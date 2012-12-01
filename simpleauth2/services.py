@@ -1,0 +1,349 @@
+from google.appengine.api import urlfetch
+from simpleauth2 import parsers
+from simpleauth2.exceptions import CSRFError
+from urllib import urlencode
+from utils import json
+import logging
+import oauth2 as oauth1
+import webapp2_extras
+
+
+class AuthEvent(object):
+    def __init__(self, service, access_token=None, expires=None, access_token_secret=None):
+        self.service = service
+        self.access_token = access_token
+        self.expires = expires
+    
+    def get_user_info(self):
+        return self.service.get_user_info()
+
+class UserInfo(object):
+    def __init__(self, *args, **kwargs):
+        self.raw_user_info = kwargs.get('raw_user_info')
+        self.id = kwargs.get('id')
+        self.username = kwargs.get('username')
+        self.name = kwargs.get('name')
+        self.first_name = kwargs.get('first_name')
+        self.last_name = kwargs.get('last_name')
+        self.link = kwargs.get('link')
+        self.gender = kwargs.get('gender')
+        self.timezone = kwargs.get('timezone')
+        self.locale = kwargs.get('locale')
+        self.email = kwargs.get('email')
+        self.picture = kwargs.get('picture')
+
+class BaseService(object):
+    """
+    Base class for all services
+    """
+        
+    def __init__(self, phase, next_phase_uri, ID, secret, handler, callback, service_name=None, scope=None, set_csrf=None, get_csrf=None):
+        self.phase = phase
+        self.next_phase_uri = next_phase_uri
+        self.ID = ID
+        self.secret = secret
+        self.handler = handler
+        self.callback = callback
+        self.service_name = service_name
+        self.scope = scope
+        self.set_csrf = set_csrf
+        self.get_csrf = get_csrf
+        
+        self.access_token = None
+        self.access_token_secret = None
+        self.uri = handler.uri_for(handler.request.route.name, *handler.request.route_args, _full=True)
+        
+    def check_session(self):
+        try:
+            if type(self.handler.session) is not webapp2_extras.sessions.SessionDict:
+                raise Exception('The RequestHandler.session property isn not of type webapp2_extras.sessions.SessionDict.')
+        except AttributeError:
+            raise Exception('No session! The RequestHandler needs to have a session property of type webapp2_extras.sessions.SessionDict.')
+    
+    #=======================================================================
+    # Static properties to be overriden by subclasses
+    #=======================================================================
+    
+    # tuple of URLs ordered by their usage
+    urls = (None, None)
+    
+    # tuple of callables which parse responses returned by providers ordered by their usage
+    parsers = (lambda body: body, lambda body: body)
+    
+    #===========================================================================
+    # Methods to be overriden by subclasses
+    #===========================================================================
+    
+    def __call__(self):
+        pass
+    
+    def get_user_info(self):
+        pass
+
+
+#===============================================================================
+# OAuth 2.0
+#===============================================================================
+
+class OAuth2(BaseService):
+    """
+    Base class for OAuth2 services
+    """
+    
+    def get_user_info(self):
+        # construct url
+        url = self.urls[2] + '?' + urlencode(dict(access_token=self.access_token))
+        
+        # fetch and decode response
+        raw_user_info = json.loads(urlfetch.fetch(url).content)
+        
+        user_info = UserInfo()
+        
+        user_info.raw_user_info = raw_user_info
+        user_info.id = raw_user_info.get('id')
+        user_info.username = user_info.raw_user_info.get('username')
+        user_info.locale = raw_user_info.get('locale')
+        user_info.gender = raw_user_info.get('gender')
+        user_info.link = raw_user_info.get('link')
+        user_info.name = user_info.raw_user_info.get('name')
+        user_info.first_name = user_info.raw_user_info.get('first_name')
+        user_info.last_name = user_info.raw_user_info.get('last_name')
+        user_info.timezone = user_info.raw_user_info.get('timezone')
+        user_info.email = user_info.raw_user_info.get('email')
+        
+        return user_info
+    
+    def __call__(self):
+        
+        if self.phase == 0:
+            
+            # prepare url parameters
+            params = dict(client_id=self.ID,
+                          redirect_uri=self.next_phase_uri,
+                          response_type='code',
+                          scope=self.scope)
+            
+            #  generate CSRF token, save it to storage and add to url parameters
+            csrf_token = self.set_csrf(self.handler) if self.set_csrf else None
+            
+            # redirect to request access token from provider
+            redirect_url = self.urls[0] + '?' + urlencode(params)
+            
+            logging.info('OAuth2 next_phase_uri = ' + self.next_phase_uri)
+            logging.info('OAuth2 redirect_url = ' + redirect_url)
+            
+            self.handler.redirect(redirect_url)
+            
+        if self.phase == 1:
+            
+            # retrieve CSRF token from storage
+            csrf_token = self.get_csrf(self.handler) if self.get_csrf else None
+            
+            # Compare it with state returned by provider
+            if csrf_token:
+                # Raise an exception if they don't match
+                if csrf_token != self.handler.request.get('state'):
+                    raise CSRFError('Invalid CSRF token!')            
+            
+            # exchange authorisation code for access token by the provider
+            params = dict(code=self.handler.request.get('code'),
+                          client_id=self.ID,
+                          client_secret=self.secret,
+                          redirect_uri=self.uri,
+                          grant_type='authorization_code')
+            
+            response = urlfetch.fetch(self.urls[1],
+                                      payload=urlencode(params),
+                                      method=urlfetch.POST,
+                                      headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            
+            # parse response
+            response = self.parsers[1](response.content)
+            
+            # get access token
+            self.access_token = response.get('access_token')
+            
+            # create event
+            event = AuthEvent(self, self.access_token, response.get('expires'))
+            
+            # call callback
+            self.callback(event)
+
+class Facebook(OAuth2):
+    """
+    Facebook Oauth 2.0 service
+    """
+    
+    # class properties
+    urls = ('https://www.facebook.com/dialog/oauth',
+            'https://graph.facebook.com/oauth/access_token',
+            'https://graph.facebook.com/me')
+    
+    parsers = (None,
+               parsers.query_string_parser)
+    
+class Google(OAuth2):
+    """
+    Google Oauth 2.0 service
+    """
+    
+    # class properties
+    urls = ('https://accounts.google.com/o/oauth2/auth',
+            'https://accounts.google.com/o/oauth2/token',
+            'https://www.googleapis.com/oauth2/v1/userinfo')
+    
+    parsers = (None,
+               parsers.json_parser)
+    
+    def get_user_info(self):
+        """
+        Overrides the OAuth2.get_user_info() method to fix Google's different naming conventions
+        """
+        user_info = OAuth2.get_user_info(self)
+        
+        user_info.name = user_info.raw_user_info.get('name')
+        user_info.first_name = user_info.raw_user_info.get('given_name')
+        user_info.last_name = user_info.raw_user_info.get('family_name')
+        user_info.timezone = user_info.raw_user_info.get('timezone')
+        user_info.email = user_info.raw_user_info.get('email')
+        user_info.picture = user_info.raw_user_info.get('picture')
+        
+        return user_info
+    
+class WindowsLive(OAuth2):
+    """
+    Windlows Live Oauth 2.0 service
+    """
+    
+    # class properties
+    urls = ('https://oauth.live.com/authorize',
+            'https://oauth.live.com/token',
+            'https://apis.live.net/v5.0/me')
+    
+    parsers = (None,
+               parsers.json_parser)
+    
+    def get_user_info(self):
+        """
+        Overrides the OAuth2.get_user_info() method to fix Google's different naming conventions
+        """
+        user_info = OAuth2.get_user_info(self)
+        
+        user_info.username = user_info.raw_user_info.get('emails').get('account')
+        user_info.username = user_info.raw_user_info.get('emails').get('preferred')
+        
+        return user_info
+
+
+#===============================================================================
+# Oauth 1.0
+#===============================================================================
+
+class OAuth1(BaseService):
+    
+    def get_user_info(self):
+        
+        token = oauth1.Token(self.access_token, self.access_token_secret)
+        consumer = oauth1.Consumer(self.ID, self.secret)
+        client = oauth1.Client(consumer,token)
+        
+        response, content = client.request(self.urls[3])
+        
+        raw_user_info = json.loads(content)
+        
+        user_info = UserInfo()
+        user_info.raw_user_info = raw_user_info
+        user_info.username = raw_user_info.get('screen_name')
+        user_info.picture = raw_user_info.get('profile_image_url')
+        user_info.name = raw_user_info.get('name')
+        user_info.locale = raw_user_info.get('lang')
+        user_info.link = raw_user_info.get('url')
+        user_info.id = raw_user_info.get('id')
+        
+        return user_info
+    
+    def __call__(self):
+        if self.phase == 0:
+            
+            # create OAuth 1.0 client
+            client = oauth1.Client(oauth1.Consumer(self.ID, self.secret))
+            
+            # fetch the client
+            response = client.request(self.urls[0], "GET")
+            
+            # check if response status is OK
+            if response[0].get('status') != '200':
+                raise Exception('Could not fetch a valid response from provider {}!'.format(self.service_name))
+            
+            # check if the handler has a working session
+            self.check_session()
+            
+            # extract OAuth token and save it to session
+            oauth_token = self.parsers[0](response[1]).get('oauth_token')
+            if not oauth_token:
+                raise Exception('Could not get a valid OAuth token from provider {}!'.format(self.service_name))
+            self.handler.session['oauth_token'] = oauth_token
+            
+            # extract OAuth token secret and save it to session
+            oauth_token_secret = self.parsers[0](response[1]).get('oauth_token_secret')
+            if not oauth_token_secret:
+                raise Exception('Could not get a valid OAuth token secret from provider {}!'.format(self.service_name))
+            self.handler.session['oauth_token_secret'] = oauth_token_secret
+            
+            # redirect to request access token from provider
+            params = urlencode(dict(oauth_token=oauth_token,
+                                    oauth_callback=self.next_phase_uri))
+            self.handler.redirect(self.urls[1] + '?' + params)
+        
+        if self.phase == 1:
+            
+            # check if the handler has a working session
+            self.check_session()
+            
+            # retrieve the OAuth token from session
+            oauth_token = self.handler.session.pop('oauth_token')
+            if not oauth_token:
+                raise Exception('OAuth token could not be retrieved from session!')
+            
+            # retrieve the OAuth token secret from session
+            oauth_token_secret = self.handler.session.pop('oauth_token_secret')
+            if not oauth_token_secret:
+                raise Exception('OAuth token secret could not be retrieved from session!')
+            
+            # extract the verifier
+            verifier = self.handler.request.get('oauth_verifier')
+            if not verifier:
+                raise Exception('No OAuth verifier was provided by the {} provider!'.format(self.service_name))
+            
+            # create OAuth 1.0 client
+            token = oauth1.Token(oauth_token, oauth_token_secret)
+            token.set_verifier(verifier)
+            client = oauth1.Client(oauth1.Consumer(self.ID, self.secret), token)
+            
+            # fetch response
+            response = client.request(self.urls[2], "POST")
+            
+            # parse response
+            response = self.parsers[1](response[1])
+            
+            # get access token
+            self.access_token = response.get('oauth_token')
+            
+            # get access token secret
+            self.access_token_secret = response.get('oauth_token_secret')
+            
+            # create event
+            event = AuthEvent(self, self.access_token, access_token_secret=self.access_token_secret)
+            
+            # call callback
+            self.callback(event)
+
+class Twitter(OAuth1):
+    urls = ('https://api.twitter.com/oauth/request_token',
+            'https://api.twitter.com/oauth/authorize',
+            'https://api.twitter.com/oauth/access_token',
+            'https://api.twitter.com/1/account/verify_credentials.json')
+    
+    parsers = (parsers.query_string_parser,
+               parsers.query_string_parser)
+    
