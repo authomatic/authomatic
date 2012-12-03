@@ -1,6 +1,7 @@
 """
 """
 from exceptions import ConfigError
+import logging
 import re
 
 def auth_mixin_factory(services):
@@ -15,26 +16,25 @@ def auth_mixin_factory(services):
     
     return type('ConfiguredAuthMixin', (_AuthMixin, ), properties)
 
-class _AuthMixin(object):
-    """
-    Base class for ConfiguredAuthMixin
+
+class Auth(object):
+    def __init__(self, handler, services):
+        self.handler = handler
+        self.services = services
     
-    Do not use this mixin directly! You should use the auth_mixin_factory(services) function
-    """
-    
-    def get(self, service_name=None):
+    def login(self, service_name, callback):
         
         # check current phase by counting leading underscores of service_name
         phase = len(re.match(r'_*', service_name).group())
         
         # construct uri for next phase by adding another leading underscore
-        next_phase_uri = self.uri_for(self.request.route.name, '_' + service_name, _full=True)
+        next_phase_uri = self.handler.uri_for(self.handler.request.route.name, '_' + service_name, _full=True)
         
         # get rid of the underscores
         service_name = service_name[phase:]
         
         # retrieve required settings for current service and raise exceptions if missing
-        service_settings = self.__services.get(service_name)
+        service_settings = self.services.get(service_name)
         if not service_settings:
             raise ConfigError('Service {} not specified!'.format(service_name))
         
@@ -55,12 +55,33 @@ class _AuthMixin(object):
                       next_phase_uri=next_phase_uri,
                       ID=service_ID,
                       secret=service_secret,
-                      handler=self,
-                      callback=self.callback,
+                      handler=self.handler,
+                      callback=callback,
                       service_name=service_name,
                       scope=service_settings.get('scope'))()
-        
-        def callback(self, request):
-            pass
+
+class _AuthMixin(object):
+    """
+    Base class for ConfiguredAuthMixin
+    
+    Do not use this mixin directly! You should use the auth_mixin_factory(services) function
+    The mixin only adds the "auth" attribute to the subclass.
+    """
+    
+    # We need to pass an instance of the Request Handler to the Auth class, but we cannot use
+    # constructor here because it will not be called unless the mixin is the first base class
+    # We use a trick with a getter instead.
+    @property
+    def simpleauth2(self):
+        pass
+    
+    @simpleauth2.getter
+    def simpleauth2(self):
+        if not hasattr(self, '_AuthMixin__simpleauth2'):
+            # Make an Auth instance only if it doesn't exist yet
+            self.__simpleauth2 = Auth(self, self._AuthMixin__services)
+        return self.__simpleauth2
+    
+    
 
 

@@ -11,7 +11,11 @@ class Home(SessionRequestHandler):
         self.session['count'] = count + 1
         self.response.write('HOME ' + str(count))
 
-class Auth(SessionRequestHandler, simpleauth2.auth_mixin_factory(config.SERVICES)):
+class Login(SessionRequestHandler, simpleauth2.auth_mixin_factory(config.SERVICES)):
+    
+    def get(self, service_name):
+        self.simpleauth2.login(service_name, self.callback)
+    
     def callback(self, event):
         
         user_info = event.get_user_info()

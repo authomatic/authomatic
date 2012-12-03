@@ -1,0 +1,6 @@
+*.class
+*.pyc
+*.pyo
+example/config.py
+.pydevproject
+.project
