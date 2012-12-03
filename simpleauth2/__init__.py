@@ -1,2 +1,2 @@
-from handlers import *
+from core import *
 from exceptions import *

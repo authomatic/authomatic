@@ -1,12 +1,9 @@
 from google.appengine.api import urlfetch
 from simpleauth2 import parsers
-from simpleauth2.exceptions import CSRFError
 from urllib import urlencode
-from utils import json
-from webapp2_extras import sessions
+from parsers import json
 import logging
 import oauth2 as oauth1
-import webapp2_extras
 
 
 class AuthEvent(object):

@@ -18,6 +18,29 @@ def auth_mixin_factory(services, session_config):
     
     return type('ConfiguredAuthMixin', (_AuthMixin, ), properties)
 
+class _AuthMixin(object):
+    """
+    Base class for ConfiguredAuthMixin
+    
+    Do not use this mixin directly! You should use the auth_mixin_factory(services) function
+    The mixin only adds the "auth" attribute to the subclass.
+    """
+    
+    # We need to pass an instance of the Request Handler to the Auth class, but we cannot use
+    # constructor here because it will not be called unless the mixin is the first base class
+    # We use a trick with a getter instead.
+    @property
+    def simpleauth2(self):
+        pass
+    
+    @simpleauth2.getter
+    def simpleauth2(self):
+        # Make an Auth instance only if it doesn't exist yet
+        if not hasattr(self, '_AuthMixin__simpleauth2'):
+            self.__simpleauth2 = Simpleauth2(self, self.__services, self.__session_config)
+            
+        return self.__simpleauth2
+
 
 class Simpleauth2(object):
     def __init__(self, handler, services, session_config):
@@ -73,35 +96,14 @@ class Simpleauth2(object):
         
         # recreate full current URI
         self.uri = self._handler.uri_for(self._handler.request.route.name, *self._handler.request.route_args, _full=True)
-                
+        
+        #self.uri = self._handler.request.build(self._handler.request)
+              
         # instantiate and call the service class
         service_class(service_name, self)()
         
         # save sessions
         self._save_sessions()
-
-class _AuthMixin(object):
-    """
-    Base class for ConfiguredAuthMixin
-    
-    Do not use this mixin directly! You should use the auth_mixin_factory(services) function
-    The mixin only adds the "auth" attribute to the subclass.
-    """
-    
-    # We need to pass an instance of the Request Handler to the Auth class, but we cannot use
-    # constructor here because it will not be called unless the mixin is the first base class
-    # We use a trick with a getter instead.
-    @property
-    def simpleauth2(self):
-        pass
-    
-    @simpleauth2.getter
-    def simpleauth2(self):
-        # Make an Auth instance only if it doesn't exist yet
-        if not hasattr(self, '_AuthMixin__simpleauth2'):
-            self.__simpleauth2 = Simpleauth2(self, self.__services, self.__session_config)
-            
-        return self.__simpleauth2
     
 
 
