@@ -11,7 +11,7 @@ class Login(webapp2.RequestHandler, ConfiguredAuthMixin):
     
     def callback(self, event):
         
-        user_info = event.get_user_info()
+        user_info = event.service.get_user_info()
         
         self.response.write(event.access_token)
         self.response.write('<br /><br />')
@@ -28,6 +28,11 @@ class Login(webapp2.RequestHandler, ConfiguredAuthMixin):
         self.response.write('<a href="/auth/windows_live">Windows Live</a><br />')
         self.response.write('<a href="/auth/twitter">Twitter</a><br />')
         
+        if type(event.service) == simpleauth2.services.Facebook:
+            resp = event.service.fetch('https://graph.facebook.com/me/music')
+            self.response.write('Its Facebook<br />')
+            self.response.write(resp)
+            self.response.write('<br />')
         
         self.response.write('<br /><br />')
         self.response.write(user_info.raw_user_info)

@@ -12,6 +12,9 @@ class AuthEvent(object):
         self.access_token = access_token
         self.expires = expires
     
+    def fetch(self, url):
+        return self.service.fetch(url)
+    
     def get_user_info(self):
         return self.service.get_user_info()
 
@@ -59,6 +62,9 @@ class BaseService(object):
     def __call__(self):
         pass
     
+    def fetch(self, access_token=None, access_token_secret=None):
+        pass
+    
     def get_user_info(self):
         pass
 
@@ -72,12 +78,19 @@ class OAuth2(BaseService):
     Base class for OAuth2 services
     """
     
-    def get_user_info(self):
+    def fetch(self, url, access_token=None, access_token_secret=None):
+        
+        at = access_token or self.access_token
+        
         # construct url
-        url = self.urls[2] + '?' + urlencode(dict(access_token=self.access_token))
+        url = url + '?' + urlencode(dict(access_token=at))
         
         # fetch and decode response
-        raw_user_info = json.loads(urlfetch.fetch(url).content)
+        return json.loads(urlfetch.fetch(url).content)
+    
+    def get_user_info(self):
+        
+        raw_user_info = self.fetch(self.urls[2])
         
         user_info = UserInfo()
         
