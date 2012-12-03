@@ -3,6 +3,7 @@ from simpleauth2 import parsers
 from simpleauth2.exceptions import CSRFError
 from urllib import urlencode
 from utils import json
+from webapp2_extras import sessions
 import logging
 import oauth2 as oauth1
 import webapp2_extras
@@ -20,7 +21,7 @@ class AuthEvent(object):
 class UserInfo(object):
     def __init__(self, *args, **kwargs):
         self.raw_user_info = kwargs.get('raw_user_info')
-        self.id = kwargs.get('id')
+        self.ID = kwargs.get('id')
         self.username = kwargs.get('username')
         self.name = kwargs.get('name')
         self.first_name = kwargs.get('first_name')
@@ -37,28 +38,12 @@ class BaseService(object):
     Base class for all services
     """
         
-    def __init__(self, phase, next_phase_uri, ID, secret, handler, callback, service_name=None, scope=None, set_csrf=None, get_csrf=None):
-        self.phase = phase
-        self.next_phase_uri = next_phase_uri
-        self.ID = ID
-        self.secret = secret
-        self.handler = handler
-        self.callback = callback
+    def __init__(self, service_name, simpleauth2):
         self.service_name = service_name
-        self.scope = scope
-        self.set_csrf = set_csrf
-        self.get_csrf = get_csrf
+        self.simpleauth2 = simpleauth2
         
         self.access_token = None
         self.access_token_secret = None
-        self.uri = handler.uri_for(handler.request.route.name, *handler.request.route_args, _full=True)
-        
-    def check_session(self):
-        try:
-            if type(self.handler.session) is not webapp2_extras.sessions.SessionDict:
-                raise Exception('The RequestHandler.session property isn not of type webapp2_extras.sessions.SessionDict.')
-        except AttributeError:
-            raise Exception('No session! The RequestHandler needs to have a session property of type webapp2_extras.sessions.SessionDict.')
     
     #=======================================================================
     # Static properties to be overriden by subclasses
@@ -68,7 +53,7 @@ class BaseService(object):
     urls = (None, None)
     
     # tuple of callables which parse responses returned by providers ordered by their usage
-    parsers = (lambda body: body, lambda body: body)
+    parsers = (lambda content: content, )
     
     #===========================================================================
     # Methods to be overriden by subclasses
@@ -115,41 +100,33 @@ class OAuth2(BaseService):
     
     def __call__(self):
         
-        if self.phase == 0:
+        if self.simpleauth2.phase == 0:
             
             # prepare url parameters
-            params = dict(client_id=self.ID,
-                          redirect_uri=self.next_phase_uri,
+            params = dict(client_id=self.simpleauth2.service_ID,
+                          redirect_uri=self.simpleauth2.uri,
                           response_type='code',
-                          scope=self.scope)
+                          scope=self.simpleauth2.scope)
             
             #  generate CSRF token, save it to storage and add to url parameters
-            csrf_token = self.set_csrf(self.handler) if self.set_csrf else None
+            
             
             # redirect to request access token from provider
             redirect_url = self.urls[0] + '?' + urlencode(params)
             
-            logging.info('OAuth2 next_phase_uri = ' + self.next_phase_uri)
-            logging.info('OAuth2 redirect_url = ' + redirect_url)
+            self.simpleauth2._handler.redirect(redirect_url)
             
-            self.handler.redirect(redirect_url)
-            
-        if self.phase == 1:
+        if self.simpleauth2.phase == 1:
             
             # retrieve CSRF token from storage
-            csrf_token = self.get_csrf(self.handler) if self.get_csrf else None
             
             # Compare it with state returned by provider
-            if csrf_token:
-                # Raise an exception if they don't match
-                if csrf_token != self.handler.request.get('state'):
-                    raise CSRFError('Invalid CSRF token!')            
             
             # exchange authorisation code for access token by the provider
-            params = dict(code=self.handler.request.get('code'),
-                          client_id=self.ID,
-                          client_secret=self.secret,
-                          redirect_uri=self.uri,
+            params = dict(code=self.simpleauth2._handler.request.get('code'),
+                          client_id=self.simpleauth2.service_ID,
+                          client_secret=self.simpleauth2.secret,
+                          redirect_uri=self.simpleauth2.uri,
                           grant_type='authorization_code')
             
             response = urlfetch.fetch(self.urls[1],
@@ -167,7 +144,7 @@ class OAuth2(BaseService):
             event = AuthEvent(self, self.access_token, response.get('expires'))
             
             # call callback
-            self.callback(event)
+            self.simpleauth2._callback(event)
 
 class Facebook(OAuth2):
     """
@@ -240,11 +217,15 @@ class WindowsLive(OAuth2):
 #===============================================================================
 
 class OAuth1(BaseService):
-    
+    def __init__(self, *args, **kwargs):
+        super(OAuth1, self).__init__(*args, **kwargs)
+        self._oauth_token_key = self.simpleauth2.service_name + '_oauth_token'
+        self._oauth_token_secret_key = self.simpleauth2.service_name + '_oauth_token_secret'
+        
     def get_user_info(self):
         
         token = oauth1.Token(self.access_token, self.access_token_secret)
-        consumer = oauth1.Consumer(self.ID, self.secret)
+        consumer = oauth1.Consumer(self.simpleauth2.service_ID, self.simpleauth2.secret)
         client = oauth1.Client(consumer,token)
         
         response, content = client.request(self.urls[3])
@@ -263,10 +244,10 @@ class OAuth1(BaseService):
         return user_info
     
     def __call__(self):
-        if self.phase == 0:
+        if self.simpleauth2.phase == 0:
             
             # create OAuth 1.0 client
-            client = oauth1.Client(oauth1.Consumer(self.ID, self.secret))
+            client = oauth1.Client(oauth1.Consumer(self.simpleauth2.service_ID, self.simpleauth2.secret))
             
             # fetch the client
             response = client.request(self.urls[0], "GET")
@@ -275,50 +256,47 @@ class OAuth1(BaseService):
             if response[0].get('status') != '200':
                 raise Exception('Could not fetch a valid response from provider {}!'.format(self.service_name))
             
-            # check if the handler has a working session
-            self.check_session()
-            
             # extract OAuth token and save it to session
             oauth_token = self.parsers[0](response[1]).get('oauth_token')
             if not oauth_token:
                 raise Exception('Could not get a valid OAuth token from provider {}!'.format(self.service_name))
-            self.handler.session['oauth_token'] = oauth_token
+            self.simpleauth2._session[self._oauth_token_key] = oauth_token
             
             # extract OAuth token secret and save it to session
             oauth_token_secret = self.parsers[0](response[1]).get('oauth_token_secret')
             if not oauth_token_secret:
                 raise Exception('Could not get a valid OAuth token secret from provider {}!'.format(self.service_name))
-            self.handler.session['oauth_token_secret'] = oauth_token_secret
+            self.simpleauth2._session[self._oauth_token_secret_key] = oauth_token_secret
+            
+            # save sessions
+            self.simpleauth2._save_sessions()
             
             # redirect to request access token from provider
             params = urlencode(dict(oauth_token=oauth_token,
-                                    oauth_callback=self.next_phase_uri))
-            self.handler.redirect(self.urls[1] + '?' + params)
+                                    oauth_callback=self.simpleauth2.uri))
+            self.simpleauth2._handler.redirect(self.urls[1] + '?' + params)
         
-        if self.phase == 1:
-            
-            # check if the handler has a working session
-            self.check_session()
+        if self.simpleauth2.phase == 1:
             
             # retrieve the OAuth token from session
-            oauth_token = self.handler.session.pop('oauth_token')
+            oauth_token = self.simpleauth2._session.get(self._oauth_token_key)
             if not oauth_token:
                 raise Exception('OAuth token could not be retrieved from session!')
             
             # retrieve the OAuth token secret from session
-            oauth_token_secret = self.handler.session.pop('oauth_token_secret')
+            oauth_token_secret = self.simpleauth2._session.get(self._oauth_token_secret_key)
             if not oauth_token_secret:
                 raise Exception('OAuth token secret could not be retrieved from session!')
             
             # extract the verifier
-            verifier = self.handler.request.get('oauth_verifier')
+            verifier = self.simpleauth2._handler.request.get('oauth_verifier')
             if not verifier:
                 raise Exception('No OAuth verifier was provided by the {} provider!'.format(self.service_name))
             
             # create OAuth 1.0 client
             token = oauth1.Token(oauth_token, oauth_token_secret)
             token.set_verifier(verifier)
-            client = oauth1.Client(oauth1.Consumer(self.ID, self.secret), token)
+            client = oauth1.Client(oauth1.Consumer(self.simpleauth2.service_ID, self.simpleauth2.secret), token)
             
             # fetch response
             response = client.request(self.urls[2], "POST")
@@ -336,7 +314,7 @@ class OAuth1(BaseService):
             event = AuthEvent(self, self.access_token, access_token_secret=self.access_token_secret)
             
             # call callback
-            self.callback(event)
+            self.simpleauth2._callback(event)
 
 class Twitter(OAuth1):
     urls = ('https://api.twitter.com/oauth/request_token',
