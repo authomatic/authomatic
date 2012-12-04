@@ -1,7 +1,7 @@
 from google.appengine.api import urlfetch
-from simpleauth2 import parsers
+from simpleauth2 import utils
 from urllib import urlencode
-from parsers import json
+from utils import json
 import logging
 import oauth2 as oauth1
 
@@ -44,6 +44,8 @@ class BaseService(object):
         
         self.access_token = None
         self.access_token_secret = None
+        
+        self.type = self.__class__.__bases__[0].__name__
     
     #=======================================================================
     # Static properties to be overriden by subclasses
@@ -53,16 +55,24 @@ class BaseService(object):
     urls = (None, None)
     
     # tuple of callables which parse responses returned by providers ordered by their usage
-    parsers = (lambda content: content, )
+    utils = (lambda content: content, )
     
     #===========================================================================
     # Methods to be overriden by subclasses
     #===========================================================================
     
+    def fetch(self, url):
+        return utils.fetch(self.type,
+                           url,
+                           self.access_token,
+                           self.access_token_secret,
+                           self.simpleauth2.service_ID,
+                           self.simpleauth2.secret)
+    
     def __call__(self):
         pass
     
-    def fetch(self, access_token=None, access_token_secret=None):
+    def _fetch(self):
         pass
     
     def get_user_info(self):
@@ -77,16 +87,6 @@ class OAuth2(BaseService):
     """
     Base class for OAuth2 services
     """
-    
-    def fetch(self, url, access_token=None, access_token_secret=None):
-        
-        at = access_token or self.access_token
-        
-        # construct url
-        url = url + '?' + urlencode(dict(access_token=at))
-        
-        # fetch and decode response
-        return json.loads(urlfetch.fetch(url).content)
     
     def get_user_info(self):
         
@@ -145,7 +145,7 @@ class OAuth2(BaseService):
                                       headers={'Content-Type': 'application/x-www-form-urlencoded'})
             
             # parse response
-            response = self.parsers[1](response.content)
+            response = self.utils[1](response.content)
             
             # get access token
             self.access_token = response.get('access_token')
@@ -166,8 +166,8 @@ class Facebook(OAuth2):
             'https://graph.facebook.com/oauth/access_token',
             'https://graph.facebook.com/me')
     
-    parsers = (None,
-               parsers.query_string_parser)
+    utils = (None,
+               utils.query_string_parser)
     
 class Google(OAuth2):
     """
@@ -179,8 +179,8 @@ class Google(OAuth2):
             'https://accounts.google.com/o/oauth2/token',
             'https://www.googleapis.com/oauth2/v1/userinfo')
     
-    parsers = (None,
-               parsers.json_parser)
+    utils = (None,
+               utils.json_parser)
     
     def get_user_info(self):
         """
@@ -207,8 +207,8 @@ class WindowsLive(OAuth2):
             'https://oauth.live.com/token',
             'https://apis.live.net/v5.0/me')
     
-    parsers = (None,
-               parsers.json_parser)
+    utils = (None,
+               utils.json_parser)
     
     def get_user_info(self):
         """
@@ -231,16 +231,18 @@ class OAuth1(BaseService):
         super(OAuth1, self).__init__(*args, **kwargs)
         self._oauth_token_key = self.simpleauth2.service_name + '_oauth_token'
         self._oauth_token_secret_key = self.simpleauth2.service_name + '_oauth_token_secret'
-        
+    
     def get_user_info(self):
         
-        token = oauth1.Token(self.access_token, self.access_token_secret)
-        consumer = oauth1.Consumer(self.simpleauth2.service_ID, self.simpleauth2.secret)
-        client = oauth1.Client(consumer,token)
-        
-        response, content = client.request(self.urls[3])
-        
-        raw_user_info = json.loads(content)
+#        token = oauth1.Token(self.access_token, self.access_token_secret)
+#        consumer = oauth1.Consumer(self.simpleauth2.service_ID, self.simpleauth2.secret)
+#        client = oauth1.Client(consumer,token)
+#        
+#        response, content = client.request(self.urls[3])
+#        
+#        raw_user_info = json.loads(content)
+#        
+        raw_user_info = self.fetch(self.urls[3])
         
         user_info = UserInfo()
         user_info.raw_user_info = raw_user_info
@@ -267,13 +269,13 @@ class OAuth1(BaseService):
                 raise Exception('Could not fetch a valid response from provider {}!'.format(self.service_name))
             
             # extract OAuth token and save it to session
-            oauth_token = self.parsers[0](response[1]).get('oauth_token')
+            oauth_token = self.utils[0](response[1]).get('oauth_token')
             if not oauth_token:
                 raise Exception('Could not get a valid OAuth token from provider {}!'.format(self.service_name))
             self.simpleauth2._session[self._oauth_token_key] = oauth_token
             
             # extract OAuth token secret and save it to session
-            oauth_token_secret = self.parsers[0](response[1]).get('oauth_token_secret')
+            oauth_token_secret = self.utils[0](response[1]).get('oauth_token_secret')
             if not oauth_token_secret:
                 raise Exception('Could not get a valid OAuth token secret from provider {}!'.format(self.service_name))
             self.simpleauth2._session[self._oauth_token_secret_key] = oauth_token_secret
@@ -312,7 +314,7 @@ class OAuth1(BaseService):
             response = client.request(self.urls[2], "POST")
             
             # parse response
-            response = self.parsers[1](response[1])
+            response = self.utils[1](response[1])
             
             # get access token
             self.access_token = response.get('oauth_token')
@@ -332,6 +334,6 @@ class Twitter(OAuth1):
             'https://api.twitter.com/oauth/access_token',
             'https://api.twitter.com/1/account/verify_credentials.json')
     
-    parsers = (parsers.query_string_parser,
-               parsers.query_string_parser)
+    utils = (utils.query_string_parser,
+               utils.query_string_parser)
     

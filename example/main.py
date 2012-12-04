@@ -1,6 +1,7 @@
 import config
 import simpleauth2
 import webapp2
+from simpleauth2 import services, utils
 
 ConfiguredAuthMixin = simpleauth2.auth_mixin_factory(config.SERVICES, config.SESSION)
 
@@ -12,6 +13,9 @@ class Login(webapp2.RequestHandler, ConfiguredAuthMixin):
     def callback(self, event):
         
         user_info = event.service.get_user_info()
+        
+        self.response.write('Type: {}<br /><br />'.format(event.service.type))
+        self.response.write('Name: {}<br /><br />'.format(event.service.service_name))
         
         self.response.write(event.access_token)
         self.response.write('<br /><br />')
@@ -28,11 +32,33 @@ class Login(webapp2.RequestHandler, ConfiguredAuthMixin):
         self.response.write('<a href="/auth/windows_live">Windows Live</a><br />')
         self.response.write('<a href="/auth/twitter">Twitter</a><br />')
         
+        # if Facebook
         if type(event.service) == simpleauth2.services.Facebook:
-            resp = event.service.fetch('https://graph.facebook.com/me/music')
-            self.response.write('Its Facebook<br />')
-            self.response.write(resp)
-            self.response.write('<br />')
+            
+            self.response.write('Its Facebook<br /><br />')
+            
+            # fetch service api throug event without access token
+            music = event.service.fetch('https://graph.facebook.com/me/music')
+            self.response.write('Music:<br /><br />')            
+            self.response.write(music)
+            self.response.write('<br /><br />') 
+            
+            books = utils.oauth2_fetch('https://graph.facebook.com/me/books', event.access_token)            
+            self.response.write('Books:<br /><br />')            
+            self.response.write(books)
+            self.response.write('<br /><br />')
+        
+        
+        # if Twitter
+        if type(event.service) == simpleauth2.services.Twitter:
+            
+            self.response.write('Its Twitter<br /><br />')
+            
+            # fetch service api throug event without access token
+            statuses = event.service.fetch('https://api.twitter.com/1.1/statuses/user_timeline.json')
+            self.response.write('Statuses:<br /><br />')            
+            self.response.write(statuses)
+            self.response.write('<br /><br />')
         
         self.response.write('<br /><br />')
         self.response.write(user_info.raw_user_info)
