@@ -2,6 +2,7 @@ import config
 import simpleauth2
 import webapp2
 from simpleauth2 import services, utils
+import logging
 
 ConfiguredAuthMixin = simpleauth2.auth_mixin_factory(config.SERVICES, config.SESSION)
 
@@ -11,6 +12,7 @@ class Login(webapp2.RequestHandler, ConfiguredAuthMixin):
         self.simpleauth2.login(service_name, self.callback)
     
     def callback(self, event):
+        
         
         user_info = event.service.get_user_info()
         
@@ -38,15 +40,16 @@ class Login(webapp2.RequestHandler, ConfiguredAuthMixin):
             self.response.write('Its Facebook<br /><br />')
             
             # fetch service api throug event without access token
-            music = event.service.fetch('https://graph.facebook.com/me/music')
+            response = event.service.fetch('https://graph.facebook.com/me/music')
             self.response.write('Music:<br /><br />')            
-            self.response.write(music)
-            self.response.write('<br /><br />') 
-            
-            books = utils.oauth2_fetch('https://graph.facebook.com/me/books', event.access_token)            
-            self.response.write('Books:<br /><br />')            
-            self.response.write(books)
+            self.response.write(response.data)
             self.response.write('<br /><br />')
+            
+            
+            logging.info('Response.status_code = {}'.format(response.status_code))
+            logging.info('Response.status_code type = {}'.format(type(response.status_code)))
+            logging.info('Response.headers = {}'.format(response.headers))
+            logging.info('Response.final_url = {}'.format(response.final_url))
         
         
         # if Twitter
@@ -55,9 +58,17 @@ class Login(webapp2.RequestHandler, ConfiguredAuthMixin):
             self.response.write('Its Twitter<br /><br />')
             
             # fetch service api throug event without access token
-            statuses = event.service.fetch('https://api.twitter.com/1.1/statuses/user_timeline.json')
+            response = event.service.fetch('https://api.twitter.com/1.1/statuses/user_timeline.json')
+            
+            self.response.write('Location: {}<br /><br />'.format(response.headers.get('content-location')))
+            
+            logging.info('Response.status_code = {}'.format(response.status_code))
+            logging.info('Response.status_code type = {}'.format(type(response.status_code)))
+            logging.info('Response.headers = {}'.format(response.headers))
+            logging.info('Response.final_url = {}'.format(response.final_url))
+            
             self.response.write('Statuses:<br /><br />')            
-            self.response.write(statuses)
+            self.response.write(response.data)
             self.response.write('<br /><br />')
         
         self.response.write('<br /><br />')

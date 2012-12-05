@@ -62,12 +62,13 @@ class BaseService(object):
     #===========================================================================
     
     def fetch(self, url):
-        return utils.fetch(self.type,
-                           url,
-                           self.access_token,
-                           self.access_token_secret,
-                           self.simpleauth2.service_ID,
-                           self.simpleauth2.secret)
+        return utils.fetch(service_type=self.type,
+                           url=url,
+                           access_token=self.access_token,
+                           method='GET',
+                           access_token_secret=self.access_token_secret,
+                           service_ID=self.simpleauth2.service_ID,
+                           secret=self.simpleauth2.secret)
     
     def __call__(self):
         pass
@@ -90,7 +91,7 @@ class OAuth2(BaseService):
     
     def get_user_info(self):
         
-        raw_user_info = self.fetch(self.urls[2])
+        raw_user_info = self.fetch(self.urls[2]).data
         
         user_info = UserInfo()
         
@@ -242,7 +243,7 @@ class OAuth1(BaseService):
 #        
 #        raw_user_info = json.loads(content)
 #        
-        raw_user_info = self.fetch(self.urls[3])
+        raw_user_info = self.fetch(self.urls[3]).data
         
         user_info = UserInfo()
         user_info.raw_user_info = raw_user_info
