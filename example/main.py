@@ -1,15 +1,17 @@
+from simpleauth2 import Simpleauth2
 import config
+import logging
 import simpleauth2
 import webapp2
-import logging
 
 class Login(webapp2.RequestHandler):
     
     def get(self, provider_name):
         
-        sa2 = simpleauth2.Simpleauth2(self, config.PROVIDERS, config.SESSION)
-        sa2.login(provider_name, self.callback)
-        #self.simpleauth2.login(provider_name, self.callback)
+        # instantiate Simpleauth2 and call its login method.
+        # No need to store it
+        #TODO: Seems like Simpleauth2 could only be a function
+        Simpleauth2(self, config.PROVIDERS, config.SESSION).login(provider_name, self.callback)
     
     def callback(self, event):
                 
