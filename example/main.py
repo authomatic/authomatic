@@ -3,12 +3,13 @@ import simpleauth2
 import webapp2
 import logging
 
-ConfiguredAuthMixin = simpleauth2.auth_mixin_factory(config.PROVIDERS, config.SESSION)
-
-class Login(webapp2.RequestHandler, ConfiguredAuthMixin):
+class Login(webapp2.RequestHandler):
     
     def get(self, provider_name):
-        self.simpleauth2.login(provider_name, self.callback)
+        
+        sa2 = simpleauth2.Simpleauth2(self, config.PROVIDERS, config.SESSION)
+        sa2.login(provider_name, self.callback)
+        #self.simpleauth2.login(provider_name, self.callback)
     
     def callback(self, event):
                 

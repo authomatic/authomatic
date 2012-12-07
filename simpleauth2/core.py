@@ -4,43 +4,6 @@ from exceptions import ConfigError
 import logging
 from webapp2_extras import sessions
 
-def auth_mixin_factory(providers, session_config):
-    """
-    Returns ConfiguredAuthMixin class that adds support for OAuth 2.0, OAuth 1.0 and Open ID to webapp2.RequestHandler.
-    
-    Requires a base class with session support.
-    """
-    
-    # Return properties with name-mingled name
-    properties = dict(_AuthMixin__providers=providers,
-                      _AuthMixin__session_config=session_config)
-    
-    return type('ConfiguredAuthMixin', (_AuthMixin, ), properties)
-
-class _AuthMixin(object):
-    """
-    Base class for ConfiguredAuthMixin
-    
-    Do not use this mixin directly! You should use the auth_mixin_factory(providers) function
-    The mixin only adds the "auth" attribute to the subclass.
-    """
-    
-    # We need to pass an instance of the Request Handler to the Auth class, but we cannot use
-    # constructor here because it will not be called unless the mixin is the first base class
-    # We use a trick with a getter instead.
-    @property
-    def simpleauth2(self):
-        pass
-    
-    @simpleauth2.getter
-    def simpleauth2(self):
-        # Make an Auth instance only if it doesn't exist yet
-        if not hasattr(self, '_AuthMixin__simpleauth2'):
-            self.__simpleauth2 = Simpleauth2(self, self.__providers, self.__session_config)
-            
-        return self.__simpleauth2
-
-
 class Simpleauth2(object):
     def __init__(self, handler, providers, session_config):
         self._handler = handler
