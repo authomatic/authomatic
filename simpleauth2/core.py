@@ -2,10 +2,9 @@
 """
 from exceptions import ConfigError
 import logging
-import re
 from webapp2_extras import sessions
 
-def auth_mixin_factory(services, session_config):
+def auth_mixin_factory(providers, session_config):
     """
     Returns ConfiguredAuthMixin class that adds support for OAuth 2.0, OAuth 1.0 and Open ID to webapp2.RequestHandler.
     
@@ -13,7 +12,7 @@ def auth_mixin_factory(services, session_config):
     """
     
     # Return properties with name-mingled name
-    properties = dict(_AuthMixin__services=services,
+    properties = dict(_AuthMixin__providers=providers,
                       _AuthMixin__session_config=session_config)
     
     return type('ConfiguredAuthMixin', (_AuthMixin, ), properties)
@@ -22,7 +21,7 @@ class _AuthMixin(object):
     """
     Base class for ConfiguredAuthMixin
     
-    Do not use this mixin directly! You should use the auth_mixin_factory(services) function
+    Do not use this mixin directly! You should use the auth_mixin_factory(providers) function
     The mixin only adds the "auth" attribute to the subclass.
     """
     
@@ -37,15 +36,15 @@ class _AuthMixin(object):
     def simpleauth2(self):
         # Make an Auth instance only if it doesn't exist yet
         if not hasattr(self, '_AuthMixin__simpleauth2'):
-            self.__simpleauth2 = Simpleauth2(self, self.__services, self.__session_config)
+            self.__simpleauth2 = Simpleauth2(self, self.__providers, self.__session_config)
             
         return self.__simpleauth2
 
 
 class Simpleauth2(object):
-    def __init__(self, handler, services, session_config):
+    def __init__(self, handler, providers, session_config):
         self._handler = handler
-        self.services = services
+        self.providers = providers
         
         # create session
         self._session_store = sessions.SessionStore(self._handler.request, session_config)
@@ -55,7 +54,7 @@ class Simpleauth2(object):
         self._session_store.save_sessions(self._handler.response)
     
     def _reset_phase(self):
-        self._session[self.service_name] = 0
+        self._session[self.provider_name] = 0
     
     def _callback(self, event):
         # Set phase to 0
@@ -64,43 +63,41 @@ class Simpleauth2(object):
         # call user specified callback
         self.callback(event)
     
-    def login(self, service_name, callback):
+    def login(self, provider_name, callback):
         
-        self.service_name = service_name
+        self.provider_name = provider_name
         self.callback = callback
         
         # get current phase from session
-        self.phase = self._session.get(service_name, 0)
+        self.phase = self._session.get(provider_name, 0)
         
         # increase phase in session
-        self._session[service_name] = self.phase + 1
+        self._session[provider_name] = self.phase + 1
                 
-        # retrieve required settings for current service and raise exceptions if missing
-        service_settings = self.services.get(service_name)
-        if not service_settings:
-            raise ConfigError('Service {} not specified!'.format(service_name))
+        # retrieve required settings for current provider and raise exceptions if missing
+        provider_settings = self.providers.get(provider_name)
+        if not provider_settings:
+            raise ConfigError('Provider name "{}" not specified!'.format(provider_name))
         
-        service_class = service_settings.get('class')
-        if not service_class:
-            raise ConfigError('Class not specified for service {}!'.format(service_name))
+        ProviderClass = provider_settings.get('class')
+        if not ProviderClass:
+            raise ConfigError('Class not specified for provider {}!'.format(provider_name))
         
-        self.service_ID = service_settings.get('id')
-        if not self.service_ID:
-            raise ConfigError('ID not specified for service {}!'.format(service_name))    
+        self.consumer_id = provider_settings.get('id')
+        if not self.consumer_id:
+            raise ConfigError('ID not specified for provider {}!'.format(provider_name))    
         
-        self.secret = service_settings.get('secret')
+        self.secret = provider_settings.get('secret')
         if not self.secret:
-            raise ConfigError('Secret not specified for service {}!'.format(service_name))
+            raise ConfigError('Secret not specified for provider {}!'.format(provider_name))
         
-        self.scope = service_settings.get('scope')
+        self.scope = provider_settings.get('scope')
         
         # recreate full current URI
         self.uri = self._handler.uri_for(self._handler.request.route.name, *self._handler.request.route_args, _full=True)
-        
-        #self.uri = self._handler.request.build(self._handler.request)
               
         # instantiate and call the service class
-        service_class(service_name, self)()
+        ProviderClass(self)()
         
         # save sessions
         self._save_sessions()

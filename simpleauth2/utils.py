@@ -48,10 +48,9 @@ class FetchResult(object):
         
         self.data = json.loads(self.content)
 
-def create_oauth1_url(base, access_token, access_token_secret, service_ID, secret):
-    
+def create_oauth1_url(base, access_token, access_token_secret, consumer_id, secret):
     token = oauth1.Token(access_token, access_token_secret)
-    consumer = oauth1.Consumer(service_ID, secret)
+    consumer = oauth1.Consumer(consumer_id, secret)
     client = oauth1.Client(consumer, token)
     
     request = oauth1.Request.from_consumer_and_token(consumer, token)
@@ -64,32 +63,38 @@ def create_oauth1_url(base, access_token, access_token_secret, service_ID, secre
     
     return base + '?' + params
 
+
 def create_oauth2_url(base, access_token):
-    
     return base + '?' + urlencode(dict(access_token=access_token))
 
-def fetch(service_type, url, access_token, method='GET', access_token_secret=None, service_ID=None, secret=None):
-    """
-    Common interface to oauth2_fetch() and oauth1_fetch()
-    """
+class FetchRequest(object):
+    def __init__(self, service_type, access_token, url, method='GET', parser=None, access_token_secret=None, consumer_id=None, secret=None):
+        self.service_type = service_type
+        self.access_token = access_token
+        self.url = url
+        self.method = method
+        self.parser = parser
+        self.access_token_secret = access_token_secret
+        self.consumer_id = consumer_id
+        self.secret = secret
+        
+        logging.info('FetchRequest.__init__() self.parser = {}'.format(self.parser))
+        
+        self.rpc = None
+        
+        if self.service_type == 'OAuth2':
+            self.url = create_oauth2_url(url, access_token)
+        elif self.service_type == 'OAuth1':
+            self.url = create_oauth1_url(url, access_token, access_token_secret, consumer_id, secret)
     
-    if service_type == 'OAuth2':
-        url = create_oauth2_url(url, access_token)
-    elif service_type == 'OAuth1':
-        url = create_oauth1_url(url, access_token, access_token_secret, service_ID, secret)
+    def fetch(self):
+        self.rpc = urlfetch.create_rpc()
+        urlfetch.make_fetch_call(self.rpc, self.url, method=self.method)
+        return self
     
-    result = urlfetch.fetch(url, method=method)
-    
-    return FetchResult(result)
-
-def call_async(calls, callback):
-    
-    rpc = urlfetch.create_rpc()
-    
-    rpc.callback = lambda: None
-    
-    event = None
-    callback(event)
+    def get_result(self):
+        result = FetchResult(self.rpc.get_result())
+        return self.parser(result) if self.parser else result
 
 
 
