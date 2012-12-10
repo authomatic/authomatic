@@ -24,6 +24,27 @@ def query_string_parser(body):
         res = json_parser(body)
     return res
 
+class Consumer(object):
+    def __init__(self, key, secret, scope=None):
+        self.key = key
+        self.secret = secret
+        self.scope = scope
+        self.access_token = None
+
+class User(object):
+    def __init__(self, access_token, access_token_secret=None):
+        self.access_token = access_token
+        self.access_token_secret = access_token_secret
+
+class Credentials(object):
+    def __init__(self, access_token, access_token_secret=None, consumer_key=None, consumer_secret=None, expires=0, provider_type=None):
+        self.access_token = access_token
+        self.access_token_secret = access_token_secret
+        self.consumer_key = consumer_key
+        self.consumer_secret = consumer_secret
+        self.expires = expires
+        self.provider_type = provider_type
+
 class FetchResult(object):
     """
     Provides unified interface to results of different http request types
@@ -68,27 +89,26 @@ def create_oauth2_url(base, access_token):
     return base + '?' + urlencode(dict(access_token=access_token))
 
 class FetchRequest(object):
-    def __init__(self, service_type, access_token, url, method='GET', parser=None, access_token_secret=None, consumer_id=None, secret=None):
-        self.service_type = service_type
-        self.access_token = access_token
+    def __init__(self, url, credentials, method='GET', parser=None):
         self.url = url
+        self.credentials = credentials
         self.method = method
         self.parser = parser
-        self.access_token_secret = access_token_secret
-        self.consumer_id = consumer_id
-        self.secret = secret
-        
-        logging.info('FetchRequest.__init__() self.parser = {}'.format(self.parser))
         
         self.rpc = None
         
-        if self.service_type == 'OAuth2':
-            self.url = create_oauth2_url(url, access_token)
-        elif self.service_type == 'OAuth1':
-            self.url = create_oauth1_url(url, access_token, access_token_secret, consumer_id, secret)
+        if self.credentials.provider_type == 'OAuth2':
+            self.url = create_oauth2_url(url, self.credentials.access_token)
+        elif self.credentials.provider_type == 'OAuth1':
+            self.url = create_oauth1_url(url,
+                                         self.credentials.access_token,
+                                         self.credentials.access_token_secret,
+                                         self.credentials.consumer_key,
+                                         self.credentials.consumer_secret)
     
     def fetch(self):
         self.rpc = urlfetch.create_rpc()
+        logging.info('METHOD: {}'.format(self.method))
         urlfetch.make_fetch_call(self.rpc, self.url, method=self.method)
         return self
     

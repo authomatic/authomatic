@@ -1,4 +1,4 @@
-from simpleauth2 import Simpleauth2
+
 import config
 import logging
 import simpleauth2
@@ -8,49 +8,23 @@ class Login(webapp2.RequestHandler):
     
     def get(self, provider_name):
         
-        # instantiate Simpleauth2 and call its login method.
-        # No need to store it
-        #TODO: Seems like Simpleauth2 could only be a function
-        Simpleauth2(self, config.PROVIDERS, config.SESSION).login(provider_name, self.callback)
+        simpleauth2.authenticate(provider_name, self.callback, self, config.PROVIDERS, config.SESSION)
     
     def callback(self, event):
                 
         # fetch user info asynchronously
         event.provider.user_info_request.fetch()
                
-        self.response.write('Type: {}<br /><br />'.format(event.provider.type))
-        self.response.write('Name: {}<br /><br />'.format(event.provider.provider_name))
-        
-        self.response.write(event.access_token)
-        self.response.write('<br /><br />')
-        self.response.write(event.expires)
-        self.response.write('<br /><br />')
-                
+                        
         self.response.write('<br /><br />')
         self.response.write('<a href="/auth/facebook">Facebook</a><br />')
         self.response.write('<a href="/auth/google">Google</a><br />')
         self.response.write('<a href="/auth/windows_live">Windows Live</a><br />')
         self.response.write('<a href="/auth/twitter">Twitter</a><br />')
         
-        # if Facebook
-        if type(event.provider) == simpleauth2.providers.Facebook:
-            
-            music_request = event.provider.create_request('https://graph.facebook.com/me/music').fetch()
-            music_request.fetch()
-            music = music_request.get_result().data
-            
-            self.response.write('Music:<br /><br />')
-            self.response.write(music)
-            self.response.write('<br /><br />')
-        
-        
-        # if Twitter
-        if type(event.provider) == simpleauth2.providers.Twitter:
-            
-            self.response.write('Its Twitter<br /><br />')
         
         # get result of asynchronous call
-        user_info = event.provider.user_info_request.get_result()
+        user_info = event.provider.user_info_request.fetch().get_result()
         
         for k, v in user_info.__dict__.items():
             if k != 'raw_user_info':

@@ -1,5 +1,6 @@
 from google.appengine.api import urlfetch
 from simpleauth2 import utils
+from simpleauth2.utils import User, Credentials
 from urllib import urlencode
 from utils import json
 import logging
@@ -7,10 +8,11 @@ import oauth2 as oauth1
 
 
 class AuthEvent(object):
-    def __init__(self, provider, access_token=None, expires=None, access_token_secret=None):
+    def __init__(self, provider, consumer, user, credentials):
         self.provider = provider
-        self.access_token = access_token
-        self.expires = expires
+        self.consumer = consumer
+        self.user = user
+        self.credentials = credentials
 
 class UserInfo(object):
     def __init__(self, *args, **kwargs):
@@ -32,15 +34,23 @@ class BaseProvider(object):
     Base class for all providers
     """
         
-    def __init__(self, simpleauth2):
-        self.simpleauth2 = simpleauth2
-        self.provider_name = simpleauth2.provider_name
+    def __init__(self, phase, provider_name, consumer, handler, session, callback):
+        self.phase = phase
+        self.provider_name = provider_name
+        self.consumer = consumer
+        self.handler = handler
+        self.session = session
+        self.callback = callback
         
-        self.access_token = None
-        self.access_token_secret = None
+        self.user = None
+        
+        
         self._user_info_request = None
                 
         self.type = self.__class__.__bases__[0].__name__
+        
+        # recreate full current URI
+        self.uri = handler.uri_for(handler.request.route.name, *handler.request.route_args, _full=True)
         
     #=======================================================================
     # Static properties to be overriden by subclasses
@@ -62,14 +72,11 @@ class BaseProvider(object):
     def __call__(self):
         pass
     
-    def create_request(self, url, parser=None):
+    def create_request(self, url, method='GET', parser=None):
         
-        return utils.FetchRequest(service_type=self.type,
-                                  access_token=self.access_token,
-                                  access_token_secret=self.access_token_secret,
-                                  consumer_id=self.simpleauth2.consumer_id,
-                                  secret=self.simpleauth2.secret,
-                                  url=url,
+        return utils.FetchRequest(url=url,
+                                  credentials=self.credentials,
+                                  method=method,
                                   parser=parser)
         
     def fetch_user_info(self):
@@ -83,19 +90,20 @@ class BaseProvider(object):
     def user_info_request(self):
         if not self._user_info_request:
             def parser(result):
-                logging.info('PARSER')
                 return self.user_info_parser(result.data)
             parser = lambda result: self.user_info_parser(result.data)
-            self._user_info_request = self.create_request(self.urls[-1], parser)
+            self._user_info_request = self.create_request(self.urls[-1], parser=parser)
         return self._user_info_request
     
     @staticmethod
     def user_info_parser(raw_user_info):
-        logging.info('BaseProvider.user_info_parser() raw_user_info = {}'.format(raw_user_info))
-        
         user_info = UserInfo()
         user_info.raw_user_info = raw_user_info
         return user_info
+    
+    def _save_sessions(self):
+        self.session.container.session_store.save_sessions(self.handler.response)
+        
 
 
 #===============================================================================
@@ -126,33 +134,38 @@ class OAuth2(BaseProvider):
     
     def __call__(self):
         
-        if self.simpleauth2.phase == 0:
+        if self.phase == 0:
             
             # prepare url parameters
-            params = dict(client_id=self.simpleauth2.consumer_id,
-                          redirect_uri=self.simpleauth2.uri,
+            params = dict(client_id=self.consumer.key,
+                          redirect_uri=self.uri,
                           response_type='code',
-                          scope=self.simpleauth2.scope)
+                          scope=self.consumer.scope)
             
             #  generate CSRF token, save it to storage and add to url parameters
             
             
-            # redirect to request access token from provider
+            # redirect to to provider to get access token
             redirect_url = self.urls[0] + '?' + urlencode(params)
             
-            self.simpleauth2._handler.redirect(redirect_url)
+            self.handler.redirect(redirect_url)
             
-        if self.simpleauth2.phase == 1:
+        if self.phase == 1:
             
             # retrieve CSRF token from storage
             
             # Compare it with state returned by provider
             
+            # check access token
+            self.consumer.access_token = self.handler.request.get('code')
+            if not self.consumer.access_token:
+                raise Exception('Failed to get access token from provider {}!'.format(self.provider_name))
+            
             # exchange authorisation code for access token by the provider
-            params = dict(code=self.simpleauth2._handler.request.get('code'),
-                          client_id=self.simpleauth2.consumer_id,
-                          client_secret=self.simpleauth2.secret,
-                          redirect_uri=self.simpleauth2.uri,
+            params = dict(code=self.consumer.access_token,
+                          client_id=self.consumer.key,
+                          client_secret=self.consumer.secret,
+                          redirect_uri=self.uri,
                           grant_type='authorization_code')
             
             response = urlfetch.fetch(self.urls[1],
@@ -164,13 +177,21 @@ class OAuth2(BaseProvider):
             response = self.parsers[1](response.content)
             
             # get access token
-            self.access_token = response.get('access_token')
+            access_token = response.get('access_token')
+            
+            # create user
+            self.user = User(access_token)
+            
+            # create credentials
+            # OAuth 2.0 requires only access token
+            self.credentials = Credentials(access_token, expires=response.get('expires'), provider_type=self.type)
             
             # create event
-            event = AuthEvent(self, self.access_token, response.get('expires'))
+            event = AuthEvent(self, self.consumer, self.user, self.credentials)
             
-            # call callback
-            self.simpleauth2._callback(event)
+            # call callback with event
+            self.callback(event)
+
 
 class Facebook(OAuth2):
     """
@@ -200,7 +221,7 @@ class Google(OAuth2):
     
     @staticmethod
     def user_info_parser(raw_user_info):
-        user_info = super(Google, self).user_info_parser()
+        user_info = BaseProvider.user_info_parser(raw_user_info)
         
         user_info.name = user_info.raw_user_info.get('name')
         user_info.first_name = user_info.raw_user_info.get('given_name')
@@ -226,7 +247,7 @@ class WindowsLive(OAuth2):
     
     @staticmethod
     def user_info_parser(raw_user_info):
-        user_info = super(WindowsLive, self).user_info_parser()
+        user_info = BaseProvider.user_info_parser(raw_user_info)
         
         user_info.username = user_info.raw_user_info.get('emails').get('account')
         user_info.username = user_info.raw_user_info.get('emails').get('preferred')
@@ -241,8 +262,10 @@ class WindowsLive(OAuth2):
 class OAuth1(BaseProvider):
     def __init__(self, *args, **kwargs):
         super(OAuth1, self).__init__(*args, **kwargs)
-        self._oauth_token_key = self.simpleauth2.provider_name + '_oauth_token'
-        self._oauth_token_secret_key = self.simpleauth2.provider_name + '_oauth_token_secret'
+        
+        # create keys under which oauth token and secret will be stored in session
+        self._oauth_token_key = self.provider_name + '_oauth_token'
+        self._oauth_token_secret_key = self.provider_name + '_oauth_token_secret'
     
     @staticmethod
     def user_info_parser(raw_user_info):
@@ -259,10 +282,10 @@ class OAuth1(BaseProvider):
         return user_info
     
     def __call__(self):
-        if self.simpleauth2.phase == 0:
+        if self.phase == 0:
             
             # create OAuth 1.0 client
-            client = oauth1.Client(oauth1.Consumer(self.simpleauth2.consumer_id, self.simpleauth2.secret))
+            client = oauth1.Client(oauth1.Consumer(self.consumer.key, self.consumer.secret))
             
             # fetch the client
             response = client.request(self.urls[0], "GET")
@@ -275,43 +298,43 @@ class OAuth1(BaseProvider):
             oauth_token = self.parsers[0](response[1]).get('oauth_token')
             if not oauth_token:
                 raise Exception('Could not get a valid OAuth token from provider {}!'.format(self.provider_name))
-            self.simpleauth2._session[self._oauth_token_key] = oauth_token
+            self.session[self._oauth_token_key] = oauth_token
             
             # extract OAuth token secret and save it to session
             oauth_token_secret = self.parsers[0](response[1]).get('oauth_token_secret')
             if not oauth_token_secret:
                 raise Exception('Could not get a valid OAuth token secret from provider {}!'.format(self.provider_name))
-            self.simpleauth2._session[self._oauth_token_secret_key] = oauth_token_secret
+            self.session[self._oauth_token_secret_key] = oauth_token_secret
             
             # save sessions
-            self.simpleauth2._save_sessions()
+            self._save_sessions()
             
             # redirect to request access token from provider
             params = urlencode(dict(oauth_token=oauth_token,
-                                    oauth_callback=self.simpleauth2.uri))
-            self.simpleauth2._handler.redirect(self.urls[1] + '?' + params)
+                                    oauth_callback=self.uri))
+            self.handler.redirect(self.urls[1] + '?' + params)
         
-        if self.simpleauth2.phase == 1:
+        if self.phase == 1:
             
             # retrieve the OAuth token from session
-            oauth_token = self.simpleauth2._session.get(self._oauth_token_key)
+            oauth_token = self.session.get(self._oauth_token_key)
             if not oauth_token:
                 raise Exception('OAuth token could not be retrieved from session!')
             
             # retrieve the OAuth token secret from session
-            oauth_token_secret = self.simpleauth2._session.get(self._oauth_token_secret_key)
+            oauth_token_secret = self.session.get(self._oauth_token_secret_key)
             if not oauth_token_secret:
                 raise Exception('OAuth token secret could not be retrieved from session!')
             
             # extract the verifier
-            verifier = self.simpleauth2._handler.request.get('oauth_verifier')
+            verifier = self.handler.request.get('oauth_verifier')
             if not verifier:
                 raise Exception('No OAuth verifier was provided by the {} provider!'.format(self.provider_name))
             
             # create OAuth 1.0 client
             token = oauth1.Token(oauth_token, oauth_token_secret)
             token.set_verifier(verifier)
-            client = oauth1.Client(oauth1.Consumer(self.simpleauth2.consumer_id, self.simpleauth2.secret), token)
+            client = oauth1.Client(oauth1.Consumer(self.consumer.key, self.consumer.secret), token)
             
             # fetch response
             response = client.request(self.urls[2], "POST")
@@ -325,11 +348,19 @@ class OAuth1(BaseProvider):
             # get access token secret
             self.access_token_secret = response.get('oauth_token_secret')
             
+            self.user = User(self.access_token, self.access_token_secret)
+            
+            self.credentials = Credentials(access_token=self.access_token,
+                                           access_token_secret=self.access_token_secret,
+                                           consumer_key=self.consumer.key,
+                                           consumer_secret=self.consumer.secret,
+                                           provider_type=self.type)
+            
             # create event
-            event = AuthEvent(self, self.access_token, access_token_secret=self.access_token_secret)
+            event = AuthEvent(self, self.consumer, self.user, self.credentials)
             
             # call callback
-            self.simpleauth2._callback(event)
+            self.callback(event)
 
 class Twitter(OAuth1):
     urls = ('https://api.twitter.com/oauth/request_token',
