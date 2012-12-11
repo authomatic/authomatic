@@ -1,12 +1,12 @@
-from urllib import urlencode
-import urlparse
-import oauth2 as oauth1
-import logging
-
-from google.appengine.api import urlfetch
-from webapp2_extras import sessions
-
 from exceptions import *
+from google.appengine.api import urlfetch
+from urllib import urlencode
+from webapp2_extras import sessions
+import logging
+import oauth2 as oauth1
+import os
+import urlparse
+import webapp2
 
 # taken from anyjson.py
 try:
@@ -63,7 +63,16 @@ def authenticate(provider_name, callback, handler, providers, session_secret=Non
     # get phase
     phase = session.setdefault(session_key, {}).setdefault(provider_name, {}).setdefault('phase', 0)
     # increase phase in session
-    session[session_key][provider_name]['phase'] = phase + 1
+    session[session_key][provider_name]['phase'] = phase + 1    
+    
+    # resolve provider class passed as string
+    if type(ProviderClass) == str:
+        # try to import by fully qualified path
+        ProviderClass = webapp2.import_string(ProviderClass, True)
+        if not ProviderClass:
+            # try to import from simpleauth2.providers package
+            path = '.'.join([__package__, 'providers', ProviderClass])
+            ProviderClass = webapp2.import_string(path)
     
     # instantiate and call provider class
     ProviderClass(phase, provider_name, consumer, handler, session, session_key, callback)()
