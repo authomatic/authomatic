@@ -1,33 +1,9 @@
-from google.appengine.api import urlfetch
-from simpleauth2 import utils
-from simpleauth2.utils import User, Credentials
 from urllib import urlencode
-from utils import json
-import logging
 import oauth2 as oauth1
 
+from google.appengine.api import urlfetch
 
-class AuthEvent(object):
-    def __init__(self, provider, consumer, user, credentials):
-        self.provider = provider
-        self.consumer = consumer
-        self.user = user
-        self.credentials = credentials
-
-class UserInfo(object):
-    def __init__(self, *args, **kwargs):
-        self.raw_user_info = kwargs.get('raw_user_info')
-        self.ID = kwargs.get('id')
-        self.username = kwargs.get('username')
-        self.name = kwargs.get('name')
-        self.first_name = kwargs.get('first_name')
-        self.last_name = kwargs.get('last_name')
-        self.link = kwargs.get('link')
-        self.gender = kwargs.get('gender')
-        self.timezone = kwargs.get('timezone')
-        self.locale = kwargs.get('locale')
-        self.email = kwargs.get('email')
-        self.picture = kwargs.get('picture')
+from simpleauth2 import Credentials, User, FetchRequest, query_string_parser, json_parser, UserInfo, AuthEvent
 
 class BaseProvider(object):
     """
@@ -75,7 +51,7 @@ class BaseProvider(object):
     
     def create_request(self, url, method='GET', parser=None):
         
-        return utils.FetchRequest(url=url,
+        return FetchRequest(url=url,
                                   credentials=self.credentials,
                                   method=method,
                                   parser=parser)
@@ -208,8 +184,7 @@ class Facebook(OAuth2):
             'https://graph.facebook.com/oauth/access_token',
             'https://graph.facebook.com/me')
     
-    parsers = (None,
-               utils.query_string_parser)
+    parsers = (None, query_string_parser)
     
 class Google(OAuth2):
     """
@@ -221,8 +196,7 @@ class Google(OAuth2):
             'https://accounts.google.com/o/oauth2/token',
             'https://www.googleapis.com/oauth2/v1/userinfo')
     
-    parsers = (None,
-               utils.json_parser)
+    parsers = (None, json_parser)
     
     @staticmethod
     def user_info_parser(raw_user_info):
@@ -247,8 +221,7 @@ class WindowsLive(OAuth2):
             'https://oauth.live.com/token',
             'https://apis.live.net/v5.0/me')
     
-    parsers = (None,
-               utils.json_parser)
+    parsers = (None, json_parser)
     
     @staticmethod
     def user_info_parser(raw_user_info):
@@ -382,6 +355,5 @@ class Twitter(OAuth1):
             'https://api.twitter.com/oauth/access_token',
             'https://api.twitter.com/1/account/verify_credentials.json')
     
-    parsers = (utils.query_string_parser,
-               utils.query_string_parser)
+    parsers = (query_string_parser, query_string_parser)
     
