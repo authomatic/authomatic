@@ -67,12 +67,10 @@ def authenticate(provider_name, callback, handler, providers, session_secret=Non
     
     # resolve provider class passed as string
     if type(ProviderClass) == str:
-        # try to import by fully qualified path
-        ProviderClass = webapp2.import_string(ProviderClass, True)
-        if not ProviderClass:
-            # try to import from simpleauth2.providers package
-            path = '.'.join([__package__, 'providers', ProviderClass])
-            ProviderClass = webapp2.import_string(path)
+        # prepare path for simpleauth2.providers package
+        path = '.'.join([__package__, 'providers', ProviderClass])
+        # import from fully qualified path or from simpleauth2.providers package
+        ProviderClass = webapp2.import_string(ProviderClass, True) or webapp2.import_string(path)
     
     # instantiate and call provider class
     ProviderClass(phase, provider_name, consumer, handler, session, session_key, callback)()
