@@ -104,7 +104,10 @@ class BaseProvider(object):
     
     def _save_sessions(self):
         self.session.container.session_store.save_sessions(self.handler.response)
-        
+    
+    def _reset_phase(self):
+        self.session.setdefault(self.session_key, {}).setdefault(self.provider_name, {})['phase'] = 0
+        self._save_sessions()
 
 
 #===============================================================================
@@ -160,6 +163,7 @@ class OAuth2(BaseProvider):
             # check access token
             self.consumer.access_token = self.handler.request.get('code')
             if not self.consumer.access_token:
+                self._reset_phase()
                 raise Exception('Failed to get access token from provider {}!'.format(self.provider_name))
             
             # exchange authorisation code for access token by the provider
@@ -293,11 +297,13 @@ class OAuth1(BaseProvider):
             
             # check if response status is OK
             if response[0].get('status') != '200':
+                self._reset_phase()
                 raise Exception('Could not fetch a valid response from provider {}!'.format(self.provider_name))
             
             # extract OAuth token and save it to session
             oauth_token = self.parsers[0](response[1]).get('oauth_token')
             if not oauth_token:
+                self._reset_phase()
                 raise Exception('Could not get a valid OAuth token from provider {}!'.format(self.provider_name))
             #self.session[session_key][self._oauth_token_key] = oauth_token
             self.session[self.session_key][self.provider_name]['oauth_token'] = oauth_token
@@ -305,6 +311,7 @@ class OAuth1(BaseProvider):
             # extract OAuth token secret and save it to session
             oauth_token_secret = self.parsers[0](response[1]).get('oauth_token_secret')
             if not oauth_token_secret:
+                self._reset_phase()
                 raise Exception('Could not get a valid OAuth token secret from provider {}!'.format(self.provider_name))
             #self.session[session_key][self._oauth_token_secret_key] = oauth_token_secret
             self.session[self.session_key][self.provider_name]['oauth_token_secret'] = oauth_token_secret
@@ -323,16 +330,19 @@ class OAuth1(BaseProvider):
             try:
                 oauth_token = self.session[self.session_key][self.provider_name]['oauth_token']
             except KeyError:
+                self._reset_phase()
                 raise Exception('OAuth token could not be retrieved from session!')
             
             try:
                 oauth_token_secret = self.session[self.session_key][self.provider_name]['oauth_token_secret']
             except KeyError:
+                self._reset_phase()
                 raise Exception('OAuth token secret could not be retrieved from session!')
             
             # extract the verifier
             verifier = self.handler.request.get('oauth_verifier')
             if not verifier:
+                self._reset_phase()
                 raise Exception('No OAuth verifier was returned by the {} provider!'.format(self.provider_name))
             
             # create OAuth 1.0 client
