@@ -7,6 +7,7 @@ import oauth2 as oauth1
 import os
 import urlparse
 import webapp2
+import models
 
 # taken from anyjson.py
 try:
@@ -20,7 +21,13 @@ except ImportError: # pragma: no cover
         import json
 
 
-def authenticate(provider_name, callback, handler, providers, session_secret=None, session=None, session_key='simpleauth2'):
+def authenticate(provider_name, callback, handler, providers_config=None, session_secret=None, session=None, session_key='simpleauth2'):
+    
+    # use Providers model if no providers config specified
+    if not providers_config:
+        #models.initialize_providers_model()
+        providers_config = models.Providers
+        providers_config.initialize()
     
     # create session
     if not (session or session_secret):
@@ -39,26 +46,26 @@ def authenticate(provider_name, callback, handler, providers, session_secret=Non
     #              'oauth_token_secret': None}}
         
     # retrieve required settings for current provider and raise exceptions if missing
-    provider_settings = providers.get(provider_name)
+    provider_settings = providers_config.get(provider_name)
     if not provider_settings:
         raise ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
-    ProviderClass = provider_settings.get('class')
+    ProviderClass = provider_settings.get('class_name')
     if not ProviderClass:
-        raise ConfigError('Class not specified for provider {}!'.format(provider_name))
+        raise ConfigError('Class name not specified for provider {}!'.format(provider_name))
     
-    key = provider_settings.get('id')
-    if not key:
+    consumer_key = provider_settings.get('consumer_key')
+    if not consumer_key:
         raise ConfigError('Consumer key not specified for provider {}!'.format(provider_name))    
     
-    secret = provider_settings.get('secret')
-    if not secret:
+    consumer_secret = provider_settings.get('consumer_secret')
+    if not consumer_secret:
         raise ConfigError('Consumer secret not specified for provider {}!'.format(provider_name))
     
     scope = provider_settings.get('scope')
     
     # create consumer
-    consumer = Consumer(key, secret, scope)
+    consumer = Consumer(consumer_key, consumer_secret, scope)
     
     # get phase
     phase = session.setdefault(session_key, {}).setdefault(provider_name, {}).setdefault('phase', 0)
@@ -66,7 +73,7 @@ def authenticate(provider_name, callback, handler, providers, session_secret=Non
     session[session_key][provider_name]['phase'] = phase + 1    
     
     # resolve provider class passed as string
-    if type(ProviderClass) == str:
+    if type(ProviderClass) in (str, unicode):
         # prepare path for simpleauth2.providers package
         path = '.'.join([__package__, 'providers', ProviderClass])
         # import from fully qualified path or from simpleauth2.providers package
@@ -173,8 +180,6 @@ def create_oauth1_url(base, access_token, access_token_secret, consumer_id, secr
     request.url = base
     request.sign_request(client.method, consumer, token)
     
-    logging.info('request = {}'.format(request))
-    
     params = urlencode(request)
     
     return base + '?' + params
@@ -204,7 +209,6 @@ class FetchRequest(object):
     
     def fetch(self):
         self.rpc = urlfetch.create_rpc()
-        logging.info('METHOD: {}'.format(self.method))
         urlfetch.make_fetch_call(self.rpc, self.url, method=self.method)
         return self
     

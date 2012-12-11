@@ -1,14 +1,19 @@
-
 import config
 import logging
 import simpleauth2
 import webapp2
 
+
+class Home(webapp2.RequestHandler):
+    def get(self):
+        self.response.write('Home<br />')
+        
+
 class Login(webapp2.RequestHandler):
     
     def get(self, provider_name):
         
-        simpleauth2.authenticate(provider_name, self.callback, self, config.PROVIDERS, session_secret='abcd')
+        simpleauth2.authenticate(provider_name, self.callback, self, session_secret='abcd')
     
     def callback(self, event):
                 
@@ -31,6 +36,7 @@ class Login(webapp2.RequestHandler):
                 self.response.write('{}: {}<br />'.format(k, v))
 
 # routes must be named
-ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth')]
+ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth'),
+          webapp2.Route(r'/', Home)]
 
 app = webapp2.WSGIApplication(ROUTES, debug=True)
