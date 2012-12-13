@@ -21,7 +21,7 @@ except ImportError: # pragma: no cover
         import json
 
 
-def authenticate(provider_name, callback, handler, providers_config=None, session_secret=None, session=None, session_key='simpleauth2'):
+def authenticate(provider_name, callback, handler, providers_config=None, session_secret=None, session=None, session_key='simpleauth2', scope=[]):
     
     # use Providers model if no providers config specified
     if not providers_config:
@@ -62,10 +62,14 @@ def authenticate(provider_name, callback, handler, providers_config=None, sessio
     if not consumer_secret:
         raise ConfigError('Consumer secret not specified for provider {}!'.format(provider_name))
     
-    scope = provider_settings.get('scope')
+    # extend scope list with scope from arguments
+    _scope = provider_settings.get('scope', [])
+    _scope.extend(scope)
+    
+    logging.info('authenticate.scope = {}'.format(_scope))
     
     # create consumer
-    consumer = Consumer(consumer_key, consumer_secret, scope)
+    consumer = Consumer(consumer_key, consumer_secret, _scope)
     
     # get phase
     phase = session.setdefault(session_key, {}).setdefault(provider_name, {}).setdefault('phase', 0)

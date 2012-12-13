@@ -1,4 +1,5 @@
 from google.appengine.ext import ndb
+import logging
 
 
 class Providers(ndb.Model):
@@ -26,8 +27,7 @@ class Providers(ndb.Model):
             scope = result_dict.get('scope')
             if scope:
                 result_dict['scope'] = [s.strip() for s in scope.split(',')]
-            else:
-                result_dict['scope'] = None
+            logging.info('Providers.scope = {}'.format(result_dict['scope']))
             return result_dict
         else:
             return default 
