@@ -1,9 +1,11 @@
+from google.appengine.api import urlfetch
+from simpleauth2 import Credentials, User, FetchRequest, query_string_parser, \
+    json_parser, UserInfo, AuthEvent
 from urllib import urlencode
+import logging
 import oauth2 as oauth1
 
-from google.appengine.api import urlfetch
 
-from simpleauth2 import Credentials, User, FetchRequest, query_string_parser, json_parser, UserInfo, AuthEvent
 
 class BaseProvider(object):
     """
@@ -77,6 +79,16 @@ class BaseProvider(object):
         user_info = UserInfo()
         user_info.raw_user_info = raw_user_info
         return user_info
+    
+    def credentials_parser(self, response):
+        credentials = Credentials(response.get('access_token'))
+        
+        credentials.access_token_secret = response.get('access_token_secret')
+        credentials.expires = response.get('expires_in')
+        credentials.provider_type = self.type
+        
+        return credentials
+    
     
     def _save_sessions(self):
         self.session.container.session_store.save_sessions(self.handler.response)
@@ -164,15 +176,11 @@ class OAuth2(BaseProvider):
             # parse response
             response = self.parsers[1](response.content)
             
-            # get access token
-            access_token = response.get('access_token')
-            
             # create user
-            self.user = User(access_token)
+            self.user = User(response.get('access_token'))
             
             # create credentials
-            # OAuth 2.0 requires only access token
-            self.credentials = Credentials(access_token, expires=response.get('expires'), provider_type=self.type)
+            self.credentials = self.credentials_parser(response)
             
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)
@@ -195,6 +203,11 @@ class Facebook(OAuth2):
             'https://graph.facebook.com/me')
     
     parsers = (None, query_string_parser)
+    
+    def credentials_parser(self, response):
+        credentials = super(Facebook, self).credentials_parser(response)
+        credentials.expires = response.get('expires')
+        return credentials
     
 class Google(OAuth2):
     """
@@ -226,6 +239,7 @@ class Google(OAuth2):
         user_info.picture = user_info.raw_user_info.get('picture')
         
         return user_info
+    
     
 class WindowsLive(OAuth2):
     """
@@ -274,6 +288,20 @@ class OAuth1(BaseProvider):
         user_info.id = raw_user_info.get('id')
         
         return user_info
+    
+    
+    def credentials_parser(self, response):
+        
+        credentials = super(OAuth1, self).credentials_parser(response)
+        
+        credentials.access_token = response.get('oauth_token')
+        credentials.access_token_secret = response.get('oauth_token_secret')
+        
+        credentials.consumer_key = self.consumer.key
+        credentials.consumer_secret = self.consumer.secret
+        credentials.provider_type = self.type        
+        
+        return credentials    
     
     def __call__(self):
         if self.phase == 0:
@@ -345,19 +373,9 @@ class OAuth1(BaseProvider):
             # parse response
             response = self.parsers[1](response[1])
             
-            # get access token
-            self.access_token = response.get('oauth_token')
+            self.user = User(response.get('oauth_token'), response.get('oauth_token_secret'))
             
-            # get access token secret
-            self.access_token_secret = response.get('oauth_token_secret')
-            
-            self.user = User(self.access_token, self.access_token_secret)
-            
-            self.credentials = Credentials(access_token=self.access_token,
-                                           access_token_secret=self.access_token_secret,
-                                           consumer_key=self.consumer.key,
-                                           consumer_secret=self.consumer.secret,
-                                           provider_type=self.type)
+            self.credentials = self.credentials_parser(response)
             
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)

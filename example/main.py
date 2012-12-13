@@ -13,20 +13,28 @@ class Login(webapp2.RequestHandler):
     
     def get(self, provider_name):
         
-        simpleauth2.authenticate(provider_name, self.callback, self, session_secret='abcd')
+        simpleauth2.authenticate(provider_name, self.callback, self, session_secret='abcd', providers_config=config.PROVIDERS)
     
     def callback(self, event):
                 
         # fetch user info asynchronously
         event.provider.user_info_request.fetch()
                
-                        
         self.response.write('<br /><br />')
         self.response.write('<a href="/auth/facebook">Facebook</a><br />')
         self.response.write('<a href="/auth/google">Google</a><br />')
         self.response.write('<a href="/auth/windows_live">Windows Live</a><br />')
         self.response.write('<a href="/auth/twitter">Twitter</a><br />')
         
+        self.response.write('<br /><br />')
+        self.response.write('Event:<br /><br />')
+        
+        # credentials
+        for k, v in event.credentials.__dict__.items():
+            self.response.write('{}: {}<br />'.format(k, v))        
+        
+        self.response.write('<br /><br />')
+        self.response.write('User Info:<br /><br />')
         
         # get result of asynchronous call
         user_info = event.provider.user_info_request.fetch().get_result()
