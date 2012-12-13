@@ -177,6 +177,9 @@ class OAuth2(BaseProvider):
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)
             
+            # reset phase
+            self._reset_phase()
+            
             # call callback with event
             self.callback(event)
 
@@ -358,6 +361,9 @@ class OAuth1(BaseProvider):
             
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)
+            
+            # reset phase
+            self._reset_phase()
             
             # call callback
             self.callback(event)
