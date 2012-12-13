@@ -21,7 +21,14 @@ class Providers(ndb.Model):
         """
         result = cls.query(cls.name == key).get()
         if result:
-            return result.to_dict()
+            result_dict = result.to_dict()
+            # convert scope to list
+            scope = result_dict.get('scope')
+            if scope:
+                result_dict['scope'] = [s.strip() for s in scope.split(',')]
+            else:
+                result_dict['scope'] = None
+            return result_dict
         else:
             return default 
         

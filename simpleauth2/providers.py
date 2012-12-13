@@ -84,6 +84,13 @@ class BaseProvider(object):
     def _reset_phase(self):
         self.session.setdefault(self.session_key, {}).setdefault(self.provider_name, {})['phase'] = 0
         self._save_sessions()
+    
+    def _normalize_scope(self, scope):
+        """
+        Convert scope list to csv
+        """
+        
+        return ','.join(scope) if scope else None
 
 
 #===============================================================================
@@ -120,7 +127,7 @@ class OAuth2(BaseProvider):
             params = dict(client_id=self.consumer.key,
                           redirect_uri=self.uri,
                           response_type='code',
-                          scope=self.consumer.scope)
+                          scope=self._normalize_scope(self.consumer.scope))
             
             #  generate CSRF token, save it to storage and add to url parameters
             
@@ -197,6 +204,12 @@ class Google(OAuth2):
             'https://www.googleapis.com/oauth2/v1/userinfo')
     
     parsers = (None, json_parser)
+    
+    def _normalize_scope(self, scope):
+        """
+        Google has space-separated scopes
+        """
+        return ' '.join(scope)
     
     @staticmethod
     def user_info_parser(raw_user_info):
