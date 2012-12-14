@@ -84,12 +84,17 @@ def authenticate(provider_name, callback, handler, providers_config=None, sessio
         # import from fully qualified path or from simpleauth2.providers package
         ProviderClass = webapp2.import_string(ProviderClass, True) or webapp2.import_string(path)
     
-    # instantiate and call provider class
-    ProviderClass(phase, provider_name, consumer, handler, session, session_key, callback)()
-    
-    # save session
-    session_store.save_sessions(handler.response)
-
+    # instantiate and call provider class but catch any exceptions
+    try:
+        ProviderClass(phase, provider_name, consumer, handler, session, session_key, callback)()
+    except Exception as e:
+        # reset session on exception
+        session[session_key] = None
+        # reraise caught exception
+        raise e
+    finally:
+        # save session on any case
+        session_store.save_sessions(handler.response)
 
 
 def json_parser(body):

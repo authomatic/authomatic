@@ -156,7 +156,6 @@ class OAuth2(BaseProvider):
             self.handler.redirect(redirect_url)
             
         if self.phase == 1:
-            
             # retrieve CSRF token from storage
             
             # Compare it with state returned by provider
