@@ -2,12 +2,13 @@ from exceptions import *
 from google.appengine.api import urlfetch
 from urllib import urlencode
 from webapp2_extras import sessions
+import datetime
 import logging
+import models
 import oauth2 as oauth1
 import os
 import urlparse
 import webapp2
-import models
 
 # taken from anyjson.py
 try:
@@ -111,19 +112,22 @@ class Consumer(object):
 
 
 class User(object):
-    def __init__(self, access_token, access_token_secret=None):
+    def __init__(self, access_token, access_token_secret=None, user_id=None):
+        self.user_id = user_id
         self.access_token = access_token
         self.access_token_secret = access_token_secret
 
 
 class Credentials(object):
-    def __init__(self, access_token, access_token_secret=None, consumer_key=None, consumer_secret=None, expires=0, provider_type=None):
+    def __init__(self, access_token, access_token_secret=None, consumer_key=None, consumer_secret=None, expires_in=0, provider_type=None):
         self.access_token = access_token
         self.access_token_secret = access_token_secret
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
-        self.expires = expires
+        self.expires_in = expires_in
         self.provider_type = provider_type
+        
+        self.expiration_date = datetime.datetime.now() + datetime.timedelta(seconds=expires_in)
 
 
 class AuthEvent(object):

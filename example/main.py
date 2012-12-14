@@ -27,7 +27,7 @@ class Login(webapp2.RequestHandler):
         self.response.write('<a href="/auth/twitter">Twitter</a><br />')
         
         self.response.write('<br /><br />')
-        self.response.write('Event:<br /><br />')
+        self.response.write('Credentials:<br /><br />')
         
         # credentials
         for k, v in event.credentials.__dict__.items():

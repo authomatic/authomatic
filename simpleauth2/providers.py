@@ -84,7 +84,7 @@ class BaseProvider(object):
         credentials = Credentials(response.get('access_token'))
         
         credentials.access_token_secret = response.get('access_token_secret')
-        credentials.expires = response.get('expires_in')
+        credentials.expires_in = response.get('expires_in')
         credentials.provider_type = self.type
         
         return credentials
@@ -206,7 +206,9 @@ class Facebook(OAuth2):
     
     def credentials_parser(self, response):
         credentials = super(Facebook, self).credentials_parser(response)
-        credentials.expires = response.get('expires')
+        
+        # Facebook returns "expires" instead of "expires_in"
+        credentials.expires_in = response.get('expires')
         return credentials
     
 class Google(OAuth2):
@@ -373,7 +375,9 @@ class OAuth1(BaseProvider):
             # parse response
             response = self.parsers[1](response[1])
             
-            self.user = User(response.get('oauth_token'), response.get('oauth_token_secret'))
+            logging.info('response = {}'.format(response))
+            
+            self.user = User(response.get('oauth_token'), response.get('oauth_token_secret'), response.get('user_id'))
             
             self.credentials = self.credentials_parser(response)
             
