@@ -79,15 +79,20 @@ class BaseProvider(object):
     
         
     def update_user(self, data):
+        """
+        Updates the properties of the self.user object.
+        
+        Takes into account the self.user_info_mapping property.
+        """
         self.user.raw_user_info = data
         
         # iterate over User properties
-        for k, v in self.user.__dict__.items():
+        for key in self.user.__dict__.keys():
             # exclude raw_user_info
-            if k is not 'raw_user_info':
+            if key is not 'raw_user_info':
                 
                 # check if there is a diferent key in the user_info_mapping
-                data_key = self.user_info_mapping.get(k) or k
+                data_key = self.user_info_mapping.get(key) or key
                 
                 if type(data_key) is str:
                     # get value from data
@@ -95,11 +100,11 @@ class BaseProvider(object):
                 elif callable(data_key):
                     new_value = data_key(data)
                 else:
-                    raise Exception('The values of the user_info_mapping dict must be a string or callable. {} found under "{}" key.'.format(type(data_key), k))                
+                    raise Exception('The values of the user_info_mapping dict must be a string or callable. {} found under "{}" key.'.format(type(data_key), key))                
                 
                 # update user
                 if new_value:
-                    setattr(self.user, k, new_value)
+                    setattr(self.user, key, new_value)
         
         return self.user
     
