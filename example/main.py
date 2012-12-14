@@ -37,11 +37,15 @@ class Login(webapp2.RequestHandler):
         self.response.write('User Info:<br /><br />')
         
         # get result of asynchronous call
-        user_info = event.provider.user_info_request.fetch().get_result()
+        user = event.provider.user_info_request.fetch().get_result()
         
-        for k, v in user_info.__dict__.items():
+        for k, v in user.__dict__.items():
             if k != 'raw_user_info':
                 self.response.write('{}: {}<br />'.format(k, v))
+        
+        self.response.write('<br /><br />')
+        self.response.write('Raw User Info:<br /><br />')
+        self.response.write(user.raw_user_info)
 
 # routes must be named
 ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth'),

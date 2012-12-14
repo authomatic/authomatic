@@ -1,17 +1,16 @@
 from google.appengine.api import urlfetch
 from simpleauth2 import Credentials, User, FetchRequest, query_string_parser, \
-    json_parser, UserInfo, AuthEvent
+    json_parser, AuthEvent
 from urllib import urlencode
 import logging
 import oauth2 as oauth1
-
 
 
 class BaseProvider(object):
     """
     Base class for all providers
     """
-        
+     
     def __init__(self, phase, provider_name, consumer, handler, session, session_key, callback):
         self.phase = phase
         self.provider_name = provider_name
@@ -20,10 +19,8 @@ class BaseProvider(object):
         self.session = session
         self.session_key = session_key
         self.callback = callback
-        
-        self.user = None
-        
-        
+        self.user = User()        
+                
         self._user_info_request = None
                 
         self.type = self.__class__.__bases__[0].__name__
@@ -40,6 +37,12 @@ class BaseProvider(object):
     
     # tuple of callables which parse responses returned by providers ordered by their usage
     parsers = (lambda content: content, )
+    
+    # Override this property to fix different naming conventions for user info values returned by providers.
+    # keys are the names of the User class properties
+    # values are either strings specifiing which key of the data dictionary should be used,
+    # or callables expecting the data dictionary as argument and returning the desired value
+    user_info_mapping = {}
     
     #===========================================================================
     # Methods to be overriden by subclasses
@@ -69,16 +72,36 @@ class BaseProvider(object):
     def user_info_request(self):
         if not self._user_info_request:
             def parser(result):
-                return self.user_info_parser(result.data)
-            parser = lambda result: self.user_info_parser(result.data)
+                return self.update_user(result.data)
+            parser = lambda result: self.update_user(result.data)
             self._user_info_request = self.create_request(self.urls[-1], parser=parser)
         return self._user_info_request
     
-    @staticmethod
-    def user_info_parser(raw_user_info):
-        user_info = UserInfo()
-        user_info.raw_user_info = raw_user_info
-        return user_info
+        
+    def update_user(self, data):
+        self.user.raw_user_info = data
+        
+        # iterate over User properties
+        for k, v in self.user.__dict__.items():
+            # exclude raw_user_info
+            if k is not 'raw_user_info':
+                
+                # check if there is a diferent key in the user_info_mapping
+                data_key = self.user_info_mapping.get(k) or k
+                
+                if type(data_key) is str:
+                    # get value from data
+                    new_value = data.get(data_key)
+                elif callable(data_key):
+                    new_value = data_key(data)
+                else:
+                    raise Exception('The values of the user_info_mapping dict must be a string or callable. {} found under "{}" key.'.format(type(data_key), k))                
+                
+                # update user
+                if new_value:
+                    setattr(self.user, k, new_value)
+        
+        return self.user
     
     def credentials_parser(self, response):
         credentials = Credentials(response.get('access_token'))
@@ -113,23 +136,6 @@ class OAuth2(BaseProvider):
     """
     Base class for OAuth2 services
     """
-    
-    @staticmethod
-    def user_info_parser(raw_user_info):
-        user_info = BaseProvider.user_info_parser(raw_user_info)
-        
-        user_info.id = raw_user_info.get('id')
-        user_info.username = user_info.raw_user_info.get('username')
-        user_info.locale = raw_user_info.get('locale')
-        user_info.gender = raw_user_info.get('gender')
-        user_info.link = raw_user_info.get('link')
-        user_info.name = user_info.raw_user_info.get('name')
-        user_info.first_name = user_info.raw_user_info.get('first_name')
-        user_info.last_name = user_info.raw_user_info.get('last_name')
-        user_info.timezone = user_info.raw_user_info.get('timezone')
-        user_info.email = user_info.raw_user_info.get('email')
-        
-        return user_info
     
     def __call__(self):
         
@@ -177,7 +183,7 @@ class OAuth2(BaseProvider):
             response = self.parsers[1](response.content)
             
             # create user
-            self.user = User(response.get('access_token'))
+            self.update_user(response)
             
             # create credentials
             self.credentials = self.credentials_parser(response)
@@ -204,6 +210,9 @@ class Facebook(OAuth2):
     
     parsers = (None, query_string_parser)
     
+    user_info_mapping = dict(user_id='id',
+                            picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
+    
     def credentials_parser(self, response):
         credentials = super(Facebook, self).credentials_parser(response)
         
@@ -223,24 +232,16 @@ class Google(OAuth2):
     
     parsers = (None, json_parser)
     
+    user_info_mapping = dict(name='name',
+                            first_name='given_name',
+                            last_name='family_name',
+                            user_id='id')
+    
     def _normalize_scope(self, scope):
         """
         Google has space-separated scopes
         """
         return ' '.join(scope)
-    
-    @staticmethod
-    def user_info_parser(raw_user_info):
-        user_info = BaseProvider.user_info_parser(raw_user_info)
-        
-        user_info.name = user_info.raw_user_info.get('name')
-        user_info.first_name = user_info.raw_user_info.get('given_name')
-        user_info.last_name = user_info.raw_user_info.get('family_name')
-        user_info.timezone = user_info.raw_user_info.get('timezone')
-        user_info.email = user_info.raw_user_info.get('email')
-        user_info.picture = user_info.raw_user_info.get('picture')
-        
-        return user_info
     
     
 class WindowsLive(OAuth2):
@@ -255,14 +256,8 @@ class WindowsLive(OAuth2):
     
     parsers = (None, json_parser)
     
-    @staticmethod
-    def user_info_parser(raw_user_info):
-        user_info = BaseProvider.user_info_parser(raw_user_info)
-        
-        user_info.username = user_info.raw_user_info.get('emails').get('account')
-        user_info.username = user_info.raw_user_info.get('emails').get('preferred')
-        
-        return user_info
+    user_info_mapping=dict(user_id='id',
+                           email=(lambda data: data.get('emails', {}).get('preferred')))
 
 
 #===============================================================================
@@ -276,21 +271,6 @@ class OAuth1(BaseProvider):
         # create keys under which oauth token and secret will be stored in session
         self._oauth_token_key = self.provider_name + '_oauth_token'
         self._oauth_token_secret_key = self.provider_name + '_oauth_token_secret'
-    
-    @staticmethod
-    def user_info_parser(raw_user_info):
-        user_info = BaseProvider.user_info_parser(raw_user_info)
-        
-        user_info.raw_user_info = raw_user_info
-        user_info.username = raw_user_info.get('screen_name')
-        user_info.picture = raw_user_info.get('profile_image_url')
-        user_info.name = raw_user_info.get('name')
-        user_info.locale = raw_user_info.get('lang')
-        user_info.link = raw_user_info.get('url')
-        user_info.id = raw_user_info.get('id')
-        
-        return user_info
-    
     
     def credentials_parser(self, response):
         
@@ -397,4 +377,10 @@ class Twitter(OAuth1):
             'https://api.twitter.com/1/account/verify_credentials.json')
     
     parsers = (query_string_parser, query_string_parser)
+    
+    user_info_mapping = dict(user_id='id',
+                            username='screen_name',
+                            picture='profile_image_url',
+                            locale='lang',
+                            link='url')
     

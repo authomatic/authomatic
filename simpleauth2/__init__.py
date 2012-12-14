@@ -112,10 +112,21 @@ class Consumer(object):
 
 
 class User(object):
-    def __init__(self, access_token, access_token_secret=None, user_id=None):
-        self.user_id = user_id
-        self.access_token = access_token
-        self.access_token_secret = access_token_secret
+    def __init__(self, *args, **kwargs):
+        self.raw_user_info = kwargs.get('raw_user_info')
+        self.access_token = kwargs.get('access_token')
+        self.access_token_secret = kwargs.get('access_token_secret')
+        self.user_id = kwargs.get('user_id')
+        self.username = kwargs.get('username')
+        self.name = kwargs.get('name')
+        self.first_name = kwargs.get('first_name')
+        self.last_name = kwargs.get('last_name')
+        self.link = kwargs.get('link')
+        self.gender = kwargs.get('gender')
+        self.timezone = kwargs.get('timezone')
+        self.locale = kwargs.get('locale')
+        self.email = kwargs.get('email')
+        self.picture = kwargs.get('picture')
 
 
 class Credentials(object):
@@ -137,21 +148,6 @@ class AuthEvent(object):
         self.user = user
         self.credentials = credentials
 
-
-class UserInfo(object):
-    def __init__(self, *args, **kwargs):
-        self.raw_user_info = kwargs.get('raw_user_info')
-        self.ID = kwargs.get('id')
-        self.username = kwargs.get('username')
-        self.name = kwargs.get('name')
-        self.first_name = kwargs.get('first_name')
-        self.last_name = kwargs.get('last_name')
-        self.link = kwargs.get('link')
-        self.gender = kwargs.get('gender')
-        self.timezone = kwargs.get('timezone')
-        self.locale = kwargs.get('locale')
-        self.email = kwargs.get('email')
-        self.picture = kwargs.get('picture')
 
 
 class FetchResult(object):
