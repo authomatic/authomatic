@@ -27,13 +27,14 @@ class BaseProvider(object):
         
         # recreate full current URI
         self.uri = handler.uri_for(handler.request.route.name, *handler.request.route_args, _full=True)
-        
+    
+    
     #=======================================================================
     # Static properties to be overriden by subclasses
     #=======================================================================
     
     # tuple of URLs ordered by their usage
-    urls = (None, None)
+    urls = (None, )
     
     # tuple of callables which parse responses returned by providers ordered by their usage
     parsers = (lambda content: content, )
@@ -44,15 +45,22 @@ class BaseProvider(object):
     # or callables expecting the data dictionary as argument and returning the desired value
     user_info_mapping = {}
     
+    
     #===========================================================================
     # Methods to be overriden by subclasses
+    #===========================================================================
+        
+    def __call__(self):
+        pass
+    
+    
+    #===========================================================================
+    # Exposed methods
     #===========================================================================
     
     def fetch(self, url, parser=None):
         return self.create_request(url, parser=parser).fetch().get_result()
     
-    def __call__(self):
-        pass
     
     def create_request(self, url, method='GET', parser=None):
         
@@ -61,24 +69,29 @@ class BaseProvider(object):
                                   method=method,
                                   parser=parser)
         
+    
     def fetch_user_info(self):
         return self.user_info_request.fetch().get_result()
     
+    
     @property
-    def user_info_request(self):
-        pass
+    def user_info_request(self): pass
     
     @user_info_request.getter
     def user_info_request(self):
         if not self._user_info_request:
             def parser(result):
-                return self.update_user(result.data)
-            parser = lambda result: self.update_user(result.data)
+                return self._update_user(result.data)
+            parser = lambda result: self._update_user(result.data)
             self._user_info_request = self.create_request(self.urls[-1], parser=parser)
         return self._user_info_request
     
-        
-    def update_user(self, data):
+    
+    #===========================================================================
+    # Internal methods
+    #===========================================================================
+    
+    def _update_user(self, data):
         """
         Updates the properties of the self.user object.
         
@@ -108,7 +121,8 @@ class BaseProvider(object):
         
         return self.user
     
-    def credentials_parser(self, response):
+    
+    def _credentials_parser(self, response):
         credentials = Credentials(response.get('access_token'))
         
         credentials.access_token_secret = response.get('access_token_secret')
@@ -121,9 +135,11 @@ class BaseProvider(object):
     def _save_sessions(self):
         self.session.container.session_store.save_sessions(self.handler.response)
     
+    
     def _reset_phase(self):
         self.session.setdefault(self.session_key, {}).setdefault(self.provider_name, {})['phase'] = 0
         self._save_sessions()
+    
     
     def _normalize_scope(self, scope):
         """
@@ -187,10 +203,10 @@ class OAuth2(BaseProvider):
             response = self.parsers[1](response.content)
             
             # create user
-            self.update_user(response)
+            self._update_user(response)
             
             # create credentials
-            self.credentials = self.credentials_parser(response)
+            self.credentials = self._credentials_parser(response)
             
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)
@@ -217,8 +233,8 @@ class Facebook(OAuth2):
     user_info_mapping = dict(user_id='id',
                             picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
     
-    def credentials_parser(self, response):
-        credentials = super(Facebook, self).credentials_parser(response)
+    def _credentials_parser(self, response):
+        credentials = super(Facebook, self)._credentials_parser(response)
         
         # Facebook returns "expires" instead of "expires_in"
         credentials.expires_in = response.get('expires')
@@ -276,9 +292,9 @@ class OAuth1(BaseProvider):
         self._oauth_token_key = self.provider_name + '_oauth_token'
         self._oauth_token_secret_key = self.provider_name + '_oauth_token_secret'
     
-    def credentials_parser(self, response):
+    def _credentials_parser(self, response):
         
-        credentials = super(OAuth1, self).credentials_parser(response)
+        credentials = super(OAuth1, self)._credentials_parser(response)
         
         credentials.access_token = response.get('oauth_token')
         credentials.access_token_secret = response.get('oauth_token_secret')
@@ -363,7 +379,7 @@ class OAuth1(BaseProvider):
             
             self.user = User(response.get('oauth_token'), response.get('oauth_token_secret'), response.get('user_id'))
             
-            self.credentials = self.credentials_parser(response)
+            self.credentials = self._credentials_parser(response)
             
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)
