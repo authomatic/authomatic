@@ -140,10 +140,30 @@ class Credentials(object):
         self.access_token_secret = access_token_secret
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
-        self.expires_in = expires_in
         self.provider_type = provider_type
-        
+        self._expires_in = expires_in
+        self._set_expiration_date(expires_in)
+    
+    
+    def _set_expiration_date(self, expires_in):
         self.expiration_date = datetime.datetime.now() + datetime.timedelta(seconds=expires_in)
+    
+    
+    @property
+    def expires_in(self): pass
+    
+    
+    @expires_in.getter
+    def expires_in(self): 
+        return self._expires_in
+    
+    
+    @expires_in.setter
+    def expires_in(self, value):
+        # update expiration_date 
+        self._set_expiration_date(value)
+        
+        self._expires_in = value
 
 
 class AuthEvent(object):

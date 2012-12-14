@@ -234,12 +234,16 @@ class Facebook(OAuth2):
                             picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
     
     def _credentials_parser(self, response):
+        """
+        We need to override this method to fix Facebooks naming deviation
+        """
         credentials = super(Facebook, self)._credentials_parser(response)
         
         # Facebook returns "expires" instead of "expires_in"
         credentials.expires_in = response.get('expires')
         return credentials
-    
+
+
 class Google(OAuth2):
     """
     Google Oauth 2.0 service
