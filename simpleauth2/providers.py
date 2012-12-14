@@ -137,6 +137,7 @@ class BaseProvider(object):
     
     
     def _reset_phase(self):
+        #TODO: Check if it would not be better to reset whole session
         self.session.setdefault(self.session_key, {}).setdefault(self.provider_name, {})['phase'] = 0
         self._save_sessions()
     
