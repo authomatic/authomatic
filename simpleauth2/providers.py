@@ -61,10 +61,11 @@ class BaseProvider(object):
     
     
     def create_request(self, url, method='GET', parser=None):        
-        return Request(url=url,
-                                  credentials=self.credentials,
-                                  method=method,
-                                  parser=parser)
+        return Request(adapter=self.adapter,
+                       url=url,
+                       credentials=self.credentials,
+                       method=method,
+                       parser=parser)
         
     
     def fetch_user_info(self):
@@ -314,7 +315,7 @@ class OAuth1(BaseProvider):
             # fetch the client
             #response = client.request(self.urls[0], "GET")
             
-            response = self.adapter.oauth1_fetch('GET', self.urls[0], self.consumer.key, self.consumer.secret)
+            response = self.adapter.fetch_oauth1('GET', self.urls[0], self.consumer.key, self.consumer.secret)
             
             # check if response status is OK
             if response[0].get('status') != '200':
@@ -366,7 +367,7 @@ class OAuth1(BaseProvider):
                 self.adapter.reset_phase(self.provider_name)
                 raise Exception('No OAuth verifier was returned by the {} provider!'.format(self.provider_name))
             
-            response = self.adapter.oauth1_fetch('POST', self.urls[2], self.consumer.key, self.consumer.secret, oauth_token, oauth_token_secret)
+            response = self.adapter.fetch_oauth1('POST', self.urls[2], self.consumer.key, self.consumer.secret, oauth_token, oauth_token_secret)
             
             # parse response
             parser = self._get_parser_by_index(1)

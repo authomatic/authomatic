@@ -1,54 +1,19 @@
 from exceptions import *
-from google.appengine.api import urlfetch
 from urllib import urlencode
-from webapp2_extras import sessions
 import datetime
-import logging
-import models
-import oauth2 as oauth1
-import os
-import urlparse
-import webapp2
-
-# taken from anyjson.py
-try:
-    import simplejson as json
-except ImportError: # pragma: no cover
-    try:
-        # Try to import from django, should work on App Engine
-        from django.utils import simplejson as json
-    except ImportError:
-        # Should work for Python2.6 and higher.
-        import json
 
 
-def login(provider_name, callback, handler, providers_config=None, session_secret=None, session=None, session_key='simpleauth2', scope=[], adapter=None):
+def login(adapter, provider_name, callback, scope=[]):
     
     providers_config = adapter.get_providers_config()
-    
-    # create session
-    if not (session or session_secret):
-        raise Exception('Either session or session_secret must be specified')
-    
-    if not session:
-        # create default session
-        session_store = sessions.SessionStore(handler.request, dict(secret_key=session_secret))
-        session = session_store.get_session('simpleauth2', max_age=60)
-    
-    # session structure:
-    #
-    # {'facebook': {'phase': 0},
-    #  'twitter': {'phase': 1,
-    #              'oauth_token': None,
-    #              'oauth_token_secret': None}}
-        
+            
     # retrieve required settings for current provider and raise exceptions if missing
     provider_settings = providers_config.get(provider_name)
     if not provider_settings:
         raise ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
-    ProviderClass = provider_settings.get('class_name')
-    if not ProviderClass:
+    provider_class = provider_settings.get('class_name')
+    if not provider_class:
         raise ConfigError('Class name not specified for provider {}!'.format(provider_name))
     
     consumer_key = provider_settings.get('consumer_key')
@@ -59,14 +24,11 @@ def login(provider_name, callback, handler, providers_config=None, session_secre
     if not consumer_secret:
         raise ConfigError('Consumer secret not specified for provider {}!'.format(provider_name))
     
-    # extend scope list with scope from arguments
-    _scope = provider_settings.get('scope', [])
-    _scope.extend(scope)
-    
-    logging.info('authenticate.scope = {}'.format(_scope))
+    # merge scopes from config and argument
+    scope.extend(provider_settings.get('scope', []))
     
     # create consumer
-    consumer = Consumer(consumer_key, consumer_secret, _scope)
+    consumer = Consumer(consumer_key, consumer_secret, scope)
     
     # get phase
     phase = adapter.get_phase(provider_name)
@@ -74,16 +36,12 @@ def login(provider_name, callback, handler, providers_config=None, session_secre
     # store increased phase
     adapter.set_phase(provider_name, phase + 1)
     
-    #TODO: Move this to a separate function
-    # resolve provider class passed as string
-    if type(ProviderClass) in (str, unicode):
-        # prepare path for simpleauth2.providers package
-        path = '.'.join([__package__, 'providers', ProviderClass])
-        # import from fully qualified path or from simpleauth2.providers package
-        ProviderClass = webapp2.import_string(ProviderClass, True) or webapp2.import_string(path)
+        
+    ProviderClass = adapter.resolve_class(provider_class)
     
     # instantiate and call provider class
     ProviderClass(adapter, phase, provider_name, consumer, callback).login()
+
 
 
 class Consumer(object):
@@ -154,51 +112,24 @@ class AuthEvent(object):
         self.user = user
         self.credentials = credentials
 
+
 class Response(object):
     """
     Provides unified interface to results of different http request types
-    
-    The interface resembles the google.appengine.api.urlfetch.fetch()
     """
-    def __init__(self, response):
+    
+    def __init__(self, **kwargs):
         
-        if type(response) == urlfetch._URLFetchResult:
-            # if request returned by google.appengine.api.urlfetch.fetch()
-            self.content = response.content
-            self.status_code = int(response.status_code)
-            self.headers = response.headers
-            self.final_url = response.final_url
-            
-        elif type(response) == tuple:
-            # if request returned by oauth2.Client.request()
-            self.headers = response[0]
-            self.content = response[1]
-            self.status_code = int(self.headers['status'])
-            self.final_url = None
-        
-        self.data = json.loads(self.content)
-
-
-def create_oauth1_url(base, access_token, access_token_secret, consumer_id, secret):
-    token = oauth1.Token(access_token, access_token_secret)
-    consumer = oauth1.Consumer(consumer_id, secret)
-    client = oauth1.Client(consumer, token)
-    
-    request = oauth1.Request.from_consumer_and_token(consumer, token)
-    request.url = base
-    request.sign_request(client.method, consumer, token)
-    
-    params = urlencode(request)
-    
-    return base + '?' + params
-
-
-def create_oauth2_url(base, access_token):
-    return base + '?' + urlencode(dict(access_token=access_token))
+        self.content = kwargs.get('content')
+        self.status_code = kwargs.get('status_code')
+        self.headers = kwargs.get('headers')
+        self.final_url = kwargs.get('final_url')
+        self.data = kwargs.get('data')
 
 
 class Request(object):
-    def __init__(self, url, credentials, method='GET', parser=None):
+    def __init__(self, adapter, url, credentials, method='GET', parser=None):
+        self.adapter = adapter
         self.url = url
         self.credentials = credentials
         self.method = method
@@ -207,20 +138,20 @@ class Request(object):
         self.rpc = None
         
         if self.credentials.provider_type == 'OAuth2':
-            self.url = create_oauth2_url(url, self.credentials.access_token)
+            self.url = self.adapter.create_oauth2_url(url, self.credentials.access_token)
         elif self.credentials.provider_type == 'OAuth1':
-            self.url = create_oauth1_url(url,
+            self.url = self.adapter.create_oauth1_url(url,
                                          self.credentials.access_token,
                                          self.credentials.access_token_secret,
                                          self.credentials.consumer_key,
                                          self.credentials.consumer_secret)
     
     def fetch(self):
-        self.rpc = urlfetch.create_rpc()
-        urlfetch.make_fetch_call(self.rpc, self.url, method=self.method)
+        self.rpc = self.adapter.fetch_async(self.url, self.method)        
         return self
     
     def get_result(self):
-        result = Response(self.rpc.get_result())
+        result_dict = self.adapter.normalize_response(self.rpc.get_result())
+        result = Response(**result_dict)
         return self.parser(result) if self.parser else result
 
