@@ -172,7 +172,7 @@ class AuthEvent(object):
 
 
 
-class FetchResult(object):
+class Response(object):
     """
     Provides unified interface to results of different http request types
     
@@ -215,7 +215,7 @@ def create_oauth2_url(base, access_token):
     return base + '?' + urlencode(dict(access_token=access_token))
 
 
-class FetchRequest(object):
+class Request(object):
     def __init__(self, url, credentials, method='GET', parser=None):
         self.url = url
         self.credentials = credentials
@@ -239,6 +239,6 @@ class FetchRequest(object):
         return self
     
     def get_result(self):
-        result = FetchResult(self.rpc.get_result())
+        result = Response(self.rpc.get_result())
         return self.parser(result) if self.parser else result
 

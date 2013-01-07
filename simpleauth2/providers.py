@@ -1,5 +1,5 @@
 from google.appengine.api import urlfetch
-from simpleauth2 import Credentials, User, FetchRequest, query_string_parser, \
+from simpleauth2 import Credentials, User, Request, query_string_parser, \
     json_parser, AuthEvent
 from urllib import urlencode
 import logging
@@ -64,7 +64,7 @@ class BaseProvider(object):
     
     def create_request(self, url, method='GET', parser=None):
         
-        return FetchRequest(url=url,
+        return Request(url=url,
                                   credentials=self.credentials,
                                   method=method,
                                   parser=parser)
