@@ -22,7 +22,7 @@ except ImportError: # pragma: no cover
         import json
 
 
-def authenticate(provider_name, callback, handler, providers_config=None, session_secret=None, session=None, session_key='simpleauth2', scope=[]):
+def login(provider_name, callback, handler, providers_config=None, session_secret=None, session=None, session_key='simpleauth2', scope=[]):
     
     # use Providers model if no providers config specified
     if not providers_config:

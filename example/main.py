@@ -13,7 +13,7 @@ class Login(webapp2.RequestHandler):
     
     def get(self, provider_name):
         
-        simpleauth2.authenticate(provider_name, self.callback, self, session_secret='abcd', providers_config=config.PROVIDERS)
+        simpleauth2.login(provider_name, self.callback, self, session_secret='abcd', providers_config=config.PROVIDERS)
     
     def callback(self, event):
                 
