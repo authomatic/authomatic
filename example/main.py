@@ -2,7 +2,7 @@ import config
 import logging
 import simpleauth2
 import webapp2
-
+from simpleauth2.adapters.gae_webapp2 import GAEWebapp2Adapter
 
 class Home(webapp2.RequestHandler):
     def get(self):
@@ -13,7 +13,11 @@ class Login(webapp2.RequestHandler):
     
     def get(self, provider_name):
         
-        simpleauth2.login(provider_name, self.callback, self, session_secret='abcd', providers_config=config.PROVIDERS)
+        adapter = GAEWebapp2Adapter(handler=self,
+                                    providers_config=config.PROVIDERS,
+                                    session_secret='abcd')
+        
+        simpleauth2.login(provider_name, self.callback, self, session_secret='abcd', providers_config=config.PROVIDERS, adapter=adapter)
     
     def callback(self, event):
                 

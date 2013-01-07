@@ -22,13 +22,9 @@ except ImportError: # pragma: no cover
         import json
 
 
-def login(provider_name, callback, handler, providers_config=None, session_secret=None, session=None, session_key='simpleauth2', scope=[]):
+def login(provider_name, callback, handler, providers_config=None, session_secret=None, session=None, session_key='simpleauth2', scope=[], adapter=None):
     
-    # use Providers model if no providers config specified
-    if not providers_config:
-        #models.initialize_providers_model()
-        providers_config = models.Providers
-        providers_config.initialize()
+    providers_config = adapter.get_providers_config()
     
     # create session
     if not (session or session_secret):
@@ -73,10 +69,12 @@ def login(provider_name, callback, handler, providers_config=None, session_secre
     consumer = Consumer(consumer_key, consumer_secret, _scope)
     
     # get phase
-    phase = session.setdefault(session_key, {}).setdefault(provider_name, {}).setdefault('phase', 0)
-    # increase phase in session
-    session[session_key][provider_name]['phase'] = phase + 1    
+    phase = adapter.get_phase(provider_name)
     
+    # store increased phase
+    adapter.set_phase(provider_name, phase + 1)
+    
+    #TODO: Move this to a separate function
     # resolve provider class passed as string
     if type(ProviderClass) in (str, unicode):
         # prepare path for simpleauth2.providers package
@@ -86,9 +84,6 @@ def login(provider_name, callback, handler, providers_config=None, session_secre
     
     # instantiate and call provider class
     ProviderClass(phase, provider_name, consumer, handler, session, session_key, callback)()
-    
-    # save session on any case
-    session_store.save_sessions(handler.response)
 
 
 def json_parser(body):
@@ -169,8 +164,6 @@ class AuthEvent(object):
         self.consumer = consumer
         self.user = user
         self.credentials = credentials
-
-
 
 class Response(object):
     """
