@@ -1,24 +1,22 @@
-from google.appengine.api import urlfetch
-from simpleauth2 import Credentials, User, Request, query_string_parser, \
-    json_parser, AuthEvent
+from simpleauth2 import Credentials, User, Request, AuthEvent
 from urllib import urlencode
-import logging
-import oauth2 as oauth1
 
+QUERY_STRING_PARSER = 'query_string_parser'
+JSON_PARSER = 'json_parser'
 
 class BaseProvider(object):
     """
     Base class for all providers
     """
      
-    def __init__(self, phase, provider_name, consumer, handler, session, session_key, callback):
+    def __init__(self, adapter, phase, provider_name, consumer, callback):
         self.phase = phase
         self.provider_name = provider_name
         self.consumer = consumer
-        self.handler = handler
-        self.session = session
-        self.session_key = session_key
         self.callback = callback
+        self.adapter = adapter
+        
+        #TODO: Create user only when there is data
         self.user = User()        
                 
         self._user_info_request = None
@@ -26,7 +24,7 @@ class BaseProvider(object):
         self.type = self.__class__.__bases__[0].__name__
         
         # recreate full current URI
-        self.uri = handler.uri_for(handler.request.route.name, *handler.request.route_args, _full=True)
+        self.uri = self.adapter.get_current_url()
     
     
     #=======================================================================
@@ -50,7 +48,7 @@ class BaseProvider(object):
     # Methods to be overriden by subclasses
     #===========================================================================
         
-    def __call__(self):
+    def login(self):
         pass
     
     
@@ -62,8 +60,7 @@ class BaseProvider(object):
         return self.create_request(url, parser=parser).fetch().get_result()
     
     
-    def create_request(self, url, method='GET', parser=None):
-        
+    def create_request(self, url, method='GET', parser=None):        
         return Request(url=url,
                                   credentials=self.credentials,
                                   method=method,
@@ -132,10 +129,6 @@ class BaseProvider(object):
         return credentials
     
     
-    def _save_sessions(self):
-        self.session.container.session_store.save_sessions(self.handler.response)
-    
-    
     def _reset_phase(self):
         #TODO: Check if it would not be better to reset whole session
         self.session.setdefault(self.session_key, {}).setdefault(self.provider_name, {})['phase'] = 0
@@ -148,6 +141,10 @@ class BaseProvider(object):
         """
         
         return ','.join(scope) if scope else None
+        
+    
+    def _get_parser_by_index(self, index):
+        return getattr(self.adapter, self.parsers[index])
 
 
 #===============================================================================
@@ -159,7 +156,7 @@ class OAuth2(BaseProvider):
     Base class for OAuth2 services
     """
     
-    def __call__(self):
+    def login(self):
         
         if self.phase == 0:
             
@@ -175,7 +172,7 @@ class OAuth2(BaseProvider):
             # redirect to to provider to get access token
             redirect_url = self.urls[0] + '?' + urlencode(params)
             
-            self.handler.redirect(redirect_url)
+            self.adapter.redirect(redirect_url)
             
         if self.phase == 1:
             # retrieve CSRF token from storage
@@ -183,9 +180,9 @@ class OAuth2(BaseProvider):
             # Compare it with state returned by provider
             
             # check access token
-            self.consumer.access_token = self.handler.request.get('code')
+            self.consumer.access_token = self.adapter.get_request_param('code')
             if not self.consumer.access_token:
-                self._reset_phase()
+                self.adapter.reset_phase(self.provider_name)
                 raise Exception('Failed to get access token from provider {}!'.format(self.provider_name))
             
             # exchange authorisation code for access token by the provider
@@ -195,13 +192,11 @@ class OAuth2(BaseProvider):
                           redirect_uri=self.uri,
                           grant_type='authorization_code')
             
-            response = urlfetch.fetch(self.urls[1],
-                                      payload=urlencode(params),
-                                      method=urlfetch.POST,
-                                      headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            response = self.adapter.fetch('POST', self.urls[1], urlencode(params), headers={'Content-Type': 'application/x-www-form-urlencoded'})
             
             # parse response
-            response = self.parsers[1](response.content)
+            parser = self._get_parser_by_index(1)
+            response = parser(response.content)
             
             # create user
             self._update_user(response)
@@ -213,7 +208,7 @@ class OAuth2(BaseProvider):
             event = AuthEvent(self, self.consumer, self.user, self.credentials)
             
             # reset phase
-            self._reset_phase()
+            self.adapter.reset_phase(self.provider_name)
             
             # call callback with event
             self.callback(event)
@@ -229,7 +224,7 @@ class Facebook(OAuth2):
             'https://graph.facebook.com/oauth/access_token',
             'https://graph.facebook.com/me')
     
-    parsers = (None, query_string_parser)
+    parsers = (None, QUERY_STRING_PARSER)
     
     user_info_mapping = dict(user_id='id',
                             picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
@@ -255,7 +250,7 @@ class Google(OAuth2):
             'https://accounts.google.com/o/oauth2/token',
             'https://www.googleapis.com/oauth2/v1/userinfo')
     
-    parsers = (None, json_parser)
+    parsers = (None, JSON_PARSER)
     
     user_info_mapping = dict(name='name',
                             first_name='given_name',
@@ -279,7 +274,7 @@ class WindowsLive(OAuth2):
             'https://oauth.live.com/token',
             'https://apis.live.net/v5.0/me')
     
-    parsers = (None, json_parser)
+    parsers = (None, JSON_PARSER)
     
     user_info_mapping=dict(user_id='id',
                            email=(lambda data: data.get('emails', {}).get('preferred')))
@@ -310,77 +305,72 @@ class OAuth1(BaseProvider):
         
         return credentials    
     
-    def __call__(self):
+    def login(self):
         if self.phase == 0:
             
             # create OAuth 1.0 client
-            client = oauth1.Client(oauth1.Consumer(self.consumer.key, self.consumer.secret))
+            #client = oauth1.Client(oauth1.Consumer(self.consumer.key, self.consumer.secret))            
             
             # fetch the client
-            response = client.request(self.urls[0], "GET")
+            #response = client.request(self.urls[0], "GET")
+            
+            response = self.adapter.oauth1_fetch('GET', self.urls[0], self.consumer.key, self.consumer.secret)
             
             # check if response status is OK
             if response[0].get('status') != '200':
                 self._reset_phase()
                 raise Exception('Could not fetch a valid response from provider {}!'.format(self.provider_name))
             
-            # extract OAuth token and save it to session
-            oauth_token = self.parsers[0](response[1]).get('oauth_token')
+            parser = self._get_parser_by_index(0)            
+            
+            # extract OAuth token and save it to storage
+            oauth_token = parser(response[1]).get('oauth_token')
             if not oauth_token:
                 self._reset_phase()
                 raise Exception('Could not get a valid OAuth token from provider {}!'.format(self.provider_name))
-            #self.session[session_key][self._oauth_token_key] = oauth_token
-            self.session[self.session_key][self.provider_name]['oauth_token'] = oauth_token
             
-            # extract OAuth token secret and save it to session
-            oauth_token_secret = self.parsers[0](response[1]).get('oauth_token_secret')
+            self.adapter.store_provider_data(self.provider_name, 'oauth_token', oauth_token)
+            
+            # extract OAuth token secret and save it to storage
+            oauth_token_secret = parser(response[1]).get('oauth_token_secret')
             if not oauth_token_secret:
                 self._reset_phase()
                 raise Exception('Could not get a valid OAuth token secret from provider {}!'.format(self.provider_name))
-            #self.session[session_key][self._oauth_token_secret_key] = oauth_token_secret
-            self.session[self.session_key][self.provider_name]['oauth_token_secret'] = oauth_token_secret
             
-            # save sessions
-            self._save_sessions()
-            
+            self.adapter.store_provider_data(self.provider_name, 'oauth_token_secret', oauth_token_secret)
+                        
             # redirect to request access token from provider
             params = urlencode(dict(oauth_token=oauth_token,
                                     oauth_callback=self.uri))
-            self.handler.redirect(self.urls[1] + '?' + params)
+            
+            self.adapter.redirect(self.urls[1] + '?' + params)
         
         if self.phase == 1:
             
             # retrieve the OAuth token from session
             try:
-                oauth_token = self.session[self.session_key][self.provider_name]['oauth_token']
+                oauth_token = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token')
             except KeyError:
                 self._reset_phase()
-                raise Exception('OAuth token could not be retrieved from session!')
+                raise Exception('OAuth token could not be retrieved from storage!')
             
             try:
-                oauth_token_secret = self.session[self.session_key][self.provider_name]['oauth_token_secret']
+                oauth_token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token_secret')
             except KeyError:
                 self._reset_phase()
-                raise Exception('OAuth token secret could not be retrieved from session!')
+                raise Exception('OAuth token secret could not be retrieved from storage!')
             
             # extract the verifier
-            verifier = self.handler.request.get('oauth_verifier')
+            verifier = self.adapter.get_request_param('oauth_verifier')
             if not verifier:
-                self._reset_phase()
+                self.adapter.reset_phase(self.provider_name)
                 raise Exception('No OAuth verifier was returned by the {} provider!'.format(self.provider_name))
             
-            # create OAuth 1.0 client
-            token = oauth1.Token(oauth_token, oauth_token_secret)
-            token.set_verifier(verifier)
-            client = oauth1.Client(oauth1.Consumer(self.consumer.key, self.consumer.secret), token)
-            
-            # fetch response
-            response = client.request(self.urls[2], "POST")
+            response = self.adapter.oauth1_fetch('POST', self.urls[2], self.consumer.key, self.consumer.secret, oauth_token, oauth_token_secret)
             
             # parse response
-            response = self.parsers[1](response[1])
-            
-            logging.info('response = {}'.format(response))
+            parser = self._get_parser_by_index(1)
+            response = parser(response[1])
             
             self.user = User(response.get('oauth_token'), response.get('oauth_token_secret'), response.get('user_id'))
             
@@ -390,7 +380,7 @@ class OAuth1(BaseProvider):
             event = AuthEvent(self, self.consumer, self.user, self.credentials)
             
             # reset phase
-            self._reset_phase()
+            self.adapter.reset_phase(self.provider_name)
             
             # call callback
             self.callback(event)
@@ -401,7 +391,7 @@ class Twitter(OAuth1):
             'https://api.twitter.com/oauth/access_token',
             'https://api.twitter.com/1/account/verify_credentials.json')
     
-    parsers = (query_string_parser, query_string_parser)
+    parsers = (QUERY_STRING_PARSER, QUERY_STRING_PARSER)
     
     user_info_mapping = dict(user_id='id',
                             username='screen_name',

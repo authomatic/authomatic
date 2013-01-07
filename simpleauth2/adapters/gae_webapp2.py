@@ -1,7 +1,22 @@
 from . import BaseAdapter
+from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
+from urllib import urlencode
 from webapp2_extras import sessions
 import logging
+import oauth2 as oauth1
+import urlparse
+
+# taken from anyjson.py
+try:
+    import simplejson as json
+except ImportError: # pragma: no cover
+    try:
+        # Try to import from django, should work on App Engine
+        from django.utils import simplejson as json
+    except ImportError:
+        # Should work for Python2.6 and higher.
+        import json
 
 class ProvidersConfigModel(ndb.Model):
     """
@@ -72,14 +87,44 @@ class GAEWebapp2Adapter(BaseAdapter):
         #  'twitter': {'phase': 1,
         #              'oauth_token': None,
         #              'oauth_token_secret': None}}
-        
-        
+    
+    
+    def get_current_url(self):
+        """
+        Returns the url of the actual request
+        """
+        route_name = self._handler.request.route.name
+        args = self._handler.request.route_args
+        return self._handler.uri_for(route_name, *args, _full=True)
+    
+    
+    def get_request_param(self, key):
+        """
+        Returns a GET or POST variable by key
+        """
+        return self._handler.request.params.get(key)
+    
+    
     def set_phase(self, provider_name, phase):
-        self._session[self._session_key][provider_name]['phase'] = phase 
-        self._save_session()
+        self.store_provider_data(provider_name, 'phase', phase)
+    
     
     def get_phase(self, provider_name):
-        return self._session.setdefault(self._session_key, {}).setdefault(provider_name, {}).setdefault('phase', 0)
+        return self.retrieve_provider_data(provider_name, 'phase', 0)
+    
+    
+    def reset_phase(self, provider_name):
+        self.set_phase(provider_name, 0)
+    
+    
+    def store_provider_data(self, provider_name, key, value):
+        self._session.setdefault(self._session_key, {}).setdefault(provider_name, {})[key] = value
+        self._save_session()
+        
+        
+    def retrieve_provider_data(self, provider_name, key, default=None):
+        return self._session.setdefault(self._session_key, {}).setdefault(provider_name, {}).get(key, default)
+    
     
     def get_providers_config(self):
         
@@ -90,6 +135,40 @@ class GAEWebapp2Adapter(BaseAdapter):
             providers_config = ProvidersConfigModel
             providers_config.initialize()
             return providers_config
+    
+    
+    def redirect(self, uri):
+        self._handler.redirect(uri)
+    
+    
+    def fetch(self, method, url, params=None, headers=None):
+        #TODO: Check whether the method is valid
+        return urlfetch.fetch(url, params, method=method, headers=headers)
+    
+    
+    #TODO: Possibly merge with async request
+    def oauth1_fetch(self, method, url, consumer_key, consumer_secret, access_token=None, access_token_secret=None):
+        # Create token only if needed
+        token = oauth1.Token(access_token, access_token_secret) if access_token and access_token_secret else None
+        consumer = oauth1.Consumer(consumer_key, consumer_secret)
+        client = oauth1.Client(consumer, token)
+        
+        # make request and return response
+        return client.request(url, method)
+    
+    
+    @staticmethod
+    def json_parser(body):
+        return json.loads(body)
+    
+    
+    @staticmethod
+    def query_string_parser(body):
+        res = dict(urlparse.parse_qsl(body))
+        if not res:
+            res = json.loads(body)
+        return res
+    
     
     def _save_session(self):
         self._session.container.session_store.save_sessions(self._handler.response)

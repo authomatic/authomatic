@@ -83,18 +83,7 @@ def login(provider_name, callback, handler, providers_config=None, session_secre
         ProviderClass = webapp2.import_string(ProviderClass, True) or webapp2.import_string(path)
     
     # instantiate and call provider class
-    ProviderClass(phase, provider_name, consumer, handler, session, session_key, callback)()
-
-
-def json_parser(body):
-    return json.loads(body)
-
-
-def query_string_parser(body):
-    res = dict(urlparse.parse_qsl(body))
-    if not res:
-        res = json_parser(body)
-    return res
+    ProviderClass(adapter, phase, provider_name, consumer, callback).login()
 
 
 class Consumer(object):
