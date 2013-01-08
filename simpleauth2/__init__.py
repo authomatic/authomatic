@@ -33,7 +33,7 @@ def login(adapter, provider_name, callback, scope=[]):
         raise ConfigError('Consumer secret not specified for provider {}!'.format(provider_name))
     
     # merge scopes from config and argument
-    scope.extend(provider_settings.get('scope', []))
+    scope = provider_settings.get('scope', []) + scope
     
     # create consumer
     consumer = Consumer(consumer_key, consumer_secret, scope)
