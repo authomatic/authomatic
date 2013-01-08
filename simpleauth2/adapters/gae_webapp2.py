@@ -220,16 +220,6 @@ class GAEWebapp2Adapter(BaseAdapter):
         return res
     
     
-    def resolve_class(self, class_):
-        # resolve provider class passed as string
-        if type(class_) in (str, unicode):
-            # prepare path for simpleauth2.providers package
-            path = '.'.join([__package__, 'providers', class_])
-            # import from fully qualified path or from simpleauth2.providers package
-            return webapp2.import_string(class_, True) or webapp2.import_string(path)
-        else:
-            return class_
-    
     def create_oauth2_url(self, url, access_token):
         return url + '?' + urlencode(dict(access_token=access_token))
     

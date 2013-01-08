@@ -3,3 +3,6 @@ class ConfigError(Exception):
 
 class CSRFError(Exception):
     pass
+
+class ImportStringError(Exception):
+    pass

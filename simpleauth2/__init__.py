@@ -1,6 +1,7 @@
 from exceptions import *
 from urllib import urlencode
 import datetime
+import sys
 
 
 def login(adapter, provider_name, callback, scope=[]):
@@ -37,11 +38,35 @@ def login(adapter, provider_name, callback, scope=[]):
     adapter.set_phase(provider_name, phase + 1)
     
         
-    ProviderClass = adapter.resolve_class(provider_class)
+    ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate and call provider class
     ProviderClass(adapter, phase, provider_name, consumer, callback).login()
 
+
+def resolve_provider_class(class_):
+    if type(class_) in (str, unicode):
+        # prepare path for simpleauth2.providers package
+        path = '.'.join([__package__, 'providers', class_])        
+        return import_string(path)        
+    else:
+        return class_
+
+
+def import_string(import_name):
+    """
+    Imports an object based on a string in dotted notation.
+    
+    taken from webapp2.import_string()
+    """
+    try:
+        if '.' in import_name:
+            module, obj = import_name.rsplit('.', 1)
+            return getattr(__import__(module, None, None, [obj]), obj)
+        else:
+            return __import__(import_name)
+    except (ImportError, AttributeError), e:
+        raise ImportStringError(import_name, e), None, sys.exc_info()[2]
 
 
 class Consumer(object):
