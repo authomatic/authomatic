@@ -1,7 +1,14 @@
 from exceptions import *
 from urllib import urlencode
+import binascii
 import datetime
+import hashlib
+import hmac
+import logging
+import random
 import sys
+import time
+import urllib
 
 
 def login(adapter, provider_name, callback, scope=[]):
@@ -44,29 +51,82 @@ def login(adapter, provider_name, callback, scope=[]):
     ProviderClass(adapter, phase, provider_name, consumer, callback).login()
 
 
+def escape(s):
+    """Escape a URL including any /."""
+    return urllib.quote(s.encode('utf-8'), safe='~')
+
+
+def create_oauth1_url(url, access_token, access_token_secret, consumer_key, consumer_secret, method='GET'):
+    """
+    Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint
+    
+    Taken from the oauth2 library
+    """
+    
+    params = {}
+    
+    params['oauth_version'] = '1.0'
+    params['oauth_token'] = access_token
+    params['oauth_consumer_key'] = consumer_key
+    params['oauth_signature_method'] = 'HMAC-SHA1'
+        
+    params['oauth_nonce'] = str(random.randint(0, 100000000))
+    params['oauth_timestamp'] = str(int(time.time()))
+    
+    # prepare values for signing
+    
+    # signed parameters must be sorted first by key, then by value
+    params_to_sign = [(k, v) for k, v in params.items() if k != 'oauth_signature']
+    params_to_sign.sort()
+    params_to_sign = urllib.urlencode(params_to_sign)
+    params_to_sign = params_to_sign.replace('+', '%20').replace('%7E', '~')
+    
+    key = '{}&'.format(escape(consumer_secret))
+    if access_token_secret:
+        key += escape(access_token_secret)
+    
+    raw = '&'.join((escape(method), escape(url), escape(params_to_sign)))
+    
+    # sign with HMAC-SHA1 method
+    hashed = hmac.new(key, raw, hashlib.sha1)
+    params['oauth_signature'] = binascii.b2a_base64(hashed.digest())[:-1]
+    
+    return url + '?' + urlencode(params)
+
+
+def create_oauth2_url(url, access_token):
+    return url + '?' + urlencode(dict(access_token=access_token))
+
+
 def resolve_provider_class(class_):
     if type(class_) in (str, unicode):
         # prepare path for simpleauth2.providers package
-        path = '.'.join([__package__, 'providers', class_])        
-        return import_string(path)        
+        path = '.'.join([__package__, 'providers', class_])
+        
+        # try to import class by string from providers module or by fully qualified path
+        return import_string(class_, True) or import_string(path)  
     else:
         return class_
 
 
-def import_string(import_name):
+def import_string(import_name, silent=False):
     """
     Imports an object based on a string in dotted notation.
     
     taken from webapp2.import_string()
     """
+    
+    logging.info('import_string() import_name = {}'.format(import_name))
     try:
         if '.' in import_name:
             module, obj = import_name.rsplit('.', 1)
+            #TODO: Throws an error on fully qualified path
             return getattr(__import__(module, None, None, [obj]), obj)
         else:
             return __import__(import_name)
     except (ImportError, AttributeError), e:
-        raise ImportStringError(import_name, e), None, sys.exc_info()[2]
+        if not silent:
+            raise ImportStringError(import_name, e), None, sys.exc_info()[2]
 
 
 class Consumer(object):
@@ -163,20 +223,19 @@ class Request(object):
         self.rpc = None
         
         if self.credentials.provider_type == 'OAuth2':
-            self.url = self.adapter.create_oauth2_url(url, self.credentials.access_token)
+            self.url = create_oauth2_url(url, self.credentials.access_token)
         elif self.credentials.provider_type == 'OAuth1':
-            self.url = self.adapter.create_oauth1_url(url,
-                                         self.credentials.access_token,
-                                         self.credentials.access_token_secret,
-                                         self.credentials.consumer_key,
-                                         self.credentials.consumer_secret)
+            self.url = create_oauth1_url(url,
+                                     self.credentials.access_token,
+                                     self.credentials.access_token_secret,
+                                     self.credentials.consumer_key,
+                                     self.credentials.consumer_secret)
     
     def fetch(self):
         self.rpc = self.adapter.fetch_async(self.url, self.method)        
         return self
     
     def get_result(self):
-        result_dict = self.adapter.normalize_response(self.rpc.get_result())
-        result = Response(**result_dict)
-        return self.parser(result) if self.parser else result
-
+        response = self.adapter.parse_response(self.rpc.get_result(), self.adapter.json_parser)
+        
+        return self.parser(response) if self.parser else response

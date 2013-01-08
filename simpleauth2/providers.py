@@ -1,5 +1,6 @@
 from simpleauth2 import Credentials, User, Request, AuthEvent
 from urllib import urlencode
+import logging
 
 QUERY_STRING_PARSER = 'query_string_parser'
 JSON_PARSER = 'json_parser'
@@ -80,7 +81,7 @@ class BaseProvider(object):
         if not self._user_info_request:
             def parser(result):
                 return self._update_user(result.data)
-            parser = lambda result: self._update_user(result.data)
+            #parser = lambda result: self._update_user(result.data)
             self._user_info_request = self.create_request(self.urls[-1], parser=parser)
         return self._user_info_request
     
@@ -128,13 +129,7 @@ class BaseProvider(object):
         credentials.provider_type = self.type
         
         return credentials
-    
-    
-    def _reset_phase(self):
-        #TODO: Check if it would not be better to reset whole session
-        self.session.setdefault(self.session_key, {}).setdefault(self.provider_name, {})['phase'] = 0
-        self._save_sessions()
-    
+        
     
     def _normalize_scope(self, scope):
         """
@@ -193,7 +188,9 @@ class OAuth2(BaseProvider):
                           redirect_uri=self.uri,
                           grant_type='authorization_code')
             
-            response = self.adapter.fetch('POST', self.urls[1], urlencode(params), headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            # construct url
+            
+            response = self.adapter.fetch(self.urls[1], urlencode(params), 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
             
             # parse response
             parser = self._get_parser_by_index(1)
@@ -315,27 +312,35 @@ class OAuth1(BaseProvider):
             # fetch the client
             #response = client.request(self.urls[0], "GET")
             
-            response = self.adapter.fetch_oauth1('GET', self.urls[0], self.consumer.key, self.consumer.secret)
+            parser = self._get_parser_by_index(0)
+            
+            response = self.adapter.fetch_oauth1(self.urls[0], 'GET', self.consumer.key, self.consumer.secret)
+                        
+            logging.info('RESPONSE = {}'.format(response.status_code))
+            
+            response = self.adapter.parse_response(response, parser)
+            
             
             # check if response status is OK
-            if response[0].get('status') != '200':
-                self._reset_phase()
+            if response.status_code != 200:
+                self.adapter.reset_phase(self.provider_name)
                 raise Exception('Could not fetch a valid response from provider {}!'.format(self.provider_name))
-            
-            parser = self._get_parser_by_index(0)            
+                                   
             
             # extract OAuth token and save it to storage
-            oauth_token = parser(response[1]).get('oauth_token')
+            #oauth_token = parser(response).get('oauth_token')
+            oauth_token = response.data.get('oauth_token')
             if not oauth_token:
-                self._reset_phase()
+                self.adapter.reset_phase(self.provider_name)
                 raise Exception('Could not get a valid OAuth token from provider {}!'.format(self.provider_name))
             
             self.adapter.store_provider_data(self.provider_name, 'oauth_token', oauth_token)
             
             # extract OAuth token secret and save it to storage
-            oauth_token_secret = parser(response[1]).get('oauth_token_secret')
+            #oauth_token_secret = parser(response.setdefault('content'), {}).get('oauth_token_secret')
+            oauth_token_secret = response.data.get('oauth_token_secret')
             if not oauth_token_secret:
-                self._reset_phase()
+                self.adapter.reset_phase(self.provider_name)
                 raise Exception('Could not get a valid OAuth token secret from provider {}!'.format(self.provider_name))
             
             self.adapter.store_provider_data(self.provider_name, 'oauth_token_secret', oauth_token_secret)
@@ -352,13 +357,13 @@ class OAuth1(BaseProvider):
             try:
                 oauth_token = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token')
             except KeyError:
-                self._reset_phase()
+                self.adapter.reset_phase(self.provider_name)
                 raise Exception('OAuth token could not be retrieved from storage!')
             
             try:
                 oauth_token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token_secret')
             except KeyError:
-                self._reset_phase()
+                self.adapter.reset_phase(self.provider_name)
                 raise Exception('OAuth token secret could not be retrieved from storage!')
             
             # extract the verifier
@@ -367,15 +372,15 @@ class OAuth1(BaseProvider):
                 self.adapter.reset_phase(self.provider_name)
                 raise Exception('No OAuth verifier was returned by the {} provider!'.format(self.provider_name))
             
-            response = self.adapter.fetch_oauth1('POST', self.urls[2], self.consumer.key, self.consumer.secret, oauth_token, oauth_token_secret)
+            response = self.adapter.fetch_oauth1(self.urls[2], 'POST', self.consumer.key, self.consumer.secret, oauth_token, oauth_token_secret)
             
             # parse response
             parser = self._get_parser_by_index(1)
-            response = parser(response[1])
+            response = self.adapter.parse_response(response, parser)
             
-            self.user = User(response.get('oauth_token'), response.get('oauth_token_secret'), response.get('user_id'))
+            self.user = User(response.data.get('oauth_token'), response.data.get('oauth_token_secret'), response.data.get('user_id'))
             
-            self.credentials = self._credentials_parser(response)
+            self.credentials = self._credentials_parser(response.data)
             
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)

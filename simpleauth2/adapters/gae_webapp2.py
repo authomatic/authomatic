@@ -1,12 +1,9 @@
 from . import BaseAdapter
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
-from urllib import urlencode
+from simpleauth2 import Response
 from webapp2_extras import sessions
-import logging
-import oauth2 as oauth1
 import urlparse
-import webapp2
 
 # taken from anyjson.py
 try:
@@ -44,7 +41,6 @@ class ProvidersConfigModel(ndb.Model):
             scope = result_dict.get('scope')
             if scope:
                 result_dict['scope'] = [s.strip() for s in scope.split(',')]
-            logging.info('Providers.scope = {}'.format(result_dict['scope']))
             return result_dict
         else:
             return default 
@@ -90,11 +86,11 @@ class GAEWebapp2Adapter(BaseAdapter):
         #              'oauth_token': None,
         #              'oauth_token_secret': None}}
     
-    
     def get_current_url(self):
         """
         Returns the url of the actual request
         """
+        
         route_name = self._handler.request.route.name
         args = self._handler.request.route_args
         return self._handler.uri_for(route_name, *args, _full=True)
@@ -143,12 +139,12 @@ class GAEWebapp2Adapter(BaseAdapter):
         self._handler.redirect(uri)
     
     
-    def fetch(self, method, url, params=None, headers=None):
+    def fetch(self, url, payload=None, method='GET', headers={}):
         #TODO: Check whether the method is valid
-        return urlfetch.fetch(url, params, method=method, headers=headers)
+        return self.fetch_async(url, payload, method, headers).get_result()
     
     
-    def fetch_async(self, url, method='GET'):
+    def fetch_async(self, url, payload=None, method='GET', headers={}):
         """
         Makes an asynchronous object
         
@@ -156,18 +152,8 @@ class GAEWebapp2Adapter(BaseAdapter):
         """
         
         rpc = urlfetch.create_rpc()
-        urlfetch.make_fetch_call(rpc, url, method=method)
+        urlfetch.make_fetch_call(rpc, url, payload, method, headers)
         return rpc
-    
-    
-    def fetch_oauth1(self, method, url, consumer_key, consumer_secret, access_token=None, access_token_secret=None):
-        # Create token only if needed
-        token = oauth1.Token(access_token, access_token_secret) if access_token and access_token_secret else None
-        consumer = oauth1.Consumer(consumer_key, consumer_secret)
-        client = oauth1.Client(consumer, token)
-        
-        # make request and return response
-        return client.request(url, method)
     
     
     @staticmethod
@@ -183,45 +169,17 @@ class GAEWebapp2Adapter(BaseAdapter):
         return res
     
     
-    def create_oauth1_url(self, url, access_token, access_token_secret, consumer_key, consumer_secret):
-        token = oauth1.Token(access_token, access_token_secret)
-        consumer = oauth1.Consumer(consumer_key, consumer_secret)
-        client = oauth1.Client(consumer, token)
+    @staticmethod
+    def parse_response(response, parser=None):
+        resp = Response()
         
-        request = oauth1.Request.from_consumer_and_token(consumer, token)
-        request.url = url
-        request.sign_request(client.method, consumer, token)
+        resp.content = response.content
+        resp.status_code = response.status_code
+        resp.headers = response.headers
+        resp.final_url = response.final_url
+        resp.data = parser(response.content) if parser else None
         
-        params = urlencode(request)
-        
-        return url + '?' + params
-    
-    
-    def normalize_response(self, response):
-        
-        res = {}
-        
-        if type(response) == urlfetch._URLFetchResult:
-            # if request returned by google.appengine.api.urlfetch.fetch()
-            res['status_code'] = int(response.status_code)
-            res['headers'] = response.headers
-            res['content'] = response.content
-            res['final_url'] = response.final_url
-            
-        elif type(response) == tuple:
-            # if request returned by oauth2.Client.request()
-            res['headers'] = response[0]
-            res['status_code'] = int(response[0].get('status'))            
-            res['content'] = response[1]
-            res['final_url'] = None
-        
-        res['data'] = json.loads(res['content'])
-        
-        return res
-    
-    
-    def create_oauth2_url(self, url, access_token):
-        return url + '?' + urlencode(dict(access_token=access_token))
+        return resp
     
     
     def _save_session(self):
