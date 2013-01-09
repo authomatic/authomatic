@@ -199,27 +199,53 @@ class AuthEvent(object):
         self.credentials = credentials
 
 
+class RPC(object):
+    """
+    An Remote Procedure Call wrapper
+    """
+    
+    def __init__(self, rpc_object, response_parser, content_parser):
+        self.rpc_object = rpc_object
+        self.response_parser = response_parser
+        self.content_parser = content_parser
+    
+    def get_response(self):
+        """
+        Returns Response instance
+        """
+        
+        return self.response_parser(self.rpc_object.get_result(), self.content_parser)
+
+
 class Response(object):
     """
     Provides unified interface to results of different http request types
     """
     
-    def __init__(self, **kwargs):
-        
-        self.content = kwargs.get('content')
-        self.status_code = kwargs.get('status_code')
-        self.headers = kwargs.get('headers')
-        self.final_url = kwargs.get('final_url')
-        self.data = kwargs.get('data')
+    def __init__(self, status_code=None, headers=None, raw_content=None, content=None):
+        self.raw_content = raw_content
+        self.status_code = status_code
+        self.headers = headers
+        self.content = content
+
+
+class UserInfoResponse(object):
+    def __init__(self, response, user):
+        self.raw_content = response.raw_content
+        self.status_code = response.status_code
+        self.headers = response.headers
+        self.content = response.content
+        self.user = user
 
 
 class Request(object):
-    def __init__(self, adapter, url, credentials, method='GET', parser=None):
+    def __init__(self, adapter, url, credentials, method='GET', response_parser=None, content_parser=None):
         self.adapter = adapter
         self.url = url
         self.credentials = credentials
         self.method = method
-        self.parser = parser
+        self.response_parser = response_parser
+        self.content_parser = content_parser or adapter.json_parser
         
         self.rpc = None
         
@@ -233,10 +259,10 @@ class Request(object):
                                      self.credentials.consumer_secret)
     
     def fetch(self):
-        self.rpc = self.adapter.fetch_async(self.url, self.method)        
+        self.rpc = self.adapter.fetch_async(self.content_parser, self.url, self.method, response_parser=self.response_parser)        
         return self
     
     def get_result(self):
-        response = self.adapter.parse_response(self.rpc.get_result(), self.adapter.json_parser)
-        
-        return self.parser(response) if self.parser else response
+        return self.rpc.get_response()
+#        response = self.adapter.parse_response(self.rpc.get_result(), self.adapter.json_parser)
+#        return self.content_parser(response) if self.content_parser else response

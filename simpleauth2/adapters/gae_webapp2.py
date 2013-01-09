@@ -1,7 +1,7 @@
 from . import BaseAdapter
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
-from simpleauth2 import Response
+from simpleauth2 import Response, RPC
 from webapp2_extras import sessions
 import urlparse
 
@@ -132,13 +132,14 @@ class GAEWebapp2Adapter(BaseAdapter):
         self._handler.redirect(url)
     
     
-    def fetch(self, url, payload=None, method='GET', headers={}):
+    #TODO: Can be moved to BaseProvider
+    def fetch(self, content_parser, url, payload=None, method='GET', headers={}):
         #TODO: Check whether the method is valid
-        #TODO: Return Request instance
-        return self.fetch_async(url, payload, method, headers).get_result()
+        
+        return self.fetch_async(content_parser, url, payload, method, headers).get_response()
     
     
-    def fetch_async(self, url, payload=None, method='GET', headers={}):
+    def fetch_async(self, content_parser, url, payload=None, method='GET', headers={}, response_parser=None):
         """
         Makes an asynchronous object
         
@@ -148,8 +149,7 @@ class GAEWebapp2Adapter(BaseAdapter):
         rpc = urlfetch.create_rpc()
         urlfetch.make_fetch_call(rpc, url, payload, method, headers)
         
-        #TODO: Return rpc wrapper which returns Request instance on get_result()
-        return rpc
+        return RPC(rpc, response_parser or self.response_parser, content_parser)
     
     
     @staticmethod
@@ -166,14 +166,14 @@ class GAEWebapp2Adapter(BaseAdapter):
     
     
     @staticmethod
-    def parse_response(response, parser=None):
+    def response_parser(response, content_parser):
         resp = Response()
         
         resp.content = response.content
         resp.status_code = response.status_code
         resp.headers = response.headers
         resp.final_url = response.final_url
-        resp.data = parser(response.content) if parser else None
+        resp.data = content_parser(response.content)
         
         return resp
     

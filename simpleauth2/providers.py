@@ -1,4 +1,4 @@
-from simpleauth2 import Credentials, User, Request, AuthEvent
+from simpleauth2 import Credentials, User, Request, AuthEvent, UserInfoResponse
 from urllib import urlencode
 import logging
 
@@ -61,12 +61,13 @@ class BaseProvider(object):
         return self.create_request(url, parser=parser).fetch().get_result()
     
     
-    def create_request(self, url, method='GET', parser=None):        
+    def create_request(self, url, method='GET', content_parser=None, response_parser=None):        
         return Request(adapter=self.adapter,
                        url=url,
                        credentials=self.credentials,
                        method=method,
-                       parser=parser)
+                       content_parser=content_parser,
+                       response_parser=response_parser)
         
     
     def fetch_user_info(self):
@@ -79,10 +80,16 @@ class BaseProvider(object):
     @user_info_request.getter
     def user_info_request(self):
         if not self._user_info_request:
-            def parser(result):
-                return self._update_user(result.data)
-            #parser = lambda result: self._update_user(result.data)
-            self._user_info_request = self.create_request(self.urls[-1], parser=parser)
+            
+            def response_parser(response, content_parser):
+                response = self.adapter.response_parser(response, content_parser)
+                user = self._update_user(response.data)
+                return UserInfoResponse(response, user)
+            
+            self._user_info_request = self.create_request(self.urls[-1],
+                                                          content_parser=self.adapter.json_parser,
+                                                          response_parser=response_parser)
+            
         return self._user_info_request
     
     
@@ -121,11 +128,12 @@ class BaseProvider(object):
         return self.user
     
     
-    def _credentials_parser(self, response):
-        credentials = Credentials(response.get('access_token'))
+    def _credentials_parser(self, data):
         
-        credentials.access_token_secret = response.get('access_token_secret')
-        credentials.expires_in = response.get('expires_in')
+        credentials = Credentials(data.get('access_token'))
+        
+        credentials.access_token_secret = data.get('access_token_secret')
+        credentials.expires_in = data.get('expires_in')
         credentials.provider_type = self.type
         
         return credentials
@@ -190,17 +198,18 @@ class OAuth2(BaseProvider):
             
             # construct url
             
-            response = self.adapter.fetch(self.urls[1], urlencode(params), 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            parser = self._get_parser_by_index(1)
+            response = self.adapter.fetch(parser, self.urls[1], urlencode(params), 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
             
             # parse response
-            parser = self._get_parser_by_index(1)
-            response = parser(response.content)
+#            parser = self._get_parser_by_index(1)
+#            response = parser(response.content)
             
             # create user
-            self._update_user(response)
+            self._update_user(response.data)
             
             # create credentials
-            self.credentials = self._credentials_parser(response)
+            self.credentials = self._credentials_parser(response.data)
             
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)
@@ -227,14 +236,14 @@ class Facebook(OAuth2):
     user_info_mapping = dict(user_id='id',
                             picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
     
-    def _credentials_parser(self, response):
+    def _credentials_parser(self, data):
         """
         We need to override this method to fix Facebooks naming deviation
         """
-        credentials = super(Facebook, self)._credentials_parser(response)
+        credentials = super(Facebook, self)._credentials_parser(data)
         
         # Facebook returns "expires" instead of "expires_in"
-        credentials.expires_in = response.get('expires')
+        credentials.expires_in = data.get('expires')
         return credentials
 
 
@@ -314,11 +323,11 @@ class OAuth1(BaseProvider):
             
             parser = self._get_parser_by_index(0)
             
-            response = self.adapter.fetch_oauth1(self.urls[0], 'GET', self.consumer.key, self.consumer.secret)
+            response = self.adapter.fetch_oauth1(parser, self.urls[0], 'GET', self.consumer.key, self.consumer.secret)
                         
             logging.info('RESPONSE = {}'.format(response.status_code))
             
-            response = self.adapter.parse_response(response, parser)
+#            response = self.adapter.parse_response(response, parser)
             
             
             # check if response status is OK

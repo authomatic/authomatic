@@ -11,6 +11,7 @@ def escape(s):
     """Escape a URL including any /."""
     return urllib.quote(s.encode('utf-8'), safe='~')
 
+
 class BaseAdapter(object):
     """
     Base class for platform adapters
@@ -18,9 +19,10 @@ class BaseAdapter(object):
     Defines common interface for platform specific (non standard library) functionality.
     """
     
-    def fetch_oauth1(self, url, method, consumer_key, consumer_secret, access_token=None, access_token_secret=None):
+    #TODO: Get rid of it, move it to provider
+    def fetch_oauth1(self, content_parser, url, method, consumer_key, consumer_secret, access_token=None, access_token_secret=None):
         url = create_oauth1_url(url, access_token, access_token_secret, consumer_key, consumer_secret, method)
-        return self.fetch_async(url, method).get_result()
+        return self.fetch_async(content_parser, url, method).get_result()
     
     
     def get_current_uri(self):
