@@ -6,3 +6,6 @@ class CSRFError(Exception):
 
 class ImportStringError(Exception):
     pass
+
+class OAuth1Error(Exception):
+    pass

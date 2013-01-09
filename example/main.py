@@ -41,7 +41,7 @@ class Login(webapp2.RequestHandler):
         self.response.write('User Info:<br /><br />')
         
         # get result of asynchronous call
-        user = event.provider.user_info_request.fetch().get_result().user
+        user = event.provider.user_info_request.fetch().get_response().user
         
         for k, v in user.__dict__.items():
             if k != 'raw_user_info':

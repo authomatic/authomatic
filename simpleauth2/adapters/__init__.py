@@ -21,8 +21,8 @@ class BaseAdapter(object):
     
     #TODO: Get rid of it, move it to provider
     def fetch_oauth1(self, content_parser, url, method, consumer_key, consumer_secret, access_token=None, access_token_secret=None):
-        url = create_oauth1_url(url, access_token, access_token_secret, consumer_key, consumer_secret, method)
-        return self.fetch_async(content_parser, url, method).get_result()
+        url = create_oauth1_url(url, consumer_key, consumer_secret, access_token, access_token_secret, method)
+        return self.fetch_async(content_parser, url, method).get_response()
     
     
     def get_current_uri(self):

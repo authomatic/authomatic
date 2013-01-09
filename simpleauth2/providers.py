@@ -1,6 +1,8 @@
-from simpleauth2 import Credentials, User, Request, AuthEvent, UserInfoResponse
+from simpleauth2 import Credentials, User, Request, AuthEvent, UserInfoResponse, \
+    create_oauth1_url
 from urllib import urlencode
 import logging
+import oauth2
 
 QUERY_STRING_PARSER = 'query_string_parser'
 JSON_PARSER = 'json_parser'
@@ -58,7 +60,7 @@ class BaseProvider(object):
     #===========================================================================
     
     def fetch(self, url, parser=None):
-        return self.create_request(url, parser=parser).fetch().get_result()
+        return self.create_request(url, parser=parser).fetch().get_response()
     
     
     def create_request(self, url, method='GET', content_parser=None, response_parser=None):        
@@ -71,13 +73,10 @@ class BaseProvider(object):
         
     
     def fetch_user_info(self):
-        return self.user_info_request.fetch().get_result()
+        return self.user_info_request.fetch().get_response()
     
     
     @property
-    def user_info_request(self): pass
-    
-    @user_info_request.getter
     def user_info_request(self):
         if not self._user_info_request:
             
@@ -89,13 +88,18 @@ class BaseProvider(object):
             self._user_info_request = self.create_request(self.urls[-1],
                                                           content_parser=self.adapter.json_parser,
                                                           response_parser=response_parser)
-            
+        
         return self._user_info_request
     
     
     #===========================================================================
     # Internal methods
     #===========================================================================
+    
+    def _fetch(self, content_parser, url, payload=None, method='GET', headers={}):
+        #TODO: Check whether the method is valid
+        
+        return self.adapter.fetch_async(content_parser, url, payload, method, headers).get_response()
     
     def _update_user(self, data):
         """
@@ -199,7 +203,7 @@ class OAuth2(BaseProvider):
             # construct url
             
             parser = self._get_parser_by_index(1)
-            response = self.adapter.fetch(parser, self.urls[1], urlencode(params), 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            response = self._fetch(parser, self.urls[1], urlencode(params), 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
             
             # parse response
 #            parser = self._get_parser_by_index(1)
@@ -316,15 +320,23 @@ class OAuth1(BaseProvider):
         if self.phase == 0:
             
             # create OAuth 1.0 client
-            #client = oauth1.Client(oauth1.Consumer(self.consumer.key, self.consumer.secret))            
+#            client = oauth2.Client(oauth2.Consumer(self.consumer.key, self.consumer.secret))
             
             # fetch the client
-            #response = client.request(self.urls[0], "GET")
+#            response = client.request(self.urls[0], "GET")
             
             parser = self._get_parser_by_index(0)
             
-            response = self.adapter.fetch_oauth1(parser, self.urls[0], 'GET', self.consumer.key, self.consumer.secret)
-                        
+#            response = self.adapter.fetch_oauth1(parser, self.urls[0], 'GET', self.consumer.key, self.consumer.secret)
+            
+            # Create Request Token URL
+            url1 = create_oauth1_url(phase=1,
+                                     base=self.urls[0],
+                                     consumer_key=self.consumer.key,
+                                     consumer_secret=self.consumer.secret,
+                                     callback=self.uri)
+            response = self._fetch(parser, url1)
+            
             logging.info('RESPONSE = {}'.format(response.status_code))
             
 #            response = self.adapter.parse_response(response, parser)
@@ -354,11 +366,11 @@ class OAuth1(BaseProvider):
             
             self.adapter.store_provider_data(self.provider_name, 'oauth_token_secret', oauth_token_secret)
                         
-            # redirect to request access token from provider
-            params = urlencode(dict(oauth_token=oauth_token,
-                                    oauth_callback=self.uri))
-            
-            self.adapter.redirect(self.urls[1] + '?' + params)
+            # Create User Authorization URL
+            url2 = create_oauth1_url(phase=2,
+                                     base=self.urls[1],
+                                     token=oauth_token)            
+            self.adapter.redirect(url2)
         
         if self.phase == 1:
             
@@ -376,16 +388,27 @@ class OAuth1(BaseProvider):
                 raise Exception('OAuth token secret could not be retrieved from storage!')
             
             # extract the verifier
+            #TODO: Check what is verifier good for!
             verifier = self.adapter.get_request_param('oauth_verifier')
             if not verifier:
                 self.adapter.reset_phase(self.provider_name)
-                raise Exception('No OAuth verifier was returned by the {} provider!'.format(self.provider_name))
+#                raise Exception('No OAuth verifier was returned by the {} provider!'.format(self.provider_name))
             
-            response = self.adapter.fetch_oauth1(self.urls[2], 'POST', self.consumer.key, self.consumer.secret, oauth_token, oauth_token_secret)
             
-            # parse response
             parser = self._get_parser_by_index(1)
-            response = self.adapter.parse_response(response, parser)
+            
+            # Create Access Token URL
+            url3 = create_oauth1_url(phase=3,
+                                     base=self.urls[2],
+                                     token=oauth_token,
+                                     consumer_key=self.consumer.key,
+                                     consumer_secret=self.consumer.secret,
+                                     token_secret=oauth_token_secret,
+                                     verifier=verifier)
+            response = self._fetch(parser, url3, method='POST')
+            
+#            response = self.adapter.fetch_oauth1(self.urls[2], 'POST', self.consumer.key, self.consumer.secret, oauth_token, oauth_token_secret)
+#            response = self.adapter.parse_response(response, parser)
             
             self.user = User(response.data.get('oauth_token'), response.data.get('oauth_token_secret'), response.data.get('user_id'))
             

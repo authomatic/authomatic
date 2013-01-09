@@ -132,13 +132,6 @@ class GAEWebapp2Adapter(BaseAdapter):
         self._handler.redirect(url)
     
     
-    #TODO: Can be moved to BaseProvider
-    def fetch(self, content_parser, url, payload=None, method='GET', headers={}):
-        #TODO: Check whether the method is valid
-        
-        return self.fetch_async(content_parser, url, payload, method, headers).get_response()
-    
-    
     def fetch_async(self, content_parser, url, payload=None, method='GET', headers={}, response_parser=None):
         """
         Makes an asynchronous object
@@ -161,7 +154,10 @@ class GAEWebapp2Adapter(BaseAdapter):
     def query_string_parser(body):
         res = dict(urlparse.parse_qsl(body))
         if not res:
-            res = json.loads(body)
+            try:
+                res = json.loads(body) if body else None
+            except:
+                pass
         return res
     
     
