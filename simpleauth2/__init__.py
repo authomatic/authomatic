@@ -10,6 +10,7 @@ import sys
 import time
 import urllib
 
+#TODO: Fix inconsistency with using URI and URL in names
 
 def login(adapter, provider_name, callback, scope=[]):
     

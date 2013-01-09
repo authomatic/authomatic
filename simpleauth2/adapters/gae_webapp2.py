@@ -86,10 +86,8 @@ class GAEWebapp2Adapter(BaseAdapter):
         #              'oauth_token': None,
         #              'oauth_token_secret': None}}
     
-    def get_current_url(self):
-        """
-        Returns the url of the actual request
-        """
+    def get_current_uri(self):
+        """Returns the uri of the actual request"""
         
         route_name = self._handler.request.route.name
         args = self._handler.request.route_args
@@ -97,9 +95,8 @@ class GAEWebapp2Adapter(BaseAdapter):
     
     
     def get_request_param(self, key):
-        """
-        Returns a GET or POST variable by key
-        """
+        """Returns a GET or POST variable by key"""
+        
         return self._handler.request.params.get(key)
     
     
@@ -109,10 +106,6 @@ class GAEWebapp2Adapter(BaseAdapter):
     
     def get_phase(self, provider_name):
         return self.retrieve_provider_data(provider_name, 'phase', 0)
-    
-    
-    def reset_phase(self, provider_name):
-        self.set_phase(provider_name, 0)
     
     
     def store_provider_data(self, provider_name, key, value):
@@ -135,12 +128,13 @@ class GAEWebapp2Adapter(BaseAdapter):
             return providers_config
     
     
-    def redirect(self, uri):
-        self._handler.redirect(uri)
+    def redirect(self, url):
+        self._handler.redirect(url)
     
     
     def fetch(self, url, payload=None, method='GET', headers={}):
         #TODO: Check whether the method is valid
+        #TODO: Return Request instance
         return self.fetch_async(url, payload, method, headers).get_result()
     
     
@@ -153,6 +147,8 @@ class GAEWebapp2Adapter(BaseAdapter):
         
         rpc = urlfetch.create_rpc()
         urlfetch.make_fetch_call(rpc, url, payload, method, headers)
+        
+        #TODO: Return rpc wrapper which returns Request instance on get_result()
         return rpc
     
     

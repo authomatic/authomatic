@@ -24,8 +24,8 @@ class BaseProvider(object):
                 
         self.type = self.__class__.__bases__[0].__name__
         
-        # recreate full current URI
-        self.uri = self.adapter.get_current_url()
+        # recreate full current URL
+        self.uri = self.adapter.get_current_uri()
     
     
     #=======================================================================
