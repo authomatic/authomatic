@@ -126,7 +126,7 @@ def create_oauth1_url(phase, base, consumer_key=None, consumer_secret=None, toke
             oauth_nonce
             oauth_version
             
-            oauth_signature (we need consumer_secret to sign the request)
+            oauth_signature (we need consumer_secret and token_secret to sign the request)
             
         returns:
             requested data    
@@ -163,10 +163,11 @@ def create_oauth1_url(phase, base, consumer_key=None, consumer_secret=None, toke
         
     elif phase == 4:
         # Protected Resources URL
-        if consumer_key and consumer_secret and token:
-            pass
+        if consumer_key and consumer_secret and token and token_secret:
+            params['oauth_token'] = token
+            params['oauth_consumer_key'] = consumer_key
         else:
-            raise OAuth1Error('Parameters consumer_key, consumer_secret and token are required to create Protected Resources URL!')
+            raise OAuth1Error('Parameters consumer_key, consumer_secret, token and token_secret are required to create Protected Resources URL!')
     
     # Tign request.
     # Taken from the oauth2 library.
@@ -211,6 +212,7 @@ def create_oauth1_urlX(url, consumer_key, consumer_secret, access_token=None, ac
     params['oauth_consumer_key'] = consumer_key
     params['oauth_signature_method'] = 'HMAC-SHA1'
     params['oauth_timestamp'] = str(int(time.time()))
+    #TODO: Handle nonce as CSRF token
     params['oauth_nonce'] = str(random.randint(0, 100000000))
     params['oauth_version'] = '1.0'
     
@@ -393,6 +395,8 @@ class Request(object):
         if self.credentials.provider_type == 'OAuth2':
             self.url = create_oauth2_url(url, self.credentials.access_token)
         elif self.credentials.provider_type == 'OAuth1':
+            
+            #TODO: returns {u'errors': [{u'message': u'Bad Authentication data', u'code': 215}]}
             self.url = create_oauth1_url(phase=4,
                                          base=url,
                                          consumer_key=self.credentials.consumer_key,
