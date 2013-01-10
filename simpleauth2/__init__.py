@@ -10,7 +10,6 @@ import sys
 import time
 import urllib
 
-#TODO: Fix inconsistency with using URI and URL in names
 
 def login(adapter, provider_name, callback, scope=[]):
     
@@ -57,13 +56,12 @@ def escape(s):
     return urllib.quote(s.encode('utf-8'), safe='~')
 
 
-def create_oauth1_url(phase, base, consumer_key=None, consumer_secret=None, token=None, token_secret=None, verifier=None, method='GET', callback=None):
+def create_oauth1_url(url_type, base, consumer_key=None, consumer_secret=None, token=None, token_secret=None, verifier=None, method='GET', callback=None):
     """
     Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint
     
     Taken from the oauth2 library
-    
-    
+        
     1. Request Token URL http://oauth.net/core/1.0a/auth_step1
         
         params:
@@ -136,7 +134,7 @@ def create_oauth1_url(phase, base, consumer_key=None, consumer_secret=None, toke
     params = {}
     
     
-    if phase == 1:
+    if url_type == 1:
         # Request Token URL
         if consumer_key and consumer_secret and callback:
             params['oauth_consumer_key'] = consumer_key
@@ -144,7 +142,7 @@ def create_oauth1_url(phase, base, consumer_key=None, consumer_secret=None, toke
         else:
             raise OAuth1Error('Parameters consumer_key, consumer_secret and callback are required to create Request Token URL!')
         
-    elif phase == 2:
+    elif url_type == 2:
         # User Authorization URL
         if token:
             params['oauth_token'] = token
@@ -152,7 +150,7 @@ def create_oauth1_url(phase, base, consumer_key=None, consumer_secret=None, toke
         else:
             raise OAuth1Error('Parameter token is required to create User Authorization URL!')
         
-    elif phase == 3:
+    elif url_type == 3:
         # Access Token URL
         if consumer_key and consumer_secret and token and verifier:
             params['oauth_token'] = token
@@ -161,7 +159,7 @@ def create_oauth1_url(phase, base, consumer_key=None, consumer_secret=None, toke
         else:
             raise OAuth1Error('Parameters consumer_key, consumer_secret, token and verifier are required to create Access Token URL!')
         
-    elif phase == 4:
+    elif url_type == 4:
         # Protected Resources URL
         if consumer_key and consumer_secret and token and token_secret:
             params['oauth_token'] = token
@@ -196,46 +194,6 @@ def create_oauth1_url(phase, base, consumer_key=None, consumer_secret=None, toke
     params['oauth_signature'] = binascii.b2a_base64(hashed.digest())[:-1]
     
     return base + '?' + urlencode(params)
-
-
-def create_oauth1_urlX(url, consumer_key, consumer_secret, access_token=None, access_token_secret=None, method='GET'):
-    """
-    Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint
-    
-    Taken from the oauth2 library    
-    """
-    
-    params = {}
-    
-    params['oauth_token'] = access_token
-    
-    params['oauth_consumer_key'] = consumer_key
-    params['oauth_signature_method'] = 'HMAC-SHA1'
-    params['oauth_timestamp'] = str(int(time.time()))
-    #TODO: Handle nonce as CSRF token
-    params['oauth_nonce'] = str(random.randint(0, 100000000))
-    params['oauth_version'] = '1.0'
-    
-        
-    # prepare values for signing        
-    # signed parameters must be sorted first by key, then by value
-    params_to_sign = [(k, v) for k, v in params.items() if k != 'oauth_signature']
-    params_to_sign.sort()
-    params_to_sign = urllib.urlencode(params_to_sign)
-    params_to_sign = params_to_sign.replace('+', '%20').replace('%7E', '~')
-    
-    key = '{}&'.format(escape(consumer_secret))
-    if access_token_secret:
-        key += escape(access_token_secret)
-    
-    raw = '&'.join((escape(method), escape(url), escape(params_to_sign)))
-    
-    # sign with HMAC-SHA1 method
-    hashed = hmac.new(key, raw, hashlib.sha1)
-    
-    params['oauth_signature'] = binascii.b2a_base64(hashed.digest())[:-1]
-    
-    return url + '?' + urlencode(params)
 
 
 def create_oauth2_url(url, access_token):
@@ -309,22 +267,15 @@ class Credentials(object):
         self._expires_in = expires_in
         self._set_expiration_date(expires_in)
     
-    
     def _set_expiration_date(self, expires_in):
         if expires_in:
             self.expiration_date = datetime.datetime.now() + datetime.timedelta(seconds=int(expires_in))
         else:
             self.expiration_date = None
     
-    
     @property
-    def expires_in(self): pass
-    
-    
-    @expires_in.getter
     def expires_in(self): 
         return self._expires_in
-    
     
     @expires_in.setter
     def expires_in(self, value):
@@ -344,7 +295,7 @@ class AuthEvent(object):
 
 class RPC(object):
     """
-    An Remote Procedure Call wrapper
+    Remote Procedure Call wrapper
     """
     
     def __init__(self, rpc_object, response_parser, content_parser):
@@ -395,9 +346,7 @@ class Request(object):
         if self.credentials.provider_type == 'OAuth2':
             self.url = create_oauth2_url(url, self.credentials.access_token)
         elif self.credentials.provider_type == 'OAuth1':
-            
-            #TODO: returns {u'errors': [{u'message': u'Bad Authentication data', u'code': 215}]}
-            self.url = create_oauth1_url(phase=4,
+            self.url = create_oauth1_url(url_type=4,
                                          base=url,
                                          consumer_key=self.credentials.consumer_key,
                                          consumer_secret=self.credentials.consumer_secret,
@@ -410,5 +359,3 @@ class Request(object):
     
     def get_response(self):
         return self.rpc.get_response()
-#        response = self.adapter.parse_response(self.rpc.get_response(), self.adapter.json_parser)
-#        return self.content_parser(response) if self.content_parser else response
