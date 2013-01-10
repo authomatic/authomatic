@@ -9,3 +9,6 @@ class ImportStringError(Exception):
 
 class OAuth1Error(Exception):
     pass
+
+class OAuth2Error(Exception):
+    pass

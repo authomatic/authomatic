@@ -2,6 +2,7 @@ from . import BaseAdapter
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 from simpleauth2 import Response, RPC
+from urllib import urlencode
 from webapp2_extras import sessions
 import urlparse
 
@@ -132,7 +133,7 @@ class GAEWebapp2Adapter(BaseAdapter):
         self._handler.redirect(url)
     
     
-    def fetch_async(self, content_parser, url, payload=None, method='GET', headers={}, response_parser=None):
+    def fetch_async(self, content_parser, url, params={}, method='GET', headers={}, response_parser=None):
         """
         Makes an asynchronous object
         
@@ -140,7 +141,7 @@ class GAEWebapp2Adapter(BaseAdapter):
         """
         
         rpc = urlfetch.create_rpc()
-        urlfetch.make_fetch_call(rpc, url, payload, method, headers)
+        urlfetch.make_fetch_call(rpc, url, urlencode(params), method, headers)
         
         return RPC(rpc, response_parser or self.response_parser, content_parser)
     

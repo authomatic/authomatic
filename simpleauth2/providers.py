@@ -1,5 +1,5 @@
 from simpleauth2 import Credentials, User, Request, AuthEvent, UserInfoResponse, \
-    create_oauth1_url
+    create_oauth1_url, create_oauth2_url
 from urllib import urlencode
 import logging
 import oauth2
@@ -96,10 +96,10 @@ class BaseProvider(object):
     # Internal methods
     #===========================================================================
     
-    def _fetch(self, content_parser, url, payload=None, method='GET', headers={}):
+    def _fetch(self, content_parser, url, params={}, method='GET', headers={}):
         #TODO: Check whether the method is valid
         
-        return self.adapter.fetch_async(content_parser, url, payload, method, headers).get_response()
+        return self.adapter.fetch_async(content_parser, url, params, method, headers).get_response()
     
     def _update_or_create_user(self, data):
         """
@@ -172,19 +172,12 @@ class OAuth2(BaseProvider):
         
         if self.phase == 0:
             
-            # prepare url parameters
-            params = dict(client_id=self.consumer.key,
-                          redirect_uri=self.uri,
-                          response_type='code',
-                          scope=self._normalize_scope(self.consumer.scope))
+            url = create_oauth2_url(1, self.urls[0],
+                                    consumer_key=self.consumer.key,
+                                    redirect_uri=self.uri,
+                                    scope=self._normalize_scope(self.consumer.scope)) #TODO: Move scope normalization to setter in Consumer
             
-            #  generate CSRF token, save it to storage and add to url parameters
-            
-            
-            # redirect to to provider to get access token
-            redirect_url = self.urls[0] + '?' + urlencode(params)
-            
-            self.adapter.redirect(redirect_url)
+            self.adapter.redirect(url)
             
         if self.phase == 1:
             # retrieve CSRF token from storage
@@ -198,16 +191,15 @@ class OAuth2(BaseProvider):
                 raise Exception('Failed to get access token from provider {}!'.format(self.provider_name))
             
             # exchange authorisation code for access token by the provider
+            # the parameters should be encoded in the headers so create_oauth2_url() doesn't help
             params = dict(code=self.consumer.access_token,
                           client_id=self.consumer.key,
                           client_secret=self.consumer.secret,
                           redirect_uri=self.uri,
                           grant_type='authorization_code')
             
-            # construct url
-            
             parser = self._get_parser_by_index(1)
-            response = self._fetch(parser, self.urls[1], urlencode(params), 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            response = self._fetch(parser, self.urls[1], params, 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
                         
             # create user
             self._update_or_create_user(response.data)

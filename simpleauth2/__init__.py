@@ -196,8 +196,32 @@ def create_oauth1_url(url_type, base, consumer_key=None, consumer_secret=None, t
     return base + '?' + urlencode(params)
 
 
-def create_oauth2_url(url, access_token):
-    return url + '?' + urlencode(dict(access_token=access_token))
+def create_oauth2_url(url_type, base, consumer_key=None, access_token=None, redirect_uri=None, scope=None, state=None):
+    
+    params = {}
+    
+    if url_type == 1:
+        # Authorization Request http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.1
+        if consumer_key:
+            # required
+            params['client_id'] = consumer_key
+            params['response_type'] = 'code'
+            
+            # optional
+            if redirect_uri: params['redirect_uri'] = redirect_uri
+            if scope: params['scope'] = scope
+            if state: params['state'] = state
+        else:
+            raise OAuth2Error('Parameter consumer_key is required to create Authorization Requestn URL!')
+    
+    if url_type == 2:
+        # 
+        if access_token:
+            params['access_token'] = access_token
+        else:
+            raise OAuth2Error('')
+        
+    return base + '?' + urlencode(params)
 
 
 def resolve_provider_class(class_):
@@ -344,7 +368,7 @@ class Request(object):
         self.rpc = None
         
         if self.credentials.provider_type == 'OAuth2':
-            self.url = create_oauth2_url(url, self.credentials.access_token)
+            self.url = create_oauth2_url(2, url, access_token=self.credentials.access_token)
         elif self.credentials.provider_type == 'OAuth1':
             self.url = create_oauth1_url(url_type=4,
                                          base=url,
@@ -354,7 +378,9 @@ class Request(object):
                                          token_secret=self.credentials.access_token_secret)
     
     def fetch(self):
-        self.rpc = self.adapter.fetch_async(self.content_parser, self.url, self.method, response_parser=self.response_parser)        
+        self.rpc = self.adapter.fetch_async(self.content_parser, self.url,
+                                            method=self.method,
+                                            response_parser=self.response_parser)        
         return self
     
     def get_response(self):
