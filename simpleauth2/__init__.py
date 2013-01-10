@@ -246,7 +246,6 @@ def import_string(import_name, silent=False):
     try:
         if '.' in import_name:
             module, obj = import_name.rsplit('.', 1)
-            #TODO: Throws an error on fully qualified path
             return getattr(__import__(module, None, None, [obj]), obj)
         else:
             return __import__(import_name)

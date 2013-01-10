@@ -175,7 +175,7 @@ class OAuth2(BaseProvider):
             url = create_oauth2_url(1, self.urls[0],
                                     consumer_key=self.consumer.key,
                                     redirect_uri=self.uri,
-                                    scope=self._normalize_scope(self.consumer.scope)) #TODO: Move scope normalization to setter in Consumer
+                                    scope=self._normalize_scope(self.consumer.scope))
             
             self.adapter.redirect(url)
             
