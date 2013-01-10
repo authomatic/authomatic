@@ -1,5 +1,6 @@
 from simpleauth2 import Credentials, User, Request, AuthEvent, UserInfoResponse, \
     create_oauth1_url, create_oauth2_url
+from simpleauth2.exceptions import OAuth2Error
 from urllib import urlencode
 import logging
 import oauth2
@@ -19,7 +20,6 @@ class BaseProvider(object):
         self.callback = callback
         self.adapter = adapter
         
-        #TODO: Create user only when there is data
         self.user = None
                 
         self._user_info_request = None
@@ -95,7 +95,7 @@ class BaseProvider(object):
     #===========================================================================
     # Internal methods
     #===========================================================================
-    
+        
     def _fetch(self, content_parser, url, params={}, method='GET', headers={}):
         #TODO: Check whether the method is valid
         
@@ -167,7 +167,7 @@ class OAuth2(BaseProvider):
     """
     Base class for OAuth2 services
     """
-    
+        
     def login(self):
         
         if self.phase == 0:
@@ -368,7 +368,6 @@ class OAuth1(BaseProvider):
                 raise Exception('OAuth token secret could not be retrieved from storage!')
             
             # extract the verifier
-            #TODO: Check what is verifier good for!
             verifier = self.adapter.get_request_param('oauth_verifier')
             if not verifier:
                 self.adapter.reset_phase(self.provider_name)
