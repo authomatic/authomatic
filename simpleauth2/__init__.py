@@ -5,6 +5,7 @@ import datetime
 import hashlib
 import hmac
 import logging
+import pickle
 import random
 import sys
 import time
@@ -48,7 +49,7 @@ def login(adapter, provider_name, callback, scope=[]):
     ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate and call provider class
-    ProviderClass(adapter, phase, provider_name, consumer, callback).login()
+    ProviderClass(adapter, phase, provider_name, consumer, callback, provider_settings.get('id')).login()
 
 
 def escape(s):
@@ -254,6 +255,15 @@ def import_string(import_name, silent=False):
             raise ImportStringError(import_name, e), None, sys.exc_info()[2]
 
 
+def get_provider_by_id(config, provider_id):
+    for v in config.values():
+        if v.get('id') == provider_id:
+            return v
+            break
+    else:
+        raise Exception('Failed to get provider by id!')
+
+
 class Consumer(object):
     def __init__(self, key, secret, scope=None):
         self.key = key
@@ -281,20 +291,18 @@ class User(object):
 
 
 class Credentials(object):
-    def __init__(self, access_token, access_token_secret=None, consumer_key=None, consumer_secret=None, expires_in=0, provider_type=None):
+    
+    _types = ('OAuth1', 'OAuth2', 'OpenID')
+    
+    def __init__(self, access_token, provider_type, provider_id, consumer_key=None, consumer_secret=None, access_token_secret=None, expires_in=0):
         self.access_token = access_token
-        self.access_token_secret = access_token_secret
+        self.provider_type = provider_type
+        self.provider_id = provider_id
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
-        self.provider_type = provider_type
-        self._expires_in = expires_in
-        self._set_expiration_date(expires_in)
-    
-    def _set_expiration_date(self, expires_in):
-        if expires_in:
-            self.expiration_date = datetime.datetime.now() + datetime.timedelta(seconds=int(expires_in))
-        else:
-            self.expiration_date = None
+        self.access_token_secret = access_token_secret
+        self.expires_in = expires_in
+        self.expiration_date = None
     
     @property
     def expires_in(self): 
@@ -302,10 +310,47 @@ class Credentials(object):
     
     @expires_in.setter
     def expires_in(self, value):
-        # update expiration_date 
-        self._set_expiration_date(value)
+        if value:
+            self.expiration_date = datetime.datetime.now() + datetime.timedelta(seconds=int(value))
+            self._expires_in = value
+    
+    def serialize(self):
+        # OAuth 2.0 needs only access_token
+        result = (self._types.index(self.provider_type), self.provider_id, self.access_token)
         
-        self._expires_in = value
+        if self.provider_type == 'OAuth1':
+            # OAuth 1.0 also needs access_token_secret
+            result += (self.access_token_secret,)
+        elif self.provider_type == 'OAuth2':
+            # OAuth 2.0 also needs expires_in
+            result += (self.expiration_date,)
+        return pickle.dumps(result)
+    
+    @classmethod
+    def from_serialized(cls, adapter, serialized):
+        # Unpickle serialized
+        deserialized = pickle.loads(serialized)
+        
+        try:
+            provider_type = cls._types[deserialized[0]]
+            provider_id = deserialized[1]
+            access_token = deserialized[2]
+            
+            cfg =  get_provider_by_id(adapter.get_providers_config(), provider_id)
+            
+            if provider_type == 'OAuth2':
+                credentials = cls(access_token, provider_type, provider_id)
+                credentials.expiration_date = deserialized[3]
+                return credentials
+            
+            elif provider_type == 'OAuth1':
+                return cls(access_token, provider_type, provider_id,
+                           access_token_secret=deserialized[3],
+                           consumer_key=cfg.get('consumer_key'),
+                           consumer_secret=cfg.get('consumer_secret'))
+            
+        except (TypeError, IndexError) as e:
+            raise CredentialsError('Deserialization failed! Error: {}'.format(e))
 
 
 class AuthEvent(object):

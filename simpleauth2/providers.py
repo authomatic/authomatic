@@ -13,12 +13,13 @@ class BaseProvider(object):
     Base class for all providers
     """
      
-    def __init__(self, adapter, phase, provider_name, consumer, callback):
+    def __init__(self, adapter, phase, provider_name, consumer, callback, provider_id=None):
         self.phase = phase
         self.provider_name = provider_name
         self.consumer = consumer
         self.callback = callback
         self.adapter = adapter
+        self.id = provider_id
         
         self.user = None
                 
@@ -136,15 +137,12 @@ class BaseProvider(object):
         return self.user
     
     
-    def _credentials_parser(self, data):
+    def _update_credentials(self, data):
         
-        credentials = Credentials(data.get('access_token'))
+        self.credentials.access_token_secret = data.get('access_token_secret')
+        self.credentials.expires_in = data.get('expires_in')
         
-        credentials.access_token_secret = data.get('access_token_secret')
-        credentials.expires_in = data.get('expires_in')
-        credentials.provider_type = self.type
-        
-        return credentials
+        return self.credentials
         
     
     def _normalize_scope(self, scope):
@@ -205,7 +203,8 @@ class OAuth2(BaseProvider):
             self._update_or_create_user(response.data)
             
             # create credentials
-            self.credentials = self._credentials_parser(response.data)
+            self.credentials = Credentials(response.data.get('access_token'), self.type, self.id)
+            self._update_credentials(response.data)
             
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)
@@ -232,11 +231,11 @@ class Facebook(OAuth2):
     user_info_mapping = dict(user_id='id',
                             picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
     
-    def _credentials_parser(self, data):
+    def _update_credentials(self, data):
         """
         We need to override this method to fix Facebooks naming deviation
         """
-        credentials = super(Facebook, self)._credentials_parser(data)
+        credentials = super(Facebook, self)._update_credentials(data)
         
         # Facebook returns "expires" instead of "expires_in"
         credentials.expires_in = data.get('expires')
@@ -295,9 +294,9 @@ class OAuth1(BaseProvider):
         self._oauth_token_key = self.provider_name + '_oauth_token'
         self._oauth_token_secret_key = self.provider_name + '_oauth_token_secret'
     
-    def _credentials_parser(self, response):
+    def _update_credentials(self, response):
         
-        credentials = super(OAuth1, self)._credentials_parser(response)
+        credentials = super(OAuth1, self)._update_credentials(response)
         
         credentials.access_token = response.get('oauth_token')
         credentials.access_token_secret = response.get('oauth_token_secret')
@@ -388,7 +387,8 @@ class OAuth1(BaseProvider):
             
             self._update_or_create_user(response.data)
             
-            self.credentials = self._credentials_parser(response.data)
+            self.credentials = Credentials(self.consumer.access_token, self.type, self.id)
+            self._update_credentials(response.data)
             
             # create event
             event = AuthEvent(self, self.consumer, self.user, self.credentials)

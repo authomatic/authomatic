@@ -12,3 +12,6 @@ class OAuth1Error(Exception):
 
 class OAuth2Error(Exception):
     pass
+
+class CredentialsError(Exception):
+    pass
