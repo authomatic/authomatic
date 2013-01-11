@@ -197,11 +197,15 @@ class Request(object):
     def __init__(self, adapter, url, credentials, method='GET', response_parser=None, content_parser=None):
         self.adapter = adapter
         self.url = url
-        self.credentials = credentials
         self.method = method
         self.response_parser = response_parser
         self.content_parser = content_parser or adapter.json_parser
         self.rpc = None
+        
+        if type(credentials) == Credentials:
+            self.credentials = credentials
+        elif type(credentials) == str:
+            self.credentials = Credentials.from_serialized(self.adapter, credentials)
         
         if self.credentials.provider_type == 'OAuth2':
             self.url = providers.OAuth2.create_url(2, url, access_token=self.credentials.access_token)
