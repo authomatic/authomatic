@@ -1,4 +1,4 @@
-from exceptions import *
+import exceptions
 from urllib import urlencode
 import binascii
 import datetime

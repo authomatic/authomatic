@@ -1,5 +1,4 @@
-from simpleauth2 import Credentials, User, Request, AuthEvent, UserInfoResponse, \
-    create_oauth1_url, create_oauth2_url
+import simpleauth2
 from simpleauth2.exceptions import OAuth2Error
 from urllib import urlencode
 import logging
@@ -65,7 +64,7 @@ class BaseProvider(object):
     
     
     def create_request(self, url, method='GET', content_parser=None, response_parser=None):        
-        return Request(adapter=self.adapter,
+        return simpleauth2.Request(adapter=self.adapter,
                        url=url,
                        credentials=self.credentials,
                        method=method,
@@ -84,7 +83,7 @@ class BaseProvider(object):
             def response_parser(response, content_parser):
                 response = self.adapter.response_parser(response, content_parser)
                 user = self._update_or_create_user(response.data)
-                return UserInfoResponse(response, user)
+                return simpleauth2.UserInfoResponse(response, user)
             
             self._user_info_request = self.create_request(self.urls[-1],
                                                           content_parser=self.adapter.json_parser,
@@ -110,7 +109,7 @@ class BaseProvider(object):
         """
         
         if not self.user:
-            self.user = User()
+            self.user = simpleauth2.User()
         
         self.user.raw_user_info = data
         
@@ -170,7 +169,7 @@ class OAuth2(BaseProvider):
         
         if self.phase == 0:
             
-            url = create_oauth2_url(1, self.urls[0],
+            url = simpleauth2.create_oauth2_url(1, self.urls[0],
                                     consumer_key=self.consumer.key,
                                     redirect_uri=self.uri,
                                     scope=self._normalize_scope(self.consumer.scope))
@@ -203,11 +202,11 @@ class OAuth2(BaseProvider):
             self._update_or_create_user(response.data)
             
             # create credentials
-            self.credentials = Credentials(response.data.get('access_token'), self.type, self.id)
+            self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.type, self.id)
             self._update_credentials(response.data)
             
             # create event
-            event = AuthEvent(self, self.consumer, self.user, self.credentials)
+            event = simpleauth2.AuthEvent(self, self.consumer, self.user, self.credentials)
             
             # reset phase
             self.adapter.reset_phase(self.provider_name)
@@ -313,7 +312,7 @@ class OAuth1(BaseProvider):
             parser = self._get_parser_by_index(0)
             
             # Create Request Token URL
-            url1 = create_oauth1_url(url_type=1,
+            url1 = simpleauth2.create_oauth1_url(url_type=1,
                                      base=self.urls[0],
                                      consumer_key=self.consumer.key,
                                      consumer_secret=self.consumer.secret,
@@ -346,7 +345,7 @@ class OAuth1(BaseProvider):
             self.adapter.store_provider_data(self.provider_name, 'oauth_token_secret', oauth_token_secret)
                         
             # Create User Authorization URL
-            url2 = create_oauth1_url(url_type=2,
+            url2 = simpleauth2.create_oauth1_url(url_type=2,
                                      base=self.urls[1],
                                      token=oauth_token)            
             self.adapter.redirect(url2)
@@ -375,7 +374,7 @@ class OAuth1(BaseProvider):
             parser = self._get_parser_by_index(1)
             
             # Create Access Token URL
-            url3 = create_oauth1_url(url_type=3,
+            url3 = simpleauth2.create_oauth1_url(url_type=3,
                                      base=self.urls[2],
                                      token=oauth_token,
                                      consumer_key=self.consumer.key,
@@ -387,11 +386,11 @@ class OAuth1(BaseProvider):
             
             self._update_or_create_user(response.data)
             
-            self.credentials = Credentials(self.consumer.access_token, self.type, self.id)
+            self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.type, self.id)
             self._update_credentials(response.data)
             
             # create event
-            event = AuthEvent(self, self.consumer, self.user, self.credentials)
+            event = simpleauth2.AuthEvent(self, self.consumer, self.user, self.credentials)
             
             # reset phase
             self.adapter.reset_phase(self.provider_name)

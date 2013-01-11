@@ -1,5 +1,4 @@
-from simpleauth2 import create_oauth1_url, Consumer, resolve_provider_class
-from simpleauth2.exceptions import ConfigError
+import simpleauth2
 from urllib import urlencode
 import binascii
 import hashlib
@@ -28,25 +27,25 @@ class BaseAdapter(object):
         # retrieve required settings for current provider and raise exceptions if missing
         provider_settings = providers_config.get(provider_name)
         if not provider_settings:
-            raise ConfigError('Provider name "{}" not specified!'.format(provider_name))
+            raise simpleauth2.exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
         
         provider_class = provider_settings.get('class_name')
         if not provider_class:
-            raise ConfigError('Class name not specified for provider {}!'.format(provider_name))
+            raise simpleauth2.exceptions.ConfigError('Class name not specified for provider {}!'.format(provider_name))
         
         consumer_key = provider_settings.get('consumer_key')
         if not consumer_key:
-            raise ConfigError('Consumer key not specified for provider {}!'.format(provider_name))    
+            raise simpleauth2.exceptions.ConfigError('Consumer key not specified for provider {}!'.format(provider_name))    
         
         consumer_secret = provider_settings.get('consumer_secret')
         if not consumer_secret:
-            raise ConfigError('Consumer secret not specified for provider {}!'.format(provider_name))
+            raise simpleauth2.exceptions.ConfigError('Consumer secret not specified for provider {}!'.format(provider_name))
         
         # merge scopes from config and argument
         scope = provider_settings.get('scope', []) + scope
         
         # create consumer
-        consumer = Consumer(consumer_key, consumer_secret, scope)
+        consumer = simpleauth2.Consumer(consumer_key, consumer_secret, scope)
         
         # get phase
         phase = self.get_phase(provider_name)
@@ -55,7 +54,7 @@ class BaseAdapter(object):
         self.set_phase(provider_name, phase + 1)
         
             
-        ProviderClass = resolve_provider_class(provider_class)
+        ProviderClass = simpleauth2.resolve_provider_class(provider_class)
         
         # instantiate and call provider class
         ProviderClass(self, phase, provider_name, consumer, callback, provider_settings.get('id')).login()
