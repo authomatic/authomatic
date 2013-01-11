@@ -85,8 +85,6 @@ class User(object):
 
 class Credentials(object):
     
-    _types = ('OAuth1', 'OAuth2', 'OpenID')
-    
     def __init__(self, access_token, provider_type, provider_id, consumer_key=None, consumer_secret=None, access_token_secret=None, expires_in=0):
         self.access_token = access_token
         self.provider_type = provider_type
@@ -109,7 +107,7 @@ class Credentials(object):
     
     def serialize(self):
         # OAuth 2.0 needs only access_token
-        result = (self._types.index(self.provider_type), self.provider_id, self.access_token)
+        result = (self.provider_id, self.access_token)
         
         if self.provider_type == 'OAuth1':
             # OAuth 1.0 also needs access_token_secret
@@ -125,20 +123,22 @@ class Credentials(object):
         deserialized = pickle.loads(serialized)
         
         try:
-            provider_type = cls._types[deserialized[0]]
-            provider_id = deserialized[1]
-            access_token = deserialized[2]
+            provider_id = deserialized[0]
+            access_token = deserialized[1]
             
             cfg =  get_provider_by_id(adapter.get_providers_config(), provider_id)
             
+            ProviderClass = resolve_provider_class(cfg.get('class_name'))
+            provider_type = ProviderClass.get_type()
+            
             if provider_type == 'OAuth2':
                 credentials = cls(access_token, provider_type, provider_id)
-                credentials.expiration_date = deserialized[3]
+                credentials.expiration_date = deserialized[2]
                 return credentials
             
             elif provider_type == 'OAuth1':
                 return cls(access_token, provider_type, provider_id,
-                           access_token_secret=deserialized[3],
+                           access_token_secret=deserialized[2],
                            consumer_key=cfg.get('consumer_key'),
                            consumer_secret=cfg.get('consumer_secret'))
             
@@ -201,7 +201,6 @@ class Request(object):
         self.method = method
         self.response_parser = response_parser
         self.content_parser = content_parser or adapter.json_parser
-        
         self.rpc = None
         
         if self.credentials.provider_type == 'OAuth2':
