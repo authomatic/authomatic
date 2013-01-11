@@ -12,46 +12,6 @@ import time
 import urllib
 
 
-def login(adapter, provider_name, callback, scope=[]):
-    
-    providers_config = adapter.get_providers_config()
-            
-    # retrieve required settings for current provider and raise exceptions if missing
-    provider_settings = providers_config.get(provider_name)
-    if not provider_settings:
-        raise ConfigError('Provider name "{}" not specified!'.format(provider_name))
-    
-    provider_class = provider_settings.get('class_name')
-    if not provider_class:
-        raise ConfigError('Class name not specified for provider {}!'.format(provider_name))
-    
-    consumer_key = provider_settings.get('consumer_key')
-    if not consumer_key:
-        raise ConfigError('Consumer key not specified for provider {}!'.format(provider_name))    
-    
-    consumer_secret = provider_settings.get('consumer_secret')
-    if not consumer_secret:
-        raise ConfigError('Consumer secret not specified for provider {}!'.format(provider_name))
-    
-    # merge scopes from config and argument
-    scope = provider_settings.get('scope', []) + scope
-    
-    # create consumer
-    consumer = Consumer(consumer_key, consumer_secret, scope)
-    
-    # get phase
-    phase = adapter.get_phase(provider_name)
-    
-    # store increased phase
-    adapter.set_phase(provider_name, phase + 1)
-    
-        
-    ProviderClass = resolve_provider_class(provider_class)
-    
-    # instantiate and call provider class
-    ProviderClass(adapter, phase, provider_name, consumer, callback, provider_settings.get('id')).login()
-
-
 def escape(s):
     """Escape a URL including any /."""
     return urllib.quote(s.encode('utf-8'), safe='~')

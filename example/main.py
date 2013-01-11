@@ -19,7 +19,7 @@ class Login(webapp2.RequestHandler):
                                     providers_config=config.PROVIDERS,
                                     session_secret='abcd')
         
-        simpleauth2.login(self.adapter, provider_name, self.callback)
+        self.adapter.login(provider_name, self.callback)
     
     def callback(self, event):
                 
