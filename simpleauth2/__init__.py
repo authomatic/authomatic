@@ -49,7 +49,7 @@ def login(adapter, provider_name, callback, scope=[]):
     ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate and call provider class
-    ProviderClass(adapter, phase, provider_name, consumer, callback, provider_settings.get('id')).login()
+    ProviderClass(adapter, phase, provider_name, consumer, callback, provider_settings.get('short_name')).login()
 
 
 def escape(s):
@@ -89,7 +89,7 @@ def import_string(import_name, silent=False):
 
 def get_provider_by_id(config, provider_id):
     for v in config.values():
-        if v.get('id') == provider_id:
+        if v.get('short_name') == provider_id:
             return v
             break
     else:
@@ -124,10 +124,10 @@ class User(object):
 
 class Credentials(object):
     
-    def __init__(self, access_token, provider_type, provider_id, consumer_key=None, consumer_secret=None, access_token_secret=None, expires_in=0):
+    def __init__(self, access_token, provider_type, short_name, consumer_key=None, consumer_secret=None, access_token_secret=None, expires_in=0):
         self.access_token = access_token
         self.provider_type = provider_type
-        self.provider_id = provider_id
+        self.provider_short_name = short_name
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
         self.access_token_secret = access_token_secret
@@ -146,7 +146,7 @@ class Credentials(object):
     
     def serialize(self):
         # OAuth 2.0 needs only access_token
-        result = (self.provider_id, self.access_token)
+        result = (self.provider_short_name, self.access_token)
         
         if self.provider_type == 'OAuth1':
             # OAuth 1.0 also needs access_token_secret

@@ -18,13 +18,13 @@ class BaseProvider(object):
     Base class for all providers
     """
     
-    def __init__(self, adapter, phase, provider_name, consumer, callback, provider_id=None):
+    def __init__(self, adapter, phase, provider_name, consumer, callback, short_name=None):
         self.phase = phase
         self.provider_name = provider_name
         self.consumer = consumer
         self.callback = callback
         self.adapter = adapter
-        self.id = provider_id
+        self.short_name = short_name
         
         self.user = None
                 
@@ -243,7 +243,7 @@ class OAuth2(BaseProvider):
             self._update_or_create_user(response.data)
             
             # create credentials
-            self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.get_type(), self.id)
+            self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.get_type(), self.short_name)
             self._update_credentials(response.data)
             
             # create event
@@ -268,7 +268,7 @@ class Facebook(OAuth2):
     
     parsers = (None, QUERY_STRING_PARSER)
     
-    user_info_mapping = dict(user_id='id',
+    user_info_mapping = dict(user_id='short_name',
                             picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
     
     def _update_credentials(self, data):
@@ -297,7 +297,7 @@ class Google(OAuth2):
     user_info_mapping = dict(name='name',
                             first_name='given_name',
                             last_name='family_name',
-                            user_id='id')
+                            user_id='short_name')
     
     def _normalize_scope(self, scope):
         """
@@ -318,7 +318,7 @@ class WindowsLive(OAuth2):
     
     parsers = (None, JSON_PARSER)
     
-    user_info_mapping=dict(user_id='id',
+    user_info_mapping=dict(user_id='short_name',
                            email=(lambda data: data.get('emails', {}).get('preferred')))
 
 
@@ -570,7 +570,7 @@ class OAuth1(BaseProvider):
             
             self._update_or_create_user(response.data)
             
-            self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.get_type(), self.id)
+            self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.get_type(), self.short_name)
             self._update_credentials(response.data)
             
             # create event
@@ -591,7 +591,7 @@ class Twitter(OAuth1):
     
     parsers = (QUERY_STRING_PARSER, QUERY_STRING_PARSER)
     
-    user_info_mapping = dict(user_id='id',
+    user_info_mapping = dict(user_id='short_name',
                             username='screen_name',
                             picture='profile_image_url',
                             locale='lang',

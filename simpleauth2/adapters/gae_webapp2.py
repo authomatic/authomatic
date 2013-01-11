@@ -23,6 +23,7 @@ class ProvidersConfigModel(ndb.Model):
     """
     
     name = ndb.StringProperty()
+    short_name = ndb.IntegerProperty()
     class_name = ndb.StringProperty()
     consumer_key = ndb.StringProperty()
     consumer_secret = ndb.StringProperty()
