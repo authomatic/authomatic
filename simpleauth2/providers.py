@@ -17,7 +17,7 @@ class BaseProvider(object):
     """
     Base class for all providers
     """
-     
+    
     def __init__(self, adapter, phase, provider_name, consumer, callback, provider_id=None):
         self.phase = phase
         self.provider_name = provider_name
@@ -29,8 +29,6 @@ class BaseProvider(object):
         self.user = None
                 
         self._user_info_request = None
-                
-        self.type = self.__class__.__bases__[0].__name__
         
         # recreate full current URL
         self.uri = self.adapter.get_current_uri()
@@ -65,6 +63,10 @@ class BaseProvider(object):
     # Exposed methods
     #===========================================================================
     
+    @classmethod
+    def get_type(cls):
+        return cls.__bases__[0].__name__
+        
     @staticmethod
     def create_url(self, url_type, base):
         raise NotImplementedError
@@ -241,7 +243,7 @@ class OAuth2(BaseProvider):
             self._update_or_create_user(response.data)
             
             # create credentials
-            self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.type, self.id)
+            self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.get_type(), self.id)
             self._update_credentials(response.data)
             
             # create event
@@ -341,7 +343,7 @@ class OAuth1(BaseProvider):
         
         credentials.consumer_key = self.consumer.key
         credentials.consumer_secret = self.consumer.secret
-        credentials.provider_type = self.type        
+        credentials.provider_type = self.get_type()
         
         return credentials    
     
@@ -568,7 +570,7 @@ class OAuth1(BaseProvider):
             
             self._update_or_create_user(response.data)
             
-            self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.type, self.id)
+            self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.get_type(), self.id)
             self._update_credentials(response.data)
             
             # create event
