@@ -1,6 +1,7 @@
 from simpleauth2 import Credentials, Request
 from simpleauth2.adapters.gae_webapp2 import GAEWebapp2Adapter
 import config
+import simpleauth2
 import sys
 import webapp2
 

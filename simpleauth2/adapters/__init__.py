@@ -1,9 +1,9 @@
-import simpleauth2
 from urllib import urlencode
 import binascii
 import hashlib
 import hmac
 import random
+import simpleauth2
 import time
 import urllib
 
@@ -21,43 +21,7 @@ class BaseAdapter(object):
     
 
     def login(self, provider_name, callback, scope=[]):
-        
-        providers_config = self.get_providers_config()
-                
-        # retrieve required settings for current provider and raise exceptions if missing
-        provider_settings = providers_config.get(provider_name)
-        if not provider_settings:
-            raise simpleauth2.exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
-        
-        provider_class = provider_settings.get('class_name')
-        if not provider_class:
-            raise simpleauth2.exceptions.ConfigError('Class name not specified for provider {}!'.format(provider_name))
-        
-        consumer_key = provider_settings.get('consumer_key')
-        if not consumer_key:
-            raise simpleauth2.exceptions.ConfigError('Consumer key not specified for provider {}!'.format(provider_name))    
-        
-        consumer_secret = provider_settings.get('consumer_secret')
-        if not consumer_secret:
-            raise simpleauth2.exceptions.ConfigError('Consumer secret not specified for provider {}!'.format(provider_name))
-        
-        # merge scopes from config and argument
-        scope = provider_settings.get('scope', []) + scope
-        
-        # create consumer
-        consumer = simpleauth2.Consumer(consumer_key, consumer_secret, scope)
-        
-        # get phase
-        phase = self.get_phase(provider_name)
-        
-        # store increased phase
-        self.set_phase(provider_name, phase + 1)
-        
-            
-        ProviderClass = simpleauth2.resolve_provider_class(provider_class)
-        
-        # instantiate and call provider class
-        ProviderClass(self, phase, provider_name, consumer, callback, provider_settings.get('id')).login()
+        simpleauth2.login(self, provider_name, callback, scope=[])
     
     
     def get_current_uri(self):
