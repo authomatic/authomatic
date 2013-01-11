@@ -1,4 +1,5 @@
 import exceptions
+import providers
 from urllib import urlencode
 import binascii
 import datetime
@@ -15,174 +16,6 @@ import urllib
 def escape(s):
     """Escape a URL including any /."""
     return urllib.quote(s.encode('utf-8'), safe='~')
-
-
-def create_oauth1_url(url_type, base, consumer_key=None, consumer_secret=None, token=None, token_secret=None, verifier=None, method='GET', callback=None):
-    """
-    Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint
-    
-    Taken from the oauth2 library
-        
-    1. Request Token URL http://oauth.net/core/1.0a/auth_step1
-        
-        params:
-           oauth_consumer_key
-           
-           oauth_callback (must be "oob" if not used with redirect)
-           
-           oauth_signature_method
-           oauth_timestamp
-           oauth_nonce
-           oauth_version
-           
-           oauth_signature (we need consumer_secret to sign the request)
-        
-        returns:
-           oauth_token
-           oauth_token_secret
-           oauth_callback_confirmed
-    
-    
-    2. User Authorization URL http://oauth.net/core/1.0a/auth_step2
-    
-        params:
-           oauth_token
-        
-        redirects to provider which redirects to callback
-        
-        returns:
-           oauth_token
-           oauth_verifier
-    
-    
-    3. Access Token URL http://oauth.net/core/1.0a/auth_step3
-        
-        params:
-            oauth_consumer_key
-            oauth_token            
-            oauth_verifier
-            
-            oauth_signature_method
-            oauth_timestamp
-            oauth_nonce
-            oauth_version
-            
-            oauth_signature (we need consumer_secret to sign the request)
-            
-        returns:
-            oauth_token
-            oauth_token_secret
-    
-    
-    4. Protected Resources URL http://oauth.net/core/1.0a/#anchor12
-        
-        params:
-            oauth_consumer_key
-            oauth_token
-            
-            oauth_signature_method
-            oauth_timestamp
-            oauth_nonce
-            oauth_version
-            
-            oauth_signature (we need consumer_secret and token_secret to sign the request)
-            
-        returns:
-            requested data    
-    
-    """
-    
-    params = {}
-    
-    
-    if url_type == 1:
-        # Request Token URL
-        if consumer_key and consumer_secret and callback:
-            params['oauth_consumer_key'] = consumer_key
-            params['oauth_callback'] = callback
-        else:
-            raise OAuth1Error('Parameters consumer_key, consumer_secret and callback are required to create Request Token URL!')
-        
-    elif url_type == 2:
-        # User Authorization URL
-        if token:
-            params['oauth_token'] = token
-            return base + '?' + urlencode(params)
-        else:
-            raise OAuth1Error('Parameter token is required to create User Authorization URL!')
-        
-    elif url_type == 3:
-        # Access Token URL
-        if consumer_key and consumer_secret and token and verifier:
-            params['oauth_token'] = token
-            params['oauth_consumer_key'] = consumer_key
-            params['oauth_verifier'] = verifier
-        else:
-            raise OAuth1Error('Parameters consumer_key, consumer_secret, token and verifier are required to create Access Token URL!')
-        
-    elif url_type == 4:
-        # Protected Resources URL
-        if consumer_key and consumer_secret and token and token_secret:
-            params['oauth_token'] = token
-            params['oauth_consumer_key'] = consumer_key
-        else:
-            raise OAuth1Error('Parameters consumer_key, consumer_secret, token and token_secret are required to create Protected Resources URL!')
-    
-    # Tign request.
-    # Taken from the oauth2 library.
-    
-    params['oauth_signature_method'] = 'HMAC-SHA1'
-    params['oauth_timestamp'] = str(int(time.time()))
-    params['oauth_nonce'] = str(random.randint(0, 100000000))
-    params['oauth_version'] = '1.0'
-    
-    # prepare values for signing        
-    # signed parameters must be sorted first by key, then by value
-    params_to_sign = [(k, v) for k, v in params.items() if k != 'oauth_signature']
-    params_to_sign.sort()
-    params_to_sign = urllib.urlencode(params_to_sign)
-    params_to_sign = params_to_sign.replace('+', '%20').replace('%7E', '~')
-    
-    key = '{}&'.format(escape(consumer_secret))
-    if token_secret:
-        key += escape(token_secret)
-    
-    raw = '&'.join((escape(method), escape(base), escape(params_to_sign)))
-    
-    # sign with HMAC-SHA1 method
-    hashed = hmac.new(key, raw, hashlib.sha1)
-    
-    params['oauth_signature'] = binascii.b2a_base64(hashed.digest())[:-1]
-    
-    return base + '?' + urlencode(params)
-
-
-def create_oauth2_url(url_type, base, consumer_key=None, access_token=None, redirect_uri=None, scope=None, state=None):
-    
-    params = {}
-    
-    if url_type == 1:
-        # Authorization Request http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.1
-        if consumer_key:
-            # required
-            params['client_id'] = consumer_key
-            params['response_type'] = 'code'
-            
-            # optional
-            if redirect_uri: params['redirect_uri'] = redirect_uri
-            if scope: params['scope'] = scope
-            if state: params['state'] = state
-        else:
-            raise OAuth2Error('Parameter consumer_key is required to create Authorization Requestn URL!')
-    
-    if url_type == 2:
-        # 
-        if access_token:
-            params['access_token'] = access_token
-        else:
-            raise OAuth2Error('')
-        
-    return base + '?' + urlencode(params)
 
 
 def resolve_provider_class(class_):
@@ -372,9 +205,9 @@ class Request(object):
         self.rpc = None
         
         if self.credentials.provider_type == 'OAuth2':
-            self.url = create_oauth2_url(2, url, access_token=self.credentials.access_token)
+            self.url = providers.OAuth2.create_url(2, url, access_token=self.credentials.access_token)
         elif self.credentials.provider_type == 'OAuth1':
-            self.url = create_oauth1_url(url_type=4,
+            self.url = providers.OAuth1.create_url(url_type=4,
                                          base=url,
                                          consumer_key=self.credentials.consumer_key,
                                          consumer_secret=self.credentials.consumer_secret,
