@@ -45,7 +45,7 @@ def import_string(import_name, silent=False):
             return __import__(import_name)
     except (ImportError, AttributeError), e:
         if not silent:
-            raise ImportStringError(import_name, e), None, sys.exc_info()[2]
+            raise exceptions.ImportStringError(import_name, e), None, sys.exc_info()[2]
 
 
 def get_provider_by_id(config, provider_id):
@@ -143,7 +143,7 @@ class Credentials(object):
                            consumer_secret=cfg.get('consumer_secret'))
             
         except (TypeError, IndexError) as e:
-            raise CredentialsError('Deserialization failed! Error: {}'.format(e))
+            raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))
 
 
 class AuthEvent(object):
