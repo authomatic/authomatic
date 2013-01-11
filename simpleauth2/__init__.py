@@ -177,19 +177,26 @@ class Response(object):
     Provides unified interface to results of different http request types
     """
     
-    def __init__(self, status_code=None, headers=None, raw_content=None, content=None):
-        self.raw_content = raw_content
+    def __init__(self, content_parser, status_code=None, headers=None, content=None):
+        self.content_parser = content_parser
         self.status_code = status_code
         self.headers = headers
         self.content = content
+        self._data = None
+    
+    @property
+    def data(self):
+        if not self._data:
+            self._data = self.content_parser(self.content)
+        return self._data
 
 
 class UserInfoResponse(object):
     def __init__(self, response, user):
-        self.raw_content = response.raw_content
         self.status_code = response.status_code
         self.headers = response.headers
         self.content = response.content
+        self.data = response.data
         self.user = user
 
 

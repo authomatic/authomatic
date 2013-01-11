@@ -1,8 +1,6 @@
 from simpleauth2 import Credentials, Request
 from simpleauth2.adapters.gae_webapp2 import GAEWebapp2Adapter
 import config
-import logging
-import simpleauth2
 import sys
 import webapp2
 
@@ -66,6 +64,7 @@ class Login(webapp2.RequestHandler):
             resp = rpc.get_response()
             self.response.write('Bio:<br /><br />')
             self.response.write(resp.data)
+            
             self.response.write('<br /><br />')
         
         user = user_rpc.get_response().user
