@@ -19,8 +19,7 @@ class BaseProvider(object):
     Base class for all providers
     """
     
-    def __init__(self, adapter, phase, provider_name, consumer, callback, short_name=None):
-        self.phase = phase
+    def __init__(self, adapter, provider_name, consumer, callback, short_name=None):
         self.provider_name = provider_name
         self.consumer = consumer
         self.callback = callback
@@ -28,6 +27,7 @@ class BaseProvider(object):
         self.short_name = short_name
         
         self.user = None
+        self._phase = None
                 
         self._user_info_request = None
         
@@ -105,11 +105,20 @@ class BaseProvider(object):
         
         return self._user_info_request
     
+    @property
+    def phase(self):
+        if self._phase is None:
+            self._phase = self.adapter.get_phase(self.provider_name)
+        return self._phase
     
     #===========================================================================
     # Internal methods
     #===========================================================================
+    
+    def _increase_phase(self):
+        self.adapter.set_phase(self.provider_name, self.phase + 1)
         
+    
     def _fetch(self, content_parser, url, params={}, method='GET', headers={}):
         #TODO: Check whether the method is valid
         if not method in HTTP_METHODS:
@@ -170,7 +179,15 @@ class BaseProvider(object):
     
     def _get_parser_by_index(self, index):
         return getattr(self.adapter, self.parsers[index])
-
+    
+    
+    def _check_consumer(self):
+        if not self.consumer.key:
+            raise simpleauth2.exceptions.ConfigError('Consumer key not specified for provider {}!'.format(self.provider_name))
+        
+        if not self.consumer.secret:
+            raise simpleauth2.exceptions.ConfigError('Consumer key not specified for provider {}!'.format(self.provider_name))
+    
 
 #===============================================================================
 # OAuth 2.0
@@ -211,7 +228,11 @@ class OAuth2(BaseProvider):
      
     def login(self):
         
+        self._check_consumer()
+        
         if self.phase == 0:
+            
+            self._increase_phase()
             
             # generate csfr
             csrf_token = self.adapter.generate_csrf()
@@ -501,7 +522,12 @@ class OAuth1(BaseProvider):
         return base + '?' + urlencode(params)
     
     def login(self):
+        
+        self._check_consumer()
+        
         if self.phase == 0:
+            
+            self._increase_phase()
             
             parser = self._get_parser_by_index(0)
             
@@ -609,7 +635,199 @@ class Twitter(OAuth1):
                             locale='lang',
                             link='url')
 
+
 #TODO: Implement OpenID providers
+
+
+#===============================================================================
+# Open ID
+#===============================================================================
+
+class OpenID(BaseProvider):
+    
+    @staticmethod
+    def _create_url(identity, callback):
+        return 'abc'
+    
+    @staticmethod
+    def _normalize_identifier(identifier):
+        return identifier
+    
+    def login(self):
+        logging.info('Open ID provider = {}'.format(self.provider_name))
+        
+        url = self._create_url(self.urls[0], self.uri)
+        
+        logging.info('Open ID url1 = {}'.format(url))
+        
+        if self.phase == 0:
+            
+            # get identifier
+            identifier = self.urls[0] or self.adapter.get_request_param('identifier')
+            
+            # 1.) Normalize Open ID identifier http://openid.net/specs/openid-authentication-2_0.html#normalization
+            identifier = self._normalize_identifier(identifier)
+            
+            # 2.) Discover http://openid.net/specs/openid-authentication-2_0.html#normalization
+            #
+            # should return
+            #    provider endpoint URL
+            #    protocol version
+            # or
+            #    claimed identifier
+            #    provider local identifier
+            # or
+            #    XRDS document (xml)
+            
+            
+            # 3.) Establish association http://openid.net/specs/openid-authentication-2_0.html#associations
+            #
+            #    fetch provider with parameters:
+            #        common parameters:
+            #            openid.ns
+            #            openid.mode
+            #            openid.assoc_type
+            #                HMAC-SHA1
+            #                HMAC-SHA256
+            #            openid.session_type
+            #                no-encryption
+            #                DH-SHA1
+            #                DH-SHA256
+            #
+            #        Diffie-Hellman Request Parameters:
+            #            openid.dh_modulus
+            #            openid.dh_gen
+            #            openid.dh_consumer_public
+            #
+            #    on success returns
+            #        common parameters:
+            #            ns
+            #            assoc_handle
+            #            session_type
+            #            assoc_type
+            #            expires_in
+            #
+            #        Unencrypted Response Parameters:
+            #            mac_key
+            #
+            #        Diffie-Hellman Response Parameters:
+            #            dh_server_public
+            #            enc_mac_key
+            #
+            #    on failure returns:
+            #        ns
+            #        error
+            #        error_code
+            #        session_type
+            #        assoc_type
+            
+            
+            # 4.) Request Authentication http://openid.net/specs/openid-authentication-2_0.html#requesting_authentication
+            #
+            #    redirect to provider with parameters:
+            #        openid.ns
+            #        openid.mode
+            #            checkid_immediate
+            #            checkid_setup
+            #        openid.claimed_id
+            #        openid.identity
+            #        openid.assoc_handle
+            #        openid.return_to
+            #        openid.realm
+            #
+            #    on success returns:
+            #        openid.ns
+            #        openid.mode
+            #        openid.op_endpoint
+            #        openid.claimed_id
+            #        openid.identity
+            #        openid.return_to
+            #        openid.response_nonce
+            #        openid.invalidate_handle
+            #        openid.assoc_handle
+            #        openid.signed
+            #        openid.sig
+            #
+            #    on failure returns:
+            #        openid.ns
+            #        openid.mode
+                        
+            
+            pass
+        
+        elif self.phase == 1:
+            
+            # 5.) Verify assertion http://openid.net/specs/openid-authentication-2_0.html#verification
+            #
+            
+            # Finally we get
+            #
+            #    openid.claimed_id (visible user id)
+            #    
+            
+            pass
+
+class Yahoo(OpenID):
+    urls = ('me.yahoo.com', )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

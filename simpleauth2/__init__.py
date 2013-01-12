@@ -27,32 +27,19 @@ def login(adapter, provider_name, callback, scope=[]):
     provider_class = provider_settings.get('class_name')
     if not provider_class:
         raise exceptions.ConfigError('Class name not specified for provider {}!'.format(provider_name))
-    
-    consumer_key = provider_settings.get('consumer_key')
-    if not consumer_key:
-        raise exceptions.ConfigError('Consumer key not specified for provider {}!'.format(provider_name))    
-    
-    consumer_secret = provider_settings.get('consumer_secret')
-    if not consumer_secret:
-        raise exceptions.ConfigError('Consumer secret not specified for provider {}!'.format(provider_name))
-    
+        
     # merge scopes from config and argument
     scope = provider_settings.get('scope', []) + scope
     
     # create consumer
-    consumer = Consumer(consumer_key, consumer_secret, scope)
-    
-    # get phase
-    phase = adapter.get_phase(provider_name)
-    
-    # store increased phase
-    adapter.set_phase(provider_name, phase + 1)
-    
+    consumer = Consumer(provider_settings.get('consumer_key'),
+                        provider_settings.get('consumer_secret'),
+                        scope)
         
     ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate and call provider class
-    ProviderClass(adapter, phase, provider_name, consumer, callback, provider_settings.get('short_name')).login()
+    ProviderClass(adapter, provider_name, consumer, callback, provider_settings.get('short_name')).login()
 
 
 def escape(s):

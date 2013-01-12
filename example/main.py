@@ -30,6 +30,7 @@ class Login(webapp2.RequestHandler):
         self.response.write('<a href="/auth/google">Google</a><br />')
         self.response.write('<a href="/auth/windows_live">Windows Live</a><br />')
         self.response.write('<a href="/auth/twitter">Twitter</a><br />')
+        self.response.write('<a href="/auth/yahoo">Yahoo</a><br />')
         
         self.response.write('<br /><br />')
         self.response.write('Credentials:<br /><br />')
