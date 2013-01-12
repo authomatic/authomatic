@@ -264,7 +264,8 @@ class Request(object):
                                          consumer_key=self.credentials.consumer_key,
                                          consumer_secret=self.credentials.consumer_secret,
                                          token=self.credentials.access_token,
-                                         token_secret=self.credentials.access_token_secret)
+                                         token_secret=self.credentials.access_token_secret,
+                                         nonce=self.adapter.generate_csrf())
     
     def fetch(self):
         self.rpc = self.adapter.fetch_async(self.content_parser, self.url,

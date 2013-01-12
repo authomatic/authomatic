@@ -360,13 +360,13 @@ class OAuth1(BaseProvider):
     
     
     @staticmethod
-    def create_url(url_type, base, consumer_key=None, consumer_secret=None, token=None, token_secret=None, verifier=None, method='GET', callback=None, csrf_token=None):
+    def create_url(url_type, base, consumer_key=None, consumer_secret=None, token=None, token_secret=None, verifier=None, method='GET', callback=None, nonce=None):
         """
         Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint
         
         Taken from the oauth2 library
             
-        1. Request Token URL http://oauth.net/core/1.0a/auth_step1
+        1. Request Token URL http://oauth.net/core/1.0a/#auth_step1
             
             params:
                oauth_consumer_key
@@ -386,7 +386,7 @@ class OAuth1(BaseProvider):
                oauth_callback_confirmed
         
         
-        2. User Authorization URL http://oauth.net/core/1.0a/auth_step2
+        2. User Authorization URL http://oauth.net/core/1.0a/#auth_step2
         
             params:
                oauth_token
@@ -398,7 +398,7 @@ class OAuth1(BaseProvider):
                oauth_verifier
         
         
-        3. Access Token URL http://oauth.net/core/1.0a/auth_step3
+        3. Access Token URL http://oauth.net/core/1.0a/#auth_step3
             
             params:
                 oauth_consumer_key
@@ -475,7 +475,7 @@ class OAuth1(BaseProvider):
         
         params['oauth_signature_method'] = 'HMAC-SHA1'
         params['oauth_timestamp'] = str(int(time.time()))
-        params['oauth_nonce'] = csrf_token
+        params['oauth_nonce'] = nonce
         params['oauth_version'] = '1.0'
         
         # prepare values for signing        
@@ -510,7 +510,8 @@ class OAuth1(BaseProvider):
                                      base=self.urls[0],
                                      consumer_key=self.consumer.key,
                                      consumer_secret=self.consumer.secret,
-                                     callback=self.uri)
+                                     callback=self.uri,
+                                     nonce=self.adapter.generate_csrf())
             response = self._fetch(parser, url1)
             
             logging.info('RESPONSE = {}'.format(response.status_code))
@@ -537,11 +538,11 @@ class OAuth1(BaseProvider):
                 raise Exception('Could not get a valid OAuth token secret from provider {}!'.format(self.provider_name))
             
             self.adapter.store_provider_data(self.provider_name, 'oauth_token_secret', oauth_token_secret)
-                        
+            
             # Create User Authorization URL
             url2 = self.create_url(url_type=2,
                                      base=self.urls[1],
-                                     token=oauth_token)            
+                                     token=oauth_token)
             self.adapter.redirect(url2)
         
         if self.phase == 1:
@@ -574,7 +575,8 @@ class OAuth1(BaseProvider):
                                      consumer_key=self.consumer.key,
                                      consumer_secret=self.consumer.secret,
                                      token_secret=oauth_token_secret,
-                                     verifier=verifier)
+                                     verifier=verifier,
+                                     nonce=self.adapter.generate_csrf())
             
             response = self._fetch(parser, url3, method='POST')
             
