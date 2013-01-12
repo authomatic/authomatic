@@ -12,6 +12,9 @@ import sys
 import time
 import urllib
 
+class SimpleauthError(Exception):
+    pass
+
 def login(adapter, provider_name, callback, scope=[]):
     
     providers_config = adapter.get_providers_config()

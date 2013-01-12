@@ -24,6 +24,10 @@ class BaseAdapter(object):
         simpleauth2.login(self, provider_name, callback, scope=[])
     
     
+    def generate_csrf(self):
+        return str(random.randint(0, 100000000))
+    
+    
     def get_current_uri(self):
         """
         Returns the URI of current request without query parameters and fragment as string

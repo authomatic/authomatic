@@ -1,4 +1,3 @@
-from simpleauth2.exceptions import OAuth2Error
 from urllib import urlencode
 import binascii
 import hashlib
@@ -12,6 +11,8 @@ import urllib
 
 QUERY_STRING_PARSER = 'query_string_parser'
 JSON_PARSER = 'json_parser'
+
+HTTP_METHODS = ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'CONNECT', 'PATCH')
 
 class BaseProvider(object):
     """
@@ -68,7 +69,7 @@ class BaseProvider(object):
         return cls.__bases__[0].__name__
         
     @staticmethod
-    def create_url(self, url_type, base):
+    def create_url(url_type, base):
         raise NotImplementedError
     
     
@@ -111,6 +112,8 @@ class BaseProvider(object):
         
     def _fetch(self, content_parser, url, params={}, method='GET', headers={}):
         #TODO: Check whether the method is valid
+        if not method in HTTP_METHODS:
+            raise simpleauth2.exceptions.HTTPError('The {} is not a valid HTTP method!'.format(method))
         
         return self.adapter.fetch_async(content_parser, url, params, method, headers).get_response()
     
@@ -210,17 +213,25 @@ class OAuth2(BaseProvider):
         
         if self.phase == 0:
             
+            # generate csfr
+            csrf_token = self.adapter.generate_csrf()
+            self.adapter.store_provider_data(self.provider_name, 'csrf_token', csrf_token)
+            
             url = self.create_url(1, self.urls[0],
                                     consumer_key=self.consumer.key,
                                     redirect_uri=self.uri,
-                                    scope=self._normalize_scope(self.consumer.scope))
+                                    scope=self._normalize_scope(self.consumer.scope),
+                                    state=csrf_token)
             
             self.adapter.redirect(url)
             
         if self.phase == 1:
-            # retrieve CSRF token from storage
             
-            # Compare it with state returned by provider
+            # Validate CSRF token
+            csrf_token = self.adapter.retrieve_provider_data(self.provider_name, 'csrf_token')
+            state = self.adapter.get_request_param('state')
+            if not csrf_token == state:
+                raise simpleauth2.exceptions.CSRFError("The value {} of the \"state\" parameter returned by the provider doesn't match with the saved CSRF token!".format(state))
             
             # check access token
             self.consumer.access_token = self.adapter.get_request_param('code')
@@ -349,7 +360,7 @@ class OAuth1(BaseProvider):
     
     
     @staticmethod
-    def create_url(url_type, base, consumer_key=None, consumer_secret=None, token=None, token_secret=None, verifier=None, method='GET', callback=None):
+    def create_url(url_type, base, consumer_key=None, consumer_secret=None, token=None, token_secret=None, verifier=None, method='GET', callback=None, csrf_token=None):
         """
         Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint
         
@@ -426,7 +437,6 @@ class OAuth1(BaseProvider):
         
         params = {}
         
-        
         if url_type == 1:
             # Request Token URL
             if consumer_key and consumer_secret and callback:
@@ -465,7 +475,7 @@ class OAuth1(BaseProvider):
         
         params['oauth_signature_method'] = 'HMAC-SHA1'
         params['oauth_timestamp'] = str(int(time.time()))
-        params['oauth_nonce'] = str(random.randint(0, 100000000))
+        params['oauth_nonce'] = csrf_token
         params['oauth_version'] = '1.0'
         
         # prepare values for signing        
@@ -596,4 +606,12 @@ class Twitter(OAuth1):
                             picture='profile_image_url',
                             locale='lang',
                             link='url')
+
+#TODO: Implement OpenID providers
+
+
+
+
+
+
     
