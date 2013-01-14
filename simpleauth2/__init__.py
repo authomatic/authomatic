@@ -244,9 +244,9 @@ class Request(object):
             self.credentials = Credentials.from_serialized(self.adapter, credentials)
         
         if self.credentials.provider_type == 'OAuth2':
-            self.url = providers.OAuth2.create_url(2, url, access_token=self.credentials.access_token)
+            self.url = providers.oauth2.OAuth2.create_url(2, url, access_token=self.credentials.access_token)
         elif self.credentials.provider_type == 'OAuth1':
-            self.url = providers.OAuth1.create_url(url_type=4,
+            self.url = providers.oauth1.OAuth1.create_url(url_type=4,
                                          base=url,
                                          consumer_key=self.credentials.consumer_key,
                                          consumer_secret=self.credentials.consumer_secret,

@@ -21,3 +21,7 @@ class ProviderError(Exception):
 
 class HTTPError(Exception):
     pass
+
+class OpenIDError(Exception):
+    pass
+
