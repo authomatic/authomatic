@@ -68,7 +68,7 @@ class TestNDBOpenIDStore(object):
         assert association == Association.deserialize(entity.serialized)
     
     
-    def test_remove_expired(self):
+    def test_cleanupAssociations(self):
         """Tests the NDBOpenIDStore._delete_expired() method."""
         
         number_of_valid = 5
@@ -78,10 +78,11 @@ class TestNDBOpenIDStore(object):
         for i in range(number_of_valid):
             url = 'url-{}'.format(i)
             
-            association = AssociationMock(handle='handle_{}'.format(i),
-                                          serialized='serialized_{}'.format(i),
-                                          issued=int(time.time()),
-                                          lifetime=3600)
+            association = Association(handle='handle_{}'.format(i),
+                                      secret='secret',
+                                      issued=int(time.time()),
+                                      lifetime=3600,
+                                      assoc_type='HMAC-SHA1')
             
             NDBOpenIDStore.storeAssociation(url, association)
         
@@ -94,10 +95,11 @@ class TestNDBOpenIDStore(object):
             url = 'url-{}'.format(i)
             
             # create association mock beyond expiration
-            association = AssociationMock(handle='handle_{}'.format(i),
-                                          serialized='serialized_{}'.format(i),
-                                          issued=int(time.time()) - 3600,
-                                          lifetime=1000)
+            association = Association(handle='handle_{}'.format(i),
+                                      secret='secret',
+                                      issued=int(time.time()) - 3600,
+                                      lifetime=1000,
+                                      assoc_type='HMAC-SHA1')
             
             NDBOpenIDStore.storeAssociation(url, association)
         
@@ -105,7 +107,10 @@ class TestNDBOpenIDStore(object):
         assert NDBOpenIDStore.query().count() == number_of_expired + number_of_valid
         
         # call the tested method
-        NDBOpenIDStore._delete_expired()
+        removed = NDBOpenIDStore.cleanupAssociations()
+        
+        # check whether the method returned the correct number of deleted
+        assert removed == number_of_expired
         
         # get remaining
         remaining = NDBOpenIDStore.query().fetch()

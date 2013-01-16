@@ -91,7 +91,7 @@ class NDBOpenIDStore(ndb.Model, interface.OpenIDStore):
     
     
     @classmethod
-    def _delete_expired(cls):
+    def cleanupAssociations(cls):
         
         #TODO: Maybe it could be better as a background task
         
@@ -103,12 +103,14 @@ class NDBOpenIDStore(ndb.Model, interface.OpenIDStore):
         
         # delete all expired
         ndb.delete_multi(expired)
+        
+        return len(expired)
     
     
     @classmethod
     def getAssociation(cls, server_url, handle=None):
         
-        cls._delete_expired()
+        cls.cleanupAssociations()
         
         if handle:
             key = ndb.Key('ServerUrl', server_url, cls, handle)
