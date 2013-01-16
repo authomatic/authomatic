@@ -1,6 +1,7 @@
 from . import BaseAdapter
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
+from openid import association
 from openid.store import interface
 from simpleauth2 import Response, RPC
 from urllib import urlencode
@@ -68,6 +69,8 @@ class ProvidersConfigModel(ndb.Model):
 class NDBOpenIDStore(ndb.Model, interface.OpenIDStore):
     serialized = ndb.StringProperty()
     expiration_date = ndb.DateTimeProperty()
+    # we need issued to sort by most recently issued
+    issued = ndb.IntegerProperty()
     
     
     @classmethod
@@ -83,6 +86,7 @@ class NDBOpenIDStore(ndb.Model, interface.OpenIDStore):
         
         entity.serialized = association.serialize()
         entity.expiration_date = expiration_date
+        entity.issued = association.issued
         entity.put()
     
     
@@ -102,8 +106,19 @@ class NDBOpenIDStore(ndb.Model, interface.OpenIDStore):
     
     
     @classmethod
-    def getAssociation(self, server_url, handle=None):
-        pass
+    def getAssociation(cls, server_url, handle=None):
+        
+        cls._delete_expired()
+        
+        if handle:
+            key = ndb.Key('ServerUrl', server_url, cls, handle)
+            entity = key.get()
+        else:
+            # return most recently issued association
+            entity = cls.query(ancestor=ndb.Key('ServerUrl', server_url)).order(-cls.issued).get()
+        
+        if entity:
+            return association.Association.deserialize(entity.serialized)
 
 
 class GAEWebapp2Adapter(BaseAdapter):
