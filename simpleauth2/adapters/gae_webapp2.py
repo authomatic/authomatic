@@ -119,6 +119,14 @@ class NDBOpenIDStore(ndb.Model, interface.OpenIDStore):
         
         if entity:
             return association.Association.deserialize(entity.serialized)
+    
+    
+    @classmethod
+    def removeAssociation(cls, server_url, handle):
+        key = ndb.Key('ServerUrl', server_url, cls, handle)
+        if key.get():
+            key.delete()
+            return True
 
 
 class GAEWebapp2Adapter(BaseAdapter):

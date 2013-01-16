@@ -200,8 +200,39 @@ class TestNDBOpenIDStore(object):
         # test for non existent url
         association = NDBOpenIDStore.getAssociation('non_existent_url')
         assert association is None
+    
+    
+    def test_removeAssociation(self):
         
+        # create and store some associations
+        associations = []
         
+        for i in range(3):
+            assoc = Association(handle='handle-{}'.format(i),
+                                secret='secret',
+                                issued=int(time.time()),
+                                lifetime=3600,
+                                assoc_type='HMAC-SHA1')
+            associations.append(assoc)
+            NDBOpenIDStore.storeAssociation('server_url', assoc)
+        
+        # remove existing association
+        removed = NDBOpenIDStore.removeAssociation('server_url', 'handle-1')
+        
+        # check whether the method returned True
+        assert removed is True
+        
+        # check whether there is one less association in the datastore
+        assert NDBOpenIDStore.query().count() == 2
+        
+        # check whether the right association was deleted
+        assert NDBOpenIDStore.getAssociation('server_url', 'handle-1') is None
+        
+        # check whether the remaining are there
+        assert NDBOpenIDStore.getAssociation('server_url', 'handle-0') == associations[0]
+        assert NDBOpenIDStore.getAssociation('server_url', 'handle-2') == associations[2]
+            
+            
 
 
 
