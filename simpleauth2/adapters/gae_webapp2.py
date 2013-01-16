@@ -1,9 +1,11 @@
 from . import BaseAdapter
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
+from openid.store import interface
 from simpleauth2 import Response, RPC
 from urllib import urlencode
 from webapp2_extras import sessions
+import datetime
 import urlparse
 
 # taken from anyjson.py
@@ -61,6 +63,47 @@ class ProvidersConfigModel(ndb.Model):
             example.consumer_secret = 'Consumer secret'
             example.scope = 'coma, separated, list, of, scopes'
             example.put()
+
+#TODO: Move to separate module and pass it to the constructor of GAEWebapp2Adapter
+class NDBOpenIDStore(ndb.Model, interface.OpenIDStore):
+    serialized = ndb.StringProperty()
+    expiration_date = ndb.DateTimeProperty()
+    
+    
+    @classmethod
+    def storeAssociation(cls, server_url, association):
+        # store an entity with key = server_url
+                
+        issued = datetime.datetime.fromtimestamp(association.issued)
+        lifetime = datetime.timedelta(0, association.lifetime)
+        
+        expiration_date = issued + lifetime
+        
+        entity = cls.get_or_insert(association.handle, parent=ndb.Key('ServerUrl', server_url))
+        
+        entity.serialized = association.serialize()
+        entity.expiration_date = expiration_date
+        entity.put()
+    
+    
+    @classmethod
+    def _delete_expired(cls):
+        
+        #TODO: Maybe it could be better as a background task
+        
+        # query for all expired
+        query = cls.query(cls.expiration_date <= datetime.datetime.now())
+        
+        # fetch keys only
+        expired = query.fetch(keys_only=True)
+        
+        # delete all expired
+        ndb.delete_multi(expired)
+    
+    
+    @classmethod
+    def getAssociation(self, server_url, handle=None):
+        pass
 
 
 class GAEWebapp2Adapter(BaseAdapter):
@@ -172,6 +215,11 @@ class GAEWebapp2Adapter(BaseAdapter):
         resp.headers = response.headers
         
         return resp
+    
+    
+    @staticmethod
+    def get_openid_store():
+        return NDBOpenIDStore()
     
     
     def _save_session(self):
