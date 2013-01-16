@@ -1,12 +1,13 @@
 from . import BaseAdapter
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
-from openid import association
-from openid.store import interface
+from openid import association, store
+from openid.store import interface, nonce
 from simpleauth2 import Response, RPC
 from urllib import urlencode
 from webapp2_extras import sessions
 import datetime
+import openid
 import urlparse
 
 # taken from anyjson.py
@@ -65,8 +66,9 @@ class ProvidersConfigModel(ndb.Model):
             example.scope = 'coma, separated, list, of, scopes'
             example.put()
 
+
 #TODO: Move to separate module and pass it to the constructor of GAEWebapp2Adapter
-class NDBOpenIDStore(ndb.Model, interface.OpenIDStore):
+class NDBOpenIDStore(ndb.Expando, interface.OpenIDStore):
     serialized = ndb.StringProperty()
     expiration_date = ndb.DateTimeProperty()
     # we need issued to sort by most recently issued
@@ -129,6 +131,33 @@ class NDBOpenIDStore(ndb.Model, interface.OpenIDStore):
         if key.get():
             key.delete()
             return True
+    
+    @classmethod
+    def useNonce(cls, server_url, timestamp, salt):
+        
+        # check whether there is already an entity with the same ancestor path in the datastore
+        key = ndb.Key('ServerUrl', server_url, 'TimeStamp', str(timestamp), cls, salt)
+        
+        if key.get():
+            # if so, the nonce is not valid so return False
+            return False
+        else:
+            # if not, store the key to datastore and return True
+            nonce = cls(key=key)
+            nonce.expiration_date = datetime.datetime.fromtimestamp(timestamp) + datetime.timedelta(0, store.nonce.SKEW)
+            nonce.put()
+            return True
+    
+    
+    @classmethod
+    def cleanupNonces(cls):
+        # get all expired nonces
+        expired = cls.query().filter(cls.expiration_date <= datetime.datetime.now()).fetch(keys_only=True)
+        
+        # delete all expired
+        ndb.delete_multi(expired)
+        
+        return len(expired)
 
 
 class GAEWebapp2Adapter(BaseAdapter):

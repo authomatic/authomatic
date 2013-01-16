@@ -236,8 +236,50 @@ class TestNDBOpenIDStore(object):
         # check whether the remaining are there
         assert NDBOpenIDStore.getAssociation('server_url', 'handle-0') == associations[0]
         assert NDBOpenIDStore.getAssociation('server_url', 'handle-2') == associations[2]
-            
-            
+    
+    
+    def test_useNonce(self):
+        nonce = ('server_url', 123456789, 'salt')
+        
+        # check whether the method returns True with fresh nonce
+        assert NDBOpenIDStore.useNonce(*nonce) is True
+        
+        # check whether the method returns False with already used nonce
+        assert NDBOpenIDStore.useNonce(*nonce) is False
+        
+        
+        # check again with different nonce
+        nonce = ('server_url_b', 987654321, 'sugar')
+        
+        # check whether the method returns True with fresh nonce
+        assert NDBOpenIDStore.useNonce(*nonce) is True
+        
+        # check whether the method returns False with already used nonce
+        assert NDBOpenIDStore.useNonce(*nonce) is False
+    
+    
+    def test_cleanupNonces(self):
+        
+        # use valid and expired nonces
+        for i in range(10):
+            # first 5 are valid rest is expired
+            timestamp = time.time() if i < 5 else i
+            salt = 'valid' if i < 5 else 'expired'
+            NDBOpenIDStore.useNonce('server_url', timestamp, salt)
+        
+        query = NDBOpenIDStore.query()
+        
+        # check whether all nonces are in the datastore
+        assert query.count() == 10
+                        
+        # call the tested method
+        deleted = NDBOpenIDStore.cleanupNonces()
+        
+        # check whether the returned value coresponds with the number of deleted nonces
+        assert deleted == 5
+        
+        # check whether there there are 5 less nonces
+        assert query.count() == 5
 
 
 
