@@ -121,6 +121,15 @@ class TestNDBOpenIDStore(object):
         # check whether all the remaining are valid
         for entity in remaining:
             assert entity.expiration_date >= datetime.datetime.now()
+        
+        # call the tested method again
+        removed = NDBOpenIDStore.cleanupAssociations()
+        
+        # removed should now be 0
+        assert removed == 0
+        
+        # valid should still be there
+        assert NDBOpenIDStore.query().count() == number_of_valid
     
     
     def test_getAssociation(self):
@@ -279,6 +288,14 @@ class TestNDBOpenIDStore(object):
         assert deleted == 5
         
         # check whether there there are 5 less nonces
+        assert query.count() == 5
+        
+        # call the tested method again
+        deleted = NDBOpenIDStore.cleanupNonces()
+        # the returned value should now be 0
+        assert deleted == 0
+        
+        # check whether there still are 5 valid nonces
         assert query.count() == 5
 
 
