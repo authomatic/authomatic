@@ -83,7 +83,7 @@ def get_provider_settings_by_short_name(config, provider_id):
             return v
             break
     else:
-        raise Exception('Failed to get provider by id!')
+        raise Exception('Failed to get provider by id "{}"!'.format(provider_id))
 
 
 class Consumer(object):
@@ -114,7 +114,7 @@ class User(object):
 
 class Credentials(object):
     
-    def __init__(self, access_token, provider_type, short_name, consumer_key=None, consumer_secret=None, access_token_secret=None, expires_in=0, expiration_date=None):
+    def __init__(self, access_token=None, provider_type=None, short_name=None, consumer_key=None, consumer_secret=None, access_token_secret=None, expires_in=0, expiration_date=None):
         self.access_token = access_token
         self.provider_type = provider_type
         self.provider_short_name = short_name
@@ -123,6 +123,9 @@ class Credentials(object):
         self.access_token_secret = access_token_secret
         self.expires_in = expires_in
         self.expiration_date = expiration_date
+        
+        # validate required credentials by provider class
+        
     
     @property
     def expires_in(self): 
@@ -140,7 +143,10 @@ class Credentials(object):
     def serialize(self):
         
         # short_name is the first item by all providers
-        result = (self.provider_short_name, ) + self.get_provider_class().credentials_to_tuple(self)
+        short_name = self.provider_short_name
+        rest = self.get_provider_class().credentials_to_tuple(self)
+        
+        result = (short_name, ) + rest
             
         return pickle.dumps(result)
     
@@ -164,7 +170,7 @@ class Credentials(object):
 
 
 class AuthEvent(object):
-    def __init__(self, provider, consumer, user, credentials=None):
+    def __init__(self, provider, consumer, user, credentials):
         self.provider = provider
         self.consumer = consumer
         self.user = user

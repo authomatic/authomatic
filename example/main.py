@@ -1,5 +1,6 @@
 from simpleauth2 import Credentials, Request
-from simpleauth2.adapters.gae_webapp2 import GAEWebapp2Adapter
+from simpleauth2.adapters.gaewebapp2 import GAEWebapp2Adapter
+from simpleauth2.adapters.gaewebapp2.openid import NDBOpenIDStore
 import config
 import simpleauth2
 import sys
@@ -7,7 +8,13 @@ import webapp2
 
 class Home(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Home<br />')
+        self.response.write('<a href="/auth/facebook">Facebook</a><br />')
+        self.response.write('<a href="/auth/google">Google</a><br />')
+        self.response.write('<a href="/auth/windows_live">Windows Live</a><br />')
+        self.response.write('<a href="/auth/twitter">Twitter</a><br />')
+        
+        self.response.write('<a href="/auth/oi?id=https://me.yahoo.com">OpenID Yahoo</a><br />')
+        self.response.write('<a href="/auth/oi?id=https://www.google.com/accounts/o8/id">OpenID Google</a><br />')
         
 
 class Login(webapp2.RequestHandler):
@@ -16,7 +23,8 @@ class Login(webapp2.RequestHandler):
         
         self.adapter = GAEWebapp2Adapter(handler=self,
                                     providers_config=config.PROVIDERS,
-                                    session_secret='abcd')
+                                    session_secret='abcd',
+                                    openid_store=NDBOpenIDStore)
         
         self.adapter.login(provider_name, self.callback)
     
@@ -30,7 +38,23 @@ class Login(webapp2.RequestHandler):
         self.response.write('<a href="/auth/google">Google</a><br />')
         self.response.write('<a href="/auth/windows_live">Windows Live</a><br />')
         self.response.write('<a href="/auth/twitter">Twitter</a><br />')
-        self.response.write('<a href="/auth/yahoo">Yahoo</a><br />')
+        
+        self.response.write('<a href="/auth/oi?id=https://me.yahoo.com">OpenID Yahoo</a><br />')
+        self.response.write('<a href="/auth/oi?id=https://www.google.com/accounts/o8/id">OpenID Google</a><br />')
+        
+        self.response.write('<br /><br />')
+        
+        
+        
+        typ = event.provider.get_type()
+        klas = simpleauth2.resolve_provider_class(typ)
+        
+        
+        self.response.write('Type:<br /><br />')
+        self.response.write('type = {}<br />'.format(typ))
+        
+        
+        self.response.write('class.get_type() = {}<br />'.format(klas.get_type()))
         
         self.response.write('<br /><br />')
         self.response.write('Credentials:<br /><br />')
@@ -41,7 +65,7 @@ class Login(webapp2.RequestHandler):
         
         serialized = event.credentials.serialize()
         
-        deserialized = Credentials.from_serialized(self.adapter, serialized)
+        deserialized = Credentials.deserialize(self.adapter, serialized)
         
         self.response.write('<br /><br />')
         self.response.write('Serialized:<br />{}<br /><br />'.format(serialized)) 
