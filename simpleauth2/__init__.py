@@ -77,7 +77,7 @@ def import_string(import_name, silent=False):
             raise exceptions.ImportStringError(import_name, e), None, sys.exc_info()[2]
 
 
-def get_provider_by_id(config, provider_id):
+def get_provider_settings_by_short_name(config, provider_id):
     for v in config.values():
         if v.get('short_name') == provider_id:
             return v
@@ -114,7 +114,7 @@ class User(object):
 
 class Credentials(object):
     
-    def __init__(self, access_token, provider_type, short_name, consumer_key=None, consumer_secret=None, access_token_secret=None, expires_in=0):
+    def __init__(self, access_token, provider_type, short_name, consumer_key=None, consumer_secret=None, access_token_secret=None, expires_in=0, expiration_date=None):
         self.access_token = access_token
         self.provider_type = provider_type
         self.provider_short_name = short_name
@@ -122,7 +122,7 @@ class Credentials(object):
         self.consumer_secret = consumer_secret
         self.access_token_secret = access_token_secret
         self.expires_in = expires_in
-        self.expiration_date = None
+        self.expiration_date = expiration_date
     
     @property
     def expires_in(self): 
@@ -135,48 +135,36 @@ class Credentials(object):
             self._expires_in = value
     
     def serialize(self):
-        # OAuth 2.0 needs only access_token
-        result = (self.provider_short_name, self.access_token)
         
-        if self.provider_type == 'OAuth1':
-            # OAuth 1.0 also needs access_token_secret
-            result += (self.access_token_secret,)
-        elif self.provider_type == 'OAuth2':
-            # OAuth 2.0 also needs expires_in
-            result += (self.expiration_date,)
+        # get provider superclass
+        ProviderTypeClass = resolve_provider_class(self.provider_type)
+        
+        # short_name is the first item by all providers
+        result = (self.provider_short_name, ) + ProviderTypeClass.credentials_to_tuple(self)
+            
         return pickle.dumps(result)
     
+    
     @classmethod
-    def from_serialized(cls, adapter, serialized):
+    def deserialize(cls, adapter, serialized):
         # Unpickle serialized
         deserialized = pickle.loads(serialized)
         
         try:
             provider_id = deserialized[0]
-            access_token = deserialized[1]
             
-            cfg =  get_provider_by_id(adapter.get_providers_config(), provider_id)
+            cfg =  get_provider_settings_by_short_name(adapter.get_providers_config(), provider_id)
             
             ProviderClass = resolve_provider_class(cfg.get('class_name'))
-            provider_type = ProviderClass.get_type()
             
-            if provider_type == 'OAuth2':
-                credentials = cls(access_token, provider_type, provider_id)
-                credentials.expiration_date = deserialized[2]
-                return credentials
-            
-            elif provider_type == 'OAuth1':
-                return cls(access_token, provider_type, provider_id,
-                           access_token_secret=deserialized[2],
-                           consumer_key=cfg.get('consumer_key'),
-                           consumer_secret=cfg.get('consumer_secret'))
-            
+            return ProviderClass.credentials_from_tuple(deserialized)
+                        
         except (TypeError, IndexError) as e:
             raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))
 
 
 class AuthEvent(object):
-    def __init__(self, provider, consumer, user, credentials):
+    def __init__(self, provider, consumer, user, credentials=None):
         self.provider = provider
         self.consumer = consumer
         self.user = user
@@ -241,11 +229,12 @@ class Request(object):
         if type(credentials) == Credentials:
             self.credentials = credentials
         elif type(credentials) == str:
-            self.credentials = Credentials.from_serialized(self.adapter, credentials)
+            self.credentials = Credentials.deserialize(self.adapter, credentials)
         
-        if self.credentials.provider_type == 'OAuth2':
+        #TODO: get rid of create_url, replace it by calling Provider.access_resource() in the fetch() method
+        if self.credentials.provider_type == 'simpleauth2.providers.oauth2.OAuth2':
             self.url = providers.oauth2.OAuth2.create_url(2, url, access_token=self.credentials.access_token)
-        elif self.credentials.provider_type == 'OAuth1':
+        elif self.credentials.provider_type == 'simpleauth2.providers.oauth1.OAuth1':
             self.url = providers.oauth1.OAuth1.create_url(url_type=4,
                                          base=url,
                                          consumer_key=self.credentials.consumer_key,
@@ -257,8 +246,19 @@ class Request(object):
     def fetch(self):
         self.rpc = self.adapter.fetch_async(self.content_parser, self.url,
                                             method=self.method,
-                                            response_parser=self.response_parser)        
+                                            response_parser=self.response_parser)
+                
         return self
     
     def get_response(self):
         return self.rpc.get_response()
+
+
+
+
+
+
+
+
+
+

@@ -10,6 +10,7 @@ import urllib
 
 
 class OAuth1(providers.BaseProvider):
+    
     def __init__(self, *args, **kwargs):
         super(OAuth1, self).__init__(*args, **kwargs)
         
@@ -29,6 +30,18 @@ class OAuth1(providers.BaseProvider):
         credentials.provider_type = self.get_type()
         
         return credentials    
+    
+    
+    
+    @staticmethod
+    def credentials_to_tuple(credentials):
+        return (credentials.access_token, credentials.access_token_secret)
+    
+    
+    @classmethod
+    def credentials_from_tuple(cls, tuple_):
+        short_name, access_token, access_token_secret = tuple_
+        return simpleauth2.Credentials(access_token, cls.get_type(), short_name, access_token_secret=access_token_secret)
     
     
     @staticmethod

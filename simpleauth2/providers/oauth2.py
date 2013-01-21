@@ -7,7 +7,28 @@ class OAuth2(providers.BaseProvider):
     """
     Base class for OAuth2 services
     """
+    
+    @staticmethod
+    def credentials_to_tuple(credentials):
+        return (credentials.access_token, credentials.expiration_date)
+    
+    @classmethod
+    def credentials_from_tuple(cls, tuple_):
+        short_name, access_token, expiration_date = tuple_
+        return simpleauth2.Credentials(access_token, cls.get_type(), short_name, expiration_date=expiration_date)
+    
+    @classmethod
+    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET'):
+        # check required properties of credentials
+        if not credentials.access_token:
+            raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid access_token!')
         
+        url = cls.create_url(2, url, credentials.access_token)
+        rpc = adapter.fetch_async(content_parser, url)
+        
+        return rpc
+    
+    
     @staticmethod
     def create_url(url_type, base, consumer_key=None, access_token=None, redirect_uri=None, scope=None, state=None):
         

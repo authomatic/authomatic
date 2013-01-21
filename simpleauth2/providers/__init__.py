@@ -50,15 +50,27 @@ class BaseProvider(object):
     def login(self):
         pass
     
+    @staticmethod
+    def credentials_to_tuple(credentials):
+        raise NotImplementedError
+    
+    @staticmethod
+    def credentials_from_tuple(tuple_):
+        raise NotImplementedError
+    
     
     #===========================================================================
     # Exposed methods
     #===========================================================================
     
     @classmethod
-    def get_type(cls):
+    def get_typeX(cls):
         return cls.__bases__[0].__name__
-        
+    
+    @classmethod
+    def get_type(cls):
+        return cls.__module__ + '.' + cls.__bases__[0].__name__
+    
     @staticmethod
     def create_url(url_type, base):
         raise NotImplementedError
@@ -108,7 +120,9 @@ class BaseProvider(object):
     
     def _increase_phase(self):
         self.adapter.set_phase(self.provider_name, self.phase + 1)
-        
+    
+    def _reset_phase(self):   
+        self.adapter.set_phase(self.provider_name, 0)
     
     def _fetch(self, content_parser, url, params={}, method='GET', headers={}):
         #TODO: Check whether the method is valid
