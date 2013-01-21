@@ -31,7 +31,26 @@ class OAuth1(providers.BaseProvider):
         
         return credentials    
     
-    
+    @classmethod
+    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', response_parser=None):
+        # check required properties of credentials
+        if not credentials.access_token:
+            raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid access_token!')
+        
+        url2 = cls.create_url(url_type=4,
+                              base=url,
+                              consumer_key=credentials.consumer_key,
+                              consumer_secret=credentials.consumer_secret,
+                              token=credentials.access_token,
+                              token_secret=credentials.access_token_secret,
+                              nonce=adapter.generate_csrf())
+        
+        rpc = adapter.fetch_async(content_parser,
+                                  url=url2,
+                                  response_parser=response_parser)
+        
+        return rpc
+        
     
     @staticmethod
     def credentials_to_tuple(credentials):

@@ -134,13 +134,13 @@ class Credentials(object):
             self.expiration_date = datetime.datetime.now() + datetime.timedelta(seconds=int(value))
             self._expires_in = value
     
+    def get_provider_class(self):
+        return resolve_provider_class(self.provider_type)
+    
     def serialize(self):
         
-        # get provider superclass
-        ProviderTypeClass = resolve_provider_class(self.provider_type)
-        
         # short_name is the first item by all providers
-        result = (self.provider_short_name, ) + ProviderTypeClass.credentials_to_tuple(self)
+        result = (self.provider_short_name, ) + self.get_provider_class().credentials_to_tuple(self)
             
         return pickle.dumps(result)
     
@@ -230,24 +230,17 @@ class Request(object):
             self.credentials = credentials
         elif type(credentials) == str:
             self.credentials = Credentials.deserialize(self.adapter, credentials)
-        
-        #TODO: get rid of create_url, replace it by calling Provider.access_resource() in the fetch() method
-        if self.credentials.provider_type == 'simpleauth2.providers.oauth2.OAuth2':
-            self.url = providers.oauth2.OAuth2.create_url(2, url, access_token=self.credentials.access_token)
-        elif self.credentials.provider_type == 'simpleauth2.providers.oauth1.OAuth1':
-            self.url = providers.oauth1.OAuth1.create_url(url_type=4,
-                                         base=url,
-                                         consumer_key=self.credentials.consumer_key,
-                                         consumer_secret=self.credentials.consumer_secret,
-                                         token=self.credentials.access_token,
-                                         token_secret=self.credentials.access_token_secret,
-                                         nonce=self.adapter.generate_csrf())
     
-    def fetch(self):
-        self.rpc = self.adapter.fetch_async(self.content_parser, self.url,
-                                            method=self.method,
-                                            response_parser=self.response_parser)
-                
+    def fetch(self):        
+        ProviderClass = self.credentials.get_provider_class()
+        
+        self.rpc = ProviderClass.fetch_protected_resource(adapter=self.adapter,
+                                                          url=self.url,
+                                                          credentials=self.credentials,
+                                                          content_parser=self.content_parser,
+                                                          method=self.method,
+                                                          response_parser=self.response_parser)
+        
         return self
     
     def get_response(self):

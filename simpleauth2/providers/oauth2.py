@@ -18,13 +18,16 @@ class OAuth2(providers.BaseProvider):
         return simpleauth2.Credentials(access_token, cls.get_type(), short_name, expiration_date=expiration_date)
     
     @classmethod
-    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET'):
+    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', response_parser=None):
         # check required properties of credentials
         if not credentials.access_token:
             raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid access_token!')
         
-        url = cls.create_url(2, url, credentials.access_token)
-        rpc = adapter.fetch_async(content_parser, url)
+        url2 = cls.create_url(2, url, access_token=credentials.access_token)
+        
+        rpc = adapter.fetch_async(content_parser,
+                                  url=url2,
+                                  response_parser=response_parser)
         
         return rpc
     
