@@ -18,16 +18,23 @@ PAPE_POLICIES = ['AUTH_PHISHING_RESISTANT',
 POLICY_PAIRS = [(p, getattr(pape, p)) for p in PAPE_POLICIES]
 
 # http://openid.net/specs/openid-attribute-properties-list-1_0-01.html
-AX_SCHEMAS = dict(email_ax='http://axschema.org/contact/email',
-                  email_oi='http://schema.openid.net/contact/email',
-                  name='http://axschema.org/namePerson',
-                  name_prefix='http://openid.net/schema/namePerson/prefix',
-                  first_name='http://openid.net/schema/namePerson/first',
-                  last_name='http://openid.net/schema/namePerson/last',
-                  middle_name='http://openid.net/schema/namePerson/middle',
-                  name_suffix='http://openid.net/schema/namePerson/suffix',
-                  name_friendly='http://openid.net/schema/namePerson/friendly',
-                  guid='http://openid.net/schema/person/guid')
+AX_SCHEMAS = ('http://axschema.org/contact/email',
+              'http://schema.openid.net/contact/email',
+              'http://axschema.org/namePerson',
+              'http://openid.net/schema/namePerson/prefix',
+              'http://openid.net/schema/namePerson/first',
+              'http://openid.net/schema/namePerson/last',
+              'http://openid.net/schema/namePerson/friendly')
+
+SREG_FIELDS = ('nickname',
+             'email',
+             'fullname',
+             'dob',
+             'gender',
+             'postcode',
+             'country',
+             'language',
+             'timezone')
 
 class _Session(object):
     def __init__(self, provider):
@@ -88,30 +95,17 @@ class _OpenIDBase(providers.BaseProvider):
                 ax_request = ax.FetchRequest()
                 
                 # set AX schemas
-                for v in AX_SCHEMAS.values():
+                for schema in AX_SCHEMAS:
                     # google needs this to be required
-                    required = True if v == 'http://schema.openid.net/contact/email' else False
-                    ax_request.add(ax.AttrInfo(v, required=required))
+                    required = True if schema == 'http://schema.openid.net/contact/email' else False
+                    ax_request.add(ax.AttrInfo(schema, required=required))
                 
                 auth_request.addExtension(ax_request)
                 
-                # add Add PAPE extension
-                requested_policies = []
                 
-                # get requested policies from request
-                policy_prefix = 'policy_'
-                
-                # loop through request params
-                for k in self.adapter.get_request_params_dict().keys():
-                    if k.startswith(policy_prefix):
-                        # slice the rest after "policy_"
-                        policy_attr = k[len(policy_prefix):]
-                        if policy_attr in PAPE_POLICIES:
-                            requested_policies.append(getattr(pape, policy_attr))
-                
-    #            requested_policies = [pape.AUTH_MULTI_FACTOR,
-    #                                  pape.AUTH_MULTI_FACTOR_PHYSICAL,
-    #                                  pape.AUTH_PHISHING_RESISTANT]
+                requested_policies = [pape.AUTH_MULTI_FACTOR,
+                                      pape.AUTH_MULTI_FACTOR_PHYSICAL,
+                                      pape.AUTH_PHISHING_RESISTANT]
                 
                 logging.info('requested_policies = {}'.format(requested_policies))
                 
@@ -153,65 +147,48 @@ class _OpenIDBase(providers.BaseProvider):
             ax_response = None
             user_data = {}
             
+            data = {}
+            
             # on success
             if response.status == consumer.SUCCESS:
                 
                 # get id url
-                user_data['user_id'] = response.getDisplayIdentifier()
+                data['guid'] = response.getDisplayIdentifier()
                 
                 
                 # get user data from Attribute Exchange response
                 ax_response = ax.FetchResponse.fromSuccessResponse(response)
                 if ax_response:
-                    for k, v in AX_SCHEMAS.iteritems():
+                    data['ax'] = {}
+                    for schema in AX_SCHEMAS:
                         # ax_response.get() throws a KeyError on non-existent key
                         try:
-                            user_data[k] = ax_response.get(v)
+                            value = ax_response.get(schema)
+                            # if vlaue is an iterable, replace it with the first item
+                            if type(value) in (list, tuple):
+                                value = value[0]
+                            data['ax'][schema] = value
                         except KeyError:
                             pass
-                        user_data['email'] = user_data.get('email_ax') or user_data.get('email_oi')
+                
                 
                 # get user data from Simple Registration response
                 sreg_response = sreg.SRegResponse.fromSuccessResponse(response)
                 if sreg_response:
-                    user_data['name'] = sreg_response.get('nickname')
-                    user_data['birth_date'] = sreg_response.get('dob')
-                    user_data['email'] = sreg_response.get('email')
-                
-                
-                # if vlaue is an iterable, replace it with the first item
-                for k, v in user_data.iteritems():
-                    if type(v) in (list, tuple):
-                        user_data[k] = v[0]
-                
+                    data['sreg'] = {}
+                    for field in SREG_FIELDS:
+                        value = sreg_response.get(field)
+                        if value:
+                            data['sreg'][field] = value
+                                
                 
                 # get PAPE response
                 pape_response = pape.Response.fromSuccessResponse(response)
-                if not pape_response.auth_policies:
-                    pape_response = None
-                
-                
-                
-                
-                
+                if pape_response and pape_response.auth_policies:
+                    data['pape'] = pape_response.auth_policies
             
-            result = {consumer.CANCEL: 'Cancelled',
-                      consumer.FAILURE: 'Failed',
-                      consumer.SUCCESS: dict(url=response.getDisplayIdentifier(),
-                                             sreg=sreg_response and sreg_response.items(),
-                                             user_data=user_data,
-                                             pape=pape_response)}
             
-#            self._user = simpleauth2.User(raw_user_info=user_data,
-#                                             user_id=user_data.get('id'),
-#                                             username=user_data.get('name'),
-#                                             name=user_data.get('name'),
-#                                             email=user_data.get('email_ax') or user_data.get('email_oi'),)
-            
-            self._update_or_create_user(user_data)
-            
-            logging.info('result[response.status] = {}'.format(result[response.status]))
-            logging.info('self._user = {}'.format(self._user))
+            self._update_or_create_user(data)
             
             
             if isinstance(response, consumer.FailureResponse):
