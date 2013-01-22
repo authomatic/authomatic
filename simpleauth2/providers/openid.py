@@ -55,21 +55,7 @@ class _OpenIDBase(providers.BaseProvider):
     @classmethod
     def credentials_from_tuple(cls, tuple_):
         return simpleauth2.Credentials(short_name=tuple_[0],
-                                       provider_type=cls.get_type())    
-    
-    @classmethod
-    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', response_parser=None):
-        # return fake RPC
-        
-        dummy_result = lambda: None
-        dummy_result.content = ''
-        dummy_result.status_code = None
-        dummy_result.headers = None
-        
-        dummy_rpc = lambda: None
-        dummy_rpc.get_result = lambda: dummy_result
-        
-        return simpleauth2.RPC(dummy_rpc, response_parser, content_parser)
+                                       provider_type=cls.get_type())
     
     
     def login(self):
@@ -169,13 +155,10 @@ class _OpenIDBase(providers.BaseProvider):
             
             # on success
             if response.status == consumer.SUCCESS:
-                # get PAPE response
-                pape_response = pape.Response.fromSuccessResponse(response)
-                if not pape_response.auth_policies:
-                    pape_response = None
                 
-                # get Simple Registration response
-                sreg_response = sreg.SRegResponse.fromSuccessResponse(response)
+                # get id url
+                user_data['user_id'] = response.getDisplayIdentifier()
+                
                 
                 # get user data from Attribute Exchange response
                 ax_response = ax.FetchResponse.fromSuccessResponse(response)
@@ -186,16 +169,31 @@ class _OpenIDBase(providers.BaseProvider):
                             user_data[k] = ax_response.get(v)
                         except KeyError:
                             pass
-                else:
-                    logging.info('NO AX RESPONSE!')
+                        user_data['email'] = user_data.get('email_ax') or user_data.get('email_oi')
                 
-                user_data['id'] = response.getDisplayIdentifier()
+                # get user data from Simple Registration response
+                sreg_response = sreg.SRegResponse.fromSuccessResponse(response)
+                if sreg_response:
+                    user_data['name'] = sreg_response.get('nickname')
+                    user_data['birth_date'] = sreg_response.get('dob')
+                    user_data['email'] = sreg_response.get('email')
                 
-                self.user = simpleauth2.User(raw_user_info=user_data,
-                                             user_id=user_data.get('id'),
-                                             username=user_data.get('name'),
-                                             name=user_data.get('name'),
-                                             email=user_data.get('email_ax') or user_data.get('email_oi'),)
+                
+                # if vlaue is an iterable, replace it with the first item
+                for k, v in user_data.iteritems():
+                    if type(v) in (list, tuple):
+                        user_data[k] = v[0]
+                
+                
+                # get PAPE response
+                pape_response = pape.Response.fromSuccessResponse(response)
+                if not pape_response.auth_policies:
+                    pape_response = None
+                
+                
+                
+                
+                
             
             result = {consumer.CANCEL: 'Cancelled',
                       consumer.FAILURE: 'Failed',
@@ -204,7 +202,16 @@ class _OpenIDBase(providers.BaseProvider):
                                              user_data=user_data,
                                              pape=pape_response)}
             
+#            self._user = simpleauth2.User(raw_user_info=user_data,
+#                                             user_id=user_data.get('id'),
+#                                             username=user_data.get('name'),
+#                                             name=user_data.get('name'),
+#                                             email=user_data.get('email_ax') or user_data.get('email_oi'),)
+            
+            self._update_or_create_user(user_data)
+            
             logging.info('result[response.status] = {}'.format(result[response.status]))
+            logging.info('self._user = {}'.format(self._user))
             
             
             if isinstance(response, consumer.FailureResponse):
@@ -217,7 +224,7 @@ class _OpenIDBase(providers.BaseProvider):
             self.credentials = simpleauth2.Credentials(provider_type=self.get_type(),
                                                        short_name=self.short_name)
             
-            self.callback(simpleauth2.AuthEvent(self, self.consumer, self.user, self.credentials))
+            self.callback(simpleauth2.AuthEvent(self, self.consumer, self.credentials))
             
             
 class OpenID(_OpenIDBase):
