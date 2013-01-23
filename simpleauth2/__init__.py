@@ -15,7 +15,7 @@ import urllib
 class SimpleauthError(Exception):
     pass
 
-def login(adapter, provider_name, callback, scope=[]):
+def login(adapter, provider_name, callback, scope=[], **kwargs):
     
     providers_config = adapter.get_providers_config()
             
@@ -39,7 +39,7 @@ def login(adapter, provider_name, callback, scope=[]):
     ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate and call provider class
-    ProviderClass(adapter, provider_name, consumer, callback, provider_settings.get('short_name')).login()
+    ProviderClass(adapter, provider_name, consumer, callback, provider_settings.get('short_name')).login(**kwargs)
 
 
 def escape(s):
@@ -95,8 +95,9 @@ class Consumer(object):
 
 
 class User(object):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         self.raw_user_info = kwargs.get('raw_user_info')
+        
         self.access_token = kwargs.get('access_token')
         self.access_token_secret = kwargs.get('access_token_secret')
         self.user_id = kwargs.get('user_id')
@@ -110,6 +111,10 @@ class User(object):
         self.locale = kwargs.get('locale')
         self.email = kwargs.get('email')
         self.picture = kwargs.get('picture')
+        self.birth_date = kwargs.get('birth_date')
+        self.nickname = kwargs.get('nickname')
+        self.country = kwargs.get('country')
+        self.postal_code = kwargs.get('postal_code')
 
 
 class Credentials(object):
@@ -147,12 +152,16 @@ class Credentials(object):
         rest = self.get_provider_class().credentials_to_tuple(self)
         
         result = (short_name, ) + rest
-            
+        
+        #TODO: Return None if rest is None
         return pickle.dumps(result)
     
     
     @classmethod
     def deserialize(cls, adapter, serialized):
+        
+        #TODO: return None if not serialized
+        
         # Unpickle serialized
         deserialized = pickle.loads(serialized)
         
@@ -170,11 +179,14 @@ class Credentials(object):
 
 
 class AuthEvent(object):
-    def __init__(self, provider, consumer, user, credentials):
+    def __init__(self, provider):
+        #TODO: implement unified error type and original message
         self.provider = provider
-        self.consumer = consumer
-        self.user = user
-        self.credentials = credentials
+        self.consumer = provider.consumer
+        self.credentials = provider.credentials
+    
+    def get_user(self):
+        return self.provider.get_user()
 
 
 class RPC(object):

@@ -3,7 +3,7 @@ from urllib import urlencode
 import simpleauth2
 
 
-class OAuth2(providers.BaseProvider):
+class OAuth2(providers.ProtectedResorcesProvider):
     """
     Base class for OAuth2 services
     """
@@ -60,7 +60,7 @@ class OAuth2(providers.BaseProvider):
             
         return base + '?' + urlencode(params)
      
-    def login(self):
+    def login(self, **kwargs):
         
         self._check_consumer()
         
@@ -112,14 +112,11 @@ class OAuth2(providers.BaseProvider):
             self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.get_type(), self.short_name)
             self._update_credentials(response.data)
             
-            # create event
-            event = simpleauth2.AuthEvent(self, self.consumer, self.user, self.credentials)
-            
             # reset phase
             self.adapter.reset_phase(self.provider_name)
             
             # call callback with event
-            self.callback(event)
+            self.callback(simpleauth2.AuthEvent(self))
 
 
 class Facebook(OAuth2):

@@ -20,8 +20,8 @@ class BaseAdapter(object):
     """    
     
 
-    def login(self, provider_name, callback, scope=[]):
-        simpleauth2.login(self, provider_name, callback, scope=[])
+    def login(self, *args, **kwargs):
+        simpleauth2.login(self,  *args, **kwargs)
     
     
     def generate_csrf(self):

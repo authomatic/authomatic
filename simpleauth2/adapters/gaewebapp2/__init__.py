@@ -1,13 +1,10 @@
-from . import BaseAdapter
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
-from openid import association, store
-from openid.store import interface, nonce
 from simpleauth2 import Response, RPC
+from simpleauth2.adapters import BaseAdapter
 from urllib import urlencode
 from webapp2_extras import sessions
 import datetime
-import openid
 import urlparse
 
 # taken from anyjson.py
@@ -67,107 +64,19 @@ class ProvidersConfigModel(ndb.Model):
             example.put()
 
 
-#TODO: Move to separate module and pass it to the constructor of GAEWebapp2Adapter
-class NDBOpenIDStore(ndb.Expando, interface.OpenIDStore):
-    serialized = ndb.StringProperty()
-    expiration_date = ndb.DateTimeProperty()
-    # we need issued to sort by most recently issued
-    issued = ndb.IntegerProperty()
-    
-    
-    @classmethod
-    def storeAssociation(cls, server_url, association):
-        # store an entity with key = server_url
-                
-        issued = datetime.datetime.fromtimestamp(association.issued)
-        lifetime = datetime.timedelta(0, association.lifetime)
-        
-        expiration_date = issued + lifetime
-        
-        entity = cls.get_or_insert(association.handle, parent=ndb.Key('ServerUrl', server_url))
-        
-        entity.serialized = association.serialize()
-        entity.expiration_date = expiration_date
-        entity.issued = association.issued
-        entity.put()
-    
-    
-    @classmethod
-    def cleanupAssociations(cls):
-        
-        #TODO: Maybe it could be better as a background task
-        
-        # query for all expired
-        query = cls.query(cls.expiration_date <= datetime.datetime.now())
-        
-        # fetch keys only
-        expired = query.fetch(keys_only=True)
-        
-        # delete all expired
-        ndb.delete_multi(expired)
-        
-        return len(expired)
-    
-    
-    @classmethod
-    def getAssociation(cls, server_url, handle=None):
-        
-        cls.cleanupAssociations()
-        
-        if handle:
-            key = ndb.Key('ServerUrl', server_url, cls, handle)
-            entity = key.get()
-        else:
-            # return most recently issued association
-            entity = cls.query(ancestor=ndb.Key('ServerUrl', server_url)).order(-cls.issued).get()
-        
-        if entity:
-            return association.Association.deserialize(entity.serialized)
-    
-    
-    @classmethod
-    def removeAssociation(cls, server_url, handle):
-        key = ndb.Key('ServerUrl', server_url, cls, handle)
-        if key.get():
-            key.delete()
-            return True
-    
-    @classmethod
-    def useNonce(cls, server_url, timestamp, salt):
-        
-        # check whether there is already an entity with the same ancestor path in the datastore
-        key = ndb.Key('ServerUrl', server_url, 'TimeStamp', str(timestamp), cls, salt)
-        
-        if key.get():
-            # if so, the nonce is not valid so return False
-            return False
-        else:
-            # if not, store the key to datastore and return True
-            nonce = cls(key=key)
-            nonce.expiration_date = datetime.datetime.fromtimestamp(timestamp) + datetime.timedelta(0, store.nonce.SKEW)
-            nonce.put()
-            return True
-    
-    
-    @classmethod
-    def cleanupNonces(cls):
-        # get all expired nonces
-        expired = cls.query().filter(cls.expiration_date <= datetime.datetime.now()).fetch(keys_only=True)
-        
-        # delete all expired
-        ndb.delete_multi(expired)
-        
-        return len(expired)
+class GAEWebapp2AdapterError(Exception):
+    pass
 
 
 class GAEWebapp2Adapter(BaseAdapter):
     
-    def __init__(self, handler, providers_config=None, session=None, session_secret=None, session_key='simpleauth2'):
+    def __init__(self, handler, providers_config=None, session=None, session_secret=None, session_key='simpleauth2', openid_store=None):
         self._handler = handler
         self._providers_config = providers_config
         self._session = session
         self._session_secret = session_secret
         self._session_key = session_key
+        self._openid_store = openid_store
         
         # create session
         if not (session or session_secret):
@@ -176,7 +85,8 @@ class GAEWebapp2Adapter(BaseAdapter):
         if not session:
             # create default session
             session_store = sessions.SessionStore(handler.request, dict(secret_key=session_secret))
-            self._session = session_store.get_session(session_key, max_age=60)
+            #FIXME: securecookie backend complains that <openid.yadis.manager.YadisServiceManager object at 0x9ea892c> is not JSON serializable
+            self._session = session_store.get_session(session_key, max_age=60, backend='memcache')
         
         # session structure:
         #
@@ -184,6 +94,15 @@ class GAEWebapp2Adapter(BaseAdapter):
         #  'twitter': {'phase': 1,
         #              'oauth_token': None,
         #              'oauth_token_secret': None}}
+    
+    
+    def write(self, value):
+        self._handler.response.write(value)
+    
+    
+    def set_response_header(self, key, value):
+        self._handler.response.headers[key] = value
+    
     
     def get_current_uri(self):
         """Returns the uri of the actual request"""
@@ -198,6 +117,10 @@ class GAEWebapp2Adapter(BaseAdapter):
         
         return self._handler.request.params.get(key)
     
+    def get_request_params_dict(self):
+        """Returns a dictionary of all request parameters"""
+        return dict(self._handler.request.params)
+    
     
     def set_phase(self, provider_name, phase):
         self.store_provider_data(provider_name, 'phase', phase)
@@ -209,6 +132,9 @@ class GAEWebapp2Adapter(BaseAdapter):
     
     def store_provider_data(self, provider_name, key, value):
         self._session.setdefault(self._session_key, {}).setdefault(provider_name, {})[key] = value
+        
+        #FIXME: securecookie session backend complains that <openid.yadis.manager.YadisServiceManager object at 0x9ea892c> is not JSON serializable
+        
         self._save_session()
         
         
@@ -233,7 +159,7 @@ class GAEWebapp2Adapter(BaseAdapter):
     
     def fetch_async(self, content_parser, url, params={}, method='GET', headers={}, response_parser=None):
         """
-        Makes an asynchronous object
+        Makes an asynchronous call object
         
         Must return an object which has a get_result() method
         """
@@ -246,7 +172,10 @@ class GAEWebapp2Adapter(BaseAdapter):
     
     @staticmethod
     def json_parser(body):
-        return json.loads(body)
+        try:
+            return json.loads(body)
+        except (TypeError, ValueError) as e:
+            return {'error': e}
     
     
     @staticmethod
@@ -271,9 +200,11 @@ class GAEWebapp2Adapter(BaseAdapter):
         return resp
     
     
-    @staticmethod
-    def get_openid_store():
-        return NDBOpenIDStore()
+    def get_openid_store(self):
+        if self._openid_store:
+            return self._openid_store
+        else:
+            raise GAEWebapp2AdapterError('To use OpenID provider you have to pass an OpenIDStore to the adapter constructor!')
     
     
     def _save_session(self):

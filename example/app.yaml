@@ -1,5 +1,5 @@
-application: socka-example
-version: 1
+application: simpleauth2
+version: 0
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -7,3 +7,7 @@ threadsafe: true
 handlers:
 - url: /.*
   script: main.app
+  
+libraries:
+- name: lxml
+  version: "latest"

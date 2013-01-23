@@ -9,7 +9,7 @@ import time
 import urllib
 
 
-class OAuth1(providers.BaseProvider):
+class OAuth1(providers.ProtectedResorcesProvider):
     
     def __init__(self, *args, **kwargs):
         super(OAuth1, self).__init__(*args, **kwargs)
@@ -204,7 +204,7 @@ class OAuth1(providers.BaseProvider):
         
         return base + '?' + urlencode(params)
     
-    def login(self):
+    def login(self, **kwargs):
         
         self._check_consumer()
         
@@ -294,14 +294,11 @@ class OAuth1(providers.BaseProvider):
             self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.get_type(), self.short_name)
             self._update_credentials(response.data)
             
-            # create event
-            event = simpleauth2.AuthEvent(self, self.consumer, self.user, self.credentials)
-            
             # reset phase
             self.adapter.reset_phase(self.provider_name)
             
             # call callback
-            self.callback(event)
+            self.callback(simpleauth2.AuthEvent(self))
 
 
 class Twitter(OAuth1):
