@@ -60,25 +60,25 @@ class OpenID(providers.OpenIDBaseProvider):
         # handle keyword arguments
         
         # realm
-        use_realm = False if not kwargs.get('oi_use_realm') else True
-        realm_body = kwargs.get('oi_realm_body') or ''
-        realm_param = kwargs.get('oi_realm_param') or 'realm'
-        xrds_param = kwargs.get('oi_xrds_param') or 'xrds'
+        use_realm = kwargs.get('oi_use_realm', True)
+        realm_body = kwargs.get('oi_realm_body', '')
+        realm_param = kwargs.get('oi_realm_param', 'realm')
+        xrds_param = kwargs.get('oi_xrds_param', 'xrds')
         
         # sreg
-        sreg_optional_fields = list(kwargs.get('oi_sreg') if kwargs.get('oi_sreg') is not None else self.SREG_FIELDS)
-        sreg_required_fields = kwargs.get('oi_sreg_required') or []
+        sreg_optional_fields = list(kwargs.get('oi_sreg', self.SREG_FIELDS))
+        sreg_required_fields = kwargs.get('oi_sreg_required', [])
         
         # ax
-        ax_schemas = list(kwargs.get('oi_ax') if kwargs.get('oi_ax') is not None else self.AX_SCHEMAS)
-        ax_required_schemas = list(kwargs.get('oi_ax_required') if kwargs.get('oi_ax_required') is not None else self.AX_SCHEMAS_REQUIRED)
+        ax_schemas = list(kwargs.get('oi_ax', self.AX_SCHEMAS))
+        ax_required_schemas = list(kwargs.get('oi_ax_required', self.AX_SCHEMAS_REQUIRED))
         # add required schemas to schemas if not allready there
         for i in ax_required_schemas:
             if i not in ax_schemas:
                 ax_schemas.append(i)
         
         # pape
-        pape_policies = kwargs.get('oi_pape') if kwargs.get('oi_pape') is not None else self.PAPE_POLICIES
+        pape_policies = kwargs.get('oi_pape', self.PAPE_POLICIES)
         
         
         # Instantiate consumer
@@ -113,9 +113,9 @@ class OpenID(providers.OpenIDBaseProvider):
             # add AX extension
             ax_request = ax.FetchRequest()
             # set AX schemas
-            for schema in ax_schemas:
-                required = schema in ax_required_schemas
-                ax_request.add(ax.AttrInfo(schema, required=required))
+            for i in ax_schemas:
+                required = i in ax_required_schemas
+                ax_request.add(ax.AttrInfo(i, required=required))
             auth_request.addExtension(ax_request)
             
             # add PAPE extension
