@@ -229,7 +229,7 @@ class OpenIDBaseProvider(BaseProvider):
                   'http://openid.net/schema/timezone',)
     
     # google requires this schema
-    AX_SCHEMAS_REQUIRED = ('http://schema.openid.net/contact/email')
+    AX_SCHEMAS_REQUIRED = ('http://schema.openid.net/contact/email', )
     
     # http://openid.net/specs/openid-simple-registration-extension-1_1-01.html#response_format
     SREG_FIELDS = ('nickname',
