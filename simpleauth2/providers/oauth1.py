@@ -174,35 +174,64 @@ class OAuth1(providers.ProtectedResorcesProvider):
             else:
                 raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and token_secret are required to create Protected Resources URL!')
         
-        # Tign request.
-        # Taken from the oauth2 library.
         
-        params['oauth_signature_method'] = 'HMAC-SHA1'
+        
+        # Sign request.
+        # http://oauth.net/core/1.0a/#anchor13
+        
+        # Prepare parameters for signature base string
+        # http://oauth.net/core/1.0a/#rfc.section.9.1
+        params['oauth_signature_method'] = 'HMAC-SHA1' #TODO: Add other signature methods
         params['oauth_timestamp'] = str(int(time.time()))
         params['oauth_nonce'] = nonce
         params['oauth_version'] = '1.0'
         
-        # prepare values for signing        
-        # signed parameters must be sorted first by key, then by value
+        # Normalize request parameters
+        # http://oauth.net/core/1.0a/#rfc.section.9.1.1
+        
+        # the oauth_signature MUST NOT be there
         params_to_sign = [(k, v) for k, v in params.items() if k != 'oauth_signature']
+        
+        # parameters must be sorted first by key, then by value
         params_to_sign.sort()
+        
+        # parameters must be separated by the & sign like this: a=1&c=hi%20there&f=25&f=50&f=a&z=p&z=t 
         params_to_sign = urllib.urlencode(params_to_sign)
         params_to_sign = params_to_sign.replace('+', '%20').replace('%7E', '~')
         
+        # Concatenate http method, base URL and request parameters by &
+        # http://oauth.net/core/1.0a/#rfc.section.9.1.3
+        base_string = '&'.join((simpleauth2.escape(method),
+                        simpleauth2.escape(base),
+                        simpleauth2.escape(params_to_sign)))
+        
+        
+        
+        # Prepare the signature key
+        # http://oauth.net/core/1.0a/#rfc.section.9.2
         key = '{}&'.format(simpleauth2.escape(consumer_secret))
         if token_secret:
             key += simpleauth2.escape(token_secret)
         
-        raw = '&'.join((simpleauth2.escape(method),
-                        simpleauth2.escape(base),
-                        simpleauth2.escape(params_to_sign)))
         
-        # sign with HMAC-SHA1 method
-        hashed = hmac.new(key, raw, hashlib.sha1)
         
-        params['oauth_signature'] = binascii.b2a_base64(hashed.digest())[:-1]
+        # Generate signature
         
+        # Generate HMAC-SHA1 signature
+        # http://oauth.net/core/1.0a/#rfc.section.9.2
+        hashed = hmac.new(key, base_string, hashlib.sha1)
+        signature = binascii.b2a_base64(hashed.digest())[:-1]
+        
+        
+        #TODO: Generate RSA-SHA1 signature if there is need for it
+        # http://oauth.net/core/1.0a/#rfc.section.9.3
+        
+        # add signature to params
+        params['oauth_signature'] = signature
+        
+        # return signed url
         return base + '?' + urlencode(params)
+    
     
     def login(self, **kwargs):
         
