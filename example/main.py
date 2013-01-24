@@ -30,7 +30,7 @@ def headers(handler):
     handler.response.write('<a href="/auth/oi?id=http://peterhudec.signon.com">peterhudec.signon.com</a> Returns nothing!<br />')
     handler.response.write('<a href="/auth/oi?id=http://peterhudec.myopenid.com/">peterhudec.myopenid.com</a> (PAPE) POST is not alloved!<br />')
     
-    
+    handler.response.write('<br /><br />')
     
 
 class Home(webapp2.RequestHandler):
@@ -55,62 +55,71 @@ class Login(webapp2.RequestHandler):
         
         headers(self)
         
-        self.response.write('<br /><br />')
-        
-        self.response.write('<br /><br />')
-        self.response.write('Credentials:<br /><br />')
-        
-        if event.credentials:
-            
-            for k, v in event.credentials.__dict__.items():
-                self.response.write('{}: {}<br />'.format(k, v))        
-            
-            serialized = event.credentials.serialize()
-            
-            deserialized = Credentials.deserialize(self.adapter, serialized)
-            
+        if event.error:
+            self.response.write('ERROR:')
             self.response.write('<br /><br />')
-            self.response.write('Serialized:<br />{}<br /><br />'.format(serialized)) 
-            self.response.write('Serialized size:<br />{} B<br /><br />'.format(sys.getsizeof(serialized)))        
-            
-            # deserialized credentials
-            for k, v in deserialized.__dict__.items():
-                self.response.write('{}: {}<br />'.format(k, v)) 
+            self.response.write('type: {}<br /><br />'.format(event.error.type))
+            self.response.write('message: {}<br /><br />'.format(event.error.message))
+            self.response.write('original_message: {}<br /><br />'.format(event.error.original_message))
         
-        
-        if event.provider.has_protected_resources:
-            # fetch user info asynchronously
-            event.provider.user_info_request.fetch()
-            
-            
-            # fetch user info request the easy way
-            user_rpc = event.provider.user_info_request.fetch()
-            
-            # fetch request from deserialized credentials
-            if event.provider.provider_name == 'facebook':
-                url = 'https://graph.facebook.com/me'
-                rpc = Request(self.adapter, url, serialized).fetch()
-                
-                resp = rpc.get_response()
-                self.response.write('Bio:<br /><br />')
-                self.response.write(resp.data)
-            
-            user = user_rpc.get_response().user
         else:
-            user = event.get_user()
-        
-        if user:
-            self.response.write('<br /><br />')
-            self.response.write('User Info:<br /><br />')
-            self.response.write('<br /><br />')
-            
-            for k, v in user.__dict__.items():
-                if k != 'raw_user_info':
+            if event.credentials:
+                
+                self.response.write('<br /><br />')
+                self.response.write('Credentials:<br /><br />')
+                
+                for k, v in event.credentials.__dict__.items():
+                    self.response.write('{}: {}<br />'.format(k, v))        
+                
+                serialized = event.credentials.serialize()
+                
+                deserialized = Credentials.deserialize(self.adapter, serialized)
+                
+                self.response.write('<br /><br />')
+                self.response.write('Serialized:<br />{}<br /><br />'.format(serialized)) 
+                self.response.write('Serialized size:<br />{} B<br /><br />'.format(sys.getsizeof(serialized)))        
+                
+                # deserialized credentials
+                for k, v in deserialized.__dict__.items():
                     self.response.write('{}: {}<br />'.format(k, v))
             
-            self.response.write('<br /><br />')
-            self.response.write('Raw User Info:<br /><br />')
-            self.response.write(user.raw_user_info)
+            if event.provider.has_protected_resources:
+                # fetch user info asynchronously
+                event.provider.user_info_request.fetch()
+                
+                
+                # fetch user info request the easy way
+                user_rpc = event.provider.user_info_request.fetch()
+                
+                # fetch request from deserialized credentials
+                if event.provider.provider_name == 'facebook':
+                    url = 'https://graph.facebook.com/me'
+                    rpc = Request(self.adapter, url, serialized).fetch()
+                    
+                    resp = rpc.get_response()
+                    self.response.write('Bio:<br /><br />')
+                    self.response.write(resp.data)
+                
+                user = user_rpc.get_response().user
+            else:
+                user = event.get_user()
+            
+            if user:
+                self.response.write('<br /><br />')
+                self.response.write('User Info:<br /><br />')
+                self.response.write('<br /><br />')
+                
+                for k, v in user.__dict__.iteritems():
+                    if k != 'raw_user_info':
+                        self.response.write('{}: {}<br />'.format(k, v))
+                        if k == 'gae_user' and v:
+                            for kk, vv in v.__dict__.iteritems():
+                                self.response.write('&nbsp;&nbsp;&nbsp;{}: {}<br />'.format(kk, vv))
+                        
+                
+                self.response.write('<br /><br />')
+                self.response.write('Raw User Info:<br /><br />')
+                self.response.write(user.raw_user_info)
 
 
 

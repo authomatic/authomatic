@@ -3,8 +3,9 @@ from __future__ import absolute_import
 from openid.consumer import consumer
 from openid.extensions import ax, pape, sreg
 from simpleauth2 import providers
-import simpleauth2
+import datetime
 import logging
+import simpleauth2
 
 REALM_HTML = \
 """
@@ -35,6 +36,8 @@ XRDS_XML = \
 
 
 class _Session(object):
+    """A dictionary like session as specified in openid.consumer.consumer.Consumer()"""
+    
     def __init__(self, provider):
         self.provider = provider                            
     
@@ -52,8 +55,99 @@ class _Session(object):
 
 
 class OpenID(providers.OpenIDBaseProvider):
+    """OpenID provider based on the python-openid library."""
+        
+    # http://openid.net/specs/openid-attribute-properties-list-1_0-01.html
+    AX_SCHEMAS = ('http://axschema.org/contact/email',
+                  'http://schema.openid.net/contact/email',
+                  'http://axschema.org/namePerson',
+                  'http://openid.net/schema/namePerson/first',
+                  'http://openid.net/schema/namePerson/last',
+                  'http://openid.net/schema/gender',
+                  'http://openid.net/schema/language/pref',
+                  'http://openid.net/schema/contact/web/default',
+                  'http://openid.net/schema/media/image',
+                  'http://openid.net/schema/timezone',)
+    
+    # google requires this schema
+    AX_SCHEMAS_REQUIRED = ('http://schema.openid.net/contact/email', )
+    
+    # http://openid.net/specs/openid-simple-registration-extension-1_1-01.html#response_format
+    SREG_FIELDS = ('nickname',
+                 'email',
+                 'fullname',
+                 'dob',
+                 'gender',
+                 'postcode',
+                 'country',
+                 'language',
+                 'timezone')
+    
+    # http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html#auth_policies
+    PAPE_POLICIES = ['http://schemas.openid.net/pape/policies/2007/06/multi-factor-physical',
+                     'http://schemas.openid.net/pape/policies/2007/06/multi-factor',
+                     'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant']
+    
+    # maps raw_user_info dict to User properties
+    user_info_mapping = {
+        'name':          lambda data:   data.get('sreg', {}).get('fullname') or \
+                                        data.get('ax', {}).get('http://axschema.org/namePerson'),
+                                        
+        'first_name':    lambda data:   data.get('ax', {}).get('http://openid.net/schema/namePerson/first'),
+        
+        'last_name':     lambda data:   data.get('ax', {}).get('http://openid.net/schema/namePerson/last'),
+        
+        'user_id':       lambda data:   data.get('guid'),
+        
+        'gender':        lambda data:   data.get('sreg', {}).get('gender') or \
+                                        data.get('ax', {}).get('http://openid.net/schema/gender'),
+        
+        'locale':        lambda data:   data.get('sreg', {}).get('language') or \
+                                        data.get('ax', {}).get('http://openid.net/schema/language/pref'),
+        
+        'link':          lambda data:   data.get('ax', {}).get('http://openid.net/schema/contact/web/default'),
+        
+        'picture':       lambda data:   data.get('ax', {}).get('http://openid.net/schema/media/image'),
+        
+        'timezone':      lambda data:   data.get('sreg', {}).get('timezone') or \
+                                        data.get('ax', {}).get('http://openid.net/schema/timezone'),
+        
+        'email':         lambda data:   data.get('sreg', {}).get('email') or \
+                                        data.get('ax', {}).get('http://axschema.org/contact/email') or \
+                                        data.get('ax', {}).get('http://schema.openid.net/contact/email'),
+        
+        'birth_date':    lambda data:   datetime.datetime.strptime(data.get('sreg', {}).get('dob'), '%Y-%m-%d') if \
+                                        data.get('sreg', {}).get('dob') else None,
+        
+        'nickname':      lambda data:   data.get('sreg', {}).get('nickname'),
+        
+        'country':       lambda data:   data.get('sreg', {}).get('country'),
+        
+        'postal_code':   lambda data:   data.get('sreg', {}).get('postcode'),
+    }
+    
     
     def login(self, *args, **kwargs):
+        """
+        Launches the OpenID authentication procedure.
+        
+        Accepts optional keyword arguments:
+        
+        oi_identifier
+        
+        oi_use_realm
+        oi_realm_body
+        oi_realm_param
+        oi_xrds_param
+        
+        oi_sreg
+        oi_sreg_required
+        
+        oi_ax
+        oi_ax_required
+        
+        oi_pape
+        """
         
         super(OpenID, self).login(*args, **kwargs)
         
@@ -79,12 +173,10 @@ class OpenID(providers.OpenIDBaseProvider):
         
         # pape
         pape_policies = kwargs.get('oi_pape', self.PAPE_POLICIES)
-        
-        
+                
         # Instantiate consumer
         oi_consumer = consumer.Consumer(_Session(self), self.adapter.get_openid_store())
-        
-        
+                
         # handle realm
         if use_realm:
             
@@ -103,7 +195,11 @@ class OpenID(providers.OpenIDBaseProvider):
         if self.phase == 0 and self.identifier:
             
             # get AuthRequest object
-            auth_request = oi_consumer.begin(self.identifier)
+            try:
+                auth_request = oi_consumer.begin(self.identifier)
+            except consumer.DiscoveryFailure as e:
+                self._finish(simpleauth2.AuthError.OPENID_DISCOVERY_FAILURE, e.message)
+                return
             
             # add SREG extension
             # we need to remove required fields from optional fields because addExtension then raises an error
@@ -142,13 +238,20 @@ class OpenID(providers.OpenIDBaseProvider):
             
             self._reset_phase()
             
+            # check whether the user has been redirected back by provider
+            if not self.adapter.get_request_param('openid.mode'):
+                # if so abort with error
+                self._finish(simpleauth2.AuthError.REDIRECT, 'User did not finish the redirect!')
+                return
+            
             # complete the authentication process
             response = oi_consumer.complete(self.adapter.get_request_params_dict(), self.uri)
             
-            data = {}
             
             # on success
             if response.status == consumer.SUCCESS:
+                
+                data = {}
                 
                 # get user ID
                 data['guid'] = response.getDisplayIdentifier()
@@ -175,18 +278,17 @@ class OpenID(providers.OpenIDBaseProvider):
                 pape_response = pape.Response.fromSuccessResponse(response)
                 if pape_response and pape_response.auth_policies:
                     data['pape'] = pape_response.auth_policies
-            
-            # create user
-            self._update_or_create_user(data)
-            
-            #TODO: Handle errors
-            if isinstance(response, consumer.FailureResponse):
-                # error
-                logging.info('ERROR ocured!')
                 
-            #TODO: move to self._finish()
-            self.callback(simpleauth2.AuthEvent(self))
+                # create user
+                self._update_or_create_user(data)
+                
+                self._finish()
             
+            elif response.status == consumer.CANCEL:
+                self._finish(simpleauth2.AuthError.CANCEL, response.getDisplayIdentifier())
+            
+            elif response.status == consumer.FAILURE:
+                self._finish(simpleauth2.AuthError.FAILURE, response.message)
 
 
 class Yahoo(OpenID):

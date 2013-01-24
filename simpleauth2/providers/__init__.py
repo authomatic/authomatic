@@ -156,7 +156,12 @@ class BaseProvider(object):
         
         if not self.consumer.secret:
             raise simpleauth2.exceptions.ConfigError('Consumer key not specified for provider {}!'.format(self.provider_name))
-
+    
+    
+    def _finish(self, error_type='', error_msg='', error_original_msg=''):
+        error = simpleauth2.AuthError(error_type, error_msg, error_original_msg) if error_type else None
+        self.callback(simpleauth2.AuthEvent(self, error))
+    
 
 class ProtectedResorcesProvider(BaseProvider):
     
@@ -211,79 +216,17 @@ class ProtectedResorcesProvider(BaseProvider):
     
 
 class OpenIDBaseProvider(BaseProvider):
+    """Base class for OpenID providers."""
     
     def login(self, *args, **kwargs):
-        self.identifier = kwargs.get('oi_identifier') or self.urls[0]
+        """
+        Launches the OpenID authentication procedure.
         
+        Accepts oi_identifier optional parameter
+        """
+        
+        self.identifier = kwargs.get('oi_identifier', self.urls[0])
     
-    # http://openid.net/specs/openid-attribute-properties-list-1_0-01.html
-    AX_SCHEMAS = ('http://axschema.org/contact/email',
-                  'http://schema.openid.net/contact/email',
-                  'http://axschema.org/namePerson',
-                  'http://openid.net/schema/namePerson/first',
-                  'http://openid.net/schema/namePerson/last',
-                  'http://openid.net/schema/gender',
-                  'http://openid.net/schema/language/pref',
-                  'http://openid.net/schema/contact/web/default',
-                  'http://openid.net/schema/media/image',
-                  'http://openid.net/schema/timezone',)
-    
-    # google requires this schema
-    AX_SCHEMAS_REQUIRED = ('http://schema.openid.net/contact/email', )
-    
-    # http://openid.net/specs/openid-simple-registration-extension-1_1-01.html#response_format
-    SREG_FIELDS = ('nickname',
-                 'email',
-                 'fullname',
-                 'dob',
-                 'gender',
-                 'postcode',
-                 'country',
-                 'language',
-                 'timezone')
-    
-    PAPE_POLICIES = ['http://schemas.openid.net/pape/policies/2007/06/multi-factor-physical',
-                     'http://schemas.openid.net/pape/policies/2007/06/multi-factor',
-                     'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant',
-                     'http://schemas.openid.net/pape/policies/2007/06/none']
-    
-    user_info_mapping = {
-        'name': lambda data: data.get('sreg', {}).get('fullname') or \
-                    data.get('ax', {}).get('http://axschema.org/namePerson'),
-                             
-        'first_name': lambda data: data.get('ax', {}).get('http://openid.net/schema/namePerson/first'),
-                             
-        'last_name': lambda data: data.get('ax', {}).get('http://openid.net/schema/namePerson/last'),
-                             
-        'user_id': lambda data: data.get('guid'),
-                             
-        'gender': lambda data: data.get('sreg', {}).get('gender') or \
-                         data.get('ax', {}).get('http://openid.net/schema/gender'),
-        
-        'locale': lambda data: data.get('sreg', {}).get('language') or \
-                         data.get('ax', {}).get('http://openid.net/schema/language/pref'),
-        
-        'link': lambda data: data.get('ax', {}).get('http://openid.net/schema/contact/web/default'),
-        
-        'picture': lambda data: data.get('ax', {}).get('http://openid.net/schema/media/image'),
-        
-        'timezone': lambda data: data.get('sreg', {}).get('timezone') or \
-                           data.get('ax', {}).get('http://openid.net/schema/timezone'),
-        
-        'email': lambda data: data.get('sreg', {}).get('email') or \
-                        data.get('ax', {}).get('http://axschema.org/contact/email') or \
-                        data.get('ax', {}).get('http://schema.openid.net/contact/email'),
-        
-        'birth_date': lambda data: datetime.datetime.strptime(data.get('sreg', {}).get('dob'), '%Y-%m-%d') if data.get('sreg', {}).get('dob') else None,
-        
-        'nickname': lambda data: data.get('sreg', {}).get('nickname'),
-        
-        'country': lambda data: data.get('sreg', {}).get('country'),
-        
-        'postal_code': lambda data: data.get('sreg', {}).get('postcode'),
-        
-        
-    }
 
 
 

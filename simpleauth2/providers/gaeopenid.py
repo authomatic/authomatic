@@ -1,24 +1,24 @@
 from google.appengine.api import users
-from simpleauth2.providers import BaseProvider
+import simpleauth2
 import logging
 
-class GAEOpenID(BaseProvider):
+class GAEOpenID(simpleauth2.providers.OpenIDBaseProvider):
+    """OpenID provider based on google.appengine.api.users library."""
     
-    def login(self):
+    def login(self, *args, **kwargs):
+        """
+        Launches the OpenID authentication procedure.
         
-        logging.info('GAEOpenID')
+        Accepts oi_identifier optional parameter
+        """
         
-        if self.phase == 0:
+        super(GAEOpenID, self).login(*args, **kwargs)
+        
+        if self.phase == 0 and self.identifier:
+            # redirect to google auth service
+            self.adapter.redirect(users.create_login_url(dest_url=self.uri, federated_identity=self.identifier))            
             
             self._increase_phase()
-            
-            # get Open ID identifier
-            identifier = self.urls[0] or self.adapter.get_request_param('id')
-            
-            target_url = users.create_login_url(dest_url=self.uri, federated_identity=identifier)
-            
-            self.adapter.redirect(target_url)            
-            
         
         if self.phase == 1:
             
@@ -26,8 +26,16 @@ class GAEOpenID(BaseProvider):
             
             user = users.get_current_user()
             
-            logging.info('user.federated_identity() = {}'.format(user.federated_identity()))
-            logging.info('user.nickname() = {}'.format(user.nickname()))
-            logging.info('user.email() = {}'.format(user.email()))
+            if user:
+                self._user = simpleauth2.User(user_id=user.federated_identity(),
+                                              email=user.email(),
+                                              gae_user=user)
             
-            
+                self.callback(simpleauth2.AuthEvent(self))
+            else:
+                self._finish(simpleauth2.AuthError.FAILURE)
+
+
+
+
+

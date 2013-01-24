@@ -115,6 +115,7 @@ class User(object):
         self.nickname = kwargs.get('nickname')
         self.country = kwargs.get('country')
         self.postal_code = kwargs.get('postal_code')
+        self.gae_user = kwargs.get('gae_user')
 
 
 class Credentials(object):
@@ -178,10 +179,23 @@ class Credentials(object):
             raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))
 
 
+class AuthError(object):
+    FAILURE = 'failure'
+    CANCEL = 'cancel'
+    REDIRECT = 'redirect'
+    OPENID_DISCOVERY_FAILURE = 'open_id_discovery_failure'
+    
+    def __init__(self, type, message=None, original_message=None):
+        self.type = type
+        self.message = message
+        self.original_message = original_message or message
+
+
 class AuthEvent(object):
-    def __init__(self, provider):
+    def __init__(self, provider, error=None):
         #TODO: implement unified error type and original message
         self.provider = provider
+        self.error = error
         self.consumer = provider.consumer
         self.credentials = provider.credentials
     
