@@ -285,7 +285,7 @@ class OpenID(providers.OpenIDBaseProvider):
                 self._finish()
             
             elif response.status == consumer.CANCEL:
-                self._finish(simpleauth2.AuthError.CANCEL, response.getDisplayIdentifier())
+                self._finish(simpleauth2.AuthError.DENIED, response.getDisplayIdentifier())
             
             elif response.status == consumer.FAILURE:
                 self._finish(simpleauth2.AuthError.FAILURE, response.message)

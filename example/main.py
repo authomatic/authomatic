@@ -58,9 +58,9 @@ class Login(webapp2.RequestHandler):
         if event.error:
             self.response.write('ERROR:')
             self.response.write('<br /><br />')
-            self.response.write('type: {}<br /><br />'.format(event.error.type))
-            self.response.write('message: {}<br /><br />'.format(event.error.message))
-            self.response.write('original_message: {}<br /><br />'.format(event.error.original_message))
+            
+            for k, v in event.error.__dict__.iteritems():
+                self.response.write('{}: {}<br />'.format(k, v))
         
         else:
             if event.credentials:

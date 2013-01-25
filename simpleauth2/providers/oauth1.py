@@ -65,79 +65,7 @@ class OAuth1(providers.ProtectedResorcesProvider):
     
     @staticmethod
     def create_url(url_type, base, consumer_key=None, consumer_secret=None, token=None, token_secret=None, verifier=None, method='GET', callback=None, nonce=None):
-        """
-        Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint
-        
-        Taken from the oauth2 library
-            
-        1. Request Token URL http://oauth.net/core/1.0a/#auth_step1
-            
-            params:
-               oauth_consumer_key
-               
-               oauth_callback (must be "oob" if not used with redirect)
-               
-               oauth_signature_method
-               oauth_timestamp
-               oauth_nonce
-               oauth_version
-               
-               oauth_signature (we need consumer_secret to sign the request)
-            
-            returns:
-               oauth_token
-               oauth_token_secret
-               oauth_callback_confirmed
-        
-        
-        2. User Authorization URL http://oauth.net/core/1.0a/#auth_step2
-        
-            params:
-               oauth_token
-            
-            redirects to provider which redirects to callback
-            
-            returns:
-               oauth_token
-               oauth_verifier
-        
-        
-        3. Access Token URL http://oauth.net/core/1.0a/#auth_step3
-            
-            params:
-                oauth_consumer_key
-                oauth_token            
-                oauth_verifier
-                
-                oauth_signature_method
-                oauth_timestamp
-                oauth_nonce
-                oauth_version
-                
-                oauth_signature (we need consumer_secret to sign the request)
-                
-            returns:
-                oauth_token
-                oauth_token_secret
-        
-        
-        4. Protected Resources URL http://oauth.net/core/1.0a/#anchor12
-            
-            params:
-                oauth_consumer_key
-                oauth_token
-                
-                oauth_signature_method
-                oauth_timestamp
-                oauth_nonce
-                oauth_version
-                
-                oauth_signature (we need consumer_secret and token_secret to sign the request)
-                
-            returns:
-                requested data    
-        
-        """
+        """ Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint"""
         
         params = {}
         
@@ -239,7 +167,6 @@ class OAuth1(providers.ProtectedResorcesProvider):
         
         if self.phase == 0:
             
-            self._increase_phase()
             
             parser = self._get_parser_by_index(0)
             
@@ -250,21 +177,29 @@ class OAuth1(providers.ProtectedResorcesProvider):
                                      consumer_secret=self.consumer.secret,
                                      callback=self.uri,
                                      nonce=self.adapter.generate_csrf())
+            
             response = self._fetch(parser, url1)
             
             logging.info('RESPONSE = {}'.format(response.status_code))
             
             # check if response status is OK
             if response.status_code != 200:
-                self.adapter.reset_phase(self.provider_name)
-                raise Exception('Could not fetch a valid response from provider {}!'.format(self.provider_name))
+                self._finish(simpleauth2.AuthError.FAILURE, \
+                             'Failed to obtain request token from {}! HTTP status code: {}.'\
+                             .format(self.urls[0], response.status_code),
+                             code=response.status_code,
+                             url=self.urls[0])
+                return
             
             # extract OAuth token and save it to storage
             #oauth_token = parser(response).get('oauth_token')
             oauth_token = response.data.get('oauth_token')
             if not oauth_token:
-                self.adapter.reset_phase(self.provider_name)
-                raise Exception('Could not get a valid OAuth token from provider {}!'.format(self.provider_name))
+                self._finish(simpleauth2.AuthError.FAILURE, \
+                             'Response from {} doesn\'t contain OAuth 1.0a oauth_token!'.format(self.urls[0]),
+                             response.data,
+                             url=self.urls[0])
+                return
             
             self.adapter.store_provider_data(self.provider_name, 'oauth_token', oauth_token)
             
@@ -281,28 +216,43 @@ class OAuth1(providers.ProtectedResorcesProvider):
             url2 = self.create_url(url_type=2,
                                      base=self.urls[1],
                                      token=oauth_token)
+            
             self.adapter.redirect(url2)
-        
+            
+            self._increase_phase()
+            
         if self.phase == 1:
             
+            self._reset_phase()
+                        
             # retrieve the OAuth token from session
-            try:
-                oauth_token = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token')
-            except KeyError:
-                self.adapter.reset_phase(self.provider_name)
-                raise Exception('OAuth token could not be retrieved from storage!')
+            oauth_token = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token')
+            if not oauth_token:
+                self._finish(simpleauth2.AuthError.FAILURE,
+                             'Unable to retrieve OAuth 1.0a oauth_token from storage!')
+                return
             
-            try:
-                oauth_token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token_secret')
-            except KeyError:
-                self.adapter.reset_phase(self.provider_name)
-                raise Exception('OAuth token secret could not be retrieved from storage!')
+            # if the user denied the request token
+            #TODO: Not sure that all providers return it as denied=token since there is no mention in the OAuth 1.0a spec
+            if self.adapter.get_request_param('denied') == oauth_token:
+                self._finish(simpleauth2.AuthError.DENIED,
+                             'User denied the OAuth 1.0a request token {} during a redirect to {}!'.format(oauth_token, self.urls[1]),
+                             error_original_msg=self.adapter.get_request_param('denied'),
+                             url=self.urls[1])
+                return
+            
+            oauth_token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token_secret')
+            if not oauth_token_secret:
+                self._finish(simpleauth2.AuthError.FAILURE,
+                             'Unable to retrieve OAuth 1.0a oauth_token_secret from storage!')
+                return
             
             # extract the verifier
             verifier = self.adapter.get_request_param('oauth_verifier')
             if not verifier:
-                self.adapter.reset_phase(self.provider_name)
-                raise Exception('No OAuth verifier was returned by the {} provider!'.format(self.provider_name))
+                self._finish(simpleauth2.AuthError.FAILURE,
+                             'Unable to retrieve OAuth 1.0a oauth_verifier from storage!')
+                return
                         
             parser = self._get_parser_by_index(1)
             
@@ -318,16 +268,22 @@ class OAuth1(providers.ProtectedResorcesProvider):
             
             response = self._fetch(parser, url3, method='POST')
             
+            if response.status_code != 200:
+                self._finish(simpleauth2.AuthError.FAILURE, \
+                             'Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
+                             .format(self.urls[2], response.status_code),
+                             code=response.status_code,
+                             url=self.urls[2])
+                return
+            
+            logging.info('RESPONSE DATA = {}'.format(response.data))
+            
             self._update_or_create_user(response.data)
             
             self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.get_type(), self.short_name)
             self._update_credentials(response.data)
-            
-            # reset phase
-            self.adapter.reset_phase(self.provider_name)
-            
-            # call callback
-            self.callback(simpleauth2.AuthEvent(self))
+                        
+            self._finish()
 
 
 class Twitter(OAuth1):

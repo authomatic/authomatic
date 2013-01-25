@@ -178,17 +178,19 @@ class Credentials(object):
         except (TypeError, IndexError) as e:
             raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))
 
-
+#TODO: raise or report
 class AuthError(object):
     FAILURE = 'failure'
-    CANCEL = 'cancel'
+    DENIED = 'denied'
     REDIRECT = 'redirect'
     OPENID_DISCOVERY_FAILURE = 'open_id_discovery_failure'
     
-    def __init__(self, type, message=None, original_message=None):
+    def __init__(self, type, message='', original_message='', code='', url=''):
         self.type = type
+        self.code = code
         self.message = message
-        self.original_message = original_message or message
+        self.url = url
+        self.original_message = original_message
 
 
 class AuthEvent(object):

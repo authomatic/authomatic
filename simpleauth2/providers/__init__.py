@@ -158,8 +158,8 @@ class BaseProvider(object):
             raise simpleauth2.exceptions.ConfigError('Consumer key not specified for provider {}!'.format(self.provider_name))
     
     
-    def _finish(self, error_type='', error_msg='', error_original_msg=''):
-        error = simpleauth2.AuthError(error_type, error_msg, error_original_msg) if error_type else None
+    def _finish(self, error_type='', error_msg='', error_original_msg='', code='', url=''):
+        error = simpleauth2.AuthError(error_type, error_msg, error_original_msg, code, url) if error_type else None
         self.callback(simpleauth2.AuthEvent(self, error))
     
 
