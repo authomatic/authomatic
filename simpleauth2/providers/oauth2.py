@@ -66,8 +66,6 @@ class OAuth2(providers.ProtectedResorcesProvider):
         
         if self.phase == 0:
             
-            self._increase_phase()
-            
             # generate csfr
             csrf_token = self.adapter.generate_csrf()
             self.adapter.store_provider_data(self.provider_name, 'csrf_token', csrf_token)
@@ -80,23 +78,41 @@ class OAuth2(providers.ProtectedResorcesProvider):
             
             self.adapter.redirect(url)
             
+            self._increase_phase()
+            
         if self.phase == 1:
+            
+            self._reset_phase()
             
             # Validate CSRF token
             csrf_token = self.adapter.retrieve_provider_data(self.provider_name, 'csrf_token')
             state = self.adapter.get_request_param('state')
             if not csrf_token == state:
-                raise simpleauth2.exceptions.CSRFError("The value {} of the \"state\" parameter returned by the provider doesn't match with the saved CSRF token!".format(state))
+                self._finish(simpleauth2.AuthError.FAILURE, \
+                             "The {} CSRF token is not valid!".format(state),
+                             url=self.urls[0])
+                return
             
-            # check access token
-            self.consumer.access_token = self.adapter.get_request_param('code')
-            if not self.consumer.access_token:
-                self.adapter.reset_phase(self.provider_name)
-                raise Exception('Failed to get access token from provider {}!'.format(self.provider_name))
+            # check errors
+            error = self.adapter.get_request_param('error')
+            error_reason = self.adapter.get_request_param('error_reason')
+            error_description = self.adapter.get_request_param('error_description')
+            if error:
+                error_type = simpleauth2.AuthError.DENIED if error_reason == 'user_denied' else simpleauth2.AuthError.FAILURE
+                self._finish(error_type, error_description, error_description, url=self.urls[0])
+                return
+            
+            # check authorisation code
+            authorisation_code = self.adapter.get_request_param('code')
+            if not authorisation_code:
+                self._finish(simpleauth2.AuthError.FAILURE, \
+                             "Could not get OAuth 2.0 authorisation code from provider {}!".format(self.provider_name),
+                             url=self.urls[0])
+                return
             
             # exchange authorisation code for access token by the provider
             # the parameters should be encoded in the headers so create_oauth2_url() doesn't help
-            params = dict(code=self.consumer.access_token,
+            params = dict(code=authorisation_code,
                           client_id=self.consumer.key,
                           client_secret=self.consumer.secret,
                           redirect_uri=self.uri,
@@ -104,7 +120,15 @@ class OAuth2(providers.ProtectedResorcesProvider):
             
             parser = self._get_parser_by_index(1)
             response = self._fetch(parser, self.urls[1], params, 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
-                        
+            
+            if response.status_code != 200:
+                self._finish(simpleauth2.AuthError.FAILURE, \
+                             'Failed to obtain OAuth 2.0  access token from {}! HTTP status code: {}.'\
+                             .format(self.urls[1], response.status_code),
+                             code=response.status_code,
+                             url=self.urls[1])
+                return
+            
             # create user
             self._update_or_create_user(response.data)
             
@@ -112,11 +136,7 @@ class OAuth2(providers.ProtectedResorcesProvider):
             self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.get_type(), self.short_name)
             self._update_credentials(response.data)
             
-            # reset phase
-            self.adapter.reset_phase(self.provider_name)
-            
-            # call callback with event
-            self.callback(simpleauth2.AuthEvent(self))
+            self._finish()
 
 
 class Facebook(OAuth2):

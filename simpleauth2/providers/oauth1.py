@@ -165,8 +165,7 @@ class OAuth1(providers.ProtectedResorcesProvider):
         
         self._check_consumer()
         
-        if self.phase == 0:
-            
+        if self.phase == 0:            
             
             parser = self._get_parser_by_index(0)
             

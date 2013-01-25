@@ -48,8 +48,7 @@ class Login(webapp2.RequestHandler):
                                     session_secret='abcd',
                                     openid_store=NDBOpenIDStore)
         
-        self.adapter.login(provider_name, self.callback,
-                           oi_identifier=self.request.params.get('id'))
+        self.adapter.login(provider_name, self.callback, oi_identifier=self.request.params.get('id'))
     
     def callback(self, event):
         

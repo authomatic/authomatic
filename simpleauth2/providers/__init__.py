@@ -12,12 +12,14 @@ class BaseProvider(object):
     Base class for all providers
     """
     
-    def __init__(self, adapter, provider_name, consumer, callback, short_name=None):
+    def __init__(self, adapter, provider_name, consumer, callback,
+                 short_name=None, error_mode=None):
         self.provider_name = provider_name
         self.consumer = consumer
         self.callback = callback
         self.adapter = adapter
         self.short_name = short_name
+        self.error_mode = error_mode
         self.credentials = None
         
         self._user = None
@@ -52,7 +54,7 @@ class BaseProvider(object):
     #===========================================================================
         
     def login(self, **kwargs):
-        pass
+        raise NotImplementedError
     
     
     #===========================================================================
@@ -160,7 +162,12 @@ class BaseProvider(object):
     
     def _finish(self, error_type='', error_msg='', error_original_msg='', code='', url=''):
         error = simpleauth2.AuthError(error_type, error_msg, error_original_msg, code, url) if error_type else None
-        self.callback(simpleauth2.AuthEvent(self, error))
+        if self.error_mode == simpleauth2.ERROR_MODE_RAISE:
+            raise error
+        elif self.error_mode == simpleauth2.ERROR_MODE_REPORT:
+            self.callback(simpleauth2.AuthEvent(self, error))
+        else:
+            raise simpleauth2.AuthError(simpleauth2.AuthError.GENERAL, 'Error mode must be either "raise" or "report"! Got "{}".'.format(self.error_mode))
     
 
 class ProtectedResorcesProvider(BaseProvider):
