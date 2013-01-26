@@ -13,14 +13,11 @@ import time
 import urllib
 
 
-ERROR_MODE_RAISE = 'raise'
-ERROR_MODE_REPORT = 'report'
-
 
 class SimpleauthError(Exception):
     pass
 
-def login(adapter, provider_name, callback, error_mode=ERROR_MODE_REPORT, scope=[], **kwargs):
+def login(adapter, provider_name, callback, report_errors=True, scope=[], **kwargs):
     
     providers_config = adapter.get_providers_config()
             
@@ -45,7 +42,7 @@ def login(adapter, provider_name, callback, error_mode=ERROR_MODE_REPORT, scope=
     
     # instantiate and call provider class
     ProviderClass(adapter, provider_name, consumer, callback, provider_settings.get('short_name'),
-                  error_mode=error_mode).login(**kwargs)
+                  report_errors=report_errors).login(**kwargs)
 
 
 def escape(s):
@@ -198,7 +195,6 @@ class AuthError(Exception):
         self.message = message
         self.url = url
         self.original_message = original_message
-
 
 class AuthEvent(object):
     def __init__(self, provider, error=None):

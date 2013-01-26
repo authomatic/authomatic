@@ -1,27 +1,48 @@
-class ConfigError(Exception):
+class BaseError(Exception):
+    def __init__(self, message, original_message='', url='', code=None):
+        super(BaseError, self).__init__(message)        
+        self.message = message
+        self.original_message = original_message
+        self.url = url
+        self.code = code
+
+
+class ConfigError(BaseError):
     pass
 
-class CSRFError(Exception):
+
+class CredentialsError(BaseError):
     pass
 
-class ImportStringError(Exception):
+
+class HTTPError(BaseError):
     pass
 
-class OAuth1Error(Exception):
+
+class CSRFError(BaseError):
     pass
 
-class OAuth2Error(Exception):
+
+class ImportStringError(BaseError):
     pass
 
-class CredentialsError(Exception):
+
+class OAuth1Error(BaseError):
     pass
 
-class ProviderError(Exception):
+
+class OAuth2Error(BaseError):
     pass
 
-class HTTPError(Exception):
+
+class OpenIDError(BaseError):
     pass
 
-class OpenIDError(Exception):
+
+class DeniedError(BaseError):
+    pass
+
+
+class FailureError(BaseError):
     pass
 

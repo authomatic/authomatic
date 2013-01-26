@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from openid.consumer import consumer
 from openid.extensions import ax, pape, sreg
 from simpleauth2 import providers
+from simpleauth2.exceptions import FailureError, DeniedError
 import datetime
 import logging
 import simpleauth2
@@ -126,7 +127,7 @@ class OpenID(providers.OpenIDBaseProvider):
         'postal_code':   lambda data:   data.get('sreg', {}).get('postcode'),
     }
     
-    
+    @providers._error_decorator
     def login(self, *args, **kwargs):
         """
         Launches the OpenID authentication procedure.
@@ -198,8 +199,7 @@ class OpenID(providers.OpenIDBaseProvider):
             try:
                 auth_request = oi_consumer.begin(self.identifier)
             except consumer.DiscoveryFailure as e:
-                self._finish(simpleauth2.AuthError.OPENID_DISCOVERY_FAILURE, e.message)
-                return
+                raise FailureError(e.message)
             
             # add SREG extension
             # we need to remove required fields from optional fields because addExtension then raises an error
@@ -236,14 +236,12 @@ class OpenID(providers.OpenIDBaseProvider):
         
         elif self.phase == 1:
             
-            self._reset_phase()
-            
             # check whether the user has been redirected back by provider
             if not self.adapter.get_request_param('openid.mode'):
-                # if so abort with error
-                self._finish(simpleauth2.AuthError.REDIRECT, 'User did not finish the redirect!')
-                return
+                raise DeniedError('User did not finish the redirect!')
             
+            self._reset_phase()
+                        
             # complete the authentication process
             response = oi_consumer.complete(self.adapter.get_request_params_dict(), self.uri)
             
@@ -285,10 +283,10 @@ class OpenID(providers.OpenIDBaseProvider):
                 self._finish()
             
             elif response.status == consumer.CANCEL:
-                self._finish(simpleauth2.AuthError.DENIED, response.getDisplayIdentifier())
+                raise DeniedError('User cancelled the verification of ID "{}"!'.format(response.getDisplayIdentifier()))
             
             elif response.status == consumer.FAILURE:
-                self._finish(simpleauth2.AuthError.FAILURE, response.message)
+                raise FailureError(response.message)
 
 
 class Yahoo(OpenID):

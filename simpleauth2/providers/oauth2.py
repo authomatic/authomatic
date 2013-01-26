@@ -1,4 +1,5 @@
 from simpleauth2 import providers
+from simpleauth2.exceptions import DeniedError, FailureError
 from urllib import urlencode
 import simpleauth2
 
@@ -59,7 +60,8 @@ class OAuth2(providers.ProtectedResorcesProvider):
                 raise simpleauth2.exceptions.OAuth2Error('')
             
         return base + '?' + urlencode(params)
-     
+    
+    @providers._error_decorator
     def login(self, **kwargs):
         
         self._check_consumer()
@@ -82,34 +84,35 @@ class OAuth2(providers.ProtectedResorcesProvider):
             
         if self.phase == 1:
             
+            # check whether the user completed the process
+            # if not error or not csrf_token
+            #     user did not finish
+            
             self._reset_phase()
             
             # Validate CSRF token
             csrf_token = self.adapter.retrieve_provider_data(self.provider_name, 'csrf_token')
             state = self.adapter.get_request_param('state')
             if not csrf_token == state:
-                self._finish(simpleauth2.AuthError.FAILURE, \
-                             "The {} CSRF token is not valid!".format(state),
-                             url=self.urls[0])
-                return
+                raise FailureError('The CSRF token "{}" is not valid!'.format(state), url=self.urls[0])
             
             # check errors
             error = self.adapter.get_request_param('error')
             error_reason = self.adapter.get_request_param('error_reason')
             error_description = self.adapter.get_request_param('error_description')
             if error:
-                error_type = simpleauth2.AuthError.DENIED if error_reason == 'user_denied' else simpleauth2.AuthError.FAILURE
-                self._finish(error_type, error_description, error_description, url=self.urls[0])
-                return
+                if error_reason == 'user_denied':
+                    raise DeniedError(error_description, url=self.urls[0])
+                else:
+                    raise FailureError(error_description, url=self.urls[0])
             
             # check authorisation code
             authorisation_code = self.adapter.get_request_param('code')
             if not authorisation_code:
-                self._finish(simpleauth2.AuthError.FAILURE, \
-                             "Could not get OAuth 2.0 authorisation code from provider {}!".format(self.provider_name),
-                             url=self.urls[0])
-                return
+                raise FailureError("Could not get OAuth 2.0 authorisation code from provider {}!".format(self.provider_name),
+                                  url=self.urls[0])
             
+                        
             # exchange authorisation code for access token by the provider
             # the parameters should be encoded in the headers so create_oauth2_url() doesn't help
             params = dict(code=authorisation_code,
@@ -122,12 +125,10 @@ class OAuth2(providers.ProtectedResorcesProvider):
             response = self._fetch(parser, self.urls[1], params, 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
             
             if response.status_code != 200:
-                self._finish(simpleauth2.AuthError.FAILURE, \
-                             'Failed to obtain OAuth 2.0  access token from {}! HTTP status code: {}.'\
-                             .format(self.urls[1], response.status_code),
-                             code=response.status_code,
-                             url=self.urls[1])
-                return
+                raise FailureError('Failed to obtain OAuth 2.0  access token from {}! HTTP status code: {}.'\
+                                  .format(self.urls[1], response.status_code),
+                                  code=response.status_code,
+                                  url=self.urls[1])
             
             # create user
             self._update_or_create_user(response.data)

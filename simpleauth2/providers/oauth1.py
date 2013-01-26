@@ -1,4 +1,5 @@
 from simpleauth2 import providers
+from simpleauth2.exceptions import DeniedError, FailureError
 from urllib import urlencode
 import binascii
 import hashlib
@@ -161,6 +162,7 @@ class OAuth1(providers.ProtectedResorcesProvider):
         return base + '?' + urlencode(params)
     
     
+    @providers._error_decorator
     def login(self, **kwargs):
         
         self._check_consumer()
@@ -183,22 +185,18 @@ class OAuth1(providers.ProtectedResorcesProvider):
             
             # check if response status is OK
             if response.status_code != 200:
-                self._finish(simpleauth2.AuthError.FAILURE, \
-                             'Failed to obtain request token from {}! HTTP status code: {}.'\
-                             .format(self.urls[0], response.status_code),
-                             code=response.status_code,
-                             url=self.urls[0])
-                return
+                raise FailureError('Failed to obtain request token from {}! HTTP status code: {}.'\
+                                  .format(self.urls[0], response.status_code),
+                                  code=response.status_code,
+                                  url=self.urls[0])
             
             # extract OAuth token and save it to storage
             #oauth_token = parser(response).get('oauth_token')
             oauth_token = response.data.get('oauth_token')
             if not oauth_token:
-                self._finish(simpleauth2.AuthError.FAILURE, \
-                             'Response from {} doesn\'t contain OAuth 1.0a oauth_token!'.format(self.urls[0]),
-                             response.data,
-                             url=self.urls[0])
-                return
+                raise FailureError('Response from {} doesn\'t contain OAuth 1.0a oauth_token!'.format(self.urls[0]),
+                                  original_message=response.data,
+                                  url=self.urls[0])
             
             self.adapter.store_provider_data(self.provider_name, 'oauth_token', oauth_token)
             
@@ -206,8 +204,9 @@ class OAuth1(providers.ProtectedResorcesProvider):
             #oauth_token_secret = parser(response.setdefault('content'), {}).get('oauth_token_secret')
             oauth_token_secret = response.data.get('oauth_token_secret')
             if not oauth_token_secret:
-                self.adapter.reset_phase(self.provider_name)
-                raise Exception('Could not get a valid OAuth token secret from provider {}!'.format(self.provider_name))
+                raise FailureError('Failed to obtain oauth_token_secret from {}!'.format(self.urls[0]),
+                                  original_message=response.data,
+                                  url=self.urls[0])
             
             self.adapter.store_provider_data(self.provider_name, 'oauth_token_secret', oauth_token_secret)
             
@@ -222,36 +221,31 @@ class OAuth1(providers.ProtectedResorcesProvider):
             
         if self.phase == 1:
             
+            # check whether the user completed the process
+            
             self._reset_phase()
                         
             # retrieve the OAuth token from session
             oauth_token = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token')
             if not oauth_token:
-                self._finish(simpleauth2.AuthError.FAILURE,
-                             'Unable to retrieve OAuth 1.0a oauth_token from storage!')
-                return
+                raise FailureError('Unable to retrieve OAuth 1.0a oauth_token from storage!')
             
             # if the user denied the request token
             #TODO: Not sure that all providers return it as denied=token since there is no mention in the OAuth 1.0a spec
             if self.adapter.get_request_param('denied') == oauth_token:
-                self._finish(simpleauth2.AuthError.DENIED,
-                             'User denied the OAuth 1.0a request token {} during a redirect to {}!'.format(oauth_token, self.urls[1]),
-                             error_original_msg=self.adapter.get_request_param('denied'),
-                             url=self.urls[1])
-                return
+                raise DeniedError('User denied the OAuth 1.0a request token {} during a redirect to {}!'.\
+                                  format(oauth_token, self.urls[1]),
+                                  original_message=self.adapter.get_request_param('denied'),
+                                  url=self.urls[1])
             
             oauth_token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token_secret')
             if not oauth_token_secret:
-                self._finish(simpleauth2.AuthError.FAILURE,
-                             'Unable to retrieve OAuth 1.0a oauth_token_secret from storage!')
-                return
+                raise FailureError('Unable to retrieve OAuth 1.0a oauth_token_secret from storage!')
             
             # extract the verifier
             verifier = self.adapter.get_request_param('oauth_verifier')
             if not verifier:
-                self._finish(simpleauth2.AuthError.FAILURE,
-                             'Unable to retrieve OAuth 1.0a oauth_verifier from storage!')
-                return
+                raise FailureError('Unable to retrieve OAuth 1.0a oauth_verifier from storage!')
                         
             parser = self._get_parser_by_index(1)
             
@@ -268,14 +262,10 @@ class OAuth1(providers.ProtectedResorcesProvider):
             response = self._fetch(parser, url3, method='POST')
             
             if response.status_code != 200:
-                self._finish(simpleauth2.AuthError.FAILURE, \
-                             'Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
-                             .format(self.urls[2], response.status_code),
-                             code=response.status_code,
-                             url=self.urls[2])
-                return
-            
-            logging.info('RESPONSE DATA = {}'.format(response.data))
+                raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
+                                  .format(self.urls[2], response.status_code),
+                                  code=response.status_code,
+                                  url=self.urls[2])
             
             self._update_or_create_user(response.data)
             

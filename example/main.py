@@ -48,7 +48,8 @@ class Login(webapp2.RequestHandler):
                                     session_secret='abcd',
                                     openid_store=NDBOpenIDStore)
         
-        self.adapter.login(provider_name, self.callback, oi_identifier=self.request.params.get('id'))
+        self.adapter.login(provider_name, self.callback, oi_identifier=self.request.params.get('id'),
+                           report_errors=True)
     
     def callback(self, event):
         
@@ -58,8 +59,10 @@ class Login(webapp2.RequestHandler):
             self.response.write('ERROR:')
             self.response.write('<br /><br />')
             
+            self.response.write('message: {}<br />'.format(event.error.message))
             for k, v in event.error.__dict__.iteritems():
-                self.response.write('{}: {}<br />'.format(k, v))
+                if not k == 'message':
+                    self.response.write('{}: {}<br />'.format(k, v))
         
         else:
             if event.credentials:

@@ -7,19 +7,35 @@ HTTP_METHODS = ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'CON
 QUERY_STRING_PARSER = 'query_string_parser'
 JSON_PARSER = 'json_parser'
 
+def _error_decorator(func):
+    """
+    
+    """
+    
+    def wrap(provider, *args, **kwargs):
+        
+        try:
+            func(provider, *args, **kwargs)
+        except Exception as e:
+            
+            provider._finish(e)
+    
+    return wrap
+
+
 class BaseProvider(object):
     """
     Base class for all providers
     """
     
     def __init__(self, adapter, provider_name, consumer, callback,
-                 short_name=None, error_mode=None):
+                 short_name=None, report_errors=True):
         self.provider_name = provider_name
         self.consumer = consumer
         self.callback = callback
         self.adapter = adapter
         self.short_name = short_name
-        self.error_mode = error_mode
+        self.report_errors = report_errors
         self.credentials = None
         
         self._user = None
@@ -52,8 +68,9 @@ class BaseProvider(object):
     #===========================================================================
     # Methods to be overriden by subclasses
     #===========================================================================
-        
-    def login(self, **kwargs):
+    
+    @_error_decorator
+    def login(self, *args, **kwargs):
         raise NotImplementedError
     
     
@@ -157,17 +174,13 @@ class BaseProvider(object):
             raise simpleauth2.exceptions.ConfigError('Consumer key not specified for provider {}!'.format(self.provider_name))
         
         if not self.consumer.secret:
-            raise simpleauth2.exceptions.ConfigError('Consumer key not specified for provider {}!'.format(self.provider_name))
+            raise simpleauth2.exceptions.ConfigError('Consumer secret not specified for provider {}!'.format(self.provider_name))
     
     
-    def _finish(self, error_type='', error_msg='', error_original_msg='', code='', url=''):
-        error = simpleauth2.AuthError(error_type, error_msg, error_original_msg, code, url) if error_type else None
-        if self.error_mode == simpleauth2.ERROR_MODE_RAISE:
+    def _finish(self, error=None):
+        if not self.report_errors and error:
             raise error
-        elif self.error_mode == simpleauth2.ERROR_MODE_REPORT:
-            self.callback(simpleauth2.AuthEvent(self, error))
-        else:
-            raise simpleauth2.AuthError(simpleauth2.AuthError.GENERAL, 'Error mode must be either "raise" or "report"! Got "{}".'.format(self.error_mode))
+        self.callback(simpleauth2.AuthEvent(self, error))
     
 
 class ProtectedResorcesProvider(BaseProvider):
@@ -233,7 +246,34 @@ class OpenIDBaseProvider(BaseProvider):
         """
         
         self.identifier = kwargs.get('oi_identifier', self.urls[0])
+
+
+
+class LCProvider(BaseProvider):
     
+    @_error_decorator
+    def login(self, *args, **kwargs):
+        
+        logging.info('LOGIN: 1')
+        
+        logging.info('LOGIN: 2')
+        
+        raise simpleauth2.exceptions.OAuth2Error('nastala chyba', url='facebook/khaar')
+        
+        logging.info('LOGIN: 3')
+        
+        logging.info('LOGIN: 4')
+        
+        
+        
+
+
+
+
+
+
+
+
 
 
 
