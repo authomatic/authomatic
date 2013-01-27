@@ -165,90 +165,17 @@ class OAuth1(providers.ProtectedResorcesProvider):
     @providers._error_decorator
     def login(self, **kwargs):
         
-        self._check_consumer()
+        denied = self.adapter.get_request_param('denied')
+        verifier = self.adapter.get_request_param('oauth_verifier')
+        oauth_token = self.adapter.get_request_param('oauth_token')
         
-        if self.phase == 0:            
-            
-            parser = self._get_parser_by_index(0)
-            
-            # Create Request Token URL
-            url1 = self.create_url(url_type=1,
-                                     base=self.urls[0],
-                                     consumer_key=self.consumer.key,
-                                     consumer_secret=self.consumer.secret,
-                                     callback=self.uri,
-                                     nonce=self.adapter.generate_csrf())
-            
-            response = self._fetch(parser, url1)
-            
-            logging.info('RESPONSE = {}'.format(response.status_code))
-            
-            # check if response status is OK
-            if response.status_code != 200:
-                raise FailureError('Failed to obtain request token from {}! HTTP status code: {}.'\
-                                  .format(self.urls[0], response.status_code),
-                                  code=response.status_code,
-                                  url=self.urls[0])
-            
-            # extract OAuth token and save it to storage
-            #oauth_token = parser(response).get('oauth_token')
-            oauth_token = response.data.get('oauth_token')
-            if not oauth_token:
-                raise FailureError('Response from {} doesn\'t contain OAuth 1.0a oauth_token!'.format(self.urls[0]),
-                                  original_message=response.data,
-                                  url=self.urls[0])
-            
-            self.adapter.store_provider_data(self.provider_name, 'oauth_token', oauth_token)
-            
-            # extract OAuth token secret and save it to storage
-            #oauth_token_secret = parser(response.setdefault('content'), {}).get('oauth_token_secret')
-            oauth_token_secret = response.data.get('oauth_token_secret')
-            if not oauth_token_secret:
-                raise FailureError('Failed to obtain oauth_token_secret from {}!'.format(self.urls[0]),
-                                  original_message=response.data,
-                                  url=self.urls[0])
-            
-            self.adapter.store_provider_data(self.provider_name, 'oauth_token_secret', oauth_token_secret)
-            
-            # Create User Authorization URL
-            url2 = self.create_url(url_type=2,
-                                     base=self.urls[1],
-                                     token=oauth_token)
-            
-            self.adapter.redirect(url2)
-            
-            self._increase_phase()
-            
-        if self.phase == 1:
-            
-            # check whether the user completed the process
-            
-            self._reset_phase()
-                        
-            # retrieve the OAuth token from session
-            oauth_token = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token')
-            if not oauth_token:
-                raise FailureError('Unable to retrieve OAuth 1.0a oauth_token from storage!')
-            
-            # if the user denied the request token
-            #TODO: Not sure that all providers return it as denied=token since there is no mention in the OAuth 1.0a spec
-            if self.adapter.get_request_param('denied') == oauth_token:
-                raise DeniedError('User denied the OAuth 1.0a request token {} during a redirect to {}!'.\
-                                  format(oauth_token, self.urls[1]),
-                                  original_message=self.adapter.get_request_param('denied'),
-                                  url=self.urls[1])
+        if oauth_token and verifier:
+            # Phase 2 after redirect with success
             
             oauth_token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token_secret')
             if not oauth_token_secret:
                 raise FailureError('Unable to retrieve OAuth 1.0a oauth_token_secret from storage!')
-            
-            # extract the verifier
-            verifier = self.adapter.get_request_param('oauth_verifier')
-            if not verifier:
-                raise FailureError('Unable to retrieve OAuth 1.0a oauth_verifier from storage!')
                         
-            parser = self._get_parser_by_index(1)
-            
             # Create Access Token URL
             url3 = self.create_url(url_type=3,
                                      base=self.urls[2],
@@ -259,6 +186,7 @@ class OAuth1(providers.ProtectedResorcesProvider):
                                      verifier=verifier,
                                      nonce=self.adapter.generate_csrf())
             
+            parser = self._get_parser_by_index(1)            
             response = self._fetch(parser, url3, method='POST')
             
             if response.status_code != 200:
@@ -273,6 +201,59 @@ class OAuth1(providers.ProtectedResorcesProvider):
             self._update_credentials(response.data)
                         
             self._finish()
+            
+        elif denied:
+            # Phase 2 after redirect denied
+            raise DeniedError('User denied the OAuth 1.0a request token {} during a redirect to {}!'.\
+                                  format(denied, self.urls[1]),
+                                  original_message=denied,
+                                  url=self.urls[1])
+        else:
+            # Phase 1 before redirect
+            
+            parser = self._get_parser_by_index(0)
+            
+            # Create Request Token URL
+            url1 = self.create_url(url_type=1,
+                                     base=self.urls[0],
+                                     consumer_key=self.consumer.key,
+                                     consumer_secret=self.consumer.secret,
+                                     callback=self.uri,
+                                     nonce=self.adapter.generate_csrf())
+            
+            response = self._fetch(parser, url1)
+            
+            # check if response status is OK
+            if response.status_code != 200:
+                raise FailureError('Failed to obtain request token from {}! HTTP status code: {}.'\
+                                  .format(self.urls[0], response.status_code),
+                                  code=response.status_code,
+                                  url=self.urls[0])
+            
+            # extract OAuth token
+            #oauth_token = parser(response).get('oauth_token')
+            oauth_token = response.data.get('oauth_token')
+            if not oauth_token:
+                raise FailureError('Response from {} doesn\'t contain OAuth 1.0a oauth_token!'.format(self.urls[0]),
+                                  original_message=response.data,
+                                  url=self.urls[0])
+            
+            # extract OAuth token secret and save it to storage
+            #oauth_token_secret = parser(response.setdefault('content'), {}).get('oauth_token_secret')
+            oauth_token_secret = response.data.get('oauth_token_secret')
+            if oauth_token_secret:
+                self.adapter.store_provider_data(self.provider_name, 'oauth_token_secret', oauth_token_secret)
+            else:
+                raise FailureError('Failed to obtain oauth_token_secret from {}!'.format(self.urls[0]),
+                                  original_message=response.data,
+                                  url=self.urls[0])
+            
+            # Create User Authorization URL
+            url2 = self.create_url(url_type=2,
+                                     base=self.urls[1],
+                                     token=oauth_token)
+            
+            self.adapter.redirect(url2)
 
 
 class Twitter(OAuth1):
