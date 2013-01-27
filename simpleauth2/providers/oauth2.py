@@ -62,57 +62,23 @@ class OAuth2(providers.ProtectedResorcesProvider):
         return base + '?' + urlencode(params)
     
     @providers._error_decorator
-    def login(self, **kwargs):
+    def login(self, *args, **kwargs):
         
-        self._check_consumer()
+        authorisation_code = self.adapter.get_request_param('code')
+        error = self.adapter.get_request_param('error')
+        state = self.adapter.get_request_param('state')        
         
-        if self.phase == 0:
+        if authorisation_code and state:
+            # Phase 2 after redirect with success
             
-            # generate csfr
-            csrf_token = self.adapter.generate_csrf()
-            self.adapter.store_provider_data(self.provider_name, 'csrf_token', csrf_token)
+            # validate CSRF token
+            stored_state = self.adapter.retrieve_provider_data(self.provider_name, 'state')
             
-            url = self.create_url(1, self.urls[0],
-                                    consumer_key=self.consumer.key,
-                                    redirect_uri=self.uri,
-                                    scope=self._normalize_scope(self.consumer.scope),
-                                    state=csrf_token)
-            
-            self.adapter.redirect(url)
-            
-            self._increase_phase()
-            
-        if self.phase == 1:
-            
-            # check whether the user completed the process
-            # if not error or not csrf_token
-            #     user did not finish
-            
-            self._reset_phase()
-            
-            # Validate CSRF token
-            csrf_token = self.adapter.retrieve_provider_data(self.provider_name, 'csrf_token')
-            state = self.adapter.get_request_param('state')
-            if not csrf_token == state:
-                raise FailureError('The CSRF token "{}" is not valid!'.format(state), url=self.urls[0])
-            
-            # check errors
-            error = self.adapter.get_request_param('error')
-            error_reason = self.adapter.get_request_param('error_reason')
-            error_description = self.adapter.get_request_param('error_description')
-            if error:
-                if error_reason == 'user_denied':
-                    raise DeniedError(error_description, url=self.urls[0])
-                else:
-                    raise FailureError(error_description, url=self.urls[0])
-            
-            # check authorisation code
-            authorisation_code = self.adapter.get_request_param('code')
-            if not authorisation_code:
-                raise FailureError("Could not get OAuth 2.0 authorisation code from provider {}!".format(self.provider_name),
-                                  url=self.urls[0])
-            
-                        
+            if not stored_state:
+                raise FailureError('Unable to retrieve stored state!')
+            elif not stored_state == state:
+                raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state), url=self.urls[0])
+                                    
             # exchange authorisation code for access token by the provider
             # the parameters should be encoded in the headers so create_oauth2_url() doesn't help
             params = dict(code=authorisation_code,
@@ -138,6 +104,31 @@ class OAuth2(providers.ProtectedResorcesProvider):
             self._update_credentials(response.data)
             
             self._finish()
+            
+        elif error:
+            # Phase 2 after redirect with error
+            
+            error_reason = self.adapter.get_request_param('error_reason')
+            error_description = self.adapter.get_request_param('error_description')
+            
+            if error_reason == 'user_denied':
+                raise DeniedError(error_description, url=self.urls[0])
+            else:
+                raise FailureError(error_description, url=self.urls[0])
+        else:
+            # phase 1 before redirect
+            
+            # generate csfr
+            state = self.adapter.generate_csrf()
+            self.adapter.store_provider_data(self.provider_name, 'state', state)
+            
+            url = self.create_url(1, self.urls[0],
+                                    consumer_key=self.consumer.key,
+                                    redirect_uri=self.uri,
+                                    scope=self._normalize_scope(self.consumer.scope),
+                                    state=state)
+            
+            self.adapter.redirect(url)
 
 
 class Facebook(OAuth2):
