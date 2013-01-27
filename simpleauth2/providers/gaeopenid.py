@@ -1,6 +1,7 @@
 from google.appengine.api import users
-import simpleauth2
+from simpleauth2.exceptions import FailureError
 import logging
+import simpleauth2
 
 class GAEOpenID(simpleauth2.providers.OpenIDBaseProvider):
     """OpenID provider based on google.appengine.api.users library."""
@@ -14,28 +15,18 @@ class GAEOpenID(simpleauth2.providers.OpenIDBaseProvider):
         
         super(GAEOpenID, self).login(*args, **kwargs)
         
-        if self.phase == 0 and self.identifier:
-            # redirect to google auth service
-            self.adapter.redirect(users.create_login_url(dest_url=self.uri, federated_identity=self.identifier))            
-            
-            self._increase_phase()
-        
-        if self.phase == 1:
-            
-            self._reset_phase()
-            
+        if self.identifier:
+            url = users.create_login_url(dest_url=self.uri, federated_identity=self.identifier)
+            self.adapter.redirect(url)
+        else:
+            # returned from redirect or somebody requested without identifier
             user = users.get_current_user()
-            
             if user:
                 self._user = simpleauth2.User(user_id=user.federated_identity(),
                                               email=user.email(),
                                               gae_user=user)
-            
-                self.callback(simpleauth2.AuthEvent(self))
+                self._finish()
             else:
-                self._finish(simpleauth2.AuthError.FAILURE)
-
-
-
+                raise FailureError('Unable to verify user id!')
 
 

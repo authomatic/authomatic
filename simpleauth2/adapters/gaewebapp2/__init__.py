@@ -122,6 +122,11 @@ class GAEWebapp2Adapter(BaseAdapter):
         return dict(self._handler.request.params)
     
     
+    def get_request_headers_dict(self):
+        """Returns a dictionary of all request headers"""
+        return dict(self._handler.request.headers)
+    
+    
     def set_phase(self, provider_name, phase):
         self.store_provider_data(provider_name, 'phase', phase)
     
