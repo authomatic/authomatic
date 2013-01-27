@@ -87,13 +87,6 @@ class GAEWebapp2Adapter(BaseAdapter):
             session_store = sessions.SessionStore(handler.request, dict(secret_key=session_secret))
             #FIXME: securecookie backend complains that <openid.yadis.manager.YadisServiceManager object at 0x9ea892c> is not JSON serializable
             self._session = session_store.get_session(session_key, max_age=60, backend='memcache')
-        
-        # session structure:
-        #
-        # {'facebook': {'phase': 0},
-        #  'twitter': {'phase': 1,
-        #              'oauth_token': None,
-        #              'oauth_token_secret': None}}
     
     
     def write(self, value):
@@ -120,19 +113,6 @@ class GAEWebapp2Adapter(BaseAdapter):
     def get_request_params_dict(self):
         """Returns a dictionary of all request parameters"""
         return dict(self._handler.request.params)
-    
-    
-    def get_request_headers_dict(self):
-        """Returns a dictionary of all request headers"""
-        return dict(self._handler.request.headers)
-    
-    
-    def set_phase(self, provider_name, phase):
-        self.store_provider_data(provider_name, 'phase', phase)
-    
-    
-    def get_phase(self, provider_name):
-        return self.retrieve_provider_data(provider_name, 'phase', 0)
     
     
     def store_provider_data(self, provider_name, key, value):

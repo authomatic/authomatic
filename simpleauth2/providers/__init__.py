@@ -39,7 +39,6 @@ class BaseProvider(object):
         self.credentials = None
         
         self._user = None
-        self._phase = None
                 
         self._user_info_request = None
         
@@ -91,21 +90,9 @@ class BaseProvider(object):
         return self._user
     
     
-    @property
-    def phase(self):
-        if self._phase is None:
-            self._phase = self.adapter.get_phase(self.provider_name)
-        return self._phase
-    
     #===========================================================================
     # Internal methods
     #===========================================================================
-    
-    def _increase_phase(self):
-        self.adapter.set_phase(self.provider_name, self.phase + 1)
-    
-    def _reset_phase(self):   
-        self.adapter.set_phase(self.provider_name, 0)
     
     def _fetch(self, content_parser, url, params={}, method='GET', headers={}):
         #TODO: Check whether the method is valid
