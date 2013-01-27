@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from openid.consumer import consumer
 from openid.extensions import ax, pape, sreg
 from simpleauth2 import providers
-from simpleauth2.exceptions import FailureError, DeniedError
+from simpleauth2.exceptions import FailureError, DeniedError, OpenIDError
 import datetime
 import logging
 import simpleauth2
@@ -193,58 +193,12 @@ class OpenID(providers.OpenIDBaseProvider):
                     xrds_location = '{u}?{x}={x}'.format(u=self.uri, x=xrds_param)
                     self.adapter.write(REALM_HTML.format(xrds_location=xrds_location, body=realm_body))
         
-        if self.phase == 0 and self.identifier:
-            
-            # get AuthRequest object
-            try:
-                auth_request = oi_consumer.begin(self.identifier)
-            except consumer.DiscoveryFailure as e:
-                raise FailureError(e.message)
-            
-            # add SREG extension
-            # we need to remove required fields from optional fields because addExtension then raises an error
-            sreg_optional_fields = [i for i in sreg_optional_fields if i not in sreg_required_fields]
-            auth_request.addExtension(sreg.SRegRequest(optional=sreg_optional_fields, required=sreg_required_fields))
-            
-            # add AX extension
-            ax_request = ax.FetchRequest()
-            # set AX schemas
-            for i in ax_schemas:
-                required = i in ax_required_schemas
-                ax_request.add(ax.AttrInfo(i, required=required))
-            auth_request.addExtension(ax_request)
-            
-            # add PAPE extension
-            auth_request.addExtension(pape.Request(pape_policies))           
-            
-            # prepare realm and return_to URLs
-            realm = return_to = '{u}?{r}={r}'.format(u=self.uri, r=realm_param) if use_realm else self.uri
-            
-            if auth_request.shouldSendRedirect():
-                # can be redirected
-                url = auth_request.redirectURL(realm, return_to)
-                self.adapter.redirect(url)
-            else:
-                # must be sent as POST
-                # this writes a html post form with auto-submit
-                form = auth_request.htmlMarkup(realm, return_to, False, dict(id='openid_form'))
-                self.adapter.write(form)
-            
-            # finally move to next phase
-            self._increase_phase()
-                            
         
-        elif self.phase == 1:
+        if self.adapter.get_request_param('openid.mode'):
+            # Phase 2 after redirect
             
-            # check whether the user has been redirected back by provider
-            if not self.adapter.get_request_param('openid.mode'):
-                raise DeniedError('User did not finish the redirect!')
-            
-            self._reset_phase()
-                        
             # complete the authentication process
-            response = oi_consumer.complete(self.adapter.get_request_params_dict(), self.uri)
-            
+            response = oi_consumer.complete(self.adapter.get_request_params_dict(), self.uri)            
             
             # on success
             if response.status == consumer.SUCCESS:
@@ -287,6 +241,48 @@ class OpenID(providers.OpenIDBaseProvider):
             
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
+            
+        elif self.identifier:
+            # Phase 1 before redirect
+            
+            # get AuthRequest object
+            try:
+                auth_request = oi_consumer.begin(self.identifier)
+            except consumer.DiscoveryFailure as e:
+                raise FailureError(e.message)
+            
+            # add SREG extension
+            # we need to remove required fields from optional fields because addExtension then raises an error
+            sreg_optional_fields = [i for i in sreg_optional_fields if i not in sreg_required_fields]
+            auth_request.addExtension(sreg.SRegRequest(optional=sreg_optional_fields, required=sreg_required_fields))
+            
+            # add AX extension
+            ax_request = ax.FetchRequest()
+            # set AX schemas
+            for i in ax_schemas:
+                required = i in ax_required_schemas
+                ax_request.add(ax.AttrInfo(i, required=required))
+            auth_request.addExtension(ax_request)
+            
+            # add PAPE extension
+            auth_request.addExtension(pape.Request(pape_policies))           
+            
+            # prepare realm and return_to URLs
+            realm = return_to = '{u}?{r}={r}'.format(u=self.uri, r=realm_param) if use_realm else self.uri
+            
+            
+            url = auth_request.redirectURL(realm, return_to)
+            logging.info('OpenID url = {}'.format(url))
+            
+            if auth_request.shouldSendRedirect():
+                # can be redirected
+                url = auth_request.redirectURL(realm, return_to)
+                self.adapter.redirect(url)
+            else:
+                # must be sent as POST
+                # this writes a html post form with auto-submit
+                form = auth_request.htmlMarkup(realm, return_to, False, dict(id='openid_form'))
+                self.adapter.write(form)
 
 
 class Yahoo(OpenID):
@@ -295,5 +291,23 @@ class Yahoo(OpenID):
 class Google(OpenID):
     urls = ('https://www.google.com/accounts/o8/id', )
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 
