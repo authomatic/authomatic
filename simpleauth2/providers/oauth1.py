@@ -195,11 +195,11 @@ class OAuth1(providers.AuthorisationProvider):
                                   code=response.status_code,
                                   url=self.urls[2])
             
-            self._update_or_create_user(response.data)
-            
             self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.get_type(), self.short_name)
             self._update_credentials(response.data)
-                        
+            
+            self._update_or_create_user(response.data, self.credentials)
+            
             # We're done
             
         elif denied:
@@ -264,7 +264,7 @@ class Twitter(OAuth1):
     
     parsers = (providers.QUERY_STRING_PARSER, providers.QUERY_STRING_PARSER)
     
-    user_info_mapping = dict(user_id='short_name',
+    user_info_mapping = dict(user_id='id',
                             username='screen_name',
                             picture='profile_image_url',
                             locale='lang',

@@ -61,6 +61,7 @@ class OAuth2(providers.AuthorisationProvider):
             
         return base + '?' + urlencode(params)
     
+    
     @providers._login_decorator
     def login(self, *args, **kwargs):
         
@@ -96,12 +97,12 @@ class OAuth2(providers.AuthorisationProvider):
                                   code=response.status_code,
                                   url=self.urls[1])
             
-            # create user
-            self._update_or_create_user(response.data)
-            
             # create credentials
             self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.get_type(), self.short_name)
             self._update_credentials(response.data)
+            
+            # create user
+            self._update_or_create_user(response.data, self.credentials)
             
             # We're done
             
@@ -143,7 +144,7 @@ class Facebook(OAuth2):
     
     parsers = (None, providers.QUERY_STRING_PARSER)
     
-    user_info_mapping = dict(user_id='short_name',
+    user_info_mapping = dict(user_id='id',
                             picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
     
     def _update_credentials(self, data):
@@ -172,7 +173,7 @@ class Google(OAuth2):
     user_info_mapping = dict(name='name',
                             first_name='given_name',
                             last_name='family_name',
-                            user_id='short_name')
+                            user_id='id')
     
     def _normalize_scope(self, scope):
         """
@@ -193,5 +194,7 @@ class WindowsLive(OAuth2):
     
     parsers = (None, providers.JSON_PARSER)
     
-    user_info_mapping=dict(user_id='short_name',
+    user_info_mapping=dict(user_id='id',
                            email=(lambda data: data.get('emails', {}).get('preferred')))
+
+
