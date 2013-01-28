@@ -4,7 +4,7 @@ from simpleauth2.exceptions import FailureError
 import logging
 import simpleauth2
 
-class GAEOpenID(simpleauth2.providers.OpenIDBaseProvider):
+class GAEOpenID(simpleauth2.providers.AuthenticationProvider):
     """OpenID provider based on google.appengine.api.users library."""
     
     @providers._login_decorator

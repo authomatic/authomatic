@@ -10,7 +10,7 @@ import time
 import urllib
 
 
-class OAuth1(providers.ProtectedResorcesProvider):
+class OAuth1(providers.AuthorisationProvider):
     
     def __init__(self, *args, **kwargs):
         super(OAuth1, self).__init__(*args, **kwargs)

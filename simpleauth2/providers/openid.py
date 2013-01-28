@@ -55,7 +55,7 @@ class _Session(object):
         self.provider.adapter.retrieve_provider_data(self.provider.provider_name, key)
 
 
-class OpenID(providers.OpenIDBaseProvider):
+class OpenID(providers.AuthenticationProvider):
     """OpenID provider based on the python-openid library."""
         
     # http://openid.net/specs/openid-attribute-properties-list-1_0-01.html

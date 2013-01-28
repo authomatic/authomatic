@@ -4,7 +4,7 @@ from urllib import urlencode
 import simpleauth2
 
 
-class OAuth2(providers.ProtectedResorcesProvider):
+class OAuth2(providers.AuthorisationProvider):
     """
     Base class for OAuth2 services
     """

@@ -172,7 +172,7 @@ class BaseProvider(object):
             raise simpleauth2.exceptions.ConfigError('Consumer secret not specified for provider {}!'.format(self.provider_name))
         
 
-class ProtectedResorcesProvider(BaseProvider):
+class AuthorisationProvider(BaseProvider):
     
     has_protected_resources = True
         
@@ -224,7 +224,7 @@ class ProtectedResorcesProvider(BaseProvider):
         self.user_info_request.fetch().get_response().user
     
 
-class OpenIDBaseProvider(BaseProvider):
+class AuthenticationProvider(BaseProvider):
     """Base class for OpenID providers."""
     
     def login(self, *args, **kwargs):
@@ -235,23 +235,6 @@ class OpenIDBaseProvider(BaseProvider):
         """
         
         self.identifier = kwargs.get('oi_identifier', self.urls[0])
-
-
-
-class LCProvider(BaseProvider):
-    
-    @_login_decorator
-    def login(self, *args, **kwargs):
-        
-        logging.info('LOGIN: 1')
-        
-        logging.info('LOGIN: 2')
-        
-        raise simpleauth2.exceptions.OAuth2Error('nastala chyba', url='facebook/khaar')
-        
-        logging.info('LOGIN: 3')
-        
-        logging.info('LOGIN: 4')
         
         
         
