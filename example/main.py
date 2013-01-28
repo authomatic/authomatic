@@ -48,8 +48,20 @@ class Login(webapp2.RequestHandler):
                                     session_secret='abcd',
                                     openid_store=NDBOpenIDStore)
         
-        self.adapter.login(provider_name, self.callback, oi_identifier=self.request.params.get('id'),
-                           report_errors=True)
+        result = self.adapter.login(provider_name,
+                                    callback=self.callback,
+                                    oi_identifier=self.request.params.get('id'))
+        
+        if result:
+            if result.user:
+                user = result.user.update()
+                self.response.write('Hi {}<br />'.format(user.name))
+                self.response.write('your ID is {}<br />'.format(user.user_id))
+                self.response.write('your email is {}<br />'.format(user.email))
+            elif result.error:
+                self.response.write('ERROR {}<br />'.format(result.error.message))
+    
+    
     
     def callback(self, event):
         
@@ -64,16 +76,17 @@ class Login(webapp2.RequestHandler):
                 if not k == 'message':
                     self.response.write('{}: {}<br />'.format(k, v))
         
-        else:
-            if event.credentials:
+        elif event.user:
+            
+            if event.user.credentials:
                 
                 self.response.write('<br /><br />')
                 self.response.write('Credentials:<br /><br />')
                 
-                for k, v in event.credentials.__dict__.items():
+                for k, v in event.user.credentials.__dict__.items():
                     self.response.write('{}: {}<br />'.format(k, v))        
                 
-                serialized = event.credentials.serialize()
+                serialized = event.user.credentials.serialize()
                 
                 deserialized = Credentials.deserialize(self.adapter, serialized)
                 
@@ -104,7 +117,7 @@ class Login(webapp2.RequestHandler):
                 
                 user = user_rpc.get_response().user
             else:
-                user = event.get_user()
+                user = event.user.update()
             
             if user:
                 self.response.write('<br /><br />')

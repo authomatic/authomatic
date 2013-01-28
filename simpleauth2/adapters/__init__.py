@@ -21,7 +21,7 @@ class BaseAdapter(object):
     
 
     def login(self, *args, **kwargs):
-        simpleauth2.login(self,  *args, **kwargs)
+        return simpleauth2.login(self,  *args, **kwargs)
     
     
     def generate_csrf(self):

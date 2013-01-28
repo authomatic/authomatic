@@ -13,11 +13,7 @@ import time
 import urllib
 
 
-
-class SimpleauthError(Exception):
-    pass
-
-def login(adapter, provider_name, callback, report_errors=True, scope=[], **kwargs):
+def login(adapter, provider_name, callback=None, report_errors=True, scope=[], **kwargs):
     
     providers_config = adapter.get_providers_config()
             
@@ -40,9 +36,12 @@ def login(adapter, provider_name, callback, report_errors=True, scope=[], **kwar
         
     ProviderClass = resolve_provider_class(provider_class)
     
-    # instantiate and call provider class
-    ProviderClass(adapter, provider_name, consumer, callback, provider_settings.get('short_name'),
-                  report_errors=report_errors).login(**kwargs)
+    # instantiate provider class
+    provider = ProviderClass(adapter, provider_name, consumer, callback, provider_settings.get('short_name'),
+                  report_errors=report_errors)
+    
+    # return login result
+    return provider.login(**kwargs)
 
 
 def escape(s):
@@ -98,11 +97,11 @@ class Consumer(object):
 
 
 class User(object):
-    def __init__(self, **kwargs):
-        self.raw_user_info = kwargs.get('raw_user_info')
+    def __init__(self, provider, **kwargs):
+        self.provider = provider
+        self.credentials = kwargs.get('credentials')
         
-        self.access_token = kwargs.get('access_token')
-        self.access_token_secret = kwargs.get('access_token_secret')
+        self.raw_user_info = kwargs.get('raw_user_info')
         self.user_id = kwargs.get('user_id')
         self.username = kwargs.get('username')
         self.name = kwargs.get('name')
@@ -119,6 +118,9 @@ class User(object):
         self.country = kwargs.get('country')
         self.postal_code = kwargs.get('postal_code')
         self.gae_user = kwargs.get('gae_user')
+    
+    def update(self):
+        return self.provider.update_user()
 
 
 class Credentials(object):
@@ -181,31 +183,14 @@ class Credentials(object):
         except (TypeError, IndexError) as e:
             raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))
 
-#TODO: raise or report
-class AuthError(Exception):
-    GENERAL = 'general'
-    FAILURE = 'failure'
-    DENIED = 'denied'
-    REDIRECT = 'redirect'
-    OPENID_DISCOVERY_FAILURE = 'open_id_discovery_failure'
-    def __init__(self, type, message='', original_message='', code='', url=''):
-        super(AuthError, self).__init__(message)
-        self.type = type
-        self.code = code
-        self.message = message
-        self.url = url
-        self.original_message = original_message
 
-class AuthEvent(object):
+class LoginResult(object):
     def __init__(self, provider, error=None):
         #TODO: implement unified error type and original message
         self.provider = provider
         self.error = error
         self.consumer = provider.consumer
-        self.credentials = provider.credentials
-    
-    def get_user(self):
-        return self.provider.get_user()
+        self.user = provider.user
 
 
 class RPC(object):

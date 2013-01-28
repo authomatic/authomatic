@@ -24,9 +24,10 @@ class GAEOpenID(simpleauth2.providers.AuthenticationProvider):
             # returned from redirect or somebody requested without identifier
             user = users.get_current_user()
             if user:
-                self._user = simpleauth2.User(user_id=user.federated_identity(),
-                                              email=user.email(),
-                                              gae_user=user)
+                self.user = simpleauth2.User(self,
+                                             user_id=user.federated_identity(),
+                                             email=user.email(),
+                                             gae_user=user)
                 # We're done
             else:
                 raise FailureError('Unable to verify user id!')

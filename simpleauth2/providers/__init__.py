@@ -22,8 +22,8 @@ def _login_decorator(func):
             else:
                 raise
         finally:
-            event = simpleauth2.AuthEvent(provider, error)
-            if provider._user or error:
+            event = simpleauth2.LoginResult(provider, error)
+            if provider.user or error:
                 if provider.callback:
                     provider.callback(event)
                 return event
@@ -36,7 +36,7 @@ class BaseProvider(object):
     Base class for all providers
     """
     
-    def __init__(self, adapter, provider_name, consumer, callback,
+    def __init__(self, adapter, provider_name, consumer, callback=None,
                  short_name=None, report_errors=True):
         self.provider_name = provider_name
         self.consumer = consumer
@@ -46,7 +46,7 @@ class BaseProvider(object):
         self.report_errors = report_errors
         self.credentials = None
         
-        self._user = None
+        self.user = None
                 
         self._user_info_request = None
         
@@ -94,8 +94,8 @@ class BaseProvider(object):
         raise NotImplementedError
     
     
-    def get_user(self):
-        return self._user
+    def update_user(self):
+        return self.user
     
     
     #===========================================================================
@@ -109,20 +109,20 @@ class BaseProvider(object):
         
         return self.adapter.fetch_async(content_parser, url, params, method, headers).get_response()
     
-    def _update_or_create_user(self, data):
+    def _update_or_create_user(self, data, credentials=None):
         """
-        Updates the properties of the self._user object.
+        Updates the properties of the self.user object.
         
         Takes into account the self.user_info_mapping property.
         """
         
-        if not self._user:
-            self._user = simpleauth2.User()
+        if not self.user:
+            self.user = simpleauth2.User(self, credentials=credentials)
         
-        self._user.raw_user_info = data
+        self.user.raw_user_info = data
         
         # iterate over User properties
-        for key in self._user.__dict__.keys():
+        for key in self.user.__dict__.keys():
             # exclude raw_user_info
             if key is not 'raw_user_info':
                 
@@ -139,9 +139,9 @@ class BaseProvider(object):
                 
                 # update user
                 if new_value:
-                    setattr(self._user, key, new_value)
+                    setattr(self.user, key, new_value)
         
-        return self._user
+        return self.user
     
     
     def _update_credentials(self, data):
@@ -210,8 +210,8 @@ class AuthorisationProvider(BaseProvider):
             
             def response_parser(response, content_parser):
                 response = self.adapter.response_parser(response, content_parser)
-                user = self._update_or_create_user(response.data)
-                return simpleauth2.UserInfoResponse(response, user)
+                self.user = self._update_or_create_user(response.data)
+                return simpleauth2.UserInfoResponse(response, self.user)
             
             self._user_info_request = self.create_request(self.urls[-1],
                                                           content_parser=self.adapter.json_parser,
@@ -220,8 +220,8 @@ class AuthorisationProvider(BaseProvider):
         return self._user_info_request
     
     
-    def get_user(self):
-        self.user_info_request.fetch().get_response().user
+    def update_user(self):
+        return self.user_info_request.fetch().get_response().user
     
 
 class AuthenticationProvider(BaseProvider):
