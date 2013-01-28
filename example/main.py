@@ -2,6 +2,7 @@ from simpleauth2 import Credentials, Request
 from simpleauth2.adapters.gaewebapp2 import GAEWebapp2Adapter
 from simpleauth2.adapters.gaewebapp2.openid import NDBOpenIDStore
 import config
+import logging
 import simpleauth2
 import sys
 import webapp2
@@ -50,7 +51,8 @@ class Login(webapp2.RequestHandler):
         
         result = self.adapter.login(provider_name,
                                     callback=self.callback,
-                                    report_errors=False,
+                                    report_errors=True,
+                                    logging_level=logging.DEBUG,
                                     oi_identifier=self.request.params.get('id'))
         
         if result:

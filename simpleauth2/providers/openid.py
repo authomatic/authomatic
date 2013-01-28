@@ -185,23 +185,24 @@ class OpenID(providers.AuthenticationProvider):
         oi_consumer = consumer.Consumer(_Session(self), self.adapter.get_openid_store())
                 
         # handle realm
-        if use_realm:
+        if use_realm and not self.identifier:
             
-            if not self.identifier:
+            if self.adapter.get_request_param(xrds_param):
+                # write XRDS XML if there is ?{xrds_param}={xrds_param} request parameter
+                self._log(logging.INFO, 'Writing XRDS document to the response.')
+                self.adapter.set_response_header('Content-Type', 'application/xrds+xml')
+                self.adapter.write(XRDS_XML.format(return_to=self.uri))
                 
-                if self.adapter.get_request_param(xrds_param):
-                    # write XRDS XML if there is ?{xrds_param}={xrds_param} request parameter
-                    self.adapter.set_response_header('Content-Type', 'application/xrds+xml')
-                    self.adapter.write(XRDS_XML.format(return_to=self.uri))
-                    
-                elif self.adapter.get_request_param(realm_param) and len(self.adapter.get_request_params_dict()) == 1:
-                    # write realm HTML but only if there is NOTHING BUT the ?{realm_param}={realm_param} request parameter
-                    xrds_location = '{u}?{x}={x}'.format(u=self.uri, x=xrds_param)
-                    self.adapter.write(REALM_HTML.format(xrds_location=xrds_location, body=realm_body))
+            elif self.adapter.get_request_param(realm_param) and len(self.adapter.get_request_params_dict()) == 1:
+                # write realm HTML but only if there is NOTHING BUT the ?{realm_param}={realm_param} request parameter
+                self._log(logging.INFO, 'Writing OpenID realm HTML to the response.')
+                xrds_location = '{u}?{x}={x}'.format(u=self.uri, x=xrds_param)
+                self.adapter.write(REALM_HTML.format(xrds_location=xrds_location, body=realm_body))
         
         
         if self.adapter.get_request_param('openid.mode'):
             # Phase 2 after redirect
+            self._log(logging.INFO, 'Continuing OpenID authentication procedure after redirect.')
             
             # complete the authentication process
             response = oi_consumer.complete(self.adapter.get_request_params_dict(), self.uri)            
@@ -214,10 +215,12 @@ class OpenID(providers.AuthenticationProvider):
                 # get user ID
                 data['guid'] = response.getDisplayIdentifier()
                 
+                self._log(logging.INFO, 'Authentication successful.')
                 
                 # get user data from AX response
                 ax_response = ax.FetchResponse.fromSuccessResponse(response)
                 if ax_response and ax_response.data:
+                    self._log(logging.INFO, 'Got AX data.')
                     ax_data = {}
                     # conver iterable values to their first item
                     for k, v in ax_response.data.iteritems():
@@ -229,12 +232,14 @@ class OpenID(providers.AuthenticationProvider):
                 # get user data from SREG response
                 sreg_response = sreg.SRegResponse.fromSuccessResponse(response)
                 if sreg_response and sreg_response.data:
+                    self._log(logging.INFO, 'Got SREG data.')
                     data['sreg'] = sreg_response.data
                                 
                 
                 # get data from PAPE response
                 pape_response = pape.Response.fromSuccessResponse(response)
                 if pape_response and pape_response.auth_policies:
+                    self._log(logging.INFO, 'Got SREG data.')
                     data['pape'] = pape_response.auth_policies
                 
                 # create user
@@ -250,12 +255,17 @@ class OpenID(providers.AuthenticationProvider):
             
         elif self.identifier:
             # Phase 1 before redirect
+            self._log(logging.INFO, 'Starting OpenID authentication procedure.')
             
             # get AuthRequest object
             try:
                 auth_request = oi_consumer.begin(self.identifier)
             except consumer.DiscoveryFailure as e:
-                raise FailureError(e.message)
+                raise FailureError('Discovery failed for identifier {}!'.format(self.identifier),
+                                   url=self.identifier,
+                                   original_message=e.message)
+            
+            self._log(logging.INFO, 'Service discovery for identifier {} successfull.'.format(self.identifier))
             
             # add SREG extension
             # we need to remove required fields from optional fields because addExtension then raises an error
@@ -275,18 +285,18 @@ class OpenID(providers.AuthenticationProvider):
             
             # prepare realm and return_to URLs
             realm = return_to = '{u}?{r}={r}'.format(u=self.uri, r=realm_param) if use_realm else self.uri
-            
-            
+                        
             url = auth_request.redirectURL(realm, return_to)
-            logging.info('OpenID url = {}'.format(url))
             
             if auth_request.shouldSendRedirect():
                 # can be redirected
                 url = auth_request.redirectURL(realm, return_to)
+                self._log(logging.INFO, 'Redirecting to {}.'.format(url))
                 self.adapter.redirect(url)
             else:
                 # must be sent as POST
                 # this writes a html post form with auto-submit
+                self._log(logging.INFO, 'Writing an auto-submit HTML form to the response.')
                 form = auth_request.htmlMarkup(realm, return_to, False, dict(id='openid_form'))
                 self.adapter.write(form)
 

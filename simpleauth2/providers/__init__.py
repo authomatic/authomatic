@@ -19,6 +19,7 @@ def _login_decorator(func):
         except Exception as e:
             if provider.report_errors:
                 error = e
+                provider._log(logging.ERROR, 'Reported supressed exception: {}!'.format(repr(error)))
             else:
                 raise
         finally:
@@ -26,8 +27,8 @@ def _login_decorator(func):
             if provider.user or error:
                 if provider.callback:
                     provider.callback(event)
+                    provider._log(logging.INFO, 'Procedure finished.')
                 return event
-    
     return wrap
 
 
@@ -37,18 +38,25 @@ class BaseProvider(object):
     """
     
     def __init__(self, adapter, provider_name, consumer, callback=None,
-                 short_name=None, report_errors=True):
+                 short_name=None, report_errors=True, logging_level=logging.INFO):
         self.provider_name = provider_name
         self.consumer = consumer
         self.callback = callback
         self.adapter = adapter
         self.short_name = short_name
         self.report_errors = report_errors
+        self.logging = logging
         self.credentials = None
         
         self.user = None
                 
         self._user_info_request = None
+        
+        # setup logger
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging_level)
+        if logging_level in (None, False):
+            self.logger.disabled = False
         
         # recreate full current URL
         self.uri = self.adapter.get_current_uri()
@@ -101,6 +109,11 @@ class BaseProvider(object):
     #===========================================================================
     # Internal methods
     #===========================================================================
+    
+    def _log(self, level, msg):
+        base = 'SimpleAuth:{}: '.format(self.__class__.__name__)
+        self.logger.log(level, base + msg)
+        
     
     def _fetch(self, content_parser, url, params={}, method='GET', headers={}):
         #TODO: Check whether the method is valid

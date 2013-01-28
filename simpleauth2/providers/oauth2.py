@@ -1,6 +1,7 @@
 from simpleauth2 import providers
 from simpleauth2.exceptions import DeniedError, FailureError
 from urllib import urlencode
+import logging
 import simpleauth2
 
 
@@ -71,15 +72,20 @@ class OAuth2(providers.AuthorisationProvider):
         
         if authorisation_code and state:
             # Phase 2 after redirect with success
+            self._log(logging.INFO, 'Continuing OAuth 2.0 authorisation procedure after redirect.')
             
             # validate CSRF token
+            self._log(logging.INFO, 'Validating request by comparing request state {} to stored state.'.format(state))
             stored_state = self.adapter.retrieve_provider_data(self.provider_name, 'state')
+            
             
             if not stored_state:
                 raise FailureError('Unable to retrieve stored state!')
             elif not stored_state == state:
                 raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state), url=self.urls[0])
-                                    
+            
+            self._log(logging.INFO, 'Request is valid.')
+            
             # exchange authorisation code for access token by the provider
             # the parameters should be encoded in the headers so create_oauth2_url() doesn't help
             params = dict(code=authorisation_code,
@@ -88,17 +94,22 @@ class OAuth2(providers.AuthorisationProvider):
                           redirect_uri=self.uri,
                           grant_type='authorization_code')
             
+            self._log(logging.INFO, 'Fetching access token from {}.'.format(self.urls[1]))
             parser = self._get_parser_by_index(1)
             response = self._fetch(parser, self.urls[1], params, 'POST', headers={'Content-Type': 'application/x-www-form-urlencoded'})
             
-            if response.status_code != 200:
+            access_token = response.data.get('access_token')
+            
+            if response.status_code != 200 or not access_token:
                 raise FailureError('Failed to obtain OAuth 2.0  access token from {}! HTTP status code: {}.'\
                                   .format(self.urls[1], response.status_code),
                                   code=response.status_code,
                                   url=self.urls[1])
             
+            self._log(logging.INFO, 'Got access token.')
+            
             # create credentials
-            self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.get_type(), self.short_name)
+            self.credentials = simpleauth2.Credentials(access_token, self.get_type(), self.short_name)
             self._update_credentials(response.data)
             
             # create user
@@ -118,6 +129,7 @@ class OAuth2(providers.AuthorisationProvider):
                 raise FailureError(error_description, url=self.urls[0])
         else:
             # phase 1 before redirect
+            self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure.')
             
             # generate csfr
             state = self.adapter.generate_csrf()
@@ -128,6 +140,8 @@ class OAuth2(providers.AuthorisationProvider):
                                     redirect_uri=self.uri,
                                     scope=self._normalize_scope(self.consumer.scope),
                                     state=state)
+            
+            self._log(logging.INFO, 'Redirecting to {}.'.format(url))
             
             self.adapter.redirect(url)
 

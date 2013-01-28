@@ -18,18 +18,26 @@ class GAEOpenID(simpleauth2.providers.AuthenticationProvider):
         super(GAEOpenID, self).login(*args, **kwargs)
         
         if self.identifier:
+            self._log(logging.INFO, 'Starting OpenID authentication procedure.')
+            
             url = users.create_login_url(dest_url=self.uri, federated_identity=self.identifier)
+            
+            self._log(logging.INFO, 'Redirecting to {}.'.format(url))
+            
             self.adapter.redirect(url)
         else:
             # returned from redirect or somebody requested without identifier
+            self._log(logging.INFO, 'Continuing OpenID authentication procedure after redirect.')
+            
             user = users.get_current_user()
             if user:
+                self._log(logging.INFO, 'Authentication successful.')
                 self.user = simpleauth2.User(self,
                                              user_id=user.federated_identity(),
                                              email=user.email(),
                                              gae_user=user)
                 # We're done
             else:
-                raise FailureError('Unable to verify user id!')
+                raise FailureError('Unable to authenticate user id!')
 
 

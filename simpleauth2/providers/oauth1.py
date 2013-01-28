@@ -171,6 +171,7 @@ class OAuth1(providers.AuthorisationProvider):
         
         if oauth_token and verifier:
             # Phase 2 after redirect with success
+            self._log(logging.INFO, 'Continuing OAuth 1.0a authorisation procedure after redirect.')
             
             oauth_token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token_secret')
             if not oauth_token_secret:
@@ -186,6 +187,9 @@ class OAuth1(providers.AuthorisationProvider):
                                      verifier=verifier,
                                      nonce=self.adapter.generate_csrf())
             
+            
+            self._log(logging.INFO, 'Fetching oauth token from {}.'.format(self.urls[2]))
+            
             parser = self._get_parser_by_index(1)            
             response = self._fetch(parser, url3, method='POST')
             
@@ -194,6 +198,8 @@ class OAuth1(providers.AuthorisationProvider):
                                   .format(self.urls[2], response.status_code),
                                   code=response.status_code,
                                   url=self.urls[2])
+            
+            self._log(logging.INFO, 'Got oauth token.')
             
             self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.get_type(), self.short_name)
             self._update_credentials(response.data)
@@ -210,6 +216,7 @@ class OAuth1(providers.AuthorisationProvider):
                                   url=self.urls[1])
         else:
             # Phase 1 before redirect
+            self._log(logging.INFO, 'Starting OAuth 1.0a authorisation procedure.')
             
             parser = self._get_parser_by_index(0)
             
@@ -221,11 +228,12 @@ class OAuth1(providers.AuthorisationProvider):
                                      callback=self.uri,
                                      nonce=self.adapter.generate_csrf())
             
+            self._log(logging.INFO, 'Fetching oauth token and oauth token secret from {}.'.format(self.urls[0]))
             response = self._fetch(parser, url1)
             
             # check if response status is OK
             if response.status_code != 200:
-                raise FailureError('Failed to obtain request token from {}! HTTP status code: {}.'\
+                raise FailureError('Failed to obtain oauth token from {}! HTTP status code: {}.'\
                                   .format(self.urls[0], response.status_code),
                                   code=response.status_code,
                                   url=self.urls[0])
@@ -248,10 +256,14 @@ class OAuth1(providers.AuthorisationProvider):
                                   original_message=response.data,
                                   url=self.urls[0])
             
+            self._log(logging.INFO, 'Got oauth token and oauth token secret')
+            
             # Create User Authorization URL
             url2 = self.create_url(url_type=2,
                                      base=self.urls[1],
                                      token=oauth_token)
+            
+            self._log(logging.INFO, 'Redirecting to {}.'.format(url2))
             
             self.adapter.redirect(url2)
 

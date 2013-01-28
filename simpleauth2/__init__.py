@@ -5,7 +5,6 @@ import binascii
 import datetime
 import hashlib
 import hmac
-import logging
 import pickle
 import random
 import sys
@@ -13,7 +12,7 @@ import time
 import urllib
 
 
-def login(adapter, provider_name, callback=None, report_errors=True, scope=[], **kwargs):
+def login(adapter, provider_name, callback=None, report_errors=True, logging_level=20, scope=[], **kwargs):
     
     providers_config = adapter.get_providers_config()
             
@@ -38,7 +37,8 @@ def login(adapter, provider_name, callback=None, report_errors=True, scope=[], *
     
     # instantiate provider class
     provider = ProviderClass(adapter, provider_name, consumer, callback, provider_settings.get('short_name'),
-                  report_errors=report_errors)
+                             report_errors=report_errors,
+                             logging_level=logging_level)
     
     # return login result
     return provider.login(**kwargs)
@@ -74,7 +74,6 @@ def import_string(import_name, silent=False):
     taken from webapp2.import_string()
     """
     
-    logging.info('import_string() import_name = {}'.format(import_name))
     try:
         if '.' in import_name:
             module, obj = import_name.rsplit('.', 1)
