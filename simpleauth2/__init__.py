@@ -44,6 +44,13 @@ def login(adapter, provider_name, callback=None, report_errors=True, scope=[], *
     return provider.login(**kwargs)
 
 
+class Counter(object):
+    count = 0
+    def __call__(self):
+        self.count += 1
+        return self.count
+
+
 def escape(s):
     """Escape a URL including any /."""
     return urllib.quote(s.encode('utf-8'), safe='~')
@@ -153,8 +160,10 @@ class Credentials(object):
     
     def serialize(self):
         
-        # short_name is the first item by all providers
+        # short_name will be the first item by all providers
         short_name = self.provider_short_name
+        if short_name is None:
+            raise exceptions.ConfigError('The provider config must have a "short_name" key set to a unique value to be able to serialize credentials!')
         rest = self.get_provider_class().credentials_to_tuple(self)
         
         result = (short_name, ) + rest

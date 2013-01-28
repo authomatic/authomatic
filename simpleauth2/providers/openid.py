@@ -7,6 +7,12 @@ from simpleauth2.exceptions import FailureError, DeniedError, OpenIDError
 import datetime
 import logging
 import simpleauth2
+from openid import oidutil
+
+
+# supress openid logging to stderr
+oidutil.log = lambda message, level=0: None
+
 
 REALM_HTML = \
 """
