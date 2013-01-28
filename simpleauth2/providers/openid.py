@@ -127,7 +127,7 @@ class OpenID(providers.OpenIDBaseProvider):
         'postal_code':   lambda data:   data.get('sreg', {}).get('postcode'),
     }
     
-    @providers._error_decorator
+    @providers._login_decorator
     def login(self, *args, **kwargs):
         """
         Launches the OpenID authentication procedure.
@@ -234,7 +234,7 @@ class OpenID(providers.OpenIDBaseProvider):
                 # create user
                 self._update_or_create_user(data)
                 
-                self._finish()
+                # We're done
             
             elif response.status == consumer.CANCEL:
                 raise DeniedError('User cancelled the verification of ID "{}"!'.format(response.getDisplayIdentifier()))

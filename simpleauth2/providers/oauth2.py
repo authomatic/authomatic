@@ -61,7 +61,7 @@ class OAuth2(providers.ProtectedResorcesProvider):
             
         return base + '?' + urlencode(params)
     
-    @providers._error_decorator
+    @providers._login_decorator
     def login(self, *args, **kwargs):
         
         authorisation_code = self.adapter.get_request_param('code')
@@ -103,7 +103,7 @@ class OAuth2(providers.ProtectedResorcesProvider):
             self.credentials = simpleauth2.Credentials(response.data.get('access_token'), self.get_type(), self.short_name)
             self._update_credentials(response.data)
             
-            self._finish()
+            # We're done
             
         elif error:
             # Phase 2 after redirect with error

@@ -162,7 +162,7 @@ class OAuth1(providers.ProtectedResorcesProvider):
         return base + '?' + urlencode(params)
     
     
-    @providers._error_decorator
+    @providers._login_decorator
     def login(self, **kwargs):
         
         denied = self.adapter.get_request_param('denied')
@@ -200,7 +200,7 @@ class OAuth1(providers.ProtectedResorcesProvider):
             self.credentials = simpleauth2.Credentials(self.consumer.access_token, self.get_type(), self.short_name)
             self._update_credentials(response.data)
                         
-            self._finish()
+            # We're done
             
         elif denied:
             # Phase 2 after redirect denied

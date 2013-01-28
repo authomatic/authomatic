@@ -7,18 +7,26 @@ HTTP_METHODS = ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'CON
 QUERY_STRING_PARSER = 'query_string_parser'
 JSON_PARSER = 'json_parser'
 
-def _error_decorator(func):
+def _login_decorator(func):
     """
     
     """
     
     def wrap(provider, *args, **kwargs):
-        
+        error = None
         try:
             func(provider, *args, **kwargs)
         except Exception as e:
-            
-            provider._finish(e)
+            if provider.report_errors:
+                error = e
+            else:
+                raise
+        finally:
+            event = simpleauth2.AuthEvent(provider, error)
+            if provider._user or error:
+                if provider.callback:
+                    provider.callback(event)
+                return event
     
     return wrap
 
@@ -68,7 +76,7 @@ class BaseProvider(object):
     # Methods to be overriden by subclasses
     #===========================================================================
     
-    @_error_decorator
+    @_login_decorator
     def login(self, *args, **kwargs):
         raise NotImplementedError
     
@@ -162,13 +170,7 @@ class BaseProvider(object):
         
         if not self.consumer.secret:
             raise simpleauth2.exceptions.ConfigError('Consumer secret not specified for provider {}!'.format(self.provider_name))
-    
-    
-    def _finish(self, error=None):
-        if not self.report_errors and error:
-            raise error
-        self.callback(simpleauth2.AuthEvent(self, error))
-    
+        
 
 class ProtectedResorcesProvider(BaseProvider):
     
@@ -238,7 +240,7 @@ class OpenIDBaseProvider(BaseProvider):
 
 class LCProvider(BaseProvider):
     
-    @_error_decorator
+    @_login_decorator
     def login(self, *args, **kwargs):
         
         logging.info('LOGIN: 1')

@@ -1,4 +1,5 @@
 from google.appengine.api import users
+from simpleauth2 import providers
 from simpleauth2.exceptions import FailureError
 import logging
 import simpleauth2
@@ -6,6 +7,7 @@ import simpleauth2
 class GAEOpenID(simpleauth2.providers.OpenIDBaseProvider):
     """OpenID provider based on google.appengine.api.users library."""
     
+    @providers._login_decorator
     def login(self, *args, **kwargs):
         """
         Launches the OpenID authentication procedure.
@@ -25,7 +27,7 @@ class GAEOpenID(simpleauth2.providers.OpenIDBaseProvider):
                 self._user = simpleauth2.User(user_id=user.federated_identity(),
                                               email=user.email(),
                                               gae_user=user)
-                self._finish()
+                # We're done
             else:
                 raise FailureError('Unable to verify user id!')
 
