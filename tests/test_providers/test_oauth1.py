@@ -5,6 +5,7 @@ import hmac
 import simpleauth2
 import urllib
 import urlparse
+from urllib import urlencode
 
 
 def create_signature(base_string, key):
@@ -20,24 +21,14 @@ def get_signature(url):
     return query.get('oauth_signature', [])[0]
 
 
-class TestCreateUrl(object):
-    
+class SignatureSetupTeardown(object):
     def setup_method(self, method):
+        
+        self.consumer_secret = 'consumer-secret'
+        self.token_secret = 'token-secret'
         
         self.method = 'GET'
         self.base = 'http://example.com/path'
-        
-        url = ''.join([self.base,
-                       '?',
-                       'realm=realm_value&',
-                       'oauth_signature=oauth_signature_value&',
-                       'c=c_value&',
-                       'a=a_value&',
-                       '10=10_value&',
-                       '11=11_value&',
-                       'b=b_value&',
-                       'x=x_value&',
-                       '1=1_value',])
         
         self.params = [('a', '1'),
                   ('c', 'hi there~wasup'),
@@ -48,11 +39,11 @@ class TestCreateUrl(object):
                   ('z', 't'),
                   ('realm', 'realm value'),
                   ('oauth_signature', 'oauth_signature value')]
-    
-    
-    def teardown_method(self, method):
-        del self.params
-    
+        
+        self.url = self.base + '?' + urllib.urlencode(self.params)
+
+
+class TestCreateSignature(SignatureSetupTeardown):
     
     def test__normalize_params(self):
         
@@ -107,7 +98,9 @@ class TestCreateUrl(object):
                   ('1', '1_value')]
         
         assert desired_base_string == oauth1._create_base_string(self.method, self.base, params)
-    
+
+
+class TestHMACSHA1Generator(SignatureSetupTeardown):
     
     def test__create_key(self):
         
@@ -116,14 +109,22 @@ class TestCreateUrl(object):
         
         desired_key = simpleauth2.escape(consumer_secret) + '&' + simpleauth2.escape(token_secret)
         
-        assert oauth1._create_key(consumer_secret, token_secret) == desired_key
+        assert oauth1.HMACSHA1Generator._create_key(consumer_secret, token_secret) == desired_key
     
     
-    def test_create_url(self):
+    def test__create_signature(self):
+
+        params2 = [i for i in self.params]
+        params2.reverse()
         
-        method = 'GET'
-        base = 'http://example.com/auth'
-        callback = 'http://callback.com?param1=value1&param2=value2'
-        consumer_key = 'abcdef'
-        consumer_secret = 'ghijkl'
-        nonce = '12345'
+        signature1 = oauth1.HMACSHA1Generator.create_signature(self.method, self.base,
+                                                                self.params, self.consumer_secret,
+                                                                self.token_secret)
+        
+        signature2 = oauth1.HMACSHA1Generator.create_signature(self.method, self.base,
+                                                                params2, self.consumer_secret,
+                                                                self.token_secret)
+        
+        assert signature1 == signature2
+
+

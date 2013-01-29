@@ -17,8 +17,11 @@ def _normalize_params(params):
     excluding the "realm" and "oauth_signature" parameters
     as specified here: http://oauth.net/core/1.0a/#rfc.section.9.1.1
     
-    params: list of tuples as returned by the urlparse.parse_qsl() method
+    params: dict or list of tuples
     """
+    
+    if type(params) == dict:
+        params = params.items()
     
     # remove "realm" and "oauth_signature"
     params = [(k, v) for k, v in params if k not in ('oauth_signature', 'realm')]
@@ -62,20 +65,54 @@ def _create_base_string(method, base, params):
     return _join_by_ampersand(method, base, normalized_qs)
 
 
-def _create_key(consumer_secret, token_secret=''):
-    """
-    Returns a key for HMAC-SHA1 signature
+class BaseSignatureGenerator(object):
+    @classmethod
+    def create_signature(cls, method, base, params, consumer_secret, token_secret=''):
+        raise NotImplementedError
+
+
+class HMACSHA1Generator(BaseSignatureGenerator):
     
-    as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2
+    @classmethod
+    def _create_key(cls, consumer_secret, token_secret=''):
+        """
+        Returns a key for HMAC-SHA1 signature
+        
+        as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2
+        
+        :param consumer_secret:
+        :param token_secret:
+        """
+        
+        return _join_by_ampersand(consumer_secret, token_secret)
     
-    :param consumer_secret:
-    :param token_secret:
-    """
-    
-    return _join_by_ampersand(consumer_secret, token_secret)
+    @classmethod
+    def create_signature(cls, method, base, params, consumer_secret, token_secret=''):
+        """
+        Returns HMAC-SHA1 signature
+        
+        as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2
+        
+        :param cls:
+        :param method:
+        :param base:
+        :param params:
+        :param consumer_secret:
+        :param token_secret:
+        """
+        
+        base_string = _create_base_string(method, base, params)
+        key = cls._create_key(consumer_secret, token_secret)
+        
+        hashed = hmac.new(key, base_string, hashlib.sha1)
+        signature = binascii.b2a_base64(hashed.digest())[:-1]
+        
+        return signature
 
 
 class OAuth1(providers.AuthorisationProvider):
+    
+    signature_generator = HMACSHA1Generator
     
     def __init__(self, *args, **kwargs):
         super(OAuth1, self).__init__(*args, **kwargs)
@@ -134,8 +171,8 @@ class OAuth1(providers.AuthorisationProvider):
     #TODO: Allow for other signature methods
     
     
-    @staticmethod
-    def create_url(url_type, base, consumer_key='', consumer_secret='',
+    @classmethod
+    def create_url(cls, url_type, base, consumer_key='', consumer_secret='',
                    token='', token_secret='', verifier='', method='GET',
                    callback='', nonce=''):
         """ Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint"""
@@ -177,7 +214,6 @@ class OAuth1(providers.AuthorisationProvider):
                 params['oauth_consumer_key'] = consumer_key
             else:
                 raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and token_secret are required to create Protected Resources URL!')
-                
         
         # Sign request.
         # http://oauth.net/core/1.0a/#anchor13
@@ -189,26 +225,8 @@ class OAuth1(providers.AuthorisationProvider):
         params['oauth_nonce'] = nonce
         params['oauth_version'] = '1.0'
         
-        # Create base string for signature
-        # http://oauth.net/core/1.0a/#rfc.section.9.1.3
-        base_string = _create_base_string(method, base, params.items())
-        
-        # Prepare key for signature                
-        key = _create_key(consumer_secret, token_secret)
-        
-        # Generate signature
-        
-        # Generate HMAC-SHA1 signature
-        # http://oauth.net/core/1.0a/#rfc.section.9.2
-        hashed = hmac.new(key, base_string, hashlib.sha1)
-        signature = binascii.b2a_base64(hashed.digest())[:-1]
-        
-        
-        #TODO: Generate RSA-SHA1 signature if there is need for it
-        # http://oauth.net/core/1.0a/#rfc.section.9.3
-        
         # add signature to params
-        params['oauth_signature'] = signature
+        params['oauth_signature'] = cls.signature_generator.create_signature(method, base, params, consumer_secret, token_secret)
         
         # return signed url
         return base + '?' + urlencode(params)
