@@ -46,6 +46,10 @@ def _split_url(url):
     return base, params
 
 
+def _join_by_ampersand(*args):
+    return '&'.join([simpleauth2.escape(i) for i in args])
+
+
 def _create_base_string(method, base, params):
     """
     Returns base string for HMAC-SHA1 signature
@@ -55,13 +59,20 @@ def _create_base_string(method, base, params):
     
     normalized_qs = _normalize_params(params)
     
-    return '&'.join((simpleauth2.escape(method),
-                     simpleauth2.escape(base),
-                     simpleauth2.escape(normalized_qs)))
+    return _join_by_ampersand(method, base, normalized_qs)
 
 
-def _create_key(consumer_secret, token_secret):
-    return
+def _create_key(consumer_secret, token_secret=''):
+    """
+    Returns a key for HMAC-SHA1 signature
+    
+    as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2
+    
+    :param consumer_secret:
+    :param token_secret:
+    """
+    
+    return _join_by_ampersand(consumer_secret, token_secret)
 
 
 class OAuth1(providers.AuthorisationProvider):
@@ -121,10 +132,12 @@ class OAuth1(providers.AuthorisationProvider):
     #TODO: Allow for base with params
     #TODO: Write tests
     #TODO: Allow for other signature methods
+    
+    
     @staticmethod
-    def create_url(url_type, base, consumer_key=None, consumer_secret=None,
-                   token=None, token_secret=None, verifier=None, method='GET',
-                   callback=None, nonce=None):
+    def create_url(url_type, base, consumer_key='', consumer_secret='',
+                   token='', token_secret='', verifier='', method='GET',
+                   callback='', nonce=''):
         """ Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint"""
         
         # separate url base and query parameters
@@ -180,12 +193,8 @@ class OAuth1(providers.AuthorisationProvider):
         # http://oauth.net/core/1.0a/#rfc.section.9.1.3
         base_string = _create_base_string(method, base, params.items())
         
-        # Prepare key for signature
-        # http://oauth.net/core/1.0a/#rfc.section.9.2
-        key = '{}&'.format(simpleauth2.escape(consumer_secret))
-        if token_secret:
-            key += simpleauth2.escape(token_secret)
-                
+        # Prepare key for signature                
+        key = _create_key(consumer_secret, token_secret)
         
         # Generate signature
         

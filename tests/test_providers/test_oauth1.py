@@ -109,6 +109,16 @@ class TestCreateUrl(object):
         assert desired_base_string == oauth1._create_base_string(self.method, self.base, params)
     
     
+    def test__create_key(self):
+        
+        consumer_secret = 'cs'
+        token_secret = 'ts'
+        
+        desired_key = simpleauth2.escape(consumer_secret) + '&' + simpleauth2.escape(token_secret)
+        
+        assert oauth1._create_key(consumer_secret, token_secret) == desired_key
+    
+    
     def test_create_url(self):
         
         method = 'GET'
