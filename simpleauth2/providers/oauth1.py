@@ -10,6 +10,30 @@ import time
 import urllib
 
 
+
+def _normalize_params(params):
+    """
+    Returns a normalized query string sorted first by key, then by value
+    excluding the "realm" and "oauth_signature" parameters
+    as specified here: http://oauth.net/core/1.0a/#rfc.section.9.1.1
+    
+    params: list of tuples as returned by the urlparse.parse_qsl() method
+    """
+    
+    # remove "realm" and "oauth_signature"
+    params = [(k, v) for k, v in params if k not in ('oauth_signature', 'realm')]
+    # sort
+    params.sort()
+    # convert to query string
+    qs = urllib.urlencode(params)
+    # replace "+" to "%20"
+    qs = qs.replace('+', '%20')
+    # replace "%7E" to "%20"
+    qs = qs.replace('%7E', '~')
+    
+    return qs
+
+
 class OAuth1(providers.AuthorisationProvider):
     
     def __init__(self, *args, **kwargs):
@@ -63,9 +87,14 @@ class OAuth1(providers.AuthorisationProvider):
         short_name, access_token, access_token_secret = tuple_
         return simpleauth2.Credentials(access_token, cls.get_type(), short_name, access_token_secret=access_token_secret)
     
-    
+    #TODO: Break into smaller functions
+    #TODO: Allow for base with params
+    #TODO: Write tests
+    #TODO: Allow for other signature methods
     @staticmethod
-    def create_url(url_type, base, consumer_key=None, consumer_secret=None, token=None, token_secret=None, verifier=None, method='GET', callback=None, nonce=None):
+    def create_url(url_type, base, consumer_key=None, consumer_secret=None,
+                   token=None, token_secret=None, verifier=None, method='GET',
+                   callback=None, nonce=None):
         """ Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint"""
         
         params = {}
@@ -102,8 +131,7 @@ class OAuth1(providers.AuthorisationProvider):
                 params['oauth_consumer_key'] = consumer_key
             else:
                 raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and token_secret are required to create Protected Resources URL!')
-        
-        
+                
         
         # Sign request.
         # http://oauth.net/core/1.0a/#anchor13
@@ -118,31 +146,21 @@ class OAuth1(providers.AuthorisationProvider):
         # Normalize request parameters
         # http://oauth.net/core/1.0a/#rfc.section.9.1.1
         
-        # the oauth_signature MUST NOT be there
-        params_to_sign = [(k, v) for k, v in params.items() if k != 'oauth_signature']
-        
-        # parameters must be sorted first by key, then by value
-        params_to_sign.sort()
-        
-        # parameters must be separated by the & sign like this: a=1&c=hi%20there&f=25&f=50&f=a&z=p&z=t 
-        params_to_sign = urllib.urlencode(params_to_sign)
-        params_to_sign = params_to_sign.replace('+', '%20').replace('%7E', '~')
+        params_to_sign = _normalize_params(params.items())
         
         # Concatenate http method, base URL and request parameters by &
         # http://oauth.net/core/1.0a/#rfc.section.9.1.3
         base_string = '&'.join((simpleauth2.escape(method),
                         simpleauth2.escape(base),
                         simpleauth2.escape(params_to_sign)))
-        
-        
+                
         
         # Prepare the signature key
         # http://oauth.net/core/1.0a/#rfc.section.9.2
         key = '{}&'.format(simpleauth2.escape(consumer_secret))
         if token_secret:
             key += simpleauth2.escape(token_secret)
-        
-        
+                
         
         # Generate signature
         
