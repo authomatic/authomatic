@@ -8,7 +8,7 @@ import logging
 import simpleauth2
 import time
 import urllib
-
+import urlparse
 
 
 def _normalize_params(params):
@@ -32,6 +32,36 @@ def _normalize_params(params):
     qs = qs.replace('%7E', '~')
     
     return qs
+
+
+def _split_url(url):
+    "Splits given url to url base and params converted to list of tuples"
+    
+    split = urlparse.urlsplit(url)
+    
+    base = urlparse.urlunsplit((split.scheme, split.netloc, split.path, 0, 0))
+    
+    params = urlparse.parse_qsl(split.query, True)
+    
+    return base, params
+
+
+def _create_base_string(method, base, params):
+    """
+    Returns base string for HMAC-SHA1 signature
+    
+    as specified at: http://oauth.net/core/1.0a/#rfc.section.9.1.3
+    """
+    
+    normalized_qs = _normalize_params(params)
+    
+    return '&'.join((simpleauth2.escape(method),
+                     simpleauth2.escape(base),
+                     simpleauth2.escape(normalized_qs)))
+
+
+def _create_key(consumer_secret, token_secret):
+    return
 
 
 class OAuth1(providers.AuthorisationProvider):
@@ -97,6 +127,9 @@ class OAuth1(providers.AuthorisationProvider):
                    callback=None, nonce=None):
         """ Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint"""
         
+        # separate url base and query parameters
+        base, base_params = _split_url(base)
+        
         params = {}
         
         if url_type == 1:
@@ -143,19 +176,11 @@ class OAuth1(providers.AuthorisationProvider):
         params['oauth_nonce'] = nonce
         params['oauth_version'] = '1.0'
         
-        # Normalize request parameters
-        # http://oauth.net/core/1.0a/#rfc.section.9.1.1
-        
-        params_to_sign = _normalize_params(params.items())
-        
-        # Concatenate http method, base URL and request parameters by &
+        # Create base string for signature
         # http://oauth.net/core/1.0a/#rfc.section.9.1.3
-        base_string = '&'.join((simpleauth2.escape(method),
-                        simpleauth2.escape(base),
-                        simpleauth2.escape(params_to_sign)))
-                
+        base_string = _create_base_string(method, base, params.items())
         
-        # Prepare the signature key
+        # Prepare key for signature
         # http://oauth.net/core/1.0a/#rfc.section.9.2
         key = '{}&'.format(simpleauth2.escape(consumer_secret))
         if token_secret:
@@ -287,10 +312,11 @@ class OAuth1(providers.AuthorisationProvider):
 
 
 class Twitter(OAuth1):
-    urls = ('https://api.twitter.com/oauth/request_token',
-            'https://api.twitter.com/oauth/authorize',
-            'https://api.twitter.com/oauth/access_token',
-            'https://api.twitter.com/1/account/verify_credentials.json')
+    #TODO: dont forget to remove params!!!
+    urls = ('https://api.twitter.com/oauth/request_token?pokus=kupos',
+            'https://api.twitter.com/oauth/authorize?pokus=kupos',
+            'https://api.twitter.com/oauth/access_token?pokus=kupos',
+            'https://api.twitter.com/1/account/verify_credentials.json?pokus=kupos')
     
     parsers = (providers.QUERY_STRING_PARSER, providers.QUERY_STRING_PARSER)
     
