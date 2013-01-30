@@ -1,11 +1,13 @@
 import datetime
 import logging
 import simpleauth2
+import urlparse
 
 HTTP_METHODS = ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'CONNECT', 'PATCH')
 
 QUERY_STRING_PARSER = 'query_string_parser'
 JSON_PARSER = 'json_parser'
+
 
 def _login_decorator(func):
     """
@@ -110,17 +112,19 @@ class BaseProvider(object):
     # Internal methods
     #===========================================================================
     
+    @classmethod
+    def _create_request_elements(cls, request_type, url, method='GET'):
+        raise NotImplementedError
+    
+    
     def _log(self, level, msg):
         base = 'SimpleAuth:{}: '.format(self.__class__.__name__)
         self.logger.log(level, base + msg)
         
     
-    def _fetch(self, content_parser, url, params={}, method='GET', headers={}):
-        #TODO: Check whether the method is valid
-        if not method in HTTP_METHODS:
-            raise simpleauth2.exceptions.HTTPError('The {} is not a valid HTTP method!'.format(method))
+    def _fetch(self, *args, **kwargs):
+        return self.adapter.fetch_async(*args, **kwargs).get_response()
         
-        return self.adapter.fetch_async(content_parser, url, params, method, headers).get_response()
     
     def _update_or_create_user(self, data, credentials=None):
         """
@@ -183,12 +187,29 @@ class BaseProvider(object):
         
         if not self.consumer.secret:
             raise simpleauth2.exceptions.ConfigError('Consumer secret not specified for provider {}!'.format(self.provider_name))
-        
+
 
 class AuthorisationProvider(BaseProvider):
     
     has_protected_resources = True
         
+    REQUEST_TOKEN_REQUEST_TYPE = 1
+    USER_AUTHORISATION_REQUEST_TYPE = 2
+    ACCESS_TOKEN_REQUEST_TYPE = 3
+    PROTECTED_RESOURCE_REQUEST_TYPE = 4
+    
+    @staticmethod
+    def _split_url(url):
+        "Splits given url to url base and params converted to list of tuples"
+        
+        split = urlparse.urlsplit(url)
+        
+        base = urlparse.urlunsplit((split.scheme, split.netloc, split.path, 0, 0))
+        
+        params = urlparse.parse_qsl(split.query, True)
+        
+        return base, params
+    
     
     @staticmethod
     def credentials_to_tuple(credentials):
@@ -198,10 +219,6 @@ class AuthorisationProvider(BaseProvider):
     @staticmethod
     def credentials_from_tuple(tuple_):
         raise NotImplementedError
-    
-    
-    def fetch(self, url, parser=None):
-        return self.create_request(url, parser=parser).fetch().get_response()
     
     
     def create_request(self, url, method='GET', content_parser=None, response_parser=None):       
@@ -239,6 +256,7 @@ class AuthorisationProvider(BaseProvider):
 
 class AuthenticationProvider(BaseProvider):
     """Base class for OpenID providers."""
+    
     
     def login(self, *args, **kwargs):
         """

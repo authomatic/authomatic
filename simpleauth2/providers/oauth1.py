@@ -10,10 +10,7 @@ import time
 import urllib
 import urlparse
 
-REQUEST_TOKEN_REQUEST_TYPE = 1
-USER_AUTHORISATION_REQUEST_TYPE = 2
-ACCESS_TOKEN_REQUEST_TYPE = 3
-PROTECTED_RESOURCE_REQUEST_TYPE = 4
+
 
 def _normalize_params(params):
     """
@@ -40,17 +37,6 @@ def _normalize_params(params):
     
     return qs
 
-
-def _split_url(url):
-    "Splits given url to url base and params converted to list of tuples"
-    
-    split = urlparse.urlsplit(url)
-    
-    base = urlparse.urlunsplit((split.scheme, split.netloc, split.path, 0, 0))
-    
-    params = urlparse.parse_qsl(split.query, True)
-    
-    return base, params
 
 
 def _join_by_ampersand(*args):
@@ -152,19 +138,17 @@ class OAuth1(providers.AuthorisationProvider):
                                                      'access_token_secret, consumer_key and consumer_secret!')
         
         # create request elements
-        url, payload, method = cls.create_request_elements(request_type=PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                           url=url,
-                                                           consumer_key=credentials.consumer_key,
-                                                           consumer_secret=credentials.consumer_secret,
-                                                           token=credentials.access_token,
-                                                           token_secret=credentials.access_token_secret,
-                                                           method=method,
-                                                           nonce=adapter.generate_csrf())
+        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                       url=url,
+                                                       consumer_key=credentials.consumer_key,
+                                                       consumer_secret=credentials.consumer_secret,
+                                                       token=credentials.access_token,
+                                                       token_secret=credentials.access_token_secret,
+                                                       method=method,
+                                                       nonce=adapter.generate_csrf())
         
         # create rpc object
-        rpc = adapter.fetch_async_2(url=url,
-                                    payload=payload,
-                                    method=method,
+        rpc = adapter.fetch_async(*request_elements,
                                     headers=headers,
                                     response_parser=response_parser,
                                     content_parser=content_parser)
@@ -185,17 +169,17 @@ class OAuth1(providers.AuthorisationProvider):
     
     
     @classmethod
-    def create_request_elements(cls, request_type, url, consumer_key='', consumer_secret='',
-                   token='', token_secret='', verifier='', method='GET',
-                   callback='', nonce=''):
+    def _create_request_elements(cls, request_type, url, method='GET', consumer_key='',
+                                consumer_secret='', token='', token_secret='',
+                                verifier='', callback='', nonce='', **kwargs):
         
         # separate url base and query parameters
-        url, base_params = _split_url(url)
+        url, base_params = cls._split_url(url)
         
         # add extracted params to future params
         params = dict(base_params)
         
-        if request_type == USER_AUTHORISATION_REQUEST_TYPE:
+        if request_type == cls.USER_AUTHORISATION_REQUEST_TYPE:
             # no need for signature
             if token:
                 params['oauth_token'] = token
@@ -203,7 +187,7 @@ class OAuth1(providers.AuthorisationProvider):
                 raise simpleauth2.exceptions.OAuth1Error('Parameter token is required to create User Authorization URL!')
         else:
             # signature needed
-            if request_type == REQUEST_TOKEN_REQUEST_TYPE:
+            if request_type == cls.REQUEST_TOKEN_REQUEST_TYPE:
                 # Request Token URL
                 if consumer_key and consumer_secret and callback:
                     params['oauth_consumer_key'] = consumer_key
@@ -211,7 +195,7 @@ class OAuth1(providers.AuthorisationProvider):
                 else:
                     raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret and callback are required to create Request Token URL!')
                 
-            elif request_type == ACCESS_TOKEN_REQUEST_TYPE:
+            elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
                 # Access Token URL
                 if consumer_key and consumer_secret and token and verifier:
                     params['oauth_token'] = token
@@ -220,7 +204,7 @@ class OAuth1(providers.AuthorisationProvider):
                 else:
                     raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and verifier are required to create Access Token URL!')
                 
-            elif request_type == PROTECTED_RESOURCE_REQUEST_TYPE:
+            elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
                 # Protected Resources URL
                 if consumer_key and consumer_secret and token and token_secret:
                     params['oauth_token'] = token
@@ -254,67 +238,6 @@ class OAuth1(providers.AuthorisationProvider):
         return url, payload, method
     
     
-    @classmethod
-    def create_url(cls, url_type, base, consumer_key='', consumer_secret='',
-                   token='', token_secret='', verifier='', method='GET',
-                   callback='', nonce=''):
-        """ Creates a HMAC-SHA1 signed url to access OAuth 1.0 endpoint"""
-        
-        # separate url base and query parameters
-        base, base_params = _split_url(base)
-        
-        params = {}
-        
-        if url_type == REQUEST_TOKEN_REQUEST_TYPE:
-            # Request Token URL
-            if consumer_key and consumer_secret and callback:
-                params['oauth_consumer_key'] = consumer_key
-                params['oauth_callback'] = callback
-            else:
-                raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret and callback are required to create Request Token URL!')
-            
-        elif url_type == USER_AUTHORISATION_REQUEST_TYPE:
-            # User Authorization URL
-            if token:
-                params['oauth_token'] = token
-                return base + '?' + urlencode(params)
-            else:
-                raise simpleauth2.exceptions.OAuth1Error('Parameter token is required to create User Authorization URL!')
-            
-        elif url_type == ACCESS_TOKEN_REQUEST_TYPE:
-            # Access Token URL
-            if consumer_key and consumer_secret and token and verifier:
-                params['oauth_token'] = token
-                params['oauth_consumer_key'] = consumer_key
-                params['oauth_verifier'] = verifier
-            else:
-                raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and verifier are required to create Access Token URL!')
-            
-        elif url_type == PROTECTED_RESOURCE_REQUEST_TYPE:
-            # Protected Resources URL
-            if consumer_key and consumer_secret and token and token_secret:
-                params['oauth_token'] = token
-                params['oauth_consumer_key'] = consumer_key
-            else:
-                raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and token_secret are required to create Protected Resources URL!')
-        
-        # Sign request.
-        # http://oauth.net/core/1.0a/#anchor13
-        
-        # Prepare parameters for signature base string
-        # http://oauth.net/core/1.0a/#rfc.section.9.1
-        params['oauth_signature_method'] = cls.signature_generator.method
-        params['oauth_timestamp'] = str(int(time.time()))
-        params['oauth_nonce'] = nonce
-        params['oauth_version'] = '1.0'
-        
-        # add signature to params
-        params['oauth_signature'] = cls.signature_generator.create_signature(method, base, params, consumer_secret, token_secret)
-        
-        # return signed url
-        return base + '?' + urlencode(params)
-    
-    
     @providers._login_decorator
     def login(self, **kwargs):
         
@@ -329,22 +252,22 @@ class OAuth1(providers.AuthorisationProvider):
             oauth_token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token_secret')
             if not oauth_token_secret:
                 raise FailureError('Unable to retrieve OAuth 1.0a oauth_token_secret from storage!')
-                        
-            # Create Access Token URL
-            url3 = self.create_url(url_type=ACCESS_TOKEN_REQUEST_TYPE,
-                                     base=self.urls[2],
-                                     token=oauth_token,
-                                     consumer_key=self.consumer.key,
-                                     consumer_secret=self.consumer.secret,
-                                     token_secret=oauth_token_secret,
-                                     verifier=verifier,
-                                     nonce=self.adapter.generate_csrf())
             
-            
+                                  
+            # Get Access Token
+            parser = self._get_parser_by_index(1)            
             self._log(logging.INFO, 'Fetching oauth token from {}.'.format(self.urls[2]))
             
-            parser = self._get_parser_by_index(1)            
-            response = self._fetch(parser, url3, method='POST')
+            request_elements = self._create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
+                                                                url=self.urls[2],
+                                                                token=oauth_token,
+                                                                consumer_key=self.consumer.key,
+                                                                consumer_secret=self.consumer.secret,
+                                                                token_secret=oauth_token_secret,
+                                                                verifier=verifier,
+                                                                nonce=self.adapter.generate_csrf())
+            
+            response = self._fetch(*request_elements, content_parser=parser)            
             
             if response.status_code != 200:
                 raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
@@ -373,21 +296,15 @@ class OAuth1(providers.AuthorisationProvider):
             
             parser = self._get_parser_by_index(0)
             
-            # Create Request Token URL
-            
-            
-            #TODO:BLOCK START seems like this block could be inside single method
-            url, payload, method = self.create_request_elements(request_type=REQUEST_TOKEN_REQUEST_TYPE,
+            # Fetch request token
+            request_elements = self._create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
                                                                 url=self.urls[0],
                                                                 consumer_key=self.consumer.key,
                                                                 consumer_secret=self.consumer.secret,
                                                                 callback=self.uri,
                                                                 nonce=self.adapter.generate_csrf())
             
-            response = self.adapter.fetch_async_2(url, content_parser=parser).get_response()
-            #TODO:BLOCK END
-            
-            
+            response = self._fetch(*request_elements, content_parser=parser)            
             
             # check if response status is OK
             if response.status_code != 200:
@@ -417,20 +334,13 @@ class OAuth1(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Got oauth token and oauth token secret')
             
             # Create User Authorization URL
-            
-#            # OLD
-#            url2 = self.create_url(url_type=USER_AUTHORISATION_REQUEST_TYPE,
-#                                     base=self.urls[1],
-#                                     token=oauth_token)
-            
-            # NEW
-            url, payload, method = self.create_request_elements(request_type=USER_AUTHORISATION_REQUEST_TYPE,
+            request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                                 url=self.urls[1],
                                                                 token=oauth_token)
             
-            self._log(logging.INFO, 'Redirecting to {}.'.format(url))
+            self._log(logging.INFO, 'Redirecting to {}.'.format(request_elements[0]))
             
-            self.adapter.redirect(url)
+            self.adapter.redirect(request_elements[0])
 
 
 class Twitter(OAuth1):
