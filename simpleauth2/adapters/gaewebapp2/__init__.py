@@ -155,6 +155,20 @@ class GAEWebapp2Adapter(BaseAdapter):
         return RPC(rpc, response_parser or self.response_parser, content_parser)
     
     
+    def fetch_async_2(self, url, payload=None, method='GET', headers={}, response_parser=None, content_parser=None):
+        """
+        Makes an asynchronous call object
+        
+        Must return an object which has a get_result() method
+        """
+                
+        
+        rpc = urlfetch.create_rpc()
+        urlfetch.make_fetch_call(rpc, url, payload, method, headers)
+        
+        return RPC(rpc, response_parser or self.response_parser, content_parser)
+        
+    
     @staticmethod
     def json_parser(body):
         try:
