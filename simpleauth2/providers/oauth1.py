@@ -10,6 +10,10 @@ import time
 import urllib
 import urlparse
 
+REQUEST_TOKEN_REQUEST_TYPE = 1
+USER_AUTHORISATION_REQUEST_TYPE = 2
+ACCESS_TOKEN_REQUEST_TYPE = 3
+PROTECTED_RESOURCE_REQUEST_TYPE = 4
 
 def _normalize_params(params):
     """
@@ -145,7 +149,7 @@ class OAuth1(providers.AuthorisationProvider):
         if not credentials.access_token:
             raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid access_token!')
         
-        url2 = cls.create_url(url_type=4,
+        url2 = cls.create_url(url_type=PROTECTED_RESOURCE_REQUEST_TYPE,
                               base=url,
                               consumer_key=credentials.consumer_key,
                               consumer_secret=credentials.consumer_secret,
@@ -170,10 +174,10 @@ class OAuth1(providers.AuthorisationProvider):
         short_name, access_token, access_token_secret = tuple_
         return simpleauth2.Credentials(access_token, cls.get_type(), short_name, access_token_secret=access_token_secret)
     
-    #TODO: Break into smaller functions
-    #TODO: Allow for base with params
-    #TODO: Write tests
-    #TODO: Allow for other signature methods
+    
+    @classmethod
+    def create_request_params(cls):
+        pass
     
     
     @classmethod
@@ -187,7 +191,7 @@ class OAuth1(providers.AuthorisationProvider):
         
         params = {}
         
-        if url_type == 1:
+        if url_type == REQUEST_TOKEN_REQUEST_TYPE:
             # Request Token URL
             if consumer_key and consumer_secret and callback:
                 params['oauth_consumer_key'] = consumer_key
@@ -195,7 +199,7 @@ class OAuth1(providers.AuthorisationProvider):
             else:
                 raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret and callback are required to create Request Token URL!')
             
-        elif url_type == 2:
+        elif url_type == USER_AUTHORISATION_REQUEST_TYPE:
             # User Authorization URL
             if token:
                 params['oauth_token'] = token
@@ -203,7 +207,7 @@ class OAuth1(providers.AuthorisationProvider):
             else:
                 raise simpleauth2.exceptions.OAuth1Error('Parameter token is required to create User Authorization URL!')
             
-        elif url_type == 3:
+        elif url_type == ACCESS_TOKEN_REQUEST_TYPE:
             # Access Token URL
             if consumer_key and consumer_secret and token and verifier:
                 params['oauth_token'] = token
@@ -212,7 +216,7 @@ class OAuth1(providers.AuthorisationProvider):
             else:
                 raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and verifier are required to create Access Token URL!')
             
-        elif url_type == 4:
+        elif url_type == PROTECTED_RESOURCE_REQUEST_TYPE:
             # Protected Resources URL
             if consumer_key and consumer_secret and token and token_secret:
                 params['oauth_token'] = token
@@ -253,7 +257,7 @@ class OAuth1(providers.AuthorisationProvider):
                 raise FailureError('Unable to retrieve OAuth 1.0a oauth_token_secret from storage!')
                         
             # Create Access Token URL
-            url3 = self.create_url(url_type=3,
+            url3 = self.create_url(url_type=ACCESS_TOKEN_REQUEST_TYPE,
                                      base=self.urls[2],
                                      token=oauth_token,
                                      consumer_key=self.consumer.key,
@@ -296,7 +300,7 @@ class OAuth1(providers.AuthorisationProvider):
             parser = self._get_parser_by_index(0)
             
             # Create Request Token URL
-            url1 = self.create_url(url_type=1,
+            url1 = self.create_url(url_type=REQUEST_TOKEN_REQUEST_TYPE,
                                      base=self.urls[0],
                                      consumer_key=self.consumer.key,
                                      consumer_secret=self.consumer.secret,
@@ -334,7 +338,7 @@ class OAuth1(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Got oauth token and oauth token secret')
             
             # Create User Authorization URL
-            url2 = self.create_url(url_type=2,
+            url2 = self.create_url(url_type=USER_AUTHORISATION_REQUEST_TYPE,
                                      base=self.urls[1],
                                      token=oauth_token)
             
