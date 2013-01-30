@@ -144,23 +144,31 @@ class OAuth1(providers.AuthorisationProvider):
         return credentials    
     
     @classmethod
-    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', response_parser=None):
+    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
+        
         # check required properties of credentials
-        if not credentials.access_token:
-            raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid access_token!')
+        if not (credentials.access_token and credentials.access_token_secret and credentials.consumer_key and credentials.consumer_secret):
+            raise simpleauth2.exceptions.OAuth1Error('To access OAuth 1.0a resource you must provide credentials with valid access_token, ' + \
+                                                     'access_token_secret, consumer_key and consumer_secret!')
         
-        url2 = cls.create_url(url_type=PROTECTED_RESOURCE_REQUEST_TYPE,
-                              base=url,
-                              consumer_key=credentials.consumer_key,
-                              consumer_secret=credentials.consumer_secret,
-                              token=credentials.access_token,
-                              token_secret=credentials.access_token_secret,
-                              nonce=adapter.generate_csrf())
+        # create request elements
+        url, payload, method = cls.create_request_elements(request_type=PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                           url=url,
+                                                           consumer_key=credentials.consumer_key,
+                                                           consumer_secret=credentials.consumer_secret,
+                                                           token=credentials.access_token,
+                                                           token_secret=credentials.access_token_secret,
+                                                           method=method,
+                                                           nonce=adapter.generate_csrf())
         
-        rpc = adapter.fetch_async(content_parser,
-                                  url=url2,
-                                  response_parser=response_parser)
-        
+        # create rpc object
+        rpc = adapter.fetch_async_2(url=url,
+                                    payload=payload,
+                                    method=method,
+                                    headers=headers,
+                                    response_parser=response_parser,
+                                    content_parser=content_parser)
+        # and return it
         return rpc
         
     
@@ -172,12 +180,77 @@ class OAuth1(providers.AuthorisationProvider):
     @classmethod
     def credentials_from_tuple(cls, tuple_):
         short_name, access_token, access_token_secret = tuple_
+        #TODO: we also need to extract consumer key and secret
         return simpleauth2.Credentials(access_token, cls.get_type(), short_name, access_token_secret=access_token_secret)
     
     
     @classmethod
-    def create_request_params(cls):
-        pass
+    def create_request_elements(cls, request_type, url, consumer_key='', consumer_secret='',
+                   token='', token_secret='', verifier='', method='GET',
+                   callback='', nonce=''):
+        
+        # separate url base and query parameters
+        url, base_params = _split_url(url)
+        
+        # add extracted params to future params
+        params = dict(base_params)
+        
+        if request_type == REQUEST_TOKEN_REQUEST_TYPE:
+            # Request Token URL
+            if consumer_key and consumer_secret and callback:
+                params['oauth_consumer_key'] = consumer_key
+                params['oauth_callback'] = callback
+            else:
+                raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret and callback are required to create Request Token URL!')
+            
+        elif request_type == USER_AUTHORISATION_REQUEST_TYPE:
+            # User Authorization URL
+            if token:
+                params['oauth_token'] = token
+                return params
+            else:
+                raise simpleauth2.exceptions.OAuth1Error('Parameter token is required to create User Authorization URL!')
+            
+        elif request_type == ACCESS_TOKEN_REQUEST_TYPE:
+            # Access Token URL
+            if consumer_key and consumer_secret and token and verifier:
+                params['oauth_token'] = token
+                params['oauth_consumer_key'] = consumer_key
+                params['oauth_verifier'] = verifier
+            else:
+                raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and verifier are required to create Access Token URL!')
+            
+        elif request_type == PROTECTED_RESOURCE_REQUEST_TYPE:
+            # Protected Resources URL
+            if consumer_key and consumer_secret and token and token_secret:
+                params['oauth_token'] = token
+                params['oauth_consumer_key'] = consumer_key
+            else:
+                raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and token_secret are required to create Protected Resources URL!')
+        
+        # Sign request.
+        # http://oauth.net/core/1.0a/#anchor13
+        
+        # Prepare parameters for signature base string
+        # http://oauth.net/core/1.0a/#rfc.section.9.1
+        params['oauth_signature_method'] = cls.signature_generator.method
+        params['oauth_timestamp'] = str(int(time.time()))
+        params['oauth_nonce'] = nonce
+        params['oauth_version'] = '1.0'
+        
+        # add signature to params
+        params['oauth_signature'] = cls.signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
+        
+        params = urlencode(params)
+        
+        payload = None
+        
+        if method in ('POST', 'PUT'):
+            payload = params
+        else:
+            url = url + '?' + params
+        
+        return url, payload, method
     
     
     @classmethod
