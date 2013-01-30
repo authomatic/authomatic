@@ -51,7 +51,7 @@ class Login(webapp2.RequestHandler):
         
         result = self.adapter.login(provider_name,
                                     callback=self.callback,
-                                    report_errors=True,
+                                    report_errors=False,
                                     logging_level=logging.DEBUG,
                                     oi_identifier=self.request.params.get('id'))
         
