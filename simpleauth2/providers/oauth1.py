@@ -170,7 +170,7 @@ class OAuth1(providers.AuthorisationProvider):
                                     content_parser=content_parser)
         # and return it
         return rpc
-        
+    
     
     @staticmethod
     def credentials_to_tuple(credentials):
@@ -195,51 +195,52 @@ class OAuth1(providers.AuthorisationProvider):
         # add extracted params to future params
         params = dict(base_params)
         
-        if request_type == REQUEST_TOKEN_REQUEST_TYPE:
-            # Request Token URL
-            if consumer_key and consumer_secret and callback:
-                params['oauth_consumer_key'] = consumer_key
-                params['oauth_callback'] = callback
-            else:
-                raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret and callback are required to create Request Token URL!')
-            
-        elif request_type == USER_AUTHORISATION_REQUEST_TYPE:
-            # User Authorization URL
+        if request_type == USER_AUTHORISATION_REQUEST_TYPE:
+            # no need for signature
             if token:
                 params['oauth_token'] = token
-                return params
             else:
                 raise simpleauth2.exceptions.OAuth1Error('Parameter token is required to create User Authorization URL!')
+        else:
+            # signature needed
+            if request_type == REQUEST_TOKEN_REQUEST_TYPE:
+                # Request Token URL
+                if consumer_key and consumer_secret and callback:
+                    params['oauth_consumer_key'] = consumer_key
+                    params['oauth_callback'] = callback
+                else:
+                    raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret and callback are required to create Request Token URL!')
+                
+            elif request_type == ACCESS_TOKEN_REQUEST_TYPE:
+                # Access Token URL
+                if consumer_key and consumer_secret and token and verifier:
+                    params['oauth_token'] = token
+                    params['oauth_consumer_key'] = consumer_key
+                    params['oauth_verifier'] = verifier
+                else:
+                    raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and verifier are required to create Access Token URL!')
+                
+            elif request_type == PROTECTED_RESOURCE_REQUEST_TYPE:
+                # Protected Resources URL
+                if consumer_key and consumer_secret and token and token_secret:
+                    params['oauth_token'] = token
+                    params['oauth_consumer_key'] = consumer_key
+                else:
+                    raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and token_secret are required to create Protected Resources URL!')
             
-        elif request_type == ACCESS_TOKEN_REQUEST_TYPE:
-            # Access Token URL
-            if consumer_key and consumer_secret and token and verifier:
-                params['oauth_token'] = token
-                params['oauth_consumer_key'] = consumer_key
-                params['oauth_verifier'] = verifier
-            else:
-                raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and verifier are required to create Access Token URL!')
+            # Sign request.
+            # http://oauth.net/core/1.0a/#anchor13
             
-        elif request_type == PROTECTED_RESOURCE_REQUEST_TYPE:
-            # Protected Resources URL
-            if consumer_key and consumer_secret and token and token_secret:
-                params['oauth_token'] = token
-                params['oauth_consumer_key'] = consumer_key
-            else:
-                raise simpleauth2.exceptions.OAuth1Error('Parameters consumer_key, consumer_secret, token and token_secret are required to create Protected Resources URL!')
+            # Prepare parameters for signature base string
+            # http://oauth.net/core/1.0a/#rfc.section.9.1
+            params['oauth_signature_method'] = cls.signature_generator.method
+            params['oauth_timestamp'] = str(int(time.time()))
+            params['oauth_nonce'] = nonce
+            params['oauth_version'] = '1.0'
+            
+            # add signature to params
+            params['oauth_signature'] = cls.signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
         
-        # Sign request.
-        # http://oauth.net/core/1.0a/#anchor13
-        
-        # Prepare parameters for signature base string
-        # http://oauth.net/core/1.0a/#rfc.section.9.1
-        params['oauth_signature_method'] = cls.signature_generator.method
-        params['oauth_timestamp'] = str(int(time.time()))
-        params['oauth_nonce'] = nonce
-        params['oauth_version'] = '1.0'
-        
-        # add signature to params
-        params['oauth_signature'] = cls.signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
         
         params = urlencode(params)
         
@@ -373,15 +374,20 @@ class OAuth1(providers.AuthorisationProvider):
             parser = self._get_parser_by_index(0)
             
             # Create Request Token URL
-            url1 = self.create_url(url_type=REQUEST_TOKEN_REQUEST_TYPE,
-                                     base=self.urls[0],
-                                     consumer_key=self.consumer.key,
-                                     consumer_secret=self.consumer.secret,
-                                     callback=self.uri,
-                                     nonce=self.adapter.generate_csrf())
             
-            self._log(logging.INFO, 'Fetching oauth token and oauth token secret from {}.'.format(self.urls[0]))
-            response = self._fetch(parser, url1)
+            
+            #TODO:BLOCK START seems like this block could be inside single method
+            url, payload, method = self.create_request_elements(request_type=REQUEST_TOKEN_REQUEST_TYPE,
+                                                                url=self.urls[0],
+                                                                consumer_key=self.consumer.key,
+                                                                consumer_secret=self.consumer.secret,
+                                                                callback=self.uri,
+                                                                nonce=self.adapter.generate_csrf())
+            
+            response = self.adapter.fetch_async_2(url, content_parser=parser).get_response()
+            #TODO:BLOCK END
+            
+            
             
             # check if response status is OK
             if response.status_code != 200:
@@ -411,13 +417,20 @@ class OAuth1(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Got oauth token and oauth token secret')
             
             # Create User Authorization URL
-            url2 = self.create_url(url_type=USER_AUTHORISATION_REQUEST_TYPE,
-                                     base=self.urls[1],
-                                     token=oauth_token)
             
-            self._log(logging.INFO, 'Redirecting to {}.'.format(url2))
+#            # OLD
+#            url2 = self.create_url(url_type=USER_AUTHORISATION_REQUEST_TYPE,
+#                                     base=self.urls[1],
+#                                     token=oauth_token)
             
-            self.adapter.redirect(url2)
+            # NEW
+            url, payload, method = self.create_request_elements(request_type=USER_AUTHORISATION_REQUEST_TYPE,
+                                                                url=self.urls[1],
+                                                                token=oauth_token)
+            
+            self._log(logging.INFO, 'Redirecting to {}.'.format(url))
+            
+            self.adapter.redirect(url)
 
 
 class Twitter(OAuth1):
