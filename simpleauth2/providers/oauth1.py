@@ -66,12 +66,17 @@ def _create_base_string(method, base, params):
 
 
 class BaseSignatureGenerator(object):
+    
+    method = ''
+    
     @classmethod
     def create_signature(cls, method, base, params, consumer_secret, token_secret=''):
         raise NotImplementedError
 
 
 class HMACSHA1Generator(BaseSignatureGenerator):
+    
+    method = 'HMAC-SHA1'
     
     @classmethod
     def _create_key(cls, consumer_secret, token_secret=''):
@@ -220,7 +225,7 @@ class OAuth1(providers.AuthorisationProvider):
         
         # Prepare parameters for signature base string
         # http://oauth.net/core/1.0a/#rfc.section.9.1
-        params['oauth_signature_method'] = 'HMAC-SHA1' #TODO: Add other signature methods
+        params['oauth_signature_method'] = cls.signature_generator.method
         params['oauth_timestamp'] = str(int(time.time()))
         params['oauth_nonce'] = nonce
         params['oauth_version'] = '1.0'
