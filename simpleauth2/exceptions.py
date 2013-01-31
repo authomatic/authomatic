@@ -39,7 +39,7 @@ class OpenIDError(BaseError):
     pass
 
 
-class DeniedError(BaseError):
+class CancellationError(BaseError):
     pass
 
 

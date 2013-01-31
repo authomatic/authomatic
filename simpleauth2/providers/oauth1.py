@@ -1,5 +1,5 @@
 from simpleauth2 import providers
-from simpleauth2.exceptions import DeniedError, FailureError
+from simpleauth2.exceptions import CancellationError, FailureError
 from urllib import urlencode
 import binascii
 import hashlib
@@ -116,13 +116,6 @@ class OAuth1(providers.AuthorisationProvider):
         self._oauth_token_key = self.provider_name + '_oauth_token'
         self._oauth_token_secret_key = self.provider_name + '_oauth_token_secret'
     
-    @classmethod
-    def _update_credentials(cls, credentials, data):
-        
-        credentials.token = data.get('oauth_token')
-        credentials.token_secret = data.get('oauth_token_secret')
-        
-        return credentials    
     
     @classmethod
     def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
@@ -248,25 +241,25 @@ class OAuth1(providers.AuthorisationProvider):
         
         credentials = simpleauth2.Credentials(provider=self)
         
+        # get request parameters from which we can determine the login phase
         denied = self.adapter.get_request_param('denied')
         verifier = self.adapter.get_request_param('oauth_verifier')
-        oauth_token = self.adapter.get_request_param('oauth_token')
+        request_token = self.adapter.get_request_param('oauth_token')
         
-        if oauth_token and verifier:
+        if request_token and verifier:
             # Phase 2 after redirect with success
             self._log(logging.INFO, 'Continuing OAuth 1.0a authorisation procedure after redirect.')
             
-            oauth_token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'oauth_token_secret')
-            if not oauth_token_secret:
-                raise FailureError('Unable to retrieve OAuth 1.0a oauth_token_secret from storage!')
+            token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'token_secret')
+            if not token_secret:
+                raise FailureError('Unable to retrieve token secret from storage!')
             
-            credentials.token = oauth_token
-            credentials.token_secret = oauth_token_secret
-            
-                       
             # Get Access Token
             parser = self._get_parser_by_index(1)            
-            self._log(logging.INFO, 'Fetching oauth token from {}.'.format(self.urls[2]))
+            self._log(logging.INFO, 'Fetching for access token from {}.'.format(self.urls[2]))
+            
+            credentials.token = request_token
+            credentials.token_secret = token_secret
             
             request_elements = self._create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
                                                              url=self.urls[2],
@@ -278,13 +271,16 @@ class OAuth1(providers.AuthorisationProvider):
             
             if response.status_code != 200:
                 raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
-                                  .format(self.urls[2], response.status_code),
-                                  code=response.status_code,
-                                  url=self.urls[2])
+                                   .format(self.urls[2], response.status_code),
+                                   code=response.status_code,
+                                   url=self.urls[2])
             
-            self._log(logging.INFO, 'Got oauth token.')
+            self._log(logging.INFO, 'Got access token.')
             
-            credentials = self._update_credentials(credentials, response.data)
+            credentials.token = response.data.get('oauth_token')
+            credentials.token_secret = response.data.get('oauth_token_secret')
+            
+            credentials = self._credentials_parser(credentials, response.data)
             
             self._update_or_create_user(response.data, credentials)
             
@@ -294,7 +290,7 @@ class OAuth1(providers.AuthorisationProvider):
             
         elif denied:
             # Phase 2 after redirect denied
-            raise DeniedError('User denied the OAuth 1.0a request token {} during a redirect to {}!'.\
+            raise CancellationError('User denied the request token {} during a redirect to {}!'.\
                                   format(denied, self.urls[1]),
                                   original_message=denied,
                                   url=self.urls[1])
@@ -304,52 +300,52 @@ class OAuth1(providers.AuthorisationProvider):
             
             parser = self._get_parser_by_index(0)
             
-            # Fetch request token
+            # Fetch for request token
             request_elements = self._create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
                                                              credentials=credentials,
                                                              url=self.urls[0],
                                                              callback=self.uri,
                                                              nonce=self.adapter.generate_csrf())
             
-            self._log(logging.INFO, 'Fetching for request token and oauth token secret.')
-            
+            self._log(logging.INFO, 'Fetching for request token and token secret.')
             response = self._fetch(*request_elements, content_parser=parser)            
             
             # check if response status is OK
             if response.status_code != 200:
-                raise FailureError('Failed to obtain oauth token from {}! HTTP status code: {}.'\
+                raise FailureError('Failed to obtain request token from {}! HTTP status code: {}.'\
                                   .format(self.urls[0], response.status_code),
                                   code=response.status_code,
                                   url=self.urls[0])
             
-            # extract OAuth token
-            #oauth_token = parser(response).get('oauth_token')
-            oauth_token = response.data.get('oauth_token')
-            if not oauth_token:
-                raise FailureError('Response from {} doesn\'t contain OAuth 1.0a oauth_token!'.format(self.urls[0]),
+            # extract request token
+            request_token = response.data.get('oauth_token')
+            if not request_token:
+                raise FailureError('Response from {} doesn\'t contain oauth_token parameter!'.format(self.urls[0]),
                                   original_message=response.data,
                                   url=self.urls[0])
             
-            # extract OAuth token secret and save it to storage
-            #oauth_token_secret = parser(response.setdefault('content'), {}).get('oauth_token_secret')
-            oauth_token_secret = response.data.get('oauth_token_secret')
-            if oauth_token_secret:
-                self.adapter.store_provider_data(self.provider_name, 'oauth_token_secret', oauth_token_secret)
+            # we need request token for user authorisation redirect
+            credentials.token = request_token
+                        
+            # extract token secret and save it to storage
+            token_secret = response.data.get('oauth_token_secret')
+            if token_secret:
+                # we need token secret after user authorisation redirect to get access token
+                self.adapter.store_provider_data(self.provider_name, 'token_secret', token_secret)
             else:
-                raise FailureError('Failed to obtain oauth_token_secret from {}!'.format(self.urls[0]),
+                raise FailureError('Failed to obtain token secret from {}!'.format(self.urls[0]),
                                   original_message=response.data,
                                   url=self.urls[0])
             
-            credentials.token = oauth_token
             
-            self._log(logging.INFO, 'Got request token and oauth token secret')
+            self._log(logging.INFO, 'Got request token and token secret')
             
             # Create User Authorization URL
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                              credentials=credentials,
                                                              url=self.urls[1])
             
-            self._log(logging.INFO, 'Redirecting to {}.'.format(request_elements[0]))
+            self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
             
             self.adapter.redirect(request_elements[0])
 

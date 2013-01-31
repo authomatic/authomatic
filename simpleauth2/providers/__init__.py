@@ -103,7 +103,7 @@ class BaseProvider(object):
     def create_url(url_type, base):
         raise NotImplementedError
     
-    
+    #TODO: useless?
     def update_user(self):
         return self.user
     
@@ -134,7 +134,10 @@ class BaseProvider(object):
         """
         
         if not self.user:
+            self._log(logging.INFO, 'Creating user.')
             self.user = simpleauth2.User(self, credentials=credentials)
+        else:
+            self._log(logging.INFO, 'Updating user.')
         
         self.user.raw_user_info = data
         
@@ -160,10 +163,6 @@ class BaseProvider(object):
         
         return self.user
     
-    @classmethod
-    def _update_credentials(self, credentials, data):
-        raise NotImplementedError
-        
     
     def _normalize_scope(self, scope):
         """
@@ -244,6 +243,17 @@ class AuthorisationProvider(BaseProvider):
                                                           response_parser=response_parser)
         
         return self._user_info_request
+    
+    
+    @staticmethod
+    def _credentials_parser(credentials, data):
+        """
+        Override this to handle differences in naming conventions of providers.
+        
+        :param credentials: Instance of Credentials class
+        :param data: Response data dictionary
+        """
+        return credentials
     
     
     def update_user(self):

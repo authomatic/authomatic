@@ -1,5 +1,5 @@
 from simpleauth2 import providers
-from simpleauth2.exceptions import DeniedError, FailureError
+from simpleauth2.exceptions import CancellationError, FailureError
 from urllib import urlencode
 import logging
 import simpleauth2
@@ -9,14 +9,6 @@ class OAuth2(providers.AuthorisationProvider):
     """
     Base class for OAuth2 services
     """
-    
-    @classmethod
-    def _update_credentials(cls, credentials, data):
-        
-        credentials.token_secret = data.get('access_token_secret')
-        credentials.expires_in = data.get('expires_in')
-        
-        return credentials
     
     @staticmethod
     def to_tuple(credentials):
@@ -116,6 +108,7 @@ class OAuth2(providers.AuthorisationProvider):
         
         credentials = simpleauth2.Credentials(provider=self)
         
+        # get request parameters from which we can determine the login phase
         authorisation_code = self.adapter.get_request_param('code')
         error = self.adapter.get_request_param('error')
         state = self.adapter.get_request_param('state')        
@@ -153,21 +146,22 @@ class OAuth2(providers.AuthorisationProvider):
             access_token = response.data.get('access_token')
             
             if response.status_code != 200 or not access_token:
-                raise FailureError('Failed to obtain OAuth 2.0  access token from {}! HTTP status code: {}.'\
+                raise FailureError('Failed to obtain OAuth access token from {}! HTTP status code: {}.'\
                                   .format(self.urls[1], response.status_code),
                                   code=response.status_code,
                                   url=self.urls[1])
             
-            self._log(logging.INFO, 'Got access token.')
+            self._log(logging.INFO, 'Got access token.')            
             
-            
-            # OAuth 2.0 credentials need only access token
+            # OAuth 2.0 credentials need only access token and expires_in
             credentials.token = access_token
+            credentials.expires_in = response.data.get('expires_in')
+            # so we can reset these two guys
             credentials.consumer_key = None
             credentials.consumer_secret = None
             
-            # update credentials with returned data
-            credentials = self._update_credentials(credentials, response.data)            
+            # update credentials
+            credentials = self._credentials_parser(credentials, response.data)            
             
             # create user
             self._update_or_create_user(response.data, credentials)
@@ -183,9 +177,10 @@ class OAuth2(providers.AuthorisationProvider):
             error_description = self.adapter.get_request_param('error_description')
             
             if error_reason == 'user_denied':
-                raise DeniedError(error_description, url=self.urls[0])
+                raise CancellationError(error_description, url=self.urls[0])
             else:
                 raise FailureError(error_description, url=self.urls[0])
+            
         else:
             # phase 1 before redirect
             self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure.')
@@ -201,7 +196,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                             scope=self._normalize_scope(self.consumer.scope),
                                                             state=state)
             
-            self._log(logging.INFO, 'Redirecting to {}.'.format(request_elements[0]))
+            self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
             
             self.adapter.redirect(request_elements[0])
 
@@ -221,7 +216,8 @@ class Facebook(OAuth2):
     user_info_mapping = dict(user_id='id',
                             picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
     
-    def _update_credentials(self, credentials, data):
+    @staticmethod
+    def _credentials_parser(credentials, data):
         """
         We need to override this method to fix Facebooks naming deviation
         """

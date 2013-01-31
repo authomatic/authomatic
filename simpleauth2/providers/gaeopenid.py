@@ -22,7 +22,7 @@ class GAEOpenID(simpleauth2.providers.AuthenticationProvider):
             
             url = users.create_login_url(dest_url=self.uri, federated_identity=self.identifier)
             
-            self._log(logging.INFO, 'Redirecting to {}.'.format(url))
+            self._log(logging.INFO, 'Redirecting user to {}.'.format(url))
             
             self.adapter.redirect(url)
         else:

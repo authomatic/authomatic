@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from openid.consumer import consumer
 from openid.extensions import ax, pape, sreg
 from simpleauth2 import providers
-from simpleauth2.exceptions import FailureError, DeniedError, OpenIDError
+from simpleauth2.exceptions import FailureError, CancellationError, OpenIDError
 import datetime
 import logging
 import simpleauth2
@@ -239,7 +239,7 @@ class OpenID(providers.AuthenticationProvider):
                 # get data from PAPE response
                 pape_response = pape.Response.fromSuccessResponse(response)
                 if pape_response and pape_response.auth_policies:
-                    self._log(logging.INFO, 'Got SREG data.')
+                    self._log(logging.INFO, 'Got PAPE data.')
                     data['pape'] = pape_response.auth_policies
                 
                 # create user
@@ -248,7 +248,7 @@ class OpenID(providers.AuthenticationProvider):
                 # We're done
             
             elif response.status == consumer.CANCEL:
-                raise DeniedError('User cancelled the verification of ID "{}"!'.format(response.getDisplayIdentifier()))
+                raise CancellationError('User cancelled the verification of ID "{}"!'.format(response.getDisplayIdentifier()))
             
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
@@ -291,7 +291,7 @@ class OpenID(providers.AuthenticationProvider):
             if auth_request.shouldSendRedirect():
                 # can be redirected
                 url = auth_request.redirectURL(realm, return_to)
-                self._log(logging.INFO, 'Redirecting to {}.'.format(url))
+                self._log(logging.INFO, 'Redirecting user to {}.'.format(url))
                 self.adapter.redirect(url)
             else:
                 # must be sent as POST
