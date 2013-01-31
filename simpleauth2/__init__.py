@@ -99,7 +99,6 @@ class Consumer(object):
         self.key = key
         self.secret = secret
         self.scope = scope
-        self.access_token = None
 
 
 class User(object):
@@ -131,18 +130,33 @@ class User(object):
 
 class Credentials(object):
     
-    def __init__(self, access_token=None, provider_type=None, short_name=None, consumer_key=None, consumer_secret=None, access_token_secret=None, expires_in=0, expiration_date=None):
-        self.access_token = access_token
-        self.provider_type = provider_type
-        self.provider_short_name = short_name
-        self.consumer_key = consumer_key
-        self.consumer_secret = consumer_secret
-        self.access_token_secret = access_token_secret
-        self.expires_in = expires_in
-        self.expiration_date = expiration_date
+    def __init__(self, **kwargs):
         
-        # validate required credentials by provider class
+        #TODO: Rename to token and token_secret
+        self.token = kwargs.get('token')
+        self.token_secret = kwargs.get('token_secret')
         
+        self.expires_in = kwargs.get('expires_in', 0)
+        self.expiration_date = kwargs.get('expiration_date')
+        
+        provider = kwargs.get('provider')
+        consumer = kwargs.get('consumer')
+        
+        if provider:
+            self.provider_type = provider.get_type()
+            self.provider_short_name = provider.short_name
+            self.consumer_key = provider.consumer.key
+            self.consumer_secret = provider.consumer.secret
+        elif consumer:
+            self.consumer_key = consumer.key
+            self.consumer_secret = consumer.secret
+        else:
+            self.provider_type = kwargs.get('provider_type')
+            self.provider_short_name = kwargs.get('provider_short_name')
+            
+            self.consumer_key = kwargs.get('consumer_key')
+            self.consumer_secret = kwargs.get('consumer_secret')
+            
     
     @property
     def expires_in(self): 
@@ -163,7 +177,7 @@ class Credentials(object):
         short_name = self.provider_short_name
         if short_name is None:
             raise exceptions.ConfigError('The provider config must have a "short_name" key set to a unique value to be able to serialize credentials!')
-        rest = self.get_provider_class().credentials_to_tuple(self)
+        rest = self.get_provider_class().to_tuple(self)
         
         result = (short_name, ) + rest
         
@@ -186,7 +200,7 @@ class Credentials(object):
             
             ProviderClass = resolve_provider_class(cfg.get('class_name'))
             
-            return ProviderClass.credentials_from_tuple(deserialized)
+            return ProviderClass.reconstruct(deserialized, cfg)
                         
         except (TypeError, IndexError) as e:
             raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))

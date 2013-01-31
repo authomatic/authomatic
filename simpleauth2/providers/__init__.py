@@ -160,13 +160,9 @@ class BaseProvider(object):
         
         return self.user
     
-    
-    def _update_credentials(self, data):
-        
-        self.credentials.access_token_secret = data.get('access_token_secret')
-        self.credentials.expires_in = data.get('expires_in')
-        
-        return self.credentials
+    @classmethod
+    def _update_credentials(self, credentials, data):
+        raise NotImplementedError
         
     
     def _normalize_scope(self, scope):
@@ -212,19 +208,19 @@ class AuthorisationProvider(BaseProvider):
     
     
     @staticmethod
-    def credentials_to_tuple(credentials):
+    def to_tuple(credentials):
         raise NotImplementedError
     
     
     @staticmethod
-    def credentials_from_tuple(tuple_):
+    def reconstruct(tuple_):
         raise NotImplementedError
     
     
     def create_request(self, url, method='GET', content_parser=None, response_parser=None):       
         return simpleauth2.Request(adapter=self.adapter,
                        url=url,
-                       credentials=self.credentials,
+                       credentials=self.user.credentials,
                        method=method,
                        content_parser=content_parser,
                        response_parser=response_parser)

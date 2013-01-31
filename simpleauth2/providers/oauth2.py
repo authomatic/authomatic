@@ -10,26 +10,38 @@ class OAuth2(providers.AuthorisationProvider):
     Base class for OAuth2 services
     """
     
+    @classmethod
+    def _update_credentials(cls, credentials, data):
+        
+        credentials.token_secret = data.get('access_token_secret')
+        credentials.expires_in = data.get('expires_in')
+        
+        return credentials
+    
     @staticmethod
-    def credentials_to_tuple(credentials):
-        return (credentials.access_token, credentials.expiration_date)
+    def to_tuple(credentials):
+        return (credentials.token, credentials.expiration_date)
     
     @classmethod
-    def credentials_from_tuple(cls, tuple_):
-        short_name, access_token, expiration_date = tuple_
-        return simpleauth2.Credentials(access_token, cls.get_type(), short_name, expiration_date=expiration_date)
+    def reconstruct(cls, tuple_, cfg):
+        provider_short_name, token, expiration_date = tuple_
+        
+        return simpleauth2.Credentials(token=token,
+                                       provider_type=cls.get_type(),
+                                       provider_short_name=provider_short_name,
+                                       expiration_date=expiration_date)
     
     @classmethod
     def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
         # check required properties of credentials
-        if not credentials.access_token:
-            raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid access_token!')
+        if not credentials.token:
+            raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid token!')
         
         # NEW
         request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                       credentials=credentials,
                                                        url=url,
-                                                       state=adapter.generate_csrf(),
-                                                       token=credentials.access_token)
+                                                       state=adapter.generate_csrf())
         
         rpc = adapter.fetch_async(*request_elements,
                                     headers=headers,
@@ -40,8 +52,12 @@ class OAuth2(providers.AuthorisationProvider):
     
     
     @classmethod
-    def _create_request_elements(cls, request_type, url, method='GET', consumer_key='', consumer_secret='',
-                                token='', redirect_uri='', scope='', state=''):
+    def _create_request_elements(cls, request_type, credentials, url, method='GET',
+                                 redirect_uri='', scope='', state=''):
+        
+        consumer_key = credentials.consumer_key or ''
+        consumer_secret = credentials.consumer_secret or ''
+        token = credentials.token or ''
         
         # separate url base and query parameters
         url, base_params = cls._split_url(url)
@@ -59,8 +75,8 @@ class OAuth2(providers.AuthorisationProvider):
                 params['state'] = state
                 params['response_type'] = 'code'
             else:
-                raise simpleauth2.exceptions.OAuth2Error('Parameters consumer_key, redirect_uri, scope and state ' + \
-                                                         'are required to create OAuth 2.0 user authorisation request elements!')
+                raise simpleauth2.exceptions.OAuth2Error('Credentials with valid consumer_key and arguments redirect_uri, scope and ' + \
+                                                         'state are required to create OAuth 2.0 user authorisation request elements!')
         
         elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
             # Access token request
@@ -71,8 +87,8 @@ class OAuth2(providers.AuthorisationProvider):
                 params['redirect_uri'] = redirect_uri
                 params['grant_type'] = 'authorization_code'
             else:
-                raise simpleauth2.exceptions.OAuth2Error('Parameters token, consumer_key, consumer_secret and redirect_uri ' + \
-                                                         'are required to create OAuth 2.0 acces token request elements!')
+                raise simpleauth2.exceptions.OAuth2Error('Credentials with valid token, consumer_key, consumer_secret and argument ' + \
+                                                         'redirect_uri are required to create OAuth 2.0 acces token request elements!')
         
         elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             # Protected resources request
@@ -80,53 +96,25 @@ class OAuth2(providers.AuthorisationProvider):
                 params['access_token'] = token
             else:
                 #TODO write error message
-                raise simpleauth2.exceptions.OAuth2Error('Parameter token is required to create ' + \
+                raise simpleauth2.exceptions.OAuth2Error('Credentials with valid token are required to create ' + \
                                                          'OAuth 2.0 protected resources request elements!')
         
         params = urlencode(params)
         
-        payload = None
+        body = None
         
         if method in ('POST', 'PUT'):
-            payload = params
+            body = params
         else:
             url = url + '?' + params
         
-        return url, payload, method
+        return url, body, method
         
-    
-    
-    @staticmethod
-    def create_url(url_type, base, consumer_key=None, access_token=None, redirect_uri=None, scope=None, state=None):
-        
-        params = {}
-        
-        if url_type == 1:
-            # Authorization Request http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.1
-            if consumer_key:
-                # required
-                params['client_id'] = consumer_key
-                params['response_type'] = 'code'
-                
-                # optional
-                if redirect_uri: params['redirect_uri'] = redirect_uri
-                if scope: params['scope'] = scope
-                if state: params['state'] = state
-            else:
-                raise simpleauth2.exceptions.OAuth2Error('Parameter consumer_key is required to create Authorization Requestn URL!')
-        
-        if url_type == 2:
-            # 
-            if access_token:
-                params['access_token'] = access_token
-            else:
-                raise simpleauth2.exceptions.OAuth2Error('')
-            
-        return base + '?' + urlencode(params)
-    
     
     @providers._login_decorator
     def login(self, *args, **kwargs):
+        
+        credentials = simpleauth2.Credentials(provider=self)
         
         authorisation_code = self.adapter.get_request_param('code')
         error = self.adapter.get_request_param('error')
@@ -152,13 +140,13 @@ class OAuth2(providers.AuthorisationProvider):
             
             self._log(logging.INFO, 'Fetching access token from {}.'.format(self.urls[1]))
             
+            credentials.token = authorisation_code
+            
             request_elements = self._create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
-                                                            url=self.urls[1],
-                                                            method='POST',
-                                                            token=authorisation_code,
-                                                            consumer_key=self.consumer.key,
-                                                            consumer_secret=self.consumer.secret,
-                                                            redirect_uri=self.uri)
+                                                             credentials=credentials,
+                                                             url=self.urls[1],
+                                                             method='POST',
+                                                             redirect_uri=self.uri)
             
             response = self._fetch(*request_elements, content_parser=parser)
             
@@ -172,14 +160,21 @@ class OAuth2(providers.AuthorisationProvider):
             
             self._log(logging.INFO, 'Got access token.')
             
-            # create credentials
-            self.credentials = simpleauth2.Credentials(access_token, self.get_type(), self.short_name)
-            self._update_credentials(response.data)
+            
+            # OAuth 2.0 credentials need only access token
+            credentials.token = access_token
+            credentials.consumer_key = None
+            credentials.consumer_secret = None
+            
+            # update credentials with returned data
+            credentials = self._update_credentials(credentials, response.data)            
             
             # create user
-            self._update_or_create_user(response.data, self.credentials)
+            self._update_or_create_user(response.data, credentials)
             
-            # We're done
+            #===================================================================
+            # We're done!
+            #===================================================================
             
         elif error:
             # Phase 2 after redirect with error
@@ -200,8 +195,8 @@ class OAuth2(providers.AuthorisationProvider):
             self.adapter.store_provider_data(self.provider_name, 'state', state)
             
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
+                                                            credentials=credentials,
                                                             url=self.urls[0],
-                                                            consumer_key=self.consumer.key,
                                                             redirect_uri=self.uri,
                                                             scope=self._normalize_scope(self.consumer.scope),
                                                             state=state)
@@ -226,14 +221,14 @@ class Facebook(OAuth2):
     user_info_mapping = dict(user_id='id',
                             picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
     
-    def _update_credentials(self, data):
+    def _update_credentials(self, credentials, data):
         """
         We need to override this method to fix Facebooks naming deviation
         """
-        credentials = super(Facebook, self)._update_credentials(data)
         
         # Facebook returns "expires" instead of "expires_in"
         credentials.expires_in = data.get('expires')
+        
         return credentials
 
 
