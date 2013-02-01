@@ -2,6 +2,7 @@ from _pyio import __metaclass__
 import abc
 import datetime
 import logging
+import random
 import simpleauth2
 import urlparse
 
@@ -44,13 +45,15 @@ class BaseProvider(object):
     __metaclass__ = abc.ABCMeta
     
     def __init__(self, adapter, provider_name, consumer, callback=None,
-                 short_name=None, report_errors=True, logging_level=logging.INFO):
+                 short_name=None, report_errors=True, logging_level=logging.INFO,
+                 csrf_generator=None):
         self.provider_name = provider_name
         self.consumer = consumer
         self.callback = callback
         self.adapter = adapter
         self.short_name = short_name
         self.report_errors = report_errors
+        self._generate_csrf = csrf_generator or self._generate_csrf
         
         self.user = None
         
@@ -103,6 +106,10 @@ class BaseProvider(object):
     #===========================================================================
     # Internal methods
     #===========================================================================
+    
+    @classmethod
+    def _generate_csrf(cls):
+        return str(random.randint(0, 100000000))
     
     
     def _log(self, level, msg):

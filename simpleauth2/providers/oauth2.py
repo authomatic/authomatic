@@ -101,7 +101,7 @@ class OAuth2(providers.AuthorisationProvider):
         request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                        credentials=credentials,
                                                        url=url,
-                                                       state=adapter.generate_csrf())
+                                                       state=cls._generate_csrf())
         
         rpc = adapter.fetch_async(*request_elements,
                                     headers=headers,
@@ -193,7 +193,7 @@ class OAuth2(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure.')
             
             # generate csfr
-            state = self.adapter.generate_csrf()
+            state = self._generate_csrf()
             self.adapter.store_provider_data(self.provider_name, 'state', state)
             
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,

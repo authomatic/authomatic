@@ -226,7 +226,7 @@ class OAuth1(providers.AuthorisationProvider):
                                                        credentials=credentials,
                                                        url=url,
                                                        method=method,
-                                                       nonce=adapter.generate_csrf())
+                                                       nonce=cls._generate_csrf())
         
         # create rpc object
         rpc = adapter.fetch_async(*request_elements,
@@ -283,7 +283,7 @@ class OAuth1(providers.AuthorisationProvider):
                                                              url=self.access_token_url,
                                                              credentials=credentials,
                                                              verifier=verifier,
-                                                             nonce=self.adapter.generate_csrf())
+                                                             nonce=self._generate_csrf())
             
             response = self._fetch(*request_elements, content_parser=parser)            
             
@@ -323,7 +323,7 @@ class OAuth1(providers.AuthorisationProvider):
                                                              credentials=credentials,
                                                              url=self.request_token_url,
                                                              callback=self.uri,
-                                                             nonce=self.adapter.generate_csrf())
+                                                             nonce=self._generate_csrf())
             
             self._log(logging.INFO, 'Fetching for request token and token secret.')
             response = self._fetch(*request_elements, content_parser=parser)            

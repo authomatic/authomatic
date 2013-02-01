@@ -19,13 +19,9 @@ class BaseAdapter(object):
     Defines common interface for platform specific (non standard library) functionality.
     """    
     
-
+    
     def login(self, *args, **kwargs):
         return simpleauth2.login(self,  *args, **kwargs)
-    
-    
-    def generate_csrf(self):
-        return str(random.randint(0, 100000000))
     
     
     def get_current_uri(self):
