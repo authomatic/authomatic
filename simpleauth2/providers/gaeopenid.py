@@ -40,4 +40,8 @@ class GAEOpenID(simpleauth2.providers.AuthenticationProvider):
             else:
                 raise FailureError('Unable to authenticate user id!')
 
+class Yahoo(GAEOpenID):
+    identifier = 'me.yahoo.com'
 
+class Google(GAEOpenID):
+    identifier = 'https://www.google.com/accounts/o8/id'

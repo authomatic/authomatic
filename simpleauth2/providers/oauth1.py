@@ -109,6 +109,10 @@ class OAuth1(providers.AuthorisationProvider):
     
     signature_generator = HMACSHA1Generator
     
+    REQUEST_TOKEN_REQUEST_TYPE = 1
+    
+    request_token_url = ''
+    
     def __init__(self, *args, **kwargs):
         super(OAuth1, self).__init__(*args, **kwargs)
         
@@ -256,13 +260,13 @@ class OAuth1(providers.AuthorisationProvider):
             
             # Get Access Token
             parser = self._get_parser_by_index(1)            
-            self._log(logging.INFO, 'Fetching for access token from {}.'.format(self.urls[2]))
+            self._log(logging.INFO, 'Fetching for access token from {}.'.format(self.access_token_url))
             
             credentials.token = request_token
             credentials.token_secret = token_secret
             
             request_elements = self._create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
-                                                             url=self.urls[2],
+                                                             url=self.access_token_url,
                                                              credentials=credentials,
                                                              verifier=verifier,
                                                              nonce=self.adapter.generate_csrf())
@@ -271,9 +275,9 @@ class OAuth1(providers.AuthorisationProvider):
             
             if response.status_code != 200:
                 raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
-                                   .format(self.urls[2], response.status_code),
+                                   .format(self.access_token_url, response.status_code),
                                    code=response.status_code,
-                                   url=self.urls[2])
+                                   url=self.access_token_url)
             
             self._log(logging.INFO, 'Got access token.')
             
@@ -291,9 +295,9 @@ class OAuth1(providers.AuthorisationProvider):
         elif denied:
             # Phase 2 after redirect denied
             raise CancellationError('User denied the request token {} during a redirect to {}!'.\
-                                  format(denied, self.urls[1]),
+                                  format(denied, self.user_authorisation_url),
                                   original_message=denied,
-                                  url=self.urls[1])
+                                  url=self.user_authorisation_url)
         else:
             # Phase 1 before redirect
             self._log(logging.INFO, 'Starting OAuth 1.0a authorisation procedure.')
@@ -303,7 +307,7 @@ class OAuth1(providers.AuthorisationProvider):
             # Fetch for request token
             request_elements = self._create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
                                                              credentials=credentials,
-                                                             url=self.urls[0],
+                                                             url=self.request_token_url,
                                                              callback=self.uri,
                                                              nonce=self.adapter.generate_csrf())
             
@@ -313,16 +317,16 @@ class OAuth1(providers.AuthorisationProvider):
             # check if response status is OK
             if response.status_code != 200:
                 raise FailureError('Failed to obtain request token from {}! HTTP status code: {}.'\
-                                  .format(self.urls[0], response.status_code),
+                                  .format(self.request_token_url, response.status_code),
                                   code=response.status_code,
-                                  url=self.urls[0])
+                                  url=self.request_token_url)
             
             # extract request token
             request_token = response.data.get('oauth_token')
             if not request_token:
-                raise FailureError('Response from {} doesn\'t contain oauth_token parameter!'.format(self.urls[0]),
+                raise FailureError('Response from {} doesn\'t contain oauth_token parameter!'.format(self.request_token_url),
                                   original_message=response.data,
-                                  url=self.urls[0])
+                                  url=self.request_token_url)
             
             # we need request token for user authorisation redirect
             credentials.token = request_token
@@ -333,9 +337,9 @@ class OAuth1(providers.AuthorisationProvider):
                 # we need token secret after user authorisation redirect to get access token
                 self.adapter.store_provider_data(self.provider_name, 'token_secret', token_secret)
             else:
-                raise FailureError('Failed to obtain token secret from {}!'.format(self.urls[0]),
+                raise FailureError('Failed to obtain token secret from {}!'.format(self.request_token_url),
                                   original_message=response.data,
-                                  url=self.urls[0])
+                                  url=self.request_token_url)
             
             
             self._log(logging.INFO, 'Got request token and token secret')
@@ -343,7 +347,7 @@ class OAuth1(providers.AuthorisationProvider):
             # Create User Authorization URL
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                              credentials=credentials,
-                                                             url=self.urls[1])
+                                                             url=self.user_authorisation_url)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
             
@@ -351,11 +355,11 @@ class OAuth1(providers.AuthorisationProvider):
 
 
 class Twitter(OAuth1):
-    #TODO: dont forget to remove params!!!
-    urls = ('https://api.twitter.com/oauth/request_token?pokus=kupos',
-            'https://api.twitter.com/oauth/authorize?pokus=kupos',
-            'https://api.twitter.com/oauth/access_token?pokus=kupos',
-            'https://api.twitter.com/1/account/verify_credentials.json?pokus=kupos')
+    
+    request_token_url = 'https://api.twitter.com/oauth/request_token'
+    user_authorisation_url = 'https://api.twitter.com/oauth/authorize'
+    access_token_url = 'https://api.twitter.com/oauth/access_token'
+    user_info_url = 'https://api.twitter.com/1/account/verify_credentials.json'
     
     parsers = (providers.QUERY_STRING_PARSER, providers.QUERY_STRING_PARSER)
     

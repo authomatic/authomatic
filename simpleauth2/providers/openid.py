@@ -182,26 +182,40 @@ class OpenID(providers.AuthenticationProvider):
         pape_policies = kwargs.get('oi_pape', self.PAPE_POLICIES)
                 
         # Instantiate consumer
-        oi_consumer = consumer.Consumer(_Session(self), self.adapter.get_openid_store())
-                
-        # handle realm
-        if use_realm and not self.identifier:
+        oi_consumer = consumer.Consumer(_Session(self), self.adapter.get_openid_store())        
+        
+        # handle realm and XRDS if there is only one query parameter
+        if use_realm and len(self.adapter.get_request_params_dict()) == 1:
+            realm_request = self.adapter.get_request_param(realm_param)
+            xrds_request = self.adapter.get_request_param(xrds_param)                
+        else:
+            realm_request = None
+            xrds_request = None
+        
+        # determine type of request
+        if realm_request:
+            #===================================================================
+            # Realm HTML
+            #===================================================================
             
-            if self.adapter.get_request_param(xrds_param):
-                # write XRDS XML if there is ?{xrds_param}={xrds_param} request parameter
-                self._log(logging.INFO, 'Writing XRDS document to the response.')
-                self.adapter.set_response_header('Content-Type', 'application/xrds+xml')
-                self.adapter.write(XRDS_XML.format(return_to=self.uri))
-                
-            elif self.adapter.get_request_param(realm_param) and len(self.adapter.get_request_params_dict()) == 1:
-                # write realm HTML but only if there is NOTHING BUT the ?{realm_param}={realm_param} request parameter
-                self._log(logging.INFO, 'Writing OpenID realm HTML to the response.')
-                xrds_location = '{u}?{x}={x}'.format(u=self.uri, x=xrds_param)
-                self.adapter.write(REALM_HTML.format(xrds_location=xrds_location, body=realm_body))
+            self._log(logging.INFO, 'Writing OpenID realm HTML to the response.')
+            xrds_location = '{u}?{x}={x}'.format(u=self.uri, x=xrds_param)
+            self.adapter.write(REALM_HTML.format(xrds_location=xrds_location, body=realm_body))
+            
+        elif xrds_request:
+            #===================================================================
+            # XRDS XML
+            #===================================================================
+            
+            self._log(logging.INFO, 'Writing XRDS XML document to the response.')
+            self.adapter.set_response_header('Content-Type', 'application/xrds+xml')
+            self.adapter.write(XRDS_XML.format(return_to=self.uri))
         
-        
-        if self.adapter.get_request_param('openid.mode'):
+        elif self.adapter.get_request_param('openid.mode'):
+            #===================================================================
             # Phase 2 after redirect
+            #===================================================================
+            
             self._log(logging.INFO, 'Continuing OpenID authentication procedure after redirect.')
             
             # complete the authentication process
@@ -245,7 +259,9 @@ class OpenID(providers.AuthenticationProvider):
                 # create user
                 self._update_or_create_user(data)
                 
-                # We're done
+                #===============================================================
+                # We're done!
+                #===============================================================
             
             elif response.status == consumer.CANCEL:
                 raise CancellationError('User cancelled the verification of ID "{}"!'.format(response.getDisplayIdentifier()))
@@ -253,8 +269,11 @@ class OpenID(providers.AuthenticationProvider):
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
             
-        elif self.identifier:
+        else:
+            #===================================================================
             # Phase 1 before redirect
+            #===================================================================
+            
             self._log(logging.INFO, 'Starting OpenID authentication procedure.')
             
             # get AuthRequest object
@@ -302,10 +321,10 @@ class OpenID(providers.AuthenticationProvider):
 
 
 class Yahoo(OpenID):
-    urls = ('me.yahoo.com', )
+    identifier = 'me.yahoo.com'
 
 class Google(OpenID):
-    urls = ('https://www.google.com/accounts/o8/id', )
+    identifier = 'https://www.google.com/accounts/o8/id'
 
 
 

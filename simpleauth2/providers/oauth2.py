@@ -131,13 +131,13 @@ class OAuth2(providers.AuthorisationProvider):
             # exchange authorisation code for access token by the provider
             parser = self._get_parser_by_index(1)
             
-            self._log(logging.INFO, 'Fetching access token from {}.'.format(self.urls[1]))
+            self._log(logging.INFO, 'Fetching access token from {}.'.format(self.access_token_url))
             
             credentials.token = authorisation_code
             
             request_elements = self._create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
                                                              credentials=credentials,
-                                                             url=self.urls[1],
+                                                             url=self.access_token_url,
                                                              method='POST',
                                                              redirect_uri=self.uri)
             
@@ -147,9 +147,9 @@ class OAuth2(providers.AuthorisationProvider):
             
             if response.status_code != 200 or not access_token:
                 raise FailureError('Failed to obtain OAuth access token from {}! HTTP status code: {}.'\
-                                  .format(self.urls[1], response.status_code),
+                                  .format(self.access_token_url, response.status_code),
                                   code=response.status_code,
-                                  url=self.urls[1])
+                                  url=self.access_token_url)
             
             self._log(logging.INFO, 'Got access token.')            
             
@@ -177,9 +177,9 @@ class OAuth2(providers.AuthorisationProvider):
             error_description = self.adapter.get_request_param('error_description')
             
             if error_reason == 'user_denied':
-                raise CancellationError(error_description, url=self.urls[0])
+                raise CancellationError(error_description, url=self.user_authorisation_url)
             else:
-                raise FailureError(error_description, url=self.urls[0])
+                raise FailureError(error_description, url=self.user_authorisation_url)
             
         else:
             # phase 1 before redirect
@@ -191,7 +191,7 @@ class OAuth2(providers.AuthorisationProvider):
             
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                             credentials=credentials,
-                                                            url=self.urls[0],
+                                                            url=self.user_authorisation_url,
                                                             redirect_uri=self.uri,
                                                             scope=self._normalize_scope(self.consumer.scope),
                                                             state=state)
@@ -206,10 +206,9 @@ class Facebook(OAuth2):
     Facebook Oauth 2.0 service
     """
     
-    # class properties
-    urls = ('https://www.facebook.com/dialog/oauth',
-            'https://graph.facebook.com/oauth/access_token',
-            'https://graph.facebook.com/me')
+    user_authorisation_url = 'https://www.facebook.com/dialog/oauth'
+    access_token_url = 'https://graph.facebook.com/oauth/access_token'
+    user_info_url = 'https://graph.facebook.com/me'
     
     parsers = (None, providers.QUERY_STRING_PARSER)
     
@@ -233,10 +232,9 @@ class Google(OAuth2):
     Google Oauth 2.0 service
     """
     
-    # class properties
-    urls = ('https://accounts.google.com/o/oauth2/auth',
-            'https://accounts.google.com/o/oauth2/token',
-            'https://www.googleapis.com/oauth2/v1/userinfo')
+    user_authorisation_url = 'https://accounts.google.com/o/oauth2/auth'
+    access_token_url = 'https://accounts.google.com/o/oauth2/token'
+    user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
     
     parsers = (None, providers.JSON_PARSER)
     
@@ -257,10 +255,9 @@ class WindowsLive(OAuth2):
     Windlows Live Oauth 2.0 service
     """
     
-    # class properties
-    urls = ('https://oauth.live.com/authorize',
-            'https://oauth.live.com/token',
-            'https://apis.live.net/v5.0/me')
+    user_authorisation_url = 'https://oauth.live.com/authorize'
+    access_token_url = 'https://oauth.live.com/token'
+    user_info_url = 'https://apis.live.net/v5.0/me'
     
     parsers = (None, providers.JSON_PARSER)
     

@@ -47,8 +47,6 @@ class BaseProvider(object):
         self.adapter = adapter
         self.short_name = short_name
         self.report_errors = report_errors
-        self.logging = logging
-        self.credentials = None
         
         self.user = None
                 
@@ -68,8 +66,6 @@ class BaseProvider(object):
     # Static properties to be overriden by subclasses
     #=======================================================================
     
-    # tuple of URLs ordered by their usage
-    urls = (None, )
     
     # tuple of callables which parse responses returned by providers ordered by their usage
     parsers = (lambda content: content, )
@@ -187,11 +183,14 @@ class BaseProvider(object):
 class AuthorisationProvider(BaseProvider):
     
     has_protected_resources = True
-        
-    REQUEST_TOKEN_REQUEST_TYPE = 1
+    
     USER_AUTHORISATION_REQUEST_TYPE = 2
     ACCESS_TOKEN_REQUEST_TYPE = 3
     PROTECTED_RESOURCE_REQUEST_TYPE = 4
+    
+    user_authorisation_url = ''
+    access_token_url = ''
+    user_info_url = ''
     
     @staticmethod
     def _split_url(url):
@@ -238,7 +237,7 @@ class AuthorisationProvider(BaseProvider):
                 self.user = self._update_or_create_user(response.data)
                 return simpleauth2.UserInfoResponse(response, self.user)
             
-            self._user_info_request = self.create_request(self.urls[-1],
+            self._user_info_request = self.create_request(self.user_info_url,
                                                           content_parser=self.adapter.json_parser,
                                                           response_parser=response_parser)
         
@@ -263,6 +262,7 @@ class AuthorisationProvider(BaseProvider):
 class AuthenticationProvider(BaseProvider):
     """Base class for OpenID providers."""
     
+    identifier = ''
     
     def login(self, *args, **kwargs):
         """
@@ -271,7 +271,8 @@ class AuthenticationProvider(BaseProvider):
         Accepts oi_identifier optional parameter
         """
         
-        self.identifier = kwargs.get('oi_identifier', self.urls[0])
+        # takes the oi_identifier argument into account only if the identifier is not hardcoded
+        self.identifier = self.identifier or kwargs.get('oi_identifier', '')
         
         
         
