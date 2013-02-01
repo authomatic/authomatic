@@ -132,7 +132,6 @@ class Credentials(object):
     
     def __init__(self, **kwargs):
         
-        #TODO: Rename to token and token_secret
         self.token = kwargs.get('token')
         self.token_secret = kwargs.get('token_secret')
         
@@ -181,14 +180,11 @@ class Credentials(object):
         
         result = (short_name, ) + rest
         
-        #TODO: Return None if rest is None
         return pickle.dumps(result)
     
     
     @classmethod
     def deserialize(cls, adapter, serialized):
-        
-        #TODO: return None if not serialized
         
         # Unpickle serialized
         deserialized = pickle.loads(serialized)
@@ -208,7 +204,6 @@ class Credentials(object):
 
 class LoginResult(object):
     def __init__(self, provider, error=None):
-        #TODO: implement unified error type and original message
         self.provider = provider
         self.error = error
         self.consumer = provider.consumer

@@ -10,38 +10,9 @@ class OAuth2(providers.AuthorisationProvider):
     Base class for OAuth2 services
     """
     
-    @staticmethod
-    def to_tuple(credentials):
-        return (credentials.token, credentials.expiration_date)
-    
-    @classmethod
-    def reconstruct(cls, tuple_, cfg):
-        provider_short_name, token, expiration_date = tuple_
-        
-        return simpleauth2.Credentials(token=token,
-                                       provider_type=cls.get_type(),
-                                       provider_short_name=provider_short_name,
-                                       expiration_date=expiration_date)
-    
-    @classmethod
-    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
-        # check required properties of credentials
-        if not credentials.token:
-            raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid token!')
-        
-        # NEW
-        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                       credentials=credentials,
-                                                       url=url,
-                                                       state=adapter.generate_csrf())
-        
-        rpc = adapter.fetch_async(*request_elements,
-                                    headers=headers,
-                                    response_parser=response_parser,
-                                    content_parser=content_parser)
-        
-        return rpc
-    
+    #===========================================================================
+    # Internal methods
+    #===========================================================================
     
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, method='GET',
@@ -102,6 +73,42 @@ class OAuth2(providers.AuthorisationProvider):
         
         return url, body, method
         
+    
+    #===========================================================================
+    # Exposed methods
+    #===========================================================================
+    
+    @staticmethod
+    def to_tuple(credentials):
+        return (credentials.token, credentials.expiration_date)
+    
+    @classmethod
+    def reconstruct(cls, deserialized_tuple, cfg):
+        provider_short_name, token, expiration_date = deserialized_tuple
+        
+        return simpleauth2.Credentials(token=token,
+                                       provider_type=cls.get_type(),
+                                       provider_short_name=provider_short_name,
+                                       expiration_date=expiration_date)
+    
+    @classmethod
+    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
+        # check required properties of credentials
+        if not credentials.token:
+            raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid token!')
+        
+        # NEW
+        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                       credentials=credentials,
+                                                       url=url,
+                                                       state=adapter.generate_csrf())
+        
+        rpc = adapter.fetch_async(*request_elements,
+                                    headers=headers,
+                                    response_parser=response_parser,
+                                    content_parser=content_parser)
+        
+        return rpc
     
     @providers._login_decorator
     def login(self, *args, **kwargs):

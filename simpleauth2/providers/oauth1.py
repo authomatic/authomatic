@@ -1,6 +1,7 @@
 from simpleauth2 import providers
 from simpleauth2.exceptions import CancellationError, FailureError
 from urllib import urlencode
+import abc
 import binascii
 import hashlib
 import hmac
@@ -110,56 +111,26 @@ class OAuth1(providers.AuthorisationProvider):
     
     REQUEST_TOKEN_REQUEST_TYPE = 1
     
-    request_token_url = ''
-    
     def __init__(self, *args, **kwargs):
         super(OAuth1, self).__init__(*args, **kwargs)
         
         # create keys under which oauth token and secret will be stored in session
         self._oauth_token_key = self.provider_name + '_oauth_token'
         self._oauth_token_secret_key = self.provider_name + '_oauth_token_secret'
-    
-    
-    @classmethod
-    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
         
-        # check required properties of credentials
-        if not (credentials.token and credentials.token_secret and credentials.consumer_key and credentials.consumer_secret):
-            raise simpleauth2.exceptions.OAuth1Error('To access OAuth 1.0a resource you must provide credentials with valid access_token, ' + \
-                                                     'access_token_secret, consumer_key and consumer_secret!')
         
-        # create request elements
-        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                       credentials=credentials,
-                                                       url=url,
-                                                       method=method,
-                                                       nonce=adapter.generate_csrf())
-        
-        # create rpc object
-        rpc = adapter.fetch_async(*request_elements,
-                                    headers=headers,
-                                    response_parser=response_parser,
-                                    content_parser=content_parser)
-        # and return it
-        return rpc
+    #===========================================================================
+    # Abstract properties
+    #===========================================================================
+    
+    @abc.abstractproperty
+    def request_token_url(self):
+        pass
     
     
-    @staticmethod
-    def to_tuple(credentials):
-        return (credentials.token, credentials.token_secret)
-    
-    
-    @classmethod
-    def reconstruct(cls, deserialized_tuple, cfg):
-        provider_short_name, token, token_secret = deserialized_tuple
-        #TODO: we also need to extract consumer key and secret
-        return simpleauth2.Credentials(token=token,
-                                       token_secret=token_secret,
-                                       provider_type=cls.get_type(),
-                                       provider_short_name=provider_short_name,
-                                       consumer_key=cfg.get('consumer_key'),
-                                       consumer_secret=cfg.get('consumer_secret'))
-    
+    #===========================================================================
+    # Internal methods
+    #===========================================================================
     
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, method='GET',
@@ -181,7 +152,6 @@ class OAuth1(providers.AuthorisationProvider):
             if token:
                 params['oauth_token'] = token
             else:
-                #TODO: Chenge all error messages to somethig like "Credentials with valid ... must be passed..."
                 raise simpleauth2.exceptions.OAuth1Error('Credentials with valid token are required to create User Authorization URL!')
         else:
             # signature needed
@@ -237,6 +207,51 @@ class OAuth1(providers.AuthorisationProvider):
             url = url + '?' + params
         
         return url, body, method
+    
+    
+    #===========================================================================
+    # Exposed methods
+    #===========================================================================
+    
+    @classmethod
+    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
+        
+        # check required properties of credentials
+        if not (credentials.token and credentials.token_secret and credentials.consumer_key and credentials.consumer_secret):
+            raise simpleauth2.exceptions.OAuth1Error('To access OAuth 1.0a resource you must provide credentials with valid access_token, ' + \
+                                                     'access_token_secret, consumer_key and consumer_secret!')
+        
+        # create request elements
+        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                       credentials=credentials,
+                                                       url=url,
+                                                       method=method,
+                                                       nonce=adapter.generate_csrf())
+        
+        # create rpc object
+        rpc = adapter.fetch_async(*request_elements,
+                                    headers=headers,
+                                    response_parser=response_parser,
+                                    content_parser=content_parser)
+        # and return it
+        return rpc
+    
+    
+    @staticmethod
+    def to_tuple(credentials):
+        return (credentials.token, credentials.token_secret)
+    
+    
+    @classmethod
+    def reconstruct(cls, deserialized_tuple, cfg):
+        provider_short_name, token, token_secret = deserialized_tuple
+        
+        return simpleauth2.Credentials(token=token,
+                                       token_secret=token_secret,
+                                       provider_type=cls.get_type(),
+                                       provider_short_name=provider_short_name,
+                                       consumer_key=cfg.get('consumer_key'),
+                                       consumer_secret=cfg.get('consumer_secret'))
     
     
     @providers._login_decorator

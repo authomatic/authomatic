@@ -1,3 +1,5 @@
+from _pyio import __metaclass__
+import abc
 import datetime
 import logging
 import simpleauth2
@@ -36,8 +38,10 @@ def _login_decorator(func):
 
 class BaseProvider(object):
     """
-    Base class for all providers
+    Abstract base class for all providers
     """
+    
+    __metaclass__ = abc.ABCMeta
     
     def __init__(self, adapter, provider_name, consumer, callback=None,
                  short_name=None, report_errors=True, logging_level=logging.INFO):
@@ -49,7 +53,7 @@ class BaseProvider(object):
         self.report_errors = report_errors
         
         self.user = None
-                
+        
         self._user_info_request = None
         
         # setup logger
@@ -63,23 +67,25 @@ class BaseProvider(object):
     
     
     #=======================================================================
-    # Static properties to be overriden by subclasses
+    # Abstract properties
     #=======================================================================
     
+    @abc.abstractproperty
+    def has_protected_resources(self):
+        pass
     
-    # tuple of callables which parse responses returned by providers ordered by their usage
-    parsers = (lambda content: content, )
+    
+    #===========================================================================
+    # Abstract methods
+    #===========================================================================
+    
+    @abc.abstractmethod
+    def login(self):
+        """
         
-    has_protected_resources = False
-    
-    #===========================================================================
-    # Methods to be overriden by subclasses
-    #===========================================================================
-    
-    @_login_decorator
-    def login(self, *args, **kwargs):
-        raise NotImplementedError
-    
+        
+        Should be decorated with @_login_decorator
+        """
     
     #===========================================================================
     # Exposed methods
@@ -89,9 +95,6 @@ class BaseProvider(object):
     def get_type(cls):
         return cls.__module__ + '.' + cls.__bases__[0].__name__
     
-    @staticmethod
-    def create_url(url_type, base):
-        raise NotImplementedError
     
     def update_user(self):
         return self.user
@@ -100,10 +103,6 @@ class BaseProvider(object):
     #===========================================================================
     # Internal methods
     #===========================================================================
-    
-    @classmethod
-    def _create_request_elements(cls, request_type, url, method='GET'):
-        raise NotImplementedError
     
     
     def _log(self, level, msg):
@@ -179,32 +178,72 @@ class AuthorisationProvider(BaseProvider):
     ACCESS_TOKEN_REQUEST_TYPE = 3
     PROTECTED_RESOURCE_REQUEST_TYPE = 4
     
-    user_authorisation_url = ''
-    access_token_url = ''
-    user_info_url = ''
     
-    @staticmethod
-    def _split_url(url):
-        "Splits given url to url base and params converted to list of tuples"
+    #===========================================================================
+    # Abstract properties
+    #===========================================================================
+    
+    @abc.abstractproperty
+    def parsers(self):
+        """
+        Tuple of callables which parse responses returned by providers ordered by their usage
+        """
         
-        split = urlparse.urlsplit(url)
+        pass
+    
+    @abc.abstractproperty
+    def user_authorisation_url(self):
+        pass
+    
+    @abc.abstractproperty
+    def access_token_url(self):
+        pass
+    
+    @abc.abstractproperty
+    def user_info_url(self):
+        pass
+    
+    #===========================================================================
+    # Abstract methods
+    #===========================================================================
+    
+    @abc.abstractmethod
+    def to_tuple(self, credentials):
+        """
+        Override must be a staticmethod
         
-        base = urlparse.urlunsplit((split.scheme, split.netloc, split.path, 0, 0))
+        :param credentials:
+        """
         
-        params = urlparse.parse_qsl(split.query, True)
+        pass
+    
+    
+    @abc.abstractmethod
+    def reconstruct(self, deserialized_tuple):
+        """
+        Override must be a staticmethod
         
-        return base, params
+        :param deserialized_tuple:
+        """
+        
+        pass
     
     
-    @staticmethod
-    def to_tuple(credentials):
-        raise NotImplementedError
+    @abc.abstractmethod
+    def _create_request_elements(self, request_type, url, method='GET'):
+        """
+        
+        Override must be a classmethod
+        
+        :param request_type:
+        :param url:
+        :param method:
+        """
     
     
-    @staticmethod
-    def reconstruct(tuple_):
-        raise NotImplementedError
-    
+    #===========================================================================
+    # Exposed methods
+    #===========================================================================
     
     def create_request(self, url, method='GET', content_parser=None, response_parser=None):       
         return simpleauth2.Request(adapter=self.adapter,
@@ -218,6 +257,9 @@ class AuthorisationProvider(BaseProvider):
     def fetch_user_info(self):
         return self.user_info_request.fetch().get_response()
     
+    
+    def update_user(self):
+        return self.fetch_user_info().user
     
     @property
     def user_info_request(self):
@@ -237,6 +279,23 @@ class AuthorisationProvider(BaseProvider):
         return self._user_info_request
     
     
+    #===========================================================================
+    # Internal methods
+    #===========================================================================
+    
+    @staticmethod
+    def _split_url(url):
+        "Splits given url to url base and params converted to list of tuples"
+        
+        split = urlparse.urlsplit(url)
+        
+        base = urlparse.urlunsplit((split.scheme, split.netloc, split.path, 0, 0))
+        
+        params = urlparse.parse_qsl(split.query, True)
+        
+        return base, params
+    
+    
     @staticmethod
     def _credentials_parser(credentials, data):
         """
@@ -247,16 +306,15 @@ class AuthorisationProvider(BaseProvider):
         """
         return credentials
     
-    
-    def update_user(self):
-        return self.user_info_request.fetch().get_response().user
-    
 
 class AuthenticationProvider(BaseProvider):
     """Base class for OpenID providers."""
     
     identifier = ''
     
+    has_protected_resources = False
+    
+    @abc.abstractmethod
     def login(self, *args, **kwargs):
         """
         Launches the OpenID authentication procedure.

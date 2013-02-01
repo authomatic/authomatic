@@ -114,6 +114,7 @@ class GAEWebapp2Adapter(BaseAdapter):
         """Returns a dictionary of all request parameters"""
         return dict(self._handler.request.params)
     
+    
     #TODO convert it to session_set(key, value) and prefix the key with provider name in provider
     def store_provider_data(self, provider_name, key, value):
         self._session.setdefault(self._session_key, {}).setdefault(provider_name, {})[key] = value
