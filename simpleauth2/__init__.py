@@ -12,12 +12,14 @@ import time
 import urllib
 
 
-def login(adapter, provider_name, callback=None, report_errors=True, logging_level=20, scope=[], **kwargs):
+def login(adapter, provider_name, callback=None, report_errors=True,
+          logging_level=20, scope=[], config=None, **kwargs):
     
-    providers_config = adapter.get_providers_config()
-            
+    #TODO: Make config optional by adapters
+    config = adapter.config
+    
     # retrieve required settings for current provider and raise exceptions if missing
-    provider_settings = providers_config.get(provider_name)
+    provider_settings = config.get(provider_name)
     if not provider_settings:
         raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
@@ -192,7 +194,7 @@ class Credentials(object):
         try:
             provider_id = deserialized[0]
             
-            cfg =  get_provider_settings_by_short_name(adapter.get_providers_config(), provider_id)
+            cfg =  get_provider_settings_by_short_name(adapter.config, provider_id)
             
             ProviderClass = resolve_provider_class(cfg.get('class_name'))
             

@@ -260,15 +260,14 @@ class OAuth1(providers.AuthorisationProvider):
         credentials = simpleauth2.Credentials(provider=self)
         
         # get request parameters from which we can determine the login phase
-        denied = self.adapter.get_request_param('denied')
-        verifier = self.adapter.get_request_param('oauth_verifier')
-        request_token = self.adapter.get_request_param('oauth_token')
+        denied = self.adapter.params.get('denied')
+        verifier = self.adapter.params.get('oauth_verifier')
+        request_token = self.adapter.params.get('oauth_token')
         
         if request_token and verifier:
             # Phase 2 after redirect with success
             self._log(logging.INFO, 'Continuing OAuth 1.0a authorisation procedure after redirect.')
-            
-            token_secret = self.adapter.retrieve_provider_data(self.provider_name, 'token_secret')
+            token_secret = self._session_get('token_secret')
             if not token_secret:
                 raise FailureError('Unable to retrieve token secret from storage!')
             
@@ -349,7 +348,7 @@ class OAuth1(providers.AuthorisationProvider):
             token_secret = response.data.get('oauth_token_secret')
             if token_secret:
                 # we need token secret after user authorisation redirect to get access token
-                self.adapter.store_provider_data(self.provider_name, 'token_secret', token_secret)
+                self._session_set('token_secret', token_secret)
             else:
                 raise FailureError('Failed to obtain token secret from {}!'.format(self.request_token_url),
                                   original_message=response.data,

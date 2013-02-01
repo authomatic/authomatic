@@ -116,9 +116,9 @@ class OAuth2(providers.AuthorisationProvider):
         credentials = simpleauth2.Credentials(provider=self)
         
         # get request parameters from which we can determine the login phase
-        authorisation_code = self.adapter.get_request_param('code')
-        error = self.adapter.get_request_param('error')
-        state = self.adapter.get_request_param('state')        
+        authorisation_code = self.adapter.params.get('code')
+        error = self.adapter.params.get('error')
+        state = self.adapter.params.get('state')        
         
         if authorisation_code and state:
             # Phase 2 after redirect with success
@@ -126,8 +126,8 @@ class OAuth2(providers.AuthorisationProvider):
             
             # validate CSRF token
             self._log(logging.INFO, 'Validating request by comparing request state {} to stored state.'.format(state))
-            stored_state = self.adapter.retrieve_provider_data(self.provider_name, 'state')
-                        
+            stored_state = self._session_get('state')
+            
             if not stored_state:
                 raise FailureError('Unable to retrieve stored state!')
             elif not stored_state == state:
@@ -180,8 +180,8 @@ class OAuth2(providers.AuthorisationProvider):
         elif error:
             # Phase 2 after redirect with error
             
-            error_reason = self.adapter.get_request_param('error_reason')
-            error_description = self.adapter.get_request_param('error_description')
+            error_reason = self.adapter.params.get('error_reason')
+            error_description = self.adapter.params.get('error_description')
             
             if error_reason == 'user_denied':
                 raise CancellationError(error_description, url=self.user_authorisation_url)
@@ -194,7 +194,8 @@ class OAuth2(providers.AuthorisationProvider):
             
             # generate csfr
             state = self._generate_csrf()
-            self.adapter.store_provider_data(self.provider_name, 'state', state)
+            # and store it to session
+            self._session_set('state', state)
             
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                             credentials=credentials,
@@ -240,14 +241,13 @@ class Facebook(OAuth2):
 class Google(OAuth2):
     """
     Google Oauth 2.0 service
-    """
+    """    
+    
+    user_authorisation_url = 'https://accounts.google.com/o/oauth2/auth'
+    access_token_url = 'https://accounts.google.com/o/oauth2/token'
+    user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
     
     parsers = (None, providers.JSON_PARSER)
-    
-    user_info_mapping = dict(name='name',
-                            first_name='given_name',
-                            last_name='family_name',
-                            user_id='id')
     
     @staticmethod
     def _user_parser(user, data):
@@ -257,7 +257,7 @@ class Google(OAuth2):
         user.user_id = data.get('id')
         return user
     
-    
+    #TODO: rename to _parse_scope
     def _normalize_scope(self, scope):
         """
         Google has space-separated scopes

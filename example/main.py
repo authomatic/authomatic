@@ -46,8 +46,7 @@ class Login(webapp2.RequestHandler):
         
         self.adapter = GAEWebapp2Adapter(handler=self,
                                     providers_config=config.PROVIDERS,
-                                    session_secret='abcd',
-                                    openid_store=NDBOpenIDStore)
+                                    session_secret='abcd')
         
         result = self.adapter.login(provider_name,
                                     callback=self.callback,

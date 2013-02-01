@@ -54,6 +54,7 @@ class BaseProvider(object):
         self.short_name = short_name
         self.report_errors = report_errors
         self._generate_csrf = csrf_generator or self._generate_csrf
+        self.session_prefix = 'simpleauth'
         
         self.user = None
         
@@ -65,8 +66,7 @@ class BaseProvider(object):
         if logging_level in (None, False):
             self.logger.disabled = False
         
-        # recreate full current URL
-        self.uri = self.adapter.get_current_uri()
+        self.uri = self.adapter.url
     
     
     #=======================================================================
@@ -106,6 +106,18 @@ class BaseProvider(object):
     #===========================================================================
     # Internal methods
     #===========================================================================
+    
+    def _session_key(self, key):
+        return '{}:{}:{}'.format(self.session_prefix, self.provider_name, key)
+    
+    
+    def _session_set(self, key, value):
+        self.adapter.session[self._session_key(key)] = value
+    
+    
+    def _session_get(self, key):
+        return self.adapter.session[self._session_key(key)]
+    
     
     @classmethod
     def _generate_csrf(cls):

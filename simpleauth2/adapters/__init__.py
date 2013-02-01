@@ -6,10 +6,30 @@ import random
 import simpleauth2
 import time
 import urllib
+from _pyio import __metaclass__
+import abc
 
-def escape(s):
-    """Escape a URL including any /."""
-    return urllib.quote(s.encode('utf-8'), safe='~')
+
+class BaseSession(object):
+    
+    @abc.abstractmethod
+    def __setitem__(self, key, value):
+        pass
+    
+    
+    @abc.abstractmethod
+    def __getitem__(self, key):
+        pass
+    
+    
+    @abc.abstractmethod
+    def __delitem__(self, key):
+        pass
+    
+    
+    @abc.abstractmethod
+    def get(self, key):
+        pass
 
 
 class BaseAdapter(object):
@@ -19,129 +39,152 @@ class BaseAdapter(object):
     Defines common interface for platform specific (non standard library) functionality.
     """    
     
+    __metaclass__ = abc.ABCMeta
     
     def login(self, *args, **kwargs):
         return simpleauth2.login(self,  *args, **kwargs)
     
     
-    def get_current_uri(self):
+    @abc.abstractproperty
+    def url(self):
+        """Must return the url of the actual request including path but without query and fragment"""
+    
+    
+    @abc.abstractproperty
+    def params(self):
+        """Must return a dictionary of all request parameters of any HTTP method."""
+    
+    
+    @abc.abstractmethod
+    def write(self, value):
         """
-        Returns the URI of current request without query parameters and fragment as string
+        Must write specified value to response.
+        
+        :param value: string
         """
-        
-        raise NotImplementedError
     
     
-    def get_request_param(self, key):
-        """Returns the value of GET or POST variable of a request by key"""
-        
-        raise NotImplementedError
-    
-    
-    def set_phase(self, provider_name, phase):
-        """Saves the phase number so that it can be retrieved in another request"""
-        
-        raise NotImplementedError
-    
-    
-    def get_phase(self, provider_name):
-        """Retrieves the phase number saved in previous request"""
-        
-        raise NotImplementedError
-    
-    
-    def reset_phase(self, provider_name):
-        """Resets the phase to 0"""
-        self.set_phase(provider_name, 0)
-    
-    
-    def store_provider_data(self, provider_name, key, value):
-        """Saves a key-value pair which can be retrieved in another request with the provider_name key"""
-        
-        raise NotImplementedError
-    
-    
-    def retrieve_provider_data(self, provider_name, key, default=None):
-        """Retrieves a key-value pair which was stored in previous request with the provider_name key"""
-        
-        raise NotImplementedError
-    
-    
-    def get_providers_config(self):
+    @abc.abstractmethod
+    def set_header(self, key, value):
         """
-        Returns a dictionary like object with provider configuration
+        Must set response headers to key = value.
         
-        The dictionary must have this structure:
-        {
-            'facebook': {
-                'class_name': Facebook,
-                'consumer_key': '###',
-                'consumer_secret': '###',
-                'scope': ['scope1', 'scope2', 'scope3']
-            },
-            'google': {
-                'class_name': 'simpleauth2.providers.Google',
-                'consumer_key': '###',
-                'consumer_secret': '###',
-                'scope': ['scope1', 'scope2', 'scope3']
-            },
-            'windows_live': {
-                 'class_name': 'WindowsLive',
-                 'consumer_key': '###',
-                 'consumer_secret': '###',
-                 'scope': ['scope1', 'scope2', 'scope3']
-            }
-        }
+        :param key:
+        :param value:
         """
+    
+    
+    @abc.abstractmethod
+    def redirect(self, url):
+        """
+        Must issue a http 302 redirect to the url
         
-        raise NotImplementedError
+        :param url: string
+        """
+    
+    
+    @abc.abstractproperty
+    def session(self):
+        """
+        A session abstraction with BaseSession or dict interface
+        """
+    
+    
+    @abc.abstractmethod
+    def response_parser(self, response, content_parser):
+        """
+        A classproperty to convert platform specific fetch response to simpleauth2.Response.
+        
+        :param response: result of platform specific fetch call
+        :param content_parser: should be passed to simpleauth2.Response constructor.
+        
+        :returns: simpleauth2.Response
+        """
+    
+    
+    @abc.abstractproperty
+    def openid_store(self):
+        """
+        A permanent storage abstraction as described by the openid.store.interface.OpenIDStore interface
+        of the python-openid library http://pypi.python.org/pypi/python-openid/.
+        
+        Required only by the OpenID provider
+        """
+    
+
+class WebObBaseAdapter(BaseAdapter):
+    """
+    Abstract base class for adapters for WebOb based frameworks.
+    
+    See http://webob.org/
+    """
+    
+    @abc.abstractproperty
+    def request(self):
+        pass
+    
+    
+    @abc.abstractproperty
+    def response(self):
+        pass
+    
+    
+    #===========================================================================
+    # Request
+    #===========================================================================
+    
+    @property
+    def url(self):
+        return self.request.path_url
+    
+    
+    @property
+    def params(self):
+        return dict(self.request.params)
+    
+    
+    #===========================================================================
+    # Response
+    #===========================================================================
+            
+    def write(self, value):
+        self.response.write(value)
+    
+    
+    def set_header(self, key, value):
+        self.response.headers[key] = value
     
     
     def redirect(self, url):
-        """Redirects to specified URL"""
-        
-        raise NotImplementedError
+        self.response.location = url
+        self.response.status = 302
     
     
-    def fetch(self, url, payload=None, method='GET', headers={}):
-        """Fetches a url"""
-        
-        raise NotImplementedError
     
     
-    def fetch_async(self, url, payload=None, method='GET', headers={}):
-        """
-        
-        """
-        
-        raise NotImplementedError
-        
     
-    @staticmethod
-    def json_parser(body):
-        """
-        
-        """
-        
-        raise NotImplementedError
-    
-    
-    @staticmethod
-    def query_string_parser(body):
-        """
-        
-        """
-        
-        raise NotImplementedError
-    
-    
-    def parse_response(self, response):
-        """
-        
-        """
-        
-        raise NotImplementedError
 
 
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

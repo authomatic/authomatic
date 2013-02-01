@@ -42,25 +42,6 @@ XRDS_XML = \
 """
 
 
-class _Session(object):
-    """A dictionary like session as specified in openid.consumer.consumer.Consumer()"""
-    
-    def __init__(self, provider):
-        self.provider = provider                            
-    
-    def __setitem__(self, key, value):
-        self.provider.adapter.store_provider_data(self.provider.provider_name, key, value)
-    
-    def __getitem__(self, key):
-        self.provider.adapter.retrieve_provider_data(self.provider.provider_name, key)
-        
-    def __delitem__(self, key):
-        pass
-    
-    def get(self, key):
-        self.provider.adapter.retrieve_provider_data(self.provider.provider_name, key)
-
-
 class OpenID(providers.AuthenticationProvider):
     """OpenID provider based on the python-openid library."""
         
@@ -177,12 +158,12 @@ class OpenID(providers.AuthenticationProvider):
         pape_policies = kwargs.get('oi_pape', self.PAPE_POLICIES)
                 
         # Instantiate consumer
-        oi_consumer = consumer.Consumer(_Session(self), self.adapter.get_openid_store())        
+        oi_consumer = consumer.Consumer(self.adapter.session, self.adapter.openid_store)        
         
         # handle realm and XRDS if there is only one query parameter
-        if use_realm and len(self.adapter.get_request_params_dict()) == 1:
-            realm_request = self.adapter.get_request_param(realm_param)
-            xrds_request = self.adapter.get_request_param(xrds_param)                
+        if use_realm and len(self.adapter.params) == 1:
+            realm_request = self.adapter.params.get(realm_param)
+            xrds_request = self.adapter.params.get(xrds_param)                
         else:
             realm_request = None
             xrds_request = None
@@ -203,10 +184,10 @@ class OpenID(providers.AuthenticationProvider):
             #===================================================================
             
             self._log(logging.INFO, 'Writing XRDS XML document to the response.')
-            self.adapter.set_response_header('Content-Type', 'application/xrds+xml')
+            self.adapter.set_header('Content-Type', 'application/xrds+xml')
             self.adapter.write(XRDS_XML.format(return_to=self.uri))
         
-        elif self.adapter.get_request_param('openid.mode'):
+        elif self.adapter.params.get('openid.mode'):
             #===================================================================
             # Phase 2 after redirect
             #===================================================================
@@ -214,7 +195,7 @@ class OpenID(providers.AuthenticationProvider):
             self._log(logging.INFO, 'Continuing OpenID authentication procedure after redirect.')
             
             # complete the authentication process
-            response = oi_consumer.complete(self.adapter.get_request_params_dict(), self.uri)            
+            response = oi_consumer.complete(self.adapter.params, self.uri)            
             
             # on success
             if response.status == consumer.SUCCESS:

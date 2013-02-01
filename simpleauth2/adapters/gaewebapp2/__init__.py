@@ -1,9 +1,9 @@
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
-from simpleauth2 import Response, RPC
-from simpleauth2.adapters import BaseAdapter
+from simpleauth2 import Response, RPC, adapters
 from urllib import urlencode
 from webapp2_extras import sessions
+import openid
 import datetime
 import urlparse
 
@@ -68,15 +68,50 @@ class GAEWebapp2AdapterError(Exception):
     pass
 
 
-class GAEWebapp2Adapter(BaseAdapter):
+class _GAESessionWrapper(adapters.BaseSession):
     
-    def __init__(self, handler, providers_config=None, session=None, session_secret=None, session_key='simpleauth2', openid_store=None):
+    def __init__(self, session, response):
+        self.session = session
+        self.response = response
+    
+    
+    def __setitem__(self, key, value):
+        self.session.__setitem__(key, value)
+        # we need to save the session store
+        # it is actually the only reason why we need this wrapper
+        self.session.container.save_session(self.response)
+    
+    def __getitem__(self, key):
+        return self.session.__getitem__(key)
+    
+    
+    def __delitem__(self, key):
+        return self.session.__delitem__(key)
+    
+    
+    def get(self, key):
+        return self.session.get(key)
+    
+
+
+class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
+    
+    request = None
+    response = None
+    session = None
+    openid_store = None
+    
+    def __init__(self, handler, providers_config=None, session=None,
+                 session_secret=None, session_key='simpleauth2', openid_store=openid.NDBOpenIDStore):
+        
+        self.request = handler.request
+        self.response = handler.response
+        
         self._handler = handler
-        self._providers_config = providers_config
-        self._session = session
+        self._config = providers_config
         self._session_secret = session_secret
         self._session_key = session_key
-        self._openid_store = openid_store
+        self.openid_store = openid_store
         
         # create session
         if not (session or session_secret):
@@ -86,61 +121,21 @@ class GAEWebapp2Adapter(BaseAdapter):
             # create default session
             session_store = sessions.SessionStore(handler.request, dict(secret_key=session_secret))
             #FIXME: securecookie backend complains that <openid.yadis.manager.YadisServiceManager object at 0x9ea892c> is not JSON serializable
-            self._session = session_store.get_session(session_key, max_age=60, backend='memcache')
-    
-    
-    def write(self, value):
-        self._handler.response.write(value)
-    
-    
-    def set_response_header(self, key, value):
-        self._handler.response.headers[key] = value
-    
-    
-    def get_current_uri(self):
-        """Returns the uri of the actual request"""
+            session = session_store.get_session(session_key, max_age=60, backend='memcache')
         
-        route_name = self._handler.request.route.name
-        args = self._handler.request.route_args
-        return self._handler.uri_for(route_name, *args, _full=True)
+        self.session = _GAESessionWrapper(session, self.response)
     
     
-    def get_request_param(self, key):
-        """Returns a GET or POST variable by key"""
-        
-        return self._handler.request.params.get(key)
-    
-    def get_request_params_dict(self):
-        """Returns a dictionary of all request parameters"""
-        return dict(self._handler.request.params)
-    
-    
-    #TODO convert it to session_set(key, value) and prefix the key with provider name in provider
-    def store_provider_data(self, provider_name, key, value):
-        self._session.setdefault(self._session_key, {}).setdefault(provider_name, {})[key] = value
-        
-        #FIXME: securecookie session backend complains that <openid.yadis.manager.YadisServiceManager object at 0x9ea892c> is not JSON serializable
-        
-        self._save_session()
-    
-    #TODO convert it to session_get(key) and prefix the key with provider name in provider 
-    def retrieve_provider_data(self, provider_name, key, default=None):
-        return self._session.setdefault(self._session_key, {}).setdefault(provider_name, {}).get(key, default)
-    
-    
-    def get_providers_config(self):
-        
-        if self._providers_config:
-            return self._providers_config
+    #TODO: Make config optional by adapters
+    @property
+    def config(self):
+        if self._config:
+            return self._config
         else:
             # use Providers model if no providers config specified
             providers_config = ProvidersConfigModel
             providers_config.initialize()
             return providers_config
-    
-    
-    def redirect(self, url):
-        self._handler.redirect(url)
     
         
     def fetch_async(self, url, payload=None, method='GET', headers={}, response_parser=None, content_parser=None):
@@ -155,7 +150,24 @@ class GAEWebapp2Adapter(BaseAdapter):
         urlfetch.make_fetch_call(rpc, url, payload, method, headers)
         
         return RPC(rpc, response_parser or self.response_parser, content_parser)
+    
+    
+    @staticmethod
+    def response_parser(response, content_parser):
+        resp = Response(content_parser)
         
+        resp.content = response.content
+        resp.status_code = response.status_code
+        resp.headers = response.headers
+        
+        return resp
+    
+    
+    #===========================================================================
+    #TODO: Move all these to provider
+    #
+    # json is available in standard library
+    #===========================================================================
     
     @staticmethod
     def json_parser(body):
@@ -174,26 +186,4 @@ class GAEWebapp2Adapter(BaseAdapter):
             except:
                 pass
         return res
-    
-    
-    @staticmethod
-    def response_parser(response, content_parser):
-        resp = Response(content_parser)
-        
-        resp.content = response.content
-        resp.status_code = response.status_code
-        resp.headers = response.headers
-        
-        return resp
-    
-    
-    def get_openid_store(self):
-        if self._openid_store:
-            return self._openid_store
-        else:
-            raise GAEWebapp2AdapterError('To use OpenID provider you have to pass an OpenIDStore to the adapter constructor!')
-    
-    
-    def _save_session(self):
-        self._session.container.session_store.save_sessions(self._handler.response)
 
