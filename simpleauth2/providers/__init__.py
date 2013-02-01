@@ -69,13 +69,7 @@ class BaseProvider(object):
     
     # tuple of callables which parse responses returned by providers ordered by their usage
     parsers = (lambda content: content, )
-    
-    # Override this property to fix different naming conventions for user info values returned by providers.
-    # keys are the names of the User class properties
-    # values are either strings specifiing which key of the data dictionary should be used,
-    # or callables expecting the data dictionary as argument and returning the desired value
-    user_info_mapping = {}
-    
+        
     has_protected_resources = False
     
     #===========================================================================
@@ -99,7 +93,6 @@ class BaseProvider(object):
     def create_url(url_type, base):
         raise NotImplementedError
     
-    #TODO: useless?
     def update_user(self):
         return self.user
     
@@ -137,27 +130,25 @@ class BaseProvider(object):
         
         self.user.raw_user_info = data
         
-        # iterate over User properties
+        # iterate over user properties
         for key in self.user.__dict__.keys():
             # exclude raw_user_info
             if key is not 'raw_user_info':
-                
-                # check if there is a diferent key in the user_info_mapping
-                data_key = self.user_info_mapping.get(key) or key
-                
-                if type(data_key) is str:
-                    # get value from data
-                    new_value = data.get(data_key)
-                elif callable(data_key):
-                    new_value = data_key(data)
-                else:
-                    raise Exception('The values of the user_info_mapping dict must be a string or callable. {} found under "{}" key.'.format(type(data_key), key))                
-                
-                # update user
-                if new_value:
-                    setattr(self.user, key, new_value)
+                # extract every data item whose key matches the user property name
+                # but only if it has a value
+                value = data.get(key)
+                if value:
+                    setattr(self.user, key, value)
+                    
+        # handle different structure of data by different providers
+        self.user = self._user_parser(self.user, data)
         
-        return self.user
+        return self.user    
+    
+    
+    @staticmethod
+    def _user_parser(user, data):
+        return user
     
     
     def _normalize_scope(self, scope):
@@ -234,7 +225,9 @@ class AuthorisationProvider(BaseProvider):
             
             def response_parser(response, content_parser):
                 response = self.adapter.response_parser(response, content_parser)
+                
                 self.user = self._update_or_create_user(response.data)
+                
                 return simpleauth2.UserInfoResponse(response, self.user)
             
             self._user_info_request = self.create_request(self.user_info_url,

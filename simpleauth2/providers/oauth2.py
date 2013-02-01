@@ -212,8 +212,12 @@ class Facebook(OAuth2):
     
     parsers = (None, providers.QUERY_STRING_PARSER)
     
-    user_info_mapping = dict(user_id='id',
-                            picture=(lambda data: 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))))
+    @staticmethod
+    def _user_parser(user, data):
+        user.user_id = data.get('id')
+        user.picture = 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))
+        return user
+    
     
     @staticmethod
     def _credentials_parser(credentials, data):
@@ -223,7 +227,6 @@ class Facebook(OAuth2):
         
         # Facebook returns "expires" instead of "expires_in"
         credentials.expires_in = data.get('expires')
-        
         return credentials
 
 
@@ -232,16 +235,21 @@ class Google(OAuth2):
     Google Oauth 2.0 service
     """
     
-    user_authorisation_url = 'https://accounts.google.com/o/oauth2/auth'
-    access_token_url = 'https://accounts.google.com/o/oauth2/token'
-    user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
-    
     parsers = (None, providers.JSON_PARSER)
     
     user_info_mapping = dict(name='name',
                             first_name='given_name',
                             last_name='family_name',
                             user_id='id')
+    
+    @staticmethod
+    def _user_parser(user, data):
+        user.name = data.get('name')
+        user.first_name = data.get('given_name')
+        user.last_name = data.get('family_name')
+        user.user_id = data.get('id')
+        return user
+    
     
     def _normalize_scope(self, scope):
         """
@@ -261,7 +269,10 @@ class WindowsLive(OAuth2):
     
     parsers = (None, providers.JSON_PARSER)
     
-    user_info_mapping=dict(user_id='id',
-                           email=(lambda data: data.get('emails', {}).get('preferred')))
+    @staticmethod
+    def _user_parser(user, data):
+        user.user_id = data.get('id')
+        user.email = data.get('emails', {}).get('preferred')
+        return user
 
 

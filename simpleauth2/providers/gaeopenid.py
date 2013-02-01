@@ -32,6 +32,7 @@ class GAEOpenID(simpleauth2.providers.AuthenticationProvider):
             user = users.get_current_user()
             if user:
                 self._log(logging.INFO, 'Authentication successful.')
+                self._log(logging.INFO, 'Creating user.')
                 self.user = simpleauth2.User(self,
                                              user_id=user.federated_identity(),
                                              email=user.email(),

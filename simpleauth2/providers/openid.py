@@ -95,43 +95,38 @@ class OpenID(providers.AuthenticationProvider):
                      'http://schemas.openid.net/pape/policies/2007/06/multi-factor',
                      'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant']
     
-    # maps raw_user_info dict to User properties
-    user_info_mapping = {
-        'name':          lambda data:   data.get('sreg', {}).get('fullname') or \
-                                        data.get('ax', {}).get('http://axschema.org/namePerson'),
-                                        
-        'first_name':    lambda data:   data.get('ax', {}).get('http://openid.net/schema/namePerson/first'),
+    @staticmethod
+    def _user_parser(user, data):
+        user.first_name = data.get('ax', {}).get('http://openid.net/schema/namePerson/first')
+        user.last_name = data.get('ax', {}).get('http://openid.net/schema/namePerson/last')
+        user.user_id = data.get('guid')
+        user.link = data.get('ax', {}).get('http://openid.net/schema/contact/web/default')
+        user.picture = data.get('ax', {}).get('http://openid.net/schema/media/image')
+        user.nickname = data.get('sreg', {}).get('nickname')
+        user.country = data.get('sreg', {}).get('country')
+        user.postal_code = data.get('sreg', {}).get('postcode')
         
-        'last_name':     lambda data:   data.get('ax', {}).get('http://openid.net/schema/namePerson/last'),
+        user.name = data.get('sreg', {}).get('fullname') or \
+            data.get('ax', {}).get('http://axschema.org/namePerson')
+            
+        user.gender = data.get('sreg', {}).get('gender') or \
+            data.get('ax', {}).get('http://openid.net/schema/gender')
         
-        'user_id':       lambda data:   data.get('guid'),
+        user.locale = data.get('sreg', {}).get('language') or \
+            data.get('ax', {}).get('http://openid.net/schema/language/pref')
         
-        'gender':        lambda data:   data.get('sreg', {}).get('gender') or \
-                                        data.get('ax', {}).get('http://openid.net/schema/gender'),
+        user.timezone = data.get('sreg', {}).get('timezone') or \
+            data.get('ax', {}).get('http://openid.net/schema/timezone')
         
-        'locale':        lambda data:   data.get('sreg', {}).get('language') or \
-                                        data.get('ax', {}).get('http://openid.net/schema/language/pref'),
+        user.email = data.get('sreg', {}).get('email') or \
+            data.get('ax', {}).get('http://axschema.org/contact/email') or \
+            data.get('ax', {}).get('http://schema.openid.net/contact/email')
         
-        'link':          lambda data:   data.get('ax', {}).get('http://openid.net/schema/contact/web/default'),
-        
-        'picture':       lambda data:   data.get('ax', {}).get('http://openid.net/schema/media/image'),
-        
-        'timezone':      lambda data:   data.get('sreg', {}).get('timezone') or \
-                                        data.get('ax', {}).get('http://openid.net/schema/timezone'),
-        
-        'email':         lambda data:   data.get('sreg', {}).get('email') or \
-                                        data.get('ax', {}).get('http://axschema.org/contact/email') or \
-                                        data.get('ax', {}).get('http://schema.openid.net/contact/email'),
-        
-        'birth_date':    lambda data:   datetime.datetime.strptime(data.get('sreg', {}).get('dob'), '%Y-%m-%d') if \
-                                        data.get('sreg', {}).get('dob') else None,
-        
-        'nickname':      lambda data:   data.get('sreg', {}).get('nickname'),
-        
-        'country':       lambda data:   data.get('sreg', {}).get('country'),
-        
-        'postal_code':   lambda data:   data.get('sreg', {}).get('postcode'),
-    }
+        user.birth_date = datetime.datetime.strptime(data.get('sreg', {}).get('dob'), '%Y-%m-%d') if \
+            data.get('sreg', {}).get('dob') else None
+                
+        return user
+    
     
     @providers._login_decorator
     def login(self, *args, **kwargs):

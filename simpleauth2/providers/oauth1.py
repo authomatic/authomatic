@@ -11,7 +11,6 @@ import urllib
 import urlparse
 
 
-
 def _normalize_params(params):
     """
     Returns a normalized query string sorted first by key, then by value
@@ -363,9 +362,12 @@ class Twitter(OAuth1):
     
     parsers = (providers.QUERY_STRING_PARSER, providers.QUERY_STRING_PARSER)
     
-    user_info_mapping = dict(user_id='id',
-                            username='screen_name',
-                            picture='profile_image_url',
-                            locale='lang',
-                            link='url')
+    @staticmethod
+    def _user_parser(user, data):
+        user.user_id = data.get('id')
+        user.username = data.get('screen_name')
+        user.picture = data.get('profile_image_url')
+        user.locale = data.get('lang')
+        user.link = data.get('url')
+        return user
 
