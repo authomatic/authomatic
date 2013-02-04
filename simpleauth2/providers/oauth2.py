@@ -136,8 +136,6 @@ class OAuth2(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Request is valid.')
             
             # exchange authorisation code for access token by the provider
-            parser = self._get_parser_by_index(1)
-            
             self._log(logging.INFO, 'Fetching access token from {}.'.format(self.access_token_url))
             
             credentials.token = authorisation_code
@@ -148,7 +146,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                              method='POST',
                                                              redirect_uri=self.uri)
             
-            response = self._fetch(*request_elements, content_parser=parser)
+            response = self._fetch(*request_elements)
             
             access_token = response.data.get('access_token')
             
@@ -201,7 +199,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                             credentials=credentials,
                                                             url=self.user_authorisation_url,
                                                             redirect_uri=self.uri,
-                                                            scope=self._normalize_scope(self.consumer.scope),
+                                                            scope=self._scope_parser(self.consumer.scope),
                                                             state=state)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
@@ -217,8 +215,6 @@ class Facebook(OAuth2):
     user_authorisation_url = 'https://www.facebook.com/dialog/oauth'
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
     user_info_url = 'https://graph.facebook.com/me'
-    
-    parsers = (None, providers.QUERY_STRING_PARSER)
     
     @staticmethod
     def _user_parser(user, data):
@@ -247,8 +243,6 @@ class Google(OAuth2):
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
     user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
     
-    parsers = (None, providers.JSON_PARSER)
-    
     @staticmethod
     def _user_parser(user, data):
         user.name = data.get('name')
@@ -258,7 +252,7 @@ class Google(OAuth2):
         return user
     
     #TODO: rename to _parse_scope
-    def _normalize_scope(self, scope):
+    def _scope_parser(self, scope):
         """
         Google has space-separated scopes
         """
@@ -273,8 +267,6 @@ class WindowsLive(OAuth2):
     user_authorisation_url = 'https://oauth.live.com/authorize'
     access_token_url = 'https://oauth.live.com/token'
     user_info_url = 'https://apis.live.net/v5.0/me'
-    
-    parsers = (None, providers.JSON_PARSER)
     
     @staticmethod
     def _user_parser(user, data):

@@ -6,10 +6,8 @@ import random
 import simpleauth2
 import urlparse
 
-HTTP_METHODS = ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'CONNECT', 'PATCH')
 
-QUERY_STRING_PARSER = 'query_string_parser'
-JSON_PARSER = 'json_parser'
+HTTP_METHODS = ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'CONNECT', 'PATCH')
 
 
 def _login_decorator(func):
@@ -169,16 +167,12 @@ class BaseProvider(object):
         return user
     
     
-    def _normalize_scope(self, scope):
+    def _scope_parser(self, scope):
         """
         Convert scope list to csv
         """
         
         return ','.join(scope) if scope else None
-        
-    
-    def _get_parser_by_index(self, index):
-        return getattr(self.adapter, self.parsers[index])
     
     
     def _check_consumer(self):
@@ -201,14 +195,6 @@ class AuthorisationProvider(BaseProvider):
     #===========================================================================
     # Abstract properties
     #===========================================================================
-    
-    @abc.abstractproperty
-    def parsers(self):
-        """
-        Tuple of callables which parse responses returned by providers ordered by their usage
-        """
-        
-        pass
     
     @abc.abstractproperty
     def user_authorisation_url(self):
@@ -292,7 +278,6 @@ class AuthorisationProvider(BaseProvider):
                 return simpleauth2.UserInfoResponse(response, self.user)
             
             self._user_info_request = self.create_request(self.user_info_url,
-                                                          content_parser=self.adapter.json_parser,
                                                           response_parser=response_parser)
         
         return self._user_info_request

@@ -271,8 +271,7 @@ class OAuth1(providers.AuthorisationProvider):
             if not token_secret:
                 raise FailureError('Unable to retrieve token secret from storage!')
             
-            # Get Access Token
-            parser = self._get_parser_by_index(1)            
+            # Get Access Token          
             self._log(logging.INFO, 'Fetching for access token from {}.'.format(self.access_token_url))
             
             credentials.token = request_token
@@ -284,7 +283,7 @@ class OAuth1(providers.AuthorisationProvider):
                                                              verifier=verifier,
                                                              nonce=self._generate_csrf())
             
-            response = self._fetch(*request_elements, content_parser=parser)            
+            response = self._fetch(*request_elements)
             
             if response.status_code != 200:
                 raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
@@ -315,8 +314,6 @@ class OAuth1(providers.AuthorisationProvider):
             # Phase 1 before redirect
             self._log(logging.INFO, 'Starting OAuth 1.0a authorisation procedure.')
             
-            parser = self._get_parser_by_index(0)
-            
             # Fetch for request token
             request_elements = self._create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
                                                              credentials=credentials,
@@ -325,7 +322,7 @@ class OAuth1(providers.AuthorisationProvider):
                                                              nonce=self._generate_csrf())
             
             self._log(logging.INFO, 'Fetching for request token and token secret.')
-            response = self._fetch(*request_elements, content_parser=parser)            
+            response = self._fetch(*request_elements)
             
             # check if response status is OK
             if response.status_code != 200:
@@ -373,8 +370,6 @@ class Twitter(OAuth1):
     user_authorisation_url = 'https://api.twitter.com/oauth/authorize'
     access_token_url = 'https://api.twitter.com/oauth/access_token'
     user_info_url = 'https://api.twitter.com/1/account/verify_credentials.json'
-    
-    parsers = (providers.QUERY_STRING_PARSER, providers.QUERY_STRING_PARSER)
     
     @staticmethod
     def _user_parser(user, data):

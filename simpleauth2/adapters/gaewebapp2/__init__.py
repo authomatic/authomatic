@@ -1,22 +1,12 @@
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
-from simpleauth2 import Response, RPC, adapters
+from simpleauth2 import Response, adapters
 from urllib import urlencode
 from webapp2_extras import sessions
 import openid
 import datetime
 import urlparse
 
-# taken from anyjson.py
-try:
-    import simplejson as json
-except ImportError: # pragma: no cover
-    try:
-        # Try to import from django, should work on App Engine
-        from django.utils import simplejson as json
-    except ImportError:
-        # Should work for Python2.6 and higher.
-        import json
 
 class ProvidersConfigModel(ndb.Model):
     """
@@ -149,7 +139,8 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
         rpc = urlfetch.create_rpc()
         urlfetch.make_fetch_call(rpc, url, payload, method, headers)
         
-        return RPC(rpc, response_parser or self.response_parser, content_parser)
+        #TODO: Redundant???
+        return adapters.RPC(rpc, response_parser or self.response_parser, content_parser)
     
     
     @staticmethod
@@ -161,29 +152,4 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
         resp.headers = response.headers
         
         return resp
-    
-    
-    #===========================================================================
-    #TODO: Move all these to provider
-    #
-    # json is available in standard library
-    #===========================================================================
-    
-    @staticmethod
-    def json_parser(body):
-        try:
-            return json.loads(body)
-        except (TypeError, ValueError) as e:
-            return {'error': e}
-    
-    
-    @staticmethod
-    def query_string_parser(body):
-        res = dict(urlparse.parse_qsl(body))
-        if not res:
-            try:
-                res = json.loads(body) if body else None
-            except:
-                pass
-        return res
 

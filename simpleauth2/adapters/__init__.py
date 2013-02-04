@@ -12,6 +12,8 @@ import abc
 
 class BaseSession(object):
     
+    __metaclass__ = abc.ABCMeta
+    
     @abc.abstractmethod
     def __setitem__(self, key, value):
         pass
@@ -30,6 +32,32 @@ class BaseSession(object):
     @abc.abstractmethod
     def get(self, key):
         pass
+
+
+class RPC(object):
+    """
+    Remote Procedure Call wrapper
+    """
+    
+    def __init__(self, rpc_object, response_parser, content_parser):
+        """
+        
+        
+        :param rpc_object: Any object that has a get_result() method.
+        :param response_parser:
+        :param content_parser:
+        """
+        
+        self.rpc_object = rpc_object
+        self.response_parser = response_parser
+        self.content_parser = content_parser
+    
+    def get_response(self):
+        """
+        Returns Response instance
+        """
+        
+        return self.response_parser(self.rpc_object.get_result(), self.content_parser)
 
 
 class BaseAdapter(object):

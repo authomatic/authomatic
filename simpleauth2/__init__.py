@@ -1,15 +1,28 @@
-import exceptions
-import providers
 from urllib import urlencode
 import binascii
 import datetime
+import exceptions
 import hashlib
 import hmac
 import pickle
+import providers
 import random
 import sys
 import time
 import urllib
+import urlparse
+
+
+# taken from anyjson.py
+try:
+    import simplejson as json
+except ImportError: # pragma: no cover
+    try:
+        # Try to import from django, should work on App Engine
+        from django.utils import simplejson as json
+    except ImportError:
+        # Should work for Python2.6 and higher.
+        import json
 
 
 def login(adapter, provider_name, callback=None, report_errors=True,
@@ -212,22 +225,14 @@ class LoginResult(object):
         self.user = provider.user
 
 
-class RPC(object):
-    """
-    Remote Procedure Call wrapper
-    """
-    
-    def __init__(self, rpc_object, response_parser, content_parser):
-        self.rpc_object = rpc_object
-        self.response_parser = response_parser
-        self.content_parser = content_parser
-    
-    def get_response(self):
-        """
-        Returns Response instance
-        """
-        
-        return self.response_parser(self.rpc_object.get_result(), self.content_parser)
+def query_json_parser(body):
+    res = dict(urlparse.parse_qsl(body))
+    if not res:
+        try:
+            res = json.loads(body) if body else None
+        except:
+            pass
+    return res
 
 
 class Response(object):
@@ -235,8 +240,8 @@ class Response(object):
     Provides unified interface to results of different http request types
     """
     
-    def __init__(self, content_parser, status_code=None, headers=None, content=None):
-        self.content_parser = content_parser
+    def __init__(self, content_parser=None, status_code=None, headers=None, content=None):
+        self.content_parser = content_parser or query_json_parser
         self.status_code = status_code
         self.headers = headers
         self.content = content
@@ -264,7 +269,7 @@ class Request(object):
         self.url = url
         self.method = method
         self.response_parser = response_parser
-        self.content_parser = content_parser or adapter.json_parser
+        self.content_parser = content_parser
         self.rpc = None
         
         if type(credentials) == Credentials:
