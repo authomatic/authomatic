@@ -67,20 +67,25 @@ class _GAESessionWrapper(adapters.BaseSession):
     
     def __setitem__(self, key, value):
         self.session.__setitem__(key, value)
-        # we need to save the session store
-        # it is actually the only reason why we need this wrapper
         self.session.container.save_session(self.response)
     
-    def __getitem__(self, key):
-        return self.session.__getitem__(key)
     
+    def __getitem__(self, key):
+        self.session.__getitem__(key)
+        self.session.container.save_session(self.response)
+        
     
     def __delitem__(self, key):
         return self.session.__delitem__(key)
+        self.session.container.save_session(self.response)
     
     
     def get(self, key):
         return self.session.get(key)
+    
+    
+    def __getattr__(self, name):
+        return getattr(self.session, name)
     
 
 
