@@ -5,7 +5,6 @@ from urllib import urlencode
 from webapp2_extras import sessions
 import datetime
 import logging
-import openid
 import urlparse
 
 
@@ -108,11 +107,10 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
     request = None
     response = None
     session = None
-    openid_store = None
     config = None
     
     def __init__(self, handler, config=None, session=None, session_secret=None,
-                 session_key='simpleauth2', openid_store=openid.NDBOpenIDStore):
+                 session_key='simpleauth2', openid_store=None):
         
         self.request = handler.request
         self.response = handler.response
@@ -120,7 +118,7 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
         self._handler = handler
         self._session_secret = session_secret
         self._session_key = session_key
-        self.openid_store = openid_store
+        self._openid_store = openid_store
         
         if config:
             self.config = config
@@ -150,6 +148,16 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
         urlfetch.make_fetch_call(rpc, url, payload, method, headers)
         
         return adapters.RPC(rpc, response_parser or self.response_parser, content_parser)
+    
+    
+    @property
+    def openid_store(self):
+        if self._openid_store:
+            return self._openid_store
+        else:
+            # import only if needed to avoid python-openid dependency if not neccessary
+            from openid import NDBOpenIDStore
+            return NDBOpenIDStore
     
     
     @staticmethod
