@@ -39,7 +39,7 @@ def login(adapter, provider_name, callback=None, report_errors=True,
         raise exceptions.ConfigError('Class name not specified for provider {}!'.format(provider_name))
         
     # merge scopes from config and argument
-    scope = provider_settings.get('scope', []) + scope if scope else None
+    scope = provider_settings.get('scope', []) + scope
     
     # create consumer
     consumer = Consumer(provider_settings.get('consumer_key'),

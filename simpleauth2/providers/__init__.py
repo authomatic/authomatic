@@ -172,7 +172,7 @@ class BaseProvider(object):
         Convert scope list to csv
         """
         
-        return ','.join(scope) if scope else None
+        return ','.join(scope) if scope else ''
     
     
     def _check_consumer(self):
