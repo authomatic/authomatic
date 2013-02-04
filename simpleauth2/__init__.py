@@ -28,8 +28,10 @@ except ImportError: # pragma: no cover
 def login(adapter, provider_name, callback=None, report_errors=True,
           logging_level=20, scope=[], config=None, **kwargs):
     
-    #TODO: Make config optional by adapters
-    config = adapter.config
+    config = config or adapter.config
+    if not config:
+        raise exceptions.ConfigError('Adapter {} doesn\'t provide a default config so you must specify it with the config= argument!'.\
+                                     format(adapter.__class__.__name__))
     
     # retrieve required settings for current provider and raise exceptions if missing
     provider_settings = config.get(provider_name)
@@ -240,7 +242,7 @@ class Response(object):
     Provides unified interface to results of different http request types
     """
     
-    def __init__(self, content_parser=None, status_code=None, headers=None, content=None):
+    def __init__(self, status_code, headers, content, content_parser=None):
         self.content_parser = content_parser or query_json_parser
         self.status_code = status_code
         self.headers = headers

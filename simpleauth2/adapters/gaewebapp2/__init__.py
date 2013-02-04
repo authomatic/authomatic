@@ -145,11 +145,8 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
     
     @staticmethod
     def response_parser(response, content_parser):
-        resp = Response(content_parser)
-        
-        resp.content = response.content
-        resp.status_code = response.status_code
-        resp.headers = response.headers
-        
-        return resp
+        return Response(status_code=response.status_code,
+                        headers=response.headers,
+                        content=response.content,
+                        content_parser=content_parser)
 

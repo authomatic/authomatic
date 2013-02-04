@@ -44,7 +44,7 @@ class RPC(object):
         
         
         :param rpc_object: Any object that has a get_result() method.
-        :param response_parser:
+        :param response_parser: 
         :param content_parser:
         """
         
@@ -71,6 +71,19 @@ class BaseAdapter(object):
     
     def login(self, *args, **kwargs):
         return simpleauth2.login(self,  *args, **kwargs)
+    
+    
+    def config(self):
+        """
+        Any object that has the get('provider-name') method which should return
+        a provider config dictionary.
+        
+        Ment to provide an alternative to a hardcoded config, i.e. Data model config. 
+        
+        TODO: point to config section of future documentation? 
+        """
+        
+        return None
     
     
     @abc.abstractproperty
@@ -123,6 +136,8 @@ class BaseAdapter(object):
         """
         A classproperty to convert platform specific fetch response to simpleauth2.Response.
         
+        Must be staticmethod!
+        
         :param response: result of platform specific fetch call
         :param content_parser: should be passed to simpleauth2.Response constructor.
         
@@ -139,6 +154,20 @@ class BaseAdapter(object):
         Required only by the OpenID provider
         """
     
+    
+    @abc.abstractmethod
+    def fetch_async(self, url, payload=None, method='GET', headers={}, response_parser=None, content_parser=None):    
+        """
+        Must return an instance of the RPC class.
+        
+        :param url:
+        :param payload:
+        :param method:
+        :param headers:
+        :param response_parser:
+        :param content_parser:
+        """
+
 
 class WebObBaseAdapter(BaseAdapter):
     """
