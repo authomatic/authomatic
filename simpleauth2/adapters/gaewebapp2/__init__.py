@@ -3,12 +3,17 @@ from google.appengine.ext import ndb
 from simpleauth2 import Response, adapters
 from urllib import urlencode
 from webapp2_extras import sessions
-import openid
 import datetime
+import logging
+import openid
 import urlparse
 
 
-class ProvidersConfigModel(ndb.Model):
+class GAEWebapp2AdapterError(Exception):
+    pass
+
+
+class ProviderConfig(ndb.Model):
     """
     Datastore model for providers configuration
     """
@@ -25,7 +30,7 @@ class ProvidersConfigModel(ndb.Model):
         """
         Resembles the dict.get(key[, default=None]) method
         
-        Returns the 
+        Returns a provider config dictionary
         """
         result = cls.query(cls.name == key).get()
         if result:
@@ -37,7 +42,16 @@ class ProvidersConfigModel(ndb.Model):
             return result_dict
         else:
             return default 
-        
+    
+    
+    @classmethod
+    def values(cls):
+        # get all items
+        results = cls.query().fetch()
+        # return list of dictionaries
+        return [result.to_dict() for result in results]
+    
+    
     @classmethod
     def initialize(cls):
         """
@@ -51,11 +65,12 @@ class ProvidersConfigModel(ndb.Model):
             example.consumer_key = 'Consumer key.'
             example.consumer_secret = 'Consumer secret'
             example.scope = 'coma, separated, list, of, scopes'
+            example.short_name = 1
             example.put()
+            
+            raise GAEWebapp2AdapterError('A GAEWebapp2AdapterError data model was created!' + \
+                                         'Go to {your_domain}/_ah/admin/datastore?kind=ProvidersConfigModel and populate it with data!')
 
-
-class GAEWebapp2AdapterError(Exception):
-    pass
 
 
 class _GAESessionWrapper(adapters.BaseSession):
@@ -67,18 +82,17 @@ class _GAESessionWrapper(adapters.BaseSession):
     
     def __setitem__(self, key, value):
         self.session.__setitem__(key, value)
+        self.session.container.save_session(self.response)    
+        
+    
+    def __delitem__(self, key):
+        self.session.__delitem__(key)
         self.session.container.save_session(self.response)
     
     
     def __getitem__(self, key):
-        self.session.__getitem__(key)
-        self.session.container.save_session(self.response)
+        return self.session.__getitem__(key)
         
-    
-    def __delitem__(self, key):
-        return self.session.__delitem__(key)
-        self.session.container.save_session(self.response)
-    
     
     def get(self, key):
         return self.session.get(key)
@@ -95,18 +109,24 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
     response = None
     session = None
     openid_store = None
+    config = None
     
-    def __init__(self, handler, providers_config=None, session=None,
-                 session_secret=None, session_key='simpleauth2', openid_store=openid.NDBOpenIDStore):
+    def __init__(self, handler, config=None, session=None, session_secret=None,
+                 session_key='simpleauth2', openid_store=openid.NDBOpenIDStore):
         
         self.request = handler.request
         self.response = handler.response
         
         self._handler = handler
-        self._config = providers_config
         self._session_secret = session_secret
         self._session_key = session_key
         self.openid_store = openid_store
+        
+        if config:
+            self.config = config
+        else:
+            self.config = ProviderConfig
+            self.config.initialize()
         
         # create session
         if not (session or session_secret):
@@ -120,31 +140,15 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
         
         self.session = _GAESessionWrapper(session, self.response)
     
-    
-    #TODO: Make config optional by adapters
-    @property
-    def config(self):
-        if self._config:
-            return self._config
-        else:
-            # use Providers model if no providers config specified
-            providers_config = ProvidersConfigModel
-            providers_config.initialize()
-            return providers_config
-    
         
     def fetch_async(self, url, payload=None, method='GET', headers={}, response_parser=None, content_parser=None):
         """
         Makes an asynchronous call object
-        
-        Must return an object which has a get_result() method
         """
-                
         
         rpc = urlfetch.create_rpc()
         urlfetch.make_fetch_call(rpc, url, payload, method, headers)
         
-        #TODO: Redundant???
         return adapters.RPC(rpc, response_parser or self.response_parser, content_parser)
     
     

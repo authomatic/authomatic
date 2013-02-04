@@ -4,6 +4,7 @@ import datetime
 import exceptions
 import hashlib
 import hmac
+import logging
 import pickle
 import providers
 import random
@@ -26,15 +27,10 @@ except ImportError: # pragma: no cover
 
 
 def login(adapter, provider_name, callback=None, report_errors=True,
-          logging_level=20, scope=[], config=None, **kwargs):
-    
-    config = config or adapter.config
-    if not config:
-        raise exceptions.ConfigError('Adapter {} doesn\'t provide a default config so you must specify it with the config= argument!'.\
-                                     format(adapter.__class__.__name__))
+          logging_level=20, scope=[], **kwargs):
     
     # retrieve required settings for current provider and raise exceptions if missing
-    provider_settings = config.get(provider_name)
+    provider_settings = adapter.config.get(provider_name)
     if not provider_settings:
         raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
@@ -74,12 +70,13 @@ def escape(s):
 
 
 def resolve_provider_class(class_):
+    logging.info('resolve_provider_class({})'.format(class_))
     if type(class_) in (str, unicode):
         # prepare path for simpleauth2.providers package
         path = '.'.join([__package__, 'providers', class_])
         
         # try to import class by string from providers module or by fully qualified path
-        return import_string(class_, True) or import_string(path)  
+        return import_string(class_, True) or import_string(path)
     else:
         return class_
 

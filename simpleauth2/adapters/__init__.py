@@ -34,6 +34,24 @@ class BaseSession(object):
         pass
 
 
+class BaseConfig(object):
+    
+    __metaclass__ = abc.ABCMeta
+    
+    @abc.abstractmethod
+    def get(self, key):
+        """
+        
+        :param key:
+        """
+    
+    @abc.abstractmethod
+    def values(self):
+        """
+        
+        """        
+
+
 class RPC(object):
     """
     Remote Procedure Call wrapper
