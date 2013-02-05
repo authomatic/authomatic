@@ -224,14 +224,18 @@ class LoginResult(object):
         self.user = provider.user
 
 
-def query_json_parser(body):
-    res = dict(urlparse.parse_qsl(body))
-    if not res:
-        try:
-            res = json.loads(body) if body else None
-        except:
-            pass
-    return res
+def json_qs_parser(body):
+    """
+    Parses response body from json or query string.
+    
+    :param body: string
+    """
+    try:
+        # try json first
+        return json.loads(body)
+    except ValueError:
+        # then query string
+        return dict(urlparse.parse_qsl(body))
 
 
 class Response(object):
@@ -240,7 +244,7 @@ class Response(object):
     """
     
     def __init__(self, status_code, headers, content, content_parser=None):
-        self.content_parser = content_parser or query_json_parser
+        self.content_parser = content_parser or json_qs_parser
         self.status_code = status_code
         self.headers = headers
         self.content = content
