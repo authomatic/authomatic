@@ -58,10 +58,15 @@ def login(adapter, provider_name, callback=None, report_errors=True,
 
 
 class Counter(object):
-    count = 0
+    
+    def __init__(self, start=1):
+        self.count = start
+        
     def __call__(self):
         self.count += 1
         return self.count
+
+counter = short_name = Counter()
 
 
 def escape(s):
@@ -296,6 +301,12 @@ class Request(object):
         return self.rpc.get_response()
 
 
+def async_fetch(adapter, url, credentials, method='GET', content_parser=None):
+    return Request(adapter, url, credentials, method, content_parser).fetch()
+
+
+def fetch(adapter, url, credentials, method='GET', content_parser=None):
+    return async_fetch(adapter, url, credentials, method, content_parser).get_response()
 
 
 

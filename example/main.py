@@ -1,12 +1,12 @@
-from authomatic import Credentials, Request
+from authomatic.core import Credentials
 from authomatic.adapters.gaewebapp2 import GAEWebapp2Adapter
-from authomatic.adapters.gaewebapp2.openid import NDBOpenIDStore
 import config
-import logging
 import sys
 import webapp2
+import authomatic
 
 def headers(handler):
+        
     handler.response.write('<a href="/auth/facebook">Facebook</a><br />')
     handler.response.write('<a href="/auth/google">Google</a><br />')
     handler.response.write('<a href="/auth/windows_live">Windows Live</a><br />')
@@ -41,27 +41,24 @@ class Home(webapp2.RequestHandler):
 class Login(webapp2.RequestHandler):
     
     def login(self, provider_name):
-                
-        self.adapter = GAEWebapp2Adapter(handler=self,
-                                         config=config.PROVIDERS,
-                                         session_secret='abcd')
         
-        result = self.adapter.login(provider_name,
-                                    callback=self.callback,
-                                    report_errors=False,
-                                    logging_level=logging.DEBUG,
-                                    oi_identifier=self.request.params.get('id'))
+        self.adapter = GAEWebapp2Adapter(handler=self,
+                                    config=config.PROVIDERS,
+                                    session_secret='abcd')
+        
+        result = authomatic.login(self.adapter, provider_name,
+                                  callback=self.callback,
+                                  oi_identifier=self.request.params.get('id'))
         
         if result:
             if result.user:
                 user = result.user.update()
-                self.response.write('Hi {}<br />'.format(user.name))
+                self.response.write('<br /><br />Hi {}<br />'.format(user.name))
                 self.response.write('your ID is {}<br />'.format(user.user_id))
                 self.response.write('your email is {}<br />'.format(user.email))
             elif result.error:
                 self.response.write('ERROR {}<br />'.format(result.error.message))
-    
-    
+        
     
     def callback(self, event):
         
@@ -109,7 +106,7 @@ class Login(webapp2.RequestHandler):
                 # fetch request from deserialized credentials
                 if event.provider.provider_name == 'facebook':
                     url = 'https://graph.facebook.com/me'
-                    rpc = Request(self.adapter, url, serialized).fetch()
+                    rpc = authomatic.async_fetch(self.adapter, url, serialized)
                     
                     resp = rpc.get_response()
                     self.response.write('Bio:<br /><br />')
