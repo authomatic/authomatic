@@ -1,6 +1,6 @@
-from simpleauth2 import Credentials, Request
-from simpleauth2.adapters.gaewebapp2 import GAEWebapp2Adapter
-from simpleauth2.adapters.gaewebapp2.openid import NDBOpenIDStore
+from authomatic import Credentials, Request
+from authomatic.adapters.gaewebapp2 import GAEWebapp2Adapter
+from authomatic.adapters.gaewebapp2.openid import NDBOpenIDStore
 import config
 import logging
 import sys

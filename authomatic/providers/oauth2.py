@@ -1,8 +1,8 @@
-from simpleauth2 import providers
-from simpleauth2.exceptions import CancellationError, FailureError, OAuth2Error
+from authomatic import providers
+from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 from urllib import urlencode
 import logging
-import simpleauth2.core as core
+import authomatic.core as core
 
 
 class OAuth2(providers.AuthorisationProvider):

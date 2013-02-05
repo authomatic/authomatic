@@ -72,7 +72,7 @@ def escape(s):
 def resolve_provider_class(class_):
     logging.info('resolve_provider_class({})'.format(class_))
     if type(class_) in (str, unicode):
-        # prepare path for simpleauth2.providers package
+        # prepare path for authomatic.providers package
         path = '.'.join([__package__, 'providers', class_])
         
         # try to import class by string from providers module or by fully qualified path

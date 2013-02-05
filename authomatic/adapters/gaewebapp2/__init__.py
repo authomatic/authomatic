@@ -6,8 +6,8 @@ import datetime
 import logging
 import urlparse
 
-import simpleauth2.core as core
-from simpleauth2 import adapters
+import authomatic.core as core
+from authomatic import adapters
 
 class GAEWebapp2AdapterError(Exception):
     pass
@@ -113,7 +113,7 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
     config = None
     
     def __init__(self, handler, config=None, session=None, session_secret=None,
-                 session_key='simpleauth2', openid_store=None):
+                 session_key='authomatic', openid_store=None):
         
         self.request = handler.request
         self.response = handler.response

@@ -2,11 +2,11 @@
 from __future__ import absolute_import
 from openid.consumer import consumer
 from openid.extensions import ax, pape, sreg
-from simpleauth2 import providers
-from simpleauth2.exceptions import FailureError, CancellationError, OpenIDError
+from authomatic import providers
+from authomatic.exceptions import FailureError, CancellationError, OpenIDError
 import datetime
 import logging
-import simpleauth2
+import authomatic
 from openid import oidutil
 
 

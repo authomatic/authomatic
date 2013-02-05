@@ -1,8 +1,8 @@
-from simpleauth2.providers import oauth1
+from authomatic.providers import oauth1
 import binascii
 import hashlib
 import hmac
-import simpleauth2
+import authomatic
 import urllib
 import urlparse
 from urllib import urlencode
@@ -83,9 +83,9 @@ class TestCreateSignature(SignatureSetupTeardown):
         
         normalized_qs = '1=1_value&10=10_value&11=11_value&a=a_value&b=b_value&c=c_value&x=x_value'
         
-        desired_base_string = '&'.join([simpleauth2.escape(self.method),
-                                        simpleauth2.escape('http://example.com/path'),
-                                        simpleauth2.escape(normalized_qs)])
+        desired_base_string = '&'.join([authomatic.escape(self.method),
+                                        authomatic.escape('http://example.com/path'),
+                                        authomatic.escape(normalized_qs)])
         
         params = [('realm', 'realm_value'),
                   ('oauth_signature', 'oauth_signature_value'),
@@ -107,7 +107,7 @@ class TestHMACSHA1Generator(SignatureSetupTeardown):
         consumer_secret = 'cs'
         token_secret = 'ts'
         
-        desired_key = simpleauth2.escape(consumer_secret) + '&' + simpleauth2.escape(token_secret)
+        desired_key = authomatic.escape(consumer_secret) + '&' + authomatic.escape(token_secret)
         
         assert oauth1.HMACSHA1Generator._create_key(consumer_secret, token_secret) == desired_key
     

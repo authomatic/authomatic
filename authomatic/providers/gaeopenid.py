@@ -1,8 +1,8 @@
 from google.appengine.api import users
-from simpleauth2 import providers
-from simpleauth2.exceptions import FailureError
+from authomatic import providers
+from authomatic.exceptions import FailureError
 import logging
-import simpleauth2.core as core
+import authomatic.core as core
 
 class GAEOpenID(providers.AuthenticationProvider):
     """OpenID provider based on google.appengine.api.users library."""

@@ -4,8 +4,8 @@ import logging
 import random
 import urlparse
 
-from simpleauth2.exceptions import ConfigError
-import simpleauth2.core
+from authomatic.exceptions import ConfigError
+import authomatic.core
 
 HTTP_METHODS = ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'CONNECT', 'PATCH')
 
@@ -26,7 +26,7 @@ def _login_decorator(func):
             else:
                 raise
         finally:
-            event = simpleauth2.core.LoginResult(provider, error)
+            event = authomatic.core.LoginResult(provider, error)
             if provider.user or error:
                 if provider.callback:
                     provider.callback(event)
@@ -140,7 +140,7 @@ class BaseProvider(object):
         
         if not self.user:
             self._log(logging.INFO, 'Creating user.')
-            self.user = simpleauth2.core.User(self, credentials=credentials)
+            self.user = authomatic.core.User(self, credentials=credentials)
         else:
             self._log(logging.INFO, 'Updating user.')
         
@@ -251,7 +251,7 @@ class AuthorisationProvider(BaseProvider):
     #===========================================================================
     
     def create_request(self, url, method='GET', content_parser=None, response_parser=None):       
-        return simpleauth2.core.Request(adapter=self.adapter,
+        return authomatic.core.Request(adapter=self.adapter,
                        url=url,
                        credentials=self.user.credentials,
                        method=method,
@@ -275,7 +275,7 @@ class AuthorisationProvider(BaseProvider):
                 
                 self.user = self._update_or_create_user(response.data)
                 
-                return simpleauth2.core.UserInfoResponse(response, self.user)
+                return authomatic.core.UserInfoResponse(response, self.user)
             
             self._user_info_request = self.create_request(self.user_info_url,
                                                           response_parser=response_parser)

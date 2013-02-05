@@ -3,7 +3,7 @@ import binascii
 import hashlib
 import hmac
 import random
-import simpleauth2
+import authomatic
 import time
 import urllib
 from _pyio import __metaclass__
@@ -88,7 +88,7 @@ class BaseAdapter(object):
     __metaclass__ = abc.ABCMeta
     
     def login(self, *args, **kwargs):
-        return simpleauth2.login(self,  *args, **kwargs)
+        return authomatic.login(self,  *args, **kwargs)
     
     
     def config(self):
@@ -152,14 +152,14 @@ class BaseAdapter(object):
     @abc.abstractmethod
     def response_parser(self, response, content_parser):
         """
-        A classproperty to convert platform specific fetch response to simpleauth2.Response.
+        A classproperty to convert platform specific fetch response to authomatic.Response.
         
         Must be staticmethod!
         
         :param response: result of platform specific fetch call
-        :param content_parser: should be passed to simpleauth2.Response constructor.
+        :param content_parser: should be passed to authomatic.Response constructor.
         
-        :returns: simpleauth2.Response
+        :returns: authomatic.Response
         """
     
     

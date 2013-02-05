@@ -1,12 +1,12 @@
-from simpleauth2 import providers
-from simpleauth2.exceptions import CancellationError, FailureError, OAuth1Error
+from authomatic import providers
+from authomatic.exceptions import CancellationError, FailureError, OAuth1Error
 from urllib import urlencode
 import abc
 import binascii
 import hashlib
 import hmac
 import logging
-import simpleauth2.core as core
+import authomatic.core as core
 import time
 import urllib
 import urlparse
