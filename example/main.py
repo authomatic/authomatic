@@ -45,10 +45,10 @@ class Login(webapp2.RequestHandler):
         
         
         self.adapter = GAEWebapp2Adapter(handler=self,
+                                         config=config.PROVIDERS,
                                          session_secret='abcd')
         
         result = self.adapter.login(provider_name,
-#                                    config=config.PROVIDERS,
                                     callback=self.callback,
                                     report_errors=False,
                                     logging_level=logging.DEBUG,
