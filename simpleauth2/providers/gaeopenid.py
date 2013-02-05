@@ -2,9 +2,9 @@ from google.appengine.api import users
 from simpleauth2 import providers
 from simpleauth2.exceptions import FailureError
 import logging
-import simpleauth2
+import simpleauth2.core as core
 
-class GAEOpenID(simpleauth2.providers.AuthenticationProvider):
+class GAEOpenID(providers.AuthenticationProvider):
     """OpenID provider based on google.appengine.api.users library."""
     
     @providers._login_decorator
@@ -33,10 +33,10 @@ class GAEOpenID(simpleauth2.providers.AuthenticationProvider):
             if user:
                 self._log(logging.INFO, 'Authentication successful.')
                 self._log(logging.INFO, 'Creating user.')
-                self.user = simpleauth2.User(self,
-                                             user_id=user.federated_identity(),
-                                             email=user.email(),
-                                             gae_user=user)
+                self.user = core.User(self,
+                                     user_id=user.federated_identity(),
+                                     email=user.email(),
+                                     gae_user=user)
                 # We're done
             else:
                 raise FailureError('Unable to authenticate user id!')

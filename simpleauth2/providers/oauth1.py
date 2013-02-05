@@ -1,12 +1,12 @@
 from simpleauth2 import providers
-from simpleauth2.exceptions import CancellationError, FailureError
+from simpleauth2.exceptions import CancellationError, FailureError, OAuth1Error
 from urllib import urlencode
 import abc
 import binascii
 import hashlib
 import hmac
 import logging
-import simpleauth2
+import simpleauth2.core as core
 import time
 import urllib
 import urlparse
@@ -40,7 +40,7 @@ def _normalize_params(params):
 
 
 def _join_by_ampersand(*args):
-    return '&'.join([simpleauth2.escape(i) for i in args])
+    return '&'.join([core.escape(i) for i in args])
 
 
 def _create_base_string(method, base, params):
@@ -152,7 +152,7 @@ class OAuth1(providers.AuthorisationProvider):
             if token:
                 params['oauth_token'] = token
             else:
-                raise simpleauth2.exceptions.OAuth1Error('Credentials with valid token are required to create User Authorization URL!')
+                raise OAuth1Error('Credentials with valid token are required to create User Authorization URL!')
         else:
             # signature needed
             if request_type == cls.REQUEST_TOKEN_REQUEST_TYPE:
@@ -161,7 +161,7 @@ class OAuth1(providers.AuthorisationProvider):
                     params['oauth_consumer_key'] = consumer_key
                     params['oauth_callback'] = callback
                 else:
-                    raise simpleauth2.exceptions.OAuth1Error('Credentials with valid consumer_key, consumer_secret and ' +\
+                    raise OAuth1Error('Credentials with valid consumer_key, consumer_secret and ' +\
                                                              'callback are required to create Request Token URL!')
                 
             elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
@@ -171,7 +171,7 @@ class OAuth1(providers.AuthorisationProvider):
                     params['oauth_consumer_key'] = consumer_key
                     params['oauth_verifier'] = verifier
                 else:
-                    raise simpleauth2.exceptions.OAuth1Error('Credentials with valid consumer_key, consumer_secret, token ' +\
+                    raise OAuth1Error('Credentials with valid consumer_key, consumer_secret, token ' +\
                                                              'and argument verifier are required to create Access Token URL!')
                 
             elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
@@ -180,7 +180,7 @@ class OAuth1(providers.AuthorisationProvider):
                     params['oauth_token'] = token
                     params['oauth_consumer_key'] = consumer_key
                 else:
-                    raise simpleauth2.exceptions.OAuth1Error('Credentials with valid consumer_key, consumer_secret, token and ' +\
+                    raise OAuth1Error('Credentials with valid consumer_key, consumer_secret, token and ' +\
                                                              'token_secret are required to create Protected Resources URL!')
             
             # Sign request.
@@ -218,7 +218,7 @@ class OAuth1(providers.AuthorisationProvider):
         
         # check required properties of credentials
         if not (credentials.token and credentials.token_secret and credentials.consumer_key and credentials.consumer_secret):
-            raise simpleauth2.exceptions.OAuth1Error('To access OAuth 1.0a resource you must provide credentials with valid access_token, ' + \
+            raise OAuth1Error('To access OAuth 1.0a resource you must provide credentials with valid access_token, ' + \
                                                      'access_token_secret, consumer_key and consumer_secret!')
         
         # create request elements
@@ -246,7 +246,7 @@ class OAuth1(providers.AuthorisationProvider):
     def reconstruct(cls, deserialized_tuple, cfg):
         provider_short_name, token, token_secret = deserialized_tuple
         
-        return simpleauth2.Credentials(token=token,
+        return core.Credentials(token=token,
                                        token_secret=token_secret,
                                        provider_type=cls.get_type(),
                                        provider_short_name=provider_short_name,
@@ -257,7 +257,7 @@ class OAuth1(providers.AuthorisationProvider):
     @providers._login_decorator
     def login(self, **kwargs):
         
-        credentials = simpleauth2.Credentials(provider=self)
+        credentials = core.Credentials(provider=self)
         
         # get request parameters from which we can determine the login phase
         denied = self.adapter.params.get('denied')

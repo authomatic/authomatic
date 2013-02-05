@@ -3,7 +3,6 @@ from simpleauth2.adapters.gaewebapp2 import GAEWebapp2Adapter
 from simpleauth2.adapters.gaewebapp2.openid import NDBOpenIDStore
 import config
 import logging
-import simpleauth2
 import sys
 import webapp2
 
@@ -42,8 +41,7 @@ class Home(webapp2.RequestHandler):
 class Login(webapp2.RequestHandler):
     
     def login(self, provider_name):
-        
-        
+                
         self.adapter = GAEWebapp2Adapter(handler=self,
                                          config=config.PROVIDERS,
                                          session_secret='abcd')

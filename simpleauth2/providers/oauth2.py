@@ -1,8 +1,8 @@
 from simpleauth2 import providers
-from simpleauth2.exceptions import CancellationError, FailureError
+from simpleauth2.exceptions import CancellationError, FailureError, OAuth2Error
 from urllib import urlencode
 import logging
-import simpleauth2
+import simpleauth2.core as core
 
 
 class OAuth2(providers.AuthorisationProvider):
@@ -38,7 +38,7 @@ class OAuth2(providers.AuthorisationProvider):
                 params['state'] = state
                 params['response_type'] = 'code'
             else:
-                raise simpleauth2.exceptions.OAuth2Error('Credentials with valid consumer_key and arguments redirect_uri, scope and ' + \
+                raise OAuth2Error('Credentials with valid consumer_key and arguments redirect_uri, scope and ' + \
                                                          'state are required to create OAuth 2.0 user authorisation request elements!')
         
         elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
@@ -50,7 +50,7 @@ class OAuth2(providers.AuthorisationProvider):
                 params['redirect_uri'] = redirect_uri
                 params['grant_type'] = 'authorization_code'
             else:
-                raise simpleauth2.exceptions.OAuth2Error('Credentials with valid token, consumer_key, consumer_secret and argument ' + \
+                raise OAuth2Error('Credentials with valid token, consumer_key, consumer_secret and argument ' + \
                                                          'redirect_uri are required to create OAuth 2.0 acces token request elements!')
         
         elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
@@ -59,7 +59,7 @@ class OAuth2(providers.AuthorisationProvider):
                 params['access_token'] = token
             else:
                 #TODO write error message
-                raise simpleauth2.exceptions.OAuth2Error('Credentials with valid token are required to create ' + \
+                raise OAuth2Error('Credentials with valid token are required to create ' + \
                                                          'OAuth 2.0 protected resources request elements!')
         
         params = urlencode(params)
@@ -86,7 +86,7 @@ class OAuth2(providers.AuthorisationProvider):
     def reconstruct(cls, deserialized_tuple, cfg):
         provider_short_name, token, expiration_date = deserialized_tuple
         
-        return simpleauth2.Credentials(token=token,
+        return core.Credentials(token=token,
                                        provider_type=cls.get_type(),
                                        provider_short_name=provider_short_name,
                                        expiration_date=expiration_date)
@@ -95,7 +95,7 @@ class OAuth2(providers.AuthorisationProvider):
     def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
         # check required properties of credentials
         if not credentials.token:
-            raise simpleauth2.exceptions.OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid token!')
+            raise OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid token!')
         
         # NEW
         request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
@@ -113,7 +113,7 @@ class OAuth2(providers.AuthorisationProvider):
     @providers._login_decorator
     def login(self, *args, **kwargs):
         
-        credentials = simpleauth2.Credentials(provider=self)
+        credentials = core.Credentials(provider=self)
         
         # get request parameters from which we can determine the login phase
         authorisation_code = self.adapter.params.get('code')

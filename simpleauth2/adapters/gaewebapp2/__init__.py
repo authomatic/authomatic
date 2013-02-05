@@ -1,12 +1,13 @@
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
-from simpleauth2 import Response, adapters
 from urllib import urlencode
 from webapp2_extras import sessions
 import datetime
 import logging
 import urlparse
 
+import simpleauth2.core as core
+from simpleauth2 import adapters
 
 class GAEWebapp2AdapterError(Exception):
     pass
@@ -164,7 +165,7 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
     
     @staticmethod
     def response_parser(response, content_parser):
-        return Response(status_code=response.status_code,
+        return core.Response(status_code=response.status_code,
                         headers=response.headers,
                         content=response.content,
                         content_parser=content_parser)
