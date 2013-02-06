@@ -251,7 +251,7 @@ class Google(OAuth2):
         user.user_id = data.get('id')
         return user
     
-    #TODO: rename to _parse_scope
+    
     def _scope_parser(self, scope):
         """
         Google has space-separated scopes

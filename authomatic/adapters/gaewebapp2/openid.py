@@ -6,7 +6,6 @@ import datetime
 import openid.store.interface
 
 
-#TODO: Move to separate module and pass it to the constructor of GAEWebapp2Adapter
 class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     serialized = ndb.StringProperty()
     expiration_date = ndb.DateTimeProperty()
@@ -33,8 +32,6 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     
     @classmethod
     def cleanupAssociations(cls):
-        
-        #TODO: Maybe it could be better as a background task
         
         # query for all expired
         query = cls.query(cls.expiration_date <= datetime.datetime.now())
