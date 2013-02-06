@@ -318,7 +318,7 @@ class OAuth1(providers.AuthorisationProvider):
             request_elements = self._create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
                                                              credentials=credentials,
                                                              url=self.request_token_url,
-                                                             callback=self.uri,
+                                                             callback=self.adapter.url,
                                                              nonce=self._generate_csrf())
             
             self._log(logging.INFO, 'Fetching for request token and token secret.')

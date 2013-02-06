@@ -65,9 +65,6 @@ class BaseProvider(object):
         self.logger.setLevel(logging_level)
         if logging_level in (None, False):
             self.logger.disabled = False
-        
-        #TODO: replace for self.adapter.url
-        self.uri = self.adapter.url
     
     
     #=======================================================================

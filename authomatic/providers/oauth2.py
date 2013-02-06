@@ -144,7 +144,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                              credentials=credentials,
                                                              url=self.access_token_url,
                                                              method='POST',
-                                                             redirect_uri=self.uri)
+                                                             redirect_uri=self.adapter.url)
             
             response = self._fetch(*request_elements)
             
@@ -198,7 +198,7 @@ class OAuth2(providers.AuthorisationProvider):
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                             credentials=credentials,
                                                             url=self.user_authorisation_url,
-                                                            redirect_uri=self.uri,
+                                                            redirect_uri=self.adapter.url,
                                                             scope=self._scope_parser(self.consumer.scope),
                                                             state=state)
             

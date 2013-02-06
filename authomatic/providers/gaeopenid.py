@@ -20,7 +20,7 @@ class GAEOpenID(providers.AuthenticationProvider):
         if self.identifier:
             self._log(logging.INFO, 'Starting OpenID authentication procedure.')
             
-            url = users.create_login_url(dest_url=self.uri, federated_identity=self.identifier)
+            url = users.create_login_url(dest_url=self.adapter.url, federated_identity=self.identifier)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(url))
             

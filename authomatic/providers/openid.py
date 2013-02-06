@@ -175,7 +175,7 @@ class OpenID(providers.AuthenticationProvider):
             #===================================================================
             
             self._log(logging.INFO, 'Writing OpenID realm HTML to the response.')
-            xrds_location = '{u}?{x}={x}'.format(u=self.uri, x=xrds_param)
+            xrds_location = '{u}?{x}={x}'.format(u=self.adapter.url, x=xrds_param)
             self.adapter.write(REALM_HTML.format(xrds_location=xrds_location, body=realm_body))
             
         elif xrds_request:
@@ -185,7 +185,7 @@ class OpenID(providers.AuthenticationProvider):
             
             self._log(logging.INFO, 'Writing XRDS XML document to the response.')
             self.adapter.set_header('Content-Type', 'application/xrds+xml')
-            self.adapter.write(XRDS_XML.format(return_to=self.uri))
+            self.adapter.write(XRDS_XML.format(return_to=self.adapter.url))
         
         elif self.adapter.params.get('openid.mode'):
             #===================================================================
@@ -195,7 +195,7 @@ class OpenID(providers.AuthenticationProvider):
             self._log(logging.INFO, 'Continuing OpenID authentication procedure after redirect.')
             
             # complete the authentication process
-            response = oi_consumer.complete(self.adapter.params, self.uri)            
+            response = oi_consumer.complete(self.adapter.params, self.adapter.url)            
             
             # on success
             if response.status == consumer.SUCCESS:
@@ -279,7 +279,7 @@ class OpenID(providers.AuthenticationProvider):
             auth_request.addExtension(pape.Request(pape_policies))           
             
             # prepare realm and return_to URLs
-            realm = return_to = '{u}?{r}={r}'.format(u=self.uri, r=realm_param) if use_realm else self.uri
+            realm = return_to = '{u}?{r}={r}'.format(u=self.adapter.url, r=realm_param) if use_realm else self.adapter.url
                         
             url = auth_request.redirectURL(realm, return_to)
             
