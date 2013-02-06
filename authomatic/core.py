@@ -26,6 +26,51 @@ except ImportError: # pragma: no cover
         import json
 
 
+class ReprMixin(object):
+    """
+    Provides __repr__() method with output ClassName(arg1=value, arg2=value).
+    
+    ignored are attributes
+    
+    * which values are considered false
+    * with leading underscore
+    * listed in _repr_ignore
+    
+    Values of attributes listed in _repr_sensitive will be replaced by '###'.
+    Values which repr() string is longer than 20 characters will be represented as ClassName(...)
+    """
+    
+    _repr_ignore = []
+    _repr_sensitive = []
+    
+    def __repr__(self):
+        
+        # get class name
+        name = self.__class__.__name__
+        
+        # construct keyword arguments
+        args = []
+        for k, v in self.__dict__.items():
+            # ignore
+            if v and not k.startswith('_') and not k in self._repr_ignore:
+                
+                # replace sensitive values
+                if k in self._repr_sensitive:
+                    v = '###'
+                
+                # handle too long values
+                if len(repr(v)) > 20:
+                    v = '{}(...)'.format(v.__class__.__name__)
+                else:
+                    v = repr(v)
+                
+                args.append('{}={}'.format(k, v))
+        
+        args = ', '.join(args)
+        
+        return '{}({})'.format(name, args)
+
+
 def login(adapter, provider_name, callback=None, report_errors=True,
           logging_level=20, scope=[], **kwargs):
     
@@ -113,14 +158,18 @@ def get_provider_settings_by_short_name(config, provider_id):
         raise Exception('Failed to get provider by id "{}"!'.format(provider_id))
 
 
-class Consumer(object):
+class Consumer(ReprMixin):
+    
+    _repr_sensitive = ('key', 'secret')
+    
     def __init__(self, key, secret, scope=None):
         self.key = key
         self.secret = secret
         self.scope = scope
 
 
-class User(object):
+class User(ReprMixin):
+    
     def __init__(self, provider, **kwargs):
         self.provider = provider
         self.credentials = kwargs.get('credentials')
@@ -147,7 +196,9 @@ class User(object):
         return self.provider.update_user()
 
 
-class Credentials(object):
+class Credentials(ReprMixin):
+    
+    _repr_sensitive = ('token', 'token_secret', 'consumer_key', 'consumer_secret')
     
     def __init__(self, **kwargs):
         
@@ -221,7 +272,8 @@ class Credentials(object):
             raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))
 
 
-class LoginResult(object):
+class LoginResult(ReprMixin):
+    
     def __init__(self, provider, error=None):
         self.provider = provider
         self.error = error
@@ -243,7 +295,7 @@ def json_qs_parser(body):
         return dict(urlparse.parse_qsl(body))
 
 
-class Response(object):
+class Response(ReprMixin):
     """
     Provides unified interface to results of different http request types
     """
@@ -262,8 +314,12 @@ class Response(object):
         return self._data
 
 
-class UserInfoResponse(object):
+class UserInfoResponse(ReprMixin):
+    
+    _repr_ignore = ('status_code', 'headers', 'content', 'data')
+    
     def __init__(self, response, user):
+        self.response = response
         self.status_code = response.status_code
         self.headers = response.headers
         self.content = response.content
@@ -271,13 +327,17 @@ class UserInfoResponse(object):
         self.user = user
 
 
-class Request(object):
+class Request(ReprMixin):
+    
+    _repr_ignore = ('rpc',)
+    
     def __init__(self, adapter, url, credentials, method='GET', response_parser=None, content_parser=None):
         self.adapter = adapter
         self.url = url
         self.method = method
         self.response_parser = response_parser
         self.content_parser = content_parser
+        
         self.rpc = None
         
         if type(credentials) == Credentials:

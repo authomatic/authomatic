@@ -74,6 +74,9 @@ class Login(webapp2.RequestHandler):
                     self.response.write('{}: {}<br />'.format(k, v))
         
         elif event.user:
+                
+            self.response.write('<br /><br />')
+            self.response.write('user = {}<br /><br />'.format(event.user))
             
             if event.user.credentials:
                 

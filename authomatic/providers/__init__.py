@@ -40,6 +40,8 @@ class BaseProvider(object):
     Abstract base class for all providers
     """
     
+    _repr_ignore = ('user',)
+    
     __metaclass__ = abc.ABCMeta
     
     def __init__(self, adapter, provider_name, consumer, callback=None,
@@ -64,6 +66,7 @@ class BaseProvider(object):
         if logging_level in (None, False):
             self.logger.disabled = False
         
+        #TODO: replace for self.adapter.url
         self.uri = self.adapter.url
     
     
