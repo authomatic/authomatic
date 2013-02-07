@@ -47,6 +47,7 @@ class Login(webapp2.RequestHandler):
                                     session_secret='abcd')
         
         result = authomatic.login(self.adapter, provider_name,
+                                  report_errors=False,
                                   callback=self.callback,
                                   oi_identifier=self.request.params.get('id'))
         

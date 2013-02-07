@@ -1,13 +1,14 @@
+from authomatic import adapters
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 from urllib import urlencode
 from webapp2_extras import sessions
+import authomatic.core as core
 import datetime
 import logging
+import pickle
 import urlparse
 
-import authomatic.core as core
-from authomatic import adapters
 
 class GAEWebapp2AdapterError(Exception):
     pass
@@ -77,14 +78,52 @@ class ProviderConfig(ndb.Model):
 
 class _GAESessionWrapper(adapters.BaseSession):
     
+    JSON_SERIALIZABLE_KEY = 'json_serializable'
+    
     def __init__(self, session, response):
         self.session = session
         self.response = response
     
     
+    def _from_json_serializable(self, value):
+        """
+        Detects if value was created by self._save_json_serializable() and
+        returns its original value if so or returns unchanged value.
+        
+        :param value:
+        """
+        
+        if isinstance(value, dict) and value.get(self.JSON_SERIALIZABLE_KEY):
+            return pickle.loads(value.get(self.JSON_SERIALIZABLE_KEY))
+        else:
+            return value
+    
+    
+    def _save_json_serializable(self, key, value):
+        """
+        Converts non JSON serializable objects to {JSON_SERIALIZABLE_KEY, pickle.dumps(value)} dictionary.
+        
+        The securecookie session backend complains that YadisServiceManager is not JSON serializable.
+        We go around this by pickling the value to a dictionary,
+        which we can identify by the key for unpickling when retrieved from session.
+        
+        :param key:
+        :param value:
+        """
+        
+        try:
+            self.session.__setitem__(key, value)
+            self.session.container.save_session(self.response)
+        except TypeError:
+            # if value is not JSON serializable pickle it to a JSON serializable dictionary
+            # with identifiable key.
+            json_serializable = {self.JSON_SERIALIZABLE_KEY: pickle.dumps(value)}
+            self.session.__setitem__(key, json_serializable)
+            self.session.container.save_session(self.response)
+    
+    
     def __setitem__(self, key, value):
-        self.session.__setitem__(key, value)
-        self.session.container.save_session(self.response)    
+        self._save_json_serializable(key, value)
         
     
     def __delitem__(self, key):
@@ -93,15 +132,11 @@ class _GAESessionWrapper(adapters.BaseSession):
     
     
     def __getitem__(self, key):
-        return self.session.__getitem__(key)
+        return self._from_json_serializable(self.session.__getitem__(key))
         
     
     def get(self, key):
-        return self.session.get(key)
-    
-    
-    def __getattr__(self, name):
-        return getattr(self.session, name)
+        return self._from_json_serializable(self.session.get(key))
     
 
 
@@ -136,8 +171,7 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
         if not session:
             # create default session
             session_store = sessions.SessionStore(handler.request, dict(secret_key=session_secret))
-            #FIXME: securecookie backend complains that <openid.yadis.manager.YadisServiceManager object at 0x9ea892c> is not JSON serializable
-            session = session_store.get_session(session_key, max_age=60, backend='memcache')
+            session = session_store.get_session(session_key, max_age=60, backend='securecookie')
         
         self.session = _GAESessionWrapper(session, self.response)
     
