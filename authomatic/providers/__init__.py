@@ -123,7 +123,7 @@ class BaseProvider(object):
     
     
     def _log(self, level, msg):
-        base = 'SimpleAuth:{}: '.format(self.__class__.__name__)
+        base = 'authomatic: {}: '.format(self.__class__.__name__)
         self.logger.log(level, base + msg)
         
     

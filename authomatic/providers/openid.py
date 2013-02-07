@@ -158,6 +158,7 @@ class OpenID(providers.AuthenticationProvider):
         pape_policies = kwargs.get('oi_pape', self.PAPE_POLICIES)
                 
         # Instantiate consumer
+        self.adapter.openid_store._log = self._log
         oi_consumer = consumer.Consumer(self.adapter.session, self.adapter.openid_store)        
         
         # handle realm and XRDS if there is only one query parameter
