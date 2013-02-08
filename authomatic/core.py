@@ -171,7 +171,9 @@ def import_string(import_name, silent=False):
             return __import__(import_name)
     except (ImportError, AttributeError), e:
         if not silent:
-            raise exceptions.ImportStringError(import_name, e), None, sys.exc_info()[2]
+            raise exceptions.ImportStringError('Import from string failed for path {}'.format(import_name),
+                                               str(e))
+#            raise exceptions.ImportStringError(import_name, e), None, sys.exc_info()[2]
 
 
 def get_provider_settings_by_short_name(config, provider_id):
