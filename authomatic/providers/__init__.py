@@ -47,7 +47,7 @@ class BaseProvider(object):
     def __init__(self, adapter, provider_name, consumer, callback=None,
                  short_name=None, report_errors=True, logging_level=logging.INFO,
                  csrf_generator=None):
-        self.provider_name = provider_name
+        self.name = provider_name
         self.consumer = consumer
         self.callback = callback
         self.adapter = adapter
@@ -106,7 +106,7 @@ class BaseProvider(object):
     #===========================================================================
     
     def _session_key(self, key):
-        return '{}:{}:{}'.format(self.session_prefix, self.provider_name, key)
+        return '{}:{}:{}'.format(self.session_prefix, self.name, key)
     
     
     def _session_set(self, key, value):
@@ -177,10 +177,10 @@ class BaseProvider(object):
     
     def _check_consumer(self):
         if not self.consumer.key:
-            raise ConfigError('Consumer key not specified for provider {}!'.format(self.provider_name))
+            raise ConfigError('Consumer key not specified for provider {}!'.format(self.name))
         
         if not self.consumer.secret:
-            raise ConfigError('Consumer secret not specified for provider {}!'.format(self.provider_name))
+            raise ConfigError('Consumer secret not specified for provider {}!'.format(self.name))
 
 
 class AuthorisationProvider(BaseProvider):

@@ -115,8 +115,8 @@ class OAuth1(providers.AuthorisationProvider):
         super(OAuth1, self).__init__(*args, **kwargs)
         
         # create keys under which oauth token and secret will be stored in session
-        self._oauth_token_key = self.provider_name + '_oauth_token'
-        self._oauth_token_secret_key = self.provider_name + '_oauth_token_secret'
+        self._oauth_token_key = self.name + '_oauth_token'
+        self._oauth_token_secret_key = self.name + '_oauth_token_secret'
         
         
     #===========================================================================

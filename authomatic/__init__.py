@@ -1,1 +1,1 @@
-from core import login, counter, short_name, async_fetch, fetch
+from core import login, short_name, async_fetch, fetch
