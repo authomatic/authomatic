@@ -73,6 +73,20 @@ class ReprMixin(object):
 
 def login(adapter, provider_name, callback=None, report_errors=True,
           logging_level=20, scope=[], **kwargs):
+    """
+    Launches a login procedure for specified provider and returns :class:`LoginResult`.
+    
+    :param adapter:
+        Framework specific adapter with the interface of :class:`BaseAdapter`.
+    :param provider_name:
+    :param callback:
+    :param report_errors:
+    :param logging_level:
+    :param scope:
+    
+    :returns:
+        :class:`LoginResult`.
+    """
     
     # retrieve required settings for current provider and raise exceptions if missing
     provider_settings = adapter.config.get(provider_name)
@@ -103,15 +117,26 @@ def login(adapter, provider_name, callback=None, report_errors=True,
 
 
 class Counter(object):
+    """
+    A simple counter to be used in the config to generate unique `short_name` values.
+    """
     
-    def __init__(self, start=1):
-        self.count = start
+    def __init__(self, start=0):
+        self._count = start
         
-    def __call__(self):
-        self.count += 1
-        return self.count
+    def count(self):
+        self._count += 1
+        return self._count
 
-counter = short_name = Counter()
+#: A simple counter to be used in the config to generate unique `short_name` values.
+_counter = Counter()
+
+def short_name():
+    """
+    A simple counter to be used in the config to generate unique `short_name` values.
+    """
+    
+    return _counter.count()
 
 
 def escape(s):
@@ -362,10 +387,37 @@ class Request(ReprMixin):
 
 
 def async_fetch(adapter, url, credentials, method='GET', content_parser=None):
+    """
+    Fetches protected resource asynchronously.
+    
+    :param adapter:
+        
+    :param url:
+        Url of the providers's protected resource.
+    :param credentials:
+        
+    :param method:
+    :param content_parser:
+    
+    :returns:
+        :class:`Request`
+    """
     return Request(adapter, url, credentials, method, content_parser).fetch()
 
 
 def fetch(adapter, url, credentials, method='GET', content_parser=None):
+    """
+    Fetches protected resource.
+    
+    Internally is it just a wrapper of
+    `async_fetch(adapter, url, credentials, method, content_parser).get_response()`.
+    
+    :param adapter:
+    :param url:
+    :param credentials:
+    :param method:
+    :param content_parser:
+    """
     return async_fetch(adapter, url, credentials, method, content_parser).get_response()
 
 
