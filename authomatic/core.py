@@ -14,12 +14,12 @@ import urllib
 import urlparse
 
 
-# taken from anyjson.py
+# Taken from anyjson.py
 try:
     import simplejson as json
-except ImportError: # pragma: no cover
+except ImportError:
     try:
-        # Try to import from django, should work on App Engine
+        # Try to import from django, should work on Google App Engine.
         from django.utils import simplejson as json
     except ImportError:
         # Should work for Python2.6 and higher.
@@ -28,20 +28,25 @@ except ImportError: # pragma: no cover
 
 class ReprMixin(object):
     """
-    Provides __repr__() method with output ClassName(arg1=value, arg2=value).
+    Provides __repr__() method with output *ClassName(arg1=value, arg2=value)*.
     
-    ignored are attributes
+    Ignored are attributes
     
-    * which values are considered false
-    * with leading underscore
-    * listed in _repr_ignore
+    * which values are considered false.
+    * with leading underscore.
+    * listed in _repr_ignore.
     
-    Values of attributes listed in _repr_sensitive will be replaced by '###'.
-    Values which repr() string is longer than 20 characters will be represented as ClassName(...)
+    Values of attributes listed in _repr_sensitive will be replaced by *###*.
+    Values which repr() string is longer than _repr_lenght_limit will be represented as *ClassName(...)*
     """
     
+    #: Iterable of attributes to be ignored.
     _repr_ignore = []
+    #: Iterable of attributes which value should not be visible.
     _repr_sensitive = []
+    #: `int` Values longer than this will be truncated to *ClassName(...)*.
+    _repr_lenght_limit = 20
+    
     
     def __repr__(self):
         
@@ -50,16 +55,19 @@ class ReprMixin(object):
         
         # construct keyword arguments
         args = []
+        
         for k, v in self.__dict__.items():
-            # ignore
+            
+            # ignore attributes with leading underscores and those listed in _repr_ignore
             if v and not k.startswith('_') and not k in self._repr_ignore:
                 
                 # replace sensitive values
                 if k in self._repr_sensitive:
                     v = '###'
                 
-                # handle too long values
-                if len(repr(v)) > 20:
+                # if repr is too long
+                if len(repr(v)) > self._repr_lenght_limit:
+                    # Truncate to ClassName(...)
                     v = '{}(...)'.format(v.__class__.__name__)
                 else:
                     v = repr(v)
@@ -72,20 +80,44 @@ class ReprMixin(object):
 
 
 def login(adapter, provider_name, callback=None, report_errors=True,
-          logging_level=20, scope=[], **kwargs):
+          logging_level=logging.DEBUG, scope=[], **kwargs):
     """
-    Launches a login procedure for specified provider and returns :class:`LoginResult`.
+    Launches a login procedure for specified provider_ and returns :class:`.LoginResult`.
+    
+    .. warning::
+        The method gets called twice by all providers_.
+        
+        #. First it returns nothing but redirects the **user** to the **provider**,
+           which redirects him back to the enclosing **request handler**.
+        #. Then it gets called again and it finally returns the :class:`.LoginResult`
+           or calls the function specified in the ``callback`` argument with
+           :class:`.LoginResult` passed as argument.
     
     :param adapter:
-        Framework specific adapter with the interface of :class:`BaseAdapter`.
+        Framework specific adapter_ with the interface of :class:`authomatic.adapters.BaseAdapter`.
     :param provider_name:
+        Name of the provider as specified in the keys of the config_.
     :param callback:
+        If specified the function will call the callback with :class:`.LoginResult`
+        passed as argument and will return nothing.
     :param report_errors:
+        If ``True`` errors and exceptions which occur during login will be caught and
+        accessible in the :class:`.LoginResult`.
+        If ``False`` errors and exceptions will not be handled.
     :param logging_level:
+        The library logs important events during the login procedure.
+        You can specify the desired logging level with the constants of the
+        `logging <http://docs.python.org/2/library/logging.html>`_ of Python standard library.
+        The main login procedure events have level ``INFO``, others like adapter database access
+        have level ``DEBUG``.
     :param scope:
+        List of strings specifying scope of the requested credentials as specified in
+        `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
+        Currently used only by providers_ which inherit from the
+        :class:`authomatic.providers.oauth2.OAuth2` class.
     
     :returns:
-        :class:`LoginResult`.
+        :obj:`None` or :class:`.LoginResult` instance.
     """
     
     # retrieve required settings for current provider and raise exceptions if missing
@@ -134,6 +166,39 @@ _counter = Counter()
 def short_name():
     """
     A simple counter to be used in the config to generate unique `short_name` values.
+    
+    :returns:
+        :class:`int`.
+     
+    Use it in the config_ like this:
+    ::
+    
+        import authomatic
+        
+        CONFIG = {
+            'facebook': {
+                 'short_name': authomatic.short_name(), # returns 1
+                 'class_name': authomatic.providers.oauth2.Facebook,
+                 'consumer_key': '##########',
+                 'consumer_secret': '##########',
+                 'scope': ['user_about_me', 'email']
+            },
+            'google': {
+                 'short_name': authomatic.short_name(), # returns 2
+                 'class_name': 'authomatic.providers.oauth2.Google',
+                 'consumer_key': '##########',
+                 'consumer_secret': '##########',
+                 'scope': ['https://www.googleapis.com/auth/userinfo.profile',
+                           'https://www.googleapis.com/auth/userinfo.email']
+            },
+            'windows_live': {
+                 'short_name': authomatic.short_name(), # returns 3
+                 'class_name': 'oauth2.WindowsLive',
+                 'consumer_key': '##########',
+                 'consumer_secret': '##########',
+                 'scope': ['wl.basic', 'wl.emails', 'wl.photos']
+            },
+        }
     """
     
     return _counter.count()
@@ -144,23 +209,28 @@ def escape(s):
     return urllib.quote(s.encode('utf-8'), safe='~')
 
 
-def resolve_provider_class(class_):
-    logging.info('resolve_provider_class({})'.format(class_))
-    if type(class_) in (str, unicode):
+def resolve_provider_class(class_name):
+    """
+    Returns a provider class. 
+    
+    :param class_name: :class:`string` or :class:`authomatic.providers.BaseProvider` subclass.
+    """
+    
+    if type(class_name) in (str, unicode):
         # prepare path for authomatic.providers package
-        path = '.'.join([__package__, 'providers', class_])
+        path = '.'.join([__package__, 'providers', class_name])
         
         # try to import class by string from providers module or by fully qualified path
-        return import_string(class_, True) or import_string(path)
+        return import_string(class_name, True) or import_string(path)
     else:
-        return class_
+        return class_name
 
 
 def import_string(import_name, silent=False):
     """
-    Imports an object based on a string in dotted notation.
+    Imports an object by string in dotted notation.
     
-    taken from webapp2.import_string()
+    taken `from webapp2.import_string() <http://webapp-improved.appspot.com/api/webapp2.html#webapp2.import_string>`_
     """
     
     try:
@@ -173,76 +243,137 @@ def import_string(import_name, silent=False):
         if not silent:
             raise exceptions.ImportStringError('Import from string failed for path {}'.format(import_name),
                                                str(e))
-#            raise exceptions.ImportStringError(import_name, e), None, sys.exc_info()[2]
 
 
-def get_provider_settings_by_short_name(config, provider_id):
+def get_provider_settings_by_short_name(config, short_name):
+    """
+    Returns the configuration for a specific **provider** based on it's ``short_name`` value
+    as specified in :ref:`config`.
+    
+    :param config: :ref:`config`.
+    :param short_name: Value of the short_name parameter in the :ref:`config` to search for.
+    """
+    
     for v in config.values():
-        if v.get('short_name') == provider_id:
+        if v.get('short_name') == short_name:
             return v
             break
     else:
-        raise Exception('Failed to get provider by id "{}"!'.format(provider_id))
+        raise Exception('Failed to get provider by id "{}"!'.format(short_name))
 
 
 class Consumer(ReprMixin):
+    """
+    Consumer abstraction.
+    """
     
     _repr_sensitive = ('key', 'secret')
     
     def __init__(self, key, secret, scope=None):
+        #: :class:`str` Consumer key issued for the consumer by the provider.
         self.key = key
+        #: :class:`str` Consumer secret issued for the consumer by the provider.
         self.secret = secret
+        #: :class:`list` List of strings specifying cope as described in the
+        #: `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
         self.scope = scope
 
 
 class User(ReprMixin):
+    """
+    Provides unified interface to selected **user** informations returned by different **providers**.
+    
+    .. note:: The format of property values may vary across providers.
+    """
     
     def __init__(self, provider, **kwargs):
+        #: A provider_ instance.
         self.provider = provider
+        
+        #: An :class:`.Credentials` instance.
         self.credentials = kwargs.get('credentials')
         
+        #: A :class:`dict` containing all the **user** information returned by the **provider**.
+        #: The structure differs across **providers**.
         self.raw_user_info = kwargs.get('raw_user_info')
+        
+        #: :class:`str` ID assigned to the **user** by the **provider**.
         self.user_id = kwargs.get('user_id')
+        #: :class:`str` User name e.g. *andrewpipkin*.
         self.username = kwargs.get('username')
+        #: :class:`str` Name e.g. *Andrew Pipkin*.
         self.name = kwargs.get('name')
+        #: :class:`str` First name e.g. *Andrew*.
         self.first_name = kwargs.get('first_name')
+        #: :class:`str` Last name e.g. *Pipkin*.
         self.last_name = kwargs.get('last_name')
-        self.link = kwargs.get('link')
-        self.gender = kwargs.get('gender')
-        self.timezone = kwargs.get('timezone')
-        self.locale = kwargs.get('locale')
-        self.email = kwargs.get('email')
-        self.picture = kwargs.get('picture')
-        self.birth_date = kwargs.get('birth_date')
+        #: :class:`str` Nickname e.g. *Andy*.
         self.nickname = kwargs.get('nickname')
+        #: :class:`str` Link URL.
+        self.link = kwargs.get('link')
+        #: :class:`str` Gender.
+        self.gender = kwargs.get('gender')
+        #: :class:`str` Timezone.
+        self.timezone = kwargs.get('timezone')
+        #: :class:`str` Locale.
+        self.locale = kwargs.get('locale')
+        #: :class:`str` E-mail.
+        self.email = kwargs.get('email')
+        #: :class:`str` Picture URL.
+        self.picture = kwargs.get('picture')
+        #: :class:`datetime.datetime()` birth date .
+        self.birth_date = kwargs.get('birth_date')
+        #: :class:`str` Country.
         self.country = kwargs.get('country')
+        #: :class:`str` Postal code.
         self.postal_code = kwargs.get('postal_code')
+        #: Instance of the Google App Engine Users API
+        #: `User <https://developers.google.com/appengine/docs/python/users/userclass>`_ class.
+        #: Only present when using the :class:`authomatic.providers.gaeopenid.GAEOpenID` provider.
         self.gae_user = kwargs.get('gae_user')
     
+    
     def update(self):
+        """
+        Updates the user info by fetching the **provider's** user info URL.
+        
+        :returns:
+            Updated instance of this class.
+        """
+        
         return self.provider.update_user()
 
 
 class Credentials(ReprMixin):
+    """Contains all neccessary informations to fetch **user's protected resources**."""
     
     _repr_sensitive = ('token', 'token_secret', 'consumer_key', 'consumer_secret')
     
     def __init__(self, **kwargs):
         
+        #: :class:`str` User **access token**.
         self.token = kwargs.get('token')
+        #: :class:`str` User **access token secret**.
         self.token_secret = kwargs.get('token_secret')
         
+        #: :class:`int` Lifetime of the **access token** in seconds.
         self.expires_in = kwargs.get('expires_in', 0)
+        #: :class:`datetime.datetime()` Expiration date of the **access token**.
         self.expiration_date = kwargs.get('expiration_date')
         
         provider = kwargs.get('provider')
         consumer = kwargs.get('consumer')
-        
+            
         if provider:
+            #: :class:`str` Provider name specified in the config_.
             self.provider_name = provider.name
+            #: :class:`str` Provider type e.g. ``"authomatic.providers.oauth2.OAuth2"``.
             self.provider_type = provider.get_type()
+            #: :class:`str` Provider short name specified in the config_.
             self.provider_short_name = provider.short_name
+            #: :class:`str` Consumer key specified in the config_.
             self.consumer_key = provider.consumer.key
+            #: :class:`str` Consumer secret specified in the config_.
             self.consumer_secret = provider.consumer.secret
         elif consumer:
             self.consumer_key = consumer.key
@@ -267,34 +398,69 @@ class Credentials(ReprMixin):
             self._expires_in = value
     
     def get_provider_class(self):
+        """
+        Returns the provider_ class specified in the config_.
+        
+        :returns:
+            :class:`authomatic.providers.BaseProvider` subclass.
+        """
+        
         return resolve_provider_class(self.provider_type)
     
+    
     def serialize(self):
+        """
+        Converts the credentials to a possibly minimal :class:`tuple` and serializes it
+        to a :class:`string` to be stored for later use.
         
-        # short_name will be the first item by all providers
+        :returns:
+            :class:`string`
+        """
+        
+        # Short_name must be the first item in the tuple by all providers.
         short_name = self.provider_short_name
+        # It always must be present!
         if short_name is None:
             raise exceptions.ConfigError('The provider config must have a "short_name" key set to a unique value to be able to serialize credentials!')
+        
+        # Get the other items for the tuple.
         rest = self.get_provider_class().to_tuple(self)
         
+        # Put it together.
         result = (short_name, ) + rest
         
+        # Pickle it.
         return pickle.dumps(result)
     
     
     @classmethod
     def deserialize(cls, adapter, serialized):
+        """
+        A *class method* which reconstructs credentials created by :meth:`serialize`.
+        
+        :param adapter:
+            An adapter_ instance used by :func:`authomatic.login` to get the credentials.
+        :param serialized:
+            :class:`string` The serialized credentials.
+        
+        :returns:
+            :class:`.Credentials`
+        """
         
         # Unpickle serialized
         deserialized = pickle.loads(serialized)
         
         try:
-            provider_id = deserialized[0]
+            # We need the short name to move forward.
+            short_name = deserialized[0]
             
-            cfg =  get_provider_settings_by_short_name(adapter.config, provider_id)
+            # Get provider config by short name.
+            cfg =  get_provider_settings_by_short_name(adapter.config, short_name)
             
+            # Get the provider class.
             ProviderClass = resolve_provider_class(cfg.get('class_name'))
             
+            # Deserialization is provider specific.
             return ProviderClass.reconstruct(deserialized, cfg)
                         
         except (TypeError, IndexError) as e:
@@ -302,11 +468,18 @@ class Credentials(ReprMixin):
 
 
 class LoginResult(ReprMixin):
+    """
+    Result of the :func:`authomatic.login` function.
+    """
     
     def __init__(self, provider, error=None):
+        #: A provider_ instance.
         self.provider = provider
+        #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = error
+        #: A :class:`.Consumer` instance.
         self.consumer = provider.consumer
+        #: A :class:`.User` instance.
         self.user = provider.user
 
 
@@ -326,7 +499,8 @@ def json_qs_parser(body):
 
 class Response(ReprMixin):
     """
-    Provides unified interface to results of different http request types
+    Response object returned by :func:`authomatic.fetch`,
+    :meth:`.Request.get_response` or :meth:`authomatic.adapters.RPC.get_response`.
     """
     
     def __init__(self, status_code, headers, content, content_parser=None):
@@ -357,6 +531,9 @@ class UserInfoResponse(ReprMixin):
 
 
 class Request(ReprMixin):
+    """
+    Request bla
+    """
     
     _repr_ignore = ('rpc',)
     
@@ -387,6 +564,9 @@ class Request(ReprMixin):
         return self
     
     def get_response(self):
+        """
+        Gets response
+        """
         return self.rpc.get_response()
 
 
@@ -421,6 +601,8 @@ def fetch(adapter, url, credentials, method='GET', content_parser=None):
     :param credentials:
     :param method:
     :param content_parser:
+    :returns:
+        :class:`.Response`
     """
     return async_fetch(adapter, url, credentials, method, content_parser).get_response()
 

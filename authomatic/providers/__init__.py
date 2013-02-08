@@ -166,7 +166,7 @@ class BaseProvider(object):
     def _user_parser(user, data):
         return user
     
-    
+    #TODO: Move to Oauth2
     def _scope_parser(self, scope):
         """
         Convert scope list to csv

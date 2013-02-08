@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>authomatic.core &mdash; Authomatic 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Authomatic 0.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="authomatic" href="../authomatic.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../authomatic.html" accesskey="U">authomatic</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for authomatic.core</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlencode</span>
+<span class="kn">import</span> <span class="nn">binascii</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">exceptions</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">providers</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">urlparse</span>
+
+
+<span class="c"># taken from anyjson.py</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">simplejson</span> <span class="kn">as</span> <span class="nn">json</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c"># pragma: no cover</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c"># Try to import from django, should work on App Engine</span>
+        <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">simplejson</span> <span class="k">as</span> <span class="n">json</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c"># Should work for Python2.6 and higher.</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+
+
+<div class="viewcode-block" id="ReprMixin"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.ReprMixin">[docs]</a><span class="k">class</span> <span class="nc">ReprMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides __repr__() method with output ClassName(arg1=value, arg2=value).</span>
+<span class="sd">    </span>
+<span class="sd">    ignored are attributes</span>
+<span class="sd">    </span>
+<span class="sd">    * which values are considered false</span>
+<span class="sd">    * with leading underscore</span>
+<span class="sd">    * listed in _repr_ignore</span>
+<span class="sd">    </span>
+<span class="sd">    Values of attributes listed in _repr_sensitive will be replaced by &#39;###&#39;.</span>
+<span class="sd">    Values which repr() string is longer than 20 characters will be represented as ClassName(...)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">_repr_sensitive</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="c"># get class name</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
+        
+        <span class="c"># construct keyword arguments</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c"># ignore</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repr_ignore</span><span class="p">:</span>
+                
+                <span class="c"># replace sensitive values</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repr_sensitive</span><span class="p">:</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="s">&#39;###&#39;</span>
+                
+                <span class="c"># handle too long values</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">:</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="s">&#39;{}(...)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;{}={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+        
+        <span class="n">args</span> <span class="o">=</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="s">&#39;{}({})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">report_errors</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+          <span class="n">logging_level</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    
+    <span class="c"># retrieve required settings for current provider and raise exceptions if missing</span>
+    <span class="n">provider_settings</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">provider_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">provider_settings</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;Provider name &quot;{}&quot; not specified!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_name</span><span class="p">))</span>
+    
+    <span class="n">provider_class</span> <span class="o">=</span> <span class="n">provider_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;class_name&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">provider_class</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;Class name not specified for provider {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_name</span><span class="p">))</span>
+        
+    <span class="c"># merge scopes from config and argument</span>
+    <span class="n">scope</span> <span class="o">=</span> <span class="n">provider_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;scope&#39;</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> <span class="n">scope</span>
+    
+    <span class="c"># create consumer</span>
+    <span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">provider_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;consumer_key&#39;</span><span class="p">),</span>
+                        <span class="n">provider_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;consumer_secret&#39;</span><span class="p">),</span>
+                        <span class="n">scope</span><span class="p">)</span>
+        
+    <span class="n">ProviderClass</span> <span class="o">=</span> <span class="n">resolve_provider_class</span><span class="p">(</span><span class="n">provider_class</span><span class="p">)</span>
+    
+    <span class="c"># instantiate provider class</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">ProviderClass</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">,</span> <span class="n">consumer</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">provider_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;short_name&#39;</span><span class="p">),</span>
+                             <span class="n">report_errors</span><span class="o">=</span><span class="n">report_errors</span><span class="p">,</span>
+                             <span class="n">logging_level</span><span class="o">=</span><span class="n">logging_level</span><span class="p">)</span>
+    
+    <span class="c"># return login result</span>
+    <span class="k">return</span> <span class="n">provider</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+</div>
+<span class="k">class</span> <span class="nc">Counter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">start</span>
+        
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span>
+
+<span class="n">counter</span> <span class="o">=</span> <span class="n">short_name</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="escape"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.escape">[docs]</a><span class="k">def</span> <span class="nf">escape</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Escape a URL including any /.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">safe</span><span class="o">=</span><span class="s">&#39;~&#39;</span><span class="p">)</span>
+
+</div>
+<span class="k">def</span> <span class="nf">resolve_provider_class</span><span class="p">(</span><span class="n">class_</span><span class="p">):</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;resolve_provider_class({})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">class_</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">class_</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
+        <span class="c"># prepare path for authomatic.providers package</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">__package__</span><span class="p">,</span> <span class="s">&#39;providers&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="p">])</span>
+        
+        <span class="c"># try to import class by string from providers module or by fully qualified path</span>
+        <span class="k">return</span> <span class="n">import_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span> <span class="ow">or</span> <span class="n">import_string</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">class_</span>
+
+
+<div class="viewcode-block" id="import_string"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.import_string">[docs]</a><span class="k">def</span> <span class="nf">import_string</span><span class="p">(</span><span class="n">import_name</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Imports an object based on a string in dotted notation.</span>
+<span class="sd">    </span>
+<span class="sd">    taken from webapp2.import_string()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">import_name</span><span class="p">:</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">import_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">__import__</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">[</span><span class="n">obj</span><span class="p">]),</span> <span class="n">obj</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">import_name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">),</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">silent</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ImportStringError</span><span class="p">(</span><span class="n">import_name</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span> <span class="bp">None</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+
+</div>
+<span class="k">def</span> <span class="nf">get_provider_settings_by_short_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">provider_id</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;short_name&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">provider_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;Failed to get provider by id &quot;{}&quot;!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_id</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="Consumer"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Consumer">[docs]</a><span class="k">class</span> <span class="nc">Consumer</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    
+    <span class="n">_repr_sensitive</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;key&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret</span> <span class="o">=</span> <span class="n">secret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="n">scope</span>
+
+</div>
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;credentials&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_user_info</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;raw_user_info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;user_id&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;username&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;first_name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;last_name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;link&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;gender&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timezone</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;timezone&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;locale&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;picture&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;birth_date&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;nickname&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;country&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;postal_code&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gae_user</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;gae_user&#39;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="User.update"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.User.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">update_user</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="Credentials"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials">[docs]</a><span class="k">class</span> <span class="nc">Credentials</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    
+    <span class="n">_repr_sensitive</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;token&#39;</span><span class="p">,</span> <span class="s">&#39;token_secret&#39;</span><span class="p">,</span> <span class="s">&#39;consumer_key&#39;</span><span class="p">,</span> <span class="s">&#39;consumer_secret&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;token&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_secret</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;token_secret&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">expires_in</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;expires_in&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expiration_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;expiration_date&#39;</span><span class="p">)</span>
+        
+        <span class="n">provider</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;provider&#39;</span><span class="p">)</span>
+        <span class="n">consumer</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;consumer&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">provider</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_type</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_short_name</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">short_name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_key</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">key</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">secret</span>
+        <span class="k">elif</span> <span class="n">consumer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_key</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">key</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">secret</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;provider_type&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_short_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;provider_short_name&#39;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;consumer_key&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;consumer_secret&#39;</span><span class="p">)</span>
+            
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">expires_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expires_in</span>
+    
+    <span class="nd">@expires_in.setter</span>
+<div class="viewcode-block" id="Credentials.expires_in"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials.expires_in">[docs]</a>    <span class="k">def</span> <span class="nf">expires_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">expiration_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_expires_in</span> <span class="o">=</span> <span class="n">value</span>
+    </div>
+<div class="viewcode-block" id="Credentials.get_provider_class"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials.get_provider_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_provider_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">resolve_provider_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provider_type</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="Credentials.serialize"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="c"># short_name will be the first item by all providers</span>
+        <span class="n">short_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_short_name</span>
+        <span class="k">if</span> <span class="n">short_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;The provider config must have a &quot;short_name&quot; key set to a unique value to be able to serialize credentials!&#39;</span><span class="p">)</span>
+        <span class="n">rest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_provider_class</span><span class="p">()</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">short_name</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rest</span>
+        
+        <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    
+    </div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Credentials.deserialize"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials.deserialize">[docs]</a>    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">serialized</span><span class="p">):</span>
+        
+        <span class="c"># Unpickle serialized</span>
+        <span class="n">deserialized</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">provider_id</span> <span class="o">=</span> <span class="n">deserialized</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="n">cfg</span> <span class="o">=</span>  <span class="n">get_provider_settings_by_short_name</span><span class="p">(</span><span class="n">adapter</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">provider_id</span><span class="p">)</span>
+            
+            <span class="n">ProviderClass</span> <span class="o">=</span> <span class="n">resolve_provider_class</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;class_name&#39;</span><span class="p">))</span>
+            
+            <span class="k">return</span> <span class="n">ProviderClass</span><span class="o">.</span><span class="n">reconstruct</span><span class="p">(</span><span class="n">deserialized</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
+                        
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">CredentialsError</span><span class="p">(</span><span class="s">&#39;Deserialization failed! Error: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+</div></div>
+<div class="viewcode-block" id="LoginResult"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.LoginResult">[docs]</a><span class="k">class</span> <span class="nc">LoginResult</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">consumer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">user</span>
+
+</div>
+<div class="viewcode-block" id="json_qs_parser"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.json_qs_parser">[docs]</a><span class="k">def</span> <span class="nf">json_qs_parser</span><span class="p">(</span><span class="n">body</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses response body from json or query string.</span>
+<span class="sd">    </span>
+<span class="sd">    :param body: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c"># try json first</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="c"># then query string</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">urlparse</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
+
+</div>
+<div class="viewcode-block" id="Response"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Response">[docs]</a><span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides unified interface to results of different http request types</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status_code</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span> <span class="o">=</span> <span class="n">content_parser</span> <span class="ow">or</span> <span class="n">json_qs_parser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="n">status_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">None</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+
+</div>
+<span class="k">class</span> <span class="nc">UserInfoResponse</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    
+    <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;status_code&#39;</span><span class="p">,</span> <span class="s">&#39;headers&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+
+
+<div class="viewcode-block" id="Request"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Request">[docs]</a><span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    
+    <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;rpc&#39;</span><span class="p">,)</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span> <span class="o">=</span> <span class="n">adapter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response_parser</span> <span class="o">=</span> <span class="n">response_parser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span> <span class="o">=</span> <span class="n">content_parser</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">rpc</span> <span class="o">=</span> <span class="bp">None</span>
+        
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span> <span class="o">==</span> <span class="n">Credentials</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">credentials</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">Credentials</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+        <span class="n">ProviderClass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">get_provider_class</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">rpc</span> <span class="o">=</span> <span class="n">ProviderClass</span><span class="o">.</span><span class="n">fetch_protected_resource</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="p">,</span>
+                                                          <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                                                          <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
+                                                          <span class="n">content_parser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span><span class="p">,</span>
+                                                          <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+                                                          <span class="n">response_parser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">response_parser</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span>
+    
+<div class="viewcode-block" id="Request.get_response"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Request.get_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rpc</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span>
+
+</div></div>
+<span class="k">def</span> <span class="nf">async_fetch</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Request</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">content_parser</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">async_fetch</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">content_parser</span><span class="p">)</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../authomatic.html" >authomatic</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Peter Hudec.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
