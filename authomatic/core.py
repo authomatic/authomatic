@@ -239,6 +239,7 @@ class Credentials(ReprMixin):
         consumer = kwargs.get('consumer')
         
         if provider:
+            self.provider_name = provider.name
             self.provider_type = provider.get_type()
             self.provider_short_name = provider.short_name
             self.consumer_key = provider.consumer.key
@@ -247,6 +248,7 @@ class Credentials(ReprMixin):
             self.consumer_key = consumer.key
             self.consumer_secret = consumer.secret
         else:
+            self.provider_name = kwargs.get('provider_name')
             self.provider_type = kwargs.get('provider_type')
             self.provider_short_name = kwargs.get('provider_short_name')
             
