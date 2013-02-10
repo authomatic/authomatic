@@ -110,7 +110,7 @@ class Login(webapp2.RequestHandler):
                 # fetch request from deserialized credentials
                 if event.provider.name == 'facebook':
                     url = 'https://graph.facebook.com/me'
-                    rpc = authomatic.async_fetch(self.adapter, url, serialized)
+                    rpc = authomatic.async_fetch(self.adapter, serialized, url)
                     
                     resp = rpc.get_response()
                     self.response.write('Bio:<br /><br />')

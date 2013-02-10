@@ -1,3 +1,5 @@
+#TODO: Add coding line to all modules
+# -*- coding: utf-8 -*-
 from urllib import urlencode
 import binascii
 import datetime
@@ -85,7 +87,7 @@ def login(adapter, provider_name, callback=None, report_errors=True,
     Launches a login procedure for specified provider_ and returns :class:`.LoginResult`.
     
     .. warning::
-        The method gets called twice by all providers_.
+        Currently the method gets called twice by all providers_. This may change in future.
         
         #. First it returns nothing but redirects the **user** to the **provider**,
            which redirects him back to the enclosing **request handler**.
@@ -407,7 +409,6 @@ class Credentials(ReprMixin):
         
         return resolve_provider_class(self.provider_type)
     
-    
     def serialize(self):
         """
         Converts the credentials to a possibly minimal :class:`tuple` and serializes it
@@ -504,22 +505,37 @@ class Response(ReprMixin):
     """
     
     def __init__(self, status_code, headers, content, content_parser=None):
+        #: :class:`callable` A callable that takes the :attr:`content` as argument,
+        #: parses it and returns the parsed data as :class:`dict`.
         self.content_parser = content_parser or json_qs_parser
+        #: :class:`int` HTTP status code of the response.
         self.status_code = status_code
+        #: :class:`dict` HTTP headers of the response.
         self.headers = headers
+        #: :class:`str` The response body
         self.content = content
         self._data = None
     
+    #TODO: Convert to method
     @property
     def data(self):
+        """
+        Parses the :attr:`content` with :attr:`content_parser`.
+        
+        :returns:
+            :class:`dict`
+        """
+        
         if not self._data:
             self._data = self.content_parser(self.content)
         return self._data
 
 
 class UserInfoResponse(ReprMixin):
-    
-    _repr_ignore = ('status_code', 'headers', 'content', 'data')
+    """
+    A wrapper around :class:`.Response` which adds the :attr:`user` property.
+    Returned by :meth:`authomatic.providers.AuthorisationProvider.fetch_user_info`.
+    """
     
     def __init__(self, response, user):
         self.response = response
@@ -527,31 +543,102 @@ class UserInfoResponse(ReprMixin):
         self.headers = response.headers
         self.content = response.content
         self.data = response.data
+        #: A :class:`.User` instance.
         self.user = user
 
 
 class Request(ReprMixin):
     """
-    Request bla
+    Abstraction of asynchronous request to **user's protected resources**.
+    
+    ::
+        
+        import webapp2
+        import authomatic
+        from authomatic.core import Request
+        from authomatic.adapters import gaewebapp2
+        
+        class Login(webapp2.RequestHandler):
+            
+            # accept both GET and POST HTTP methods
+            def anymethod(provider_name):
+                
+                # create adapter
+                adapter = gaewebapp2.GAEWebapp2Adapter(self)
+                # login by the provider
+                result = authomatic.login(adapter, provider_name)
+                
+                # if login was successfull and there are credentials
+                if result.user and result.user.credentials and result.user.credentials.provider_name == 'fb':
+                    
+                    # serialize credentials and store it to DB or elsewhere
+                    sc = result.user.credentials.serialize()
+                    
+                    # fetch multiple protected resources at once with serialized credentials
+                    request1 = Request(adapter, sc,
+                                       'https://graph.facebook.com/me/og.follows',
+                                       method='GET').fetch() # returns immediately
+                    request2 = Request(adapter, sc,
+                                       'https://graph.facebook.com/me/news.reads?article=http://example.com/article',
+                                       method='POST').fetch() # returns immediately
+                    request3 = Request(adapter, sc,
+                                       'https://graph.facebook.com/me/video.watches?video=http://example.com/video',
+                                       method='POST').fetch() # returns immediately
+                    
+                    # they all now run in parallel
+                    # so you can do other stuff while the requests fly through the Internet
+                    
+                    # collect results
+                    response1 = request1.get_response() # returns when it has result
+                    response2 = request2.get_response() # returns when it has result
+                    response3 = request3.get_response() # returns when it has result
+    
+    .. warning::
+        
+        Whether the request is really asynchronous depends on the implementation of the
+        :ref:`adapter's <adapter>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
+        
     """
     
     _repr_ignore = ('rpc',)
     
-    def __init__(self, adapter, url, credentials, method='GET', response_parser=None, content_parser=None):
-        self.adapter = adapter
-        self.url = url
-        self.method = method
-        self.response_parser = response_parser
-        self.content_parser = content_parser
+    def __init__(self, adapter, credentials, url, method='GET', response_parser=None, content_parser=None):
         
-        self.rpc = None
+        #: The same adapter_ instance which was used in the :func:`.login` function to get
+        #: the **user's** :class:`.Credentials`.
+        self.adapter = adapter
         
         if type(credentials) == Credentials:
+            #: :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
+            #: of the **user** whose **protected resource** we want to access.
             self.credentials = credentials
         elif type(credentials) == str:
             self.credentials = Credentials.deserialize(self.adapter, credentials)
+            
+        #: :class:`str` The URL of the protected resource.
+        #: Can contain query parameters.
+        self.url = url
+        
+        #: :class:`str` HTTP method of the request.
+        self.method = method
+        
+        #: :class:`callable` A callable that takes the platform specific ``fetch`` response object
+        #: as argument and converts it to a :class:`.Response` instance.
+        self.response_parser = response_parser
+        
+        #: :class:`callable` A callable as described in :attr:`.Response.content_parser`.
+        self.content_parser = content_parser
+        
+        self.rpc = None
     
-    def fetch(self):        
+    def fetch(self):
+        """
+        Fetches the protected resource and returns immediately.
+        
+        :returns:
+            :attr:`self`
+        """
+        
         ProviderClass = self.credentials.get_provider_class()
         
         self.rpc = ProviderClass.fetch_protected_resource(adapter=self.adapter,
@@ -565,46 +652,112 @@ class Request(ReprMixin):
     
     def get_response(self):
         """
-        Gets response
+        Waits for the result of :meth:`.fetch` and returns :class:`.Response`.
+        
+        :returns:
+            :class:`.Response`
         """
         return self.rpc.get_response()
 
 
-def async_fetch(adapter, url, credentials, method='GET', content_parser=None):
+def async_fetch(adapter, credentials, url, method='GET', content_parser=None):
     """
     Fetches protected resource asynchronously.
     
+    ::
+        
+        import webapp2
+        import authomatic
+        from authomatic.adapters import gaewebapp2
+        
+        class Login(webapp2.RequestHandler):
+            
+            # accept both GET and POST HTTP methods
+            def anymethod(provider_name):
+                
+                # create adapter
+                adapter = gaewebapp2.GAEWebapp2Adapter(self)
+                # login by the provider
+                result = authomatic.login(adapter, provider_name)
+                
+                # if login was successfull and there are credentials
+                if result.user and result.user.credentials and result.user.credentials.provider_name == 'fb':
+                    
+                    # serialize credentials and store it to DB or elsewhere
+                    sc = result.user.credentials.serialize()
+                    
+                    # fetch multiple protected resources at once with serialized credentials
+                    request1 = authomatic.async_fetch(adapter, sc,
+                                                      'https://graph.facebook.com/me/og.follows',
+                                                      method='GET').fetch() # returns immediately
+                    request2 = authomatic.async_fetch(adapter, sc,
+                                                      'https://graph.facebook.com/me/news.reads?article=http://example.com/article',
+                                                      method='POST').fetch() # returns immediately
+                    request3 = authomatic.async_fetch(adapter, sc,
+                                                      'https://graph.facebook.com/me/video.watches?video=http://example.com/video',
+                                                      method='POST').fetch() # returns immediately
+                    
+                    # they all now run in parallel
+                    # so you can do other stuff while the requests fly through the Internet
+                    
+                    # collect results
+                    response1 = request1.get_response() # returns when it has result
+                    response2 = request2.get_response() # returns when it has result
+                    response3 = request3.get_response() # returns when it has result
+    
+    .. warning::
+        
+        Whether the function is really asynchronous depends on the implementation of the
+        :ref:`adapter's <adapter>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
+    
     :param adapter:
-        
-    :param url:
-        Url of the providers's protected resource.
+        The same adapter_ instance which was used in the :func:`.login` function to get
+        the **user's** :class:`.Credentials`.
     :param credentials:
-        
+        :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
+        of the **user** whose **protected resource** we want to access.
+    :param url:
+        :class:`str` The URL of the protected resource.
+        Can contain query parameters.
     :param method:
+        :class:`str` HTTP method of the request.
     :param content_parser:
+        A :class:`callable` as described in :attr:`.Response.content_parser`.
     
     :returns:
-        :class:`Request`
+        :class:`.Request`
     """
-    return Request(adapter, url, credentials, method, content_parser).fetch()
+    return Request(adapter, credentials, url, method, content_parser).fetch()
 
 
-def fetch(adapter, url, credentials, method='GET', content_parser=None):
+def fetch(adapter, credentials, url, method='GET', content_parser=None):
     """
     Fetches protected resource.
     
-    Internally is it just a wrapper of
-    `async_fetch(adapter, url, credentials, method, content_parser).get_response()`.
+    .. note::
+        
+        Internally is it just a wrapper of
+        ``authomatic.async_fetch(adapter, url, credentials, method, content_parser).get_response()``.
+    
     
     :param adapter:
-    :param url:
+        The same adapter_ instance which was used in the :func:`.login` function to get
+        the **user's** :class:`.Credentials`.
     :param credentials:
+        :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
+        of the **user** whose **protected resource** we want to access.
+    :param url:
+        :class:`str` The URL of the protected resource.
+        Can contain query parameters.
     :param method:
+        :class:`str` HTTP method of the request.
     :param content_parser:
+        A :class:`callable` as described in :attr:`.Response.content_parser`.
+    
     :returns:
         :class:`.Response`
     """
-    return async_fetch(adapter, url, credentials, method, content_parser).get_response()
+    return async_fetch(adapter, credentials, url, method, content_parser).get_response()
 
 
 

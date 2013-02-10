@@ -252,8 +252,8 @@ class AuthorisationProvider(BaseProvider):
     
     def create_request(self, url, method='GET', content_parser=None, response_parser=None):       
         return authomatic.core.Request(adapter=self.adapter,
-                       url=url,
                        credentials=self.user.credentials,
+                       url=url,
                        method=method,
                        content_parser=content_parser,
                        response_parser=response_parser)

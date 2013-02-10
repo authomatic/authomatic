@@ -360,13 +360,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">None</span>
     
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Response.data"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Response.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
 
-</div>
-<span class="k">class</span> <span class="nc">UserInfoResponse</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+</div></div>
+<div class="viewcode-block" id="UserInfoResponse"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.UserInfoResponse">[docs]</a><span class="k">class</span> <span class="nc">UserInfoResponse</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
     
     <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;status_code&#39;</span><span class="p">,</span> <span class="s">&#39;headers&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">)</span>
     
@@ -378,7 +378,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
 
-
+</div>
 <div class="viewcode-block" id="Request"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Request">[docs]</a><span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
     
     <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;rpc&#39;</span><span class="p">,)</span>
@@ -397,7 +397,7 @@
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">Credentials</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span>
     
-    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+<div class="viewcode-block" id="Request.fetch"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Request.fetch">[docs]</a>    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
         <span class="n">ProviderClass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">get_provider_class</span><span class="p">()</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">rpc</span> <span class="o">=</span> <span class="n">ProviderClass</span><span class="o">.</span><span class="n">fetch_protected_resource</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="p">,</span>
@@ -408,7 +408,7 @@
                                                           <span class="n">response_parser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">response_parser</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="bp">self</span>
-    
+    </div>
 <div class="viewcode-block" id="Request.get_response"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Request.get_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rpc</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span>
 
