@@ -26,8 +26,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Authomatic 0.0.0 documentation" href="../index.html" />
-    <link rel="up" title="&lt;no title&gt;" href="index.html" />
-    <link rel="next" title="Adapters" href="adapters.html" />
+    <link rel="up" title="Reference" href="index.html" />
+    <link rel="next" title="Providers" href="providers.html" />
     <link rel="prev" title="Functions" href="functions.html" /> 
   </head>
   <body>
@@ -41,13 +41,13 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="adapters.html" title="Adapters"
+          <a href="providers.html" title="Providers"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="functions.html" title="Functions"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">&lt;no title&gt;</a> &raquo;</li> 
+          <li><a href="index.html" accesskey="U">Reference</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -427,47 +427,6 @@ Returned by <tt class="xref py py-meth docutils literal"><span class="pre">autho
 <dt id="authomatic.core.Request">
 <em class="property">class </em><tt class="descclassname">authomatic.core.</tt><tt class="descname">Request</tt><big>(</big><em>adapter</em>, <em>credentials</em>, <em>url</em>, <em>method='GET'</em>, <em>response_parser=None</em>, <em>content_parser=None</em><big>)</big><a class="reference internal" href="../_modules/authomatic/core.html#Request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstraction of asynchronous request to <strong>user&#8217;s protected resources</strong>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">webapp2</span>
-<span class="kn">import</span> <span class="nn">authomatic</span>
-<span class="kn">from</span> <span class="nn">authomatic.core</span> <span class="kn">import</span> <span class="n">Request</span>
-<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">gaewebapp2</span>
-
-<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
-    
-    <span class="c"># accept both GET and POST HTTP methods</span>
-    <span class="k">def</span> <span class="nf">anymethod</span><span class="p">(</span><span class="n">provider_name</span><span class="p">):</span>
-        
-        <span class="c"># create adapter</span>
-        <span class="n">adapter</span> <span class="o">=</span> <span class="n">gaewebapp2</span><span class="o">.</span><span class="n">GAEWebapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="c"># login by the provider</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">)</span>
-        
-        <span class="c"># if login was successfull and there are credentials</span>
-        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">==</span> <span class="s">&#39;fb&#39;</span><span class="p">:</span>
-            
-            <span class="c"># serialize credentials and store it to DB or elsewhere</span>
-            <span class="n">sc</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
-            
-            <span class="c"># fetch multiple protected resources at once with serialized credentials</span>
-            <span class="n">request1</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
-                               <span class="s">&#39;https://graph.facebook.com/me/og.follows&#39;</span><span class="p">,</span>
-                               <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span> <span class="c"># returns immediately</span>
-            <span class="n">request2</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
-                               <span class="s">&#39;https://graph.facebook.com/me/news.reads?article=http://example.com/article&#39;</span><span class="p">,</span>
-                               <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span> <span class="c"># returns immediately</span>
-            <span class="n">request3</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
-                               <span class="s">&#39;https://graph.facebook.com/me/video.watches?video=http://example.com/video&#39;</span><span class="p">,</span>
-                               <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span> <span class="c"># returns immediately</span>
-            
-            <span class="c"># they all now run in parallel</span>
-            <span class="c"># so you can do other stuff while the requests fly through the Internet</span>
-            
-            <span class="c"># collect results</span>
-            <span class="n">response1</span> <span class="o">=</span> <span class="n">request1</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span> <span class="c"># returns when it has result</span>
-            <span class="n">response2</span> <span class="o">=</span> <span class="n">request2</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span> <span class="c"># returns when it has result</span>
-            <span class="n">response3</span> <span class="o">=</span> <span class="n">request3</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span> <span class="c"># returns when it has result</span>
-</pre></div>
-</div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Whether the request is really asynchronous depends on the implementation of the
@@ -555,8 +514,8 @@ as argument and converts it to a <a class="reference internal" href="#authomatic
   <p class="topless"><a href="functions.html"
                         title="previous chapter">Functions</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="adapters.html"
-                        title="next chapter">Adapters</a></p>
+  <p class="topless"><a href="providers.html"
+                        title="next chapter">Providers</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/reference/classes.txt"
@@ -589,13 +548,13 @@ as argument and converts it to a <a class="reference internal" href="#authomatic
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="adapters.html" title="Adapters"
+          <a href="providers.html" title="Providers"
              >next</a> |</li>
         <li class="right" >
           <a href="functions.html" title="Functions"
              >previous</a> |</li>
         <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
-          <li><a href="index.html" >&lt;no title&gt;</a> &raquo;</li> 
+          <li><a href="index.html" >Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

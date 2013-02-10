@@ -551,48 +551,6 @@ class Request(ReprMixin):
     """
     Abstraction of asynchronous request to **user's protected resources**.
     
-    ::
-        
-        import webapp2
-        import authomatic
-        from authomatic.core import Request
-        from authomatic.adapters import gaewebapp2
-        
-        class Login(webapp2.RequestHandler):
-            
-            # accept both GET and POST HTTP methods
-            def anymethod(provider_name):
-                
-                # create adapter
-                adapter = gaewebapp2.GAEWebapp2Adapter(self)
-                # login by the provider
-                result = authomatic.login(adapter, provider_name)
-                
-                # if login was successfull and there are credentials
-                if result.user and result.user.credentials and result.user.credentials.provider_name == 'fb':
-                    
-                    # serialize credentials and store it to DB or elsewhere
-                    sc = result.user.credentials.serialize()
-                    
-                    # fetch multiple protected resources at once with serialized credentials
-                    request1 = Request(adapter, sc,
-                                       'https://graph.facebook.com/me/og.follows',
-                                       method='GET').fetch() # returns immediately
-                    request2 = Request(adapter, sc,
-                                       'https://graph.facebook.com/me/news.reads?article=http://example.com/article',
-                                       method='POST').fetch() # returns immediately
-                    request3 = Request(adapter, sc,
-                                       'https://graph.facebook.com/me/video.watches?video=http://example.com/video',
-                                       method='POST').fetch() # returns immediately
-                    
-                    # they all now run in parallel
-                    # so you can do other stuff while the requests fly through the Internet
-                    
-                    # collect results
-                    response1 = request1.get_response() # returns when it has result
-                    response2 = request2.get_response() # returns when it has result
-                    response3 = request3.get_response() # returns when it has result
-    
     .. warning::
         
         Whether the request is really asynchronous depends on the implementation of the
@@ -663,48 +621,7 @@ class Request(ReprMixin):
 def async_fetch(adapter, credentials, url, method='GET', content_parser=None):
     """
     Fetches protected resource asynchronously.
-    
-    ::
-        
-        import webapp2
-        import authomatic
-        from authomatic.adapters import gaewebapp2
-        
-        class Login(webapp2.RequestHandler):
-            
-            # accept both GET and POST HTTP methods
-            def anymethod(provider_name):
-                
-                # create adapter
-                adapter = gaewebapp2.GAEWebapp2Adapter(self)
-                # login by the provider
-                result = authomatic.login(adapter, provider_name)
-                
-                # if login was successfull and there are credentials
-                if result.user and result.user.credentials and result.user.credentials.provider_name == 'fb':
-                    
-                    # serialize credentials and store it to DB or elsewhere
-                    sc = result.user.credentials.serialize()
-                    
-                    # fetch multiple protected resources at once with serialized credentials
-                    request1 = authomatic.async_fetch(adapter, sc,
-                                                      'https://graph.facebook.com/me/og.follows',
-                                                      method='GET').fetch() # returns immediately
-                    request2 = authomatic.async_fetch(adapter, sc,
-                                                      'https://graph.facebook.com/me/news.reads?article=http://example.com/article',
-                                                      method='POST').fetch() # returns immediately
-                    request3 = authomatic.async_fetch(adapter, sc,
-                                                      'https://graph.facebook.com/me/video.watches?video=http://example.com/video',
-                                                      method='POST').fetch() # returns immediately
-                    
-                    # they all now run in parallel
-                    # so you can do other stuff while the requests fly through the Internet
-                    
-                    # collect results
-                    response1 = request1.get_response() # returns when it has result
-                    response2 = request2.get_response() # returns when it has result
-                    response3 = request3.get_response() # returns when it has result
-    
+       
     .. warning::
         
         Whether the function is really asynchronous depends on the implementation of the
@@ -736,7 +653,7 @@ def fetch(adapter, credentials, url, method='GET', content_parser=None):
     
     .. note::
         
-        Internally is it just a wrapper of
+        Internally it's just a wrapper of
         ``authomatic.async_fetch(adapter, url, credentials, method, content_parser).get_response()``.
     
     

@@ -26,7 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Authomatic 0.0.0 documentation" href="../index.html" />
-    <link rel="prev" title="Functions" href="functions.html" /> 
+    <link rel="up" title="Reference" href="index.html" />
+    <link rel="next" title="Functions" href="functions.html" />
+    <link rel="prev" title="Reference" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,8 +42,12 @@
              >modules</a> |</li>
         <li class="right" >
           <a href="functions.html" title="Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Reference"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Reference</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -52,7 +58,81 @@
             
   <div class="section" id="config">
 <h1>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h1>
-<p>Dictionary example</p>
+<p>The <strong>config</strong> is a dictionary of dictionaries where you specify
+which providers you want to use and how are they configured.
+It should be passed to the <a class="reference internal" href="adapters.html"><em>adapter&#8217;s</em></a> constructor.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><a class="reference internal" href="adapters.html"><em>Adapters</em></a> can provide other means of config creation.
+The <tt class="xref py py-class docutils literal"><span class="pre">authomatic.adapters.gaewebapp2.GAEWebapp2Adapter</span></tt> for instance
+provides a NDB datamodel as a default config.</p>
+</div>
+<p>The <strong>config</strong> must have following structure:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">authomatic</span>
+
+<span class="n">PROVIDERS</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="c">#===========================================================================</span>
+    <span class="c"># OAutht 2.0</span>
+    <span class="c">#===========================================================================</span>
+
+    <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="c"># Provider name.</span>
+         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="c"># Unique value used for serialization of credentials only needed by OAuth 2.0 and OAuth 1.0a.</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>  <span class="c"># Provider class</span>
+         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span> <span class="c"># Key assigned to consumer by the provider.</span>
+         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span> <span class="c"># Secret assigned to consumer by the provider.</span>
+         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="c"># List of requested permissions only needed by OAuth 2.0.</span>
+                   <span class="s">&#39;email&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s">&#39;google&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="c"># use authomatic.short_name() to generate this automatically</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="s">&#39;authomatic.providers.oauth2.Google&#39;</span><span class="p">,</span> <span class="c"># Can be a fully qualified string path.</span>
+         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
+         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
+         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;https://www.googleapis.com/auth/userinfo.profile&#39;</span><span class="p">,</span>
+                   <span class="s">&#39;https://www.googleapis.com/auth/userinfo.email&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s">&#39;windows_live&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="s">&#39;oauth2.WindowsLive&#39;</span><span class="p">,</span> <span class="c"># Can be a string path relative to the authomatic.providers module.</span>
+         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
+         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
+         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;wl.basic&#39;</span><span class="p">,</span>
+                   <span class="s">&#39;wl.emails&#39;</span><span class="p">,</span>
+                   <span class="s">&#39;wl.photos&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
+
+    <span class="c">#===========================================================================</span>
+    <span class="c"># OAuth 1.0a</span>
+    <span class="c">#===========================================================================</span>
+
+    <span class="s">&#39;twitter&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">oauth1</span><span class="o">.</span><span class="n">Twitter</span><span class="p">,</span>
+         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
+         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span>
+         <span class="c"># OAuth 1.0a doesn&#39;t need scope.</span>
+    <span class="p">},</span>
+
+    <span class="c">#===========================================================================</span>
+    <span class="c"># OpenID</span>
+    <span class="c">#===========================================================================</span>
+
+    <span class="s">&#39;oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span> <span class="c"># OpenID only needs this.</span>
+    <span class="p">},</span>
+    <span class="s">&#39;gaeoi&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">gaeopenid</span><span class="o">.</span><span class="n">GAEOpenID</span><span class="p">,</span> <span class="c"># Google App Engine based OpenID provider.</span>
+    <span class="p">},</span>
+    <span class="s">&#39;google_oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">Yahoo</span><span class="p">,</span> <span class="c"># OpenID provider with predefined identifier &#39;https://me.yahoo.com&#39;.</span>
+    <span class="p">},</span>
+    <span class="s">&#39;yahoo_oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">Google</span><span class="p">,</span> <span class="c"># OpenID provider with predefined identifier &#39;https://www.google.com/accounts/o8/id&#39;.</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -62,8 +142,11 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Reference</a></p>
+  <h4>Next topic</h4>
   <p class="topless"><a href="functions.html"
-                        title="previous chapter">Functions</a></p>
+                        title="next chapter">Functions</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/reference/config.txt"
@@ -97,8 +180,12 @@
              >modules</a> |</li>
         <li class="right" >
           <a href="functions.html" title="Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Reference"
              >previous</a> |</li>
-        <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
