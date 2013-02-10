@@ -104,7 +104,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>        
 
 
-<div class="viewcode-block" id="RPC"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.RPC">[docs]</a><span class="k">class</span> <span class="nc">RPC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="RPC"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.RPC">[docs]</a><span class="k">class</span> <span class="nc">RPC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Remote Procedure Call wrapper</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -122,7 +122,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">response_parser</span> <span class="o">=</span> <span class="n">response_parser</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span> <span class="o">=</span> <span class="n">content_parser</span>
     
-<div class="viewcode-block" id="RPC.get_response"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.RPC.get_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RPC.get_response"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.RPC.get_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns Response instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -130,7 +130,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rpc_object</span><span class="o">.</span><span class="n">get_result</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span><span class="p">)</span>
 
 </div></div>
-<div class="viewcode-block" id="BaseAdapter"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter">[docs]</a><span class="k">class</span> <span class="nc">BaseAdapter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter">[docs]</a><span class="k">class</span> <span class="nc">BaseAdapter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for platform adapters</span>
 <span class="sd">    </span>
@@ -143,7 +143,7 @@
         <span class="k">return</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     
     
-<div class="viewcode-block" id="BaseAdapter.config"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter.config"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Any object that has the get(&#39;provider-name&#39;) method which should return</span>
 <span class="sd">        a provider config dictionary.</span>
@@ -157,17 +157,17 @@
     
     </div>
     <span class="nd">@abc.abstractproperty</span>
-<div class="viewcode-block" id="BaseAdapter.url"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.url">[docs]</a>    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter.url"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.url">[docs]</a>    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Must return the url of the actual request including path but without query and fragment&quot;&quot;&quot;</span>
     
     </div>
     <span class="nd">@abc.abstractproperty</span>
-<div class="viewcode-block" id="BaseAdapter.params"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.params">[docs]</a>    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter.params"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.params">[docs]</a>    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Must return a dictionary of all request parameters of any HTTP method.&quot;&quot;&quot;</span>
     
     </div>
     <span class="nd">@abc.abstractmethod</span>
-<div class="viewcode-block" id="BaseAdapter.write"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter.write"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Must write specified value to response.</span>
 <span class="sd">        </span>
@@ -176,7 +176,7 @@
     
     </div>
     <span class="nd">@abc.abstractmethod</span>
-<div class="viewcode-block" id="BaseAdapter.set_header"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.set_header">[docs]</a>    <span class="k">def</span> <span class="nf">set_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter.set_header"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.set_header">[docs]</a>    <span class="k">def</span> <span class="nf">set_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Must set response headers to key = value.</span>
 <span class="sd">        </span>
@@ -186,7 +186,7 @@
     
     </div>
     <span class="nd">@abc.abstractmethod</span>
-<div class="viewcode-block" id="BaseAdapter.redirect"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.redirect">[docs]</a>    <span class="k">def</span> <span class="nf">redirect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter.redirect"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.redirect">[docs]</a>    <span class="k">def</span> <span class="nf">redirect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Must issue a http 302 redirect to the url</span>
 <span class="sd">        </span>
@@ -195,14 +195,14 @@
     
     </div>
     <span class="nd">@abc.abstractproperty</span>
-<div class="viewcode-block" id="BaseAdapter.session"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.session">[docs]</a>    <span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter.session"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.session">[docs]</a>    <span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A session abstraction with BaseSession or dict interface</span>
 <span class="sd">        &quot;&quot;&quot;</span>
     
     </div>
     <span class="nd">@abc.abstractmethod</span>
-<div class="viewcode-block" id="BaseAdapter.response_parser"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.response_parser">[docs]</a>    <span class="k">def</span> <span class="nf">response_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">content_parser</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter.response_parser"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.response_parser">[docs]</a>    <span class="k">def</span> <span class="nf">response_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">content_parser</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A classproperty to convert platform specific fetch response to authomatic.Response.</span>
 <span class="sd">        </span>
@@ -216,7 +216,7 @@
     
     </div>
     <span class="nd">@abc.abstractproperty</span>
-<div class="viewcode-block" id="BaseAdapter.openid_store"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.openid_store">[docs]</a>    <span class="k">def</span> <span class="nf">openid_store</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAdapter.openid_store"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.openid_store">[docs]</a>    <span class="k">def</span> <span class="nf">openid_store</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A permanent storage abstraction as described by the openid.store.interface.OpenIDStore interface</span>
 <span class="sd">        of the python-openid library http://pypi.python.org/pypi/python-openid/.</span>
@@ -226,7 +226,7 @@
     
     </div>
     <span class="nd">@abc.abstractmethod</span>
-<div class="viewcode-block" id="BaseAdapter.fetch_async"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.BaseAdapter.fetch_async">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{},</span> <span class="n">response_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>    
+<div class="viewcode-block" id="BaseAdapter.fetch_async"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.BaseAdapter.fetch_async">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{},</span> <span class="n">response_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>    
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Must return an instance of the RPC class.</span>
 <span class="sd">        </span>
@@ -239,7 +239,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
 </div></div>
-<div class="viewcode-block" id="WebObBaseAdapter"><a class="viewcode-back" href="../../reference/index.html#authomatic.adapters.WebObBaseAdapter">[docs]</a><span class="k">class</span> <span class="nc">WebObBaseAdapter</span><span class="p">(</span><span class="n">BaseAdapter</span><span class="p">):</span>
+<div class="viewcode-block" id="WebObBaseAdapter"><a class="viewcode-back" href="../../reference/adapters.html#authomatic.adapters.WebObBaseAdapter">[docs]</a><span class="k">class</span> <span class="nc">WebObBaseAdapter</span><span class="p">(</span><span class="n">BaseAdapter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract base class for adapters for WebOb based frameworks.</span>
 <span class="sd">    </span>

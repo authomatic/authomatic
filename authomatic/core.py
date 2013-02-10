@@ -84,10 +84,10 @@ class ReprMixin(object):
 def login(adapter, provider_name, callback=None, report_errors=True,
           logging_level=logging.DEBUG, scope=[], **kwargs):
     """
-    Launches a login procedure for specified provider_ and returns :class:`.LoginResult`.
+    Launches a login procedure for specified :doc:`provider <providers>` and returns :class:`.LoginResult`.
     
     .. warning::
-        Currently the method gets called twice by all providers_. This may change in future.
+        Currently the method gets called twice by all :doc:`providers <providers>`. This may change in future.
         
         #. First it returns nothing but redirects the **user** to the **provider**,
            which redirects him back to the enclosing **request handler**.
@@ -96,9 +96,9 @@ def login(adapter, provider_name, callback=None, report_errors=True,
            :class:`.LoginResult` passed as argument.
     
     :param adapter:
-        Framework specific adapter_ with the interface of :class:`authomatic.adapters.BaseAdapter`.
+        Framework specific :doc:`adapter <adapters>`.
     :param provider_name:
-        Name of the provider as specified in the keys of the config_.
+        Name of the provider as specified in the keys of the :doc:`config`.
     :param callback:
         If specified the function will call the callback with :class:`.LoginResult`
         passed as argument and will return nothing.
@@ -115,7 +115,7 @@ def login(adapter, provider_name, callback=None, report_errors=True,
     :param scope:
         List of strings specifying scope of the requested credentials as specified in
         `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
-        Currently used only by providers_ which inherit from the
+        Currently used only by :doc:`providers <providers>` which inherit from the
         :class:`authomatic.providers.oauth2.OAuth2` class.
     
     :returns:
@@ -172,7 +172,7 @@ def short_name():
     :returns:
         :class:`int`.
      
-    Use it in the config_ like this:
+    Use it in the :doc:`config` like this:
     ::
     
         import authomatic
@@ -289,7 +289,7 @@ class User(ReprMixin):
     """
     
     def __init__(self, provider, **kwargs):
-        #: A provider_ instance.
+        #: A :doc:`provider <providers>` instance.
         self.provider = provider
         
         #: An :class:`.Credentials` instance.
@@ -367,15 +367,15 @@ class Credentials(ReprMixin):
         consumer = kwargs.get('consumer')
             
         if provider:
-            #: :class:`str` Provider name specified in the config_.
+            #: :class:`str` Provider name specified in the :doc:`config`.
             self.provider_name = provider.name
             #: :class:`str` Provider type e.g. ``"authomatic.providers.oauth2.OAuth2"``.
             self.provider_type = provider.get_type()
-            #: :class:`str` Provider short name specified in the config_.
+            #: :class:`str` Provider short name specified in the :doc:`config`.
             self.provider_short_name = provider.short_name
-            #: :class:`str` Consumer key specified in the config_.
+            #: :class:`str` Consumer key specified in the :doc:`config`.
             self.consumer_key = provider.consumer.key
-            #: :class:`str` Consumer secret specified in the config_.
+            #: :class:`str` Consumer secret specified in the :doc:`config`.
             self.consumer_secret = provider.consumer.secret
         elif consumer:
             self.consumer_key = consumer.key
@@ -401,7 +401,7 @@ class Credentials(ReprMixin):
     
     def get_provider_class(self):
         """
-        Returns the provider_ class specified in the config_.
+        Returns the :doc:`provider <providers>` class specified in the :doc:`config`.
         
         :returns:
             :class:`authomatic.providers.BaseProvider` subclass.
@@ -440,7 +440,7 @@ class Credentials(ReprMixin):
         A *class method* which reconstructs credentials created by :meth:`serialize`.
         
         :param adapter:
-            An adapter_ instance used by :func:`authomatic.login` to get the credentials.
+            An :doc:`adapter <adapters>` used by :func:`authomatic.login` to get the credentials.
         :param serialized:
             :class:`string` The serialized credentials.
         
@@ -474,7 +474,7 @@ class LoginResult(ReprMixin):
     """
     
     def __init__(self, provider, error=None):
-        #: A provider_ instance.
+        #: A :doc:`provider <providers>` instance.
         self.provider = provider
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = error
@@ -596,7 +596,7 @@ class Request(ReprMixin):
     .. warning::
         
         Whether the request is really asynchronous depends on the implementation of the
-        :ref:`adapter's <adapter>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
+        :doc:`adapter's <adapters>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
         
     """
     
@@ -604,7 +604,7 @@ class Request(ReprMixin):
     
     def __init__(self, adapter, credentials, url, method='GET', response_parser=None, content_parser=None):
         
-        #: The same adapter_ instance which was used in the :func:`.login` function to get
+        #: The same :doc:`adapter <adapters>` instance which was used in the :func:`.login` function to get
         #: the **user's** :class:`.Credentials`.
         self.adapter = adapter
         
@@ -708,10 +708,10 @@ def async_fetch(adapter, credentials, url, method='GET', content_parser=None):
     .. warning::
         
         Whether the function is really asynchronous depends on the implementation of the
-        :ref:`adapter's <adapter>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
+        :doc:`adapter's <adapters>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
     
     :param adapter:
-        The same adapter_ instance which was used in the :func:`.login` function to get
+        The same :doc:`adapter <adapters>` instance which was used in the :func:`.login` function to get
         the **user's** :class:`.Credentials`.
     :param credentials:
         :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
@@ -741,7 +741,7 @@ def fetch(adapter, credentials, url, method='GET', content_parser=None):
     
     
     :param adapter:
-        The same adapter_ instance which was used in the :func:`.login` function to get
+        The same :doc:`adapter <adapters>` instance which was used in the :func:`.login` function to get
         the **user's** :class:`.Credentials`.
     :param credentials:
         :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`

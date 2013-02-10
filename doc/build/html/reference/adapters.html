@@ -1,0 +1,249 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Adapters &mdash; Authomatic 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Authomatic 0.0.0 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-authomatic.adapters">
+<span id="adapters"></span><h1>Adapters<a class="headerlink" href="#module-authomatic.adapters" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="authomatic.adapters.RPC">
+<em class="property">class </em><tt class="descclassname">authomatic.adapters.</tt><tt class="descname">RPC</tt><big>(</big><em>rpc_object</em>, <em>response_parser</em>, <em>content_parser</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#RPC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.RPC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remote Procedure Call wrapper</p>
+<dl class="method">
+<dt id="authomatic.adapters.RPC.get_response">
+<tt class="descname">get_response</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#RPC.get_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.RPC.get_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Response instance</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.adapters.BaseAdapter">
+<em class="property">class </em><tt class="descclassname">authomatic.adapters.</tt><tt class="descname">BaseAdapter</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for platform adapters</p>
+<p>Defines common interface for platform specific (non standard library) functionality.</p>
+<dl class="method">
+<dt id="authomatic.adapters.BaseAdapter.config">
+<tt class="descname">config</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any object that has the get(&#8216;provider-name&#8217;) method which should return
+a provider config dictionary.</p>
+<p>Ment to provide an alternative to a hardcoded config, i.e. Data model config.</p>
+<p>TODO: point to config section of future documentation?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.adapters.BaseAdapter.url">
+<tt class="descname">url</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return the url of the actual request including path but without query and fragment</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.adapters.BaseAdapter.params">
+<tt class="descname">params</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return a dictionary of all request parameters of any HTTP method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.adapters.BaseAdapter.write">
+<tt class="descname">write</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must write specified value to response.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.adapters.BaseAdapter.set_header">
+<tt class="descname">set_header</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.set_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.set_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must set response headers to key = value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> &#8211; </li>
+<li><strong>value</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.adapters.BaseAdapter.redirect">
+<tt class="descname">redirect</tt><big>(</big><em>url</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.redirect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.redirect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must issue a http 302 redirect to the url</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>url</strong> &#8211; string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.adapters.BaseAdapter.session">
+<tt class="descname">session</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.session" title="Permalink to this definition">¶</a></dt>
+<dd><p>A session abstraction with BaseSession or dict interface</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.adapters.BaseAdapter.response_parser">
+<tt class="descname">response_parser</tt><big>(</big><em>response</em>, <em>content_parser</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.response_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.response_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>A classproperty to convert platform specific fetch response to authomatic.Response.</p>
+<p>Must be staticmethod!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>response</strong> &#8211; result of platform specific fetch call</li>
+<li><strong>content_parser</strong> &#8211; should be passed to authomatic.Response constructor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">authomatic.Response</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.adapters.BaseAdapter.openid_store">
+<tt class="descname">openid_store</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.openid_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.openid_store" title="Permalink to this definition">¶</a></dt>
+<dd><p>A permanent storage abstraction as described by the openid.store.interface.OpenIDStore interface
+of the python-openid library <a class="reference external" href="http://pypi.python.org/pypi/python-openid/">http://pypi.python.org/pypi/python-openid/</a>.</p>
+<p>Required only by the OpenID provider</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.adapters.BaseAdapter.fetch_async">
+<tt class="descname">fetch_async</tt><big>(</big><em>url</em>, <em>payload=None</em>, <em>method='GET'</em>, <em>headers={}</em>, <em>response_parser=None</em>, <em>content_parser=None</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.fetch_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.fetch_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return an instance of the RPC class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>url</strong> &#8211; </li>
+<li><strong>payload</strong> &#8211; </li>
+<li><strong>method</strong> &#8211; </li>
+<li><strong>headers</strong> &#8211; </li>
+<li><strong>response_parser</strong> &#8211; </li>
+<li><strong>content_parser</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.adapters.WebObBaseAdapter">
+<em class="property">class </em><tt class="descclassname">authomatic.adapters.</tt><tt class="descname">WebObBaseAdapter</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#WebObBaseAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.WebObBaseAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract base class for adapters for WebOb based frameworks.</p>
+<p>See <a class="reference external" href="http://webob.org/">http://webob.org/</a></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/adapters.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Peter Hudec.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

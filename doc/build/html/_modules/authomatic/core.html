@@ -210,7 +210,7 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;Failed to get provider by id &quot;{}&quot;!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_id</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="Consumer"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Consumer">[docs]</a><span class="k">class</span> <span class="nc">Consumer</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="Consumer"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Consumer">[docs]</a><span class="k">class</span> <span class="nc">Consumer</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
     
     <span class="n">_repr_sensitive</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;key&#39;</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
     
@@ -220,7 +220,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="n">scope</span>
 
 </div>
-<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span>
@@ -244,11 +244,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;postal_code&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gae_user</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;gae_user&#39;</span><span class="p">)</span>
     
-<div class="viewcode-block" id="User.update"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.User.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.update"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.User.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">update_user</span><span class="p">()</span>
 
 </div></div>
-<div class="viewcode-block" id="Credentials"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials">[docs]</a><span class="k">class</span> <span class="nc">Credentials</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="Credentials"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Credentials">[docs]</a><span class="k">class</span> <span class="nc">Credentials</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
     
     <span class="n">_repr_sensitive</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;token&#39;</span><span class="p">,</span> <span class="s">&#39;token_secret&#39;</span><span class="p">,</span> <span class="s">&#39;consumer_key&#39;</span><span class="p">,</span> <span class="s">&#39;consumer_secret&#39;</span><span class="p">)</span>
     
@@ -284,15 +284,15 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expires_in</span>
     
     <span class="nd">@expires_in.setter</span>
-<div class="viewcode-block" id="Credentials.expires_in"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials.expires_in">[docs]</a>    <span class="k">def</span> <span class="nf">expires_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="Credentials.expires_in"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Credentials.expires_in">[docs]</a>    <span class="k">def</span> <span class="nf">expires_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">expiration_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_expires_in</span> <span class="o">=</span> <span class="n">value</span>
     </div>
-<div class="viewcode-block" id="Credentials.get_provider_class"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials.get_provider_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_provider_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Credentials.get_provider_class"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Credentials.get_provider_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_provider_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">resolve_provider_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provider_type</span><span class="p">)</span>
     </div>
-<div class="viewcode-block" id="Credentials.serialize"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Credentials.serialize"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Credentials.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         
         <span class="c"># short_name will be the first item by all providers</span>
         <span class="n">short_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_short_name</span>
@@ -306,7 +306,7 @@
     
     </div>
     <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="Credentials.deserialize"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Credentials.deserialize">[docs]</a>    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">serialized</span><span class="p">):</span>
+<div class="viewcode-block" id="Credentials.deserialize"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Credentials.deserialize">[docs]</a>    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">serialized</span><span class="p">):</span>
         
         <span class="c"># Unpickle serialized</span>
         <span class="n">deserialized</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span>
@@ -324,7 +324,7 @@
             <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">CredentialsError</span><span class="p">(</span><span class="s">&#39;Deserialization failed! Error: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
 </div></div>
-<div class="viewcode-block" id="LoginResult"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.LoginResult">[docs]</a><span class="k">class</span> <span class="nc">LoginResult</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="LoginResult"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.LoginResult">[docs]</a><span class="k">class</span> <span class="nc">LoginResult</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span>
@@ -347,7 +347,7 @@
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">urlparse</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
 
 </div>
-<div class="viewcode-block" id="Response"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Response">[docs]</a><span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="Response"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Response">[docs]</a><span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Provides unified interface to results of different http request types</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -360,13 +360,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">None</span>
     
     <span class="nd">@property</span>
-<div class="viewcode-block" id="Response.data"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Response.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Response.data"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Response.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
 
 </div></div>
-<div class="viewcode-block" id="UserInfoResponse"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.UserInfoResponse">[docs]</a><span class="k">class</span> <span class="nc">UserInfoResponse</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="UserInfoResponse"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.UserInfoResponse">[docs]</a><span class="k">class</span> <span class="nc">UserInfoResponse</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
     
     <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;status_code&#39;</span><span class="p">,</span> <span class="s">&#39;headers&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">)</span>
     
@@ -379,7 +379,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
 
 </div>
-<div class="viewcode-block" id="Request"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Request">[docs]</a><span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="Request"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Request">[docs]</a><span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
     
     <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;rpc&#39;</span><span class="p">,)</span>
     
@@ -397,7 +397,7 @@
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">Credentials</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span>
     
-<div class="viewcode-block" id="Request.fetch"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Request.fetch">[docs]</a>    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+<div class="viewcode-block" id="Request.fetch"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Request.fetch">[docs]</a>    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
         <span class="n">ProviderClass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">get_provider_class</span><span class="p">()</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">rpc</span> <span class="o">=</span> <span class="n">ProviderClass</span><span class="o">.</span><span class="n">fetch_protected_resource</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="p">,</span>
@@ -409,7 +409,7 @@
         
         <span class="k">return</span> <span class="bp">self</span>
     </div>
-<div class="viewcode-block" id="Request.get_response"><a class="viewcode-back" href="../../reference/index.html#authomatic.core.Request.get_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Request.get_response"><a class="viewcode-back" href="../../reference/classes.html#authomatic.core.Request.get_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rpc</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span>
 
 </div></div>

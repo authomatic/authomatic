@@ -8,15 +8,17 @@ Authomatic
 
 Bla
 
-Contents:
----------
+Usage
+-----
+
+bla bla
+
+Reference:
+----------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    
    reference/index.rst
-
-
-.. _Python: http://www.python.org/
 
    

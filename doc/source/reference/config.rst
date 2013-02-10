@@ -1,0 +1,4 @@
+Config
+------
+
+Dictionary example

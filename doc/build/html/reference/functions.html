@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Functions &mdash; Authomatic 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Authomatic 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="Reference" href="index.html" />
+    <link rel="next" title="Adapters" href="adapters.html" />
+    <link rel="prev" title="Config" href="config.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="adapters.html" title="Adapters"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="config.html" title="Config"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-authomatic">
+<span id="functions"></span><h1>Functions<a class="headerlink" href="#module-authomatic" title="Permalink to this headline">¶</a></h1>
+<p>This is the only interface that you should ever need to get <strong>user info</strong> and <strong>credentials</strong>
+from a <strong>provider</strong> and to make calls to their <strong>protected resources</strong>.</p>
+<dl class="function">
+<dt id="authomatic.login">
+<tt class="descclassname">authomatic.</tt><tt class="descname">login</tt><big>(</big><em>adapter</em>, <em>provider_name</em>, <em>callback=None</em>, <em>report_errors=True</em>, <em>logging_level=10</em>, <em>scope=</em><span class="optional">[</span><span class="optional">]</span>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#authomatic.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Launches a login procedure for specified <a class="reference internal" href="providers.html"><em>provider</em></a> and returns <a class="reference internal" href="index.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>Currently the method gets called twice by all <a class="reference internal" href="providers.html"><em>providers</em></a>. This may change in future.</p>
+<ol class="last arabic simple">
+<li>First it returns nothing but redirects the <strong>user</strong> to the <strong>provider</strong>,
+which redirects him back to the enclosing <strong>request handler</strong>.</li>
+<li>Then it gets called again and it finally returns the <a class="reference internal" href="index.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>
+or calls the function specified in the <tt class="docutils literal"><span class="pre">callback</span></tt> argument with
+<a class="reference internal" href="index.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a> passed as argument.</li>
+</ol>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>adapter</strong> &#8211; Framework specific <a class="reference internal" href="adapters.html"><em>adapter</em></a>.</li>
+<li><strong>provider_name</strong> &#8211; Name of the provider as specified in the keys of the <a class="reference internal" href="config.html"><em>Config</em></a>.</li>
+<li><strong>callback</strong> &#8211; If specified the function will call the callback with <a class="reference internal" href="index.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>
+passed as argument and will return nothing.</li>
+<li><strong>report_errors</strong> &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt> errors and exceptions which occur during login will be caught and
+accessible in the <a class="reference internal" href="index.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>.
+If <tt class="docutils literal"><span class="pre">False</span></tt> errors and exceptions will not be handled.</li>
+<li><strong>logging_level</strong> &#8211; The library logs important events during the login procedure.
+You can specify the desired logging level with the constants of the
+<a class="reference external" href="http://docs.python.org/2/library/logging.html">logging</a> of Python standard library.
+The main login procedure events have level <tt class="docutils literal"><span class="pre">INFO</span></tt>, others like adapter database access
+have level <tt class="docutils literal"><span class="pre">DEBUG</span></tt>.</li>
+<li><strong>scope</strong> &#8211; List of strings specifying scope of the requested credentials as specified in
+<a class="reference external" href="http://tools.ietf.org/html/rfc6749#section-3.3">OAuth 2.0 spec</a>.
+Currently used only by <a class="reference internal" href="providers.html"><em>providers</em></a> which inherit from the
+<tt class="xref py py-class docutils literal"><span class="pre">authomatic.providers.oauth2.OAuth2</span></tt> class.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt> or <a class="reference internal" href="index.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a> instance.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="authomatic.short_name">
+<tt class="descclassname">authomatic.</tt><tt class="descname">short_name</tt><big>(</big><big>)</big><a class="headerlink" href="#authomatic.short_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple counter to be used in the config to generate unique <cite>short_name</cite> values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>.</td>
+</tr>
+</tbody>
+</table>
+<p>Use it in the <a class="reference internal" href="config.html"><em>Config</em></a> like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">authomatic</span>
+
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">short_name</span><span class="p">(),</span> <span class="c"># returns 1</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>
+         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s">&#39;google&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">short_name</span><span class="p">(),</span> <span class="c"># returns 2</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="s">&#39;authomatic.providers.oauth2.Google&#39;</span><span class="p">,</span>
+         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;https://www.googleapis.com/auth/userinfo.profile&#39;</span><span class="p">,</span>
+                   <span class="s">&#39;https://www.googleapis.com/auth/userinfo.email&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s">&#39;windows_live&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">short_name</span><span class="p">(),</span> <span class="c"># returns 3</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="s">&#39;oauth2.WindowsLive&#39;</span><span class="p">,</span>
+         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;wl.basic&#39;</span><span class="p">,</span> <span class="s">&#39;wl.emails&#39;</span><span class="p">,</span> <span class="s">&#39;wl.photos&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="authomatic.async_fetch">
+<tt class="descclassname">authomatic.</tt><tt class="descname">async_fetch</tt><big>(</big><em>adapter</em>, <em>credentials</em>, <em>url</em>, <em>method='GET'</em>, <em>content_parser=None</em><big>)</big><a class="headerlink" href="#authomatic.async_fetch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches protected resource asynchronously.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">import</span> <span class="nn">authomatic</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">gaewebapp2</span>
+
+<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    
+    <span class="c"># accept both GET and POST HTTP methods</span>
+    <span class="k">def</span> <span class="nf">anymethod</span><span class="p">(</span><span class="n">provider_name</span><span class="p">):</span>
+        
+        <span class="c"># create adapter</span>
+        <span class="n">adapter</span> <span class="o">=</span> <span class="n">gaewebapp2</span><span class="o">.</span><span class="n">GAEWebapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c"># login by the provider</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">)</span>
+        
+        <span class="c"># if login was successfull and there are credentials</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">==</span> <span class="s">&#39;fb&#39;</span><span class="p">:</span>
+            
+            <span class="c"># serialize credentials and store it to DB or elsewhere</span>
+            <span class="n">sc</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+            
+            <span class="c"># fetch multiple protected resources at once with serialized credentials</span>
+            <span class="n">request1</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">async_fetch</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
+                                              <span class="s">&#39;https://graph.facebook.com/me/og.follows&#39;</span><span class="p">,</span>
+                                              <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span> <span class="c"># returns immediately</span>
+            <span class="n">request2</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">async_fetch</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
+                                              <span class="s">&#39;https://graph.facebook.com/me/news.reads?article=http://example.com/article&#39;</span><span class="p">,</span>
+                                              <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span> <span class="c"># returns immediately</span>
+            <span class="n">request3</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">async_fetch</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
+                                              <span class="s">&#39;https://graph.facebook.com/me/video.watches?video=http://example.com/video&#39;</span><span class="p">,</span>
+                                              <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span> <span class="c"># returns immediately</span>
+            
+            <span class="c"># they all now run in parallel</span>
+            <span class="c"># so you can do other stuff while the requests fly through the Internet</span>
+            
+            <span class="c"># collect results</span>
+            <span class="n">response1</span> <span class="o">=</span> <span class="n">request1</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span> <span class="c"># returns when it has result</span>
+            <span class="n">response2</span> <span class="o">=</span> <span class="n">request2</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span> <span class="c"># returns when it has result</span>
+            <span class="n">response3</span> <span class="o">=</span> <span class="n">request3</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span> <span class="c"># returns when it has result</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Whether the function is really asynchronous depends on the implementation of the
+<a class="reference internal" href="adapters.html"><em>adapter&#8217;s</em></a> <a class="reference internal" href="adapters.html#authomatic.adapters.BaseAdapter.fetch_async" title="authomatic.adapters.BaseAdapter.fetch_async"><tt class="xref py py-meth docutils literal"><span class="pre">fetch_async()</span></tt></a> method.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>adapter</strong> &#8211; The same <a class="reference internal" href="adapters.html"><em>adapter</em></a> instance which was used in the <a class="reference internal" href="#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">login()</span></tt></a> function to get
+the <strong>user&#8217;s</strong> <a class="reference internal" href="index.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
+<li><strong>credentials</strong> &#8211; <a class="reference internal" href="index.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a> or <a class="reference internal" href="index.html#authomatic.core.Credentials.serialize" title="authomatic.core.Credentials.serialize"><tt class="xref py py-meth docutils literal"><span class="pre">serialized</span> <span class="pre">credentials</span></tt></a>
+of the <strong>user</strong> whose <strong>protected resource</strong> we want to access.</li>
+<li><strong>url</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> The URL of the protected resource.
+Can contain query parameters.</li>
+<li><strong>method</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> HTTP method of the request.</li>
+<li><strong>content_parser</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">callable</span></tt> as described in <a class="reference internal" href="index.html#authomatic.core.Response.content_parser" title="authomatic.core.Response.content_parser"><tt class="xref py py-attr docutils literal"><span class="pre">Response.content_parser</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="index.html#authomatic.core.Request" title="authomatic.core.Request"><tt class="xref py py-class docutils literal"><span class="pre">Request</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="authomatic.fetch">
+<tt class="descclassname">authomatic.</tt><tt class="descname">fetch</tt><big>(</big><em>adapter</em>, <em>credentials</em>, <em>url</em>, <em>method='GET'</em>, <em>content_parser=None</em><big>)</big><a class="headerlink" href="#authomatic.fetch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches protected resource.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Internally is it just a wrapper of
+<tt class="docutils literal"><span class="pre">authomatic.async_fetch(adapter,</span> <span class="pre">url,</span> <span class="pre">credentials,</span> <span class="pre">method,</span> <span class="pre">content_parser).get_response()</span></tt>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>adapter</strong> &#8211; The same <a class="reference internal" href="adapters.html"><em>adapter</em></a> instance which was used in the <a class="reference internal" href="#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">login()</span></tt></a> function to get
+the <strong>user&#8217;s</strong> <a class="reference internal" href="index.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
+<li><strong>credentials</strong> &#8211; <a class="reference internal" href="index.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a> or <a class="reference internal" href="index.html#authomatic.core.Credentials.serialize" title="authomatic.core.Credentials.serialize"><tt class="xref py py-meth docutils literal"><span class="pre">serialized</span> <span class="pre">credentials</span></tt></a>
+of the <strong>user</strong> whose <strong>protected resource</strong> we want to access.</li>
+<li><strong>url</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> The URL of the protected resource.
+Can contain query parameters.</li>
+<li><strong>method</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> HTTP method of the request.</li>
+<li><strong>content_parser</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">callable</span></tt> as described in <a class="reference internal" href="index.html#authomatic.core.Response.content_parser" title="authomatic.core.Response.content_parser"><tt class="xref py py-attr docutils literal"><span class="pre">Response.content_parser</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="index.html#authomatic.core.Response" title="authomatic.core.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="config.html"
+                        title="previous chapter">Config</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="adapters.html"
+                        title="next chapter">Adapters</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/functions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="adapters.html" title="Adapters"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="config.html" title="Config"
+             >previous</a> |</li>
+        <li><a href="../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Peter Hudec.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
