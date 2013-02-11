@@ -49,7 +49,7 @@ class Login(webapp2.RequestHandler):
         result = authomatic.login(self.adapter, provider_name,
                                   report_errors=False,
                                   callback=self.callback,
-                                  oi_identifier=self.request.params.get('id'))
+                                  identifier=self.request.params.get('id'))
         
         if result:
             if result.user:

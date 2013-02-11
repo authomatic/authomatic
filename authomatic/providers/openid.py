@@ -81,20 +81,20 @@ class OpenID(providers.AuthenticationProvider):
         
         Accepts optional keyword arguments:
         
-        oi_identifier
+        identifier
         
-        oi_use_realm
-        oi_realm_body
-        oi_realm_param
-        oi_xrds_param
+        use_realm
+        realm_body
+        realm_param
+        xrds_param
         
-        oi_sreg
-        oi_sreg_required
+        sreg
+        sreg_required
         
-        oi_ax
-        oi_ax_required
+        ax
+        ax_required
         
-        oi_pape
+        pape
         """
         
         super(OpenID, self).__init__(*args, **kwargs)
@@ -102,25 +102,25 @@ class OpenID(providers.AuthenticationProvider):
         # handle keyword arguments
         
         # realm
-        self.use_realm = kwargs.get('oi_use_realm', True)
-        self.realm_body = kwargs.get('oi_realm_body', '')
-        self.realm_param = kwargs.get('oi_realm_param', 'realm')
-        self.xrds_param = kwargs.get('oi_xrds_param', 'xrds')
+        self.use_realm = kwargs.get('use_realm', True)
+        self.realm_body = kwargs.get('realm_body', '')
+        self.realm_param = kwargs.get('realm_param', 'realm')
+        self.xrds_param = kwargs.get('xrds_param', 'xrds')
         
         # sreg
-        self.sreg_optional_fields = list(kwargs.get('oi_sreg', self.SREG_FIELDS))
-        self.sreg_required_fields = kwargs.get('oi_sreg_required', [])
+        self.sreg_optional_fields = list(kwargs.get('sreg', self.SREG_FIELDS))
+        self.sreg_required_fields = kwargs.get('sreg_required', [])
         
         # ax
-        self.ax_schemas = list(kwargs.get('oi_ax', self.AX_SCHEMAS))
-        self.ax_required_schemas = list(kwargs.get('oi_ax_required', self.AX_SCHEMAS_REQUIRED))
+        self.ax_schemas = list(kwargs.get('ax', self.AX_SCHEMAS))
+        self.ax_required_schemas = list(kwargs.get('ax_required', self.AX_SCHEMAS_REQUIRED))
         # add required schemas to schemas if not allready there
         for i in self.ax_required_schemas:
             if i not in self.ax_schemas:
                 self.ax_schemas.append(i)
         
         # pape
-        self.pape_policies = kwargs.get('oi_pape', self.PAPE_POLICIES)
+        self.pape_policies = kwargs.get('pape', self.PAPE_POLICIES)
     
     
     @staticmethod

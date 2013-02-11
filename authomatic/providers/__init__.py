@@ -324,8 +324,8 @@ class AuthenticationProvider(BaseProvider):
     def __init__(self, *args, **kwargs):   
         super(AuthenticationProvider, self).__init__(*args, **kwargs)
         
-        # takes the oi_identifier argument into account only if the identifier is not hardcoded
-        self.identifier = self.identifier or kwargs.get('oi_identifier', '')
+        # takes the identifier keyword argument into account only if the identifier is not hardcoded
+        self.identifier = self.identifier or kwargs.get('identifier', '')
         
         
         
