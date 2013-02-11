@@ -7,28 +7,37 @@ import urlparse
 from authomatic.exceptions import ConfigError
 import authomatic.core
 
+
 def login_decorator(func):
     """
+    Decorator to be used by the :meth:`.BaseProvider.login`.
     
+    Provides mechanism for error reporting and returning result
+    which makes the :meth:`.BaseProvider.login` implementation cleaner.
     """
     
     def wrap(provider, *args, **kwargs):
         error = None
-        try:
-            func(provider, *args, **kwargs)
-        except Exception as e:
-            if provider.report_errors:
+        
+        if provider.report_errors:
+            # Catch and report errors.
+            try:
+                func(provider, *args, **kwargs)
+            except Exception as e:
                 error = e
                 provider._log(logging.ERROR, 'Reported supressed exception: {}!'.format(repr(error)))
-            else:
-                raise
-        finally:
-            event = authomatic.core.LoginResult(provider, error)
-            if provider.user or error:
-                if provider.callback:
-                    provider.callback(event)
-                    provider._log(logging.INFO, 'Procedure finished.')
-                return event
+        else:
+            # Don't handle errors.
+            func(provider, *args, **kwargs)
+        
+        # If there is user or error the login procedure has finished
+        if provider.user or error:
+            result = authomatic.core.LoginResult(provider, error)
+            if provider.callback:
+                provider.callback(result)
+                provider._log(logging.INFO, 'Procedure finished.')
+            return result
+    
     return wrap
 
 
