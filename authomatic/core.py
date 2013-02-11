@@ -82,7 +82,7 @@ class ReprMixin(object):
 
 
 def login(adapter, provider_name, callback=None, report_errors=True,
-          logging_level=logging.DEBUG, scope=[], **kwargs):
+          logging_level=logging.DEBUG, **kwargs):
     """
     Launches a login procedure for specified :doc:`provider <providers>` and returns :class:`.LoginResult`.
     
@@ -130,24 +130,24 @@ def login(adapter, provider_name, callback=None, report_errors=True,
     provider_class = provider_settings.get('class_name')
     if not provider_class:
         raise exceptions.ConfigError('Class name not specified for provider {}!'.format(provider_name))
-        
-    # merge scopes from config and argument
-    scope = provider_settings.get('scope', []) + scope
     
+    
+    #TODO: Move scope to OAuth2
     # create consumer
     consumer = Consumer(provider_settings.get('consumer_key'),
-                        provider_settings.get('consumer_secret'),
-                        scope)
+                        provider_settings.get('consumer_secret'))
         
     ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate provider class
     provider = ProviderClass(adapter, provider_name, consumer, callback, provider_settings.get('short_name'),
                              report_errors=report_errors,
-                             logging_level=logging_level)
+                             logging_level=logging_level,
+                             **kwargs)
     
+    #TODO: Move kwargs to constructor
     # return login result
-    return provider.login(**kwargs)
+    return provider.login()
 
 
 class Counter(object):
@@ -276,9 +276,6 @@ class Consumer(ReprMixin):
         self.key = key
         #: :class:`str` Consumer secret issued for the consumer by the provider.
         self.secret = secret
-        #: :class:`list` List of strings specifying cope as described in the
-        #: `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
-        self.scope = scope
 
 
 class User(ReprMixin):

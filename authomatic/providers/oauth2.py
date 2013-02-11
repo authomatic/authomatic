@@ -10,6 +10,14 @@ class OAuth2(providers.AuthorisationProvider):
     Base class for OAuth2 services
     """
     
+    def __init__(self, *args, **kwargs):
+        super(OAuth2, self).__init__(*args, **kwargs)
+        
+        #: :class:`list` List of strings specifying requested permissions as described in the
+        #: `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
+        # Scope from **kwargs overrides scope from config.
+        self.scope = kwargs.get('scope', []) or self.adapter.config.get(self.name, {}).get('scope', [])
+    
     #===========================================================================
     # Internal methods
     #===========================================================================
@@ -39,7 +47,7 @@ class OAuth2(providers.AuthorisationProvider):
                 params['response_type'] = 'code'
             else:
                 raise OAuth2Error('Credentials with valid consumer_key and arguments redirect_uri, scope and ' + \
-                                                         'state are required to create OAuth 2.0 user authorisation request elements!')
+                                  'state are required to create OAuth 2.0 user authorisation request elements!')
         
         elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
             # Access token request
@@ -111,7 +119,7 @@ class OAuth2(providers.AuthorisationProvider):
         return rpc
     
     @providers._login_decorator
-    def login(self, *args, **kwargs):
+    def login(self):
         
         credentials = core.Credentials(provider=self)
         
@@ -199,7 +207,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                             credentials=credentials,
                                                             url=self.user_authorisation_url,
                                                             redirect_uri=self.adapter.url,
-                                                            scope=self._scope_parser(self.consumer.scope),
+                                                            scope=self._scope_parser(self.scope),
                                                             state=state)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))

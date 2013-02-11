@@ -76,6 +76,53 @@ class OpenID(providers.AuthenticationProvider):
                      'http://schemas.openid.net/pape/policies/2007/06/multi-factor',
                      'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant']
     
+    def __init__(self, *args, **kwargs):
+        """
+        
+        Accepts optional keyword arguments:
+        
+        oi_identifier
+        
+        oi_use_realm
+        oi_realm_body
+        oi_realm_param
+        oi_xrds_param
+        
+        oi_sreg
+        oi_sreg_required
+        
+        oi_ax
+        oi_ax_required
+        
+        oi_pape
+        """
+        
+        super(OpenID, self).__init__(*args, **kwargs)
+        
+        # handle keyword arguments
+        
+        # realm
+        self.use_realm = kwargs.get('oi_use_realm', True)
+        self.realm_body = kwargs.get('oi_realm_body', '')
+        self.realm_param = kwargs.get('oi_realm_param', 'realm')
+        self.xrds_param = kwargs.get('oi_xrds_param', 'xrds')
+        
+        # sreg
+        self.sreg_optional_fields = list(kwargs.get('oi_sreg', self.SREG_FIELDS))
+        self.sreg_required_fields = kwargs.get('oi_sreg_required', [])
+        
+        # ax
+        self.ax_schemas = list(kwargs.get('oi_ax', self.AX_SCHEMAS))
+        self.ax_required_schemas = list(kwargs.get('oi_ax_required', self.AX_SCHEMAS_REQUIRED))
+        # add required schemas to schemas if not allready there
+        for i in self.ax_required_schemas:
+            if i not in self.ax_schemas:
+                self.ax_schemas.append(i)
+        
+        # pape
+        self.pape_policies = kwargs.get('oi_pape', self.PAPE_POLICIES)
+    
+    
     @staticmethod
     def _user_parser(user, data):
         user.first_name = data.get('ax', {}).get('http://openid.net/schema/namePerson/first')
@@ -110,61 +157,22 @@ class OpenID(providers.AuthenticationProvider):
     
     
     @providers._login_decorator
-    def login(self, *args, **kwargs):
+    def login(self):
         """
         Launches the OpenID authentication procedure.
         
-        Accepts optional keyword arguments:
-        
-        oi_identifier
-        
-        oi_use_realm
-        oi_realm_body
-        oi_realm_param
-        oi_xrds_param
-        
-        oi_sreg
-        oi_sreg_required
-        
-        oi_ax
-        oi_ax_required
-        
-        oi_pape
         """
         
-        super(OpenID, self).login(*args, **kwargs)
         
-        # handle keyword arguments
-        
-        # realm
-        use_realm = kwargs.get('oi_use_realm', True)
-        realm_body = kwargs.get('oi_realm_body', '')
-        realm_param = kwargs.get('oi_realm_param', 'realm')
-        xrds_param = kwargs.get('oi_xrds_param', 'xrds')
-        
-        # sreg
-        sreg_optional_fields = list(kwargs.get('oi_sreg', self.SREG_FIELDS))
-        sreg_required_fields = kwargs.get('oi_sreg_required', [])
-        
-        # ax
-        ax_schemas = list(kwargs.get('oi_ax', self.AX_SCHEMAS))
-        ax_required_schemas = list(kwargs.get('oi_ax_required', self.AX_SCHEMAS_REQUIRED))
-        # add required schemas to schemas if not allready there
-        for i in ax_required_schemas:
-            if i not in ax_schemas:
-                ax_schemas.append(i)
-        
-        # pape
-        pape_policies = kwargs.get('oi_pape', self.PAPE_POLICIES)
                 
         # Instantiate consumer
         self.adapter.openid_store._log = self._log
         oi_consumer = consumer.Consumer(self.adapter.session, self.adapter.openid_store)        
         
         # handle realm and XRDS if there is only one query parameter
-        if use_realm and len(self.adapter.params) == 1:
-            realm_request = self.adapter.params.get(realm_param)
-            xrds_request = self.adapter.params.get(xrds_param)                
+        if self.use_realm and len(self.adapter.params) == 1:
+            realm_request = self.adapter.params.get(self.realm_param)
+            xrds_request = self.adapter.params.get(self.xrds_param)                
         else:
             realm_request = None
             xrds_request = None
@@ -176,8 +184,8 @@ class OpenID(providers.AuthenticationProvider):
             #===================================================================
             
             self._log(logging.INFO, 'Writing OpenID realm HTML to the response.')
-            xrds_location = '{u}?{x}={x}'.format(u=self.adapter.url, x=xrds_param)
-            self.adapter.write(REALM_HTML.format(xrds_location=xrds_location, body=realm_body))
+            xrds_location = '{u}?{x}={x}'.format(u=self.adapter.url, x=self.xrds_param)
+            self.adapter.write(REALM_HTML.format(xrds_location=xrds_location, body=self.realm_body))
             
         elif xrds_request:
             #===================================================================
@@ -265,22 +273,28 @@ class OpenID(providers.AuthenticationProvider):
             
             # add SREG extension
             # we need to remove required fields from optional fields because addExtension then raises an error
-            sreg_optional_fields = [i for i in sreg_optional_fields if i not in sreg_required_fields]
-            auth_request.addExtension(sreg.SRegRequest(optional=sreg_optional_fields, required=sreg_required_fields))
+            self.sreg_optional_fields = [i for i in self.sreg_optional_fields if i not in self.sreg_required_fields]
+            auth_request.addExtension(sreg.SRegRequest(optional=self.sreg_optional_fields,
+                                                       required=self.sreg_required_fields))
             
             # add AX extension
             ax_request = ax.FetchRequest()
             # set AX schemas
-            for i in ax_schemas:
-                required = i in ax_required_schemas
+            for i in self.ax_schemas:
+                required = i in self.ax_required_schemas
                 ax_request.add(ax.AttrInfo(i, required=required))
             auth_request.addExtension(ax_request)
             
             # add PAPE extension
-            auth_request.addExtension(pape.Request(pape_policies))           
+            auth_request.addExtension(pape.Request(self.pape_policies))           
             
             # prepare realm and return_to URLs
-            realm = return_to = '{u}?{r}={r}'.format(u=self.adapter.url, r=realm_param) if use_realm else self.adapter.url
+            if self.use_realm:
+                realm = return_to = '{u}?{r}={r}'.format(u=self.adapter.url, r=self.realm_param)
+            else:
+                realm = return_to = self.adapter.url
+            
+#            realm = return_to = '{u}?{r}={r}'.format(u=self.adapter.url, r=self.realm_param) if self.use_realm else self.adapter.url
                         
             url = auth_request.redirectURL(realm, return_to)
             

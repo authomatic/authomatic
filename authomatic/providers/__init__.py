@@ -40,13 +40,14 @@ class BaseProvider(object):
     Abstract base class for all providers
     """
     
+    
     _repr_ignore = ('user',)
     
     __metaclass__ = abc.ABCMeta
     
     def __init__(self, adapter, provider_name, consumer, callback=None,
                  short_name=None, report_errors=True, logging_level=logging.INFO,
-                 csrf_generator=None):
+                 csrf_generator=None, **kwargs):
         self.name = provider_name
         self.consumer = consumer
         self.callback = callback
@@ -54,12 +55,14 @@ class BaseProvider(object):
         self.short_name = short_name
         self.report_errors = report_errors
         self._generate_csrf = csrf_generator or self._generate_csrf
-        self.session_prefix = 'simpleauth'
+        #TODO: move to constant
+        self.session_prefix = 'authomatic'
         
         self.user = None
         
         self._user_info_request = None
         
+        #TODO: Make logger private
         # setup logger
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging_level)
@@ -318,13 +321,8 @@ class AuthenticationProvider(BaseProvider):
     
     has_protected_resources = False
     
-    @abc.abstractmethod
-    def login(self, *args, **kwargs):
-        """
-        Launches the OpenID authentication procedure.
-        
-        Accepts oi_identifier optional parameter
-        """
+    def __init__(self, *args, **kwargs):   
+        super(AuthenticationProvider, self).__init__(*args, **kwargs)
         
         # takes the oi_identifier argument into account only if the identifier is not hardcoded
         self.identifier = self.identifier or kwargs.get('oi_identifier', '')

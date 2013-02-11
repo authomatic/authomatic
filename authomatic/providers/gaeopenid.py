@@ -8,14 +8,12 @@ class GAEOpenID(providers.AuthenticationProvider):
     """OpenID provider based on google.appengine.api.users library."""
     
     @providers._login_decorator
-    def login(self, *args, **kwargs):
+    def login(self):
         """
         Launches the OpenID authentication procedure.
         
         Accepts oi_identifier optional parameter
         """
-        
-        super(GAEOpenID, self).login(*args, **kwargs)
         
         if self.identifier:
             self._log(logging.INFO, 'Starting OpenID authentication procedure.')

@@ -255,7 +255,7 @@ class OAuth1(providers.AuthorisationProvider):
     
     
     @providers._login_decorator
-    def login(self, **kwargs):
+    def login(self):
         
         credentials = core.Credentials(provider=self)
         
