@@ -43,13 +43,15 @@ def login_decorator(func):
 
 class BaseProvider(object):
     """
-    Abstract base class for all providers
+    Abstract base class for all providers.
     """
     
     
     _repr_ignore = ('user',)
     
     __metaclass__ = abc.ABCMeta
+    
+    PREFIX = 'authomatic'
     
     def __init__(self, adapter, provider_name, consumer, callback=None,
                  short_name=None, report_errors=True, logging_level=logging.INFO,
@@ -61,8 +63,6 @@ class BaseProvider(object):
         self.short_name = short_name
         self.report_errors = report_errors
         self._generate_csrf = csrf_generator or self._generate_csrf
-        #TODO: move to constant
-        self.session_prefix = 'authomatic'
         
         self.user = None
         
@@ -115,7 +115,7 @@ class BaseProvider(object):
     #===========================================================================
     
     def _session_key(self, key):
-        return '{}:{}:{}'.format(self.session_prefix, self.name, key)
+        return '{}:{}:{}'.format(self.PREFIX, self.name, key)
     
     
     def _session_set(self, key, value):
