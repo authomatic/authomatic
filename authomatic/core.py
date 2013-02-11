@@ -139,9 +139,10 @@ def login(adapter, provider_name, callback=None, report_errors=True,
     ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate provider class
-    provider = ProviderClass(adapter, provider_name, consumer, callback,
+    provider = ProviderClass(adapter, provider_name, callback,
                              report_errors=report_errors,
                              logging_level=logging_level,
+                             consumer=consumer,
                              **kwargs)
     
     # return login result
@@ -473,8 +474,6 @@ class LoginResult(ReprMixin):
         self.provider = provider
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = error
-        #: A :class:`.Consumer` instance.
-        self.consumer = provider.consumer
         #: A :class:`.User` instance.
         self.user = provider.user
 

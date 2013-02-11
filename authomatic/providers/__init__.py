@@ -1,11 +1,14 @@
+from authomatic.exceptions import ConfigError
 import abc
+import authomatic.core
 import datetime
+import hashlib
 import logging
+import os
 import random
 import urlparse
+import uuid
 
-from authomatic.exceptions import ConfigError
-import authomatic.core
 
 
 def login_decorator(func):
@@ -51,39 +54,47 @@ class BaseProvider(object):
     
     __metaclass__ = abc.ABCMeta
     
-    PREFIX = 'authomatic'
-    
-    def __init__(self, adapter, provider_name, consumer, callback=None,
+    def __init__(self, adapter, provider_name, callback=None,
                  report_errors=True, logging_level=logging.INFO,
-                 csrf_generator=None, **kwargs):
+                 csrf_generator=None, prefix='authomatic', **kwargs):
         
         #: The :doc:`platform adapter <adapters>`.
         self.adapter = adapter
         
-        #: :class:`str` The provider name as specified in the :ref:`config`.
+        #: :class:`str` The provider name as specified in the :doc:`config`.
         self.name = provider_name
         
-        #: :class:`authomatic.core.Consumer`
-        self.consumer = consumer
-        
         #: :class:`callable` An optional callback called when the login procedure
-        #: is finished with :class:`authomatic.core.LoginResult` passed as argument.
+        #: is finished with :class:`.core.LoginResult` passed as argument.
         self.callback = callback
         
+        #: :class:`bool` If :literal:`True` exceptions which occur inside the :meth:`.login`
+        #: will be caught and reported in the :attr:`.core.LoginResult.error`.
         self.report_errors = report_errors
-        self.logging_level = logging_level
-        self._generate_csrf = csrf_generator or self._generate_csrf
         
+        #: :class:`int` The logging level treshold as specified in the standard Python
+        #: `logging library <http://docs.python.org/2/library/logging.html>`_.
+        #: If :literal:`None` or :literal:`Flase` there will be no logs. Default is ``logging.INFO``.
+        self.logging_level = logging_level
+        
+        #: A :class:`callable` that should generate a random string which is dificult to gues.
+        self.csrf_generator = csrf_generator or self.csrf_generator
+        
+        #: :class:`str` Prefix used by storing values to session.
+        self.prefix = prefix
+        
+        #: :class:`.core.User`.
         self.user = None
+        
         
         self._user_info_request = None
         
-        #TODO: Make logger private
-        # setup logger
-        self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging_level)
+        #TODO: Make _logger private
+        # setup _logger
+        self._logger = logging.getLogger(__name__)
+        self._logger.setLevel(logging_level)
         if logging_level in (None, False):
-            self.logger.disabled = False
+            self._logger.disabled = False
     
     
     #=======================================================================
@@ -92,7 +103,10 @@ class BaseProvider(object):
     
     @abc.abstractproperty
     def has_protected_resources(self):
-        pass
+        """
+        :class:`bool` Indicates whether the **provider** supports access to
+        **user's** protected resources.  
+        """
     
     
     #===========================================================================
@@ -102,9 +116,11 @@ class BaseProvider(object):
     @abc.abstractmethod
     def login(self):
         """
+        Launches the *login procedure* to get **user's credentials** from **provider**.
         
-        
-        Should be decorated with @_login_decorator
+        Should be decorated with :func:`.login_decorator`.
+        The *login procedure* is considered finished when the :attr:`.user` attribute is
+        not empty when the method runs out of it's flow or when there are errors.
         """
     
     #===========================================================================
@@ -113,10 +129,24 @@ class BaseProvider(object):
     
     @classmethod
     def get_type(cls):
+        """
+        Returns the provider type.
+        
+        :returns:
+            :class:`str` The full dotted path to base class e.g. :literal:`"authomatic.providers.oauth2.OAuth2"`. 
+        """
+        
         return cls.__module__ + '.' + cls.__bases__[0].__name__
     
     
     def update_user(self):
+        """
+        Updates and returns :attr:`.user`.
+        
+        :returns:
+            :class:`.core.User`
+        """
+        
         return self.user
     
     
@@ -125,39 +155,79 @@ class BaseProvider(object):
     #===========================================================================
     
     def _session_key(self, key):
-        return '{}:{}:{}'.format(self.PREFIX, self.name, key)
+        """
+        Generates session key string.
+        
+        :param key:
+            :class:`str` e.g. ``"authomatic:facebook:key"``
+        """
+        
+        return '{}:{}:{}'.format(self.prefix, self.name, key)
     
     
     def _session_set(self, key, value):
+        """Saves a value to session."""
+        
         self.adapter.session[self._session_key(key)] = value
     
     
     def _session_get(self, key):
+        """Retrieves a value from session."""
         return self.adapter.session[self._session_key(key)]
     
     
     @classmethod
-    def _generate_csrf(cls):
-        return str(random.randint(0, 100000000))
+    def csrf_generator(cls):
+        """
+        Generates CSRF token.
+        
+        Inspired by this article http://blog.ptsecurity.com/2012/10/random-number-security-in-python.html
+        
+        :returns:
+            :class:`str` Random unguessable string.
+        """
+        
+        return hashlib.md5(str(uuid.uuid4())).hexdigest()
     
     
     def _log(self, level, msg):
-        base = 'authomatic: {}: '.format(self.__class__.__name__)
-        self.logger.log(level, base + msg)
+        """
+        Logs a message.
+        
+        :param level:
+            :class:`int` Logging level as specified in the
+            `login module <http://docs.python.org/2/library/logging.html>`_ of
+            Python standard library.
+        :param msg:
+            :class:`str` The actual message.
+        """
+        
+        # Prefix each message with base
+        base = '{}: {}: '.format(self.prefix, self.__class__.__name__)
+        
+        self._logger.log(level, base + msg)
         
     
     def _fetch(self, *args, **kwargs):
+        """
+        Fetches a url.
+        
+        A wrapper around :meth:`.adapters.BaseAdapter.fetch_async` method.
+        """
+        
         return self.adapter.fetch_async(*args, **kwargs).get_response()
         
     
     def _update_or_create_user(self, data, credentials=None):
         """
-        Updates the properties of the self.user object.
+        Updates or creates :attr:`.user`.
         
-        Takes into account the self.user_info_mapping property.
+        :returns:
+            :class:`.core.User`
         """
         
         if not self.user:
+            # Create.
             self._log(logging.INFO, 'Creating user.')
             self.user = authomatic.core.User(self, credentials=credentials)
         else:
@@ -165,17 +235,17 @@ class BaseProvider(object):
         
         self.user.raw_user_info = data
         
-        # iterate over user properties
+        # Update.
         for key in self.user.__dict__.keys():
-            # exclude raw_user_info
+            # Exclude raw_user_info.
             if key is not 'raw_user_info':
-                # extract every data item whose key matches the user property name
-                # but only if it has a value
+                # Extract every data item whose key matches the user property name,
+                # but only if it has a value.
                 value = data.get(key)
                 if value:
                     setattr(self.user, key, value)
                     
-        # handle different structure of data by different providers
+        # Handle different structure of data by different providers.
         self.user = self._user_parser(self.user, data)
         
         return self.user    
@@ -183,23 +253,16 @@ class BaseProvider(object):
     
     @staticmethod
     def _user_parser(user, data):
+        """
+        Handles different structure of user info data by different providers.
+        
+        :param user:
+            :class:`.core.Users`
+        :param data:
+            :class:`dict` User info data returned by provider.
+        """
+        
         return user
-    
-    #TODO: Move to Oauth2
-    def _scope_parser(self, scope):
-        """
-        Convert scope list to csv
-        """
-        
-        return ','.join(scope) if scope else ''
-    
-    
-    def _check_consumer(self):
-        if not self.consumer.key:
-            raise ConfigError('Consumer key not specified for provider {}!'.format(self.name))
-        
-        if not self.consumer.secret:
-            raise ConfigError('Consumer secret not specified for provider {}!'.format(self.name))
 
 
 class AuthorisationProvider(BaseProvider):
@@ -213,6 +276,8 @@ class AuthorisationProvider(BaseProvider):
     def __init__(self, *args, **kwargs):
         super(AuthorisationProvider, self).__init__(*args, **kwargs)
         
+        #: :class:`.core.Consumer`
+        self.consumer = kwargs.get('consumer')
         self.short_name = self.adapter.config.get(self.name, {}).get('short_name')
     
     #===========================================================================
@@ -309,6 +374,20 @@ class AuthorisationProvider(BaseProvider):
     #===========================================================================
     # Internal methods
     #===========================================================================
+    
+    
+    #TODO: Move to AuthorisationProvider
+    def _check_consumer(self):
+        """
+        Validates the :attr:`.consumer`.
+        """
+        
+        if not self.consumer.key:
+            raise ConfigError('Consumer key not specified for provider {}!'.format(self.name))
+        
+        if not self.consumer.secret:
+            raise ConfigError('Consumer secret not specified for provider {}!'.format(self.name))
+    
     
     @staticmethod
     def _split_url(url):
