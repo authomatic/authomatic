@@ -156,7 +156,7 @@ class OpenID(providers.AuthenticationProvider):
         return user
     
     
-    @providers._login_decorator
+    @providers.login_decorator
     def login(self):
         """
         Launches the OpenID authentication procedure.

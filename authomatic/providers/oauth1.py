@@ -254,7 +254,7 @@ class OAuth1(providers.AuthorisationProvider):
                                        consumer_secret=cfg.get('consumer_secret'))
     
     
-    @providers._login_decorator
+    @providers.login_decorator
     def login(self):
         
         credentials = core.Credentials(provider=self)

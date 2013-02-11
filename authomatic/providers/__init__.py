@@ -7,10 +7,7 @@ import urlparse
 from authomatic.exceptions import ConfigError
 import authomatic.core
 
-HTTP_METHODS = ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'CONNECT', 'PATCH')
-
-
-def _login_decorator(func):
+def login_decorator(func):
     """
     
     """

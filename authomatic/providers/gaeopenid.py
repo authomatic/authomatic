@@ -7,7 +7,7 @@ import authomatic.core as core
 class GAEOpenID(providers.AuthenticationProvider):
     """OpenID provider based on google.appengine.api.users library."""
     
-    @providers._login_decorator
+    @providers.login_decorator
     def login(self):
         """
         Launches the OpenID authentication procedure.

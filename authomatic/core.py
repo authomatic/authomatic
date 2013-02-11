@@ -112,11 +112,10 @@ def login(adapter, provider_name, callback=None, report_errors=True,
         `logging <http://docs.python.org/2/library/logging.html>`_ of Python standard library.
         The main login procedure events have level ``INFO``, others like adapter database access
         have level ``DEBUG``.
-    :param scope:
-        List of strings specifying scope of the requested credentials as specified in
-        `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
-        Currently used only by :doc:`providers <providers>` which inherit from the
-        :class:`authomatic.providers.oauth2.OAuth2` class.
+        
+    .. note::
+        
+        Accepts other :doc:`provider <providers>` specific keyword arguments.
     
     :returns:
         :obj:`None` or :class:`.LoginResult` instance.

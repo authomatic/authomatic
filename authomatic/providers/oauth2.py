@@ -118,7 +118,7 @@ class OAuth2(providers.AuthorisationProvider):
         
         return rpc
     
-    @providers._login_decorator
+    @providers.login_decorator
     def login(self):
         
         credentials = core.Credentials(provider=self)
