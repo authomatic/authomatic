@@ -124,14 +124,14 @@
     <span class="c">#=======================================================================</span>
     
     <span class="nd">@abc.abstractproperty</span>
-    <span class="k">def</span> <span class="nf">has_protected_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseProvider.has_protected_resources"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider.has_protected_resources">[docs]</a>    <span class="k">def</span> <span class="nf">has_protected_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
     
     
     <span class="c">#===========================================================================</span>
     <span class="c"># Abstract methods</span>
     <span class="c">#===========================================================================</span>
-    
+    </div>
     <span class="nd">@abc.abstractmethod</span>
 <div class="viewcode-block" id="BaseProvider.login"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider.login">[docs]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -145,18 +145,18 @@
     <span class="c">#===========================================================================</span>
     </div>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseProvider.get_type"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider.get_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__module__</span> <span class="o">+</span> <span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cls</span><span class="o">.</span><span class="n">__bases__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">__name__</span>
     
-    
-    <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    </div>
+<div class="viewcode-block" id="BaseProvider.update_user"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider.update_user">[docs]</a>    <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span>
     
     
     <span class="c">#===========================================================================</span>
     <span class="c"># Internal methods</span>
     <span class="c">#===========================================================================</span>
-    
+    </div>
     <span class="k">def</span> <span class="nf">_session_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">return</span> <span class="s">&#39;{}:{}:{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
     
@@ -235,7 +235,7 @@
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;Consumer secret not specified for provider {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provider_name</span><span class="p">))</span>
 
 </div>
-<span class="k">class</span> <span class="nc">AuthorisationProvider</span><span class="p">(</span><span class="n">BaseProvider</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthorisationProvider"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider">[docs]</a><span class="k">class</span> <span class="nc">AuthorisationProvider</span><span class="p">(</span><span class="n">BaseProvider</span><span class="p">):</span>
     
     <span class="n">has_protected_resources</span> <span class="o">=</span> <span class="bp">True</span>
     
@@ -249,23 +249,23 @@
     <span class="c">#===========================================================================</span>
     
     <span class="nd">@abc.abstractproperty</span>
-    <span class="k">def</span> <span class="nf">user_authorisation_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthorisationProvider.user_authorisation_url"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider.user_authorisation_url">[docs]</a>    <span class="k">def</span> <span class="nf">user_authorisation_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
-    
+    </div>
     <span class="nd">@abc.abstractproperty</span>
-    <span class="k">def</span> <span class="nf">access_token_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthorisationProvider.access_token_url"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider.access_token_url">[docs]</a>    <span class="k">def</span> <span class="nf">access_token_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
-    
+    </div>
     <span class="nd">@abc.abstractproperty</span>
-    <span class="k">def</span> <span class="nf">user_info_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthorisationProvider.user_info_url"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider.user_info_url">[docs]</a>    <span class="k">def</span> <span class="nf">user_info_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
     
     <span class="c">#===========================================================================</span>
     <span class="c"># Abstract methods</span>
     <span class="c">#===========================================================================</span>
-    
+    </div>
     <span class="nd">@abc.abstractmethod</span>
-    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthorisationProvider.to_tuple"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider.to_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override must be a staticmethod</span>
 <span class="sd">        </span>
@@ -274,9 +274,9 @@
         
         <span class="k">pass</span>
     
-    
+    </div>
     <span class="nd">@abc.abstractmethod</span>
-    <span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deserialized_tuple</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthorisationProvider.reconstruct"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider.reconstruct">[docs]</a>    <span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deserialized_tuple</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override must be a staticmethod</span>
 <span class="sd">        </span>
@@ -285,7 +285,7 @@
         
         <span class="k">pass</span>
     
-    
+    </div>
     <span class="nd">@abc.abstractmethod</span>
     <span class="k">def</span> <span class="nf">_create_request_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_type</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -302,7 +302,7 @@
     <span class="c"># Exposed methods</span>
     <span class="c">#===========================================================================</span>
     
-    <span class="k">def</span> <span class="nf">create_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>       
+<div class="viewcode-block" id="AuthorisationProvider.create_request"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider.create_request">[docs]</a>    <span class="k">def</span> <span class="nf">create_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>       
         <span class="k">return</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="p">,</span>
                        <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
                        <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
@@ -310,16 +310,16 @@
                        <span class="n">content_parser</span><span class="o">=</span><span class="n">content_parser</span><span class="p">,</span>
                        <span class="n">response_parser</span><span class="o">=</span><span class="n">response_parser</span><span class="p">)</span>
         
-    
-    <span class="k">def</span> <span class="nf">fetch_user_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    </div>
+<div class="viewcode-block" id="AuthorisationProvider.fetch_user_info"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider.fetch_user_info">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_user_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_info_request</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span>
     
-    
-    <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    </div>
+<div class="viewcode-block" id="AuthorisationProvider.update_user"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider.update_user">[docs]</a>    <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_user_info</span><span class="p">()</span><span class="o">.</span><span class="n">user</span>
-    
+    </div>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">user_info_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthorisationProvider.user_info_request"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorisationProvider.user_info_request">[docs]</a>    <span class="k">def</span> <span class="nf">user_info_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user_info_request</span><span class="p">:</span>
             
             <span class="k">def</span> <span class="nf">response_parser</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">content_parser</span><span class="p">):</span>
@@ -338,7 +338,7 @@
     <span class="c">#===========================================================================</span>
     <span class="c"># Internal methods</span>
     <span class="c">#===========================================================================</span>
-    
+    </div>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_split_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
         <span class="s">&quot;Splits given url to url base and params converted to list of tuples&quot;</span>
@@ -362,7 +362,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">credentials</span>
     
-
+</div>
 <div class="viewcode-block" id="AuthenticationProvider"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthenticationProvider">[docs]</a><span class="k">class</span> <span class="nc">AuthenticationProvider</span><span class="p">(</span><span class="n">BaseProvider</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for OpenID providers.&quot;&quot;&quot;</span>
     

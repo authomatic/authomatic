@@ -22,6 +22,15 @@ class OAuth2(providers.AuthorisationProvider):
     # Internal methods
     #===========================================================================
     
+    
+    def _scope_parser(self, scope):
+        """
+        Convert scope list to csv
+        """
+        
+        return ','.join(scope) if scope else ''
+    
+    
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, method='GET',
                                  redirect_uri='', scope='', state=''):
@@ -109,7 +118,7 @@ class OAuth2(providers.AuthorisationProvider):
         request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                        credentials=credentials,
                                                        url=url,
-                                                       state=cls._generate_csrf())
+                                                       state=cls.csrf_generator())
         
         rpc = adapter.fetch_async(*request_elements,
                                     headers=headers,
@@ -199,7 +208,7 @@ class OAuth2(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure.')
             
             # generate csfr
-            state = self._generate_csrf()
+            state = self.csrf_generator()
             # and store it to session
             self._session_set('state', state)
             
