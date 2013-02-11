@@ -54,14 +54,24 @@ class BaseProvider(object):
     PREFIX = 'authomatic'
     
     def __init__(self, adapter, provider_name, consumer, callback=None,
-                 short_name=None, report_errors=True, logging_level=logging.INFO,
+                 report_errors=True, logging_level=logging.INFO,
                  csrf_generator=None, **kwargs):
-        self.name = provider_name
-        self.consumer = consumer
-        self.callback = callback
+        
+        #: The :doc:`platform adapter <adapters>`.
         self.adapter = adapter
-        self.short_name = short_name
+        
+        #: :class:`str` The provider name as specified in the :ref:`config`.
+        self.name = provider_name
+        
+        #: :class:`authomatic.core.Consumer`
+        self.consumer = consumer
+        
+        #: :class:`callable` An optional callback called when the login procedure
+        #: is finished with :class:`authomatic.core.LoginResult` passed as argument.
+        self.callback = callback
+        
         self.report_errors = report_errors
+        self.logging_level = logging_level
         self._generate_csrf = csrf_generator or self._generate_csrf
         
         self.user = None
@@ -200,6 +210,10 @@ class AuthorisationProvider(BaseProvider):
     ACCESS_TOKEN_REQUEST_TYPE = 3
     PROTECTED_RESOURCE_REQUEST_TYPE = 4
     
+    def __init__(self, *args, **kwargs):
+        super(AuthorisationProvider, self).__init__(*args, **kwargs)
+        
+        self.short_name = self.adapter.config.get(self.name, {}).get('short_name')
     
     #===========================================================================
     # Abstract properties

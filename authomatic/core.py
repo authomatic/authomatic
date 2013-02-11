@@ -139,12 +139,11 @@ def login(adapter, provider_name, callback=None, report_errors=True,
     ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate provider class
-    provider = ProviderClass(adapter, provider_name, consumer, callback, provider_settings.get('short_name'),
+    provider = ProviderClass(adapter, provider_name, consumer, callback,
                              report_errors=report_errors,
                              logging_level=logging_level,
                              **kwargs)
     
-    #TODO: Move kwargs to constructor
     # return login result
     return provider.login()
 
