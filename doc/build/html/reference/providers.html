@@ -56,8 +56,89 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-authomatic.providers">
-<span id="providers"></span><h1>Providers<a class="headerlink" href="#module-authomatic.providers" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-authomatic.providers.gaeopenid">
+<span id="providers"></span><h1>Providers<a class="headerlink" href="#module-authomatic.providers.gaeopenid" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="google-app-engine-openid-providers">
+<h2>Google App Engine OpenID Providers<a class="headerlink" href="#google-app-engine-openid-providers" title="Permalink to this headline">¶</a></h2>
+<p>This module provides <a class="reference external" href="http://openid.net/">OpenID</a> <a class="reference internal" href=""><em>Providers</em></a> based on
+<a class="reference external" href="https://developers.google.com/appengine/docs/python/users/">Google App Engine Users API</a> library.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When using these providers the <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">user</span></tt></a> object will always have only the
+<a class="reference internal" href="classes.html#authomatic.core.User.user_id" title="authomatic.core.User.user_id"><tt class="xref py py-attr docutils literal"><span class="pre">user_id</span></tt></a>,
+<a class="reference internal" href="classes.html#authomatic.core.User.email" title="authomatic.core.User.email"><tt class="xref py py-attr docutils literal"><span class="pre">email</span></tt></a>,
+<a class="reference internal" href="classes.html#authomatic.core.User.gae_user" title="authomatic.core.User.gae_user"><tt class="xref py py-attr docutils literal"><span class="pre">gae_user</span></tt></a>
+attributes populated with data.
+Moreover the <a class="reference internal" href="classes.html#authomatic.core.User.user_id" title="authomatic.core.User.user_id"><tt class="xref py py-attr docutils literal"><span class="pre">user_id</span></tt></a> will always be empty on the
+<a class="reference external" href="https://developers.google.com/appengine/docs/python/tools/devserver">Development Server</a>.</p>
+</div>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-obj docutils literal"><span class="pre">GAEOpenID</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>OpenID provider based on the</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.gaeopenid.Yahoo" title="authomatic.providers.gaeopenid.Yahoo"><tt class="xref py py-obj docutils literal"><span class="pre">Yahoo</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.gaeopenid.Google" title="authomatic.providers.gaeopenid.Google"><tt class="xref py py-obj docutils literal"><span class="pre">Google</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="authomatic.providers.gaeopenid.GAEOpenID">
+<em class="property">class </em><tt class="descclassname">authomatic.providers.gaeopenid.</tt><tt class="descname">GAEOpenID</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/gaeopenid.html#GAEOpenID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.gaeopenid.GAEOpenID" title="Permalink to this definition">¶</a></dt>
+<dd><p>OpenID provider based on the
+<a class="reference external" href="https://developers.google.com/appengine/docs/python/users/">Google App Engine Users API</a> library.</p>
+<dl class="method">
+<dt id="authomatic.providers.gaeopenid.GAEOpenID.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>*args</em>, <em>identifier=''</em><big>)</big><a class="headerlink" href="#authomatic.providers.gaeopenid.GAEOpenID.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts additional keyword argument <tt class="xref py py-data docutils literal"><span class="pre">identifier</span></tt>, the <em>OpenID claimed identity</em> to authenticate.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.providers.gaeopenid.Yahoo">
+<em class="property">class </em><tt class="descclassname">authomatic.providers.gaeopenid.</tt><tt class="descname">Yahoo</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/gaeopenid.html#Yahoo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.gaeopenid.Yahoo" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.providers.gaeopenid.Google">
+<em class="property">class </em><tt class="descclassname">authomatic.providers.gaeopenid.</tt><tt class="descname">Google</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/gaeopenid.html#Google"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.gaeopenid.Google" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to
+<tt class="docutils literal"><span class="pre">&quot;https://www.google.com/accounts/o8/id&quot;</span></tt>.</p>
+</dd></dl>
+
+</div>
+<span class="target" id="module-authomatic.providers"></span><div class="section" id="base-providers">
+<h2>Base Providers<a class="headerlink" href="#base-providers" title="Permalink to this headline">¶</a></h2>
+<p>This module provides abstract classes for implementation of protocol specific abstract classes.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.login_decorator" title="authomatic.providers.login_decorator"><tt class="xref py py-obj docutils literal"><span class="pre">login_decorator</span></tt></a>(func)</td>
+<td>Decorator to be used by the <a class="reference internal" href="#authomatic.providers.BaseProvider.login" title="authomatic.providers.BaseProvider.login"><tt class="xref py py-meth docutils literal"><span class="pre">BaseProvider.login()</span></tt></a>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.BaseProvider" title="authomatic.providers.BaseProvider"><tt class="xref py py-obj docutils literal"><span class="pre">BaseProvider</span></tt></a>(adapter,&nbsp;provider_name[,&nbsp;...])</td>
+<td>Abstract base class for all providers.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.AuthorisationProvider" title="authomatic.providers.AuthorisationProvider"><tt class="xref py py-obj docutils literal"><span class="pre">AuthorisationProvider</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>Base provider for <em>authorisation protocols</em> i.e.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.AuthenticationProvider" title="authomatic.providers.AuthenticationProvider"><tt class="xref py py-obj docutils literal"><span class="pre">AuthenticationProvider</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>Base provider for <em>authentication protocols</em> i.e.</td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="authomatic.providers.login_decorator">
 <tt class="descclassname">authomatic.providers.</tt><tt class="descname">login_decorator</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#authomatic.providers.login_decorator" title="Permalink to this definition">¶</a></dt>
@@ -101,7 +182,7 @@ will be caught and reported in the <a class="reference internal" href="classes.h
 <tt class="descname">logging_level</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.BaseProvider.logging_level" title="Permalink to this definition">¶</a></dt>
 <dd><p><tt class="xref py py-class docutils literal"><span class="pre">int</span></tt> The logging level treshold as specified in the standard Python
 <a class="reference external" href="http://docs.python.org/2/library/logging.html">logging library</a>.
-If <tt class="docutils literal"><span class="pre">None</span></tt> or <tt class="docutils literal"><span class="pre">Flase</span></tt> there will be no logs. Default is <tt class="docutils literal"><span class="pre">logging.INFO</span></tt>.</p>
+If <tt class="docutils literal"><span class="pre">None</span></tt> or <tt class="docutils literal"><span class="pre">False</span></tt> there will be no logs. Default is <tt class="docutils literal"><span class="pre">logging.INFO</span></tt>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -352,6 +433,7 @@ authenticate a <em>claimed identity</em> of a <strong>user</strong>. e.g. <a cla
 </dd></dl>
 
 </div>
+</div>
 
 
           </div>
@@ -359,6 +441,15 @@ authenticate a <em>claimed identity</em> of a <strong>user</strong>. e.g. <a cla
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Providers</a><ul>
+<li><a class="reference internal" href="#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li><a class="reference internal" href="#base-providers">Base Providers</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="classes.html"
                         title="previous chapter">Classes</a></p>

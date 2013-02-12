@@ -1,3 +1,18 @@
+"""
+Base Providers
+--------------
+
+This module provides abstract classes for implementation of protocol specific abstract classes.
+
+.. autosummary::
+    
+    login_decorator
+    BaseProvider
+    AuthorisationProvider
+    AuthenticationProvider
+
+"""
+
 from authomatic.exceptions import ConfigError
 import abc
 import authomatic.core
@@ -9,7 +24,7 @@ import random
 import urlparse
 import uuid
 
-
+__all__ = ['BaseProvider', 'AuthorisationProvider', 'AuthenticationProvider', 'login_decorator']
 
 def login_decorator(func):
     """
@@ -74,7 +89,7 @@ class BaseProvider(object):
         
         #: :class:`int` The logging level treshold as specified in the standard Python
         #: `logging library <http://docs.python.org/2/library/logging.html>`_.
-        #: If :literal:`None` or :literal:`Flase` there will be no logs. Default is ``logging.INFO``.
+        #: If :literal:`None` or :literal:`False` there will be no logs. Default is ``logging.INFO``.
         self.logging_level = logging_level
         
         #: A :class:`callable` that should generate a random string which is dificult to gues.
