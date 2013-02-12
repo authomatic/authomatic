@@ -1,3 +1,23 @@
+"""
+OpenID Providers
+----------------------------------
+
+This module provides `OpenID <http://openid.net/>`_ :doc:`providers` based on the
+`python-openid <http://pypi.python.org/pypi/python-openid/>`_ library.
+
+.. warning::
+    
+    These providers are more expensive than the :mod:`.gaeopenid` providers.
+    The login procedure requires **one more fetch** and up to **8 DB accesses**!
+
+.. autosummary::
+    
+    OpenID
+    Yahoo
+    Google 
+
+"""
+
 # We need absolute iport to import from openid library which has the same name as this module
 from __future__ import absolute_import
 from openid.consumer import consumer
@@ -9,6 +29,7 @@ import logging
 import authomatic
 from openid import oidutil
 
+__all__ = ['OpenID', 'Yahoo', 'Google']
 
 # supress openid logging to stderr
 oidutil.log = lambda message, level=0: None
@@ -43,7 +64,12 @@ XRDS_XML = \
 
 
 class OpenID(providers.AuthenticationProvider):
-    """OpenID provider based on the python-openid library."""
+    """
+    OpenID provider based on the `python-openid <http://pypi.python.org/pypi/python-openid/>`_ library.
+    
+    .. automethod:: __init__
+    
+    """
         
     # http://openid.net/specs/openid-attribute-properties-list-1_0-01.html
     AX_SCHEMAS = ('http://axschema.org/contact/email',
@@ -78,53 +104,87 @@ class OpenID(providers.AuthenticationProvider):
     
     def __init__(self, *args, **kwargs):
         """
-        
         Accepts optional keyword arguments:
-        
-        identifier
-        
-        use_realm
-        realm_body
-        realm_param
-        xrds_param
-        
-        sreg
-        sreg_required
-        
-        ax
-        ax_required
-        
-        pape
+        :attr:`.identifier`,
+        :attr:`.use_realm`,
+        :attr:`.realm_body`,
+        :attr:`.realm_param`,
+        :attr:`.xrds_param`,
+        :attr:`.sreg`,
+        :attr:`.sreg_required`,
+        :attr:`.ax`,
+        :attr:`.ax_required`,
+        :attr:`.pape`.
         """
         
         super(OpenID, self).__init__(*args, **kwargs)
         
-        # handle keyword arguments
         
-        # realm
+        #=======================================================================
+        # Realm
+        #=======================================================================
+        
+        #: Whether to use `OpenID realm <http://openid.net/specs/openid-authentication-2_0-12.html#realms>`_.
+        #: If ``True`` the realm HTML document will be accessible at
+        #: ``{current url}?{realm_param}={realm_param}``
+        #: e.g. ``http://example.com/path?realm=realm``.
         self.use_realm = kwargs.get('use_realm', True)
+        
+        #: The contents of the HTML body tag of the realm.
         self.realm_body = kwargs.get('realm_body', '')
+        
+        #: The name of the query parameter to be used to serve the realm.
         self.realm_param = kwargs.get('realm_param', 'realm')
+        
+        #: The name of the query parameter to be used to serve the
+        #: `XRDS document <http://openid.net/specs/openid-authentication-2_0-12.html#XRDS_Sample>`_.
         self.xrds_param = kwargs.get('xrds_param', 'xrds')
         
-        # sreg
-        self.sreg_optional_fields = list(kwargs.get('sreg', self.SREG_FIELDS))
-        self.sreg_required_fields = kwargs.get('sreg_required', [])
         
-        # ax
-        self.ax_schemas = list(kwargs.get('ax', self.AX_SCHEMAS))
-        self.ax_required_schemas = list(kwargs.get('ax_required', self.AX_SCHEMAS_REQUIRED))
+        #=======================================================================
+        # SREG
+        #=======================================================================
+        
+        #: :class:`list` of optional
+        #: `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
+        self.sreg = list(kwargs.get('sreg', self.SREG_FIELDS))
+        
+        #: :class:`list` of required
+        #: `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
+        self.sreg_required = kwargs.get('sreg_required', [])
+        
+        
+        #=======================================================================
+        # AX
+        #=======================================================================
+        
+        #: :class:`list` of optional
+        #: `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
+        self.ax = list(kwargs.get('ax', self.AX_SCHEMAS))
+        
+        #: :class:`list` of required
+        #: `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
+        self.ax_required = list(kwargs.get('ax_required', self.AX_SCHEMAS_REQUIRED))
+        
         # add required schemas to schemas if not allready there
-        for i in self.ax_required_schemas:
-            if i not in self.ax_schemas:
-                self.ax_schemas.append(i)
+        for i in self.ax_required:
+            if i not in self.ax:
+                self.ax.append(i)
         
-        # pape
-        self.pape_policies = kwargs.get('pape', self.PAPE_POLICIES)
+        
+        #=======================================================================
+        # PAPE
+        #=======================================================================
+        
+        #: :class:`list` of requested
+        #: `PAPE <http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html>`_
+        #: policies.
+        self.pape = kwargs.get('pape', self.PAPE_POLICIES)
     
     
     @staticmethod
     def _user_parser(user, data):
+        
         user.first_name = data.get('ax', {}).get('http://openid.net/schema/namePerson/first')
         user.last_name = data.get('ax', {}).get('http://openid.net/schema/namePerson/last')
         user.user_id = data.get('guid')
@@ -158,11 +218,7 @@ class OpenID(providers.AuthenticationProvider):
     
     @providers.login_decorator
     def login(self):
-        """
-        Launches the OpenID authentication procedure.
-        
-        """
-        
+        """Launches the OpenID authentication procedure."""
         
                 
         # Instantiate consumer
@@ -273,20 +329,20 @@ class OpenID(providers.AuthenticationProvider):
             
             # add SREG extension
             # we need to remove required fields from optional fields because addExtension then raises an error
-            self.sreg_optional_fields = [i for i in self.sreg_optional_fields if i not in self.sreg_required_fields]
-            auth_request.addExtension(sreg.SRegRequest(optional=self.sreg_optional_fields,
-                                                       required=self.sreg_required_fields))
+            self.sreg = [i for i in self.sreg if i not in self.sreg_required]
+            auth_request.addExtension(sreg.SRegRequest(optional=self.sreg,
+                                                       required=self.sreg_required))
             
             # add AX extension
             ax_request = ax.FetchRequest()
             # set AX schemas
-            for i in self.ax_schemas:
-                required = i in self.ax_required_schemas
+            for i in self.ax:
+                required = i in self.ax_required
                 ax_request.add(ax.AttrInfo(i, required=required))
             auth_request.addExtension(ax_request)
             
             # add PAPE extension
-            auth_request.addExtension(pape.Request(self.pape_policies))           
+            auth_request.addExtension(pape.Request(self.pape))           
             
             # prepare realm and return_to URLs
             if self.use_realm:
@@ -312,9 +368,17 @@ class OpenID(providers.AuthenticationProvider):
 
 
 class Yahoo(OpenID):
+    """
+    :class:`.OpenID` provider with the :attr:`.identifier` predefined to ``"me.yahoo.com"``.
+    """
+    
     identifier = 'me.yahoo.com'
 
 class Google(OpenID):
+    """
+    :class:`.OpenID` provider with the :attr:`.identifier` predefined to ``"https://www.google.com/accounts/o8/id"``.
+    """
+    
     identifier = 'https://www.google.com/accounts/o8/id'
 
 

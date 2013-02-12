@@ -1,0 +1,464 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>authomatic.providers.openid &mdash; Authomatic 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Authomatic 0.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="authomatic.providers" href="../providers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../authomatic.html" >authomatic</a> &raquo;</li>
+          <li><a href="../providers.html" accesskey="U">authomatic.providers</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for authomatic.providers.openid</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">OpenID Providers</span>
+<span class="sd">----------------------------------</span>
+
+<span class="sd">This module provides `OpenID &lt;http://openid.net/&gt;`_ :doc:`providers` based on the</span>
+<span class="sd">`python-openid &lt;http://pypi.python.org/pypi/python-openid/&gt;`_ library.</span>
+
+<span class="sd">.. warning::</span>
+<span class="sd">    </span>
+<span class="sd">    bla</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">    </span>
+<span class="sd">    OpenID</span>
+<span class="sd">    Yahoo</span>
+<span class="sd">    Google </span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c"># We need absolute iport to import from openid library which has the same name as this module</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">openid.consumer</span> <span class="kn">import</span> <span class="n">consumer</span>
+<span class="kn">from</span> <span class="nn">openid.extensions</span> <span class="kn">import</span> <span class="n">ax</span><span class="p">,</span> <span class="n">pape</span><span class="p">,</span> <span class="n">sreg</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">providers</span>
+<span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="n">FailureError</span><span class="p">,</span> <span class="n">CancellationError</span><span class="p">,</span> <span class="n">OpenIDError</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">authomatic</span>
+<span class="kn">from</span> <span class="nn">openid</span> <span class="kn">import</span> <span class="n">oidutil</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;OpenID&#39;</span><span class="p">,</span> <span class="s">&#39;Yahoo&#39;</span><span class="p">,</span> <span class="s">&#39;Google&#39;</span><span class="p">]</span>
+
+<span class="c"># supress openid logging to stderr</span>
+<span class="n">oidutil</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">message</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">:</span> <span class="bp">None</span>
+
+
+<span class="n">REALM_HTML</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&lt;!DOCTYPE html&gt;</span>
+<span class="sd">&lt;html&gt;</span>
+<span class="sd">    &lt;head&gt;</span>
+<span class="sd">        &lt;meta http-equiv=&quot;X-XRDS-Location&quot; content=&quot;{xrds_location}&quot; /&gt;</span>
+<span class="sd">    &lt;/head&gt;</span>
+<span class="sd">    &lt;body&gt;{body}&lt;/body&gt;</span>
+<span class="sd">&lt;/html&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">XRDS_XML</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="sd">&lt;xrds:XRDS  </span>
+<span class="sd">    xmlns:xrds=&quot;xri://$xrds&quot;  </span>
+<span class="sd">    xmlns:openid=&quot;http://openid.net/xmlns/1.0&quot;  </span>
+<span class="sd">    xmlns=&quot;xri://$xrd*($v*2.0)&quot;&gt;  </span>
+<span class="sd">    &lt;XRD&gt;  </span>
+<span class="sd">        &lt;Service priority=&quot;1&quot;&gt;  </span>
+<span class="sd">            &lt;Type&gt;http://specs.openid.net/auth/2.0/return_to&lt;/Type&gt;  </span>
+<span class="sd">            &lt;URI&gt;{return_to}&lt;/URI&gt;  </span>
+<span class="sd">        &lt;/Service&gt;  </span>
+<span class="sd">    &lt;/XRD&gt;  </span>
+<span class="sd">&lt;/xrds:XRDS&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="OpenID"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.openid.OpenID">[docs]</a><span class="k">class</span> <span class="nc">OpenID</span><span class="p">(</span><span class="n">providers</span><span class="o">.</span><span class="n">AuthenticationProvider</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    OpenID provider based on the python-openid &lt;http://pypi.python.org/pypi/python-openid/&gt;`_ library.</span>
+<span class="sd">    </span>
+<span class="sd">    .. automethod:: __init__(*args, identifier=&#39;&#39;)</span>
+<span class="sd">        </span>
+<span class="sd">        Accepts these additional keyword arguments:</span>
+<span class="sd">        |</span>
+<span class="sd">        | :data:`identifier`, the *OpenID claimed identity* to authenticate.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
+    <span class="c"># http://openid.net/specs/openid-attribute-properties-list-1_0-01.html</span>
+    <span class="n">AX_SCHEMAS</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;http://axschema.org/contact/email&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;http://schema.openid.net/contact/email&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;http://axschema.org/namePerson&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;http://openid.net/schema/namePerson/first&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;http://openid.net/schema/namePerson/last&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;http://openid.net/schema/gender&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;http://openid.net/schema/language/pref&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;http://openid.net/schema/contact/web/default&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;http://openid.net/schema/media/image&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;http://openid.net/schema/timezone&#39;</span><span class="p">,)</span>
+    
+    <span class="c"># google requires this schema</span>
+    <span class="n">AX_SCHEMAS_REQUIRED</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;http://schema.openid.net/contact/email&#39;</span><span class="p">,</span> <span class="p">)</span>
+    
+    <span class="c"># http://openid.net/specs/openid-simple-registration-extension-1_1-01.html#response_format</span>
+    <span class="n">SREG_FIELDS</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;nickname&#39;</span><span class="p">,</span>
+                 <span class="s">&#39;email&#39;</span><span class="p">,</span>
+                 <span class="s">&#39;fullname&#39;</span><span class="p">,</span>
+                 <span class="s">&#39;dob&#39;</span><span class="p">,</span>
+                 <span class="s">&#39;gender&#39;</span><span class="p">,</span>
+                 <span class="s">&#39;postcode&#39;</span><span class="p">,</span>
+                 <span class="s">&#39;country&#39;</span><span class="p">,</span>
+                 <span class="s">&#39;language&#39;</span><span class="p">,</span>
+                 <span class="s">&#39;timezone&#39;</span><span class="p">)</span>
+    
+    <span class="c"># http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html#auth_policies</span>
+    <span class="n">PAPE_POLICIES</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;http://schemas.openid.net/pape/policies/2007/06/multi-factor-physical&#39;</span><span class="p">,</span>
+                     <span class="s">&#39;http://schemas.openid.net/pape/policies/2007/06/multi-factor&#39;</span><span class="p">,</span>
+                     <span class="s">&#39;http://schemas.openid.net/pape/policies/2007/06/phishing-resistant&#39;</span><span class="p">]</span>
+    
+<div class="viewcode-block" id="OpenID.__init__"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.openid.OpenID.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        </span>
+<span class="sd">        Accepts optional keyword arguments:</span>
+<span class="sd">        </span>
+<span class="sd">        identifier</span>
+<span class="sd">        </span>
+<span class="sd">        use_realm</span>
+<span class="sd">        realm_body</span>
+<span class="sd">        realm_param</span>
+<span class="sd">        xrds_param</span>
+<span class="sd">        </span>
+<span class="sd">        sreg</span>
+<span class="sd">        sreg_required</span>
+<span class="sd">        </span>
+<span class="sd">        ax</span>
+<span class="sd">        ax_required</span>
+<span class="sd">        </span>
+<span class="sd">        pape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="nb">super</span><span class="p">(</span><span class="n">OpenID</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+        <span class="c"># handle keyword arguments</span>
+        
+        <span class="c"># realm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_realm</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;use_realm&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">realm_body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;realm_body&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">realm_param</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;realm_param&#39;</span><span class="p">,</span> <span class="s">&#39;realm&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xrds_param</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;xrds_param&#39;</span><span class="p">,</span> <span class="s">&#39;xrds&#39;</span><span class="p">)</span>
+        
+        <span class="c"># sreg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sreg_optional_fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SREG_FIELDS</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sreg_required_fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg_required&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        
+        <span class="c"># ax</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax_schemas</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">AX_SCHEMAS</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax_required_schemas</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax_required&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">AX_SCHEMAS_REQUIRED</span><span class="p">))</span>
+        <span class="c"># add required schemas to schemas if not allready there</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_required_schemas</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_schemas</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ax_schemas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="c"># pape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pape_policies</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;pape&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PAPE_POLICIES</span><span class="p">)</span>
+    
+    </div>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://openid.net/schema/namePerson/first&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://openid.net/schema/namePerson/last&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;guid&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://openid.net/schema/contact/web/default&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://openid.net/schema/media/image&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;nickname&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;country&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">postal_code</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;postcode&#39;</span><span class="p">)</span>
+        
+        <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;fullname&#39;</span><span class="p">)</span> <span class="ow">or</span> \
+            <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://axschema.org/namePerson&#39;</span><span class="p">)</span>
+            
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;gender&#39;</span><span class="p">)</span> <span class="ow">or</span> \
+            <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://openid.net/schema/gender&#39;</span><span class="p">)</span>
+        
+        <span class="n">user</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;language&#39;</span><span class="p">)</span> <span class="ow">or</span> \
+            <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://openid.net/schema/language/pref&#39;</span><span class="p">)</span>
+        
+        <span class="n">user</span><span class="o">.</span><span class="n">timezone</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;timezone&#39;</span><span class="p">)</span> <span class="ow">or</span> \
+            <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://openid.net/schema/timezone&#39;</span><span class="p">)</span>
+        
+        <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">)</span> <span class="ow">or</span> \
+            <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://axschema.org/contact/email&#39;</span><span class="p">)</span> <span class="ow">or</span> \
+            <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;http://schema.openid.net/contact/email&#39;</span><span class="p">)</span>
+        
+        <span class="n">user</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;dob&#39;</span><span class="p">),</span> <span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">&#39;</span><span class="p">)</span> <span class="k">if</span> \
+            <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;dob&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span>
+                
+        <span class="k">return</span> <span class="n">user</span>
+    
+    
+    <span class="nd">@providers.login_decorator</span>
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Launches the OpenID authentication procedure.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        
+                
+        <span class="c"># Instantiate consumer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">openid_store</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log</span>
+        <span class="n">oi_consumer</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">Consumer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">openid_store</span><span class="p">)</span>        
+        
+        <span class="c"># handle realm and XRDS if there is only one query parameter</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_realm</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">realm_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_param</span><span class="p">)</span>
+            <span class="n">xrds_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xrds_param</span><span class="p">)</span>                
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">realm_request</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">xrds_request</span> <span class="o">=</span> <span class="bp">None</span>
+        
+        <span class="c"># determine type of request</span>
+        <span class="k">if</span> <span class="n">realm_request</span><span class="p">:</span>
+            <span class="c">#===================================================================</span>
+            <span class="c"># Realm HTML</span>
+            <span class="c">#===================================================================</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Writing OpenID realm HTML to the response.&#39;</span><span class="p">)</span>
+            <span class="n">xrds_location</span> <span class="o">=</span> <span class="s">&#39;{u}?{x}={x}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">xrds_param</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">REALM_HTML</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xrds_location</span><span class="o">=</span><span class="n">xrds_location</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_body</span><span class="p">))</span>
+            
+        <span class="k">elif</span> <span class="n">xrds_request</span><span class="p">:</span>
+            <span class="c">#===================================================================</span>
+            <span class="c"># XRDS XML</span>
+            <span class="c">#===================================================================</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Writing XRDS XML document to the response.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s">&#39;application/xrds+xml&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">XRDS_XML</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">return_to</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+        
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;openid.mode&#39;</span><span class="p">):</span>
+            <span class="c">#===================================================================</span>
+            <span class="c"># Phase 2 after redirect</span>
+            <span class="c">#===================================================================</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Continuing OpenID authentication procedure after redirect.&#39;</span><span class="p">)</span>
+            
+            <span class="c"># complete the authentication process</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">oi_consumer</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>            
+            
+            <span class="c"># on success</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">consumer</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+                
+                <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+                
+                <span class="c"># get user ID</span>
+                <span class="n">data</span><span class="p">[</span><span class="s">&#39;guid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">getDisplayIdentifier</span><span class="p">()</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Authentication successful.&#39;</span><span class="p">)</span>
+                
+                <span class="c"># get user data from AX response</span>
+                <span class="n">ax_response</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">FetchResponse</span><span class="o">.</span><span class="n">fromSuccessResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ax_response</span> <span class="ow">and</span> <span class="n">ax_response</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Got AX data.&#39;</span><span class="p">)</span>
+                    <span class="n">ax_data</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="c"># conver iterable values to their first item</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ax_response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">v</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                            <span class="n">ax_data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">data</span><span class="p">[</span><span class="s">&#39;ax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ax_data</span>
+                
+                
+                <span class="c"># get user data from SREG response</span>
+                <span class="n">sreg_response</span> <span class="o">=</span> <span class="n">sreg</span><span class="o">.</span><span class="n">SRegResponse</span><span class="o">.</span><span class="n">fromSuccessResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">sreg_response</span> <span class="ow">and</span> <span class="n">sreg_response</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Got SREG data.&#39;</span><span class="p">)</span>
+                    <span class="n">data</span><span class="p">[</span><span class="s">&#39;sreg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sreg_response</span><span class="o">.</span><span class="n">data</span>
+                                
+                
+                <span class="c"># get data from PAPE response</span>
+                <span class="n">pape_response</span> <span class="o">=</span> <span class="n">pape</span><span class="o">.</span><span class="n">Response</span><span class="o">.</span><span class="n">fromSuccessResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">pape_response</span> <span class="ow">and</span> <span class="n">pape_response</span><span class="o">.</span><span class="n">auth_policies</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Got PAPE data.&#39;</span><span class="p">)</span>
+                    <span class="n">data</span><span class="p">[</span><span class="s">&#39;pape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pape_response</span><span class="o">.</span><span class="n">auth_policies</span>
+                
+                <span class="c"># create user</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_or_create_user</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                
+                <span class="c">#===============================================================</span>
+                <span class="c"># We&#39;re done!</span>
+                <span class="c">#===============================================================</span>
+            
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">consumer</span><span class="o">.</span><span class="n">CANCEL</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CancellationError</span><span class="p">(</span><span class="s">&#39;User cancelled the verification of ID &quot;{}&quot;!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getDisplayIdentifier</span><span class="p">()))</span>
+            
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">consumer</span><span class="o">.</span><span class="n">FAILURE</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c">#===================================================================</span>
+            <span class="c"># Phase 1 before redirect</span>
+            <span class="c">#===================================================================</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Starting OpenID authentication procedure.&#39;</span><span class="p">)</span>
+            
+            <span class="c"># get AuthRequest object</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">auth_request</span> <span class="o">=</span> <span class="n">oi_consumer</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">consumer</span><span class="o">.</span><span class="n">DiscoveryFailure</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span><span class="s">&#39;Discovery failed for identifier {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">),</span>
+                                   <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+                                   <span class="n">original_message</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Service discovery for identifier {} successfull.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">))</span>
+            
+            <span class="c"># add SREG extension</span>
+            <span class="c"># we need to remove required fields from optional fields because addExtension then raises an error</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sreg_optional_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sreg_optional_fields</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sreg_required_fields</span><span class="p">]</span>
+            <span class="n">auth_request</span><span class="o">.</span><span class="n">addExtension</span><span class="p">(</span><span class="n">sreg</span><span class="o">.</span><span class="n">SRegRequest</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sreg_optional_fields</span><span class="p">,</span>
+                                                       <span class="n">required</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sreg_required_fields</span><span class="p">))</span>
+            
+            <span class="c"># add AX extension</span>
+            <span class="n">ax_request</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">FetchRequest</span><span class="p">()</span>
+            <span class="c"># set AX schemas</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_schemas</span><span class="p">:</span>
+                <span class="n">required</span> <span class="o">=</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_required_schemas</span>
+                <span class="n">ax_request</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">AttrInfo</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">))</span>
+            <span class="n">auth_request</span><span class="o">.</span><span class="n">addExtension</span><span class="p">(</span><span class="n">ax_request</span><span class="p">)</span>
+            
+            <span class="c"># add PAPE extension</span>
+            <span class="n">auth_request</span><span class="o">.</span><span class="n">addExtension</span><span class="p">(</span><span class="n">pape</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pape_policies</span><span class="p">))</span>           
+            
+            <span class="c"># prepare realm and return_to URLs</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_realm</span><span class="p">:</span>
+                <span class="n">realm</span> <span class="o">=</span> <span class="n">return_to</span> <span class="o">=</span> <span class="s">&#39;{u}?{r}={r}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_param</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">realm</span> <span class="o">=</span> <span class="n">return_to</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span>
+            
+<span class="c">#            realm = return_to = &#39;{u}?{r}={r}&#39;.format(u=self.adapter.url, r=self.realm_param) if self.use_realm else self.adapter.url</span>
+                        
+            <span class="n">url</span> <span class="o">=</span> <span class="n">auth_request</span><span class="o">.</span><span class="n">redirectURL</span><span class="p">(</span><span class="n">realm</span><span class="p">,</span> <span class="n">return_to</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">auth_request</span><span class="o">.</span><span class="n">shouldSendRedirect</span><span class="p">():</span>
+                <span class="c"># can be redirected</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="n">auth_request</span><span class="o">.</span><span class="n">redirectURL</span><span class="p">(</span><span class="n">realm</span><span class="p">,</span> <span class="n">return_to</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Redirecting user to {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">redirect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># must be sent as POST</span>
+                <span class="c"># this writes a html post form with auto-submit</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Writing an auto-submit HTML form to the response.&#39;</span><span class="p">)</span>
+                <span class="n">form</span> <span class="o">=</span> <span class="n">auth_request</span><span class="o">.</span><span class="n">htmlMarkup</span><span class="p">(</span><span class="n">realm</span><span class="p">,</span> <span class="n">return_to</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&#39;openid_form&#39;</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Yahoo"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.openid.Yahoo">[docs]</a><span class="k">class</span> <span class="nc">Yahoo</span><span class="p">(</span><span class="n">OpenID</span><span class="p">):</span>
+    <span class="n">identifier</span> <span class="o">=</span> <span class="s">&#39;me.yahoo.com&#39;</span>
+</div>
+<div class="viewcode-block" id="Google"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.openid.Google">[docs]</a><span class="k">class</span> <span class="nc">Google</span><span class="p">(</span><span class="n">OpenID</span><span class="p">):</span>
+    <span class="n">identifier</span> <span class="o">=</span> <span class="s">&#39;https://www.google.com/accounts/o8/id&#39;</span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../authomatic.html" >authomatic</a> &raquo;</li>
+          <li><a href="../providers.html" >authomatic.providers</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Peter Hudec.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

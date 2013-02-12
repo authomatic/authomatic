@@ -89,8 +89,7 @@ class Yahoo(GAEOpenID):
 
 class Google(GAEOpenID):
     """
-    :class:`.GAEOpenID` provider with the :attr:`.identifier` predefined to
-    ``"https://www.google.com/accounts/o8/id"``.
+    :class:`.GAEOpenID` provider with the :attr:`.identifier` predefined to ``"https://www.google.com/accounts/o8/id"``.
     """
     
     identifier = 'https://www.google.com/accounts/o8/id'
