@@ -18,6 +18,27 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../../'))
 
+rst_prolog = """
+
+.. |oauth2| replace:: OAuth 2.0
+.. _oauth2: http://oauth.net/2/
+
+.. |oauth1| replace:: OAuth 1.0a
+.. _oauth1: http://oauth.net/core/1.0a/
+
+.. |openid| replace:: OpenID
+.. _openid: http://openid.net/
+
+.. |gae_users_api| replace:: Google App Engine Users API
+.. _gae_users_api: https://developers.google.com/appengine/docs/python/users/
+
+.. _python-openid: http://pypi.python.org/pypi/python-openid/
+
+.. |classmethod| replace:: Must be a classmethod!
+
+
+"""
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.

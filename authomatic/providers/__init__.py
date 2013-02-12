@@ -71,7 +71,7 @@ class BaseProvider(object):
     
     def __init__(self, adapter, provider_name, callback=None,
                  report_errors=True, logging_level=logging.INFO,
-                 csrf_generator=None, prefix='authomatic', **kwargs):
+                 prefix='authomatic', **kwargs):
         
         #: The :doc:`platform adapter <adapters>`.
         self.adapter = adapter
@@ -91,9 +91,6 @@ class BaseProvider(object):
         #: `logging library <http://docs.python.org/2/library/logging.html>`_.
         #: If :literal:`None` or :literal:`False` there will be no logs. Default is ``logging.INFO``.
         self.logging_level = logging_level
-        
-        #: A :class:`callable` that should generate a random string which is dificult to gues.
-        self.csrf_generator = csrf_generator or self.csrf_generator
         
         #: :class:`str` Prefix used by storing values to session.
         self.prefix = prefix
@@ -197,7 +194,7 @@ class BaseProvider(object):
         Generates CSRF token.
         
         Inspired by this article http://blog.ptsecurity.com/2012/10/random-number-security-in-python.html
-        
+                
         :returns:
             :class:`str` Random unguessable string.
         """
@@ -344,7 +341,7 @@ class AuthorisationProvider(BaseProvider):
         
         .. warning::
         
-            Must be a classmethod!
+            |classmethod|
         
         :param core.Credentials credentials:
             :class:`.core.Credentials`
@@ -354,22 +351,24 @@ class AuthorisationProvider(BaseProvider):
     
     
     @abc.abstractmethod
-    def reconstruct(self, deserialized_tuple):
+    def reconstruct(self, deserialized_tuple, cfg):
         """
         Must convert the :data:`deserialized_tuple` back to :class:`.core.Credentials`.
         
         .. warning::
         
-            Must be a staticmethod or classmethod!
+            |classmethod|
         
         :param tuple deserialized_tuple:
             A tuple which first index is the :attr:`.short_name` and the rest
             are all the items of the :class:`tuple` created by :meth:`.to_tuple`.
+        :param dict cfg:
+            :doc:`config`
         """
     
     
     @abc.abstractmethod
-    def _create_request_elements(self, request_type, url, method='GET'):
+    def _create_request_elements(self, request_type, credentials, url, method='GET'):
         """
         Must create a :class:`tuple` with this structure ``(url, body, method)``,
         where *url* must be the request url without query parameters and fragment,
@@ -377,11 +376,49 @@ class AuthorisationProvider(BaseProvider):
         
         .. warning::
         
-            Must be a classmethod!
+            |classmethod|
         
         :param request_type:
-        :param url:
+            Type of the request specified by one of the classe's constants.
+        :param core.Credentials credentials:
+            :class:`Credentials <.core.Credentials>` of the **user** whose
+            **protected resource** we want to access.
+        :param str url:
+            URL of the request.
         :param method:
+            HTTP method of the request.
+        
+        :returns:
+            A (url, body, method) tuple.
+        """
+    
+    @abc.abstractmethod
+    def fetch_protected_resource(self, adapter, url, credentials, content_parser,
+                                 method='GET', headers={}, response_parser=None):
+        """
+        Fetches protected resource asynchronously.
+           
+        .. warning::
+            
+            Whether the method is really asynchronous depends on the implementation of the
+            :doc:`adapter's <adapters>` :meth:`fetch_async()
+            <authomatic.adapters.BaseAdapter.fetch_async>` method.
+        
+        :param adapter:
+            The same :doc:`adapter <adapters>` instance which was used in the :func:`authomatic.login`
+            function to get the **user's** :class:`.core.Credentials`.
+        :param core.Credentials credentials:
+            :class:`Credentials <.core.Credentials>` of the **user** whose
+            **protected resource** we want to access.
+        :param str url:
+            URL of the protected resource. Can contain query parameters.
+        :param str method:
+            HTTP method of the request.
+        :param callable content_parser:
+            A :class:`callable` as described in :attr:`core.Response.content_parser`.
+        
+        :returns:
+            :class:`.adapters.RPC`
         """
     
     

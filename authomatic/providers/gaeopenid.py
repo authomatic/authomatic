@@ -2,8 +2,7 @@
 Google App Engine OpenID Providers
 ----------------------------------
 
-This module provides `OpenID <http://openid.net/>`_ :doc:`providers` based on
-`Google App Engine Users API <https://developers.google.com/appengine/docs/python/users/>`_ library.
+Providers compatible with the |openid|_ protocol based on the |gae_users_api|_.
 
 .. note::
 
@@ -33,8 +32,7 @@ __all__ = ['GAEOpenID', 'Yahoo', 'Google']
 
 class GAEOpenID(providers.AuthenticationProvider):
     """
-    OpenID provider based on the
-    `Google App Engine Users API <https://developers.google.com/appengine/docs/python/users/>`_ library.
+    |openid|_ provider based on the |gae_users_api|_.
     
     .. automethod:: __init__(*args, identifier='')
         

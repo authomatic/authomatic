@@ -2,8 +2,8 @@
 OpenID Providers
 ----------------------------------
 
-This module provides `OpenID <http://openid.net/>`_ :doc:`providers` based on the
-`python-openid <http://pypi.python.org/pypi/python-openid/>`_ library.
+Providers compatible with the |openid|_ protocol based on the
+`python-openid`_ library.
 
 .. warning::
     
@@ -65,7 +65,7 @@ XRDS_XML = \
 
 class OpenID(providers.AuthenticationProvider):
     """
-    OpenID provider based on the `python-openid <http://pypi.python.org/pypi/python-openid/>`_ library.
+    |openid|_ provider based on the `python-openid`_ library.
     
     .. automethod:: __init__
     
@@ -369,14 +369,14 @@ class OpenID(providers.AuthenticationProvider):
 
 class Yahoo(OpenID):
     """
-    :class:`.OpenID` provider with the :attr:`.identifier` predefined to ``"me.yahoo.com"``.
+    Yahoo  :class:`.OpenID` provider with the :attr:`.identifier` predefined to ``"me.yahoo.com"``.
     """
     
     identifier = 'me.yahoo.com'
 
 class Google(OpenID):
     """
-    :class:`.OpenID` provider with the :attr:`.identifier` predefined to ``"https://www.google.com/accounts/o8/id"``.
+    Google :class:`.OpenID` provider with the :attr:`.identifier` predefined to ``"https://www.google.com/accounts/o8/id"``.
     """
     
     identifier = 'https://www.google.com/accounts/o8/id'

@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>authomatic.providers.oauth1 &mdash; Authomatic 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Authomatic 0.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="authomatic.providers" href="../providers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../authomatic.html" >authomatic</a> &raquo;</li>
+          <li><a href="../providers.html" accesskey="U">authomatic.providers</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for authomatic.providers.oauth1</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">OAuth 1.0a Providers</span>
+<span class="sd">--------------------</span>
+
+<span class="sd">Providers compatible with the |oauth1|_ protocol.</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">    </span>
+<span class="sd">    Twitter</span>
+<span class="sd">    OAuth1</span>
+<span class="sd">    </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">providers</span>
+<span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="n">CancellationError</span><span class="p">,</span> <span class="n">FailureError</span><span class="p">,</span> <span class="n">OAuth1Error</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlencode</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">binascii</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">authomatic.core</span> <span class="kn">as</span> <span class="nn">core</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">urlparse</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;OAuth1&#39;</span><span class="p">,</span> <span class="s">&#39;Twitter&#39;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">_normalize_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a normalized query string sorted first by key, then by value</span>
+<span class="sd">    excluding the &quot;realm&quot; and &quot;oauth_signature&quot; parameters</span>
+<span class="sd">    as specified here: http://oauth.net/core/1.0a/#rfc.section.9.1.1</span>
+<span class="sd">    </span>
+<span class="sd">    params: dict or list of tuples</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    
+    <span class="c"># remove &quot;realm&quot; and &quot;oauth_signature&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;oauth_signature&#39;</span><span class="p">,</span> <span class="s">&#39;realm&#39;</span><span class="p">)]</span>
+    <span class="c"># sort</span>
+    <span class="n">params</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="c"># convert to query string</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="c"># replace &quot;+&quot; to &quot;%20&quot;</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">qs</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;+&#39;</span><span class="p">,</span> <span class="s">&#39;%20&#39;</span><span class="p">)</span>
+    <span class="c"># replace &quot;%7E&quot; to &quot;%20&quot;</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">qs</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%7E</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;~&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qs</span>
+
+
+<span class="k">def</span> <span class="nf">_join_by_ampersand</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&#39;&amp;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">core</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">_create_base_string</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns base string for HMAC-SHA1 signature</span>
+<span class="sd">    </span>
+<span class="sd">    as specified in: http://oauth.net/core/1.0a/#rfc.section.9.1.3</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">normalized_qs</span> <span class="o">=</span> <span class="n">_normalize_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">_join_by_ampersand</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">normalized_qs</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">BaseSignatureGenerator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class for all signature generators.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
+    
+    <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    
+    <span class="nd">@abc.abstractmethod</span>
+    <span class="k">def</span> <span class="nf">create_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Must create signature based on the parameters as specified in</span>
+<span class="sd">        http://oauth.net/core/1.0a/#signing_process.</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning::</span>
+<span class="sd">            </span>
+<span class="sd">            |classmenthod|</span>
+<span class="sd">        </span>
+<span class="sd">        :param str method:</span>
+<span class="sd">            HTTP method of the request to be signed.</span>
+<span class="sd">        :param str base:</span>
+<span class="sd">            Base URL of the request without query string an fragment.</span>
+<span class="sd">        :param dict params:</span>
+<span class="sd">            Dictionary or list of tuples of the request parameters.</span>
+<span class="sd">        :param str consumer_secret:</span>
+<span class="sd">            :attr:`.core.Consumer.secret`</span>
+<span class="sd">        :param str token_secret:</span>
+<span class="sd">            Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            The signature string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">HMACSHA1Generator</span><span class="p">(</span><span class="n">BaseSignatureGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HMAC-SHA1 signature generator.</span>
+<span class="sd">    See: http://oauth.net/core/1.0a/#anchor15</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;HMAC-SHA1&#39;</span>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_create_key</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a key for HMAC-SHA1 signature</span>
+<span class="sd">        as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2</span>
+<span class="sd">        </span>
+<span class="sd">        :param str consumer_secret:</span>
+<span class="sd">            :attr:`.core.Consumer.secret`</span>
+<span class="sd">        :param str token_secret:</span>
+<span class="sd">            Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            Key to sign the request with.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="n">_join_by_ampersand</span><span class="p">(</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span> <span class="ow">or</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+    
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_signature</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns HMAC-SHA1 signature</span>
+<span class="sd">        as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">base_string</span> <span class="o">=</span> <span class="n">_create_base_string</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_create_key</span><span class="p">(</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+        
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">base_string</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">b2a_base64</span><span class="p">(</span><span class="n">hashed</span><span class="o">.</span><span class="n">digest</span><span class="p">())[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">signature</span>
+
+
+<div class="viewcode-block" id="OAuth1"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.OAuth1">[docs]</a><span class="k">class</span> <span class="nc">OAuth1</span><span class="p">(</span><span class="n">providers</span><span class="o">.</span><span class="n">AuthorisationProvider</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for |oauth1|_ providers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">signature_generator</span> <span class="o">=</span> <span class="n">HMACSHA1Generator</span>
+    
+    <span class="n">REQUEST_TOKEN_REQUEST_TYPE</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Abstract properties</span>
+    <span class="c">#===========================================================================</span>
+    
+    <span class="nd">@abc.abstractproperty</span>
+<div class="viewcode-block" id="OAuth1.request_token_url"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.OAuth1.request_token_url">[docs]</a>    <span class="k">def</span> <span class="nf">request_token_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :class:`str` URL where we can get the request |oauth1| token.</span>
+<span class="sd">        see http://oauth.net/core/1.0a/#auth_step1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Internal methods</span>
+    <span class="c">#===========================================================================</span>
+    </div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_create_request_elements</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">request_type</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span>
+                                 <span class="n">verifier</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">nonce</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+        
+        <span class="n">consumer_key</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_key</span> <span class="ow">or</span> <span class="s">&#39;&#39;</span>
+        <span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="ow">or</span> <span class="s">&#39;&#39;</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="ow">or</span> <span class="s">&#39;&#39;</span>
+        <span class="n">token_secret</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span> <span class="ow">or</span> <span class="s">&#39;&#39;</span>
+        
+        <span class="c"># separate url base and query parameters</span>
+        <span class="n">url</span><span class="p">,</span> <span class="n">base_params</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_split_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        
+        <span class="c"># add extracted params to future params</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">base_params</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">request_type</span> <span class="o">==</span> <span class="n">cls</span><span class="o">.</span><span class="n">USER_AUTHORISATION_REQUEST_TYPE</span><span class="p">:</span>
+            <span class="c"># no need for signature</span>
+            <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
+                <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">OAuth1Error</span><span class="p">(</span><span class="s">&#39;Credentials with valid token are required to create User Authorization URL!&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># signature needed</span>
+            <span class="k">if</span> <span class="n">request_type</span> <span class="o">==</span> <span class="n">cls</span><span class="o">.</span><span class="n">REQUEST_TOKEN_REQUEST_TYPE</span><span class="p">:</span>
+                <span class="c"># Request Token URL</span>
+                <span class="k">if</span> <span class="n">consumer_key</span> <span class="ow">and</span> <span class="n">consumer_secret</span> <span class="ow">and</span> <span class="n">callback</span><span class="p">:</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_consumer_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">consumer_key</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_callback&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">callback</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">OAuth1Error</span><span class="p">(</span><span class="s">&#39;Credentials with valid consumer_key, consumer_secret and &#39;</span> <span class="o">+</span>\
+                                                             <span class="s">&#39;callback are required to create Request Token URL!&#39;</span><span class="p">)</span>
+                
+            <span class="k">elif</span> <span class="n">request_type</span> <span class="o">==</span> <span class="n">cls</span><span class="o">.</span><span class="n">ACCESS_TOKEN_REQUEST_TYPE</span><span class="p">:</span>
+                <span class="c"># Access Token URL</span>
+                <span class="k">if</span> <span class="n">consumer_key</span> <span class="ow">and</span> <span class="n">consumer_secret</span> <span class="ow">and</span> <span class="n">token</span> <span class="ow">and</span> <span class="n">verifier</span><span class="p">:</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_consumer_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">consumer_key</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_verifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">verifier</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">OAuth1Error</span><span class="p">(</span><span class="s">&#39;Credentials with valid consumer_key, consumer_secret, token &#39;</span> <span class="o">+</span>\
+                                                             <span class="s">&#39;and argument verifier are required to create Access Token URL!&#39;</span><span class="p">)</span>
+                
+            <span class="k">elif</span> <span class="n">request_type</span> <span class="o">==</span> <span class="n">cls</span><span class="o">.</span><span class="n">PROTECTED_RESOURCE_REQUEST_TYPE</span><span class="p">:</span>
+                <span class="c"># Protected Resources URL</span>
+                <span class="k">if</span> <span class="n">consumer_key</span> <span class="ow">and</span> <span class="n">consumer_secret</span> <span class="ow">and</span> <span class="n">token</span> <span class="ow">and</span> <span class="n">token_secret</span><span class="p">:</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_consumer_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">consumer_key</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">OAuth1Error</span><span class="p">(</span><span class="s">&#39;Credentials with valid consumer_key, consumer_secret, token and &#39;</span> <span class="o">+</span>\
+                                                             <span class="s">&#39;token_secret are required to create Protected Resources URL!&#39;</span><span class="p">)</span>
+            
+            <span class="c"># Sign request.</span>
+            <span class="c"># http://oauth.net/core/1.0a/#anchor13</span>
+            
+            <span class="c"># Prepare parameters for signature base string</span>
+            <span class="c"># http://oauth.net/core/1.0a/#rfc.section.9.1</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_signature_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">signature_generator</span><span class="o">.</span><span class="n">method</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_nonce&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nonce</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;1.0&#39;</span>
+            
+            <span class="c"># add signature to params</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_signature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">signature_generator</span><span class="o">.</span><span class="n">create_signature</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+        
+        
+        <span class="n">params</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        
+        <span class="n">body</span> <span class="o">=</span> <span class="bp">None</span>
+        
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;POST&#39;</span><span class="p">,</span> <span class="s">&#39;PUT&#39;</span><span class="p">):</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s">&#39;?&#39;</span> <span class="o">+</span> <span class="n">params</span>
+        
+        <span class="k">return</span> <span class="n">url</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">method</span>
+    
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Exposed methods</span>
+    <span class="c">#===========================================================================</span>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">fetch_protected_resource</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">content_parser</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{},</span> <span class="n">response_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        
+        <span class="c"># check required properties of credentials</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="ow">and</span> <span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span> <span class="ow">and</span> <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_key</span> <span class="ow">and</span> <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_secret</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">OAuth1Error</span><span class="p">(</span><span class="s">&#39;To access OAuth 1.0a resource you must provide credentials with valid access_token, &#39;</span> <span class="o">+</span> \
+                                                     <span class="s">&#39;access_token_secret, consumer_key and consumer_secret!&#39;</span><span class="p">)</span>
+        
+        <span class="c"># create request elements</span>
+        <span class="n">request_elements</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_create_request_elements</span><span class="p">(</span><span class="n">request_type</span><span class="o">=</span><span class="n">cls</span><span class="o">.</span><span class="n">PROTECTED_RESOURCE_REQUEST_TYPE</span><span class="p">,</span>
+                                                       <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span>
+                                                       <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                                                       <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+                                                       <span class="n">nonce</span><span class="o">=</span><span class="n">cls</span><span class="o">.</span><span class="n">csrf_generator</span><span class="p">())</span>
+        
+        <span class="c"># create rpc object</span>
+        <span class="n">rpc</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">fetch_async</span><span class="p">(</span><span class="o">*</span><span class="n">request_elements</span><span class="p">,</span>
+                                    <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+                                    <span class="n">response_parser</span><span class="o">=</span><span class="n">response_parser</span><span class="p">,</span>
+                                    <span class="n">content_parser</span><span class="o">=</span><span class="n">content_parser</span><span class="p">)</span>
+        <span class="c"># and return it</span>
+        <span class="k">return</span> <span class="n">rpc</span>
+    
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="n">credentials</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">credentials</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span><span class="p">)</span>
+    
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">deserialized_tuple</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+        <span class="n">provider_short_name</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span> <span class="o">=</span> <span class="n">deserialized_tuple</span>
+        
+        <span class="k">return</span> <span class="n">core</span><span class="o">.</span><span class="n">Credentials</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span>
+                                       <span class="n">token_secret</span><span class="o">=</span><span class="n">token_secret</span><span class="p">,</span>
+                                       <span class="n">provider_type</span><span class="o">=</span><span class="n">cls</span><span class="o">.</span><span class="n">get_type</span><span class="p">(),</span>
+                                       <span class="n">provider_short_name</span><span class="o">=</span><span class="n">provider_short_name</span><span class="p">,</span>
+                                       <span class="n">consumer_key</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;consumer_key&#39;</span><span class="p">),</span>
+                                       <span class="n">consumer_secret</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;consumer_secret&#39;</span><span class="p">))</span>
+    
+    
+    <span class="nd">@providers.login_decorator</span>
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="n">credentials</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Credentials</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        
+        <span class="c"># get request parameters from which we can determine the login phase</span>
+        <span class="n">denied</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;denied&#39;</span><span class="p">)</span>
+        <span class="n">verifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;oauth_verifier&#39;</span><span class="p">)</span>
+        <span class="n">request_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;oauth_token&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">request_token</span> <span class="ow">and</span> <span class="n">verifier</span><span class="p">:</span>
+            <span class="c"># Phase 2 after redirect with success</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Continuing OAuth 1.0a authorisation procedure after redirect.&#39;</span><span class="p">)</span>
+            <span class="n">token_secret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_get</span><span class="p">(</span><span class="s">&#39;token_secret&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">token_secret</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span><span class="s">&#39;Unable to retrieve token secret from storage!&#39;</span><span class="p">)</span>
+            
+            <span class="c"># Get Access Token          </span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Fetching for access token from {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_url</span><span class="p">))</span>
+            
+            <span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">request_token</span>
+            <span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span> <span class="o">=</span> <span class="n">token_secret</span>
+            
+            <span class="n">request_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_request_elements</span><span class="p">(</span><span class="n">request_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ACCESS_TOKEN_REQUEST_TYPE</span><span class="p">,</span>
+                                                             <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_url</span><span class="p">,</span>
+                                                             <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span>
+                                                             <span class="n">verifier</span><span class="o">=</span><span class="n">verifier</span><span class="p">,</span>
+                                                             <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">csrf_generator</span><span class="p">())</span>
+            
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch</span><span class="p">(</span><span class="o">*</span><span class="n">request_elements</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span><span class="s">&#39;Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.&#39;</span>\
+                                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">),</span>
+                                   <span class="n">code</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                                   <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_url</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Got access token.&#39;</span><span class="p">)</span>
+            
+            <span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;oauth_token&#39;</span><span class="p">)</span>
+            <span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;oauth_token_secret&#39;</span><span class="p">)</span>
+            
+            <span class="n">credentials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_credentials_parser</span><span class="p">(</span><span class="n">credentials</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_or_create_user</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span>
+            
+            <span class="c">#===================================================================</span>
+            <span class="c"># We&#39;re done!</span>
+            <span class="c">#===================================================================</span>
+            
+        <span class="k">elif</span> <span class="n">denied</span><span class="p">:</span>
+            <span class="c"># Phase 2 after redirect denied</span>
+            <span class="k">raise</span> <span class="n">CancellationError</span><span class="p">(</span><span class="s">&#39;User denied the request token {} during a redirect to {}!&#39;</span><span class="o">.</span>\
+                                  <span class="n">format</span><span class="p">(</span><span class="n">denied</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_authorisation_url</span><span class="p">),</span>
+                                  <span class="n">original_message</span><span class="o">=</span><span class="n">denied</span><span class="p">,</span>
+                                  <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_authorisation_url</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># Phase 1 before redirect</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Starting OAuth 1.0a authorisation procedure.&#39;</span><span class="p">)</span>
+            
+            <span class="c"># Fetch for request token</span>
+            <span class="n">request_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_request_elements</span><span class="p">(</span><span class="n">request_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">REQUEST_TOKEN_REQUEST_TYPE</span><span class="p">,</span>
+                                                             <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span>
+                                                             <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">,</span>
+                                                             <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                                                             <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">csrf_generator</span><span class="p">())</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Fetching for request token and token secret.&#39;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch</span><span class="p">(</span><span class="o">*</span><span class="n">request_elements</span><span class="p">)</span>
+            
+            <span class="c"># check if response status is OK</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span><span class="s">&#39;Failed to obtain request token from {}! HTTP status code: {}.&#39;</span>\
+                                  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">),</span>
+                                  <span class="n">code</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                                  <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">)</span>
+            
+            <span class="c"># extract request token</span>
+            <span class="n">request_token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;oauth_token&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">request_token</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span><span class="s">&#39;Response from {} doesn</span><span class="se">\&#39;</span><span class="s">t contain oauth_token parameter!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">),</span>
+                                  <span class="n">original_message</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                                  <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">)</span>
+            
+            <span class="c"># we need request token for user authorisation redirect</span>
+            <span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">request_token</span>
+                        
+            <span class="c"># extract token secret and save it to storage</span>
+            <span class="n">token_secret</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;oauth_token_secret&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">token_secret</span><span class="p">:</span>
+                <span class="c"># we need token secret after user authorisation redirect to get access token</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_session_set</span><span class="p">(</span><span class="s">&#39;token_secret&#39;</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span><span class="s">&#39;Failed to obtain token secret from {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">),</span>
+                                  <span class="n">original_message</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                                  <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">)</span>
+            
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Got request token and token secret&#39;</span><span class="p">)</span>
+            
+            <span class="c"># Create User Authorization URL</span>
+            <span class="n">request_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_request_elements</span><span class="p">(</span><span class="n">request_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">USER_AUTHORISATION_REQUEST_TYPE</span><span class="p">,</span>
+                                                             <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span>
+                                                             <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_authorisation_url</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Redirecting user to {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request_elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">redirect</span><span class="p">(</span><span class="n">request_elements</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+</div>
+<div class="viewcode-block" id="Twitter"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Twitter">[docs]</a><span class="k">class</span> <span class="nc">Twitter</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/oauth/request_token&#39;</span>
+    <span class="n">user_authorisation_url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/oauth/authorize&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/oauth/access_token&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/1/account/verify_credentials.json&#39;</span>
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;screen_name&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;profile_image_url&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;lang&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;url&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">user</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../authomatic.html" >authomatic</a> &raquo;</li>
+          <li><a href="../providers.html" >authomatic.providers</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Peter Hudec.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

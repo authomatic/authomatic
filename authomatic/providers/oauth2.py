@@ -1,22 +1,46 @@
+"""
+OAuth 2.0 Providers
+-------------------
+
+Providers compatible with the |oauth2|_ protocol.
+
+.. autosummary::
+    
+    Facebook
+    Google
+    WindowsLive
+    OAuth2
+    
+"""
+
 from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 from urllib import urlencode
 import logging
 import authomatic.core as core
 
+__all__ = ['Facebook', 'Google', 'WindowsLive', 'OAuth2']
 
 class OAuth2(providers.AuthorisationProvider):
     """
-    Base class for OAuth2 services
+    Base class for |oauth2|_ providers.
+    
+    .. automethod:: __init__
+    
     """
     
     def __init__(self, *args, **kwargs):
+        """
+        Accepts additional keyword argument :attr:`.scope`.
+        """
+        
         super(OAuth2, self).__init__(*args, **kwargs)
         
         #: :class:`list` List of strings specifying requested permissions as described in the
         #: `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
         # Scope from **kwargs overrides scope from config.
         self.scope = kwargs.get('scope', []) or self.adapter.config.get(self.name, {}).get('scope', [])
+    
     
     #===========================================================================
     # Internal methods
@@ -25,9 +49,13 @@ class OAuth2(providers.AuthorisationProvider):
     
     def _scope_parser(self, scope):
         """
-        Convert scope list to csv
+        Override this to handle differences between accepted format of scope across different providers.
+        
+        :attr list scope:
+            List of scopes.
         """
         
+        # Most providers accept csv scope.
         return ','.join(scope) if scope else ''
     
     
@@ -39,16 +67,15 @@ class OAuth2(providers.AuthorisationProvider):
         consumer_secret = credentials.consumer_secret or ''
         token = credentials.token or ''
         
-        # separate url base and query parameters
+        # Separate url base and query parameters.
         url, base_params = cls._split_url(url)
         
-        # add extracted params to future params
+        # Add extracted params to future params.
         params = dict(base_params)
         
         if request_type == cls.USER_AUTHORISATION_REQUEST_TYPE:
-            # User authorisation request
+            # User authorisation request.
             if consumer_key and redirect_uri and scope and state:
-                # required
                 params['client_id'] = consumer_key
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
@@ -59,7 +86,7 @@ class OAuth2(providers.AuthorisationProvider):
                                   'state are required to create OAuth 2.0 user authorisation request elements!')
         
         elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
-            # Access token request
+            # Access token request.
             if token and consumer_key and consumer_secret and redirect_uri:
                 params['code'] = token
                 params['client_id'] = consumer_key
@@ -68,24 +95,25 @@ class OAuth2(providers.AuthorisationProvider):
                 params['grant_type'] = 'authorization_code'
             else:
                 raise OAuth2Error('Credentials with valid token, consumer_key, consumer_secret and argument ' + \
-                                                         'redirect_uri are required to create OAuth 2.0 acces token request elements!')
+                                  'redirect_uri are required to create OAuth 2.0 acces token request elements!')
         
         elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
-            # Protected resources request
+            # Protected resource request.
             if token:
                 params['access_token'] = token
             else:
-                #TODO write error message
                 raise OAuth2Error('Credentials with valid token are required to create ' + \
-                                                         'OAuth 2.0 protected resources request elements!')
+                                  'OAuth 2.0 protected resources request elements!')
         
         params = urlencode(params)
         
         body = None
         
         if method in ('POST', 'PUT'):
+            # Send params in the body
             body = params
         else:
+            # Send params as query string
             url = url + '?' + params
         
         return url, body, method
@@ -97,35 +125,43 @@ class OAuth2(providers.AuthorisationProvider):
     
     @staticmethod
     def to_tuple(credentials):
+        
+        # OAuth 2.0 needs only token and it's expiration date only for convenience.
         return (credentials.token, credentials.expiration_date)
+    
     
     @classmethod
     def reconstruct(cls, deserialized_tuple, cfg):
+        
         provider_short_name, token, expiration_date = deserialized_tuple
         
         return core.Credentials(token=token,
-                                       provider_type=cls.get_type(),
-                                       provider_short_name=provider_short_name,
-                                       expiration_date=expiration_date)
+                                provider_type=cls.get_type(),
+                                provider_short_name=provider_short_name,
+                                expiration_date=expiration_date)
+    
     
     @classmethod
-    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
+    def fetch_protected_resource(cls, adapter, url, credentials, content_parser,
+                                 method='GET', headers={}, response_parser=None):
+        
         # check required properties of credentials
         if not credentials.token:
             raise OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid token!')
         
-        # NEW
+        
         request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                       credentials=credentials,
-                                                       url=url,
-                                                       state=cls.csrf_generator())
+                                                        credentials=credentials,
+                                                        url=url,
+                                                        state=cls.csrf_generator())
         
         rpc = adapter.fetch_async(*request_elements,
-                                    headers=headers,
-                                    response_parser=response_parser,
-                                    content_parser=content_parser)
+                                  headers=headers,
+                                  response_parser=response_parser,
+                                  content_parser=content_parser)
         
         return rpc
+    
     
     @providers.login_decorator
     def login(self):
@@ -138,7 +174,10 @@ class OAuth2(providers.AuthorisationProvider):
         state = self.adapter.params.get('state')        
         
         if authorisation_code and state:
+            #===================================================================
             # Phase 2 after redirect with success
+            #===================================================================
+            
             self._log(logging.INFO, 'Continuing OAuth 2.0 authorisation procedure after redirect.')
             
             # validate CSRF token
@@ -193,7 +232,9 @@ class OAuth2(providers.AuthorisationProvider):
             #===================================================================
             
         elif error:
+            #===================================================================
             # Phase 2 after redirect with error
+            #===================================================================
             
             error_reason = self.adapter.params.get('error_reason')
             error_description = self.adapter.params.get('error_description')
@@ -204,7 +245,10 @@ class OAuth2(providers.AuthorisationProvider):
                 raise FailureError(error_description, url=self.user_authorisation_url)
             
         else:
-            # phase 1 before redirect
+            #===================================================================
+            # Phase 1 before redirect
+            #===================================================================
+            
             self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure.')
             
             # generate csfr
@@ -225,9 +269,7 @@ class OAuth2(providers.AuthorisationProvider):
 
 
 class Facebook(OAuth2):
-    """
-    Facebook Oauth 2.0 service
-    """
+    """Facebook |oauth2|_ provider."""
     
     user_authorisation_url = 'https://www.facebook.com/dialog/oauth'
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
@@ -252,9 +294,7 @@ class Facebook(OAuth2):
 
 
 class Google(OAuth2):
-    """
-    Google Oauth 2.0 service
-    """    
+    """Google |oauth2|_ provider."""
     
     user_authorisation_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
@@ -277,9 +317,7 @@ class Google(OAuth2):
     
     
 class WindowsLive(OAuth2):
-    """
-    Windlows Live Oauth 2.0 service
-    """
+    """Windows Live |oauth2|_ provider."""
     
     user_authorisation_url = 'https://oauth.live.com/authorize'
     access_token_url = 'https://oauth.live.com/token'

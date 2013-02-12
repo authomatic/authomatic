@@ -1,6 +1,40 @@
 Providers
 ---------
 
+Providers are abstractions of the **provider** party of the
+**provider**, **consumer**, **user** triangle.
+There is no reason for you to instatniate them manualy.
+You only should specify them in the :doc:`config`.
+
+Some provider types accept additional keyword arguments in their constructor
+passed to it via the :doc:`config` or the :func:`authomatic.login` keyword arguments.
+
+
+Here is a table of currently available providers:
+                                                                                             
++------------------------------+--------------------------+-------------------------------+-+
+| |oauth2|                     | |oauth1|                 | |openid|                      | |
++==============================+==========================+===============================+=+
+| :class:`.oauth2.Facebook`    | :class:`.oauth1.Twitter` | :class:`.openid.OpenID`       | |
++------------------------------+--------------------------+-------------------------------+-+
+| :class:`.oauth2.Google`      |                          | :class:`.openid.Yahoo`        | |
++------------------------------+--------------------------+-------------------------------+-+
+| :class:`.oauth2.WindowsLive` |                          | :class:`.openid.Google`       | |
++------------------------------+--------------------------+-------------------------------+-+
+|                              |                          | :class:`.gaeopenid.GAEOpenID` | |
++------------------------------+--------------------------+-------------------------------+-+
+|                              |                          | :class:`.gaeopenid.Yahoo`     | |
++------------------------------+--------------------------+-------------------------------+-+
+|                              |                          | :class:`.gaeopenid.Google`    | |
++------------------------------+--------------------------+-------------------------------+-+
+
+
+.. automodule:: authomatic.providers.oauth2
+   :members:
+
+.. automodule:: authomatic.providers.oauth1
+   :members:
+
 .. automodule:: authomatic.providers.openid
    :members:
 

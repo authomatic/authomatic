@@ -1,3 +1,16 @@
+"""
+OAuth 1.0a Providers
+--------------------
+
+Providers compatible with the |oauth1|_ protocol.
+
+.. autosummary::
+    
+    Twitter
+    OAuth1
+    
+"""
+
 from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth1Error
 from urllib import urlencode
@@ -11,6 +24,7 @@ import time
 import urllib
 import urlparse
 
+__all__ = ['OAuth1', 'Twitter']
 
 def _normalize_params(params):
     """
@@ -38,7 +52,6 @@ def _normalize_params(params):
     return qs
 
 
-
 def _join_by_ampersand(*args):
     return '&'.join([core.escape(i) for i in args])
 
@@ -47,7 +60,7 @@ def _create_base_string(method, base, params):
     """
     Returns base string for HMAC-SHA1 signature
     
-    as specified at: http://oauth.net/core/1.0a/#rfc.section.9.1.3
+    as specified in: http://oauth.net/core/1.0a/#rfc.section.9.1.3
     """
     
     normalized_qs = _normalize_params(params)
@@ -56,15 +69,45 @@ def _create_base_string(method, base, params):
 
 
 class BaseSignatureGenerator(object):
+    """
+    Abstract base class for all signature generators.
+    """
+    
+    __metaclass__ = abc.ABCMeta
     
     method = ''
     
-    @classmethod
-    def create_signature(cls, method, base, params, consumer_secret, token_secret=''):
-        raise NotImplementedError
+    @abc.abstractmethod
+    def create_signature(self, method, base, params, consumer_secret, token_secret=''):
+        """
+        Must create signature based on the parameters as specified in
+        http://oauth.net/core/1.0a/#signing_process.
+        
+        .. warning::
+            
+            |classmethod|
+        
+        :param str method:
+            HTTP method of the request to be signed.
+        :param str base:
+            Base URL of the request without query string an fragment.
+        :param dict params:
+            Dictionary or list of tuples of the request parameters.
+        :param str consumer_secret:
+            :attr:`.core.Consumer.secret`
+        :param str token_secret:
+            Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.
+        
+        :returns:
+            The signature string.
+        """
 
 
 class HMACSHA1Generator(BaseSignatureGenerator):
+    """
+    HMAC-SHA1 signature generator.
+    See: http://oauth.net/core/1.0a/#anchor15
+    """
     
     method = 'HMAC-SHA1'
     
@@ -72,28 +115,25 @@ class HMACSHA1Generator(BaseSignatureGenerator):
     def _create_key(cls, consumer_secret, token_secret=''):
         """
         Returns a key for HMAC-SHA1 signature
-        
         as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2
         
-        :param consumer_secret:
-        :param token_secret:
+        :param str consumer_secret:
+            :attr:`.core.Consumer.secret`
+        :param str token_secret:
+            Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.
+        
+        :returns:
+            Key to sign the request with.
         """
         
         return _join_by_ampersand(consumer_secret, token_secret or '')
+    
     
     @classmethod
     def create_signature(cls, method, base, params, consumer_secret, token_secret=''):
         """
         Returns HMAC-SHA1 signature
-        
         as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2
-        
-        :param cls:
-        :param method:
-        :param base:
-        :param params:
-        :param consumer_secret:
-        :param token_secret:
         """
         
         base_string = _create_base_string(method, base, params)
@@ -106,26 +146,25 @@ class HMACSHA1Generator(BaseSignatureGenerator):
 
 
 class OAuth1(providers.AuthorisationProvider):
+    """
+    Base class for |oauth1|_ providers.
+    """
     
     signature_generator = HMACSHA1Generator
     
     REQUEST_TOKEN_REQUEST_TYPE = 1
     
-    def __init__(self, *args, **kwargs):
-        super(OAuth1, self).__init__(*args, **kwargs)
-        
-        # create keys under which oauth token and secret will be stored in session
-        self._oauth_token_key = self.name + '_oauth_token'
-        self._oauth_token_secret_key = self.name + '_oauth_token_secret'
-        
-        
+    
     #===========================================================================
     # Abstract properties
     #===========================================================================
     
     @abc.abstractproperty
     def request_token_url(self):
-        pass
+        """
+        :class:`str` URL where we can get the |oauth1| request token.
+        see http://oauth.net/core/1.0a/#auth_step1.
+        """
     
     
     #===========================================================================
@@ -365,6 +404,9 @@ class OAuth1(providers.AuthorisationProvider):
 
 
 class Twitter(OAuth1):
+    """
+    Twitter |oauth1|_ provider.
+    """
     
     request_token_url = 'https://api.twitter.com/oauth/request_token'
     user_authorisation_url = 'https://api.twitter.com/oauth/authorize'
