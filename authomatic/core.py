@@ -81,7 +81,7 @@ class ReprMixin(object):
         return '{}({})'.format(name, args)
 
 
-def login(adapter, provider_name, callback=None, report_errors=True,
+def login(adapter, config, provider_name, callback=None, report_errors=True,
           logging_level=logging.DEBUG, **kwargs):
     """
     Launches a login procedure for specified :doc:`provider <providers>` and returns :class:`.LoginResult`.
@@ -97,16 +97,18 @@ def login(adapter, provider_name, callback=None, report_errors=True,
     
     :param adapter:
         Framework specific :doc:`adapter <adapters>`.
-    :param provider_name:
+    :param dict config:
+        :doc:`config`
+    :param str provider_name:
         Name of the provider as specified in the keys of the :doc:`config`.
-    :param callback:
+    :param callable callback:
         If specified the function will call the callback with :class:`.LoginResult`
         passed as argument and will return nothing.
-    :param report_errors:
+    :param bool report_errors:
         If ``True`` errors and exceptions which occur during login will be caught and
         accessible in the :class:`.LoginResult`.
         If ``False`` errors and exceptions will not be handled.
-    :param logging_level:
+    :param int logging_level:
         The library logs important events during the login procedure.
         You can specify the desired logging level with the constants of the
         `logging <http://docs.python.org/2/library/logging.html>`_ of Python standard library.
@@ -118,11 +120,11 @@ def login(adapter, provider_name, callback=None, report_errors=True,
         Accepts other :doc:`provider <providers>` specific keyword arguments.
     
     :returns:
-        :obj:`None` or :class:`.LoginResult` instance.
+        :obj:`None` or :class:`.LoginResult`.
     """
     
     # retrieve required settings for current provider and raise exceptions if missing
-    provider_settings = adapter.config.get(provider_name)
+    provider_settings = config.get(provider_name)
     if not provider_settings:
         raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
@@ -139,7 +141,7 @@ def login(adapter, provider_name, callback=None, report_errors=True,
     ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate provider class
-    provider = ProviderClass(adapter, provider_name, callback,
+    provider = ProviderClass(adapter, config, provider_name, callback,
                              report_errors=report_errors,
                              logging_level=logging_level,
                              consumer=consumer,
@@ -248,11 +250,13 @@ def import_string(import_name, silent=False):
 
 def get_provider_settings_by_short_name(config, short_name):
     """
-    Returns the configuration for a specific **provider** based on it's ``short_name`` value
-    as specified in :ref:`config`.
+    Returns the configuration for a specific doc:provider <providers>: based on it's
+    ``short_name`` value as specified in :doc:`config`.
     
-    :param config: :ref:`config`.
-    :param short_name: Value of the short_name parameter in the :ref:`config` to search for.
+    :param dict config:
+        :doc:`config`.
+    :param short_name:
+        Value of the short_name parameter in the :ref:`config` to search for.
     """
     
     for v in config.values():
@@ -431,13 +435,13 @@ class Credentials(ReprMixin):
     
     
     @classmethod
-    def deserialize(cls, adapter, serialized):
+    def deserialize(cls, config, serialized):
         """
         A *class method* which reconstructs credentials created by :meth:`serialize`.
         
-        :param adapter:
-            An :doc:`adapter <adapters>` used by :func:`authomatic.login` to get the credentials.
-        :param serialized:
+        :param dict config:
+            The same :doc:`config` used in the :func:`.login` to get the credentials.
+        :param str serialized:
             :class:`string` The serialized credentials.
         
         :returns:
@@ -452,7 +456,7 @@ class Credentials(ReprMixin):
             short_name = deserialized[0]
             
             # Get provider config by short name.
-            cfg =  get_provider_settings_by_short_name(adapter.config, short_name)
+            cfg =  get_provider_settings_by_short_name(config, short_name)
             
             # Get the provider class.
             ProviderClass = resolve_provider_class(cfg.get('class_name'))
@@ -547,6 +551,7 @@ class Request(ReprMixin):
     
     .. warning::
         
+        #TODO: make to substitution?
         Whether the request is really asynchronous depends on the implementation of the
         :doc:`adapter's <adapters>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
         
@@ -554,34 +559,40 @@ class Request(ReprMixin):
     
     _repr_ignore = ('rpc',)
     
-    def __init__(self, adapter, credentials, url, method='GET', response_parser=None, content_parser=None):
+    def __init__(self, adapter, config, credentials, url, method='GET',
+                 response_parser=None, content_parser=None):
+        """
+        Initializes the request.
         
-        #: The same :doc:`adapter <adapters>` instance which was used in the :func:`.login` function to get
-        #: the **user's** :class:`.Credentials`.
+        :param adapter:
+            :doc:`Adapter <adapters>`
+        :param config:
+            The same :doc:`config` used in the :func:`.login` function to get the credentials.
+        :param credentials:
+            :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
+            of the **user** whose **protected resource** we want to access.
+        :param str url:
+            The URL of the protected resource. Can contain query parameters.
+        :param str method:
+            HTTP method of the request.
+        :param callable response_parser:
+            A callable that takes the platform specific ``fetch`` response object
+            as argument and converts it to a :class:`.Response` instance.
+        :param callable content_parser:
+            A callable as described in :attr:`.Response.content_parser`.
+        """
+        
         self.adapter = adapter
+        self.url = url    
+        self.method = method
+        self.response_parser = response_parser
+        self.content_parser = content_parser
+        self.rpc = None
         
         if type(credentials) == Credentials:
-            #: :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
-            #: of the **user** whose **protected resource** we want to access.
             self.credentials = credentials
         elif type(credentials) == str:
-            self.credentials = Credentials.deserialize(self.adapter, credentials)
-            
-        #: :class:`str` The URL of the protected resource.
-        #: Can contain query parameters.
-        self.url = url
-        
-        #: :class:`str` HTTP method of the request.
-        self.method = method
-        
-        #: :class:`callable` A callable that takes the platform specific ``fetch`` response object
-        #: as argument and converts it to a :class:`.Response` instance.
-        self.response_parser = response_parser
-        
-        #: :class:`callable` A callable as described in :attr:`.Response.content_parser`.
-        self.content_parser = content_parser
-        
-        self.rpc = None
+            self.credentials = Credentials.deserialize(config, credentials)
     
     def fetch(self):
         """
@@ -612,7 +623,7 @@ class Request(ReprMixin):
         return self.rpc.get_response()
 
 
-def async_fetch(adapter, credentials, url, method='GET', content_parser=None):
+def async_fetch(adapter, config, credentials, url, method='GET', content_parser=None):
     """
     Fetches protected resource asynchronously.
        
@@ -622,8 +633,9 @@ def async_fetch(adapter, credentials, url, method='GET', content_parser=None):
         :doc:`adapter's <adapters>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
     
     :param adapter:
-        The same :doc:`adapter <adapters>` instance which was used in the :func:`.login` function to get
-        the **user's** :class:`.Credentials`.
+            :doc:`Adapter <adapters>`
+    :param config:
+            The same :doc:`config` used in the :func:`.login` function to get the credentials.
     :param credentials:
         :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
         of the **user** whose **protected resource** we want to access.
@@ -638,10 +650,10 @@ def async_fetch(adapter, credentials, url, method='GET', content_parser=None):
     :returns:
         :class:`.Request`
     """
-    return Request(adapter, credentials, url, method, content_parser).fetch()
+    return Request(adapter, config, credentials, url, method, content_parser).fetch()
 
 
-def fetch(adapter, credentials, url, method='GET', content_parser=None):
+def fetch(adapter, config, credentials, url, method='GET', content_parser=None):
     """
     Fetches protected resource.
     
@@ -650,10 +662,10 @@ def fetch(adapter, credentials, url, method='GET', content_parser=None):
         Internally it's just a wrapper of
         ``authomatic.async_fetch(adapter, url, credentials, method, content_parser).get_response()``.
     
-    
     :param adapter:
-        The same :doc:`adapter <adapters>` instance which was used in the :func:`.login` function to get
-        the **user's** :class:`.Credentials`.
+            :doc:`Adapter <adapters>`
+    :param config:
+            The same :doc:`config` used in the :func:`.login` function to get the credentials.
     :param credentials:
         :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
         of the **user** whose **protected resource** we want to access.
@@ -668,7 +680,7 @@ def fetch(adapter, credentials, url, method='GET', content_parser=None):
     :returns:
         :class:`.Response`
     """
-    return async_fetch(adapter, credentials, url, method, content_parser).get_response()
+    return async_fetch(adapter, config, credentials, url, method, content_parser).get_response()
 
 
 

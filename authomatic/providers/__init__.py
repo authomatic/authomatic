@@ -69,12 +69,15 @@ class BaseProvider(object):
     
     __metaclass__ = abc.ABCMeta
     
-    def __init__(self, adapter, provider_name, callback=None,
+    def __init__(self, adapter, config, provider_name, callback=None,
                  report_errors=True, logging_level=logging.INFO,
                  prefix='authomatic', **kwargs):
         
         #: The :doc:`platform adapter <adapters>`.
         self.adapter = adapter
+        
+        #: :doc:`config`
+        self.config = config
         
         #: :class:`str` The provider name as specified in the :doc:`config`.
         self.name = provider_name
@@ -165,6 +168,24 @@ class BaseProvider(object):
     #===========================================================================
     # Internal methods
     #===========================================================================
+    
+    
+    def _kwarg(self, kwargs, kwname, default=None):
+        """
+        Resolves keyword arguments from constructor or :doc:`config`.
+        
+        .. note::
+        
+            Arguments from :doc:`config` take precedence over those from constructor.
+        
+        :param dict kwargs:
+            Keyword arguments dictionary.
+        :param str kwname:
+            Name of the desired keyword argument.
+        """
+        
+        return self.config.get(self.name, {}).get(kwname) or kwargs.get(kwname) or default
+    
     
     def _session_key(self, key):
         """
@@ -296,10 +317,12 @@ class AuthorisationProvider(BaseProvider):
         super(AuthorisationProvider, self).__init__(*args, **kwargs)
         
         #: :class:`.core.Consumer`
-        self.consumer = kwargs.get('consumer')
+        self.consumer = self._kwarg(kwargs, 'consumer')
+#        self.consumer = kwargs.get('consumer')
         
         #: Short name as specified in the :doc:`config`.
-        self.short_name = self.adapter.config.get(self.name, {}).get('short_name')
+        self.short_name = self._kwarg(kwargs, 'short_name')
+#        self.short_name = self.adapter.config.get(self.name, {}).get('short_name')
     
     #===========================================================================
     # Abstract properties
@@ -444,6 +467,7 @@ class AuthorisationProvider(BaseProvider):
         """
         
         return authomatic.core.Request(adapter=self.adapter,
+                                       config=self.config,
                                        credentials=self.user.credentials,
                                        url=url,
                                        method=method,
@@ -574,7 +598,8 @@ class AuthenticationProvider(BaseProvider):
         super(AuthenticationProvider, self).__init__(*args, **kwargs)
         
         # takes the identifier keyword argument into account only if the identifier is not hardcoded
-        self.identifier = self.identifier or kwargs.get('identifier', '')
+        self.identifier = self._kwarg(kwargs, 'identifier', '')
+#        self.identifier = self.identifier or kwargs.get('identifier', '')
         
         
         

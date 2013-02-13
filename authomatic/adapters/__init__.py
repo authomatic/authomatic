@@ -91,19 +91,6 @@ class BaseAdapter(object):
         return authomatic.login(self,  *args, **kwargs)
     
     
-    def config(self):
-        """
-        Any object that has the get('provider-name') method which should return
-        a provider config dictionary.
-        
-        Ment to provide an alternative to a hardcoded config, i.e. Data model config. 
-        
-        TODO: point to config section of future documentation? 
-        """
-        
-        return None
-    
-    
     @abc.abstractproperty
     def url(self):
         """Must return the url of the actual request including path but without query and fragment"""

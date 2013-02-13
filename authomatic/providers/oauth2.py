@@ -39,7 +39,8 @@ class OAuth2(providers.AuthorisationProvider):
         #: :class:`list` List of strings specifying requested permissions as described in the
         #: `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
         # Scope from **kwargs overrides scope from config.
-        self.scope = kwargs.get('scope', []) or self.adapter.config.get(self.name, {}).get('scope', [])
+        self.scope = self._kwarg(kwargs, 'scope', [])
+#        self.scope = kwargs.get('scope', []) or self.adapter.config.get(self.name, {}).get('scope', [])
     
     
     #===========================================================================

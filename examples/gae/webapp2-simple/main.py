@@ -43,10 +43,9 @@ class Login(webapp2.RequestHandler):
     def login(self, provider_name):
         
         self.adapter = GAEWebapp2Adapter(handler=self,
-                                         config=config.PROVIDERS,
                                          session_secret='abcd')
         
-        result = authomatic.login(self.adapter, provider_name,
+        result = authomatic.login(self.adapter, config.PROVIDERS, provider_name,
                                   report_errors=False,
                                   callback=self.callback,
                                   identifier=self.request.params.get('id'))
@@ -89,7 +88,7 @@ class Login(webapp2.RequestHandler):
                 
                 serialized = event.user.credentials.serialize()
                 
-                deserialized = Credentials.deserialize(self.adapter, serialized)
+                deserialized = Credentials.deserialize(config.PROVIDERS, serialized)
                 
                 self.response.write('<br /><br />')
                 self.response.write('Serialized:<br />{}<br /><br />'.format(serialized)) 
@@ -110,7 +109,7 @@ class Login(webapp2.RequestHandler):
                 # fetch request from deserialized credentials
                 if event.provider.name == 'facebook':
                     url = 'https://graph.facebook.com/me'
-                    rpc = authomatic.async_fetch(self.adapter, serialized, url)
+                    rpc = authomatic.async_fetch(self.adapter, config.PROVIDERS, serialized, url)
                     
                     resp = rpc.get_response()
                     self.response.write('Bio:<br /><br />')

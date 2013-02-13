@@ -7,7 +7,8 @@ There is no reason for you to instatniate them manualy.
 You only should specify them in the :doc:`config`.
 
 Some provider types accept additional keyword arguments in their constructor
-passed to it via the :doc:`config` or the :func:`authomatic.login` keyword arguments.
+passed to them via the :doc:`config` or the :func:`authomatic.login` keyword arguments.
+
 
 
 Here is a table of currently available providers:

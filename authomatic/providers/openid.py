@@ -128,17 +128,21 @@ class OpenID(providers.AuthenticationProvider):
         #: If ``True`` the realm HTML document will be accessible at
         #: ``{current url}?{realm_param}={realm_param}``
         #: e.g. ``http://example.com/path?realm=realm``.
-        self.use_realm = kwargs.get('use_realm', True)
+        self.use_realm = self._kwarg(kwargs, 'use_realm', True)
+#        self.use_realm = kwargs.get('use_realm', True)
         
         #: The contents of the HTML body tag of the realm.
-        self.realm_body = kwargs.get('realm_body', '')
+        self.realm_body = self._kwarg(kwargs, 'realm_body', '')
+#        self.realm_body = kwargs.get('realm_body', '')
         
         #: The name of the query parameter to be used to serve the realm.
-        self.realm_param = kwargs.get('realm_param', 'realm')
+        self.realm_param = self._kwarg(kwargs, 'realm_param', 'realm')
+#        self.realm_param = kwargs.get('realm_param', 'realm')
         
         #: The name of the query parameter to be used to serve the
         #: `XRDS document <http://openid.net/specs/openid-authentication-2_0-12.html#XRDS_Sample>`_.
-        self.xrds_param = kwargs.get('xrds_param', 'xrds')
+        self.xrds_param = self._kwarg(kwargs, 'xrds_param', 'xrds')
+#        self.xrds_param = kwargs.get('xrds_param', 'xrds')
         
         
         #=======================================================================
@@ -147,11 +151,13 @@ class OpenID(providers.AuthenticationProvider):
         
         #: :class:`list` of optional
         #: `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
-        self.sreg = list(kwargs.get('sreg', self.SREG_FIELDS))
+        self.sreg = self._kwarg(kwargs, 'sreg', self.SREG_FIELDS)
+#        self.sreg = list(kwargs.get('sreg', self.SREG_FIELDS))
         
         #: :class:`list` of required
         #: `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
-        self.sreg_required = kwargs.get('sreg_required', [])
+        self.sreg_required = self._kwarg(kwargs, 'sreg_required', [])
+#        self.sreg_required = kwargs.get('sreg_required', [])
         
         
         #=======================================================================
@@ -160,11 +166,13 @@ class OpenID(providers.AuthenticationProvider):
         
         #: :class:`list` of optional
         #: `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
-        self.ax = list(kwargs.get('ax', self.AX_SCHEMAS))
+        self.ax = self._kwarg(kwargs, 'ax', self.AX_SCHEMAS)
+#        self.ax = list(kwargs.get('ax', self.AX_SCHEMAS))
         
         #: :class:`list` of required
         #: `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
-        self.ax_required = list(kwargs.get('ax_required', self.AX_SCHEMAS_REQUIRED))
+        self.ax_required = self._kwarg(kwargs, 'ax_required', self.AX_SCHEMAS_REQUIRED)
+#        self.ax_required = list(kwargs.get('ax_required', self.AX_SCHEMAS_REQUIRED))
         
         # add required schemas to schemas if not allready there
         for i in self.ax_required:
@@ -179,7 +187,8 @@ class OpenID(providers.AuthenticationProvider):
         #: :class:`list` of requested
         #: `PAPE <http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html>`_
         #: policies.
-        self.pape = kwargs.get('pape', self.PAPE_POLICIES)
+        self.pape = self._kwarg(kwargs, 'pape', self.PAPE_POLICIES)
+#        self.pape = kwargs.get('pape', self.PAPE_POLICIES)
     
     
     @staticmethod

@@ -13,8 +13,9 @@ import urlparse
 class GAEWebapp2AdapterError(Exception):
     pass
 
-
-class ProviderConfig(ndb.Model):
+#TODO: Move to separate module not tied to webapp2
+#TODO: wrap to a function who returns initiates and returns this class.
+class NDBConfig(ndb.Model):
     """
     Datastore model for providers configuration
     """
@@ -145,9 +146,8 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
     request = None
     response = None
     session = None
-    config = None
     
-    def __init__(self, handler, config=None, session=None, session_secret=None,
+    def __init__(self, handler, session=None, session_secret=None,
                  session_key='authomatic', openid_store=None):
         
         self.request = handler.request
@@ -157,12 +157,6 @@ class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
         self._session_secret = session_secret
         self._session_key = session_key
         self._openid_store = openid_store
-        
-        if config:
-            self.config = config
-        else:
-            self.config = ProviderConfig
-            self.config.initialize()
         
         # create session
         if not (session or session_secret):
