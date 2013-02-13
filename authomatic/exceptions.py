@@ -27,6 +27,10 @@ class ImportStringError(BaseError):
     pass
 
 
+class AuthenticationError(BaseError):
+    pass
+
+
 class OAuth1Error(BaseError):
     pass
 

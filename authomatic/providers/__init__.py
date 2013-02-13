@@ -13,7 +13,7 @@ This module provides abstract classes for implementation of protocol specific ab
 
 """
 
-from authomatic.exceptions import ConfigError
+from authomatic.exceptions import ConfigError, AuthenticationError
 import abc
 import authomatic.core
 import datetime
@@ -599,7 +599,8 @@ class AuthenticationProvider(BaseProvider):
         
         # takes the identifier keyword argument into account only if the identifier is not hardcoded
         self.identifier = self._kwarg(kwargs, 'identifier', '')
-#        self.identifier = self.identifier or kwargs.get('identifier', '')
+        if not self.identifier:
+            raise AuthenticationError('No identifier!')
         
         
         
