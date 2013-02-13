@@ -421,11 +421,7 @@ class AuthorisationProvider(BaseProvider):
         """
         Fetches protected resource asynchronously.
            
-        .. warning::
-            
-            Whether the method is really asynchronous depends on the implementation of the
-            :doc:`adapter's <adapters>` :meth:`fetch_async()
-            <authomatic.adapters.BaseAdapter.fetch_async>` method.
+        .. warning:: |async|
         
         :param adapter:
             The same :doc:`adapter <adapters>` instance which was used in the :func:`authomatic.login`
@@ -598,9 +594,11 @@ class AuthenticationProvider(BaseProvider):
         super(AuthenticationProvider, self).__init__(*args, **kwargs)
         
         # takes the identifier keyword argument into account only if the identifier is not hardcoded
-        self.identifier = self._kwarg(kwargs, 'identifier', '')
-        if not self.identifier:
-            raise AuthenticationError('No identifier!')
+#        self.identifier = self.identifier or kwargs.get('identifier')
+        
+        self.identifier_param = kwargs.get('identifier_param', 'id')
+        
+        self.identifier = self.adapter.params.get(self.identifier_param)
         
         
         

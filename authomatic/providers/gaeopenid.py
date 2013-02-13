@@ -44,7 +44,7 @@ class GAEOpenID(providers.AuthenticationProvider):
     def login(self):
         """Launches the OpenID authentication procedure."""
         
-        if self.identifier:
+        if self.adapter.params.get(self.identifier_param):
             #===================================================================
             # Phase 1 before redirect.
             #===================================================================

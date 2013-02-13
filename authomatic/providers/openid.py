@@ -310,7 +310,7 @@ class OpenID(providers.AuthenticationProvider):
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
             
-        else:
+        elif self.adapter.params.get(self.identifier_param):
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
@@ -349,8 +349,6 @@ class OpenID(providers.AuthenticationProvider):
                 realm = return_to = '{u}?{r}={r}'.format(u=self.adapter.url, r=self.realm_param)
             else:
                 realm = return_to = self.adapter.url
-            
-#            realm = return_to = '{u}?{r}={r}'.format(u=self.adapter.url, r=self.realm_param) if self.use_realm else self.adapter.url
                         
             url = auth_request.redirectURL(realm, return_to)
             
@@ -365,6 +363,8 @@ class OpenID(providers.AuthenticationProvider):
                 self._log(logging.INFO, 'Writing an auto-submit HTML form to the response.')
                 form = auth_request.htmlMarkup(realm, return_to, False, dict(id='openid_form'))
                 self.adapter.write(form)
+        else:
+            raise OpenIDError('No identifier! There is no "{}" querystring parameter in the request'.format(self.identifier_param))
 
 
 class Yahoo(OpenID):
