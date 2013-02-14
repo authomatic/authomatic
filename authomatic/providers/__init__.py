@@ -23,6 +23,7 @@ import os
 import random
 import urlparse
 import uuid
+import authomatic.core
 
 __all__ = ['BaseProvider', 'AuthorisationProvider', 'AuthenticationProvider', 'login_decorator']
 
@@ -110,18 +111,6 @@ class BaseProvider(object):
         self._logger.setLevel(logging_level)
         if logging_level in (None, False):
             self._logger.disabled = False
-    
-    
-    #=======================================================================
-    # Abstract properties
-    #=======================================================================
-    
-    @abc.abstractproperty
-    def has_protected_resources(self):
-        """
-        :class:`bool` Indicates whether the **provider** supports access to
-        **user's** protected resources.  
-        """
     
     
     #===========================================================================
@@ -303,26 +292,41 @@ class AuthorisationProvider(BaseProvider):
     Base provider for *authorisation protocols* i.e. protocols which allow a **consumer**
     to be authorized by a **provider** to access **protected resources** of a **user**.
     e.g. `OAuth 2.0 <http://oauth.net/2/>`_ or `OAuth 1.0a <http://oauth.net/core/1.0a/>`_.
+    
+    .. automethod:: __init__
+    
     """
-    
-    #: Indicates whether the **provider** supports access to
-    #: **user's** protected resources.
-    has_protected_resources = True
-    
+        
     USER_AUTHORISATION_REQUEST_TYPE = 2
     ACCESS_TOKEN_REQUEST_TYPE = 3
     PROTECTED_RESOURCE_REQUEST_TYPE = 4
     
     def __init__(self, *args, **kwargs):
+        """
+        Accepts these keyword arguments:
+        
+        :arg str consumer_key:
+            :attr:`.consumer_key`
+        :arg str consumer_secret:
+            :attr:`.consumer_secret`
+        :arg short_name:
+            :attr:`.short_name`
+        """
+        
         super(AuthorisationProvider, self).__init__(*args, **kwargs)
         
-        #: :class:`.core.Consumer`
-        self.consumer = self._kwarg(kwargs, 'consumer')
-#        self.consumer = kwargs.get('consumer')
+        #: The *key* assignet to our application (**consumer**) by the **provider**.
+        self.consumer_key = self._kwarg(kwargs, 'consumer_key')
         
-        #: Short name as specified in the :doc:`config`.
+        #: The *secret* assignet to our application (**consumer**) by the **provider**.
+        self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
+        
+        #: A unique short name used to serialize the :class:`core.Credentials`.
         self.short_name = self._kwarg(kwargs, 'short_name')
-#        self.short_name = self.adapter.config.get(self.name, {}).get('short_name')
+        
+        #: :class:`core.Credentials` to access **user's protected resources**.
+        self.credentials = authomatic.core.Credentials(provider=self)
+    
     
     #===========================================================================
     # Abstract properties

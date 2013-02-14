@@ -296,8 +296,6 @@ class OAuth1(providers.AuthorisationProvider):
     @providers.login_decorator
     def login(self):
         
-        credentials = core.Credentials(provider=self)
-        
         # get request parameters from which we can determine the login phase
         denied = self.adapter.params.get('denied')
         verifier = self.adapter.params.get('oauth_verifier')
@@ -313,12 +311,12 @@ class OAuth1(providers.AuthorisationProvider):
             # Get Access Token          
             self._log(logging.INFO, 'Fetching for access token from {}.'.format(self.access_token_url))
             
-            credentials.token = request_token
-            credentials.token_secret = token_secret
+            self.credentials.token = request_token
+            self.credentials.token_secret = token_secret
             
             request_elements = self._create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
                                                              url=self.access_token_url,
-                                                             credentials=credentials,
+                                                             credentials=self.credentials,
                                                              verifier=verifier,
                                                              nonce=self.csrf_generator())
             
@@ -332,12 +330,12 @@ class OAuth1(providers.AuthorisationProvider):
             
             self._log(logging.INFO, 'Got access token.')
             
-            credentials.token = response.data.get('oauth_token')
-            credentials.token_secret = response.data.get('oauth_token_secret')
+            self.credentials.token = response.data.get('oauth_token')
+            self.credentials.token_secret = response.data.get('oauth_token_secret')
             
-            credentials = self._credentials_parser(credentials, response.data)
+            self.credentials = self._credentials_parser(self.credentials, response.data)
             
-            self._update_or_create_user(response.data, credentials)
+            self._update_or_create_user(response.data, self.credentials)
             
             #===================================================================
             # We're done!
@@ -355,7 +353,7 @@ class OAuth1(providers.AuthorisationProvider):
             
             # Fetch for request token
             request_elements = self._create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
-                                                             credentials=credentials,
+                                                             credentials=self.credentials,
                                                              url=self.request_token_url,
                                                              callback=self.adapter.url,
                                                              nonce=self.csrf_generator())
@@ -378,7 +376,7 @@ class OAuth1(providers.AuthorisationProvider):
                                   url=self.request_token_url)
             
             # we need request token for user authorisation redirect
-            credentials.token = request_token
+            self.credentials.token = request_token
                         
             # extract token secret and save it to storage
             token_secret = response.data.get('oauth_token_secret')
@@ -395,7 +393,7 @@ class OAuth1(providers.AuthorisationProvider):
             
             # Create User Authorization URL
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
-                                                             credentials=credentials,
+                                                             credentials=self.credentials,
                                                              url=self.user_authorisation_url)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))

@@ -483,13 +483,6 @@ If <tt class="docutils literal"><span class="pre">None</span></tt> or <tt class=
 <dd><p><a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">core.User</span></tt></a>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="authomatic.providers.BaseProvider.has_protected_resources">
-<tt class="descname">has_protected_resources</tt><a class="reference internal" href="../_modules/authomatic/providers.html#BaseProvider.has_protected_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.BaseProvider.has_protected_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt> Indicates whether the <strong>provider</strong> supports access to
-<strong>user&#8217;s</strong> protected resources.</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="authomatic.providers.BaseProvider.login">
 <tt class="descname">login</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/authomatic/providers.html#BaseProvider.login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.BaseProvider.login" title="Permalink to this definition">¶</a></dt>
@@ -550,23 +543,47 @@ not empty when the method runs out of it&#8217;s flow or when there are errors.<
 <dd><p>Base provider for <em>authorisation protocols</em> i.e. protocols which allow a <strong>consumer</strong>
 to be authorized by a <strong>provider</strong> to access <strong>protected resources</strong> of a <strong>user</strong>.
 e.g. <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> or <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a>.</p>
-<dl class="attribute">
-<dt id="authomatic.providers.AuthorisationProvider.has_protected_resources">
-<tt class="descname">has_protected_resources</tt><em class="property"> = True</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.has_protected_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether the <strong>provider</strong> supports access to
-<strong>user&#8217;s</strong> protected resources.</p>
+<dl class="method">
+<dt id="authomatic.providers.AuthorisationProvider.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts these keyword arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>consumer_key</strong> (<em>str</em>) &#8211; <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.consumer_key" title="authomatic.providers.AuthorisationProvider.consumer_key"><tt class="xref py py-attr docutils literal"><span class="pre">consumer_key</span></tt></a></li>
+<li><strong>consumer_secret</strong> (<em>str</em>) &#8211; <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.consumer_secret" title="authomatic.providers.AuthorisationProvider.consumer_secret"><tt class="xref py py-attr docutils literal"><span class="pre">consumer_secret</span></tt></a></li>
+<li><strong>short_name</strong> &#8211; <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.short_name" title="authomatic.providers.AuthorisationProvider.short_name"><tt class="xref py py-attr docutils literal"><span class="pre">short_name</span></tt></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="authomatic.providers.AuthorisationProvider.consumer">
-<tt class="descname">consumer</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.consumer" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="classes.html#authomatic.core.Consumer" title="authomatic.core.Consumer"><tt class="xref py py-class docutils literal"><span class="pre">core.Consumer</span></tt></a></p>
+<dt id="authomatic.providers.AuthorisationProvider.consumer_key">
+<tt class="descname">consumer_key</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.consumer_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <em>key</em> assignet to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.providers.AuthorisationProvider.consumer_secret">
+<tt class="descname">consumer_secret</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.consumer_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <em>secret</em> assignet to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.providers.AuthorisationProvider.short_name">
 <tt class="descname">short_name</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.short_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Short name as specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
+<dd><p>A unique short name used to serialize the <tt class="xref py py-class docutils literal"><span class="pre">core.Credentials</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.providers.AuthorisationProvider.credentials">
+<tt class="descname">credentials</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">core.Credentials</span></tt> to access <strong>user&#8217;s protected resources</strong>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -597,7 +614,7 @@ see <a class="reference external" href="http://tools.ietf.org/html/rfc6749#secti
 <dl class="method">
 <dt id="authomatic.providers.AuthorisationProvider.to_tuple">
 <tt class="descname">to_tuple</tt><big>(</big><em>credentials</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers.html#AuthorisationProvider.to_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.to_tuple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Must convert <tt class="xref py py-data docutils literal"><span class="pre">credentials</span></tt> to a <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt> to be used by <a class="reference internal" href="classes.html#authomatic.core.Credentials.serialize" title="authomatic.core.Credentials.serialize"><tt class="xref py py-meth docutils literal"><span class="pre">core.Credentials.serialize()</span></tt></a>.</p>
+<dd><p>Must convert <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.credentials" title="authomatic.providers.AuthorisationProvider.credentials"><tt class="xref py py-data docutils literal"><span class="pre">credentials</span></tt></a> to a <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt> to be used by <a class="reference internal" href="classes.html#authomatic.core.Credentials.serialize" title="authomatic.core.Credentials.serialize"><tt class="xref py py-meth docutils literal"><span class="pre">core.Credentials.serialize()</span></tt></a>.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Must be a classmethod!</p>
@@ -643,8 +660,7 @@ are all the items of the <tt class="xref py py-class docutils literal"><span cla
 <dd><p>Fetches protected resource asynchronously.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Whether the method is really asynchronous depends on the implementation of the
-<a class="reference internal" href="adapters.html"><em>adapter&#8217;s</em></a> <a class="reference internal" href="adapters.html#authomatic.adapters.BaseAdapter.fetch_async" title="authomatic.adapters.BaseAdapter.fetch_async"><tt class="xref py py-meth docutils literal"><span class="pre">fetch_async()</span></tt></a> method.</p>
+<p class="last">Whether fetch calls are really asynchronous depends on the <a class="reference internal" href="adapters.html"><em>Adapter</em></a> implementation!</p>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

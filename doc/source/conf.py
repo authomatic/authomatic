@@ -36,6 +36,7 @@ rst_prolog = """
 
 .. |classmethod| replace:: Must be a classmethod!
 
+.. |async| replace:: Whether fetch calls are really asynchronous depends on the :doc:`Adapter <adapters>` implementation!
 
 """
 

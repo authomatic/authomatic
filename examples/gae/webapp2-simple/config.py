@@ -47,6 +47,7 @@ PROVIDERS = {
     
     'gaeoi': {
          'class_name': gaeopenid.GAEOpenID,
+         'identifier': 'https://me.yahoo.com',
     },             
     'oi': {
          'class_name': openid.OpenID,

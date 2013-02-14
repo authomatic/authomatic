@@ -17,10 +17,6 @@ Reference:
 ----------
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 6
    
-   reference/index.rst
-
-
-
-
+   reference/index

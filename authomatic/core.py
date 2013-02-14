@@ -132,19 +132,12 @@ def login(adapter, config, provider_name, callback=None, report_errors=True,
     if not provider_class:
         raise exceptions.ConfigError('Class name not specified for provider {}!'.format(provider_name))
     
-    
-    #TODO: Move scope to OAuth2
-    # create consumer
-    consumer = Consumer(provider_settings.get('consumer_key'),
-                        provider_settings.get('consumer_secret'))
-        
     ProviderClass = resolve_provider_class(provider_class)
     
     # instantiate provider class
     provider = ProviderClass(adapter, config, provider_name, callback,
                              report_errors=report_errors,
                              logging_level=logging_level,
-                             consumer=consumer,
                              **kwargs)
     
     # return login result
@@ -267,20 +260,6 @@ def get_provider_settings_by_short_name(config, short_name):
         raise Exception('Failed to get provider by id "{}"!'.format(short_name))
 
 
-class Consumer(ReprMixin):
-    """
-    Consumer abstraction.
-    """
-    
-    _repr_sensitive = ('key', 'secret')
-    
-    def __init__(self, key, secret, scope=None):
-        #: :class:`str` Consumer key issued for the consumer by the provider.
-        self.key = key
-        #: :class:`str` Consumer secret issued for the consumer by the provider.
-        self.secret = secret
-
-
 class User(ReprMixin):
     """
     Provides unified interface to selected **user** informations returned by different **providers**.
@@ -362,9 +341,8 @@ class Credentials(ReprMixin):
         self.expires_in = kwargs.get('expires_in', 0)
         #: :class:`datetime.datetime()` Expiration date of the **access token**.
         self.expiration_date = kwargs.get('expiration_date')
-        
+        #: A :doc:`Provider <providers>` instance**.
         provider = kwargs.get('provider')
-        consumer = kwargs.get('consumer')
             
         if provider:
             #: :class:`str` Provider name specified in the :doc:`config`.
@@ -374,12 +352,9 @@ class Credentials(ReprMixin):
             #: :class:`str` Provider short name specified in the :doc:`config`.
             self.provider_short_name = provider.short_name
             #: :class:`str` Consumer key specified in the :doc:`config`.
-            self.consumer_key = provider.consumer.key
+            self.consumer_key = provider.consumer_key
             #: :class:`str` Consumer secret specified in the :doc:`config`.
-            self.consumer_secret = provider.consumer.secret
-        elif consumer:
-            self.consumer_key = consumer.key
-            self.consumer_secret = consumer.secret
+            self.consumer_secret = provider.consumer_secret
         else:
             self.provider_name = kwargs.get('provider_name')
             self.provider_type = kwargs.get('provider_type')
@@ -549,11 +524,7 @@ class Request(ReprMixin):
     """
     Abstraction of asynchronous request to **user's protected resources**.
     
-    .. warning::
-        
-        #TODO: make to substitution?
-        Whether the request is really asynchronous depends on the implementation of the
-        :doc:`adapter's <adapters>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
+    .. warning:: |async|
         
     """
     
@@ -629,8 +600,7 @@ def async_fetch(adapter, config, credentials, url, method='GET', content_parser=
        
     .. warning::
         
-        Whether the function is really asynchronous depends on the implementation of the
-        :doc:`adapter's <adapters>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
+        |async|
     
     :param adapter:
             :doc:`Adapter <adapters>`

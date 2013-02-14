@@ -240,6 +240,12 @@ Only present when using the <a class="reference internal" href="providers.html#a
 </dd></dl>
 
 <dl class="attribute">
+<dt id="authomatic.core.Credentials.provider">
+<tt class="descname">provider</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.provider" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="providers.html"><em>Provider</em></a> instance**.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="authomatic.core.Credentials.provider_name">
 <tt class="descname">provider_name</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.provider_name" title="Permalink to this definition">¶</a></dt>
 <dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Provider name specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
@@ -416,9 +422,7 @@ Returned by <a class="reference internal" href="providers.html#authomatic.provid
 <dd><p>Abstraction of asynchronous request to <strong>user&#8217;s protected resources</strong>.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">#TODO: make to substitution?
-Whether the request is really asynchronous depends on the implementation of the
-<a class="reference internal" href="adapters.html"><em>adapter&#8217;s</em></a> <a class="reference internal" href="adapters.html#authomatic.adapters.BaseAdapter.fetch_async" title="authomatic.adapters.BaseAdapter.fetch_async"><tt class="xref py py-meth docutils literal"><span class="pre">fetch_async()</span></tt></a> method.</p>
+<p class="last">Whether fetch calls are really asynchronous depends on the <a class="reference internal" href="adapters.html"><em>Adapter</em></a> implementation!</p>
 </div>
 <dl class="method">
 <dt id="authomatic.core.Request.fetch">

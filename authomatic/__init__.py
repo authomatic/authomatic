@@ -2,10 +2,7 @@
 This is the only interface that you should ever need to get **user info** and **credentials**
 from a **provider** and to make asynchronous calls to their **protected resources**.
 
-.. warning::
-        
-        Whether calls are really asynchronous depends on the implementation of the
-        :doc:`adapter's <adapters>` :meth:`fetch_async() <authomatic.adapters.BaseAdapter.fetch_async>` method.
+.. warning:: |async|
 
 This is a simple webapp2 example:
 

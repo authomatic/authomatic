@@ -166,8 +166,6 @@ class OAuth2(providers.AuthorisationProvider):
     @providers.login_decorator
     def login(self):
         
-        credentials = core.Credentials(provider=self)
-        
         # get request parameters from which we can determine the login phase
         authorisation_code = self.adapter.params.get('code')
         error = self.adapter.params.get('error')
@@ -194,10 +192,10 @@ class OAuth2(providers.AuthorisationProvider):
             # exchange authorisation code for access token by the provider
             self._log(logging.INFO, 'Fetching access token from {}.'.format(self.access_token_url))
             
-            credentials.token = authorisation_code
+            self.credentials.token = authorisation_code
             
             request_elements = self._create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
-                                                             credentials=credentials,
+                                                             credentials=self.credentials,
                                                              url=self.access_token_url,
                                                              method='POST',
                                                              redirect_uri=self.adapter.url)
@@ -215,14 +213,14 @@ class OAuth2(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Got access token.')            
             
             # OAuth 2.0 credentials need only access token and expires_in
-            credentials.token = access_token
-            credentials.expires_in = response.data.get('expires_in')
+            self.credentials.token = access_token
+            self.credentials.expires_in = response.data.get('expires_in')
             # so we can reset these two guys
-            credentials.consumer_key = None
-            credentials.consumer_secret = None
+            self.credentials.consumer_key = None
+            self.credentials.consumer_secret = None
             
             # update credentials
-            credentials = self._credentials_parser(credentials, response.data)            
+            credentials = self._credentials_parser(self.credentials, response.data)            
             
             # create user
             self._update_or_create_user(response.data, credentials)
@@ -257,7 +255,7 @@ class OAuth2(providers.AuthorisationProvider):
             self._session_set('state', state)
             
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
-                                                            credentials=credentials,
+                                                            credentials=self.credentials,
                                                             url=self.user_authorisation_url,
                                                             redirect_uri=self.adapter.url,
                                                             scope=self._scope_parser(self.scope),

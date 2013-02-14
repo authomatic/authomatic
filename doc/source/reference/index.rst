@@ -2,13 +2,13 @@ Reference
 =========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 6
    
-   config.rst
-   functions.rst
-   classes.rst
-   providers.rst
-   adapters.rst
+   config
+   functions
+   classes
+   providers
+   adapters
 
 
 

@@ -47,8 +47,7 @@ class Login(webapp2.RequestHandler):
         
         result = authomatic.login(self.adapter, config.PROVIDERS, provider_name,
                                   report_errors=False,
-                                  callback=self.callback,
-                                  identifier=self.request.params.get('id'))
+                                  callback=self.callback)
         
         if result:
             if result.user:
@@ -97,8 +96,7 @@ class Login(webapp2.RequestHandler):
                 # deserialized credentials
                 for k, v in deserialized.__dict__.items():
                     self.response.write('{}: {}<br />'.format(k, v))
-            
-            if event.provider.has_protected_resources:
+                
                 # fetch user info asynchronously
                 event.provider.user_info_request.fetch()
                 
