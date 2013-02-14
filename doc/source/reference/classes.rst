@@ -2,4 +2,4 @@ Classes
 -------
 
 .. automodule:: authomatic.core
-   :members: Consumer, User, Credentials, LoginResult, Request, Response, UserInfoResponse
+   :members: User, Credentials, LoginResult, Request, Response, UserInfoResponse

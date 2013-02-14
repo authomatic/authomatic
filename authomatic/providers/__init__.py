@@ -587,18 +587,12 @@ class AuthenticationProvider(BaseProvider):
     authenticate a *claimed identity* of a **user**. e.g. `OpenID <http://openid.net/>`_.
     """
     
-    #: :class:`str` The *claimed identity* of a **user**.
-    identifier = ''
-    
     #: Indicates whether the **provider** supports access to
     #: **user's** protected resources.
     has_protected_resources = False
     
     def __init__(self, *args, **kwargs):   
         super(AuthenticationProvider, self).__init__(*args, **kwargs)
-        
-        # takes the identifier keyword argument into account only if the identifier is not hardcoded
-#        self.identifier = self.identifier or kwargs.get('identifier')
         
         self.identifier_param = kwargs.get('identifier_param', 'id')
         

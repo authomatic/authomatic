@@ -6,24 +6,24 @@ PROVIDERS = {
     # OAutht 2.0
     #===========================================================================
     'facebook': {
+         'class_': oauth2.Facebook,
          'short_name': authomatic.short_name(),
-         'class_name': oauth2.Facebook,
          'consumer_key': '494017363953317',
          'consumer_secret': 'e20424639fcedddd68ff8e57add2d70d',
          'scope': ['user_about_me',
                    'email']
     },
     'google': {
+         'class_': 'authomatic.providers.oauth2.Google',
          'short_name': authomatic.short_name(),
-         'class_name': 'authomatic.providers.oauth2.Google',
          'consumer_key': '121641813816.apps.googleusercontent.com',
          'consumer_secret': 'zPqoFD1AFcGTCr2d8dQkbEAw',
          'scope': ['https://www.googleapis.com/auth/userinfo.profile',
                    'https://www.googleapis.com/auth/userinfo.email']
     },
     'windows_live': {
+         'class_': 'oauth2.WindowsLive',
          'short_name': authomatic.short_name(),
-         'class_name': 'oauth2.WindowsLive',
          'consumer_key': '00000000480E36E2',
          'consumer_secret': 'f3lkeZBAQqmn7nzs4aS5IadVBDxW3o19',
          'scope': ['wl.basic',
@@ -35,8 +35,8 @@ PROVIDERS = {
     # OAuth 1.0
     #===========================================================================
     'twitter': {
+         'class_': oauth1.Twitter,
          'short_name': authomatic.short_name(),
-         'class_name': oauth1.Twitter,
          'consumer_key': '5H31GA4khCEePaWnXoE1ig',
          'consumer_secret': 'Bp2Ikj4sQSOBQI8ZzsVcJGCxQ2wLIrThGmbI5IEH2g'
     },
@@ -46,16 +46,16 @@ PROVIDERS = {
     #===========================================================================
     
     'gaeoi': {
-         'class_name': gaeopenid.GAEOpenID,
+         'class_': gaeopenid.GAEOpenID,
          'identifier': 'https://me.yahoo.com',
     },             
     'oi': {
-         'class_name': openid.OpenID,
+         'class_': openid.OpenID,
     },             
     'yoi': {
-         'class_name': openid.Yahoo,
+         'class_': openid.Yahoo,
     },             
     'goi': {
-         'class_name': openid.Google,
+         'class_': openid.Google,
     }
 }

@@ -59,11 +59,46 @@
   <div class="section" id="providers">
 <h1>Providers<a class="headerlink" href="#providers" title="Permalink to this headline">¶</a></h1>
 <p>Providers are abstractions of the <strong>provider</strong> party of the
-<strong>provider</strong>, <strong>consumer</strong>, <strong>user</strong> triangle.
+<strong>provider</strong>/<strong>consumer</strong>/<strong>user</strong> triangle and they are the very core of this library.
 There is no reason for you to instatniate them manualy.
-You only should specify them in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
-<p>Some provider types accept additional keyword arguments in their constructor
-passed to them via the <a class="reference internal" href="config.html"><em>Config</em></a> or the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> keyword arguments.</p>
+You only should specify them in the <a class="reference internal" href="config.html"><em>Config</em></a> and access members of their instances
+available in the <a class="reference internal" href="classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">core.LoginResult</span></tt></a> returned by the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function.</p>
+<p>Some provider types accept additional keyword arguments which you can pass to them through
+the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function&#8217;s keyword arguments or through the <a class="reference internal" href="config.html"><em>Config</em></a> like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;abc&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>CONFIG = {
+    'facebook': {
+        'class_name': oauth2.Facebook, # Subclass of AuthorisationProvider
+
+        # AuthorisationProvider specific keyword arguments:
+        'short_name': 1,
+        'consumer_key': '###################',
+        'consumer_secret': '###################',
+
+        # oauth2.OAuth2 specific keyword arguments:
+        'scope': ['user_about_me', 'email']
+    },
+    'openid': {
+         'class_name': openid.OpenID, # Subclass of AuthenticationProvider
+
+         # AuthenticationProvider specific keyword arguments:
+         'identifier_param' = 'claimed_id',
+
+         # openid.OpenID specific keyword arguments:
+         'use_realm': True,
+         'realm_body': 'OpenID Realm.',
+         'realm_param': 'r',
+         'xrds_param': 'x',
+         'sreg': ['nickname', 'email'],
+         'sreg_required': ['email'],
+         'ax': ['http://axschema.org/contact/email', 'http://axschema.org/namePerson'],
+         'ax_required': ['http://axschema.org/contact/email'],
+         'pape': ['http://schemas.openid.net/pape/policies/2007/06/multi-factor']
+    },
+}</pre>
+</div>
 <p>Here is a table of currently available providers:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -235,10 +270,10 @@ The login procedure requires <strong>one more fetch</strong> and up to <strong>8
 <td><a class="reference external" href="http://openid.net/">OpenID</a> provider based on the <a class="reference external" href="http://pypi.python.org/pypi/python-openid/">python-openid</a> library.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.openid.Yahoo" title="authomatic.providers.openid.Yahoo"><tt class="xref py py-obj docutils literal"><span class="pre">Yahoo</span></tt></a>(*args,&nbsp;**kwargs)</td>
-<td>Yahoo  <a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">OpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</td>
+<td>Yahoo  <a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">OpenID</span></tt></a> provider with the <tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.openid.Google" title="authomatic.providers.openid.Google"><tt class="xref py py-obj docutils literal"><span class="pre">Google</span></tt></a>(*args,&nbsp;**kwargs)</td>
-<td>Google <a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">OpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;https://www.google.com/accounts/o8/id&quot;</span></tt>.</td>
+<td>Google <a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">OpenID</span></tt></a> provider with the <tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt> predefined to <tt class="docutils literal"><span class="pre">&quot;https://www.google.com/accounts/o8/id&quot;</span></tt>.</td>
 </tr>
 </tbody>
 </table>
@@ -250,7 +285,7 @@ The login procedure requires <strong>one more fetch</strong> and up to <strong>8
 <dt id="authomatic.providers.openid.OpenID.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/openid.html#OpenID.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.openid.OpenID.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accepts optional keyword arguments:
-<a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a>,
+<tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt>,
 <a class="reference internal" href="#authomatic.providers.openid.OpenID.use_realm" title="authomatic.providers.openid.OpenID.use_realm"><tt class="xref py py-attr docutils literal"><span class="pre">use_realm</span></tt></a>,
 <a class="reference internal" href="#authomatic.providers.openid.OpenID.realm_body" title="authomatic.providers.openid.OpenID.realm_body"><tt class="xref py py-attr docutils literal"><span class="pre">realm_body</span></tt></a>,
 <a class="reference internal" href="#authomatic.providers.openid.OpenID.realm_param" title="authomatic.providers.openid.OpenID.realm_param"><tt class="xref py py-attr docutils literal"><span class="pre">realm_param</span></tt></a>,
@@ -331,13 +366,13 @@ policies.</p>
 <dl class="class">
 <dt id="authomatic.providers.openid.Yahoo">
 <em class="property">class </em><tt class="descclassname">authomatic.providers.openid.</tt><tt class="descname">Yahoo</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/openid.html#Yahoo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.openid.Yahoo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Yahoo  <a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">OpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</p>
+<dd><p>Yahoo  <a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">OpenID</span></tt></a> provider with the <tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="authomatic.providers.openid.Google">
 <em class="property">class </em><tt class="descclassname">authomatic.providers.openid.</tt><tt class="descname">Google</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/openid.html#Google"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.openid.Google" title="Permalink to this definition">¶</a></dt>
-<dd><p>Google <a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">OpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;https://www.google.com/accounts/o8/id&quot;</span></tt>.</p>
+<dd><p>Google <a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">OpenID</span></tt></a> provider with the <tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt> predefined to <tt class="docutils literal"><span class="pre">&quot;https://www.google.com/accounts/o8/id&quot;</span></tt>.</p>
 </dd></dl>
 
 </div>
@@ -364,10 +399,10 @@ Moreover the <a class="reference internal" href="classes.html#authomatic.core.Us
 <td><a class="reference external" href="http://openid.net/">OpenID</a> provider based on the <a class="reference external" href="https://developers.google.com/appengine/docs/python/users/">Google App Engine Users API</a>.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.gaeopenid.Yahoo" title="authomatic.providers.gaeopenid.Yahoo"><tt class="xref py py-obj docutils literal"><span class="pre">Yahoo</span></tt></a>(*args,&nbsp;**kwargs)</td>
-<td><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</td>
+<td><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.gaeopenid.Google" title="authomatic.providers.gaeopenid.Google"><tt class="xref py py-obj docutils literal"><span class="pre">Google</span></tt></a>(*args,&nbsp;**kwargs)</td>
-<td><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;https://www.google.com/accounts/o8/id&quot;</span></tt>.</td>
+<td><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt> predefined to <tt class="docutils literal"><span class="pre">&quot;https://www.google.com/accounts/o8/id&quot;</span></tt>.</td>
 </tr>
 </tbody>
 </table>
@@ -386,13 +421,13 @@ Moreover the <a class="reference internal" href="classes.html#authomatic.core.Us
 <dl class="class">
 <dt id="authomatic.providers.gaeopenid.Yahoo">
 <em class="property">class </em><tt class="descclassname">authomatic.providers.gaeopenid.</tt><tt class="descname">Yahoo</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/gaeopenid.html#Yahoo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.gaeopenid.Yahoo" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</p>
+<dd><p><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt> predefined to <tt class="docutils literal"><span class="pre">&quot;me.yahoo.com&quot;</span></tt>.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="authomatic.providers.gaeopenid.Google">
 <em class="property">class </em><tt class="descclassname">authomatic.providers.gaeopenid.</tt><tt class="descname">Google</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/gaeopenid.html#Google"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.gaeopenid.Google" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <a class="reference internal" href="#authomatic.providers.AuthenticationProvider.identifier" title="authomatic.providers.AuthenticationProvider.identifier"><tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt></a> predefined to <tt class="docutils literal"><span class="pre">&quot;https://www.google.com/accounts/o8/id&quot;</span></tt>.</p>
+<dd><p><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider with the <tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt> predefined to <tt class="docutils literal"><span class="pre">&quot;https://www.google.com/accounts/o8/id&quot;</span></tt>.</p>
 </dd></dl>
 
 </div>
@@ -768,12 +803,6 @@ authenticate a <em>claimed identity</em> of a <strong>user</strong>. e.g. <a cla
 <tt class="descname">has_protected_resources</tt><em class="property"> = False</em><a class="headerlink" href="#authomatic.providers.AuthenticationProvider.has_protected_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether the <strong>provider</strong> supports access to
 <strong>user&#8217;s</strong> protected resources.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.AuthenticationProvider.identifier">
-<tt class="descname">identifier</tt><em class="property"> = ''</em><a class="headerlink" href="#authomatic.providers.AuthenticationProvider.identifier" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> The <em>claimed identity</em> of a <strong>user</strong>.</p>
 </dd></dl>
 
 </dd></dl>

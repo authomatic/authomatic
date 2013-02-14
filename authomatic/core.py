@@ -128,11 +128,11 @@ def login(adapter, config, provider_name, callback=None, report_errors=True,
     if not provider_settings:
         raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
-    provider_class = provider_settings.get('class_name')
-    if not provider_class:
-        raise exceptions.ConfigError('Class name not specified for provider {}!'.format(provider_name))
+    class_ = provider_settings.get('class_')
+    if not class_:
+        raise exceptions.ConfigError('The "class_" key not specified in the config for provider {}!'.format(provider_name))
     
-    ProviderClass = resolve_provider_class(provider_class)
+    ProviderClass = resolve_provider_class(class_)
     
     # instantiate provider class
     provider = ProviderClass(adapter, config, provider_name, callback,
@@ -173,23 +173,23 @@ def short_name():
         
         CONFIG = {
             'facebook': {
+                 'class_': authomatic.providers.oauth2.Facebook,
                  'short_name': authomatic.short_name(), # returns 1
-                 'class_name': authomatic.providers.oauth2.Facebook,
                  'consumer_key': '##########',
                  'consumer_secret': '##########',
                  'scope': ['user_about_me', 'email']
             },
             'google': {
+                 'class_': 'authomatic.providers.oauth2.Google',
                  'short_name': authomatic.short_name(), # returns 2
-                 'class_name': 'authomatic.providers.oauth2.Google',
                  'consumer_key': '##########',
                  'consumer_secret': '##########',
                  'scope': ['https://www.googleapis.com/auth/userinfo.profile',
                            'https://www.googleapis.com/auth/userinfo.email']
             },
             'windows_live': {
+                 'class_': 'oauth2.WindowsLive',
                  'short_name': authomatic.short_name(), # returns 3
-                 'class_name': 'oauth2.WindowsLive',
                  'consumer_key': '##########',
                  'consumer_secret': '##########',
                  'scope': ['wl.basic', 'wl.emails', 'wl.photos']
@@ -205,21 +205,21 @@ def escape(s):
     return urllib.quote(s.encode('utf-8'), safe='~')
 
 
-def resolve_provider_class(class_name):
+def resolve_provider_class(class_):
     """
     Returns a provider class. 
     
     :param class_name: :class:`string` or :class:`authomatic.providers.BaseProvider` subclass.
     """
     
-    if type(class_name) in (str, unicode):
+    if type(class_) in (str, unicode):
         # prepare path for authomatic.providers package
-        path = '.'.join([__package__, 'providers', class_name])
+        path = '.'.join([__package__, 'providers', class_])
         
         # try to import class by string from providers module or by fully qualified path
-        return import_string(class_name, True) or import_string(path)
+        return import_string(class_, True) or import_string(path)
     else:
-        return class_name
+        return class_
 
 
 def import_string(import_name, silent=False):
@@ -434,7 +434,7 @@ class Credentials(ReprMixin):
             cfg =  get_provider_settings_by_short_name(config, short_name)
             
             # Get the provider class.
-            ProviderClass = resolve_provider_class(cfg.get('class_name'))
+            ProviderClass = resolve_provider_class(cfg.get('class_'))
             
             # Deserialization is provider specific.
             return ProviderClass.reconstruct(deserialized, cfg)
