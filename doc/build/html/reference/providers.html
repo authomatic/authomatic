@@ -62,44 +62,141 @@
 <strong>provider</strong>/<strong>consumer</strong>/<strong>user</strong> triangle and they are the very core of this library.
 There is no reason for you to instatniate them manualy.
 You only should specify them in the <a class="reference internal" href="config.html"><em>Config</em></a> and access members of their instances
-available in the <a class="reference internal" href="classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">core.LoginResult</span></tt></a> returned by the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function.</p>
+available in the <a class="reference internal" href="classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a> returned by the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function.</p>
 <p>Some provider types accept additional keyword arguments which you can pass to them through
 the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function&#8217;s keyword arguments or through the <a class="reference internal" href="config.html"><em>Config</em></a> like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;abc&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">}</span>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Keyword arguments passed through <a class="reference internal" href="config.html"><em>Config</em></a> take precedence over
+those passed through <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a>.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span> <span class="c"># Subclass of AuthorisationProvider</span>
+
+        <span class="c"># AuthorisationProvider specific keyword arguments:</span>
+        <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
+
+        <span class="c"># oauth2.OAuth2 specific keyword arguments:</span>
+        <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">]</span>
+     <span class="p">},</span>
+     <span class="s">&#39;openid&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span> <span class="c"># Subclass of AuthenticationProvider</span>
+
+         <span class="c"># AuthenticationProvider specific keyword arguments:</span>
+         <span class="s">&#39;identifier_param&#39;</span><span class="p">:</span> <span class="s">&#39;claimed_id&#39;</span><span class="p">,</span>
+
+         <span class="c"># openid.OpenID specific keyword arguments:</span>
+         <span class="s">&#39;use_realm&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+         <span class="s">&#39;realm_body&#39;</span><span class="p">:</span> <span class="s">&#39;OpenID Realm.&#39;</span><span class="p">,</span>
+         <span class="s">&#39;realm_param&#39;</span><span class="p">:</span> <span class="s">&#39;r&#39;</span><span class="p">,</span>
+         <span class="s">&#39;xrds_param&#39;</span><span class="p">:</span> <span class="s">&#39;x&#39;</span><span class="p">,</span>
+         <span class="s">&#39;sreg&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;nickname&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">],</span>
+         <span class="s">&#39;sreg_required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">],</span>
+         <span class="s">&#39;ax&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;http://axschema.org/contact/email&#39;</span><span class="p">,</span> <span class="s">&#39;http://axschema.org/namePerson&#39;</span><span class="p">],</span>
+         <span class="s">&#39;ax_required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;http://axschema.org/contact/email&#39;</span><span class="p">],</span>
+         <span class="s">&#39;pape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;http://schemas.openid.net/pape/policies/2007/06/multi-factor&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>CONFIG = {
-    'facebook': {
-        'class_name': oauth2.Facebook, # Subclass of AuthorisationProvider
-
-        # AuthorisationProvider specific keyword arguments:
-        'short_name': 1,
-        'consumer_key': '###################',
-        'consumer_secret': '###################',
-
-        # oauth2.OAuth2 specific keyword arguments:
-        'scope': ['user_about_me', 'email']
-    },
-    'openid': {
-         'class_name': openid.OpenID, # Subclass of AuthenticationProvider
-
-         # AuthenticationProvider specific keyword arguments:
-         'identifier_param' = 'claimed_id',
-
-         # openid.OpenID specific keyword arguments:
-         'use_realm': True,
-         'realm_body': 'OpenID Realm.',
-         'realm_param': 'r',
-         'xrds_param': 'x',
-         'sreg': ['nickname', 'email'],
-         'sreg_required': ['email'],
-         'ax': ['http://axschema.org/contact/email', 'http://axschema.org/namePerson'],
-         'ax_required': ['http://axschema.org/contact/email'],
-         'pape': ['http://schemas.openid.net/pape/policies/2007/06/multi-factor']
-    },
-}</pre>
-</div>
-<p>Here is a table of currently available providers:</p>
+<p>Additional keyword arguments by provider type:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="28%" />
+<col width="17%" />
+<col width="2%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Provider Type</th>
+<th class="head">Argument Name</th>
+<th class="head">Required</th>
+<th class="head">&nbsp;</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td rowspan="4"><a class="reference internal" href="#authomatic.providers.oauth2.OAuth2" title="authomatic.providers.oauth2.OAuth2"><tt class="xref py py-class docutils literal"><span class="pre">OAuth2</span></tt></a></td>
+<td>consumer_key</td>
+<td>yes</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>consumer_secret</td>
+<td>yes</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>short_name</td>
+<td>yes</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>scope</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td rowspan="3"><a class="reference internal" href="#authomatic.providers.oauth1.OAuth1" title="authomatic.providers.oauth1.OAuth1"><tt class="xref py py-class docutils literal"><span class="pre">OAuth1</span></tt></a></td>
+<td>consumer_key</td>
+<td>yes</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>consumer_secret</td>
+<td>yes</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>short_name</td>
+<td>yes</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td rowspan="10"><a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">OpenID</span></tt></a></td>
+<td>identifier_param</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>use_realm</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>realm_body</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>realm_param</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>xrds_param</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>sreg</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>sreg_required</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>ax</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>ax_required</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>pape</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a></td>
+<td>identifier_param</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>Available provider classes:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="34%" />
@@ -149,7 +246,7 @@ the <a class="reference internal" href="functions.html#authomatic.login" title="
 </table>
 <span class="target" id="module-authomatic.providers.oauth2"></span><div class="section" id="oauth-2-0-providers">
 <h2>OAuth 2.0 Providers<a class="headerlink" href="#oauth-2-0-providers" title="Permalink to this headline">¶</a></h2>
-<p>Providers compatible with the <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> protocol.</p>
+<p>Providers which implement the <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> protocol.</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -177,14 +274,17 @@ the <a class="reference internal" href="functions.html#authomatic.login" title="
 <dl class="method">
 <dt id="authomatic.providers.oauth2.OAuth2.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/oauth2.html#OAuth2.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.oauth2.OAuth2.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accepts additional keyword argument <a class="reference internal" href="#authomatic.providers.oauth2.OAuth2.scope" title="authomatic.providers.oauth2.OAuth2.scope"><tt class="xref py py-attr docutils literal"><span class="pre">scope</span></tt></a>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.oauth2.OAuth2.scope">
-<tt class="descname">scope</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.oauth2.OAuth2.scope" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> List of strings specifying requested permissions as described in the
-<a class="reference external" href="http://tools.ietf.org/html/rfc6749#section-3.3">OAuth 2.0 spec</a>.</p>
+<dd><p>Accepts additional keyword arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scope</strong> (<em>list</em>) &#8211; List of strings specifying requested permissions as described in the
+<a class="reference external" href="http://tools.ietf.org/html/rfc6749#section-3.3">OAuth 2.0 spec</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>As well as those inherited from <a class="reference internal" href="#authomatic.providers.AuthorisationProvider" title="authomatic.providers.AuthorisationProvider"><tt class="xref py py-class docutils literal"><span class="pre">AuthorisationProvider</span></tt></a> constructor.</p>
 </dd></dl>
 
 </dd></dl>
@@ -210,7 +310,7 @@ the <a class="reference internal" href="functions.html#authomatic.login" title="
 </div>
 <span class="target" id="module-authomatic.providers.oauth1"></span><div class="section" id="oauth-1-0a-providers">
 <h2>OAuth 1.0a Providers<a class="headerlink" href="#oauth-1-0a-providers" title="Permalink to this headline">¶</a></h2>
-<p>Providers compatible with the <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> protocol.</p>
+<p>Providers which implement the <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> protocol.</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -229,10 +329,23 @@ the <a class="reference internal" href="functions.html#authomatic.login" title="
 <dt id="authomatic.providers.oauth1.OAuth1">
 <em class="property">class </em><tt class="descclassname">authomatic.providers.oauth1.</tt><tt class="descname">OAuth1</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/oauth1.html#OAuth1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.oauth1.OAuth1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> providers.</p>
-<dl class="attribute">
-<dt id="authomatic.providers.oauth1.OAuth1.signature_generator">
-<tt class="descname">signature_generator</tt><a class="headerlink" href="#authomatic.providers.oauth1.OAuth1.signature_generator" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">HMACSHA1Generator</span></tt></p>
+<dl class="method">
+<dt id="authomatic.providers.oauth1.OAuth1.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#authomatic.providers.oauth1.OAuth1.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts additional keyword arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>consumer_key</strong> (<em>str</em>) &#8211; The <em>key</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
+<li><strong>consumer_secret</strong> (<em>str</em>) &#8211; The <em>secret</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
+<li><strong>short_name</strong> &#8211; A unique short name used to serialize <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -253,11 +366,11 @@ see <a class="reference external" href="http://oauth.net/core/1.0a/#auth_step1">
 </div>
 <span class="target" id="module-authomatic.providers.openid"></span><div class="section" id="openid-providers">
 <h2>OpenID Providers<a class="headerlink" href="#openid-providers" title="Permalink to this headline">¶</a></h2>
-<p>Providers compatible with the <a class="reference external" href="http://openid.net/">OpenID</a> protocol based on the
+<p>Providers which implement the <a class="reference external" href="http://openid.net/">OpenID</a> protocol based on the
 <a class="reference external" href="http://pypi.python.org/pypi/python-openid/">python-openid</a> library.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">These providers are more expensive than the <a class="reference internal" href="#module-authomatic.providers.gaeopenid" title="authomatic.providers.gaeopenid"><tt class="xref py py-mod docutils literal"><span class="pre">gaeopenid</span></tt></a> providers.
+<p class="last">This implementation is more expensive than <a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a>.
 The login procedure requires <strong>one more fetch</strong> and up to <strong>8 DB accesses</strong>!</p>
 </div>
 <table border="1" class="longtable docutils">
@@ -284,81 +397,44 @@ The login procedure requires <strong>one more fetch</strong> and up to <strong>8
 <dl class="method">
 <dt id="authomatic.providers.openid.OpenID.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/openid.html#OpenID.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.openid.OpenID.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accepts optional keyword arguments:
-<tt class="xref py py-attr docutils literal"><span class="pre">identifier</span></tt>,
-<a class="reference internal" href="#authomatic.providers.openid.OpenID.use_realm" title="authomatic.providers.openid.OpenID.use_realm"><tt class="xref py py-attr docutils literal"><span class="pre">use_realm</span></tt></a>,
-<a class="reference internal" href="#authomatic.providers.openid.OpenID.realm_body" title="authomatic.providers.openid.OpenID.realm_body"><tt class="xref py py-attr docutils literal"><span class="pre">realm_body</span></tt></a>,
-<a class="reference internal" href="#authomatic.providers.openid.OpenID.realm_param" title="authomatic.providers.openid.OpenID.realm_param"><tt class="xref py py-attr docutils literal"><span class="pre">realm_param</span></tt></a>,
-<a class="reference internal" href="#authomatic.providers.openid.OpenID.xrds_param" title="authomatic.providers.openid.OpenID.xrds_param"><tt class="xref py py-attr docutils literal"><span class="pre">xrds_param</span></tt></a>,
-<a class="reference internal" href="#authomatic.providers.openid.OpenID.sreg" title="authomatic.providers.openid.OpenID.sreg"><tt class="xref py py-attr docutils literal"><span class="pre">sreg</span></tt></a>,
-<a class="reference internal" href="#authomatic.providers.openid.OpenID.sreg_required" title="authomatic.providers.openid.OpenID.sreg_required"><tt class="xref py py-attr docutils literal"><span class="pre">sreg_required</span></tt></a>,
-<a class="reference internal" href="#authomatic.providers.openid.OpenID.ax" title="authomatic.providers.openid.OpenID.ax"><tt class="xref py py-attr docutils literal"><span class="pre">ax</span></tt></a>,
-<a class="reference internal" href="#authomatic.providers.openid.OpenID.ax_required" title="authomatic.providers.openid.OpenID.ax_required"><tt class="xref py py-attr docutils literal"><span class="pre">ax_required</span></tt></a>,
-<a class="reference internal" href="#authomatic.providers.openid.OpenID.pape" title="authomatic.providers.openid.OpenID.pape"><tt class="xref py py-attr docutils literal"><span class="pre">pape</span></tt></a>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.openid.OpenID.use_realm">
-<tt class="descname">use_realm</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.openid.OpenID.use_realm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether to use <a class="reference external" href="http://openid.net/specs/openid-authentication-2_0-12.html#realms">OpenID realm</a>.
+<dd><p>Accepts additional keyword arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>use_realm</strong> (<em>bool</em>) &#8211; Whether to use <a class="reference external" href="http://openid.net/specs/openid-authentication-2_0-12.html#realms">OpenID realm</a>.
 If <tt class="docutils literal"><span class="pre">True</span></tt> the realm HTML document will be accessible at
 <tt class="docutils literal"><span class="pre">{current</span> <span class="pre">url}?{realm_param}={realm_param}</span></tt>
-e.g. <tt class="docutils literal"><span class="pre">http://example.com/path?realm=realm</span></tt>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.openid.OpenID.realm_body">
-<tt class="descname">realm_body</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.openid.OpenID.realm_body" title="Permalink to this definition">¶</a></dt>
-<dd><p>The contents of the HTML body tag of the realm.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.openid.OpenID.realm_param">
-<tt class="descname">realm_param</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.openid.OpenID.realm_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>The name of the query parameter to be used to serve the realm.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.openid.OpenID.xrds_param">
-<tt class="descname">xrds_param</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.openid.OpenID.xrds_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>The name of the query parameter to be used to serve the
-<a class="reference external" href="http://openid.net/specs/openid-authentication-2_0-12.html#XRDS_Sample">XRDS document</a>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.openid.OpenID.sreg">
-<tt class="descname">sreg</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.openid.OpenID.sreg" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of optional
-<a class="reference external" href="http://openid.net/specs/openid-simple-registration-extension-1_0.html">SREG</a> fields.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.openid.OpenID.sreg_required">
-<tt class="descname">sreg_required</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.openid.OpenID.sreg_required" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of required
-<a class="reference external" href="http://openid.net/specs/openid-simple-registration-extension-1_0.html">SREG</a> fields.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.openid.OpenID.ax">
-<tt class="descname">ax</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.openid.OpenID.ax" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of optional
-<a class="reference external" href="http://openid.net/specs/openid-attribute-exchange-1_0.html">AX</a> schemas.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.openid.OpenID.ax_required">
-<tt class="descname">ax_required</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.openid.OpenID.ax_required" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of required
-<a class="reference external" href="http://openid.net/specs/openid-attribute-exchange-1_0.html">AX</a> schemas.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.openid.OpenID.pape">
-<tt class="descname">pape</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.openid.OpenID.pape" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of requested
+e.g. <tt class="docutils literal"><span class="pre">http://example.com/path?realm=realm</span></tt>.</li>
+<li><strong>realm_body</strong> (<em>str</em>) &#8211; Contents of the HTML body tag of the realm.</li>
+<li><strong>realm_param</strong> (<em>str</em>) &#8211; Name of the query parameter to be used to serve the realm.</li>
+<li><strong>xrds_param</strong> (<em>str</em>) &#8211; The name of the query parameter to be used to serve the
+<a class="reference external" href="http://openid.net/specs/openid-authentication-2_0-12.html#XRDS_Sample">XRDS document</a>.</li>
+<li><strong>sreg</strong> (<em>list</em>) &#8211; List of strings of optional
+<a class="reference external" href="http://openid.net/specs/openid-simple-registration-extension-1_0.html">SREG</a> fields.
+Default = <tt class="xref py py-attr docutils literal"><span class="pre">OpenID.SREG</span></tt>.</li>
+<li><strong>sreg_required</strong> (<em>list</em>) &#8211; <p>List of strings of required
+<a class="reference external" href="http://openid.net/specs/openid-simple-registration-extension-1_0.html">SREG</a> fields.
+Default = <tt class="docutils literal"><span class="pre">[]</span></tt>.</p>
+</li>
+<li><strong>ax</strong> (<em>list</em>) &#8211; List of strings of optional
+<a class="reference external" href="http://openid.net/specs/openid-attribute-exchange-1_0.html">AX</a> schemas.
+Default = <tt class="xref py py-attr docutils literal"><span class="pre">OpenID.AX</span></tt>.</li>
+<li><strong>ax_required</strong> (<em>list</em>) &#8211; <p>List of strings of required
+<a class="reference external" href="http://openid.net/specs/openid-attribute-exchange-1_0.html">AX</a> schemas.
+Default = <tt class="xref py py-attr docutils literal"><span class="pre">OpenID.AX_REQUIRED</span></tt>.</p>
+</li>
+<li><strong>pape</strong> (<em>list</em>) &#8211; of requested
 <a class="reference external" href="http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html">PAPE</a>
-policies.</p>
+policies.
+Default = <tt class="xref py py-attr docutils literal"><span class="pre">OpenID.PAPE</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>As well as those inherited from <a class="reference internal" href="#authomatic.providers.AuthenticationProvider" title="authomatic.providers.AuthenticationProvider"><tt class="xref py py-class docutils literal"><span class="pre">AuthenticationProvider</span></tt></a> constructor.</p>
 </dd></dl>
 
 </dd></dl>
@@ -378,16 +454,17 @@ policies.</p>
 </div>
 <span class="target" id="module-authomatic.providers.gaeopenid"></span><div class="section" id="google-app-engine-openid-providers">
 <h2>Google App Engine OpenID Providers<a class="headerlink" href="#google-app-engine-openid-providers" title="Permalink to this headline">¶</a></h2>
-<p>Providers compatible with the <a class="reference external" href="http://openid.net/">OpenID</a> protocol based on the <a class="reference external" href="https://developers.google.com/appengine/docs/python/users/">Google App Engine Users API</a>.</p>
+<p>Providers which implement the <a class="reference external" href="http://openid.net/">OpenID</a> protocol based on the <a class="reference external" href="https://developers.google.com/appengine/docs/python/users/">Google App Engine Users API</a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">When using these providers the <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">user</span></tt></a> object will always have only the
+<p class="last">When using the <a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider, the <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">user</span></tt></a> object
+will always have only the
 <a class="reference internal" href="classes.html#authomatic.core.User.user_id" title="authomatic.core.User.user_id"><tt class="xref py py-attr docutils literal"><span class="pre">user_id</span></tt></a>,
 <a class="reference internal" href="classes.html#authomatic.core.User.email" title="authomatic.core.User.email"><tt class="xref py py-attr docutils literal"><span class="pre">email</span></tt></a>,
 <a class="reference internal" href="classes.html#authomatic.core.User.gae_user" title="authomatic.core.User.gae_user"><tt class="xref py py-attr docutils literal"><span class="pre">gae_user</span></tt></a>
 attributes populated with data.
 Moreover the <a class="reference internal" href="classes.html#authomatic.core.User.user_id" title="authomatic.core.User.user_id"><tt class="xref py py-attr docutils literal"><span class="pre">user_id</span></tt></a> will always be empty on the
-<a class="reference external" href="https://developers.google.com/appengine/docs/python/tools/devserver">Development Server</a>.</p>
+<a class="reference external" href="https://developers.google.com/appengine/docs/python/tools/devserver">GAE Development Server</a>.</p>
 </div>
 <table border="1" class="longtable docutils">
 <colgroup>
@@ -431,9 +508,9 @@ Moreover the <a class="reference internal" href="classes.html#authomatic.core.Us
 </dd></dl>
 
 </div>
-<span class="target" id="module-authomatic.providers"></span><div class="section" id="base-providers">
-<h2>Base Providers<a class="headerlink" href="#base-providers" title="Permalink to this headline">¶</a></h2>
-<p>This module provides abstract classes for implementation of protocol specific abstract classes.</p>
+<span class="target" id="module-authomatic.providers"></span><div class="section" id="abstract-classes-for-providers">
+<h2>Abstract Classes for Providers<a class="headerlink" href="#abstract-classes-for-providers" title="Permalink to this headline">¶</a></h2>
+<p>Abstract base classes for implementation of protocol specific providers.</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -581,38 +658,20 @@ e.g. <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> or <
 <dl class="method">
 <dt id="authomatic.providers.AuthorisationProvider.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accepts these keyword arguments:</p>
+<dd><p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>consumer_key</strong> (<em>str</em>) &#8211; <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.consumer_key" title="authomatic.providers.AuthorisationProvider.consumer_key"><tt class="xref py py-attr docutils literal"><span class="pre">consumer_key</span></tt></a></li>
-<li><strong>consumer_secret</strong> (<em>str</em>) &#8211; <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.consumer_secret" title="authomatic.providers.AuthorisationProvider.consumer_secret"><tt class="xref py py-attr docutils literal"><span class="pre">consumer_secret</span></tt></a></li>
-<li><strong>short_name</strong> &#8211; <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.short_name" title="authomatic.providers.AuthorisationProvider.short_name"><tt class="xref py py-attr docutils literal"><span class="pre">short_name</span></tt></a></li>
+<li><strong>consumer_key</strong> (<em>str</em>) &#8211; The <em>key</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
+<li><strong>consumer_secret</strong> (<em>str</em>) &#8211; The <em>secret</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
+<li><strong>short_name</strong> &#8211; A unique short name used to serialize <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.AuthorisationProvider.consumer_key">
-<tt class="descname">consumer_key</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.consumer_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <em>key</em> assignet to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.AuthorisationProvider.consumer_secret">
-<tt class="descname">consumer_secret</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.consumer_secret" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <em>secret</em> assignet to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.AuthorisationProvider.short_name">
-<tt class="descname">short_name</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.short_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>A unique short name used to serialize the <tt class="xref py py-class docutils literal"><span class="pre">core.Credentials</span></tt>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -679,7 +738,7 @@ see <a class="reference external" href="http://tools.ietf.org/html/rfc6749#secti
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>deserialized_tuple</strong> (<em>tuple</em>) &#8211; A tuple which first index is the <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.short_name" title="authomatic.providers.AuthorisationProvider.short_name"><tt class="xref py py-attr docutils literal"><span class="pre">short_name</span></tt></a> and the rest
+<li><strong>deserialized_tuple</strong> (<em>tuple</em>) &#8211; A tuple which first index is the <tt class="xref py py-attr docutils literal"><span class="pre">short_name</span></tt> and the rest
 are all the items of the <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt> created by <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.to_tuple" title="authomatic.providers.AuthorisationProvider.to_tuple"><tt class="xref py py-meth docutils literal"><span class="pre">to_tuple()</span></tt></a>.</li>
 <li><strong>cfg</strong> (<em>dict</em>) &#8211; <a class="reference internal" href="config.html"><em>Config</em></a></li>
 </ul>
@@ -823,7 +882,7 @@ authenticate a <em>claimed identity</em> of a <strong>user</strong>. e.g. <a cla
 <li><a class="reference internal" href="#oauth-1-0a-providers">OAuth 1.0a Providers</a></li>
 <li><a class="reference internal" href="#openid-providers">OpenID Providers</a></li>
 <li><a class="reference internal" href="#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
-<li><a class="reference internal" href="#base-providers">Base Providers</a></li>
+<li><a class="reference internal" href="#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
 </ul>
 </li>
 </ul>

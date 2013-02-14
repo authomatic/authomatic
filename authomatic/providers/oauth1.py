@@ -2,7 +2,7 @@
 OAuth 1.0a Providers
 --------------------
 
-Providers compatible with the |oauth1|_ protocol.
+Providers which implement the |oauth1|_ protocol.
 
 .. autosummary::
     
@@ -148,9 +148,12 @@ class HMACSHA1Generator(BaseSignatureGenerator):
 class OAuth1(providers.AuthorisationProvider):
     """
     Base class for |oauth1|_ providers.
+    
+    .. automethod:: __init__
+    
     """
     
-    signature_generator = HMACSHA1Generator
+    _signature_generator = HMACSHA1Generator
     
     REQUEST_TOKEN_REQUEST_TYPE = 1
     
@@ -227,13 +230,13 @@ class OAuth1(providers.AuthorisationProvider):
             
             # Prepare parameters for signature base string
             # http://oauth.net/core/1.0a/#rfc.section.9.1
-            params['oauth_signature_method'] = cls.signature_generator.method
+            params['oauth_signature_method'] = cls._signature_generator.method
             params['oauth_timestamp'] = str(int(time.time()))
             params['oauth_nonce'] = nonce
             params['oauth_version'] = '1.0'
             
             # add signature to params
-            params['oauth_signature'] = cls.signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
+            params['oauth_signature'] = cls._signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
         
         
         params = urlencode(params)

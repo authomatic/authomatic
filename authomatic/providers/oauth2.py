@@ -2,7 +2,7 @@
 OAuth 2.0 Providers
 -------------------
 
-Providers compatible with the |oauth2|_ protocol.
+Providers which implement the |oauth2|_ protocol.
 
 .. autosummary::
     
@@ -31,14 +31,17 @@ class OAuth2(providers.AuthorisationProvider):
     
     def __init__(self, *args, **kwargs):
         """
-        Accepts additional keyword argument :attr:`.scope`.
+        Accepts additional keyword arguments:
+        
+        :param list scope:
+            List of strings specifying requested permissions as described in the
+            `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
+        
+        As well as those inherited from :class:`.AuthorisationProvider` constructor.
         """
         
         super(OAuth2, self).__init__(*args, **kwargs)
         
-        #: :class:`list` List of strings specifying requested permissions as described in the
-        #: `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
-        # Scope from **kwargs overrides scope from config.
         self.scope = self._kwarg(kwargs, 'scope', [])
     
     

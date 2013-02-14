@@ -1,8 +1,8 @@
 """
-Base Providers
---------------
+Abstract Classes for Providers
+------------------------------
 
-This module provides abstract classes for implementation of protocol specific abstract classes.
+Abstract base classes for implementation of protocol specific providers.
 
 .. autosummary::
     
@@ -303,25 +303,20 @@ class AuthorisationProvider(BaseProvider):
     
     def __init__(self, *args, **kwargs):
         """
-        Accepts these keyword arguments:
+        Accepts additional keyword arguments:
         
         :arg str consumer_key:
-            :attr:`.consumer_key`
+            The *key* assigned to our application (**consumer**) by the **provider**.
         :arg str consumer_secret:
-            :attr:`.consumer_secret`
+            The *secret* assigned to our application (**consumer**) by the **provider**.
         :arg short_name:
-            :attr:`.short_name`
+            A unique short name used to serialize :class:`.Credentials`.
         """
         
         super(AuthorisationProvider, self).__init__(*args, **kwargs)
         
-        #: The *key* assignet to our application (**consumer**) by the **provider**.
         self.consumer_key = self._kwarg(kwargs, 'consumer_key')
-        
-        #: The *secret* assignet to our application (**consumer**) by the **provider**.
         self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
-        
-        #: A unique short name used to serialize the :class:`core.Credentials`.
         self.short_name = self._kwarg(kwargs, 'short_name')
         
         #: :class:`core.Credentials` to access **user's protected resources**.

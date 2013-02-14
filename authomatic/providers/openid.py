@@ -2,12 +2,12 @@
 OpenID Providers
 ----------------------------------
 
-Providers compatible with the |openid|_ protocol based on the
+Providers which implement the |openid|_ protocol based on the
 `python-openid`_ library.
 
 .. warning::
     
-    These providers are more expensive than the :mod:`.gaeopenid` providers.
+    This implementation is more expensive than :class:`.GAEOpenID`.
     The login procedure requires **one more fetch** and up to **8 DB accesses**!
 
 .. autosummary::
@@ -26,7 +26,6 @@ from authomatic import providers
 from authomatic.exceptions import FailureError, CancellationError, OpenIDError
 import datetime
 import logging
-import authomatic
 from openid import oidutil
 
 __all__ = ['OpenID', 'Yahoo', 'Google']
@@ -71,115 +70,104 @@ class OpenID(providers.AuthenticationProvider):
     
     """
         
-    # http://openid.net/specs/openid-attribute-properties-list-1_0-01.html
-    AX_SCHEMAS = ('http://axschema.org/contact/email',
-                  'http://schema.openid.net/contact/email',
-                  'http://axschema.org/namePerson',
-                  'http://openid.net/schema/namePerson/first',
-                  'http://openid.net/schema/namePerson/last',
-                  'http://openid.net/schema/gender',
-                  'http://openid.net/schema/language/pref',
-                  'http://openid.net/schema/contact/web/default',
-                  'http://openid.net/schema/media/image',
-                  'http://openid.net/schema/timezone',)
+    AX = ['http://axschema.org/contact/email',
+          'http://schema.openid.net/contact/email',
+          'http://axschema.org/namePerson',
+          'http://openid.net/schema/namePerson/first',
+          'http://openid.net/schema/namePerson/last',
+          'http://openid.net/schema/gender',
+          'http://openid.net/schema/language/pref',
+          'http://openid.net/schema/contact/web/default',
+          'http://openid.net/schema/media/image',
+          'http://openid.net/schema/timezone']
     
-    # google requires this schema
-    AX_SCHEMAS_REQUIRED = ('http://schema.openid.net/contact/email', )
+    AX_REQUIRED = ['http://schema.openid.net/contact/email']
     
-    # http://openid.net/specs/openid-simple-registration-extension-1_1-01.html#response_format
-    SREG_FIELDS = ('nickname',
-                 'email',
-                 'fullname',
-                 'dob',
-                 'gender',
-                 'postcode',
-                 'country',
-                 'language',
-                 'timezone')
+    SREG = ['nickname',
+            'email',
+            'fullname',
+            'dob',
+            'gender',
+            'postcode',
+            'country',
+            'language',
+            'timezone']
     
-    # http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html#auth_policies
-    PAPE_POLICIES = ['http://schemas.openid.net/pape/policies/2007/06/multi-factor-physical',
-                     'http://schemas.openid.net/pape/policies/2007/06/multi-factor',
-                     'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant']
+    PAPE = ['http://schemas.openid.net/pape/policies/2007/06/multi-factor-physical',
+            'http://schemas.openid.net/pape/policies/2007/06/multi-factor',
+            'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant']
     
     def __init__(self, *args, **kwargs):
         """
-        Accepts optional keyword arguments:
-        :attr:`.identifier`,
-        :attr:`.use_realm`,
-        :attr:`.realm_body`,
-        :attr:`.realm_param`,
-        :attr:`.xrds_param`,
-        :attr:`.sreg`,
-        :attr:`.sreg_required`,
-        :attr:`.ax`,
-        :attr:`.ax_required`,
-        :attr:`.pape`.
+        Accepts additional keyword arguments:
+        
+        :param bool use_realm:
+            Whether to use `OpenID realm <http://openid.net/specs/openid-authentication-2_0-12.html#realms>`_.
+            If ``True`` the realm HTML document will be accessible at
+            ``{current url}?{realm_param}={realm_param}``
+            e.g. ``http://example.com/path?realm=realm``.
+        
+        :param str realm_body:
+            Contents of the HTML body tag of the realm.
+        
+        :param str realm_param:
+            Name of the query parameter to be used to serve the realm.
+        
+        :param str xrds_param:
+            The name of the query parameter to be used to serve the
+            `XRDS document <http://openid.net/specs/openid-authentication-2_0-12.html#XRDS_Sample>`_.
+        
+        :param list sreg:
+            List of strings of optional
+            `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
+            Default = :attr:`OpenID.SREG`.
+                
+        :param list sreg_required:
+            List of strings of required
+            `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
+            Default = ``[]``.        
+        
+        :param list ax:
+            List of strings of optional
+            `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
+            Default = :attr:`OpenID.AX`.
+        
+        :param list ax_required:
+            List of strings of required
+            `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
+            Default = :attr:`OpenID.AX_REQUIRED`.
+                
+        :param list pape:
+            of requested
+            `PAPE <http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html>`_
+            policies.
+            Default = :attr:`OpenID.PAPE`.
+        
+        As well as those inherited from :class:`.AuthenticationProvider` constructor.
         """
         
         super(OpenID, self).__init__(*args, **kwargs)
         
-        
-        #=======================================================================
         # Realm
-        #=======================================================================
-        
-        #: Whether to use `OpenID realm <http://openid.net/specs/openid-authentication-2_0-12.html#realms>`_.
-        #: If ``True`` the realm HTML document will be accessible at
-        #: ``{current url}?{realm_param}={realm_param}``
-        #: e.g. ``http://example.com/path?realm=realm``.
         self.use_realm = self._kwarg(kwargs, 'use_realm', True)
-        
-        #: The contents of the HTML body tag of the realm.
         self.realm_body = self._kwarg(kwargs, 'realm_body', '')
-        
-        #: The name of the query parameter to be used to serve the realm.
         self.realm_param = self._kwarg(kwargs, 'realm_param', 'realm')
+        self.xrds_param = self._kwarg(kwargs, 'xrds_param', 'xrds')        
         
-        #: The name of the query parameter to be used to serve the
-        #: `XRDS document <http://openid.net/specs/openid-authentication-2_0-12.html#XRDS_Sample>`_.
-        self.xrds_param = self._kwarg(kwargs, 'xrds_param', 'xrds')
-        
-        
-        #=======================================================================
-        # SREG
-        #=======================================================================
-        
-        #: :class:`list` of optional
-        #: `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
-        self.sreg = self._kwarg(kwargs, 'sreg', self.SREG_FIELDS)
-        
-        #: :class:`list` of required
-        #: `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
+        #SREG
+        self.sreg = self._kwarg(kwargs, 'sreg', self.SREG)
         self.sreg_required = self._kwarg(kwargs, 'sreg_required', [])
         
-        
-        #=======================================================================
         # AX
-        #=======================================================================
-        
-        #: :class:`list` of optional
-        #: `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
-        self.ax = self._kwarg(kwargs, 'ax', self.AX_SCHEMAS)
-        
-        #: :class:`list` of required
-        #: `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
-        self.ax_required = self._kwarg(kwargs, 'ax_required', self.AX_SCHEMAS_REQUIRED)
-        
+        self.ax = self._kwarg(kwargs, 'ax', self.AX)
+        self.ax_required = self._kwarg(kwargs, 'ax_required', self.AX_REQUIRED)
         # add required schemas to schemas if not allready there
         for i in self.ax_required:
             if i not in self.ax:
                 self.ax.append(i)
         
-        
-        #=======================================================================
         # PAPE
-        #=======================================================================
-        
-        #: :class:`list` of requested
-        #: `PAPE <http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html>`_
-        #: policies.
-        self.pape = self._kwarg(kwargs, 'pape', self.PAPE_POLICIES)
+        self.pape = self._kwarg(kwargs, 'pape', self.PAPE)
     
     
     @staticmethod

@@ -5,14 +5,15 @@ Providers are abstractions of the **provider** party of the
 **provider**/**consumer**/**user** triangle and they are the very core of this library.
 There is no reason for you to instatniate them manualy.
 You only should specify them in the :doc:`config` and access members of their instances
-available in the :class:`.core.LoginResult` returned by the :func:`authomatic.login` function.
+available in the :class:`.LoginResult` returned by the :func:`authomatic.login` function.
 
 Some provider types accept additional keyword arguments which you can pass to them through
 the :func:`authomatic.login` function's keyword arguments or through the :doc:`config` like this:
 
-::
+.. note::
 
-    CONFIG = {'abc': 123}
+   Keyword arguments passed through :doc:`config` take precedence over
+   those passed through :func:`authomatic.login`.
 
 ::
 
@@ -27,12 +28,12 @@ the :func:`authomatic.login` function's keyword arguments or through the :doc:`c
 
             # oauth2.OAuth2 specific keyword arguments:
             'scope': ['user_about_me', 'email']
-        },
-        'openid': {
+         },
+         'openid': {
              'class_name': openid.OpenID, # Subclass of AuthenticationProvider
 
              # AuthenticationProvider specific keyword arguments:
-             'identifier_param' = 'claimed_id',
+             'identifier_param': 'claimed_id',
 
              # openid.OpenID specific keyword arguments:
              'use_realm': True,
@@ -48,8 +49,52 @@ the :func:`authomatic.login` function's keyword arguments or through the :doc:`c
     }
 
 
-Here is a table of currently available providers:
-                                                                                             
+Additional keyword arguments by provider type:
+
++----------------------------------+------------------+-----------+-+
+| Provider Type                    | Argument Name    | Required  | |
++==================================+==================+===========+=+
+| :class:`.OAuth2`                 | consumer_key     | yes       | |
++                                  +------------------+-----------+-+
+|                                  | consumer_secret  | yes       | |
++                                  +------------------+-----------+-+
+|                                  | short_name       | yes       | |
++                                  +------------------+-----------+-+
+|                                  | scope            |           | |
++----------------------------------+------------------+-----------+-+
+| :class:`.OAuth1`                 | consumer_key     | yes       | |
++                                  +------------------+-----------+-+
+|                                  | consumer_secret  | yes       | |
++                                  +------------------+-----------+-+
+|                                  | short_name       | yes       | |
++----------------------------------+------------------+-----------+-+
+| :class:`.OpenID`                 | identifier_param |           | |
++                                  +------------------+-----------+-+
+|                                  | use_realm        |           | |
++                                  +------------------+-----------+-+
+|                                  | realm_body       |           | |
++                                  +------------------+-----------+-+
+|                                  | realm_param      |           | |
++                                  +------------------+-----------+-+
+|                                  | xrds_param       |           | |
++                                  +------------------+-----------+-+
+|                                  | sreg             |           | |
++                                  +------------------+-----------+-+
+|                                  | sreg_required    |           | |
++                                  +------------------+-----------+-+
+|                                  | ax               |           | |
++                                  +------------------+-----------+-+
+|                                  | ax_required      |           | |
++                                  +------------------+-----------+-+
+|                                  | pape             |           | |
++----------------------------------+------------------+-----------+-+
+| :class:`.GAEOpenID`              | identifier_param |           | |
++----------------------------------+------------------+-----------+-+
+
+
+
+Available provider classes:
+
 +------------------------------+--------------------------+-------------------------------+-+
 | |oauth2|                     | |oauth1|                 | |openid|                      | |
 +==============================+==========================+===============================+=+

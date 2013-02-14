@@ -2,17 +2,18 @@
 Google App Engine OpenID Providers
 ----------------------------------
 
-Providers compatible with the |openid|_ protocol based on the |gae_users_api|_.
+Providers which implement the |openid|_ protocol based on the |gae_users_api|_.
 
 .. note::
 
-    When using these providers the :class:`user <.core.User>` object will always have only the
+    When using the :class:`GAEOpenID` provider, the :class:`user <.core.User>` object
+    will always have only the
     :attr:`user_id <.core.User.user_id>`,
     :attr:`email <.core.User.email>`,
     :attr:`gae_user <.core.User.gae_user>`
     attributes populated with data.
     Moreover the :attr:`user_id <.core.User.user_id>` will always be empty on the
-    `Development Server <https://developers.google.com/appengine/docs/python/tools/devserver>`_.
+    `GAE Development Server <https://developers.google.com/appengine/docs/python/tools/devserver>`_.
 
 .. autosummary::
     
