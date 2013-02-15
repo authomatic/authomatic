@@ -6,6 +6,7 @@ from webapp2_extras import sessions
 import authomatic.core as core
 import datetime
 import logging
+import os
 import pickle
 import urlparse
 
@@ -116,8 +117,8 @@ class NDBConfig(ndb.Model):
             # OpenID
             example.use_realm = True
             example.realm_body = 'Contents of the HTML body tag of the realm.'
-            example.realm_param = 'Name of the query parameter to be used to serve the realm.'
-            example.xrds_param = ' The name of the query parameter to be used to serve the XRDS document.'
+            example.realm_param = 'Name of the query parameter to be used to serve the realm (leave empty for default).'
+            example.xrds_param = ' The name of the query parameter to be used to serve the XRDS document (leave empty for default).'
             example.sreg = 'list, of, strings, of, optional, SREG, fields, (leave empty for defaults)'
             example.sreg_required = 'list, of, strings, of, required, SREG, fields, (leave empty for defaults)'
             example.ax = 'list, of, strings, of, optional, AX, schemas, (leave empty for defaults)'
@@ -127,9 +128,12 @@ class NDBConfig(ndb.Model):
             
             example.put()
             
+            url = '{}://{}/_ah/admin/datastore?kind={}'.format(os.environ.get('wsgi.url_scheme'),
+                                                               os.environ.get('HTTP_HOST'),
+                                                               cls.__name__)
+            
             raise Webapp2AdapterError('A NDBConfig data model was created! ' + \
-                                      'Go to {your_domain}/_ah/admin/datastore?kind=NDBConfig ' + \
-                                      'and populate it with data!')
+                                      'Go to {} and populate it with data!'.format(url))
 
 def ndb_config():
     NDBConfig.initialize()

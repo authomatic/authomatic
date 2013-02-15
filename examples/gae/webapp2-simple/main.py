@@ -35,7 +35,7 @@ def headers(handler):
 
 class Home(webapp2.RequestHandler):
     def get(self):
-        headers(self)        
+        headers(self)
         
 
 class Login(webapp2.RequestHandler):
@@ -43,7 +43,7 @@ class Login(webapp2.RequestHandler):
     def login(self, provider_name):
         
         self.adapter = gae.Webapp2Adapter(handler=self,
-                                      session_secret='abcd')
+                                          session_secret='abcd')
         
         result = authomatic.login(self.adapter, gae.ndb_config(), provider_name,
                                   report_errors=False,
