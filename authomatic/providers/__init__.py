@@ -295,10 +295,7 @@ class AuthorisationProvider(BaseProvider):
     """
     Base provider for *authorisation protocols* i.e. protocols which allow a **consumer**
     to be authorized by a **provider** to access **protected resources** of a **user**.
-    e.g. `OAuth 2.0 <http://oauth.net/2/>`_ or `OAuth 1.0a <http://oauth.net/core/1.0a/>`_.
-    
-    .. automethod:: __init__
-    
+    e.g. `OAuth 2.0 <http://oauth.net/2/>`_ or `OAuth 1.0a <http://oauth.net/core/1.0a/>`_.    
     """
         
     USER_AUTHORISATION_REQUEST_TYPE = 2

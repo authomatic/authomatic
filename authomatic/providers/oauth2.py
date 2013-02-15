@@ -24,9 +24,6 @@ __all__ = ['Facebook', 'Google', 'WindowsLive', 'OAuth2']
 class OAuth2(providers.AuthorisationProvider):
     """
     Base class for |oauth2|_ providers.
-    
-    .. automethod:: __init__
-    
     """
     
     def __init__(self, *args, **kwargs):

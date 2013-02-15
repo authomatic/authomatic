@@ -1,3 +1,11 @@
+"""
+Google App Engine Adapters
+--------------------------
+
+Adapters and utilities to be used on |gae|_.
+
+"""
+
 from authomatic import adapters
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
@@ -10,18 +18,22 @@ import os
 import pickle
 import urlparse
 
+__all__ = ['ndb_config', 'Webapp2Adapter']
+
 
 class Webapp2AdapterError(Exception):
     pass
 
-#TODO: Move to separate module not tied to webapp2
-#TODO: wrap to a function who returns initiates and returns this class.
+
+class GAEError(Exception):
+    pass
+
+
 class NDBConfig(ndb.Model):
     """
-    Datastore model for providers configuration
+    Datastore model for providers configuration    
     """
-    
-    
+        
     provider_name = ndb.StringProperty( )
     class_ = ndb.StringProperty()
     
@@ -60,22 +72,12 @@ class NDBConfig(ndb.Model):
         if result:
             result_dict = result.to_dict()
             
-            # NEW
             for i in ('scope', 'sreg', 'sreg_required', 'ax', 'ax_required', 'pape', ):
                 prop = result_dict.get(i)
                 if prop:
                     result_dict[i] = [s.strip() for s in prop.split(',')]
                 else:
                     result_dict[i] = None
-            
-            # OLD
-            
-            # convert scope to list
-#            scope = result_dict.get('scope')
-#            if scope:
-#                result_dict['scope'] = [s.strip() for s in scope.split(',')]
-#            else:
-#                result_dict['scope'] = []
 
             return result_dict
         else:
@@ -132,10 +134,31 @@ class NDBConfig(ndb.Model):
                                                                os.environ.get('HTTP_HOST'),
                                                                cls.__name__)
             
-            raise Webapp2AdapterError('A NDBConfig data model was created! ' + \
-                                      'Go to {} and populate it with data!'.format(url))
+            raise GAEError('A NDBConfig data model was created! ' + \
+                           'Go to {} and populate it with data!'.format(url))
+
 
 def ndb_config():
+    """
+    Allows you to have a **datastore** :doc:`config` instead of a hardcoded one.
+    
+    This function creates an **"Example"** entity of kind **"NDBConfig"** in the datastore
+    if the model is empty and raises and error to inform you that you should populate the model with data.
+        
+    .. note::
+    
+        The *Datastore Viewer* in the ``_ah/admin/`` wont let you add properties to a model
+        if there is not an entity with that property already.
+        Therefore it is a good idea to keep the **"Example"** entity (which has all
+        possible properties set) in the datastore.
+    
+    :raises:
+        :exc:`.GAEError`
+    
+    :returns:
+        :class:`.NDBConfig`
+    """
+    
     NDBConfig.initialize()
     return NDBConfig
 
@@ -201,10 +224,12 @@ class _GAESessionWrapper(adapters.BaseSession):
     
     def get(self, key):
         return self._from_json_serializable(self.session.get(key))
-    
 
 
 class Webapp2Adapter(adapters.WebObBaseAdapter):
+    """
+    Adapter to be used with the |webapp2|_ framework on |gae|_.
+    """
     
     request = None
     response = None
@@ -212,6 +237,30 @@ class Webapp2Adapter(adapters.WebObBaseAdapter):
     
     def __init__(self, handler, session=None, session_secret=None,
                  session_key='authomatic', openid_store=None):
+        """
+        
+        .. note::
+            
+            You must provide :data:`session` or :data:`session_secret`.
+        
+        :param handler:
+            A |webapp2|_ :class:`RequestHandler` instance.
+            
+        :param session:
+            A |webapp2| `session <http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html>`_.
+            
+        :param str session_secret:
+            Session secret.
+            
+        :param str session_key:
+            A key under which a new session will be created.
+        
+        :param openid_store:
+            Your own implementation of the
+            :class:`openid.store.interface.OpenIDStore` of the `python-openid`_ library.
+            Default is :class:`.gae.openid.NDBOpenidStore`.
+            
+        """
         
         self.request = handler.request
         self.response = handler.response
@@ -234,14 +283,11 @@ class Webapp2Adapter(adapters.WebObBaseAdapter):
     
         
     def fetch_async(self, url, payload=None, method='GET', headers={}, response_parser=None, content_parser=None):
-        """
-        Makes an asynchronous call object
-        """
         
         rpc = urlfetch.create_rpc()
         urlfetch.make_fetch_call(rpc, url, payload, method, headers)
         
-        return adapters.RPC(rpc, response_parser or self.response_parser, content_parser)
+        return adapters.AsynchronousFetch(rpc, self, response_parser, content_parser)
     
     
     @property

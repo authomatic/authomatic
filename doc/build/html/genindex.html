@@ -77,27 +77,19 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/providers.html#authomatic.providers.AuthorisationProvider.__init__">__init__() (authomatic.providers.AuthorisationProvider method)</a>
+  <dt><a href="reference/adapters.html#authomatic.adapters.BaseSession.__delitem__">__delitem__() (authomatic.adapters.BaseSession method)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="reference/providers.html#authomatic.providers.gaeopenid.GAEOpenID.__init__">(authomatic.providers.gaeopenid.GAEOpenID method)</a>
+      
+  <dt><a href="reference/adapters.html#authomatic.adapters.BaseSession.__getitem__">__getitem__() (authomatic.adapters.BaseSession method)</a>
   </dt>
 
-        
-  <dt><a href="reference/providers.html#authomatic.providers.oauth1.OAuth1.__init__">(authomatic.providers.oauth1.OAuth1 method)</a>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="reference/adapters.html#authomatic.adapters.BaseSession.__setitem__">__setitem__() (authomatic.adapters.BaseSession method)</a>
   </dt>
 
-        
-  <dt><a href="reference/providers.html#authomatic.providers.oauth2.OAuth2.__init__">(authomatic.providers.oauth2.OAuth2 method)</a>
-  </dt>
-
-        
-  <dt><a href="reference/providers.html#authomatic.providers.openid.OpenID.__init__">(authomatic.providers.openid.OpenID method)</a>
-  </dt>
-
-      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -117,6 +109,10 @@
   </dt>
 
       
+  <dt><a href="reference/adapters.html#authomatic.adapters.AsynchronousFetch">AsynchronousFetch (class in authomatic.adapters)</a>
+  </dt>
+
+      
   <dt><a href="reference/providers.html#authomatic.providers.AuthenticationProvider">AuthenticationProvider (class in authomatic.providers)</a>
   </dt>
 
@@ -129,11 +125,15 @@
   </dt>
 
       
-  <dt><a href="reference/classes.html#module-authomatic.core">authomatic.core (module)</a>
+  <dt><a href="reference/adapters.html#module-authomatic.adapters.gae">authomatic.adapters.gae (module)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="reference/classes.html#module-authomatic.core">authomatic.core (module)</a>
+  </dt>
+
       
   <dt><a href="reference/providers.html#module-authomatic.providers">authomatic.providers (module)</a>
   </dt>
@@ -174,6 +174,10 @@
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="reference/adapters.html#authomatic.adapters.BaseSession">BaseSession (class in authomatic.adapters)</a>
+  </dt>
+
       
   <dt><a href="reference/classes.html#authomatic.core.User.birth_date">birth_date (authomatic.core.User attribute)</a>
   </dt>
@@ -333,13 +337,17 @@
   </dt>
 
       
-  <dt><a href="reference/classes.html#authomatic.core.Credentials.get_provider_class">get_provider_class() (authomatic.core.Credentials method)</a>
+  <dt><a href="reference/adapters.html#authomatic.adapters.BaseSession.get">get() (authomatic.adapters.BaseSession method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/adapters.html#authomatic.adapters.RPC.get_response">get_response() (authomatic.adapters.RPC method)</a>
+  <dt><a href="reference/classes.html#authomatic.core.Credentials.get_provider_class">get_provider_class() (authomatic.core.Credentials method)</a>
+  </dt>
+
+      
+  <dt><a href="reference/adapters.html#authomatic.adapters.AsynchronousFetch.get_response">get_response() (authomatic.adapters.AsynchronousFetch method)</a>
   </dt>
 
       <dd><dl>
@@ -440,6 +448,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="reference/adapters.html#authomatic.adapters.gae.ndb_config">ndb_config() (in module authomatic.adapters.gae)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -543,13 +555,21 @@
   </dt>
 
       
-  <dt><a href="reference/classes.html#authomatic.core.Request">Request (class in authomatic.core)</a>
+  <dt><a href="reference/adapters.html#authomatic.adapters.WebObBaseAdapter.request">request (authomatic.adapters.WebObBaseAdapter attribute)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="reference/classes.html#authomatic.core.Request">Request (class in authomatic.core)</a>
+  </dt>
+
+      
   <dt><a href="reference/providers.html#authomatic.providers.oauth1.OAuth1.request_token_url">request_token_url (authomatic.providers.oauth1.OAuth1 attribute)</a>
+  </dt>
+
+      
+  <dt><a href="reference/adapters.html#authomatic.adapters.WebObBaseAdapter.response">response (authomatic.adapters.WebObBaseAdapter attribute)</a>
   </dt>
 
       
@@ -558,10 +578,6 @@
 
       
   <dt><a href="reference/adapters.html#authomatic.adapters.BaseAdapter.response_parser">response_parser() (authomatic.adapters.BaseAdapter method)</a>
-  </dt>
-
-      
-  <dt><a href="reference/adapters.html#authomatic.adapters.RPC">RPC (class in authomatic.adapters)</a>
   </dt>
 
   </dl></td>
@@ -695,15 +711,19 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="reference/adapters.html#authomatic.adapters.WebObBaseAdapter">WebObBaseAdapter (class in authomatic.adapters)</a>
+  <dt><a href="reference/adapters.html#authomatic.adapters.gae.Webapp2Adapter">Webapp2Adapter (class in authomatic.adapters.gae)</a>
   </dt>
 
       
-  <dt><a href="reference/providers.html#authomatic.providers.oauth2.WindowsLive">WindowsLive (class in authomatic.providers.oauth2)</a>
+  <dt><a href="reference/adapters.html#authomatic.adapters.WebObBaseAdapter">WebObBaseAdapter (class in authomatic.adapters)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="reference/providers.html#authomatic.providers.oauth2.WindowsLive">WindowsLive (class in authomatic.providers.oauth2)</a>
+  </dt>
+
       
   <dt><a href="reference/adapters.html#authomatic.adapters.BaseAdapter.write">write() (authomatic.adapters.BaseAdapter method)</a>
   </dt>

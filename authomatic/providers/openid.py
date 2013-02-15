@@ -64,10 +64,7 @@ XRDS_XML = \
 
 class OpenID(providers.AuthenticationProvider):
     """
-    |openid|_ provider based on the `python-openid`_ library.
-    
-    .. automethod:: __init__
-    
+    |openid|_ provider based on the `python-openid`_ library.    
     """
         
     AX = ['http://axschema.org/contact/email',

@@ -16,12 +16,31 @@ import sys, os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('../../'))
+
+pymodules = sys.path.index('/usr/lib/pymodules/python2.7')
+
+sys.path.pop(pymodules)
+
+gae_path = '/usr/lib/google-app-engine'
+
+sys.path[0:0] = [
+    gae_path,
+    os.path.join(gae_path, 'lib', 'yaml', 'lib'),
+    os.path.join(gae_path, 'google', 'appengine', 'ext', 'gql'),
+    os.path.abspath('../../'),
+]
+
 
 rst_prolog = """
 
+.. |webob| replace:: WebOb
+.. _webob: http://webob.org/
+
 .. |gae| replace:: Google App Engine
 .. _gae: https://developers.google.com/appengine/
+
+.. |webapp2| replace:: Webapp2
+.. _webapp2: http://webapp-improved.appspot.com/
 
 .. |oauth2| replace:: OAuth 2.0
 .. _oauth2: http://oauth.net/2/
@@ -192,6 +211,7 @@ html_static_path = ['_static']
 htmlhelp_basename = 'Authomaticdoc'
 
 autodoc_member_order = 'bysource'
+autoclass_content = 'both'
 
 # -- Options for LaTeX output --------------------------------------------------
 

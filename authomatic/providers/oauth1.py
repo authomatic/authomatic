@@ -147,10 +147,7 @@ class HMACSHA1Generator(BaseSignatureGenerator):
 
 class OAuth1(providers.AuthorisationProvider):
     """
-    Base class for |oauth1|_ providers.
-    
-    .. automethod:: __init__
-    
+    Base class for |oauth1|_ providers.    
     """
     
     _signature_generator = HMACSHA1Generator

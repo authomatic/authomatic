@@ -343,7 +343,7 @@ to a <tt class="xref py py-class docutils literal"><span class="pre">string</spa
 <dt id="authomatic.core.Response">
 <em class="property">class </em><tt class="descclassname">authomatic.core.</tt><tt class="descname">Response</tt><big>(</big><em>status_code</em>, <em>headers</em>, <em>content</em>, <em>content_parser=None</em><big>)</big><a class="reference internal" href="../_modules/authomatic/core.html#Response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Response object returned by <a class="reference internal" href="functions.html#authomatic.fetch" title="authomatic.fetch"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.fetch()</span></tt></a>,
-<a class="reference internal" href="#authomatic.core.Request.get_response" title="authomatic.core.Request.get_response"><tt class="xref py py-meth docutils literal"><span class="pre">Request.get_response()</span></tt></a> or <a class="reference internal" href="adapters.html#authomatic.adapters.RPC.get_response" title="authomatic.adapters.RPC.get_response"><tt class="xref py py-meth docutils literal"><span class="pre">authomatic.adapters.RPC.get_response()</span></tt></a>.</p>
+<a class="reference internal" href="#authomatic.core.Request.get_response" title="authomatic.core.Request.get_response"><tt class="xref py py-meth docutils literal"><span class="pre">Request.get_response()</span></tt></a> or <tt class="xref py py-meth docutils literal"><span class="pre">authomatic.adapters.RPC.get_response()</span></tt>.</p>
 <dl class="attribute">
 <dt id="authomatic.core.Response.content_parser">
 <tt class="descname">content_parser</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Response.content_parser" title="Permalink to this definition">¶</a></dt>
@@ -406,6 +406,26 @@ Returned by <a class="reference internal" href="providers.html#authomatic.provid
 <p class="first admonition-title">Warning</p>
 <p class="last">Whether fetch calls are really asynchronous depends on the <a class="reference internal" href="adapters.html"><em>Adapter</em></a> implementation!</p>
 </div>
+<p>Initializes the request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>adapter</strong> &#8211; <a class="reference internal" href="adapters.html"><em>Adapter</em></a></li>
+<li><strong>config</strong> &#8211; The same <a class="reference internal" href="config.html"><em>Config</em></a> used in the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">login()</span></tt></a> function to get the credentials.</li>
+<li><strong>credentials</strong> &#8211; <a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a> or <a class="reference internal" href="#authomatic.core.Credentials.serialize" title="authomatic.core.Credentials.serialize"><tt class="xref py py-meth docutils literal"><span class="pre">serialized</span> <span class="pre">credentials</span></tt></a>
+of the <strong>user</strong> whose <strong>protected resource</strong> we want to access.</li>
+<li><strong>url</strong> (<em>str</em>) &#8211; The URL of the protected resource. Can contain query parameters.</li>
+<li><strong>method</strong> (<em>str</em>) &#8211; HTTP method of the request.</li>
+<li><strong>response_parser</strong> (<em>callable</em>) &#8211; A callable that takes the platform specific <tt class="docutils literal"><span class="pre">fetch</span></tt> response object
+as argument and converts it to a <a class="reference internal" href="#authomatic.core.Response" title="authomatic.core.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a> instance.</li>
+<li><strong>content_parser</strong> (<em>callable</em>) &#8211; A callable as described in <a class="reference internal" href="#authomatic.core.Response.content_parser" title="authomatic.core.Response.content_parser"><tt class="xref py py-attr docutils literal"><span class="pre">Response.content_parser</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="authomatic.core.Request.fetch">
 <tt class="descname">fetch</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/authomatic/core.html#Request.fetch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Request.fetch" title="Permalink to this definition">¶</a></dt>

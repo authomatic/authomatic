@@ -35,10 +35,7 @@ class GAEOpenID(providers.AuthenticationProvider):
     """
     |openid|_ provider based on the |gae_users_api|_.
     
-    .. automethod:: __init__(*args, identifier='')
-        
-        Accepts additional keyword argument :data:`identifier`, the *OpenID claimed identity* to authenticate.
-        
+    Accepts additional keyword arguments inherited from :class:`.AuthenticationProvider`.
     """
     
     @providers.login_decorator
