@@ -87,9 +87,6 @@ class BaseAdapter(object):
     
     __metaclass__ = abc.ABCMeta
     
-    def login(self, *args, **kwargs):
-        return authomatic.login(self,  *args, **kwargs)
-    
     
     @abc.abstractproperty
     def url(self):
