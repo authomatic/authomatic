@@ -58,8 +58,9 @@
             
   <div class="section" id="config">
 <h1>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h1>
-<p>The <strong>config</strong> is where you specify which providers you want to use
-and how should they be configured.</p>
+<p>The <strong>config</strong> is a constant where you specify which providers you want to use
+and how should they be configured. It is not tied to any specific location inside your project&#8217;s
+folder structure. You only need to pass it to the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function as argument.</p>
 <p>It is a dictionary of dictionaries which maps your custom provider names to
 <a class="reference internal" href="providers.html"><em>provider classes</em></a>.
 You can and should specify the keyword arguments for each <a class="reference internal" href="providers.html"><em>provider class</em></a> here.</p>
@@ -67,8 +68,7 @@ You can and should specify the keyword arguments for each <a class="reference in
 <p class="first admonition-title">Note</p>
 <p>In fact the config cann be any object implementing a subset of <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt> interface as
 specified in the <tt class="xref py py-class docutils literal"><span class="pre">adapters.BaseConfig</span></tt> abstract class.</p>
-<p class="last">The <tt class="xref py py-class docutils literal"><span class="pre">authomatic.adapters.gaewebapp2.GAEWebapp2Adapter</span></tt> for instance
-provides a NDB datamodel as a default config.</p>
+<p class="last">If your app is running on <a class="reference external" href="https://developers.google.com/appengine/">Google App Engine</a> you can use the <tt class="xref py py-func docutils literal"><span class="pre">adapters.gae.ndb_config()</span></tt>.</p>
 </div>
 <p>The <strong>config</strong> must have following structure:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">authomatic</span>
@@ -79,7 +79,7 @@ provides a NDB datamodel as a default config.</p>
     <span class="c"># Defaults</span>
     <span class="c">#===========================================================================</span>
 
-    <span class="s">&#39;__defaults__&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="c"># This is a special item where you can define default values for all providers.</span>
+    <span class="s">&#39;__defaults__&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="c"># This is an optional special item where you can define default values for all providers.</span>
          <span class="c"># You can override each default value by specifying it in concrete provider dict.</span>
          <span class="s">&#39;sreg&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;fullname&#39;</span><span class="p">,</span> <span class="s">&#39;country&#39;</span><span class="p">],</span>
          <span class="s">&#39;pape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;http://schemas.openid.net/pape/policies/2007/06/multi-factor&#39;</span><span class="p">],</span>

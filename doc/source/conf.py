@@ -20,6 +20,9 @@ sys.path.insert(0, os.path.abspath('../../'))
 
 rst_prolog = """
 
+.. |gae| replace:: Google App Engine
+.. _gae: https://developers.google.com/appengine/
+
 .. |oauth2| replace:: OAuth 2.0
 .. _oauth2: http://oauth.net/2/
 

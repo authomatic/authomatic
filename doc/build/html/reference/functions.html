@@ -188,23 +188,23 @@ have level <tt class="docutils literal"><span class="pre">DEBUG</span></tt>.</li
 
 <span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>
          <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">short_name</span><span class="p">(),</span> <span class="c"># returns 1</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>
          <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
          <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
          <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">]</span>
     <span class="p">},</span>
     <span class="s">&#39;google&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="s">&#39;authomatic.providers.oauth2.Google&#39;</span><span class="p">,</span>
          <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">short_name</span><span class="p">(),</span> <span class="c"># returns 2</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="s">&#39;authomatic.providers.oauth2.Google&#39;</span><span class="p">,</span>
          <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
          <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
          <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;https://www.googleapis.com/auth/userinfo.profile&#39;</span><span class="p">,</span>
                    <span class="s">&#39;https://www.googleapis.com/auth/userinfo.email&#39;</span><span class="p">]</span>
     <span class="p">},</span>
     <span class="s">&#39;windows_live&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="s">&#39;oauth2.WindowsLive&#39;</span><span class="p">,</span>
          <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">short_name</span><span class="p">(),</span> <span class="c"># returns 3</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="s">&#39;oauth2.WindowsLive&#39;</span><span class="p">,</span>
          <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
          <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
          <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;wl.basic&#39;</span><span class="p">,</span> <span class="s">&#39;wl.emails&#39;</span><span class="p">,</span> <span class="s">&#39;wl.photos&#39;</span><span class="p">]</span>

@@ -1,8 +1,9 @@
 Config
 ------
 
-The **config** is where you specify which providers you want to use
-and how should they be configured.
+The **config** is a constant where you specify which providers you want to use
+and how should they be configured. It is not tied to any specific location inside your project's
+folder structure. You only need to pass it to the :func:`authomatic.login` function as argument.
 
 It is a dictionary of dictionaries which maps your custom provider names to
 :doc:`provider classes <providers>`.
@@ -13,8 +14,7 @@ You can and should specify the keyword arguments for each :doc:`provider class <
    In fact the config cann be any object implementing a subset of :class:`dict` interface as
    specified in the :class:`.adapters.BaseConfig` abstract class.
    
-   The :class:`authomatic.adapters.gaewebapp2.GAEWebapp2Adapter` for instance
-   provides a NDB datamodel as a default config.
+   If your app is running on |gae|_ you can use the :func:`.adapters.gae.ndb_config`.
 
 
 The **config** must have following structure:
@@ -29,7 +29,7 @@ The **config** must have following structure:
        # Defaults
        #===========================================================================
        
-       '__defaults__': { # This is a special item where you can define default values for all providers.
+       '__defaults__': { # This is an optional special item where you can define default values for all providers.
             # You can override each default value by specifying it in concrete provider dict.
             'sreg': ['fullname', 'country'],
             'pape': ['http://schemas.openid.net/pape/policies/2007/06/multi-factor'],
