@@ -7,8 +7,8 @@ There is no reason for you to instatniate them manualy.
 You only should specify them in the :doc:`config` and access members of their instances
 available in the :class:`.LoginResult` returned by the :func:`authomatic.login` function.
 
-Some provider types accept additional keyword arguments which you can pass to them through
-the :func:`authomatic.login` function's keyword arguments or through the :doc:`config` like this:
+Some provider types accept additional keyword arguments in their constructor which you can pass to them
+through the :func:`authomatic.login` function's keyword arguments or through the :doc:`config` like this:
 
 .. note::
 
@@ -19,7 +19,7 @@ the :func:`authomatic.login` function's keyword arguments or through the :doc:`c
 
     CONFIG = {
         'facebook': {
-            'class_name': oauth2.Facebook, # Subclass of AuthorisationProvider
+            'class_': oauth2.Facebook, # Subclass of AuthorisationProvider
 
             # AuthorisationProvider specific keyword arguments:
             'short_name': 1,
@@ -30,7 +30,7 @@ the :func:`authomatic.login` function's keyword arguments or through the :doc:`c
             'scope': ['user_about_me', 'email']
          },
          'openid': {
-             'class_name': openid.OpenID, # Subclass of AuthenticationProvider
+             'class_': openid.OpenID, # Subclass of AuthenticationProvider
 
              # AuthenticationProvider specific keyword arguments:
              'identifier_param': 'claimed_id',

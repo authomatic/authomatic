@@ -1,5 +1,5 @@
 from authomatic.core import Credentials
-from authomatic.adapters.gaewebapp2 import GAEWebapp2Adapter
+from authomatic.adapters import gae
 import config
 import sys
 import webapp2
@@ -42,10 +42,10 @@ class Login(webapp2.RequestHandler):
     
     def login(self, provider_name):
         
-        self.adapter = GAEWebapp2Adapter(handler=self,
-                                         session_secret='abcd')
+        self.adapter = gae.Webapp2Adapter(handler=self,
+                                      session_secret='abcd')
         
-        result = authomatic.login(self.adapter, config.PROVIDERS, provider_name,
+        result = authomatic.login(self.adapter, gae.ndb_config(), provider_name,
                                   report_errors=False,
                                   callback=self.callback)
         

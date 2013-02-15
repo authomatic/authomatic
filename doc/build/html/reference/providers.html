@@ -63,8 +63,8 @@
 There is no reason for you to instatniate them manualy.
 You only should specify them in the <a class="reference internal" href="config.html"><em>Config</em></a> and access members of their instances
 available in the <a class="reference internal" href="classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a> returned by the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function.</p>
-<p>Some provider types accept additional keyword arguments which you can pass to them through
-the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function&#8217;s keyword arguments or through the <a class="reference internal" href="config.html"><em>Config</em></a> like this:</p>
+<p>Some provider types accept additional keyword arguments in their constructor which you can pass to them
+through the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function&#8217;s keyword arguments or through the <a class="reference internal" href="config.html"><em>Config</em></a> like this:</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Keyword arguments passed through <a class="reference internal" href="config.html"><em>Config</em></a> take precedence over
@@ -72,7 +72,7 @@ those passed through <a class="reference internal" href="functions.html#authomat
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span> <span class="c"># Subclass of AuthorisationProvider</span>
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span> <span class="c"># Subclass of AuthorisationProvider</span>
 
         <span class="c"># AuthorisationProvider specific keyword arguments:</span>
         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -83,7 +83,7 @@ those passed through <a class="reference internal" href="functions.html#authomat
         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">]</span>
      <span class="p">},</span>
      <span class="s">&#39;openid&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span> <span class="c"># Subclass of AuthenticationProvider</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span> <span class="c"># Subclass of AuthenticationProvider</span>
 
          <span class="c"># AuthenticationProvider specific keyword arguments:</span>
          <span class="s">&#39;identifier_param&#39;</span><span class="p">:</span> <span class="s">&#39;claimed_id&#39;</span><span class="p">,</span>

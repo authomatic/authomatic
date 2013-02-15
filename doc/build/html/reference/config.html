@@ -58,13 +58,16 @@
             
   <div class="section" id="config">
 <h1>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h1>
-<p>The <strong>config</strong> is a dictionary of dictionaries where you specify
-which providers you want to use and how are they configured.
-It should be passed to the <a class="reference internal" href="adapters.html"><em>adapter&#8217;s</em></a> constructor.</p>
+<p>The <strong>config</strong> is where you specify which providers you want to use
+and how should they be configured.</p>
+<p>It is a dictionary of dictionaries which maps your custom provider names to
+<a class="reference internal" href="providers.html"><em>provider classes</em></a>.
+You can and should specify the keyword arguments for each <a class="reference internal" href="providers.html"><em>provider class</em></a> here.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last"><a class="reference internal" href="adapters.html"><em>Adapters</em></a> can provide other means of config creation.
-The <tt class="xref py py-class docutils literal"><span class="pre">authomatic.adapters.gaewebapp2.GAEWebapp2Adapter</span></tt> for instance
+<p>In fact the config cann be any object implementing a subset of <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt> interface as
+specified in the <tt class="xref py py-class docutils literal"><span class="pre">adapters.BaseConfig</span></tt> abstract class.</p>
+<p class="last">The <tt class="xref py py-class docutils literal"><span class="pre">authomatic.adapters.gaewebapp2.GAEWebapp2Adapter</span></tt> for instance
 provides a NDB datamodel as a default config.</p>
 </div>
 <p>The <strong>config</strong> must have following structure:</p>
@@ -77,24 +80,30 @@ provides a NDB datamodel as a default config.</p>
     <span class="c">#===========================================================================</span>
 
     <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="c"># Provider name.</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>  <span class="c"># Provider class.</span>
+
+         <span class="c"># Provider type specific keyword arguments:</span>
          <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="c"># Unique value used for serialization of credentials only needed by OAuth 2.0 and OAuth 1.0a.</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>  <span class="c"># Provider class</span>
          <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span> <span class="c"># Key assigned to consumer by the provider.</span>
          <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span> <span class="c"># Secret assigned to consumer by the provider.</span>
          <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="c"># List of requested permissions only needed by OAuth 2.0.</span>
                    <span class="s">&#39;email&#39;</span><span class="p">]</span>
     <span class="p">},</span>
     <span class="s">&#39;google&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="s">&#39;authomatic.providers.oauth2.Google&#39;</span><span class="p">,</span> <span class="c"># Can be a fully qualified string path.</span>
+
+         <span class="c"># Provider type specific keyword arguments:</span>
          <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="c"># use authomatic.short_name() to generate this automatically</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="s">&#39;authomatic.providers.oauth2.Google&#39;</span><span class="p">,</span> <span class="c"># Can be a fully qualified string path.</span>
          <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
          <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
          <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;https://www.googleapis.com/auth/userinfo.profile&#39;</span><span class="p">,</span>
                    <span class="s">&#39;https://www.googleapis.com/auth/userinfo.email&#39;</span><span class="p">]</span>
     <span class="p">},</span>
     <span class="s">&#39;windows_live&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="s">&#39;oauth2.WindowsLive&#39;</span><span class="p">,</span> <span class="c"># Can be a string path relative to the authomatic.providers module.</span>
+
+         <span class="c"># Provider type specific keyword arguments:</span>
          <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="s">&#39;oauth2.WindowsLive&#39;</span><span class="p">,</span> <span class="c"># Can be a string path relative to the authomatic.providers module.</span>
          <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
          <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
          <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;wl.basic&#39;</span><span class="p">,</span>
@@ -107,8 +116,10 @@ provides a NDB datamodel as a default config.</p>
     <span class="c">#===========================================================================</span>
 
     <span class="s">&#39;twitter&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth1</span><span class="o">.</span><span class="n">Twitter</span><span class="p">,</span>
+
+         <span class="c"># Provider type specific keyword arguments:</span>
          <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">oauth1</span><span class="o">.</span><span class="n">Twitter</span><span class="p">,</span>
          <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span><span class="p">,</span>
          <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;###################&#39;</span>
          <span class="c"># OAuth 1.0a doesn&#39;t need scope.</span>
@@ -119,16 +130,16 @@ provides a NDB datamodel as a default config.</p>
     <span class="c">#===========================================================================</span>
 
     <span class="s">&#39;oi&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span> <span class="c"># OpenID only needs this.</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span> <span class="c"># OpenID only needs this.</span>
     <span class="p">},</span>
     <span class="s">&#39;gaeoi&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">gaeopenid</span><span class="o">.</span><span class="n">GAEOpenID</span><span class="p">,</span> <span class="c"># Google App Engine based OpenID provider.</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">gaeopenid</span><span class="o">.</span><span class="n">GAEOpenID</span><span class="p">,</span> <span class="c"># Google App Engine based OpenID provider.</span>
     <span class="p">},</span>
     <span class="s">&#39;google_oi&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">Yahoo</span><span class="p">,</span> <span class="c"># OpenID provider with predefined identifier &#39;https://me.yahoo.com&#39;.</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">Yahoo</span><span class="p">,</span> <span class="c"># OpenID provider with predefined identifier &#39;https://me.yahoo.com&#39;.</span>
     <span class="p">},</span>
     <span class="s">&#39;yahoo_oi&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s">&#39;class_name&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">Google</span><span class="p">,</span> <span class="c"># OpenID provider with predefined identifier &#39;https://www.google.com/accounts/o8/id&#39;.</span>
+         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">Google</span><span class="p">,</span> <span class="c"># OpenID provider with predefined identifier &#39;https://www.google.com/accounts/o8/id&#39;.</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

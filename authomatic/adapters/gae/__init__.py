@@ -10,7 +10,7 @@ import pickle
 import urlparse
 
 
-class GAEWebapp2AdapterError(Exception):
+class Webapp2AdapterError(Exception):
     pass
 
 #TODO: Move to separate module not tied to webapp2
@@ -20,12 +20,31 @@ class NDBConfig(ndb.Model):
     Datastore model for providers configuration
     """
     
-    name = ndb.StringProperty()
+    
+    provider_name = ndb.StringProperty( )
+    class_ = ndb.StringProperty()
+    
+    # AuthorisationProvider
     short_name = ndb.IntegerProperty()
-    class_name = ndb.StringProperty()
     consumer_key = ndb.StringProperty()
     consumer_secret = ndb.StringProperty()
+    
+    # OAuth2
     scope = ndb.StringProperty()
+    
+    # AuthenticationProvider
+    identifier_param = ndb.StringProperty()
+    
+    # OpenID
+    use_realm = ndb.BooleanProperty(default=True)
+    realm_body = ndb.StringProperty()
+    realm_param = ndb.StringProperty()
+    xrds_param = ndb.StringProperty()
+    sreg = ndb.StringProperty()
+    sreg_required = ndb.StringProperty()
+    ax = ndb.StringProperty()
+    ax_required = ndb.StringProperty()
+    pape = ndb.StringProperty()
     
     @classmethod
     def get(cls, key, default=None):
@@ -34,18 +53,32 @@ class NDBConfig(ndb.Model):
         
         Returns a provider config dictionary
         """
-        result = cls.query(cls.name == key).get()
+        
+        result = cls.query(cls.provider_name == key).get()
+        
         if result:
             result_dict = result.to_dict()
+            
+            # NEW
+            for i in ('scope', 'sreg', 'sreg_required', 'ax', 'ax_required', 'pape', ):
+                prop = result_dict.get(i)
+                if prop:
+                    result_dict[i] = [s.strip() for s in prop.split(',')]
+                else:
+                    result_dict[i] = None
+            
+            # OLD
+            
             # convert scope to list
-            scope = result_dict.get('scope')
-            if scope:
-                result_dict['scope'] = [s.strip() for s in scope.split(',')]
-            else:
-                result_dict['scope'] = []
+#            scope = result_dict.get('scope')
+#            if scope:
+#                result_dict['scope'] = [s.strip() for s in scope.split(',')]
+#            else:
+#                result_dict['scope'] = []
+
             return result_dict
         else:
-            return default 
+            return default
     
     
     @classmethod
@@ -63,18 +96,44 @@ class NDBConfig(ndb.Model):
         """
         
         if not len(cls.query().fetch()):
+            
             example = cls.get_or_insert('Example')
-            example.name = 'string-identifier-of-provider.'
-            example.class_name = 'Name of provider class.'
+            
+            example.class_ = 'Provider class e.g. "authomatic.providers.oauth2.Facebook".'
+            example.provider_name = 'Your custom provider name e.g. "fb".'
+            
+            # AuthorisationProvider
             example.consumer_key = 'Consumer key.'
             example.consumer_secret = 'Consumer secret'
-            example.scope = 'coma, separated, list, of, scopes'
             example.short_name = 1
+            
+            # OAuth2
+            example.scope = 'coma, separated, list, of, scopes'
+            
+            # AuthenticationProvider
+            example.identifier_param = 'User identifier to authenticate e.g. "me.yahoo.com".'
+            
+            # OpenID
+            example.use_realm = True
+            example.realm_body = 'Contents of the HTML body tag of the realm.'
+            example.realm_param = 'Name of the query parameter to be used to serve the realm.'
+            example.xrds_param = ' The name of the query parameter to be used to serve the XRDS document.'
+            example.sreg = 'list, of, strings, of, optional, SREG, fields, (leave empty for defaults)'
+            example.sreg_required = 'list, of, strings, of, required, SREG, fields, (leave empty for defaults)'
+            example.ax = 'list, of, strings, of, optional, AX, schemas, (leave empty for defaults)'
+            example.ax_required = 'list, of, strings, of, required, AX, schemas, (leave empty for defaults)'
+            example.pape = 'list, of, strings, of, optional, PAPE, policies, (leave empty for defaults)'
+            
+            
             example.put()
             
-            raise GAEWebapp2AdapterError('A GAEWebapp2AdapterError data model was created!' + \
-                                         'Go to {your_domain}/_ah/admin/datastore?kind=ProvidersConfigModel and populate it with data!')
+            raise Webapp2AdapterError('A NDBConfig data model was created! ' + \
+                                      'Go to {your_domain}/_ah/admin/datastore?kind=NDBConfig ' + \
+                                      'and populate it with data!')
 
+def ndb_config():
+    NDBConfig.initialize()
+    return NDBConfig
 
 
 class _GAESessionWrapper(adapters.BaseSession):
@@ -141,7 +200,7 @@ class _GAESessionWrapper(adapters.BaseSession):
     
 
 
-class GAEWebapp2Adapter(adapters.WebObBaseAdapter):
+class Webapp2Adapter(adapters.WebObBaseAdapter):
     
     request = None
     response = None
