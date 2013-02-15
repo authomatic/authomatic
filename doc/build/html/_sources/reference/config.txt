@@ -23,14 +23,24 @@ The **config** must have following structure:
 
    import authomatic
    
-   PROVIDERS = {
-   
+   CONFIG = {
+       
+       #===========================================================================
+       # Defaults
+       #===========================================================================
+       
+       '__defaults__': { # This is a special item where you can define default values for all providers.
+            # You can override each default value by specifying it in concrete provider dict.
+            'sreg': ['fullname', 'country'],
+            'pape': ['http://schemas.openid.net/pape/policies/2007/06/multi-factor'],
+       },
+       
        #===========================================================================
        # OAutht 2.0
        #===========================================================================
        
        'facebook': { # Provider name.
-            'class_': oauth2.Facebook,  # Provider class.
+            'class_': oauth2.Facebook,  # Provider class. Dont miss the trailing underscore!
             
             # Provider type specific keyword arguments:
             'short_name': 1, # Unique value used for serialization of credentials only needed by OAuth 2.0 and OAuth 1.0a.
@@ -87,6 +97,7 @@ The **config** must have following structure:
        },             
        'google_oi': {
             'class_': openid.Yahoo, # OpenID provider with predefined identifier 'https://me.yahoo.com'.
+            'sreg': ['email'] # This overrides the "sreg" defined in "__defaults__".
        },             
        'yahoo_oi': {
             'class_': openid.Google, # OpenID provider with predefined identifier 'https://www.google.com/accounts/o8/id'.

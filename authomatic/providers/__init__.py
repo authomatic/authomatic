@@ -173,7 +173,9 @@ class BaseProvider(object):
             Name of the desired keyword argument.
         """
         
-        return self.config.get(self.name, {}).get(kwname) or kwargs.get(kwname) or default
+        return self.config.get(self.name, {}).get(kwname) or \
+               self.config.get('__defaults__', {}).get(kwname) or \
+               kwargs.get(kwname) or default
     
     
     def _session_key(self, key):
@@ -208,6 +210,8 @@ class BaseProvider(object):
         :returns:
             :class:`str` Random unguessable string.
         """
+        
+        
         
         return hashlib.md5(str(uuid.uuid4())).hexdigest()
     

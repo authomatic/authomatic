@@ -2,6 +2,7 @@ from authomatic.providers import oauth1, oauth2, openid, gaeopenid
 import authomatic
 
 PROVIDERS = {
+             
     #===========================================================================
     # OAutht 2.0
     #===========================================================================

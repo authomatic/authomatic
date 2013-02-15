@@ -45,7 +45,7 @@ class Login(webapp2.RequestHandler):
         self.adapter = gae.Webapp2Adapter(handler=self,
                                           session_secret='abcd')
         
-        result = authomatic.login(self.adapter, gae.ndb_config(), provider_name,
+        result = authomatic.login(self.adapter, config.PROVIDERS, provider_name,
                                   report_errors=False,
                                   callback=self.callback)
         
