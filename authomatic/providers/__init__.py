@@ -197,7 +197,7 @@ class BaseProvider(object):
     
     def _session_get(self, key):
         """Retrieves a value from session."""
-        return self.adapter.session[self._session_key(key)]
+        return self.adapter.session.get(self._session_key(key))
     
     
     @classmethod
