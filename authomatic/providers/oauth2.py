@@ -185,7 +185,8 @@ class OAuth2(providers.AuthorisationProvider):
             if not stored_state:
                 raise FailureError('Unable to retrieve stored state!')
             elif not stored_state == state:
-                raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state), url=self.urls[0])
+                raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state),
+                                   url=self.user_authorisation_url)
             
             self._log(logging.INFO, 'Request is valid.')
             
