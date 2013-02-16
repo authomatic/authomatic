@@ -172,7 +172,7 @@ class OpenID(providers.AuthenticationProvider):
         
         user.first_name = data.get('ax', {}).get('http://openid.net/schema/namePerson/first')
         user.last_name = data.get('ax', {}).get('http://openid.net/schema/namePerson/last')
-        user.user_id = data.get('guid')
+        user.id = data.get('guid')
         user.link = data.get('ax', {}).get('http://openid.net/schema/contact/web/default')
         user.picture = data.get('ax', {}).get('http://openid.net/schema/media/image')
         user.nickname = data.get('sreg', {}).get('nickname')

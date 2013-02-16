@@ -276,7 +276,7 @@ class Facebook(OAuth2):
     
     @staticmethod
     def _user_parser(user, data):
-        user.user_id = data.get('id')
+#        user.user_id = data.get('id')
         user.picture = 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))
         return user
     
@@ -304,7 +304,7 @@ class Google(OAuth2):
         user.name = data.get('name')
         user.first_name = data.get('given_name')
         user.last_name = data.get('family_name')
-        user.user_id = data.get('id')
+#        user.user_id = data.get('id')
         return user
     
     
@@ -324,7 +324,7 @@ class WindowsLive(OAuth2):
     
     @staticmethod
     def _user_parser(user, data):
-        user.user_id = data.get('id')
+#        user.user_id = data.get('id')
         user.email = data.get('emails', {}).get('preferred')
         return user
 

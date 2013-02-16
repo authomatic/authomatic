@@ -413,7 +413,7 @@ class Twitter(OAuth1):
     
     @staticmethod
     def _user_parser(user, data):
-        user.user_id = data.get('id')
+#        user.id = data.get('id')
         user.username = data.get('screen_name')
         user.picture = data.get('profile_image_url')
         user.locale = data.get('lang')

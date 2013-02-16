@@ -279,7 +279,7 @@ class User(ReprMixin):
         self.raw_user_info = kwargs.get('raw_user_info')
         
         #: :class:`str` ID assigned to the **user** by the **provider**.
-        self.user_id = kwargs.get('user_id')
+        self.id = kwargs.get('id')
         #: :class:`str` User name e.g. *andrewpipkin*.
         self.username = kwargs.get('username')
         #: :class:`str` Name e.g. *Andrew Pipkin*.

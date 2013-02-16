@@ -66,7 +66,7 @@ class GAEOpenID(providers.AuthenticationProvider):
                 self._log(logging.INFO, 'Authentication successful.')
                 self._log(logging.INFO, 'Creating user.')
                 self.user = core.User(self,
-                                     user_id=user.federated_identity(),
+                                     id=user.federated_identity(),
                                      email=user.email(),
                                      gae_user=user)
                 
@@ -74,7 +74,7 @@ class GAEOpenID(providers.AuthenticationProvider):
                 # We're done
                 #===============================================================
             else:
-                raise FailureError('Unable to authenticate user id!')
+                raise FailureError('Unable to authenticate identifier "{}"!'.format(self.identifier))
 
 class Yahoo(GAEOpenID):
     """

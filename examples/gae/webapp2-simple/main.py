@@ -53,7 +53,7 @@ class Login(webapp2.RequestHandler):
             if result.user:
                 user = result.user.update()
                 self.response.write('<br /><br />Hi {}<br />'.format(user.name))
-                self.response.write('your ID is {}<br />'.format(user.user_id))
+                self.response.write('your ID is {}<br />'.format(user.id))
                 self.response.write('your email is {}<br />'.format(user.email))
             elif result.error:
                 self.response.write('ERROR {}<br />'.format(result.error.message))
