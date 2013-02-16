@@ -142,8 +142,8 @@ class OAuth2(providers.AuthorisationProvider):
     
     
     @classmethod
-    def fetch_protected_resource(cls, adapter, url, credentials, content_parser,
-                                 method='GET', headers={}, response_parser=None):
+    def fetch_async(cls, adapter, credentials, url, content_parser,
+                    method='GET', headers={}, response_parser=None):
         
         # check required properties of credentials
         if not credentials.token:
@@ -153,6 +153,7 @@ class OAuth2(providers.AuthorisationProvider):
         request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                         credentials=credentials,
                                                         url=url,
+                                                        method=method,
                                                         state=cls.csrf_generator())
         
         rpc = adapter.fetch_async(*request_elements,
