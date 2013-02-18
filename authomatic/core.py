@@ -334,16 +334,18 @@ class Credentials(ReprMixin):
         
         #: :class:`str` User **access token**.
         self.token = kwargs.get('token')
+        
         #: :class:`str` User **access token secret**.
         self.token_secret = kwargs.get('token_secret')
         
-        #: :class:`int` Lifetime of the **access token** in seconds.
-        self.expires_in = kwargs.get('expires_in', 0)
         #: :class:`datetime.datetime()` Expiration date of the **access token**.
         self.expiration_date = kwargs.get('expiration_date')
+        
         #: A :doc:`Provider <providers>` instance**.
         provider = kwargs.get('provider')
-            
+        
+        self._expires_in = kwargs.get('expires_in', 0)
+        
         if provider:
             #: :class:`str` Provider name specified in the :doc:`config`.
             self.provider_name = provider.name
@@ -362,17 +364,48 @@ class Credentials(ReprMixin):
             
             self.consumer_key = kwargs.get('consumer_key')
             self.consumer_secret = kwargs.get('consumer_secret')
-            
+    
     
     @property
-    def expires_in(self): 
-        return self._expires_in
+    def expires_in(self):
+        if self._expires_in:
+            return self._expires_in
+        else:
+            None
+    
     
     @expires_in.setter
     def expires_in(self, value):
         if value:
             self.expiration_date = datetime.datetime.now() + datetime.timedelta(seconds=int(value))
             self._expires_in = value
+    
+    
+    @property
+    def valid(self):
+        """
+        ``True`` if credentials are valid, ``False`` if expired.
+        """
+        if self.expiration_date:
+            return self.expiration_date > datetime.datetime.now()
+        else:
+            return True
+    
+    
+    def expires_soon(self, *args, **kwargs):
+        """
+        Returns ``True`` if credentials expire sooner than specified.
+        The method has the same signature as :func:`datetime.timedelta`.
+        
+        :returns:
+            ``True`` if credentials expire sooner than specified, else ``False``.
+        """
+        
+        if self.expiration_date:
+            return self.expiration_date < datetime.datetime.now() + datetime.timedelta(*args, **kwargs)
+        else:
+            return False
+    
     
     def get_provider_class(self):
         """
@@ -383,6 +416,7 @@ class Credentials(ReprMixin):
         """
         
         return resolve_provider_class(self.provider_type)
+    
     
     def serialize(self):
         """
