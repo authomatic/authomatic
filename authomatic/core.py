@@ -241,10 +241,10 @@ def import_string(import_name, silent=False):
                                                str(e))
 
 
-def get_provider_settings_by_short_name(config, short_name):
+def short_name_to_name(config, short_name):
     """
-    Returns the configuration for a specific doc:provider <providers>: based on it's
-    ``short_name`` value as specified in :doc:`config`.
+    Returns the provider :doc:`config` key based on it's
+    ``short_name`` value.
     
     :param dict config:
         :doc:`config`.
@@ -252,12 +252,12 @@ def get_provider_settings_by_short_name(config, short_name):
         Value of the short_name parameter in the :ref:`config` to search for.
     """
     
-    for v in config.values():
+    for k, v in config.items():
         if v.get('short_name') == short_name:
-            return v
+            return k
             break
     else:
-        raise Exception('Failed to get provider by id "{}"!'.format(short_name))
+        raise Exception('No provider with short_name={} found in the config!'.format(short_name))
 
 
 class User(ReprMixin):
@@ -387,7 +387,7 @@ class Credentials(ReprMixin):
     def serialize(self):
         """
         Converts the credentials to a possibly minimal :class:`tuple` and serializes it
-        to a :class:`string` to be stored for later use.
+        to a percent encoded :class:`string` to be stored for later use.
         
         :returns:
             :class:`string`
@@ -405,8 +405,8 @@ class Credentials(ReprMixin):
         # Put it together.
         result = (short_name, ) + rest
         
-        # Pickle it.
-        return pickle.dumps(result)
+        # Pickle it and percent encode.
+        return urllib.quote(pickle.dumps(result), '')
     
     
     @classmethod
@@ -423,21 +423,26 @@ class Credentials(ReprMixin):
             :class:`.Credentials`
         """
         
-        # Unpickle serialized
-        deserialized = pickle.loads(serialized)
+        # Percent decode and npickle
+        deserialized = pickle.loads(urllib.unquote(serialized))
         
         try:
             # We need the short name to move forward.
             short_name = deserialized[0]
             
             # Get provider config by short name.
-            cfg =  get_provider_settings_by_short_name(config, short_name)
+            provider_name = short_name_to_name(config, short_name)
+            cfg = config.get(provider_name)
             
             # Get the provider class.
             ProviderClass = resolve_provider_class(cfg.get('class_'))
             
             # Deserialization is provider specific.
-            return ProviderClass.reconstruct(deserialized, cfg)
+            credentials = ProviderClass.reconstruct(deserialized, cfg)
+            
+            credentials.provider_name = provider_name
+            
+            return credentials
                         
         except (TypeError, IndexError) as e:
             raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))
@@ -575,7 +580,7 @@ class Request(ReprMixin):
         
         ProviderClass = self.credentials.get_provider_class()
         
-        self.rpc = ProviderClass.fetch_protected_resource(adapter=self.adapter,
+        self.rpc = ProviderClass.fetch_async(adapter=self.adapter,
                                                           url=self.url,
                                                           credentials=self.credentials,
                                                           content_parser=self.content_parser,
