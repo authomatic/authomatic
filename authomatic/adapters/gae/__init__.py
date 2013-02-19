@@ -223,7 +223,7 @@ class _GAESessionWrapper(adapters.BaseSession):
         
     
     def get(self, key):
-        return self._from_json_serializable(self.session.get(key))
+        return self._from_json_serializable(self.session.get(key, None))
 
 
 class Webapp2Adapter(adapters.WebObBaseAdapter):

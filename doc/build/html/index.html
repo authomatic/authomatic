@@ -55,7 +55,360 @@
 <p>Bla</p>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<p>bla bla</p>
+<div class="section" id="simple-example">
+<h3>Simple Example<a class="headerlink" href="#simple-example" title="Permalink to this headline">¶</a></h3>
+<p>A simple example is worth a thousand words:</p>
+<p>First create the <a class="reference internal" href="reference/config.html"><em>Config</em></a> dictionary:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># config.py</span>
+
+<span class="kn">from</span> <span class="nn">authomatic.providers</span> <span class="kn">import</span> <span class="n">oauth2</span><span class="p">,</span> <span class="n">oauth1</span><span class="p">,</span> <span class="n">openid</span><span class="p">,</span> <span class="n">gaeopenid</span>
+
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;tw&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="c"># Your internal provider name</span>
+           
+           <span class="c"># Provider class</span>
+           <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth1</span><span class="o">.</span><span class="n">Twitter</span><span class="p">,</span>
+           
+           <span class="c"># Twitter is an AuthorisationProvider so we need to set several other properties:</span>
+           <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+           <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    
+    <span class="c"># Facebook</span>
+    <span class="s">&#39;fb&#39;</span><span class="p">:</span> <span class="p">{</span>
+           
+           <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>
+           
+           <span class="c"># Facebook is an AuthorisationProvider too.</span>
+           <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+           <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+           
+           <span class="c"># But it is also an OAuth 2.0 provider and it needs scope.</span>
+           <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">,</span> <span class="s">&#39;publish_stream&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
+    
+    <span class="s">&#39;gae_oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+           
+           <span class="c"># OpenID based Google App Engine Users API works only on GAE</span>
+           <span class="c"># and returns only the id and email of a user.</span>
+           <span class="c"># Moreover, the id is not available in the development environment!</span>
+           <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">gaeopenid</span><span class="o">.</span><span class="n">GAEOpenID</span><span class="p">,</span>
+    <span class="p">},</span>
+    
+    <span class="s">&#39;oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+           
+           <span class="c"># OpenID based on python-openid library works everywhere,</span>
+           <span class="c"># is flexible, but requires more resources.</span>
+           <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Create <tt class="docutils literal"><span class="pre">main.py</span></tt> file and mport what&#8217;s needed.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># main.py</span>
+
+<span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">gae</span>
+<span class="kn">import</span> <span class="nn">authomatic</span>
+<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+</pre></div>
+</div>
+<p>Create a simple request handler which accepts <tt class="docutils literal"><span class="pre">GET</span></tt> and <tt class="docutils literal"><span class="pre">POST</span></tt> HTTP methods and
+recieves the <tt class="docutils literal"><span class="pre">provider_name</span></tt> URL variable. Don&#8217;t write anything to response yet!</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">anymethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Inside the handler create an adapter for <a class="reference external" href="http://webapp-improved.appspot.com/">Webapp2</a> framework.</p>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="n">adapter</span> <span class="o">=</span> <span class="n">gae</span><span class="o">.</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_secret</span><span class="o">=</span><span class="s">&#39;abcdef&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Login the user with <a class="reference internal" href="reference/functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">CONFIG</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The login procedure is finished when there is
+the <a class="reference internal" href="reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>.
+Now you can write to response.</p>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;a href=&quot;..&quot;&gt;Home&lt;/a&gt;&lt;br /&gt;!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Check for errors.</p>
+<div class="highlight-python"><div class="highlight"><pre>            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that error: {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>If there are no errors there must be a <a class="reference internal" href="reference/classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> object.
+We must update it if we need properties like <strong>name</strong> or <strong>email</strong>.</p>
+<div class="highlight-python"><div class="highlight"><pre>            <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Welcome the user.</p>
+<div class="highlight-python"><div class="highlight"><pre>                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Hi {},&lt;br /&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your id is: {}&lt;br /&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your email is: {}&lt;br /&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We are done, but we can do more!</p>
+<p>If there are <a class="reference internal" href="reference/classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">credentials</span></tt></a> the user has logged in with an
+<a class="reference internal" href="reference/providers.html#authomatic.providers.AuthorisationProvider" title="authomatic.providers.AuthorisationProvider"><tt class="xref py py-class docutils literal"><span class="pre">AuthorisationProvider</span></tt></a>
+i.e. <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> or <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> and we can access his/her <strong>protected resources</strong>.</p>
+<div class="highlight-python"><div class="highlight"><pre>                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>Each provider has it&#8217;s specific API. First we do som tricks with Facebook.</p>
+<div class="highlight-python"><div class="highlight"><pre>                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;fb&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your are logged in with Facebook.&lt;br /&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let&#8217;s write something on the <strong>users</strong> timeline.
+To be able to do it we must include the <tt class="docutils literal"><span class="pre">'publish_stream'</span></tt> scope in the config.</p>
+<div class="highlight-python"><div class="highlight"><pre>                        <span class="n">message</span> <span class="o">=</span> <span class="s">&#39;Can it be that it is all so simple now?&#39;</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://graph.facebook.com/{}/feed?message={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To be sure that everything went right we can check the response.</p>
+<div class="highlight-python"><div class="highlight"><pre>                        <span class="n">post_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
+                        <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error&#39;</span><span class="p">)</span>
+                        
+                        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that error: {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+                        <span class="k">elif</span> <span class="n">post_id</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;You just posted a post with id &#39;</span> <span class="o">+</span> \
+                                                <span class="s">&#39;{} to your Facebook timeline!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">post_id</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that unknown error!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Do the same for Twitter.</p>
+<div class="highlight-python"><div class="highlight"><pre>                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;tw&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your are logged in with Twitter.&lt;br /&gt;&#39;</span><span class="p">)</span>
+                        
+                        <span class="n">status</span> <span class="o">=</span> <span class="s">&#39;Can it be that it is all so simple now?&#39;</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/1.1/statuses/update.json?status={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span>
+                        
+                        <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
+                        <span class="n">tweet_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
+                        
+                        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that error: {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+                        <span class="k">elif</span> <span class="n">tweet_id</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;You just tweeted a tweet with id {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tweet_id</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that unknown error!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That&#8217;s it for the login handler.</p>
+<p>Now just for convenience that we don&#8217;t have to enter all the URLs manualy
+let&#8217;s create a <strong>home</strong> handler.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Home</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Create links to login handler.</p>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Login with &lt;a href=&quot;login/fb&quot;&gt;Facebook&lt;/a&gt;.&lt;br /&gt;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Login with &lt;a href=&quot;login/tw&quot;&gt;Twitter&lt;/a&gt;.&lt;br /&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create <strong>OpenID</strong> forms where the user can specify his/her <strong>claimed ID</strong>.
+The library by default extracts the identifier from the query string <tt class="docutils literal"><span class="pre">id</span></tt> parameter,
+but you can change its name to whatever you want.</p>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">            &lt;form action=&quot;login/oi&quot;&gt;</span>
+<span class="s">                &lt;input type=&quot;text&quot; name=&quot;id&quot; value=&quot;me.yahoo.com&quot; /&gt;</span>
+<span class="s">                &lt;input type=&quot;submit&quot; value=&quot;Authenticate With OpenID&quot;&gt;</span>
+<span class="s">            &lt;/form&gt;</span>
+<span class="s">        &#39;&#39;&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">            &lt;form action=&quot;login/gae_oi&quot;&gt;</span>
+<span class="s">                &lt;input type=&quot;text&quot; name=&quot;id&quot; value=&quot;me.yahoo.com&quot; /&gt;</span>
+<span class="s">                &lt;input type=&quot;submit&quot; value=&quot;Authenticate With GAEOpenID&quot;&gt;</span>
+<span class="s">            &lt;/form&gt;</span>
+<span class="s">        &#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally route URLs to your handlers...</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ROUTES</span> <span class="o">=</span> <span class="p">[</span><span class="n">webapp2</span><span class="o">.</span><span class="n">Route</span><span class="p">(</span><span class="s">r&#39;/login/&lt;:.*&gt;&#39;</span><span class="p">,</span> <span class="n">Login</span><span class="p">,</span> <span class="n">handler_method</span><span class="o">=</span><span class="s">&#39;anymethod&#39;</span><span class="p">),</span>
+          <span class="n">webapp2</span><span class="o">.</span><span class="n">Route</span><span class="p">(</span><span class="s">r&#39;/&#39;</span><span class="p">,</span> <span class="n">Home</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>...and instantiate the WSGI application.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">app</span> <span class="o">=</span> <span class="n">webapp2</span><span class="o">.</span><span class="n">WSGIApplication</span><span class="p">(</span><span class="n">ROUTES</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And here is the complete app:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># main.py</span>
+
+<span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">gae</span>
+<span class="kn">import</span> <span class="nn">authomatic</span>
+<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+
+<span class="c"># Create a simple request handler for the login procedure.</span>
+<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    
+    <span class="c"># The handler must accept GET and POST http methods.</span>
+    <span class="c"># Accept the &quot;provider_name&quot; URL variable.</span>
+    <span class="k">def</span> <span class="nf">anymethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">):</span>
+                
+        <span class="c"># Create an adapter for Webapp2 framework.</span>
+        <span class="n">adapter</span> <span class="o">=</span> <span class="n">gae</span><span class="o">.</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_secret</span><span class="o">=</span><span class="s">&#39;abcdef&#39;</span><span class="p">)</span>
+        
+        <span class="c"># We now have everything to get the user from provider.</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">CONFIG</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">)</span>
+        
+        <span class="c"># Dont write anything to the response if there is no result!!!</span>
+        
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            
+            <span class="c"># If there is result, the login procedure has finished,</span>
+            <span class="c"># And you can write to the response.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;a href=&quot;..&quot;&gt;Home&lt;/a&gt;&lt;br /&gt;!&#39;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="c"># Login procedure finished with an error.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that error: {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+            
+            <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+                <span class="c"># Hooray, we have the user!</span>
+                
+                <span class="c"># But wait, we need to update his info first.</span>
+                <span class="c"># This is only neccessary by AuthorisationProvider i.e. OAuth 2.0 and OAuth 1.0a.</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+                
+                <span class="c"># Welcome the user.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Hi {},&lt;br /&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your id is: {}&lt;br /&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your email is: {}&lt;br /&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">))</span>
+                
+                <span class="c"># Seems like we&#39;re done, but there&#39;s more we can do...</span>
+                
+                <span class="c"># If there are credentials (only by AuthorisationProvider),</span>
+                <span class="c"># we can access user&#39;s protected resources.</span>
+                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="p">:</span>
+                    
+                    <span class="c"># Each provider has it&#39;s specific API.</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;fb&#39;</span><span class="p">:</span>
+                        
+                        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your are logged in with Facebook.&lt;br /&gt;&#39;</span><span class="p">)</span>
+                        
+                        <span class="c"># We will post this message to the user&#39;s Facebook timeline.</span>
+                        <span class="n">message</span> <span class="o">=</span> <span class="s">&#39;Can it be that it is all so simple now?&#39;</span>
+                        
+                        <span class="c"># Construct the Facebook Graph API URL.</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://graph.facebook.com/{}/feed?message={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+                        
+                        <span class="c"># Post to timeline on user&#39;s behalf (access his protected resource).</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span>
+                        
+                        <span class="c"># Parse response.</span>
+                        <span class="n">post_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
+                        <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error&#39;</span><span class="p">)</span>
+                        
+                        <span class="c"># We&#39;re done!</span>
+                        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that error: {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+                        <span class="k">elif</span> <span class="n">post_id</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;You just posted a post with id &#39;</span> <span class="o">+</span> \
+                                                <span class="s">&#39;{} to your Facebook timeline!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">post_id</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that unknown error!&#39;</span><span class="p">)</span>
+                        
+                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;tw&#39;</span><span class="p">:</span>
+                        
+                        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your are logged in with Twitter.&lt;br /&gt;&#39;</span><span class="p">)</span>
+                        
+                        <span class="c"># We will tweet this message on the users timeline.</span>
+                        <span class="n">status</span> <span class="o">=</span> <span class="s">&#39;Can it be that it is all so simple now?&#39;</span>
+                        
+                        <span class="c"># Construct the Twitter API URL</span>
+                        <span class="c"># Note: You need to set your Twitter app access to &quot;Read and Write&quot;!</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/1.1/statuses/update.json?status={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+                        
+                        <span class="c"># Tweet on user&#39;s behalf (access his protected resource).</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span>
+                        
+                        <span class="c"># Parse response.</span>
+                        <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
+                        <span class="n">tweet_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
+                        
+                        <span class="c"># We&#39;re done!</span>
+                        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that error: {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+                        <span class="k">elif</span> <span class="n">tweet_id</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;You just tweeted a tweet with id {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tweet_id</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that unknown error!&#39;</span><span class="p">)</span>
+
+
+<span class="c"># Create a home request handler just that you don&#39;t have to enter the urls manually.</span>
+<span class="k">class</span> <span class="nc">Home</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="c"># Create links to the Login handler.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Login with &lt;a href=&quot;login/fb&quot;&gt;Facebook&lt;/a&gt;.&lt;br /&gt;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Login with &lt;a href=&quot;login/tw&quot;&gt;Twitter&lt;/a&gt;.&lt;br /&gt;&#39;</span><span class="p">)</span>
+        
+        <span class="c"># Create OpenID form where the user can specify his claimed identifier.</span>
+        <span class="c"># The library by default extracts the identifier from the &quot;id&quot; parameter.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">            &lt;form action=&quot;login/oi&quot;&gt;</span>
+<span class="s">                &lt;input type=&quot;text&quot; name=&quot;id&quot; value=&quot;me.yahoo.com&quot; /&gt;</span>
+<span class="s">                &lt;input type=&quot;submit&quot; value=&quot;Authenticate With OpenID&quot;&gt;</span>
+<span class="s">            &lt;/form&gt;</span>
+<span class="s">        &#39;&#39;&#39;</span><span class="p">)</span>
+        
+        <span class="c"># Create GAEOpenID form</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">            &lt;form action=&quot;login/gae_oi&quot;&gt;</span>
+<span class="s">                &lt;input type=&quot;text&quot; name=&quot;id&quot; value=&quot;me.yahoo.com&quot; /&gt;</span>
+<span class="s">                &lt;input type=&quot;submit&quot; value=&quot;Authenticate With GAEOpenID&quot;&gt;</span>
+<span class="s">            &lt;/form&gt;</span>
+<span class="s">        &#39;&#39;&#39;</span><span class="p">)</span>
+
+
+<span class="c"># Finally create the routes.</span>
+<span class="n">ROUTES</span> <span class="o">=</span> <span class="p">[</span><span class="n">webapp2</span><span class="o">.</span><span class="n">Route</span><span class="p">(</span><span class="s">r&#39;/login/&lt;:.*&gt;&#39;</span><span class="p">,</span> <span class="n">Login</span><span class="p">,</span> <span class="n">handler_method</span><span class="o">=</span><span class="s">&#39;anymethod&#39;</span><span class="p">),</span>
+          <span class="n">webapp2</span><span class="o">.</span><span class="n">Route</span><span class="p">(</span><span class="s">r&#39;/&#39;</span><span class="p">,</span> <span class="n">Home</span><span class="p">)]</span>
+
+<span class="c"># And instantiate the WSGI application.</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">webapp2</span><span class="o">.</span><span class="n">WSGIApplication</span><span class="p">(</span><span class="n">ROUTES</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Don&#8217;t forget to set up the <tt class="docutils literal"><span class="pre">app.yaml</span></tt> file.</p>
+<div class="highlight-python"><pre># app.yaml
+
+application: authomatic-simple-example
+version: 0
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /.*
+  script: main.app
+</pre>
+</div>
+</div>
+<div class="section" id="advanced">
+<h3>Advanced<a class="headerlink" href="#advanced" title="Permalink to this headline">¶</a></h3>
+<p>Bla</p>
+<div class="section" id="credentials">
+<h4>Credentials<a class="headerlink" href="#credentials" title="Permalink to this headline">¶</a></h4>
+<p>Bla</p>
+</div>
+<div class="section" id="asynchronous-requests">
+<h4>Asynchronous Requests<a class="headerlink" href="#asynchronous-requests" title="Permalink to this headline">¶</a></h4>
+<p>Bla</p>
+</div>
+</div>
 </div>
 <div class="section" id="reference">
 <h2>Reference:<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
@@ -94,7 +447,15 @@
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Authomatic</a><ul>
-<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#simple-example">Simple Example</a></li>
+<li><a class="reference internal" href="#advanced">Advanced</a><ul>
+<li><a class="reference internal" href="#credentials">Credentials</a></li>
+<li><a class="reference internal" href="#asynchronous-requests">Asynchronous Requests</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#reference">Reference:</a><ul>
 </ul>
 </li>

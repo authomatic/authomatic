@@ -580,11 +580,11 @@ Default = <tt class="xref py py-attr docutils literal"><span class="pre">OpenID.
 <p class="first admonition-title">Note</p>
 <p class="last">When using the <a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">GAEOpenID</span></tt></a> provider, the <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">user</span></tt></a> object
 will always have only the
-<a class="reference internal" href="classes.html#authomatic.core.User.user_id" title="authomatic.core.User.user_id"><tt class="xref py py-attr docutils literal"><span class="pre">user_id</span></tt></a>,
+<tt class="xref py py-attr docutils literal"><span class="pre">user_id</span></tt>,
 <a class="reference internal" href="classes.html#authomatic.core.User.email" title="authomatic.core.User.email"><tt class="xref py py-attr docutils literal"><span class="pre">email</span></tt></a>,
 <a class="reference internal" href="classes.html#authomatic.core.User.gae_user" title="authomatic.core.User.gae_user"><tt class="xref py py-attr docutils literal"><span class="pre">gae_user</span></tt></a>
 attributes populated with data.
-Moreover the <a class="reference internal" href="classes.html#authomatic.core.User.user_id" title="authomatic.core.User.user_id"><tt class="xref py py-attr docutils literal"><span class="pre">user_id</span></tt></a> will always be empty on the
+Moreover the <tt class="xref py py-attr docutils literal"><span class="pre">user_id</span></tt> will always be empty on the
 <a class="reference external" href="https://developers.google.com/appengine/docs/python/tools/devserver">GAE Development Server</a>.</p>
 </div>
 <table border="1" class="longtable docutils">
@@ -860,8 +860,8 @@ are all the items of the <tt class="xref py py-class docutils literal"><span cla
 </dd></dl>
 
 <dl class="method">
-<dt id="authomatic.providers.AuthorisationProvider.fetch_protected_resource">
-<tt class="descname">fetch_protected_resource</tt><big>(</big><em>adapter</em>, <em>url</em>, <em>credentials</em>, <em>content_parser</em>, <em>method='GET'</em>, <em>headers={}</em>, <em>response_parser=None</em><big>)</big><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.fetch_protected_resource" title="Permalink to this definition">¶</a></dt>
+<dt id="authomatic.providers.AuthorisationProvider.fetch_async">
+<tt class="descname">fetch_async</tt><big>(</big><em>adapter</em>, <em>credentials</em>, <em>url</em>, <em>content_parser</em>, <em>method='GET'</em>, <em>headers={}</em>, <em>response_parser=None</em><big>)</big><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.fetch_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetches protected resource asynchronously.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
@@ -906,6 +906,27 @@ function to get the <strong>user&#8217;s</strong> <a class="reference internal" 
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="classes.html#authomatic.core.Request" title="authomatic.core.Request"><tt class="xref py py-class docutils literal"><span class="pre">core.Request</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.providers.AuthorisationProvider.fetch">
+<tt class="descname">fetch</tt><big>(</big><em>url</em>, <em>method='GET'</em>, <em>headers={}</em>, <em>response_parser=None</em>, <em>content_parser=None</em><big>)</big><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.fetch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches protected resource.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>url</strong> &#8211; </li>
+<li><strong>method</strong> &#8211; </li>
+<li><strong>headers</strong> &#8211; </li>
+<li><strong>response_parser</strong> &#8211; </li>
+<li><strong>content_parser</strong> &#8211; </li>
+</ul>
 </td>
 </tr>
 </tbody>

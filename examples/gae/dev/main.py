@@ -1,9 +1,12 @@
-from authomatic.core import Credentials
 from authomatic.adapters import gae
+from authomatic.core import Credentials
+import authomatic
 import config
+import os
 import sys
 import webapp2
-import authomatic
+import logging
+        
 
 def headers(handler):
         
@@ -35,6 +38,10 @@ def headers(handler):
 
 class Home(webapp2.RequestHandler):
     def get(self):
+        
+        self.app
+        os.environ
+        
         headers(self)
         
 
@@ -142,3 +149,9 @@ ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth', handler_method='login'),
           webapp2.Route(r'/', Home)]
 
 app = webapp2.WSGIApplication(ROUTES, debug=True)
+
+
+
+
+
+
