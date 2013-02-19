@@ -26,6 +26,14 @@ class OAuth2(providers.AuthorisationProvider):
     Base class for |oauth2|_ providers.
     """
     
+    # I intruduced this dictionary because of Facebook,
+    # who likes to invent its own terminology for OAuth 2.0!!!
+    _term_dict = dict(refresh_token='refresh_token',
+                      authorization_code='authorization_code',
+                      password='password',  
+                      client_credentials='client_credentials')
+    
+    
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
@@ -61,17 +69,18 @@ class OAuth2(providers.AuthorisationProvider):
     
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, method='GET',
-                                 redirect_uri='', scope='', state=''):
+                                 redirect_uri='', scope='', state='', params={}):
         
         consumer_key = credentials.consumer_key or ''
         consumer_secret = credentials.consumer_secret or ''
         token = credentials.token or ''
+        refresh_token = credentials.refresh_token or credentials.token or ''
         
         # Separate url base and query parameters.
         url, base_params = cls._split_url(url)
         
-        # Add extracted params to future params.
-        params = dict(base_params)
+        # Add params extracted from URL.
+        params.update(dict(base_params))
         
         if request_type == cls.USER_AUTHORISATION_REQUEST_TYPE:
             # User authorisation request.
@@ -92,10 +101,21 @@ class OAuth2(providers.AuthorisationProvider):
                 params['client_id'] = consumer_key
                 params['client_secret'] = consumer_secret
                 params['redirect_uri'] = redirect_uri
-                params['grant_type'] = 'authorization_code'
+                params['grant_type'] = cls._term_dict['authorization_code']
             else:
                 raise OAuth2Error('Credentials with valid token, consumer_key, consumer_secret and argument ' + \
                                   'redirect_uri are required to create OAuth 2.0 acces token request elements!')
+        
+        elif request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
+            # Access token request.
+            if refresh_token and consumer_key and consumer_secret:
+                params[cls._term_dict['refresh_token']] = refresh_token
+                params['client_id'] = consumer_key
+                params['client_secret'] = consumer_secret
+                params['grant_type'] = cls._term_dict['refresh_token']
+            else:
+                raise OAuth2Error('Credentials with valid refresh_token, consumer_key, consumer_secret ' + \
+                                  'are required to create OAuth 2.0 refresh token request elements!')
         
         elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             # Protected resource request.
@@ -126,19 +146,70 @@ class OAuth2(providers.AuthorisationProvider):
     @staticmethod
     def to_tuple(credentials):
         
-        # OAuth 2.0 needs only token and it's expiration date only for convenience.
-        return (credentials.token, credentials.expiration_date)
+        # OAuth 2.0 needs only token, refresh_token and expiration date.
+        return (credentials.token, credentials.refresh_token, credentials.expiration_date)
     
     
     @classmethod
     def reconstruct(cls, deserialized_tuple, cfg):
         
-        provider_short_name, token, expiration_date = deserialized_tuple
+        provider_short_name, token, refresh_token, expiration_date = deserialized_tuple
         
         return core.Credentials(token=token,
+                                refresh_token=refresh_token,
                                 provider_type=cls.get_type(),
                                 provider_short_name=provider_short_name,
-                                expiration_date=expiration_date)
+                                expiration_date=expiration_date,
+                                provider_class=cls)
+    
+    @classmethod
+    def refresh_credentials(cls, adapter, config, credentials):
+        """
+        Refreshes :class:`.Credentials` by providing fresh **token**,
+        **refresh_token** and **expires_in**.
+        
+        :param adapter:
+            :doc:`Adapter <adapters>`
+        :param credentials:
+            :class:`.Credentials`
+        
+        :returns:
+            :class:`.Response`.
+        """
+        
+        # We need consumer key and secret to make this kind of request.
+        cfg = config.get(credentials.provider_name)
+        credentials.consumer_key = cfg.get('consumer_key')
+        credentials.consumer_secret = cfg.get('consumer_secret')
+        
+        request_elements = cls._create_request_elements(request_type=cls.REFRESH_TOKEN_REQUEST_TYPE,
+                                                        credentials=credentials,
+                                                        url=cls.access_token_url,
+                                                        method='POST')
+        
+        response = adapter.fetch_async(*request_elements).get_response()
+        
+        # We no longer need consumer info.
+        credentials.consumer_key = None
+        credentials.consumer_secret = None
+        
+        # Extract the refreshed data.
+        access_token = response.data.get('access_token')
+        refresh_token = response.data.get('refresh_token')
+        
+        # Update credentials only if there is access token.
+        if access_token:
+            credentials.token = access_token
+            credentials.expires_in = response.data.get('expires_in')
+            
+            # Update refresh token only if there is a new one.
+            if refresh_token:
+                credentials.refresh_token = refresh_token
+            
+            # Handle different naming conventions across providers.
+            credentials = cls._credentials_parser(credentials, response.data)
+        
+        return response
     
     
     @classmethod
@@ -200,32 +271,39 @@ class OAuth2(providers.AuthorisationProvider):
                                                              credentials=self.credentials,
                                                              url=self.access_token_url,
                                                              method='POST',
-                                                             redirect_uri=self.adapter.url)
+                                                             redirect_uri=self.adapter.url,
+                                                             params=self.access_token_params)
+            
             
             response = self._fetch(*request_elements)
             
             access_token = response.data.get('access_token')
+            refresh_token = response.data.get('refresh_token')
             
             if response.status_code != 200 or not access_token:
-                raise FailureError('Failed to obtain OAuth access token from {}! HTTP status code: {}.'\
+                raise FailureError('Failed to obtain OAuth 2.0 access token from {}! HTTP status code: {}.'\
                                   .format(self.access_token_url, response.status_code),
                                   code=response.status_code,
                                   url=self.access_token_url)
             
-            self._log(logging.INFO, 'Got access token.')            
+            self._log(logging.INFO, 'Got access token.')
             
-            # OAuth 2.0 credentials need only access token and expires_in
+            if refresh_token:
+                self._log(logging.INFO, 'Got refresh access token.')
+            
+            # OAuth 2.0 credentials need only access token, refresh token and expires_in.
             self.credentials.token = access_token
+            self.credentials.refresh_token = refresh_token
             self.credentials.expires_in = response.data.get('expires_in')
             # so we can reset these two guys
             self.credentials.consumer_key = None
             self.credentials.consumer_secret = None
             
             # update credentials
-            credentials = self._credentials_parser(self.credentials, response.data)            
+            self.credentials = self._credentials_parser(self.credentials, response.data)            
             
             # create user
-            self._update_or_create_user(response.data, credentials)
+            self._update_or_create_user(response.data, self.credentials)
             
             #===================================================================
             # We're done!
@@ -261,7 +339,8 @@ class OAuth2(providers.AuthorisationProvider):
                                                             url=self.user_authorisation_url,
                                                             redirect_uri=self.adapter.url,
                                                             scope=self._scope_parser(self.scope),
-                                                            state=state)
+                                                            state=state,
+                                                            params=self.user_authorisation_params)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
             
@@ -275,21 +354,24 @@ class Facebook(OAuth2):
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
     user_info_url = 'https://graph.facebook.com/me'
     
+    # Facebook is original as usual and has its own name for "refresh_token"!!!
+    _term_dict = OAuth2._term_dict.copy()
+    _term_dict['refresh_token'] = 'fb_exchange_token'
+    
     @staticmethod
     def _user_parser(user, data):
-#        user.user_id = data.get('id')
         user.picture = 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))
         return user
-    
-    
+        
     @staticmethod
     def _credentials_parser(credentials, data):
         """
-        We need to override this method to fix Facebooks naming deviation
+        We need to override this method to fix Facebooks naming deviation.
         """
         
-        # Facebook returns "expires" instead of "expires_in"
+        # Facebook returns "expires" instead of "expires_in".
         credentials.expires_in = data.get('expires')
+        
         return credentials
 
 
@@ -305,7 +387,6 @@ class Google(OAuth2):
         user.name = data.get('name')
         user.first_name = data.get('given_name')
         user.last_name = data.get('family_name')
-#        user.user_id = data.get('id')
         return user
     
     
@@ -325,7 +406,6 @@ class WindowsLive(OAuth2):
     
     @staticmethod
     def _user_parser(user, data):
-#        user.user_id = data.get('id')
         user.email = data.get('emails', {}).get('preferred')
         return user
 

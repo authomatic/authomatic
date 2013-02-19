@@ -301,6 +301,7 @@ class AuthorisationProvider(BaseProvider):
     USER_AUTHORISATION_REQUEST_TYPE = 2
     ACCESS_TOKEN_REQUEST_TYPE = 3
     PROTECTED_RESOURCE_REQUEST_TYPE = 4
+    REFRESH_TOKEN_REQUEST_TYPE = 5
     
     def __init__(self, *args, **kwargs):
         """
@@ -312,6 +313,10 @@ class AuthorisationProvider(BaseProvider):
             The *secret* assigned to our application (**consumer**) by the **provider**.
         :arg short_name:
             A unique short name used to serialize :class:`.Credentials`.
+        :arg dict user_authorisation_params:
+            A dictionary of additional request parameters for **user authorisation request**.
+        :arg dict access_token_params:
+            A dictionary of additional request parameters for **access token request**.
         """
         
         super(AuthorisationProvider, self).__init__(*args, **kwargs)
@@ -320,6 +325,9 @@ class AuthorisationProvider(BaseProvider):
         self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
         self.short_name = self._kwarg(kwargs, 'short_name')
         
+        self.user_authorisation_params = self._kwarg(kwargs, 'user_authorisation_params', {})
+        self.access_token_params = self._kwarg(kwargs, 'access_token_params', {})
+        
         #: :class:`core.Credentials` to access **user's protected resources**.
         self.credentials = authomatic.core.Credentials(provider=self)
     
@@ -327,7 +335,7 @@ class AuthorisationProvider(BaseProvider):
     #===========================================================================
     # Abstract properties
     #===========================================================================
-    
+        
     @abc.abstractproperty
     def user_authorisation_url(self):
         """
@@ -415,9 +423,10 @@ class AuthorisationProvider(BaseProvider):
             A (url, body, method) tuple.
         """
     
+    
     @abc.abstractmethod
-    def fetch_protected_resource(self, adapter, url, credentials, content_parser,
-                                 method='GET', headers={}, response_parser=None):
+    def fetch_async(self, adapter, credentials, url, content_parser,
+                    method='GET', headers={}, response_parser=None):
         """
         Fetches protected resource asynchronously.
            
@@ -445,6 +454,7 @@ class AuthorisationProvider(BaseProvider):
     # Exposed methods
     #===========================================================================
     
+    
     def create_request(self, url, method='GET', content_parser=None, response_parser=None):
         """
         Creates an authorized :class:`request <.core.Request>` to **protected resources** of a **user**.
@@ -470,6 +480,26 @@ class AuthorisationProvider(BaseProvider):
                                        content_parser=content_parser,
                                        response_parser=response_parser)
         
+    
+    def fetch(self, url, method='GET', headers={}, response_parser=None, content_parser=None):
+        """
+        Fetches protected resource.
+        
+        :param url:
+        :param method:
+        :param headers:
+        :param response_parser:
+        :param content_parser:
+        """
+        
+        return self.fetch_async(adapter=self.adapter,
+                                credentials=self.credentials,
+                                url=url,
+                                method=method,
+                                headers=headers,
+                                response_parser=response_parser,
+                                content_parser=content_parser).get_response()
+    
     
     def fetch_user_info(self):
         """

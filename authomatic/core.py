@@ -328,12 +328,15 @@ class User(ReprMixin):
 class Credentials(ReprMixin):
     """Contains all neccessary informations to fetch **user's protected resources**."""
     
-    _repr_sensitive = ('token', 'token_secret', 'consumer_key', 'consumer_secret')
+    _repr_sensitive = ('token', 'refresh_token', 'token_secret', 'consumer_key', 'consumer_secret')
     
     def __init__(self, **kwargs):
         
         #: :class:`str` User **access token**.
         self.token = kwargs.get('token')
+        
+        #: :class:`str` User **access token**.
+        self.refresh_token = kwargs.get('refresh_token')
         
         #: :class:`str` User **access token secret**.
         self.token_secret = kwargs.get('token_secret')
@@ -349,18 +352,27 @@ class Credentials(ReprMixin):
         if provider:
             #: :class:`str` Provider name specified in the :doc:`config`.
             self.provider_name = provider.name
+            
             #: :class:`str` Provider type e.g. ``"authomatic.providers.oauth2.OAuth2"``.
             self.provider_type = provider.get_type()
+            
             #: :class:`str` Provider short name specified in the :doc:`config`.
-            self.provider_short_name = provider.short_name
+            self.provider_short_name = provider.short_name            
+            
+            #: :class:`class` Provider class.
+            self.provider_class = provider.__class__
+            
             #: :class:`str` Consumer key specified in the :doc:`config`.
             self.consumer_key = provider.consumer_key
+            
             #: :class:`str` Consumer secret specified in the :doc:`config`.
             self.consumer_secret = provider.consumer_secret
+            
         else:
             self.provider_name = kwargs.get('provider_name')
             self.provider_type = kwargs.get('provider_type')
             self.provider_short_name = kwargs.get('provider_short_name')
+            self.provider_class = kwargs.get('provider_class')
             
             self.consumer_key = kwargs.get('consumer_key')
             self.consumer_secret = kwargs.get('consumer_secret')
@@ -407,7 +419,14 @@ class Credentials(ReprMixin):
             return False
     
     
-    def get_provider_class(self):
+    def refresh(self, adapter, config):
+        if hasattr(self.provider_class, 'refresh_credentials'):
+            return self.provider_class.refresh_credentials(adapter, config, self)
+        else:
+            return False
+    
+    
+    def provider_type_class(self):
         """
         Returns the :doc:`provider <providers>` class specified in the :doc:`config`.
         
@@ -434,7 +453,7 @@ class Credentials(ReprMixin):
             raise exceptions.ConfigError('The provider config must have a "short_name" key set to a unique value to be able to serialize credentials!')
         
         # Get the other items for the tuple.
-        rest = self.get_provider_class().to_tuple(self)
+        rest = self.provider_type_class().to_tuple(self)
         
         # Put it together.
         result = (short_name, ) + rest
@@ -612,14 +631,14 @@ class Request(ReprMixin):
             :attr:`self`
         """
         
-        ProviderClass = self.credentials.get_provider_class()
+        ProviderClass = self.credentials.provider_type_class()
         
         self.rpc = ProviderClass.fetch_async(adapter=self.adapter,
-                                                          url=self.url,
-                                                          credentials=self.credentials,
-                                                          content_parser=self.content_parser,
-                                                          method=self.method,
-                                                          response_parser=self.response_parser)
+                                             url=self.url,
+                                             credentials=self.credentials,
+                                             content_parser=self.content_parser,
+                                             method=self.method,
+                                             response_parser=self.response_parser)
         
         return self
     
