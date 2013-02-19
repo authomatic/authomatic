@@ -152,8 +152,30 @@ class OAuth1(providers.AuthorisationProvider):
     
     _signature_generator = HMACSHA1Generator
     
+    # TODO: Move to AuthorisationProvider???
     REQUEST_TOKEN_REQUEST_TYPE = 1
     
+    def __init__(self, *args, **kwargs):
+        """
+        Accepts additional keyword arguments:
+        
+        :arg str consumer_key:
+            The *key* assigned to our application (**consumer**) by the **provider**.
+        :arg str consumer_secret:
+            The *secret* assigned to our application (**consumer**) by the **provider**.
+        :arg short_name:
+            A unique short name used to serialize :class:`.Credentials`.
+        :arg dict user_authorisation_params:
+            A dictionary of additional request parameters for **user authorisation request**.
+        :arg dict access_token_params:
+            A dictionary of additional request parameters for **access token request**.
+        :arg dict request_token_params:
+            A dictionary of additional request parameters for **request token request**.
+        """
+        
+        super(OAuth1, self).__init__(*args, **kwargs)
+        
+        self.request_token_params = self._kwarg(kwargs, 'request_token_params', {})
     
     #===========================================================================
     # Abstract properties
@@ -173,7 +195,7 @@ class OAuth1(providers.AuthorisationProvider):
     
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, method='GET',
-                                 verifier='', callback='', nonce=''):
+                                 verifier='', callback='', nonce='', params={}):
         
         consumer_key = credentials.consumer_key or ''
         consumer_secret = credentials.consumer_secret or ''
@@ -184,7 +206,7 @@ class OAuth1(providers.AuthorisationProvider):
         url, base_params = cls._split_url(url)
         
         # add extracted params to future params
-        params = dict(base_params)
+        params.update(dict(base_params))
         
         if request_type == cls.USER_AUTHORISATION_REQUEST_TYPE:
             # no need for signature
@@ -253,7 +275,8 @@ class OAuth1(providers.AuthorisationProvider):
     #===========================================================================
     
     @classmethod
-    def fetch_protected_resource(cls, adapter, url, credentials, content_parser, method='GET', headers={}, response_parser=None):
+    def fetch_async(cls, adapter, credentials, url, content_parser,
+                    method='GET',headers={}, response_parser=None):
         
         # check required properties of credentials
         if not (credentials.token and credentials.token_secret and credentials.consumer_key and credentials.consumer_secret):
@@ -269,9 +292,9 @@ class OAuth1(providers.AuthorisationProvider):
         
         # create rpc object
         rpc = adapter.fetch_async(*request_elements,
-                                    headers=headers,
-                                    response_parser=response_parser,
-                                    content_parser=content_parser)
+                                  headers=headers,
+                                  response_parser=response_parser,
+                                  content_parser=content_parser)
         # and return it
         return rpc
     
@@ -318,7 +341,8 @@ class OAuth1(providers.AuthorisationProvider):
                                                              url=self.access_token_url,
                                                              credentials=self.credentials,
                                                              verifier=verifier,
-                                                             nonce=self.csrf_generator())
+                                                             nonce=self.csrf_generator(),
+                                                             params=self.access_token_params)
             
             response = self._fetch(*request_elements)
             
@@ -356,7 +380,8 @@ class OAuth1(providers.AuthorisationProvider):
                                                              credentials=self.credentials,
                                                              url=self.request_token_url,
                                                              callback=self.adapter.url,
-                                                             nonce=self.csrf_generator())
+                                                             nonce=self.csrf_generator(),
+                                                             params=self.request_token_params)
             
             self._log(logging.INFO, 'Fetching for request token and token secret.')
             response = self._fetch(*request_elements)
@@ -394,7 +419,8 @@ class OAuth1(providers.AuthorisationProvider):
             # Create User Authorization URL
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                              credentials=self.credentials,
-                                                             url=self.user_authorisation_url)
+                                                             url=self.user_authorisation_url,
+                                                             params=self.user_authorisation_params)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
             
@@ -413,7 +439,6 @@ class Twitter(OAuth1):
     
     @staticmethod
     def _user_parser(user, data):
-#        user.id = data.get('id')
         user.username = data.get('screen_name')
         user.picture = data.get('profile_image_url')
         user.locale = data.get('lang')
