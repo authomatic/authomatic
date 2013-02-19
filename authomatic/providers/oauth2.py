@@ -33,7 +33,6 @@ class OAuth2(providers.AuthorisationProvider):
                       password='password',  
                       client_credentials='client_credentials')
     
-    
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
@@ -78,6 +77,8 @@ class OAuth2(providers.AuthorisationProvider):
         
         # Separate url base and query parameters.
         url, base_params = cls._split_url(url)
+        
+        params
         
         # Add params extracted from URL.
         params.update(dict(base_params))
@@ -137,7 +138,24 @@ class OAuth2(providers.AuthorisationProvider):
             url = url + '?' + params
         
         return url, body, method
+    
+    
+    @staticmethod
+    def _refresh_credentials_if(credentials):
+        """
+        Override this to specify conditions when it is worth to refresh credentials.
         
+        .. warning:: |classmethod|
+        
+        :param credentials:
+            :class:`.Credentials`
+        
+        :returns:
+            ``True`` or ``False``
+        """
+        
+        return True
+    
     
     #===========================================================================
     # Exposed methods
@@ -162,6 +180,7 @@ class OAuth2(providers.AuthorisationProvider):
                                 expiration_date=expiration_date,
                                 provider_class=cls)
     
+    
     @classmethod
     def refresh_credentials(cls, adapter, config, credentials):
         """
@@ -176,6 +195,9 @@ class OAuth2(providers.AuthorisationProvider):
         :returns:
             :class:`.Response`.
         """
+        
+        if not cls._refresh_credentials_if(credentials):
+            return
         
         # We need consumer key and secret to make this kind of request.
         cfg = config.get(credentials.provider_name)
@@ -381,6 +403,13 @@ class Google(OAuth2):
     user_authorisation_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
     user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
+    
+    
+    @staticmethod
+    def _refresh_credentials_if(credentials):
+        # Refres credentials only if there is refresh_token.
+        return credentials.refresh_token
+    
     
     @staticmethod
     def _user_parser(user, data):

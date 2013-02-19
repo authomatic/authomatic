@@ -422,8 +422,6 @@ class Credentials(ReprMixin):
     def refresh(self, adapter, config):
         if hasattr(self.provider_class, 'refresh_credentials'):
             return self.provider_class.refresh_credentials(adapter, config, self)
-        else:
-            return False
     
     
     def provider_type_class(self):
