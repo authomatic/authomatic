@@ -6,7 +6,7 @@ import os
 import sys
 import webapp2
 import logging
-        
+
 
 def headers(handler):
         
@@ -37,10 +37,11 @@ def headers(handler):
     
 
 class Home(webapp2.RequestHandler):
-    def get(self):
+    def any(self):
         
-        self.app
-        os.environ
+#        authomatic.pokus()
+        
+        self.response.write('jojo')
         
         headers(self)
         
@@ -143,12 +144,10 @@ class Login(webapp2.RequestHandler):
 
 
 
-
-# routes must be named
 ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth', handler_method='login'),
-          webapp2.Route(r'/', Home)]
+          webapp2.Route(r'/', Home, handler_method='any')]
 
-app = webapp2.WSGIApplication(ROUTES, debug=True)
+app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True))
 
 
 

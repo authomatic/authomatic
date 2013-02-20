@@ -261,9 +261,10 @@ class OAuth2(providers.AuthorisationProvider):
     def login(self):
         
         # get request parameters from which we can determine the login phase
-        authorisation_code = self.adapter.params.get('code')
-        error = self.adapter.params.get('error')
-        state = self.adapter.params.get('state')        
+        
+        authorisation_code = core.mw.params.get('code')
+        error = core.mw.params.get('error')
+        state = core.mw.params.get('state')      
         
         if authorisation_code and state:
             #===================================================================
@@ -293,7 +294,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                              credentials=self.credentials,
                                                              url=self.access_token_url,
                                                              method='POST',
-                                                             redirect_uri=self.adapter.url,
+                                                             redirect_uri=core.mw.url,
                                                              params=self.access_token_params)
             
             
@@ -336,8 +337,8 @@ class OAuth2(providers.AuthorisationProvider):
             # Phase 2 after redirect with error
             #===================================================================
             
-            error_reason = self.adapter.params.get('error_reason')
-            error_description = self.adapter.params.get('error_description')
+            error_reason = core.mw.params.get('error_reason')
+            error_description = core.mw.params.get('error_description')
             
             if error_reason == 'user_denied':
                 raise CancellationError(error_description, url=self.user_authorisation_url)
@@ -355,18 +356,18 @@ class OAuth2(providers.AuthorisationProvider):
             state = self.csrf_generator()
             # and store it to session
             self._session_set('state', state)
-            
+                        
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                             credentials=self.credentials,
                                                             url=self.user_authorisation_url,
-                                                            redirect_uri=self.adapter.url,
+                                                            redirect_uri=core.mw.url,
                                                             scope=self._scope_parser(self.scope),
                                                             state=state,
                                                             params=self.user_authorisation_params)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
             
-            self.adapter.redirect(request_elements[0])
+            core.mw.redirect(request_elements[0])
 
 
 class Facebook(OAuth2):

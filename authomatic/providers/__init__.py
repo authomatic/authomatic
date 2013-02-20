@@ -192,12 +192,12 @@ class BaseProvider(object):
     def _session_set(self, key, value):
         """Saves a value to session."""
         
-        self.adapter.session[self._session_key(key)] = value
+        authomatic.core.mw.session[self._session_key(key)] = value
     
     
     def _session_get(self, key):
         """Retrieves a value from session."""
-        return self.adapter.session.get(self._session_key(key))
+        return authomatic.core.mw.session.get(self._session_key(key))
     
     
     @classmethod
@@ -622,7 +622,7 @@ class AuthenticationProvider(BaseProvider):
         
         self.identifier_param = kwargs.get('identifier_param', 'id')
         
-        self.identifier = self.adapter.params.get(self.identifier_param)
+        self.identifier = authomatic.core.mw.params.get(self.identifier_param)
         
         
         

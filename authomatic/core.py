@@ -1,6 +1,8 @@
 #TODO: Add coding line to all modules
 # -*- coding: utf-8 -*-
 from urllib import urlencode
+import Cookie
+import base64
 import binascii
 import datetime
 import exceptions
@@ -14,6 +16,7 @@ import sys
 import time
 import urllib
 import urlparse
+import webob
 
 
 # Taken from anyjson.py
@@ -26,6 +29,19 @@ except ImportError:
     except ImportError:
         # Should work for Python2.6 and higher.
         import json
+
+#===============================================================================
+# Global variables
+#===============================================================================
+
+mw = None
+config = None
+
+
+singleton = lambda: None
+singleton.adapter = None
+singleton.config = None
+singleton.middleware = None
 
 
 class ReprMixin(object):
@@ -79,6 +95,225 @@ class ReprMixin(object):
         args = ', '.join(args)
         
         return '{}({})'.format(name, args)
+
+
+class Session(object):
+    
+    def __init__(self, secret, key='authomatic', max_age=600):
+        self.key = key
+        self.secret = secret
+        self.max_age = max_age
+        self.data = self._get_data() or {}
+    
+    
+    def _get_data(self):
+        morsel = Cookie.SimpleCookie(mw.environ.get('HTTP_COOKIE')).get(self.key)
+        if morsel:
+            return self._deserialize(morsel.value)
+    
+    
+    def _signature(self, *parts):
+        signature = hmac.new(self.secret, digestmod=hashlib.sha1)
+        signature.update('|'.join(parts))
+        return signature.hexdigest()
+    
+    
+    def _serialize(self, value):
+        """
+        Converts the value to a signed string with timestamp.
+        
+        TODO: Check licence!
+        Taken from `webapp2_extras.securecookie <http://webapp-improved.appspot.com/guide/extras.html>`_.
+        
+        :param value:
+            Object to be serialized.
+        
+        :returns:
+            Serialized value.
+        """
+        
+        # 1. Serialize
+        serialized = pickle.dumps(value)
+        
+        # 2. Encode
+        encoded = base64.urlsafe_b64encode(serialized)
+        
+        # Create timestamp
+        timestamp = str(int(time.time()))
+        
+        # Create signature
+        signature = self._signature(self.key, encoded, timestamp)
+        
+        # 3. Concatenate
+        return '|'.join([encoded, timestamp, signature])
+    
+    
+    def _deserialize(self, value):
+        """
+        Deserializes and verifies the value created by :meth:`._serialize`.
+        
+        :param str value:
+            The serialized value.
+        
+        :returns:
+            Desrialized object.
+        """
+        
+        # 3. Split
+        encoded, timestamp, signature = value.split('|')
+        
+        # Verify signature
+        if not signature == self._signature(self.key, encoded, timestamp):
+            return None
+        
+        # Verify timestamp
+        if int(timestamp) < int(time.time()) - self.max_age:
+            return None
+        
+        # 2. Decode
+        decoded = base64.urlsafe_b64decode(encoded)
+        
+        # 1. Deserialize
+        deserialized = pickle.loads(decoded)
+        
+        return deserialized
+    
+    
+    def __setitem__(self, key, value):
+        self.data[key] = value
+        
+        mw.set_header('Set-Cookie', '{}={}'.format(self.key, self._serialize(self.data)))
+    
+    
+    def __getitem__(self, key):
+        return self.data.__getitem__(key)
+    
+    
+    def __delitem__(self, key):
+        return self.data.__delitem__(key)
+    
+    
+    def get(self, key, default=None):
+        return self.data.get(key, default)
+
+
+def call_app(app, environ):
+    res = [None, None, None]
+    def start_response(status, headers, exc_info=None):
+        res[:] = [status, headers, exc_info]
+    app_iter = app(environ, start_response)
+    return res[0], res[1], res[2], app_iter
+
+
+class Middleware(object):
+    
+    def __init__(self, app, session=None):
+        self.app = app
+        self.session = session
+    
+    
+    def __call__(self, environ, start_response):
+        global config
+        
+        self._post = {}
+        self._get = {}
+        self.output = []
+        self.status = '200 OK'
+        self.headers = []
+        self.environ = environ
+        self.session = self.session or Session('abcdefg')
+        
+        app_output = self.app(environ, start_response)
+    
+        if self.output or self.headers:
+            start_response(self.status, self.headers, sys.exc_info())
+            return self.output
+        else:
+            return app_output
+    
+    
+    @property
+    def url(self):
+        scheme = self.environ.get('wsgi.url_scheme')
+        host = self.environ.get('HTTP_HOST')
+        path = self.environ.get('PATH_INFO')
+        return urlparse.urlunsplit((scheme, host, path, 0, 0))
+    
+    
+    @property
+    def body(self):
+        length = int(self.environ.get('CONTENT_LENGTH', '0'))
+        
+        if length:
+            body = self.environ.get('wsgi.input').read(length)
+            return body
+        else:
+            return ''
+    
+    
+    def _to_dict(self, items):
+        return {k: v[0] if len(v) == 1 else v for k, v in items}
+    
+    
+    def _parse_qs(self, qs):
+        qs = urlparse.parse_qs(qs)
+        return self._to_dict(qs.items())
+    
+    
+    @property
+    def post(self):
+        if self._post:
+            return self._post
+        else:
+            self._post = self._parse_qs(self.body)
+            return self._post
+    
+    
+    @property
+    def get(self):
+        if self._get:
+            return self._get
+        else:
+            self._get = self._parse_qs(self.environ.get('QUERY_STRING'))
+            return self._get
+    
+    
+    @property
+    def params(self):
+        res = {}
+        
+        # Normalize common values of GET and POST to one key with list value.
+        for k, v in self.get.items():
+            if k in self.post:
+                vp = self.post[k]
+                vp = vp if type(vp) is list else [vp]
+                vg = v if type(v) is list else [v]                
+                res[k] = vg + vp
+            else:
+                res[k] = v
+        return res
+    
+    
+    def set_header(self, key, value):
+        self.headers.append((key, value))
+    
+    
+    def write(self, value):
+        self.output.append(value)
+    
+    
+    def redirect(self, url):
+        self.status = '302 Found'
+        self.set_header('Location', url)
+
+
+def middleware(app):
+    global mw
+    mw = Middleware(app)
+    return mw
+
+
+
 
 
 def login(adapter, config, provider_name, callback=None, report_errors=True,

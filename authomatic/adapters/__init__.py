@@ -27,16 +27,17 @@ implement **three** members.
 
 """
 
+from _pyio import __metaclass__
 from urllib import urlencode
+import abc
+import authomatic
 import binascii
 import hashlib
 import hmac
+import logging
 import random
-import authomatic
 import time
 import urllib
-from _pyio import __metaclass__
-import abc
 
 
 class BaseSession(object):
@@ -342,4 +343,9 @@ class WebObBaseAdapter(BaseAdapter):
         self.response.location = url
         self.response.status = 302
     
-    
+
+
+
+
+
+

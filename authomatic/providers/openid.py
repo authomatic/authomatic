@@ -27,6 +27,7 @@ from authomatic.exceptions import FailureError, CancellationError, OpenIDError
 import datetime
 import logging
 from openid import oidutil
+import authomatic.core as core
 
 __all__ = ['OpenID', 'Yahoo', 'Google']
 
@@ -208,12 +209,12 @@ class OpenID(providers.AuthenticationProvider):
                 
         # Instantiate consumer
         self.adapter.openid_store._log = self._log
-        oi_consumer = consumer.Consumer(self.adapter.session, self.adapter.openid_store)        
+        oi_consumer = consumer.Consumer(core.mw.session, self.adapter.openid_store)
         
         # handle realm and XRDS if there is only one query parameter
-        if self.use_realm and len(self.adapter.params) == 1:
-            realm_request = self.adapter.params.get(self.realm_param)
-            xrds_request = self.adapter.params.get(self.xrds_param)                
+        if self.use_realm and len(core.mw.params) == 1:
+            realm_request = core.mw.params.get(self.realm_param)
+            xrds_request = core.mw.params.get(self.xrds_param)                
         else:
             realm_request = None
             xrds_request = None
@@ -225,8 +226,8 @@ class OpenID(providers.AuthenticationProvider):
             #===================================================================
             
             self._log(logging.INFO, 'Writing OpenID realm HTML to the response.')
-            xrds_location = '{u}?{x}={x}'.format(u=self.adapter.url, x=self.xrds_param)
-            self.adapter.write(REALM_HTML.format(xrds_location=xrds_location, body=self.realm_body))
+            xrds_location = '{u}?{x}={x}'.format(u=core.mw.url, x=self.xrds_param)
+            core.mw.write(REALM_HTML.format(xrds_location=xrds_location, body=self.realm_body))
             
         elif xrds_request:
             #===================================================================
@@ -234,10 +235,10 @@ class OpenID(providers.AuthenticationProvider):
             #===================================================================
             
             self._log(logging.INFO, 'Writing XRDS XML document to the response.')
-            self.adapter.set_header('Content-Type', 'application/xrds+xml')
-            self.adapter.write(XRDS_XML.format(return_to=self.adapter.url))
+            core.mw.set_header('Content-Type', 'application/xrds+xml')
+            core.mw.write(XRDS_XML.format(return_to=core.mw.url))
         
-        elif self.adapter.params.get('openid.mode'):
+        elif core.mw.params.get('openid.mode'):
             #===================================================================
             # Phase 2 after redirect
             #===================================================================
@@ -245,7 +246,7 @@ class OpenID(providers.AuthenticationProvider):
             self._log(logging.INFO, 'Continuing OpenID authentication procedure after redirect.')
             
             # complete the authentication process
-            response = oi_consumer.complete(self.adapter.params, self.adapter.url)            
+            response = oi_consumer.complete(core.mw.params, core.mw.url)            
             
             # on success
             if response.status == consumer.SUCCESS:
@@ -295,7 +296,7 @@ class OpenID(providers.AuthenticationProvider):
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
             
-        elif self.adapter.params.get(self.identifier_param):
+        elif core.mw.params.get(self.identifier_param):
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
@@ -331,9 +332,9 @@ class OpenID(providers.AuthenticationProvider):
             
             # prepare realm and return_to URLs
             if self.use_realm:
-                realm = return_to = '{u}?{r}={r}'.format(u=self.adapter.url, r=self.realm_param)
+                realm = return_to = '{u}?{r}={r}'.format(u=core.mw.url, r=self.realm_param)
             else:
-                realm = return_to = self.adapter.url
+                realm = return_to = core.mw.url
                         
             url = auth_request.redirectURL(realm, return_to)
             
@@ -341,13 +342,13 @@ class OpenID(providers.AuthenticationProvider):
                 # can be redirected
                 url = auth_request.redirectURL(realm, return_to)
                 self._log(logging.INFO, 'Redirecting user to {}.'.format(url))
-                self.adapter.redirect(url)
+                core.mw.redirect(url)
             else:
                 # must be sent as POST
                 # this writes a html post form with auto-submit
                 self._log(logging.INFO, 'Writing an auto-submit HTML form to the response.')
                 form = auth_request.htmlMarkup(realm, return_to, False, dict(id='openid_form'))
-                self.adapter.write(form)
+                core.mw.write(form)
         else:
             raise OpenIDError('No identifier! There is no "{}" querystring parameter in the request'.format(self.identifier_param))
 
