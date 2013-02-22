@@ -38,14 +38,6 @@ except ImportError:
 #===============================================================================
 
 mw = None
-config = None
-
-
-singleton = lambda: None
-singleton.adapter = None
-singleton.config = None
-singleton.middleware = None
-
 
 def normalize_dict(dict_):
     """
@@ -239,7 +231,7 @@ def call_app(app, environ):
     app_iter = app(environ, start_response)
     return res[0], res[1], res[2], app_iter
 
-
+# TODO: Move to its own module together with Session.
 class Middleware(object):
     
     def __init__(self, app, config, openid_store, session=None,
@@ -699,9 +691,9 @@ class Credentials(ReprMixin):
             return False
     
     
-    def refresh(self, adapter, config):
+    def refresh(self):
         if hasattr(self.provider_class, 'refresh_credentials'):
-            return self.provider_class.refresh_credentials(adapter, config, self)
+            return self.provider_class.refresh_credentials(self)
     
     
     def provider_type_class(self):
@@ -737,46 +729,66 @@ class Credentials(ReprMixin):
         result = (short_name, ) + rest
         
         # Pickle it and percent encode.
+        # TODO: encode to base64
         return urllib.quote(pickle.dumps(result), '')
     
     
     @classmethod
-    def deserialize(cls, config, serialized):
+    def deserialize(cls, credentials):
         """
         A *class method* which reconstructs credentials created by :meth:`serialize`.
         
         :param dict config:
             The same :doc:`config` used in the :func:`.login` to get the credentials.
-        :param str serialized:
+        :param str credentials:
             :class:`string` The serialized credentials.
         
         :returns:
             :class:`.Credentials`
         """
         
-        # Percent decode and npickle
-        deserialized = pickle.loads(urllib.unquote(serialized))
+        # Accept both serialized and normal.
+        if type(credentials) is Credentials:
+            return credentials
+        
+        # Percent decode and pickle
+        # TODO: decode from base64
+        unpickled = pickle.loads(urllib.unquote(credentials))
         
         try:
             # We need the short name to move forward.
-            short_name = deserialized[0]
+            short_name = unpickled[0]
             
             # Get provider config by short name.
-            provider_name = short_name_to_name(config, short_name)
-            cfg = config.get(provider_name)
+            provider_name = short_name_to_name(mw.config, short_name)
+            cfg = mw.config.get(provider_name)
             
             # Get the provider class.
             ProviderClass = resolve_provider_class(cfg.get('class_'))
             
             # Deserialization is provider specific.
-            credentials = ProviderClass.reconstruct(deserialized, cfg)
+            deserialized = ProviderClass.reconstruct(unpickled, cfg)
             
-            credentials.provider_name = provider_name
+            deserialized.provider_name = provider_name
+            deserialized.provider_class = ProviderClass
             
-            return credentials
+            return deserialized
                         
         except (TypeError, IndexError) as e:
             raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))
+
+
+def credentials(credentials):
+    """
+    Deserializes credentials if needed.
+    
+    :param credentials:
+        Credentials serialized with :meth:`.Credentials.serialize` or :class:`.Credentials` instance.
+    
+    :returns:
+        :class:`.Credentials`
+    """
+    return Credentials.deserialize(credentials)
 
 
 class LoginResult(ReprMixin):
@@ -906,7 +918,27 @@ class UserInfoResponse(Response):
         #: :class:`.User` instance.
         self.user = user
 
-
+def access(credentials, url, method='GET', headers={}, content_parser=None):
+    """
+    
+    
+    :param credentials:
+    :param url:
+    :param method:
+    :param headers:
+    :param content_parser:
+    """
+    
+    # Deserialize credentials.
+    credentials = Credentials.deserialize(credentials)
+    
+    # Resolve provider class.
+    ProviderClass = credentials.provider_class
+    
+    # Access resource and return response.
+    return ProviderClass.access_with_credentials(credentials, url, method, headers, content_parser)
+    
+    
 
 
 

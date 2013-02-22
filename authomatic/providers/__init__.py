@@ -112,24 +112,6 @@ class BaseProvider(object):
     
     
     @classmethod
-    def access_with_credentials(cls, credentials, url, method='GET', headers={}, content_parser=None):
-        
-        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                        credentials=credentials,
-                                                        url=url,
-                                                        method=method,
-                                                        csrf=cls.csrf_generator())
-        
-        return cls._fetch(*request_elements,
-                              headers=headers,
-                              content_parser=content_parser)
-    
-    
-    def access(self, url, method='GET', headers={}, content_parser=None):
-        return self.access_with_credentials(self.credentials, url, method, headers, content_parser)
-    
-    
-    @classmethod
     def get_type(cls):
         """
         Returns the provider type.
@@ -421,6 +403,24 @@ class AuthorisationProvider(BaseProvider):
         :param dict cfg:
             :doc:`config`
         """
+    
+    
+    @classmethod
+    def access_with_credentials(cls, credentials, url, method='GET', headers={}, content_parser=None):
+        
+        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                        credentials=credentials,
+                                                        url=url,
+                                                        method=method,
+                                                        csrf=cls.csrf_generator())
+        
+        return cls._fetch(*request_elements,
+                              headers=headers,
+                              content_parser=content_parser)
+    
+    
+    def access(self, url, method='GET', headers={}, content_parser=None):
+        return self.access_with_credentials(self.credentials, url, method, headers, content_parser)
     
     
     @abc.abstractmethod

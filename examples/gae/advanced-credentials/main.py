@@ -1,19 +1,18 @@
 # main.py
 
-from authomatic.adapters import gae
+from authomatic.adapters.gae.openid import NDBOpenIDStore
 from config import CONFIG
 import authomatic
-import webapp2
 import logging
 import urllib
+import webapp2
 
 
 class Login(webapp2.RequestHandler):
     
     def anymethod(self, provider_name):
         
-        adapter = gae.Webapp2Adapter(self, session_secret='abcdef')
-        result = authomatic.login(adapter, CONFIG, provider_name)
+        result = authomatic.login(provider_name)
         
         if result:
             
@@ -81,14 +80,8 @@ class Action(webapp2.RequestHandler):
         user_id = self.request.cookies.get('user_id')
         
         # Now it's time to deserialize credentials.
-        # To do it We need the CONFIG.
-        credentials = authomatic.core.Credentials().deserialize(CONFIG, serialized_credentials)
+        credentials = authomatic.credentials(serialized_credentials)
                 
-        # We are going to do a fetch so we will need the adapter again.
-        # You will probably make a function for it in your code.
-        adapter = gae.Webapp2Adapter(self, session_secret='abcdef')
-        
-        
         # The OAuth 2.0 credentials (the access token) have limited lifetime.
         
         # We can check the expiration date of the credentials,
@@ -108,18 +101,18 @@ class Action(webapp2.RequestHandler):
         # We need to pass adapter and CONFIG to the method because internaly it
         # fetches the provider's access token url.
         # The method updates the credentials instance and returns a Response instance.
-        response = credentials.refresh(adapter, CONFIG)
+        response = credentials.refresh()
         
         # The refreshment of credentials is OAuth 2.0 specific feature and
         # the method returns None if it is called by other provider types.
         if response:
-            if response.status_code == 200:
+            if response.status == 200:
                 self.response.write('Credentials were refreshed successfully!<br />')
                 expiration_date = credentials.expiration_date
                 self.response.write('Credentials expire on {}.<br />'.format(expiration_date))
             else:
                 self.response.write('Credentials refreshment failed!<br />')
-                self.response.write('status code: {}<br />'.format(response.status_code))
+                self.response.write('status code: {}<br />'.format(response.status))
                 self.response.write('content: {}<br />'.format(response.content))
         else:
             self.response.write('Credentials do not support refreshment!<br />')
@@ -136,10 +129,10 @@ class Action(webapp2.RequestHandler):
             self.response.write('Credentials refresh_token {}.<br />'.format(credentials.refresh_token))
             self.response.write('<br />-------------------REFRESH-----------------<br />')
             
-            response = credentials.refresh(adapter, CONFIG)
+            response = credentials.refresh()
             
             if response:
-                self.response.write('status_code = {}<br />'.format(response.status_code))
+                self.response.write('status = {}<br />'.format(response.status))
                 self.response.write('content = {}<br /><br />'.format(response.content))
             
             self.response.write('Credentials expire on {}.<br />'.format(credentials.expiration_date))
@@ -164,13 +157,12 @@ class Action(webapp2.RequestHandler):
             
             # An expiring access token can be exchanged for a fresh one by the provider.
             # This is provider specific so I leave it up to you to find out how.
-            
-            
+                        
             # Prepare the URL for Facebook Graph API
             url = 'https://graph.facebook.com/{}/feed?message={}'.format(user_id, message)
             
             # Access user's protected resource.
-            response = authomatic.fetch(adapter, CONFIG, credentials, url, 'POST')
+            response = authomatic.access(credentials, url, 'POST')
             
             # Parse response.
             post_id = response.data.get('id')
@@ -191,7 +183,7 @@ class Action(webapp2.RequestHandler):
             url = 'https://api.twitter.com/1.1/statuses/update.json?status={}'.format(message)
             
              # Access user's protected resource.
-            response = authomatic.fetch(adapter, CONFIG, credentials, url, 'POST')
+            response = authomatic.access(credentials, url, 'POST')
             
             # Parse response.
             error = response.data.get('errors')
@@ -233,6 +225,11 @@ ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, handler_method='anymethod'),
 # And instantiate the WSGI application.
 app = webapp2.WSGIApplication(ROUTES, debug=True)
 
+# Wrap the WSGI app in middleware.
+app = authomatic.middleware(app,
+                            config=CONFIG,
+                            openid_store=NDBOpenIDStore,
+                            report_errors=False)
 
 
 

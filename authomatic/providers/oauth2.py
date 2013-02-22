@@ -184,7 +184,7 @@ class OAuth2(providers.AuthorisationProvider):
     
     
     @classmethod
-    def refresh_credentials(cls, adapter, config, credentials):
+    def refresh_credentials(cls, credentials):
         """
         Refreshes :class:`.Credentials` by providing fresh **token**,
         **refresh_token** and **expires_in**.
@@ -202,7 +202,7 @@ class OAuth2(providers.AuthorisationProvider):
             return
         
         # We need consumer key and secret to make this kind of request.
-        cfg = config.get(credentials.provider_name)
+        cfg = core.mw.config.get(credentials.provider_name)
         credentials.consumer_key = cfg.get('consumer_key')
         credentials.consumer_secret = cfg.get('consumer_secret')
         
@@ -211,7 +211,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                         url=cls.access_token_url,
                                                         method='POST')
         
-        response = adapter.fetch_async(*request_elements).get_response()
+        response = cls._fetch(*request_elements)
         
         # We no longer need consumer info.
         credentials.consumer_key = None

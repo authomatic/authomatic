@@ -134,7 +134,7 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='anymethod'),
 # And instantiate the WSGI application.
 app = webapp2.WSGIApplication(ROUTES, debug=True)
 
-# Wrap the WSGI app to middleware.
+# Wrap the WSGI app in middleware.
 app = authomatic.middleware(app,
                             config=CONFIG,
                             openid_store=NDBOpenIDStore,

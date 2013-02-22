@@ -4,6 +4,7 @@ class BaseError(Exception):
         self.message = message
         self.original_message = original_message
         self.url = url
+        # TODO: Rename to "status" to be consistent wit Response.status.
         self.code = code
 
 
