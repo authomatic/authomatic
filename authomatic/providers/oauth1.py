@@ -195,7 +195,7 @@ class OAuth1(providers.AuthorisationProvider):
     
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, method='GET',
-                                 verifier='', callback='', nonce='', params={}):
+                                 verifier='', callback='', csrf='', params={}):
         
         consumer_key = credentials.consumer_key or ''
         consumer_secret = credentials.consumer_secret or ''
@@ -251,7 +251,7 @@ class OAuth1(providers.AuthorisationProvider):
             # http://oauth.net/core/1.0a/#rfc.section.9.1
             params['oauth_signature_method'] = cls._signature_generator.method
             params['oauth_timestamp'] = str(int(time.time()))
-            params['oauth_nonce'] = nonce
+            params['oauth_nonce'] = csrf
             params['oauth_version'] = '1.0'
             
             # add signature to params
@@ -273,30 +273,6 @@ class OAuth1(providers.AuthorisationProvider):
     #===========================================================================
     # Exposed methods
     #===========================================================================
-    
-    @classmethod
-    def fetch_async(cls, adapter, credentials, url, content_parser,
-                    method='GET',headers={}, response_parser=None):
-        
-        # check required properties of credentials
-        if not (credentials.token and credentials.token_secret and credentials.consumer_key and credentials.consumer_secret):
-            raise OAuth1Error('To access OAuth 1.0a resource you must provide credentials with valid access_token, ' + \
-                                                     'access_token_secret, consumer_key and consumer_secret!')
-        
-        # create request elements
-        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                       credentials=credentials,
-                                                       url=url,
-                                                       method=method,
-                                                       nonce=cls.csrf_generator())
-        
-        # create rpc object
-        rpc = adapter.fetch_async(*request_elements,
-                                  headers=headers,
-                                  response_parser=response_parser,
-                                  content_parser=content_parser)
-        # and return it
-        return rpc
     
     
     @staticmethod
@@ -341,10 +317,10 @@ class OAuth1(providers.AuthorisationProvider):
                                                              url=self.access_token_url,
                                                              credentials=self.credentials,
                                                              verifier=verifier,
-                                                             nonce=self.csrf_generator(),
+                                                             csrf=self.csrf_generator(),
                                                              params=self.access_token_params)
             
-            response = self._fetch(*request_elements)
+            response = self._new_fetch(*request_elements)
             
             if response.status_code != 200:
                 raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
@@ -380,11 +356,11 @@ class OAuth1(providers.AuthorisationProvider):
                                                              credentials=self.credentials,
                                                              url=self.request_token_url,
                                                              callback=core.mw.url,
-                                                             nonce=self.csrf_generator(),
+                                                             csrf=self.csrf_generator(),
                                                              params=self.request_token_params)
             
             self._log(logging.INFO, 'Fetching for request token and token secret.')
-            response = self._fetch(*request_elements)
+            response = self._new_fetch(*request_elements)
             
             # check if response status is OK
             if response.status_code != 200:

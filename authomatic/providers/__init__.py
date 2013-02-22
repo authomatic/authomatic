@@ -13,17 +13,17 @@ Abstract base classes for implementation of protocol specific providers.
 
 """
 
-from authomatic.exceptions import ConfigError, AuthenticationError
+from authomatic.exceptions import ConfigError, AuthenticationError, FetchError
 import abc
 import authomatic.core
 import datetime
 import hashlib
+import httplib
 import logging
 import os
 import random
 import urlparse
 import uuid
-import authomatic.core
 
 __all__ = ['BaseProvider', 'AuthorisationProvider', 'AuthenticationProvider', 'login_decorator']
 
@@ -70,15 +70,9 @@ class BaseProvider(object):
     
     __metaclass__ = abc.ABCMeta
     
-    def __init__(self, adapter, config, provider_name, callback=None,
+    def __init__(self, provider_name, callback=None,
                  report_errors=True, logging_level=logging.INFO,
                  prefix='authomatic', **kwargs):
-        
-        #: The :doc:`platform adapter <adapters>`.
-        self.adapter = adapter
-        
-        #: :doc:`config`
-        self.config = config
         
         #: :class:`str` The provider name as specified in the :doc:`config`.
         self.name = provider_name
@@ -131,6 +125,21 @@ class BaseProvider(object):
     # Exposed methods
     #===========================================================================
     
+    
+    @classmethod
+    def new_fetch(cls, credentials, url, method='GET', headers={}, content_parser=None):
+        
+        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                        credentials=credentials,
+                                                        url=url,
+                                                        method=method,
+                                                        csrf=cls.csrf_generator())
+        
+        return cls._new_fetch(*request_elements,
+                              headers=headers,
+                              content_parser=content_parser)
+    
+    
     @classmethod
     def get_type(cls):
         """
@@ -173,8 +182,8 @@ class BaseProvider(object):
             Name of the desired keyword argument.
         """
         
-        return self.config.get(self.name, {}).get(kwname) or \
-               self.config.get('__defaults__', {}).get(kwname) or \
+        return authomatic.core.mw.config.get(self.name, {}).get(kwname) or \
+               authomatic.core.mw.config.get('__defaults__', {}).get(kwname) or \
                kwargs.get(kwname) or default
     
     
@@ -234,15 +243,44 @@ class BaseProvider(object):
         self._logger.log(level, base + msg)
         
     
-    def _fetch(self, *args, **kwargs):
-        """
-        Fetches a url.
+    @classmethod
+    def _new_fetch(cls, url, body='', method='GET', headers={}, max_redirects=4, content_parser=None):
         
-        A wrapper around :meth:`.adapters.BaseAdapter.fetch_async` method.
-        """
+        logging.info('Fetching url = {}'.format(url))
+        logging.info('remaining redirects = {}'.format(max_redirects))
         
-        return self.adapter.fetch_async(*args, **kwargs).get_response()
+        # Prepare URL elements
+        scheme, host, path, query, fragment = urlparse.urlsplit(url)
+        request_path = urlparse.urlunsplit((None, None, path, query, None))
         
+        # Connect
+        connection = httplib.HTTPSConnection(host)
+        try:
+            connection.request(method, request_path, body, headers)
+        except Exception as e:
+            raise FetchError('Could not connect! Error: {}'.format(e.message))
+        
+        response = connection.getresponse()
+        
+        location = response.getheader('Location')
+        
+        if response.status in (300, 301, 302, 303, 307) and location:
+            if location == url:
+                raise FetchError('Loop redirect to = {}'.format(location))
+            elif max_redirects > 0:
+                logging.info('Redirecting to = {}'.format(location))
+                response = cls.new_fetch(location, body, method, headers, max_redirects=max_redirects - 1)
+            else:
+                raise FetchError('Max redirects reached!')
+        else:
+            logging.info('Got response from url = {}'.format(url))
+        
+        
+        return authomatic.core.Response(status_code=response.status,
+                                        headers=dict(response.getheaders()),
+                                        content=response.read(),
+                                        content_parser=content_parser)
+    
     
     def _update_or_create_user(self, data, credentials=None):
         """
@@ -424,93 +462,9 @@ class AuthorisationProvider(BaseProvider):
         """
     
     
-    @abc.abstractmethod
-    def fetch_async(self, adapter, credentials, url, content_parser,
-                    method='GET', headers={}, response_parser=None):
-        """
-        Fetches protected resource asynchronously.
-           
-        .. warning:: |async|
-        
-        :param adapter:
-            The same :doc:`adapter <adapters>` instance which was used in the :func:`authomatic.login`
-            function to get the **user's** :class:`.core.Credentials`.
-        :param core.Credentials credentials:
-            :class:`Credentials <.core.Credentials>` of the **user** whose
-            **protected resource** we want to access.
-        :param str url:
-            URL of the protected resource. Can contain query parameters.
-        :param str method:
-            HTTP method of the request.
-        :param callable content_parser:
-            A :class:`callable` as described in :attr:`core.Response.content_parser`.
-        
-        :returns:
-            :class:`.adapters.RPC`
-        """
-    
-    
     #===========================================================================
     # Exposed methods
     #===========================================================================
-    
-    
-    def create_request(self, url, method='GET', content_parser=None, response_parser=None):
-        """
-        Creates an authorized :class:`request <.core.Request>` to **protected resources** of a **user**.
-        
-        :param str url:
-            URL of the protected resource. Can contain query parameters.
-        :param str method:
-            HTTP method of the request.
-        :param callable content_parser:
-            A callable as described in :attr:`.core.Response.content_parser`.
-        :param callable response_parser:            
-            A callable as described in :attr:`.core.Request.response_parser`.
-        
-        :returns:
-            :class:`.core.Request`
-        """
-        
-        return authomatic.core.Request(adapter=self.adapter,
-                                       config=self.config,
-                                       credentials=self.user.credentials,
-                                       url=url,
-                                       method=method,
-                                       content_parser=content_parser,
-                                       response_parser=response_parser)
-        
-    
-    def fetch(self, url, method='GET', headers={}, response_parser=None, content_parser=None):
-        """
-        Fetches protected resource.
-        
-        :param url:
-        :param method:
-        :param headers:
-        :param response_parser:
-        :param content_parser:
-        """
-        
-        return self.fetch_async(adapter=self.adapter,
-                                credentials=self.credentials,
-                                url=url,
-                                method=method,
-                                headers=headers,
-                                response_parser=response_parser,
-                                content_parser=content_parser).get_response()
-    
-    
-    def fetch_user_info(self):
-        """
-        Makes **synchronous** request to :attr:`.user_info_url` and
-        returns the :class:`.core.UserInfoResponse`.
-        
-        :returns:
-            :class:`.core.UserInfoResponse`
-        """
-        
-        return self.user_info_request.fetch().get_response()
     
     
     def update_user(self):
@@ -525,41 +479,17 @@ class AuthorisationProvider(BaseProvider):
             :class:`.core.User`
         """
         
-        return self.fetch_user_info().user
+        return self.new_fetch_user_info().user
     
     
-    @property
-    def user_info_request(self):
-        """
-        Returns an **asynchronous** :class:`request <.core.Request>` to :attr:`.user_info_url`
-        whose :meth:`get_response() <.core.Request.get_response>` method returns
-        a :class:`.core.UserInfoResponse`.
+    def new_fetch_user_info(self):
+        response = self.new_fetch(self.credentials, self.user_info_url)
         
-        :returns:
-            :class:`.core.Request`
-        """
+        # Create user.
+        self.user = self._update_or_create_user(response.data)
         
-        if not self._user_info_request:
-            
-            def response_parser(response, content_parser):
-                """
-                Response parser which converts response to :class:`.core.UserInfoResponse`.
-                """
-                
-                # Parse response.
-                response = self.adapter.response_parser(response, content_parser)
-                
-                # Create user.
-                self.user = self._update_or_create_user(response.data)
-                
-                # Return UserInfoResponse.
-                return authomatic.core.UserInfoResponse(response, self.user)
-            
-            # Create the request
-            self._user_info_request = self.create_request(self.user_info_url,
-                                                          response_parser=response_parser)
-        
-        return self._user_info_request
+        # Return UserInfoResponse.
+        return authomatic.core.UserInfoResponse(response, self.user)
     
     
     #===========================================================================

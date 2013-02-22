@@ -63,5 +63,5 @@ This is a simple webapp2 example:
 
 """
 
-from core import login, short_name, async_fetch, fetch, middleware
+from core import login, short_name, middleware
 

@@ -50,3 +50,7 @@ class CancellationError(BaseError):
 class FailureError(BaseError):
     pass
 
+class FetchError(BaseError):
+    pass
+
+

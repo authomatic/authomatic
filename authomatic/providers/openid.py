@@ -62,6 +62,26 @@ XRDS_XML = \
 </xrds:XRDS>
 """
 
+class SessionOpenIDStore(object):
+    
+    def storeAssociation(self, server_url, association):
+        pass
+    
+    def cleanupAssociations(self):
+        pass
+    
+    def getAssociation(self, server_url, handle=None):
+        pass
+    
+    def removeAssociation(self, server_url, handle):
+        pass
+    
+    def useNonce(self, server_url, timestamp, salt):
+        pass
+    
+    def cleanupNonces(self):
+        pass
+
 
 class OpenID(providers.AuthenticationProvider):
     """
@@ -208,8 +228,11 @@ class OpenID(providers.AuthenticationProvider):
         
                 
         # Instantiate consumer
-        self.adapter.openid_store._log = self._log
-        oi_consumer = consumer.Consumer(core.mw.session, self.adapter.openid_store)
+        core.mw.openid_store._log = self._log
+        oi_consumer = consumer.Consumer(core.mw.session, core.mw.openid_store)
+        
+#        self.adapter.openid_store._log = self._log
+#        oi_consumer = consumer.Consumer(core.mw.session, self.adapter.openid_store)
         
         # handle realm and XRDS if there is only one query parameter
         if self.use_realm and len(core.mw.params) == 1:

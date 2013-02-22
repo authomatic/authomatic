@@ -68,12 +68,14 @@ class OAuth2(providers.AuthorisationProvider):
     
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, method='GET',
-                                 redirect_uri='', scope='', state='', params={}):
+                                 redirect_uri='', scope='', csrf='', params={}):
         
         consumer_key = credentials.consumer_key or ''
         consumer_secret = credentials.consumer_secret or ''
         token = credentials.token or ''
         refresh_token = credentials.refresh_token or credentials.token or ''
+        
+        
         
         # Separate url base and query parameters.
         url, base_params = cls._split_url(url)
@@ -85,11 +87,11 @@ class OAuth2(providers.AuthorisationProvider):
         
         if request_type == cls.USER_AUTHORISATION_REQUEST_TYPE:
             # User authorisation request.
-            if consumer_key and redirect_uri and scope and state:
+            if consumer_key and redirect_uri and scope and csrf:
                 params['client_id'] = consumer_key
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
-                params['state'] = state
+                params['state'] = csrf
                 params['response_type'] = 'code'
             else:
                 raise OAuth2Error('Credentials with valid consumer_key and arguments redirect_uri, scope and ' + \
@@ -234,29 +236,6 @@ class OAuth2(providers.AuthorisationProvider):
         return response
     
     
-    @classmethod
-    def fetch_async(cls, adapter, credentials, url, content_parser,
-                    method='GET', headers={}, response_parser=None):
-        
-        # check required properties of credentials
-        if not credentials.token:
-            raise OAuth2Error('To access OAuth 2.0 resource you must provide credentials with valid token!')
-        
-        
-        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                        credentials=credentials,
-                                                        url=url,
-                                                        method=method,
-                                                        state=cls.csrf_generator())
-        
-        rpc = adapter.fetch_async(*request_elements,
-                                  headers=headers,
-                                  response_parser=response_parser,
-                                  content_parser=content_parser)
-        
-        return rpc
-    
-    
     @providers.login_decorator
     def login(self):
         
@@ -297,8 +276,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                              redirect_uri=core.mw.url,
                                                              params=self.access_token_params)
             
-            
-            response = self._fetch(*request_elements)
+            response = self._new_fetch(*request_elements)
             
             access_token = response.data.get('access_token')
             refresh_token = response.data.get('refresh_token')
@@ -306,6 +284,7 @@ class OAuth2(providers.AuthorisationProvider):
             if response.status_code != 200 or not access_token:
                 raise FailureError('Failed to obtain OAuth 2.0 access token from {}! HTTP status code: {}.'\
                                   .format(self.access_token_url, response.status_code),
+                                  original_message=response.content,
                                   code=response.status_code,
                                   url=self.access_token_url)
             
@@ -353,16 +332,16 @@ class OAuth2(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure.')
             
             # generate csfr
-            state = self.csrf_generator()
+            csrf = self.csrf_generator()
             # and store it to session
-            self._session_set('state', state)
+            self._session_set('state', csrf)
                         
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                             credentials=self.credentials,
                                                             url=self.user_authorisation_url,
                                                             redirect_uri=core.mw.url,
                                                             scope=self._scope_parser(self.scope),
-                                                            state=state,
+                                                            csrf=csrf,
                                                             params=self.user_authorisation_params)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))

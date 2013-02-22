@@ -4,10 +4,12 @@ from urllib import urlencode
 import Cookie
 import base64
 import binascii
+import collections
 import datetime
 import exceptions
 import hashlib
 import hmac
+import httplib
 import logging
 import pickle
 import providers
@@ -15,6 +17,7 @@ import random
 import sys
 import time
 import urllib
+import urllib2
 import urlparse
 import webob
 
@@ -42,6 +45,38 @@ singleton = lambda: None
 singleton.adapter = None
 singleton.config = None
 singleton.middleware = None
+
+
+def normalize_dict(dict_):
+    """
+    Replaces all values that are single-item iterables with the value of its index 0.
+    
+    :param dict dict_:
+        Dictionary to normalize.
+    
+    :returns:
+        Normalized dictionary.
+    """
+    return {k: v[0] if not type(v) is str and len(v) == 1 else v for k, v in dict_.items()}
+
+
+def items_to_dict(items):
+    """
+    Converts list of tuples to dictionary with duplicate keys converted to lists.
+    
+    :param list items:
+        List of tuples.
+    
+    :returns:
+        :class:`dict`
+    """
+    
+    res = collections.defaultdict(list)
+    
+    for k, v in items:
+        res[k].append(v)
+        
+    return normalize_dict(dict(res))
 
 
 class ReprMixin(object):
@@ -207,8 +242,10 @@ def call_app(app, environ):
 
 class Middleware(object):
     
-    def __init__(self, app, session=None):
+    def __init__(self, app, config, openid_store, session=None):
         self.app = app
+        self.config = config
+        self.openid_store = openid_store
         self.session = session
     
     
@@ -307,16 +344,34 @@ class Middleware(object):
         self.set_header('Location', url)
 
 
-def middleware(app):
+def middleware(*args, **kwargs):
     global mw
-    mw = Middleware(app)
+    mw = Middleware(*args, **kwargs)
     return mw
 
 
+def new_fetch(url, body=None, method='GET', headers={}, response_parser=None, content_parser=None):
+    
+    scheme, host, path, query, fragment = urlparse.urlsplit(url)
+    
+    connection = httplib.HTTPConnection(host)
+    connection.request(method, path + '?' + query, body, headers)
+    
+    response = connection.getresponse()
+    
+    res = Response(response.status, response.getheaders(), response.read())
+    
+    response.close()
+    
+    return res
 
 
+def new_async_fetch(*args, **kwargs):
+    
+    return new_fetch(*args, **kwargs)
 
-def login(adapter, config, provider_name, callback=None, report_errors=True,
+
+def login(provider_name, callback=None, report_errors=True,
           logging_level=logging.DEBUG, **kwargs):
     """
     Launches a login procedure for specified :doc:`provider <providers>` and returns :class:`.LoginResult`.
@@ -359,7 +414,7 @@ def login(adapter, config, provider_name, callback=None, report_errors=True,
     """
     
     # retrieve required settings for current provider and raise exceptions if missing
-    provider_settings = config.get(provider_name)
+    provider_settings = mw.config.get(provider_name)
     if not provider_settings:
         raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
@@ -370,7 +425,7 @@ def login(adapter, config, provider_name, callback=None, report_errors=True,
     ProviderClass = resolve_provider_class(class_)
     
     # instantiate provider class
-    provider = ProviderClass(adapter, config, provider_name, callback,
+    provider = ProviderClass(provider_name, callback,
                              report_errors=report_errors,
                              logging_level=logging_level,
                              **kwargs)
@@ -809,139 +864,6 @@ class UserInfoResponse(ReprMixin):
         self.data = response.data
         #: A :class:`.User` instance.
         self.user = user
-
-
-class Request(ReprMixin):
-    """
-    Abstraction of asynchronous request to **user's protected resources**.
-    
-    .. warning:: |async|
-        
-    """
-    
-    _repr_ignore = ('rpc',)
-    
-    def __init__(self, adapter, config, credentials, url, method='GET',
-                 response_parser=None, content_parser=None):
-        """
-        Initializes the request.
-        
-        :param adapter:
-            :doc:`Adapter <adapters>`
-        :param config:
-            The same :doc:`config` used in the :func:`.login` function to get the credentials.
-        :param credentials:
-            :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
-            of the **user** whose **protected resource** we want to access.
-        :param str url:
-            The URL of the protected resource. Can contain query parameters.
-        :param str method:
-            HTTP method of the request.
-        :param callable response_parser:
-            A callable that takes the platform specific ``fetch`` response object
-            as argument and converts it to a :class:`.Response` instance.
-        :param callable content_parser:
-            A callable as described in :attr:`.Response.content_parser`.
-        """
-        
-        self.adapter = adapter
-        self.url = url    
-        self.method = method
-        self.response_parser = response_parser
-        self.content_parser = content_parser
-        self.rpc = None
-        
-        if type(credentials) == Credentials:
-            self.credentials = credentials
-        elif type(credentials) == str:
-            self.credentials = Credentials.deserialize(config, credentials)
-    
-    def fetch(self):
-        """
-        Fetches the protected resource and returns immediately.
-        
-        :returns:
-            :attr:`self`
-        """
-        
-        ProviderClass = self.credentials.provider_type_class()
-        
-        self.rpc = ProviderClass.fetch_async(adapter=self.adapter,
-                                             url=self.url,
-                                             credentials=self.credentials,
-                                             content_parser=self.content_parser,
-                                             method=self.method,
-                                             response_parser=self.response_parser)
-        
-        return self
-    
-    def get_response(self):
-        """
-        Waits for the result of :meth:`.fetch` and returns :class:`.Response`.
-        
-        :returns:
-            :class:`.Response`
-        """
-        return self.rpc.get_response()
-
-
-def async_fetch(adapter, config, credentials, url, method='GET', content_parser=None):
-    """
-    Fetches protected resource asynchronously.
-       
-    .. warning::
-        
-        |async|
-    
-    :param adapter:
-            :doc:`Adapter <adapters>`
-    :param config:
-            The same :doc:`config` used in the :func:`.login` function to get the credentials.
-    :param credentials:
-        :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
-        of the **user** whose **protected resource** we want to access.
-    :param url:
-        :class:`str` The URL of the protected resource.
-        Can contain query parameters.
-    :param method:
-        :class:`str` HTTP method of the request.
-    :param content_parser:
-        A :class:`callable` as described in :attr:`.Response.content_parser`.
-    
-    :returns:
-        :class:`.Request`
-    """
-    return Request(adapter, config, credentials, url, method, content_parser).fetch()
-
-
-def fetch(adapter, config, credentials, url, method='GET', content_parser=None):
-    """
-    Fetches protected resource.
-    
-    .. note::
-        
-        Internally it's just a wrapper of
-        ``authomatic.async_fetch(adapter, url, credentials, method, content_parser).get_response()``.
-    
-    :param adapter:
-            :doc:`Adapter <adapters>`
-    :param config:
-            The same :doc:`config` used in the :func:`.login` function to get the credentials.
-    :param credentials:
-        :class:`.Credentials` or :meth:`serialized credentials <.Credentials.serialize>`
-        of the **user** whose **protected resource** we want to access.
-    :param url:
-        :class:`str` The URL of the protected resource.
-        Can contain query parameters.
-    :param method:
-        :class:`str` HTTP method of the request.
-    :param content_parser:
-        A :class:`callable` as described in :attr:`.Response.content_parser`.
-    
-    :returns:
-        :class:`.Response`
-    """
-    return async_fetch(adapter, config, credentials, url, method, content_parser).get_response()
 
 
 
