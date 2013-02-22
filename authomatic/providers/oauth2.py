@@ -276,16 +276,16 @@ class OAuth2(providers.AuthorisationProvider):
                                                              redirect_uri=core.mw.url,
                                                              params=self.access_token_params)
             
-            response = self._new_fetch(*request_elements)
+            response = self._fetch(*request_elements)
             
             access_token = response.data.get('access_token')
             refresh_token = response.data.get('refresh_token')
             
-            if response.status_code != 200 or not access_token:
+            if response.status != 200 or not access_token:
                 raise FailureError('Failed to obtain OAuth 2.0 access token from {}! HTTP status code: {}.'\
-                                  .format(self.access_token_url, response.status_code),
+                                  .format(self.access_token_url, response.status),
                                   original_message=response.content,
-                                  code=response.status_code,
+                                  code=response.status,
                                   url=self.access_token_url)
             
             self._log(logging.INFO, 'Got access token.')

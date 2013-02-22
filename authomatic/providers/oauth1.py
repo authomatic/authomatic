@@ -320,12 +320,13 @@ class OAuth1(providers.AuthorisationProvider):
                                                              csrf=self.csrf_generator(),
                                                              params=self.access_token_params)
             
-            response = self._new_fetch(*request_elements)
+            response = self._fetch(*request_elements)
             
-            if response.status_code != 200:
+            if response.status != 200:
                 raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
-                                   .format(self.access_token_url, response.status_code),
-                                   code=response.status_code,
+                                   .format(self.access_token_url, response.status),
+                                   original_message=response.content,
+                                   code=response.status,
                                    url=self.access_token_url)
             
             self._log(logging.INFO, 'Got access token.')
@@ -360,20 +361,21 @@ class OAuth1(providers.AuthorisationProvider):
                                                              params=self.request_token_params)
             
             self._log(logging.INFO, 'Fetching for request token and token secret.')
-            response = self._new_fetch(*request_elements)
+            response = self._fetch(*request_elements)
             
             # check if response status is OK
-            if response.status_code != 200:
+            if response.status != 200:
                 raise FailureError('Failed to obtain request token from {}! HTTP status code: {}.'\
-                                  .format(self.request_token_url, response.status_code),
-                                  code=response.status_code,
+                                  .format(self.request_token_url, response.status),
+                                  original_message=response.content,
+                                  code=response.status,
                                   url=self.request_token_url)
             
             # extract request token
             request_token = response.data.get('oauth_token')
             if not request_token:
                 raise FailureError('Response from {} doesn\'t contain oauth_token parameter!'.format(self.request_token_url),
-                                  original_message=response.data,
+                                  original_message=response.content,
                                   url=self.request_token_url)
             
             # we need request token for user authorisation redirect
@@ -386,7 +388,7 @@ class OAuth1(providers.AuthorisationProvider):
                 self._session_set('token_secret', token_secret)
             else:
                 raise FailureError('Failed to obtain token secret from {}!'.format(self.request_token_url),
-                                  original_message=response.data,
+                                  original_message=response.content,
                                   url=self.request_token_url)
             
             

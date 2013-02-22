@@ -38,7 +38,7 @@ def login_decorator(func):
     def wrap(provider, *args, **kwargs):
         error = None
         
-        if provider.report_errors:
+        if authomatic.core.mw.report_errors:
             # Catch and report errors.
             try:
                 func(provider, *args, **kwargs)
@@ -71,7 +71,6 @@ class BaseProvider(object):
     __metaclass__ = abc.ABCMeta
     
     def __init__(self, provider_name, callback=None,
-                 report_errors=True, logging_level=logging.INFO,
                  prefix='authomatic', **kwargs):
         
         #: :class:`str` The provider name as specified in the :doc:`config`.
@@ -80,30 +79,16 @@ class BaseProvider(object):
         #: :class:`callable` An optional callback called when the login procedure
         #: is finished with :class:`.core.LoginResult` passed as argument.
         self.callback = callback
-        
-        #: :class:`bool` If :literal:`True` exceptions which occur inside the :meth:`.login`
-        #: will be caught and reported in the :attr:`.core.LoginResult.error`.
-        self.report_errors = report_errors
-        
-        #: :class:`int` The logging level treshold as specified in the standard Python
-        #: `logging library <http://docs.python.org/2/library/logging.html>`_.
-        #: If :literal:`None` or :literal:`False` there will be no logs. Default is ``logging.INFO``.
-        self.logging_level = logging_level
-        
-        #: :class:`str` Prefix used by storing values to session.
-        self.prefix = prefix
-        
+                
         #: :class:`.core.User`.
-        self.user = None
-        
+        self.user = None        
         
         self._user_info_request = None
         
-        #TODO: Make _logger private
         # setup _logger
         self._logger = logging.getLogger(__name__)
-        self._logger.setLevel(logging_level)
-        if logging_level in (None, False):
+        self._logger.setLevel(authomatic.core.mw.logging_level)
+        if authomatic.core.mw.logging_level in (None, False):
             self._logger.disabled = False
     
     
@@ -127,7 +112,7 @@ class BaseProvider(object):
     
     
     @classmethod
-    def new_fetch(cls, credentials, url, method='GET', headers={}, content_parser=None):
+    def access_with_credentials(cls, credentials, url, method='GET', headers={}, content_parser=None):
         
         request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                         credentials=credentials,
@@ -135,9 +120,13 @@ class BaseProvider(object):
                                                         method=method,
                                                         csrf=cls.csrf_generator())
         
-        return cls._new_fetch(*request_elements,
+        return cls._fetch(*request_elements,
                               headers=headers,
                               content_parser=content_parser)
+    
+    
+    def access(self, url, method='GET', headers={}, content_parser=None):
+        return self.access_with_credentials(self.credentials, url, method, headers, content_parser)
     
     
     @classmethod
@@ -195,7 +184,7 @@ class BaseProvider(object):
             e.g. ``"authomatic:facebook:key"``
         """
         
-        return '{}:{}:{}'.format(self.prefix, self.name, key)
+        return '{}:{}:{}'.format(authomatic.core.mw.prefix, self.name, key)
     
     
     def _session_set(self, key, value):
@@ -238,16 +227,15 @@ class BaseProvider(object):
         """
         
         # Prefix each message with base
-        base = '{}: {}: '.format(self.prefix, self.__class__.__name__)
+        base = '{}: {}: '.format(authomatic.core.mw.prefix, self.__class__.__name__)
         
         self._logger.log(level, base + msg)
         
     
     @classmethod
-    def _new_fetch(cls, url, body='', method='GET', headers={}, max_redirects=4, content_parser=None):
+    def _fetch(cls, url, body='', method='GET', headers={}, max_redirects=4, content_parser=None):
         
         logging.info('Fetching url = {}'.format(url))
-        logging.info('remaining redirects = {}'.format(max_redirects))
         
         # Prepare URL elements
         scheme, host, path, query, fragment = urlparse.urlsplit(url)
@@ -268,18 +256,17 @@ class BaseProvider(object):
             if location == url:
                 raise FetchError('Loop redirect to = {}'.format(location))
             elif max_redirects > 0:
+                remaining_redirects = max_redirects - 1
                 logging.info('Redirecting to = {}'.format(location))
-                response = cls.new_fetch(location, body, method, headers, max_redirects=max_redirects - 1)
+                logging.info('remaining redirects = {}'.format(remaining_redirects))
+                response = cls.access_with_credentials(location, body, method, headers,
+                                         max_redirects=remaining_redirects)
             else:
                 raise FetchError('Max redirects reached!')
         else:
             logging.info('Got response from url = {}'.format(url))
-        
-        
-        return authomatic.core.Response(status_code=response.status,
-                                        headers=dict(response.getheaders()),
-                                        content=response.read(),
-                                        content_parser=content_parser)
+                
+        return authomatic.core.Response(response, content_parser)
     
     
     def _update_or_create_user(self, data, credentials=None):
@@ -332,7 +319,7 @@ class BaseProvider(object):
 class AuthorisationProvider(BaseProvider):
     """
     Base provider for *authorisation protocols* i.e. protocols which allow a **consumer**
-    to be authorized by a **provider** to access **protected resources** of a **user**.
+    to be authorized by a **provider** to access_with_credentials **protected resources** of a **user**.
     e.g. `OAuth 2.0 <http://oauth.net/2/>`_ or `OAuth 1.0a <http://oauth.net/core/1.0a/>`_.    
     """
         
@@ -354,7 +341,7 @@ class AuthorisationProvider(BaseProvider):
         :arg dict user_authorisation_params:
             A dictionary of additional request parameters for **user authorisation request**.
         :arg dict access_token_params:
-            A dictionary of additional request parameters for **access token request**.
+            A dictionary of additional request parameters for **access_with_credentials token request**.
         """
         
         super(AuthorisationProvider, self).__init__(*args, **kwargs)
@@ -366,7 +353,7 @@ class AuthorisationProvider(BaseProvider):
         self.user_authorisation_params = self._kwarg(kwargs, 'user_authorisation_params', {})
         self.access_token_params = self._kwarg(kwargs, 'access_token_params', {})
         
-        #: :class:`core.Credentials` to access **user's protected resources**.
+        #: :class:`core.Credentials` to access_with_credentials **user's protected resources**.
         self.credentials = authomatic.core.Credentials(provider=self)
     
     
@@ -378,7 +365,7 @@ class AuthorisationProvider(BaseProvider):
     def user_authorisation_url(self):
         """
         :class:`str` URL to which we redirect the **user** to grant our app i.e. the **consumer**
-        an **authorisation** to access his **protected resources**.
+        an **authorisation** to access_with_credentials his **protected resources**.
         see http://tools.ietf.org/html/rfc6749#section-4.1.1 and
         http://oauth.net/core/1.0a/#auth_step2.
         """
@@ -386,7 +373,7 @@ class AuthorisationProvider(BaseProvider):
     @abc.abstractproperty
     def access_token_url(self):
         """
-        :class:`str` URL where we can get the *access token* to access **protected resources** of a **user**.
+        :class:`str` URL where we can get the *access_with_credentials token* to access_with_credentials **protected resources** of a **user**.
         see http://tools.ietf.org/html/rfc6749#section-4.1.3 and
         http://oauth.net/core/1.0a/#auth_step3.
         """
@@ -451,7 +438,7 @@ class AuthorisationProvider(BaseProvider):
             Type of the request specified by one of the classe's constants.
         :param core.Credentials credentials:
             :class:`Credentials <.core.Credentials>` of the **user** whose
-            **protected resource** we want to access.
+            **protected resource** we want to access_with_credentials.
         :param str url:
             URL of the request.
         :param method:
@@ -479,17 +466,17 @@ class AuthorisationProvider(BaseProvider):
             :class:`.core.User`
         """
         
-        return self.new_fetch_user_info().user
+        return self.access_user_info().user
     
     
-    def new_fetch_user_info(self):
-        response = self.new_fetch(self.credentials, self.user_info_url)
+    def access_user_info(self):
+        response = self.access_with_credentials(self.credentials, self.user_info_url)
         
         # Create user.
         self.user = self._update_or_create_user(response.data)
         
         # Return UserInfoResponse.
-        return authomatic.core.UserInfoResponse(response, self.user)
+        return authomatic.core.UserInfoResponse(self.user, response.httplib_response)
     
     
     #===========================================================================
@@ -543,7 +530,7 @@ class AuthenticationProvider(BaseProvider):
     authenticate a *claimed identity* of a **user**. e.g. `OpenID <http://openid.net/>`_.
     """
     
-    #: Indicates whether the **provider** supports access to
+    #: Indicates whether the **provider** supports access_with_credentials to
     #: **user's** protected resources.
     has_protected_resources = False
     

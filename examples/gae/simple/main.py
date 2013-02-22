@@ -1,7 +1,7 @@
 # main.py
 
 import webapp2
-from authomatic.adapters import gae
+from authomatic.adapters.gae.openid import NDBOpenIDStore
 import authomatic
 from config import CONFIG
 
@@ -13,11 +13,8 @@ class Login(webapp2.RequestHandler):
     # Accept the "provider_name" URL variable.
     def anymethod(self, provider_name):
                 
-        # Create an adapter for Webapp2 framework.
-        adapter = gae.Webapp2Adapter(self, session_secret='abcdef')
-        
-        # We now have everything to get the user from provider.
-        result = authomatic.login(adapter, CONFIG, provider_name)
+        # Get user from provider.
+        result = authomatic.login(provider_name)
         
         # Dont write anything to the response if there is no result!!!
         
@@ -46,7 +43,7 @@ class Login(webapp2.RequestHandler):
                 # Seems like we're done, but there's more we can do...
                 
                 # If there are credentials (only by AuthorisationProvider),
-                # we can access user's protected resources.
+                # we can _access user's protected resources.
                 if result.user.credentials:
                     
                     # Each provider has it's specific API.
@@ -60,8 +57,8 @@ class Login(webapp2.RequestHandler):
                         # Construct the Facebook Graph API URL.
                         url = 'https://graph.facebook.com/{}/feed?message={}'.format(result.user.id, message)
                         
-                        # Post to timeline on user's behalf (access his protected resource).
-                        response = result.provider.fetch(url, method='POST')
+                        # Post to timeline on user's behalf (_access his protected resource).
+                        response = result.provider.access(url, method='POST')
                         
                         # Parse response.
                         post_id = response.data.get('id')
@@ -84,11 +81,11 @@ class Login(webapp2.RequestHandler):
                         status = 'Can it be that it is all so simple now?'
                         
                         # Construct the Twitter API URL
-                        # Note: You need to set your Twitter app access to "Read and Write"!
+                        # Note: You need to set your Twitter app _access to "Read and Write"!
                         url = 'https://api.twitter.com/1.1/statuses/update.json?status={}'.format(status)
                         
-                        # Tweet on user's behalf (access his protected resource).
-                        response = result.provider.fetch(url, method='POST')
+                        # Tweet on user's behalf (_access his protected resource).
+                        response = result.provider.access(url, method='POST')
                         
                         # Parse response.
                         error = response.data.get('errors')
@@ -136,6 +133,12 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='anymethod'),
 
 # And instantiate the WSGI application.
 app = webapp2.WSGIApplication(ROUTES, debug=True)
+
+# Wrap the WSGI app to middleware.
+app = authomatic.middleware(app,
+                            config=CONFIG,
+                            openid_store=NDBOpenIDStore,
+                            report_errors=False)
 
 
 

@@ -242,11 +242,22 @@ def call_app(app, environ):
 
 class Middleware(object):
     
-    def __init__(self, app, config, openid_store, session=None):
+    def __init__(self, app, config, openid_store, session=None,
+                 report_errors=True, logging_level=logging.DEBUG,
+                 prefix='authomatic'):
         self.app = app
+        self.session = session
+        
+        # TODO: Move to authomatic.settings module
         self.config = config
         self.openid_store = openid_store
-        self.session = session
+        self.report_errors = report_errors
+        self.prefix = prefix
+        
+        #: :class:`int` The logging level treshold as specified in the standard Python
+        #: `logging library <http://docs.python.org/2/library/logging.html>`_.
+        #: If :literal:`None` or :literal:`False` there will be no logs. Default is ``logging.INFO``.
+        self.logging_level = logging_level
     
     
     def __call__(self, environ, start_response):
@@ -350,29 +361,7 @@ def middleware(*args, **kwargs):
     return mw
 
 
-def new_fetch(url, body=None, method='GET', headers={}, response_parser=None, content_parser=None):
-    
-    scheme, host, path, query, fragment = urlparse.urlsplit(url)
-    
-    connection = httplib.HTTPConnection(host)
-    connection.request(method, path + '?' + query, body, headers)
-    
-    response = connection.getresponse()
-    
-    res = Response(response.status, response.getheaders(), response.read())
-    
-    response.close()
-    
-    return res
-
-
-def new_async_fetch(*args, **kwargs):
-    
-    return new_fetch(*args, **kwargs)
-
-
-def login(provider_name, callback=None, report_errors=True,
-          logging_level=logging.DEBUG, **kwargs):
+def login(provider_name, callback=None, **kwargs):
     """
     Launches a login procedure for specified :doc:`provider <providers>` and returns :class:`.LoginResult`.
     
@@ -402,7 +391,7 @@ def login(provider_name, callback=None, report_errors=True,
         The library logs important events during the login procedure.
         You can specify the desired logging level with the constants of the
         `logging <http://docs.python.org/2/library/logging.html>`_ of Python standard library.
-        The main login procedure events have level ``INFO``, others like adapter database access
+        The main login procedure events have level ``INFO``, others like adapter database access_with_credentials
         have level ``DEBUG``.
         
     .. note::
@@ -412,6 +401,8 @@ def login(provider_name, callback=None, report_errors=True,
     :returns:
         :obj:`None` or :class:`.LoginResult`.
     """
+    
+    # TODO: Move report_errors and logging to Middleware
     
     # retrieve required settings for current provider and raise exceptions if missing
     provider_settings = mw.config.get(provider_name)
@@ -425,10 +416,7 @@ def login(provider_name, callback=None, report_errors=True,
     ProviderClass = resolve_provider_class(class_)
     
     # instantiate provider class
-    provider = ProviderClass(provider_name, callback,
-                             report_errors=report_errors,
-                             logging_level=logging_level,
-                             **kwargs)
+    provider = ProviderClass(provider_name, callback, **kwargs)
     
     # return login result
     return provider.login()
@@ -446,8 +434,10 @@ class Counter(object):
         self._count += 1
         return self._count
 
+
 #: A simple counter to be used in the config to generate unique `short_name` values.
 _counter = Counter()
+
 
 def short_name():
     """
@@ -622,16 +612,16 @@ class Credentials(ReprMixin):
     
     def __init__(self, **kwargs):
         
-        #: :class:`str` User **access token**.
+        #: :class:`str` User **access_with_credentials token**.
         self.token = kwargs.get('token')
         
-        #: :class:`str` User **access token**.
+        #: :class:`str` User **access_with_credentials token**.
         self.refresh_token = kwargs.get('refresh_token')
         
-        #: :class:`str` User **access token secret**.
+        #: :class:`str` User **access_with_credentials token secret**.
         self.token_secret = kwargs.get('token_secret')
         
-        #: :class:`datetime.datetime()` Expiration date of the **access token**.
+        #: :class:`datetime.datetime()` Expiration date of the **access_with_credentials token**.
         self.expiration_date = kwargs.get('expiration_date')
         
         #: A :doc:`Provider <providers>` instance**.
@@ -819,30 +809,85 @@ def json_qs_parser(body):
 
 class Response(ReprMixin):
     """
-    Response object returned by :func:`authomatic.fetch`,
-    :meth:`.Request.get_response` or :meth:`authomatic.adapters.RPC.get_response`.
+    Wraps :class:`httplib.HTTPResponse` and adds
+    :attr:`.content` and :attr:`.data` attributes.
     """
     
-    def __init__(self, status_code, headers, content, content_parser=None):
-        #: :class:`callable` A callable that takes the :attr:`content` as argument,
-        #: parses it and returns the parsed data as :class:`dict`.
+    def __init__(self, httplib_response, content_parser=None):
+        """
+        :param httplib_response:
+            The wrapped :class:`httplib.HTTPResponse` instance.
+            
+        :param function content_parser:
+            Callable which accepts :attr:`.content` as argument,
+            parses it and returns the parsed data as :class:`dict`.
+        """
+        
+        self.httplib_response = httplib_response
         self.content_parser = content_parser or json_qs_parser
-        #: :class:`int` HTTP status code of the response.
-        self.status_code = status_code
-        #: :class:`dict` HTTP headers of the response.
-        self.headers = headers
-        #: :class:`str` The response body
-        self.content = content
         self._data = None
+        self._content = None
+        
+        #: Same as :attr:`httplib.HTTPResponse.msg`.
+        self.msg = httplib_response.msg        
+        #: Same as :attr:`httplib.HTTPResponse.version`.
+        self.version = httplib_response.version        
+        #: Same as :attr:`httplib.HTTPResponse.status`.
+        self.status = httplib_response.status        
+        #: Same as :attr:`httplib.HTTPResponse.reason`.
+        self.reason = httplib_response.reason
     
-    #TODO: Convert to method
+    
+    def read(self, amt=None):
+        """
+        Same as :meth:`httplib.HTTPResponse.read`.
+        
+        :param amt:
+        """
+    
+        return self.httplib_response.read(amt)
+    
+    
+    def getheader(self, name, default=None):
+        """
+        Same as :meth:`httplib.HTTPResponse.getheader`.
+        
+        :param name:
+        :param default:
+        """
+        
+        return self.httplib_response.getheader(name, default)
+    
+    
+    def fileno(self):
+        """
+        Same as :meth:`httplib.HTTPResponse.fileno`.
+        """
+        return self.httplib_response.fileno()
+    
+    
+    def getheaders(self):
+        """
+        Same as :meth:`httplib.HTTPResponse.getheaders`.
+        """
+        return self.httplib_response.getheaders()
+    
+    
+    @property
+    def content(self):
+        """
+        The whole response content.
+        """
+        
+        if not self._content:
+            self._content = self.httplib_response.read()
+        return self._content
+    
+    
     @property
     def data(self):
         """
-        Parses the :attr:`content` with :attr:`content_parser`.
-        
-        :returns:
-            :class:`dict`
+        A :class:`dict` of data parsed from :attr:`.content`.
         """
         
         if not self._data:
@@ -850,20 +895,17 @@ class Response(ReprMixin):
         return self._data
 
 
-class UserInfoResponse(ReprMixin):
+class UserInfoResponse(Response):
     """
-    A wrapper around :class:`.Response` which adds the :attr:`user` property.
-    Returned by :meth:`authomatic.providers.AuthorisationProvider.fetch_user_info`.
+    Inherits from :class:`.Response`, adds  :attr:`.user` attribute.
     """
     
-    def __init__(self, response, user):
-        self.response = response
-        self.status_code = response.status_code
-        self.headers = response.headers
-        self.content = response.content
-        self.data = response.data
-        #: A :class:`.User` instance.
+    def __init__(self, user, *args, **kwargs):
+        super(UserInfoResponse, self).__init__(*args, **kwargs)
+        
+        #: :class:`.User` instance.
         self.user = user
+
 
 
 

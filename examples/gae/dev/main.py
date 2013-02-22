@@ -1,5 +1,5 @@
 from authomatic.adapters.gae.openid import NDBOpenIDStore
-from authomatic.core import Credentials, new_fetch, items_to_dict
+from authomatic.core import Credentials, access_with_credentials, items_to_dict
 import authomatic
 import config
 import os
@@ -53,7 +53,7 @@ class Home(webapp2.RequestHandler):
         self.response.write('content = {}<br /><br />'.format(response.content))
         
         
-        response2 = BaseProvider._new_fetch(url)
+        response2 = BaseProvider._fetch(url)
         
         self.response.write('status_code = {}<br /><br /><br />'.format(response2.status_code))
         self.response.write('headers = {}<br /><br />'.format(response2.headers))
@@ -62,7 +62,7 @@ class Home(webapp2.RequestHandler):
 #        
 #        self.response.write('time = {}<br />'.format())
 #        
-#        response = new_fetch('http://date.jsontest.com/pokus?a=a', 'GET')
+#        response = access_with_credentials('http://date.jsontest.com/pokus?a=a', 'GET')
 #        
 #        
 #        self.response.write('status = {}<br />'.format(response.status_code))
@@ -78,9 +78,7 @@ class Login(webapp2.RequestHandler):
     
     def login(self, provider_name):
         
-        result = authomatic.login(provider_name,
-                                  report_errors=False,
-                                  callback=self.callback)
+        result = authomatic.login(provider_name, callback=self.callback)
         
         if result:
             if result.user:

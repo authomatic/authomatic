@@ -21,7 +21,7 @@ import urllib2
 #    else:
 #        return url
 
-def new_fetch(url, body=None, method='GET', headers={}, max_redirects=4):
+def access_with_credentials(url, body=None, method='GET', headers={}, max_redirects=4):
     
     print 'Fetching url = {}'.format(url)
     print 'remaining redirects = {}'.format(max_redirects)
@@ -47,7 +47,7 @@ def new_fetch(url, body=None, method='GET', headers={}, max_redirects=4):
             return
         elif max_redirects > 0:
             print 'Redirecting to = {}'.format(location)
-            response = new_fetch(location, body, method, headers, max_redirects=max_redirects - 1)
+            response = access_with_credentials(location, body, method, headers, max_redirects=max_redirects - 1)
         else:
             print 'Max redirects reached!'
             return
@@ -119,7 +119,7 @@ headers = {
     
 }
 
-resp = new_fetch('https://graph.facebook.com/oauth/access_token')
+resp = access_with_credentials('https://graph.facebook.com/oauth/access_token')
 
 print resp.status
 print resp.read()
