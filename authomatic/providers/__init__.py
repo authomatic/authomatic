@@ -56,6 +56,7 @@ def login_decorator(func):
             if provider.callback:
                 provider.callback(result)
                 provider._log(logging.INFO, 'Procedure finished.')
+                authomatic.core.middleware.pending = False
             return result
     
     return wrap

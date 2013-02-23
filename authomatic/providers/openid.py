@@ -20,15 +20,18 @@ Providers which implement the |openid|_ protocol based on the
 
 # We need absolute iport to import from openid library which has the same name as this module
 from __future__ import absolute_import
-from openid.consumer import consumer
-from openid.extensions import ax, pape, sreg
 from authomatic import providers
 from authomatic.exceptions import FailureError, CancellationError, OpenIDError
-import datetime
-import logging
 from openid import oidutil
+from openid.consumer import consumer
+from openid.extensions import ax, pape, sreg
+from openid.association import Association
 import authomatic.core as core
 import authomatic.settings as settings
+import datetime
+import logging
+import time
+import pprint
 
 __all__ = ['OpenID', 'Yahoo', 'Google']
 
@@ -63,25 +66,59 @@ XRDS_XML = \
 </xrds:XRDS>
 """
 
+
 class SessionOpenIDStore(object):
+    """
+    A very primitive session-based implementation of the :class:`openid.store.interface.OpenIDStore`
+    interface of the `python-openid`_ library.
+    
+    .. warning::
+        
+        Nonces get verified only by their timeout. Use on your own risk!
+    
+    """
+    
+    _log = lambda level, message: None
+    
+    def __init__(self, nonce_timeout=60):
+        """
+        :param int nonce_timeout:
+            Nonces older than this in seconds will be considered expired.
+        """
+        
+        self.nonce_timeout = nonce_timeout
     
     def storeAssociation(self, server_url, association):
-        pass
+        self._log(logging.DEBUG, 'SessionOpenIDStore: Storing association to session.')
+        # Allways store only one association as a tuple.
+        core.middleware.session['oia'] = (server_url, association.handle, association.serialize())
     
-    def cleanupAssociations(self):
-        pass
     
     def getAssociation(self, server_url, handle=None):
-        pass
+        # Try to get association.
+        assoc = core.middleware.session.get('oia')
+        
+        if assoc and assoc[0] == server_url:
+            # If found deserialize and return it.
+            self._log(logging.DEBUG, 'SessionOpenIDStore: Association found.')
+            return Association.deserialize(assoc[2])
+        else:
+            self._log(logging.DEBUG, 'SessionOpenIDStore: Association not found.')
+    
     
     def removeAssociation(self, server_url, handle):
-        pass
+        # Just inform the caller that it's gone.
+        True
+    
     
     def useNonce(self, server_url, timestamp, salt):
-        pass
-    
-    def cleanupNonces(self):
-        pass
+        # Evaluate expired nonces as false.
+        age = int(time.time()) - int(timestamp)
+        if age < self.nonce_timeout:
+            return True
+        else:
+            self._log(logging.ERROR, 'SessionOpenIDStore: Expired nonce!')
+            return False
 
 
 class OpenID(providers.AuthenticationProvider):
@@ -119,6 +156,10 @@ class OpenID(providers.AuthenticationProvider):
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
+        
+        :param store:
+            Required, :class:`.SessionOpenIDStore` or :class:`.adapters.gae.NDBOpenIDStore` or
+            any object with :class:`openid.store.interface.OpenIDStore` of the `python-openid`_ library.
         
         :param bool use_realm:
             Whether to use `OpenID realm <http://openid.net/specs/openid-authentication-2_0-12.html#realms>`_.
@@ -167,7 +208,9 @@ class OpenID(providers.AuthenticationProvider):
         
         super(OpenID, self).__init__(*args, **kwargs)
         
-        self.store = self._kwarg(kwargs, 'store', True)
+        self.store = self._kwarg(kwargs, 'store')
+        if not self.store:
+            raise OpenIDError('You need to specify "store" in the config to use OpenID provider.')
         
         # Realm
         self.use_realm = self._kwarg(kwargs, 'use_realm', True)
@@ -375,8 +418,7 @@ class OpenID(providers.AuthenticationProvider):
                 self._log(logging.INFO, 'Writing an auto-submit HTML form to the response.')
                 form = auth_request.htmlMarkup(realm, return_to, False, dict(id='openid_form'))
                 core.middleware.write(form)
-        else:
-            raise OpenIDError('No identifier! There is no "{}" querystring parameter in the request'.format(self.identifier_param))
+
 
 
 class Yahoo(OpenID):

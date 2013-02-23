@@ -13,7 +13,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     # we need issued to sort by most recently issued
     issued = ndb.IntegerProperty()
     
-    # a placeholder for provider._log method
+    # Logging method.
     _log = lambda level, message: None
     
     @classmethod
@@ -26,6 +26,21 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
         expiration_date = issued + lifetime
         
         cls._log(logging.DEBUG, 'NDBOpenIDStore: Getting or inserting OpenID association from datastore.')
+        
+        
+        
+        cls._log(logging.DEBUG, '------------------------------------------------')
+        cls._log(logging.DEBUG, '| Association')
+        cls._log(logging.DEBUG, '------------------------------------------------')
+        cls._log(logging.DEBUG, '| server_url = {}'.format(server_url))
+        cls._log(logging.DEBUG, '|')
+        cls._log(logging.DEBUG, '| Association:')
+        cls._log(logging.DEBUG, '| \t issued = {}'.format(association.issued))
+        cls._log(logging.DEBUG, '| \t lifetime = {}'.format(association.lifetime))
+        cls._log(logging.DEBUG, '| \t handle = {}'.format(association.handle))
+        cls._log(logging.DEBUG, '------------------------------------------------')
+        
+        
         
         entity = cls.get_or_insert(association.handle, parent=ndb.Key('ServerUrl', server_url))
         
@@ -84,6 +99,15 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     
     @classmethod
     def useNonce(cls, server_url, timestamp, salt):
+        
+        cls._log(logging.DEBUG, '------------------------------------------------')
+        cls._log(logging.DEBUG, '| Nonce')
+        cls._log(logging.DEBUG, '------------------------------------------------')
+        cls._log(logging.DEBUG, '| server_url = {}'.format(server_url))
+        cls._log(logging.DEBUG, '| timestamp = {}'.format(timestamp))
+        cls._log(logging.DEBUG, '| salt = {}'.format(salt))
+        cls._log(logging.DEBUG, '------------------------------------------------')
+        
         
         # check whether there is already an entity with the same ancestor path in the datastore
         key = ndb.Key('ServerUrl', str(server_url) or 'x', 'TimeStamp', str(timestamp), cls, str(salt))

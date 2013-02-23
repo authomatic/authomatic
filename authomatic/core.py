@@ -224,6 +224,20 @@ class Session(object):
         return self.data.get(key, default)
 
 
+def call_wsgi(app, environ):
+    
+    sh = [None, None]
+    
+    def start_response(status, headers):
+        sh[:] = [status, headers]
+    
+    app_iter = app(environ, start_response)
+    
+    status, headers = sh
+    
+    return app_iter, status, headers
+
+
 class Middleware(object):
     
     def __init__(self, app, config, session=None,
@@ -231,6 +245,7 @@ class Middleware(object):
                  prefix='authomatic'):
         self.app = app
         self.session = session
+        self.pending = False
         
         # Set global settings.
         settings.config = config
@@ -252,12 +267,17 @@ class Middleware(object):
         self.environ = environ
         self.session = self.session or Session('abcdefg')
         
-        app_output = self.app(environ, start_response)
-    
-        if self.output or self.headers:
+        
+        app_output, app_status, app_headers = call_wsgi(self.app, environ)
+#        app_output = self.app(environ, start_response)
+        
+        
+#        if self.output or self.headers:
+        if self.pending:
             start_response(self.status, self.headers, sys.exc_info())
             return self.output
         else:
+            start_response(app_status, app_headers, sys.exc_info())
             return app_output
     
     
@@ -398,6 +418,8 @@ def login(provider_name, callback=None, **kwargs):
     
     # instantiate provider class
     provider = ProviderClass(provider_name, callback, **kwargs)
+    
+    middleware.pending = True
     
     # return login result
     return provider.login()

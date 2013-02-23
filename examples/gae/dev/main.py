@@ -131,7 +131,8 @@ ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth', handler_method='login'),
           webapp2.Route(r'/', Home, handler_method='any'),]
 
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
-                            config=config.PROVIDERS)
+                            config=config.PROVIDERS,
+                            report_errors=True)
 
 
 
