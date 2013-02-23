@@ -24,6 +24,7 @@ import os
 import random
 import urlparse
 import uuid
+import authomatic.settings as settings
 
 __all__ = ['BaseProvider', 'AuthorisationProvider', 'AuthenticationProvider', 'login_decorator']
 
@@ -38,7 +39,7 @@ def login_decorator(func):
     def wrap(provider, *args, **kwargs):
         error = None
         
-        if authomatic.core.mw.report_errors:
+        if settings.report_errors:
             # Catch and report errors.
             try:
                 func(provider, *args, **kwargs)
@@ -153,8 +154,8 @@ class BaseProvider(object):
             Name of the desired keyword argument.
         """
         
-        return authomatic.core.mw.config.get(self.name, {}).get(kwname) or \
-               authomatic.core.mw.config.get('__defaults__', {}).get(kwname) or \
+        return settings.config.get(self.name, {}).get(kwname) or \
+               settings.config.get('__defaults__', {}).get(kwname) or \
                kwargs.get(kwname) or default
     
     
@@ -166,7 +167,7 @@ class BaseProvider(object):
             e.g. ``"authomatic:facebook:key"``
         """
         
-        return '{}:{}:{}'.format(authomatic.core.mw.prefix, self.name, key)
+        return '{}:{}:{}'.format(settings.prefix, self.name, key)
     
     
     def _session_set(self, key, value):
@@ -209,7 +210,7 @@ class BaseProvider(object):
         """
         
         # Prefix each message with base
-        base = '{}: {}: '.format(authomatic.core.mw.prefix, self.__class__.__name__)
+        base = '{}: {}: '.format(settings.prefix, self.__class__.__name__)
         
         self._logger.log(level, base + msg)
         

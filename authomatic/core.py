@@ -20,7 +20,7 @@ import urllib
 import urllib2
 import urlparse
 import webob
-
+import settings
 
 # Taken from anyjson.py
 try:
@@ -234,17 +234,16 @@ def call_app(app, environ):
 # TODO: Move to its own module together with Session.
 class Middleware(object):
     
-    def __init__(self, app, config, openid_store, session=None,
+    def __init__(self, app, config, session=None,
                  report_errors=True, logging_level=logging.DEBUG,
                  prefix='authomatic'):
         self.app = app
         self.session = session
         
-        # TODO: Move to authomatic.settings module
-        self.config = config
-        self.openid_store = openid_store
-        self.report_errors = report_errors
-        self.prefix = prefix
+        # Set global settings.
+        settings.config = config
+        settings.report_errors = report_errors
+        settings.prefix = prefix
         
         #: :class:`int` The logging level treshold as specified in the standard Python
         #: `logging library <http://docs.python.org/2/library/logging.html>`_.
@@ -397,7 +396,7 @@ def login(provider_name, callback=None, **kwargs):
     # TODO: Move report_errors and logging to Middleware
     
     # retrieve required settings for current provider and raise exceptions if missing
-    provider_settings = mw.config.get(provider_name)
+    provider_settings = settings.config.get(provider_name)
     if not provider_settings:
         raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
@@ -760,8 +759,8 @@ class Credentials(ReprMixin):
             short_name = unpickled[0]
             
             # Get provider config by short name.
-            provider_name = short_name_to_name(mw.config, short_name)
-            cfg = mw.config.get(provider_name)
+            provider_name = short_name_to_name(settings.config, short_name)
+            cfg = settings.config.get(provider_name)
             
             # Get the provider class.
             ProviderClass = resolve_provider_class(cfg.get('class_'))

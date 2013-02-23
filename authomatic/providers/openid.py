@@ -28,6 +28,7 @@ import datetime
 import logging
 from openid import oidutil
 import authomatic.core as core
+import authomatic.settings as settings
 
 __all__ = ['OpenID', 'Yahoo', 'Google']
 
@@ -166,6 +167,8 @@ class OpenID(providers.AuthenticationProvider):
         
         super(OpenID, self).__init__(*args, **kwargs)
         
+        self.store = self._kwarg(kwargs, 'store', True)
+        
         # Realm
         self.use_realm = self._kwarg(kwargs, 'use_realm', True)
         self.realm_body = self._kwarg(kwargs, 'realm_body', '')
@@ -228,8 +231,8 @@ class OpenID(providers.AuthenticationProvider):
         
                 
         # Instantiate consumer
-        core.mw.openid_store._log = self._log
-        oi_consumer = consumer.Consumer(core.mw.session, core.mw.openid_store)
+        self.store._log = self._log
+        oi_consumer = consumer.Consumer(core.mw.session, self.store)
         
 #        self.adapter.openid_store._log = self._log
 #        oi_consumer = consumer.Consumer(core.mw.session, self.adapter.openid_store)

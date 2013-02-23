@@ -1,5 +1,4 @@
 from authomatic.adapters.gae.openid import NDBOpenIDStore
-from authomatic.core import Credentials, access_with_credentials, items_to_dict
 import authomatic
 import config
 import os
@@ -43,35 +42,7 @@ def headers(handler):
 
 class Home(webapp2.RequestHandler):
     def any(self):
-        
-        url = 'https://graph.facebook.com/oauth/access_token'
-        
-        response = urlfetch.fetch(url)
-        
-        self.response.write('status_code = {}<br /><br />'.format(response.status_code))
-        self.response.write('headers = {}<br /><br />'.format(response.headers))
-        self.response.write('content = {}<br /><br />'.format(response.content))
-        
-        
-        response2 = BaseProvider._fetch(url)
-        
-        self.response.write('status_code = {}<br /><br /><br />'.format(response2.status_code))
-        self.response.write('headers = {}<br /><br />'.format(response2.headers))
-        self.response.write('content = {}<br /><br />'.format(response2.content))
-        
-#        
-#        self.response.write('time = {}<br />'.format())
-#        
-#        response = access_with_credentials('http://date.jsontest.com/pokus?a=a', 'GET')
-#        
-#        
-#        self.response.write('status = {}<br />'.format(response.status_code))
-#        self.response.write('headers = {}<br />'.format(response.headers))
-#        self.response.write('content = {}<br />'.format(response.content))
-        
-#        self.response.write('jojo')
-        
-#        headers(self)
+        headers(self)
         
 
 class Login(webapp2.RequestHandler):
@@ -118,7 +89,7 @@ class Login(webapp2.RequestHandler):
                 
                 serialized = event.user.credentials.serialize()
                 
-                deserialized = Credentials.deserialize(config.PROVIDERS, serialized)
+                deserialized = authomatic.credentials(serialized)
                 
                 self.response.write('<br /><br />')
                 self.response.write('Serialized:<br />{}<br /><br />'.format(serialized)) 
@@ -160,8 +131,7 @@ ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth', handler_method='login'),
           webapp2.Route(r'/', Home, handler_method='any'),]
 
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
-                            config=config.PROVIDERS,
-                            openid_store=NDBOpenIDStore)
+                            config=config.PROVIDERS)
 
 
 

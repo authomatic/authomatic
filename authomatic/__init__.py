@@ -4,4 +4,5 @@ from a **provider** and to make asynchronous calls to **protected resources** of
 """
 
 from core import login, short_name, middleware, access, credentials
+import settings
 

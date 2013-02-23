@@ -18,6 +18,7 @@ from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 from urllib import urlencode
 import logging
 import authomatic.core as core
+import authomatic.settings as settings
 
 __all__ = ['Facebook', 'Google', 'WindowsLive', 'OAuth2']
 
@@ -202,7 +203,7 @@ class OAuth2(providers.AuthorisationProvider):
             return
         
         # We need consumer key and secret to make this kind of request.
-        cfg = core.mw.config.get(credentials.provider_name)
+        cfg = settings.config.get(credentials.provider_name)
         credentials.consumer_key = cfg.get('consumer_key')
         credentials.consumer_secret = cfg.get('consumer_secret')
         
