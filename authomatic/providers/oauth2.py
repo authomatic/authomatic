@@ -212,6 +212,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                         url=cls.access_token_url,
                                                         method='POST')
         
+        cls._log(logging.INFO, 'Refreshing credentials.')
         response = cls._fetch(*request_elements)
         
         # We no longer need consumer info.
@@ -254,7 +255,7 @@ class OAuth2(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Continuing OAuth 2.0 authorisation procedure after redirect.')
             
             # validate CSRF token
-            self._log(logging.INFO, 'Validating request by comparing request state {} to stored state.'.format(state))
+            self._log(logging.INFO, 'Validating request by comparing request state with stored state.')
             stored_state = self._session_get('state')
             
             if not stored_state:

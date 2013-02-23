@@ -87,10 +87,10 @@ class BaseProvider(object):
         self._user_info_request = None
         
         # setup _logger
-        self._logger = logging.getLogger(__name__)
-        self._logger.setLevel(settings.logging_level)
-        if settings.logging_level in (None, False):
-            self._logger.disabled = False
+#        self._logger = logging.getLogger(__name__)
+#        self._logger.setLevel(settings.logging_level)
+#        if settings.logging_level in (None, False):
+#            self._logger.disabled = False
     
     
     #===========================================================================
@@ -192,12 +192,13 @@ class BaseProvider(object):
             :class:`str` Random unguessable string.
         """
         
-        
+        # TODO: Move to utils.
         
         return hashlib.md5(str(uuid.uuid4())).hexdigest()
     
     
-    def _log(self, level, msg):
+    @classmethod
+    def _log(cls, level, msg):
         """
         Logs a message.
         
@@ -209,16 +210,13 @@ class BaseProvider(object):
             The actual message.
         """
         
-        # Prefix each message with base
-        base = '{}: {}: '.format(settings.prefix, self.__class__.__name__)
-        
-        self._logger.log(level, base + msg)
+        authomatic.core._logger.log(level, ': '.join((settings.prefix, cls.__name__, msg)))
         
     
     @classmethod
-    def _fetch(cls, url, body='', method='GET', headers={}, max_redirects=4, content_parser=None):
+    def _fetch(cls, url, body='', method='GET', headers={}, max_redirects=5, content_parser=None):
         
-        logging.info('Fetching url = {}'.format(url))
+        cls._log(logging.DEBUG, 'Fetching url {}'.format(url))
         
         # Prepare URL elements
         scheme, host, path, query, fragment = urlparse.urlsplit(url)
@@ -229,7 +227,9 @@ class BaseProvider(object):
         try:
             connection.request(method, request_path, body, headers)
         except Exception as e:
-            raise FetchError('Could not connect! Error: {}'.format(e.message))
+            raise FetchError('Could not connect!',
+                             original_message=e.message,
+                             url=request_path)
         
         response = connection.getresponse()
         
@@ -237,17 +237,27 @@ class BaseProvider(object):
         
         if response.status in (300, 301, 302, 303, 307) and location:
             if location == url:
-                raise FetchError('Loop redirect to = {}'.format(location))
+                raise FetchError('Url redirects to itself!',
+                                 url=location)
+                
             elif max_redirects > 0:
                 remaining_redirects = max_redirects - 1
-                logging.info('Redirecting to = {}'.format(location))
-                logging.info('remaining redirects = {}'.format(remaining_redirects))
-                response = cls.access_with_credentials(location, body, method, headers,
-                                         max_redirects=remaining_redirects)
+                
+                cls._log(logging.DEBUG, 'Redirecting to {}'.format(url))
+                cls._log(logging.DEBUG, 'Remaining redirect attempts: '.format(remaining_redirects))
+                
+                # Call this method again.
+                response = cls._fetch(url=location,
+                                      body=body,
+                                      method=method,
+                                      headers=headers,
+                                      max_redirects=remaining_redirects)
+                
             else:
-                raise FetchError('Max redirects reached!')
+                raise FetchError('Max redirects reached!',
+                                 url=location)
         else:
-            logging.info('Got response from url = {}'.format(url))
+            cls._log(logging.DEBUG, 'Got response from {}'.format(url))
                 
         return authomatic.core.Response(response, content_parser)
     
@@ -261,11 +271,7 @@ class BaseProvider(object):
         """
         
         if not self.user:
-            # Create.
-            self._log(logging.INFO, 'Creating user.')
             self.user = authomatic.core.User(self, credentials=credentials)
-        else:
-            self._log(logging.INFO, 'Updating user.')
         
         self.user.raw_user_info = data
         
@@ -407,7 +413,9 @@ class AuthorisationProvider(BaseProvider):
     
     
     @classmethod
-    def access_with_credentials(cls, credentials, url, method='GET', headers={}, content_parser=None):
+    def access_with_credentials(cls, credentials, url, method='GET', headers={}, max_redirects=5, content_parser=None):
+        
+        cls._log(logging.INFO, 'Accessing protected resource {}.'.format(url))
         
         request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                         credentials=credentials,
@@ -415,13 +423,18 @@ class AuthorisationProvider(BaseProvider):
                                                         method=method,
                                                         csrf=cls.csrf_generator())
         
-        return cls._fetch(*request_elements,
+        response = cls._fetch(*request_elements,
                               headers=headers,
+                              max_redirects=max_redirects,
                               content_parser=content_parser)
+        
+        cls._log(logging.INFO, 'Got response. HTTP status = {}.'.format(response.status))
+        return response
     
     
-    def access(self, url, method='GET', headers={}, content_parser=None):
-        return self.access_with_credentials(self.credentials, url, method, headers, content_parser)
+    def access(self, url, method='GET', headers={}, max_redirects=5, content_parser=None):
+        return self.access_with_credentials(self.credentials, url, method,
+                                            headers, max_redirects, content_parser)
     
     
     @abc.abstractmethod

@@ -36,6 +36,9 @@ except ImportError:
 # Global variable that holds the middleware
 middleware = None
 
+# Globall variable that holds the logger
+_logger = logging.getLogger(__name__)
+
 def normalize_dict(dict_):
     """
     Replaces all values that are single-item iterables with the value of its index 0.
@@ -221,7 +224,6 @@ class Session(object):
         return self.data.get(key, default)
 
 
-# TODO: Move to its own module together with Session.
 class Middleware(object):
     
     def __init__(self, app, config, session=None,
@@ -235,7 +237,9 @@ class Middleware(object):
         settings.report_errors = report_errors
         settings.prefix = prefix
         settings.logging_level = logging_level
-    
+        
+        # Set logging level.
+        _logger.setLevel(logging_level)
     
     def __call__(self, environ, start_response):
         global config
@@ -903,7 +907,7 @@ class UserInfoResponse(Response):
         #: :class:`.User` instance.
         self.user = user
 
-def access(credentials, url, method='GET', headers={}, content_parser=None):
+def access(credentials, url, method='GET', headers={}, max_redirects=5, content_parser=None):
     """
     
     
@@ -921,7 +925,8 @@ def access(credentials, url, method='GET', headers={}, content_parser=None):
     ProviderClass = credentials.provider_class
     
     # Access resource and return response.
-    return ProviderClass.access_with_credentials(credentials, url, method, headers, content_parser)
+    return ProviderClass.access_with_credentials(credentials, url, method,
+                                                 headers, max_redirects, content_parser)
     
     
 
