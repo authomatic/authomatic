@@ -88,8 +88,8 @@ class BaseProvider(object):
         
         # setup _logger
         self._logger = logging.getLogger(__name__)
-        self._logger.setLevel(authomatic.core.mw.logging_level)
-        if authomatic.core.mw.logging_level in (None, False):
+        self._logger.setLevel(settings.logging_level)
+        if settings.logging_level in (None, False):
             self._logger.disabled = False
     
     
@@ -173,12 +173,12 @@ class BaseProvider(object):
     def _session_set(self, key, value):
         """Saves a value to session."""
         
-        authomatic.core.mw.session[self._session_key(key)] = value
+        authomatic.core.middleware.session[self._session_key(key)] = value
     
     
     def _session_get(self, key):
         """Retrieves a value from session."""
-        return authomatic.core.mw.session.get(self._session_key(key))
+        return authomatic.core.middleware.session.get(self._session_key(key))
     
     
     @classmethod
@@ -540,7 +540,7 @@ class AuthenticationProvider(BaseProvider):
         
         self.identifier_param = kwargs.get('identifier_param', 'id')
         
-        self.identifier = authomatic.core.mw.params.get(self.identifier_param)
+        self.identifier = authomatic.core.middleware.params.get(self.identifier_param)
         
         
         

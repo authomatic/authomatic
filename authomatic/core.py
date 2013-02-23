@@ -33,11 +33,8 @@ except ImportError:
         # Should work for Python2.6 and higher.
         import json
 
-#===============================================================================
-# Global variables
-#===============================================================================
-
-mw = None
+# Global variable that holds the middleware
+middleware = None
 
 def normalize_dict(dict_):
     """
@@ -134,7 +131,7 @@ class Session(object):
     
     
     def _get_data(self):
-        morsel = Cookie.SimpleCookie(mw.environ.get('HTTP_COOKIE')).get(self.key)
+        morsel = Cookie.SimpleCookie(middleware.environ.get('HTTP_COOKIE')).get(self.key)
         if morsel:
             return self._deserialize(morsel.value)
     
@@ -209,7 +206,7 @@ class Session(object):
     def __setitem__(self, key, value):
         self.data[key] = value
         
-        mw.set_header('Set-Cookie', '{}={}'.format(self.key, self._serialize(self.data)))
+        middleware.set_header('Set-Cookie', '{}={}'.format(self.key, self._serialize(self.data)))
     
     
     def __getitem__(self, key):
@@ -224,13 +221,6 @@ class Session(object):
         return self.data.get(key, default)
 
 
-def call_app(app, environ):
-    res = [None, None, None]
-    def start_response(status, headers, exc_info=None):
-        res[:] = [status, headers, exc_info]
-    app_iter = app(environ, start_response)
-    return res[0], res[1], res[2], app_iter
-
 # TODO: Move to its own module together with Session.
 class Middleware(object):
     
@@ -244,11 +234,7 @@ class Middleware(object):
         settings.config = config
         settings.report_errors = report_errors
         settings.prefix = prefix
-        
-        #: :class:`int` The logging level treshold as specified in the standard Python
-        #: `logging library <http://docs.python.org/2/library/logging.html>`_.
-        #: If :literal:`None` or :literal:`False` there will be no logs. Default is ``logging.INFO``.
-        self.logging_level = logging_level
+        settings.logging_level = logging_level
     
     
     def __call__(self, environ, start_response):
@@ -346,10 +332,10 @@ class Middleware(object):
         self.set_header('Location', url)
 
 
-def middleware(*args, **kwargs):
-    global mw
-    mw = Middleware(*args, **kwargs)
-    return mw
+def setup_middleware(*args, **kwargs):
+    global middleware
+    middleware = Middleware(*args, **kwargs)
+    return middleware
 
 
 def login(provider_name, callback=None, **kwargs):

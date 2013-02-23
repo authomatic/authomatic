@@ -296,9 +296,9 @@ class OAuth1(providers.AuthorisationProvider):
     def login(self):
         
         # get request parameters from which we can determine the login phase
-        denied = core.mw.params.get('denied')
-        verifier = core.mw.params.get('oauth_verifier')
-        request_token = core.mw.params.get('oauth_token')
+        denied = core.middleware.params.get('denied')
+        verifier = core.middleware.params.get('oauth_verifier')
+        request_token = core.middleware.params.get('oauth_token')
         
         if request_token and verifier:
             # Phase 2 after redirect with success
@@ -356,7 +356,7 @@ class OAuth1(providers.AuthorisationProvider):
             request_elements = self._create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
                                                              credentials=self.credentials,
                                                              url=self.request_token_url,
-                                                             callback=core.mw.url,
+                                                             callback=core.middleware.url,
                                                              csrf=self.csrf_generator(),
                                                              params=self.request_token_params)
             
@@ -402,7 +402,7 @@ class OAuth1(providers.AuthorisationProvider):
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
             
-            core.mw.redirect(request_elements[0])
+            core.middleware.redirect(request_elements[0])
 
 
 class Twitter(OAuth1):
