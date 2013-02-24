@@ -163,7 +163,7 @@ class OAuth1(providers.AuthorisationProvider):
             The *key* assigned to our application (**consumer**) by the **provider**.
         :arg str consumer_secret:
             The *secret* assigned to our application (**consumer**) by the **provider**.
-        :arg short_name:
+        :arg id:
             A unique short name used to serialize :class:`.Credentials`.
         :arg dict user_authorisation_params:
             A dictionary of additional request parameters for **user authorisation request**.
@@ -282,14 +282,14 @@ class OAuth1(providers.AuthorisationProvider):
     
     @classmethod
     def reconstruct(cls, deserialized_tuple, cfg):
-        provider_short_name, token, token_secret = deserialized_tuple
+        provider_id, token, token_secret = deserialized_tuple
         
         return core.Credentials(token=token,
                                        token_secret=token_secret,
                                        provider_type=cls.get_type(),
-                                       provider_short_name=provider_short_name,
-                                       consumer_key=cfg.get('consumer_key'),
-                                       consumer_secret=cfg.get('consumer_secret'))
+                                       provider_id=provider_id,
+                                       consumer_key=cfg.get('consumer_key', ''),
+                                       consumer_secret=cfg.get('consumer_secret', ''))
     
     
     @providers.login_decorator
@@ -297,8 +297,8 @@ class OAuth1(providers.AuthorisationProvider):
         
         # get request parameters from which we can determine the login phase
         denied = core.middleware.params.get('denied')
-        verifier = core.middleware.params.get('oauth_verifier')
-        request_token = core.middleware.params.get('oauth_token')
+        verifier = core.middleware.params.get('oauth_verifier', '')
+        request_token = core.middleware.params.get('oauth_token', '')
         
         if request_token and verifier:
             # Phase 2 after redirect with success
@@ -331,8 +331,8 @@ class OAuth1(providers.AuthorisationProvider):
             
             self._log(logging.INFO, 'Got access token.')
             
-            self.credentials.token = response.data.get('oauth_token')
-            self.credentials.token_secret = response.data.get('oauth_token_secret')
+            self.credentials.token = response.data.get('oauth_token', '')
+            self.credentials.token_secret = response.data.get('oauth_token_secret', '')
             
             self.credentials = self._credentials_parser(self.credentials, response.data)
             

@@ -38,7 +38,6 @@ def login_decorator(func):
     
     def wrap(provider, *args, **kwargs):
         error = None
-        
         if settings.report_errors:
             # Catch and report errors.
             try:
@@ -53,10 +52,13 @@ def login_decorator(func):
         # If there is user or error the login procedure has finished
         if provider.user or error:
             result = authomatic.core.LoginResult(provider, error)
+            provider._log(logging.INFO, 'Procedure finished.')
+            
+            # Let middleware know that login procedure is over
+            authomatic.core.middleware.pending = False
+            
             if provider.callback:
                 provider.callback(result)
-                provider._log(logging.INFO, 'Procedure finished.')
-                authomatic.core.middleware.pending = False
             return result
     
     return wrap
@@ -83,15 +85,7 @@ class BaseProvider(object):
         self.callback = callback
                 
         #: :class:`.core.User`.
-        self.user = None        
-        
-        self._user_info_request = None
-        
-        # setup _logger
-#        self._logger = logging.getLogger(__name__)
-#        self._logger.setLevel(settings.logging_level)
-#        if settings.logging_level in (None, False):
-#            self._logger.disabled = False
+        self.user = None
     
     
     #===========================================================================
@@ -326,8 +320,8 @@ class AuthorisationProvider(BaseProvider):
             The *key* assigned to our application (**consumer**) by the **provider**.
         :arg str consumer_secret:
             The *secret* assigned to our application (**consumer**) by the **provider**.
-        :arg short_name:
-            A unique short name used to serialize :class:`.Credentials`.
+        :arg int id:
+            A unique numeric ID used to serialize :class:`.Credentials`.
         :arg dict user_authorisation_params:
             A dictionary of additional request parameters for **user authorisation request**.
         :arg dict access_token_params:
@@ -338,7 +332,7 @@ class AuthorisationProvider(BaseProvider):
         
         self.consumer_key = self._kwarg(kwargs, 'consumer_key')
         self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
-        self.short_name = self._kwarg(kwargs, 'short_name')
+        self.id = int(self._kwarg(kwargs, 'id'))
         
         self.user_authorisation_params = self._kwarg(kwargs, 'user_authorisation_params', {})
         self.access_token_params = self._kwarg(kwargs, 'access_token_params', {})
@@ -406,7 +400,7 @@ class AuthorisationProvider(BaseProvider):
             |classmethod|
         
         :param tuple deserialized_tuple:
-            A tuple which first index is the :attr:`.short_name` and the rest
+            A tuple which first index is the :attr:`.id` and the rest
             are all the items of the :class:`tuple` created by :meth:`.to_tuple`.
         :param dict cfg:
             :doc:`config`

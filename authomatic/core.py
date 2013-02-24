@@ -14,13 +14,13 @@ import logging
 import pickle
 import providers
 import random
+import settings
 import sys
 import time
 import urllib
 import urllib2
 import urlparse
 import webob
-import settings
 
 # Taken from anyjson.py
 try:
@@ -160,6 +160,7 @@ class Session(object):
         """
         
         # 1. Serialize
+        # TODO: Use json
         serialized = pickle.dumps(value)
         
         # 2. Encode
@@ -201,6 +202,7 @@ class Session(object):
         decoded = base64.urlsafe_b64decode(encoded)
         
         # 1. Deserialize
+        # TODO: Use json
         deserialized = pickle.loads(decoded)
         
         return deserialized
@@ -209,6 +211,7 @@ class Session(object):
     def __setitem__(self, key, value):
         self.data[key] = value
         
+        # TODO: Set advanced cookie attributes.
         middleware.set_header('Set-Cookie', '{}={}'.format(self.key, self._serialize(self.data)))
     
     
@@ -226,16 +229,16 @@ class Session(object):
 
 def call_wsgi(app, environ):
     
-    sh = [None, None]
+    args = [None, None]
     
-    def start_response(status, headers):
-        sh[:] = [status, headers]
+    def start_response(status, headers, exc_info=None):
+        args[:] = [status, headers, exc_info]
     
     app_iter = app(environ, start_response)
     
-    status, headers = sh
+    status, headers, exc_info = args
     
-    return app_iter, status, headers
+    return app_iter, status, headers, exc_info
 
 
 class Middleware(object):
@@ -267,17 +270,20 @@ class Middleware(object):
         self.environ = environ
         self.session = self.session or Session('abcdefg')
         
+        try:
+            app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
+        except Exception as e:
+            logging.info('CAUGHT {}'.format(e))
         
-        app_output, app_status, app_headers = call_wsgi(self.app, environ)
-#        app_output = self.app(environ, start_response)
+        logging.info('EXC INFO = {}'.format(exc_info))
         
-        
-#        if self.output or self.headers:
         if self.pending:
-            start_response(self.status, self.headers, sys.exc_info())
+            logging.info('WSGI: MIDDLEWARE')
+            start_response(self.status, self.headers, exc_info)
             return self.output
         else:
-            start_response(app_status, app_headers, sys.exc_info())
+            logging.info('WSGI: APP')
+            start_response(app_status, app_headers, exc_info)
             return app_output
     
     
@@ -427,7 +433,7 @@ def login(provider_name, callback=None, **kwargs):
 
 class Counter(object):
     """
-    A simple counter to be used in the config to generate unique `short_name` values.
+    A simple counter to be used in the config to generate unique `id` values.
     """
     
     def __init__(self, start=0):
@@ -438,13 +444,13 @@ class Counter(object):
         return self._count
 
 
-#: A simple counter to be used in the config to generate unique `short_name` values.
+#: A simple counter to be used in the config to generate unique `id` values.
 _counter = Counter()
 
 
-def short_name():
+def provider_id():
     """
-    A simple counter to be used in the config to generate unique `short_name` values.
+    A simple counter to be used in the config to generate unique `id` values.
     
     :returns:
         :class:`int`.
@@ -457,14 +463,14 @@ def short_name():
         CONFIG = {
             'facebook': {
                  'class_': authomatic.providers.oauth2.Facebook,
-                 'short_name': authomatic.short_name(), # returns 1
+                 'id': authomatic.id(), # returns 1
                  'consumer_key': '##########',
                  'consumer_secret': '##########',
                  'scope': ['user_about_me', 'email']
             },
             'google': {
                  'class_': 'authomatic.providers.oauth2.Google',
-                 'short_name': authomatic.short_name(), # returns 2
+                 'id': authomatic.id(), # returns 2
                  'consumer_key': '##########',
                  'consumer_secret': '##########',
                  'scope': ['https://www.googleapis.com/auth/userinfo.profile',
@@ -472,7 +478,7 @@ def short_name():
             },
             'windows_live': {
                  'class_': 'oauth2.WindowsLive',
-                 'short_name': authomatic.short_name(), # returns 3
+                 'id': authomatic.id(), # returns 3
                  'consumer_key': '##########',
                  'consumer_secret': '##########',
                  'scope': ['wl.basic', 'wl.emails', 'wl.photos']
@@ -527,20 +533,20 @@ def import_string(import_name, silent=False):
 def short_name_to_name(config, short_name):
     """
     Returns the provider :doc:`config` key based on it's
-    ``short_name`` value.
+    ``id`` value.
     
     :param dict config:
         :doc:`config`.
-    :param short_name:
-        Value of the short_name parameter in the :ref:`config` to search for.
+    :param id:
+        Value of the id parameter in the :ref:`config` to search for.
     """
     
     for k, v in config.items():
-        if v.get('short_name') == short_name:
+        if v.get('id') == short_name:
             return k
             break
     else:
-        raise Exception('No provider with short_name={} found in the config!'.format(short_name))
+        raise Exception('No provider with id={} found in the config!'.format(short_name))
 
 
 class User(ReprMixin):
@@ -616,21 +622,21 @@ class Credentials(ReprMixin):
     def __init__(self, **kwargs):
         
         #: :class:`str` User **access_with_credentials token**.
-        self.token = kwargs.get('token')
+        self.token = kwargs.get('token', '')
         
         #: :class:`str` User **access_with_credentials token**.
-        self.refresh_token = kwargs.get('refresh_token')
+        self.refresh_token = kwargs.get('refresh_token', '')
         
         #: :class:`str` User **access_with_credentials token secret**.
-        self.token_secret = kwargs.get('token_secret')
+        self.token_secret = kwargs.get('token_secret', '')
         
         #: :class:`datetime.datetime()` Expiration date of the **access_with_credentials token**.
-        self.expiration_date = kwargs.get('expiration_date')
+        self.expiration_time = int(kwargs.get('expiration_time', 0))
         
         #: A :doc:`Provider <providers>` instance**.
         provider = kwargs.get('provider')
         
-        self._expires_in = kwargs.get('expires_in', 0)
+        self._expires_in = int(kwargs.get('expires_in', 0))
         
         if provider:
             #: :class:`str` Provider name specified in the :doc:`config`.
@@ -640,7 +646,7 @@ class Credentials(ReprMixin):
             self.provider_type = provider.get_type()
             
             #: :class:`str` Provider short name specified in the :doc:`config`.
-            self.provider_short_name = provider.short_name            
+            self.provider_id = int(provider.id)            
             
             #: :class:`class` Provider class.
             self.provider_class = provider.__class__
@@ -652,13 +658,13 @@ class Credentials(ReprMixin):
             self.consumer_secret = provider.consumer_secret
             
         else:
-            self.provider_name = kwargs.get('provider_name')
-            self.provider_type = kwargs.get('provider_type')
-            self.provider_short_name = kwargs.get('provider_short_name')
+            self.provider_name = kwargs.get('provider_name', '')
+            self.provider_type = kwargs.get('provider_type', '')
+            self.provider_id = int(kwargs.get('provider_id'))
             self.provider_class = kwargs.get('provider_class')
             
-            self.consumer_key = kwargs.get('consumer_key')
-            self.consumer_secret = kwargs.get('consumer_secret')
+            self.consumer_key = kwargs.get('consumer_key', '')
+            self.consumer_secret = kwargs.get('consumer_secret', '')
     
     
     @property
@@ -672,7 +678,7 @@ class Credentials(ReprMixin):
     @expires_in.setter
     def expires_in(self, value):
         if value:
-            self.expiration_date = datetime.datetime.now() + datetime.timedelta(seconds=int(value))
+            self.expiration_time = int(time.time()) + int(value)
             self._expires_in = value
     
     
@@ -681,13 +687,13 @@ class Credentials(ReprMixin):
         """
         ``True`` if credentials are valid, ``False`` if expired.
         """
-        if self.expiration_date:
-            return self.expiration_date > datetime.datetime.now()
+        if self.expiration_time:
+            return self.expiration_time > int(time.time())
         else:
             return True
     
     
-    def expires_soon(self, *args, **kwargs):
+    def expires_soon(self, seconds):
         """
         Returns ``True`` if credentials expire sooner than specified.
         The method has the same signature as :func:`datetime.timedelta`.
@@ -696,8 +702,8 @@ class Credentials(ReprMixin):
             ``True`` if credentials expire sooner than specified, else ``False``.
         """
         
-        if self.expiration_date:
-            return self.expiration_date < datetime.datetime.now() + datetime.timedelta(*args, **kwargs)
+        if self.expiration_time:
+            return self.expiration_time < int(time.time()) + int(seconds)
         else:
             return False
     
@@ -728,20 +734,22 @@ class Credentials(ReprMixin):
         """
         
         # Short_name must be the first item in the tuple by all providers.
-        short_name = self.provider_short_name
+        short_name = self.provider_id
         # It always must be present!
         if short_name is None:
-            raise exceptions.ConfigError('The provider config must have a "short_name" key set to a unique value to be able to serialize credentials!')
+            raise exceptions.ConfigError('The provider config must have a "id" key set to a unique value to be able to serialize credentials!')
         
-        # Get the other items for the tuple.
+        # Get the remaining items for the tuple.
         rest = self.provider_type_class().to_tuple(self)
         
         # Put it together.
         result = (short_name, ) + rest
         
-        # Pickle it and percent encode.
-        # TODO: encode to base64
-        return urllib.quote(pickle.dumps(result), '')
+        stringified = [str(i) for i in result]
+        
+        concatenated = '\n'.join(stringified)
+        
+        return urllib.quote(concatenated, '')
     
     
     @classmethod
@@ -762,13 +770,16 @@ class Credentials(ReprMixin):
         if type(credentials) is Credentials:
             return credentials
         
+        decoded = urllib.unquote(credentials)
+        
+        split = decoded.split('\n')
+        
         # Percent decode and pickle
-        # TODO: decode from base64
-        unpickled = pickle.loads(urllib.unquote(credentials))
+#        unpickled = pickle.loads(base64.urlsafe_b64decode(credentials))
         
         try:
             # We need the short name to move forward.
-            short_name = unpickled[0]
+            short_name = int(split[0])
             
             # Get provider config by short name.
             provider_name = short_name_to_name(settings.config, short_name)
@@ -778,7 +789,7 @@ class Credentials(ReprMixin):
             ProviderClass = resolve_provider_class(cfg.get('class_'))
             
             # Deserialization is provider specific.
-            deserialized = ProviderClass.reconstruct(unpickled, cfg)
+            deserialized = ProviderClass.reconstruct(split, cfg)
             
             deserialized.provider_name = provider_name
             deserialized.provider_class = ProviderClass

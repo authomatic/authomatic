@@ -69,20 +69,18 @@ class OAuth2(providers.AuthorisationProvider):
     
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, method='GET',
-                                 redirect_uri='', scope='', csrf='', params={}):
+                                 redirect_uri='', scope='', csrf='', params=None):
+        
+        params = params or {}
         
         consumer_key = credentials.consumer_key or ''
         consumer_secret = credentials.consumer_secret or ''
         token = credentials.token or ''
         refresh_token = credentials.refresh_token or credentials.token or ''
         
-        
-        
         # Separate url base and query parameters.
         url, base_params = cls._split_url(url)
-        
-        params
-        
+                
         # Add params extracted from URL.
         params.update(dict(base_params))
         
@@ -168,19 +166,19 @@ class OAuth2(providers.AuthorisationProvider):
     def to_tuple(credentials):
         
         # OAuth 2.0 needs only token, refresh_token and expiration date.
-        return (credentials.token, credentials.refresh_token, credentials.expiration_date)
+        return (credentials.token, credentials.refresh_token, credentials.expiration_time)
     
     
     @classmethod
     def reconstruct(cls, deserialized_tuple, cfg):
         
-        provider_short_name, token, refresh_token, expiration_date = deserialized_tuple
+        provider_id, token, refresh_token, expiration_time = deserialized_tuple
         
         return core.Credentials(token=token,
                                 refresh_token=refresh_token,
                                 provider_type=cls.get_type(),
-                                provider_short_name=provider_short_name,
-                                expiration_date=expiration_date,
+                                provider_id=provider_id,
+                                expiration_time=expiration_time,
                                 provider_class=cls)
     
     
@@ -280,8 +278,8 @@ class OAuth2(providers.AuthorisationProvider):
             
             response = self._fetch(*request_elements)
             
-            access_token = response.data.get('access_token')
-            refresh_token = response.data.get('refresh_token')
+            access_token = response.data.get('access_token', '')
+            refresh_token = response.data.get('refresh_token', '')
             
             if response.status != 200 or not access_token:
                 raise FailureError('Failed to obtain OAuth 2.0 access token from {}! HTTP status code: {}.'\
@@ -300,8 +298,8 @@ class OAuth2(providers.AuthorisationProvider):
             self.credentials.refresh_token = refresh_token
             self.credentials.expires_in = response.data.get('expires_in')
             # so we can reset these two guys
-            self.credentials.consumer_key = None
-            self.credentials.consumer_secret = None
+            self.credentials.consumer_key = ''
+            self.credentials.consumer_secret = ''
             
             # update credentials
             self.credentials = self._credentials_parser(self.credentials, response.data)            

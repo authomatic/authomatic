@@ -24,6 +24,8 @@ class Login(webapp2.RequestHandler):
             
             elif result.user:
                 
+                logging.info('OK')
+                
                 result.user.update()
                 
                 self.response.write('Hi {},<br />'.format(result.user.name))
@@ -85,8 +87,8 @@ class Action(webapp2.RequestHandler):
         # The OAuth 2.0 credentials (the access token) have limited lifetime.
         
         # We can check the expiration date of the credentials,
-        expiration_date = credentials.expiration_date
-        self.response.write('Credentials expire on {}.<br />'.format(expiration_date))
+        expiration_time = credentials.expiration_time
+        self.response.write('Credentials expire on {}.<br />'.format(expiration_time))
         
         # whether it has not expired allready,
         valid = credentials.valid
@@ -94,7 +96,7 @@ class Action(webapp2.RequestHandler):
         
         # or whether it will expire soon.
         # The function has the same signature as datetime.timedelta().
-        expires_soon = credentials.expires_soon(days=1)
+        expires_soon = credentials.expires_soon(60 * 60 * 24)
         self.response.write('Credentials expire in less than one day: {}.<br />'.format(expires_soon))
         
         # You can refresh the credentials at any time but it must not be expired!
@@ -108,8 +110,8 @@ class Action(webapp2.RequestHandler):
         if response:
             if response.status == 200:
                 self.response.write('Credentials were refreshed successfully!<br />')
-                expiration_date = credentials.expiration_date
-                self.response.write('Credentials expire on {}.<br />'.format(expiration_date))
+                expiration_time = credentials.expiration_time
+                self.response.write('Credentials expire on {}.<br />'.format(expiration_time))
             else:
                 self.response.write('Credentials refreshment failed!<br />')
                 self.response.write('status code: {}<br />'.format(response.status))
@@ -124,7 +126,7 @@ class Action(webapp2.RequestHandler):
         # Credentials know the provider name.
         if credentials.provider_name == 'fb':
             
-            self.response.write('Credentials expire on {}.<br />'.format(credentials.expiration_date))
+            self.response.write('Credentials expire on {}.<br />'.format(credentials.expiration_time))
             self.response.write('Credentials token {}.<br />'.format(credentials.token))
             self.response.write('Credentials refresh_token {}.<br />'.format(credentials.refresh_token))
             self.response.write('<br />-------------------REFRESH-----------------<br />')
@@ -135,7 +137,7 @@ class Action(webapp2.RequestHandler):
                 self.response.write('status = {}<br />'.format(response.status))
                 self.response.write('content = {}<br /><br />'.format(response.content))
             
-            self.response.write('Credentials expire on {}.<br />'.format(credentials.expiration_date))
+            self.response.write('Credentials expire on {}.<br />'.format(credentials.expiration_time))
             self.response.write('Credentials token {}.<br />'.format(credentials.token))
             self.response.write('Credentials refresh_token {}.<br /><br /><br />'.format(credentials.refresh_token))
             
@@ -144,15 +146,15 @@ class Action(webapp2.RequestHandler):
             # OAuth 2.0 credentials (the access token) have limited lifetime.
             
             # We can check the expiration date of the credentials,
-            expiration_date = credentials.expiration_date
-            self.response.write('Credentials expire on {}.<br />'.format(expiration_date))
+            expiration_time = credentials.expiration_time
+            self.response.write('Credentials expire on {}.<br />'.format(expiration_time))
             
             # whether it has not expired allready,
             valid = credentials.valid
             self.response.write('Credentials are valid: {}.<br />'.format(valid))
             
             # or whether it will expire soon.
-            expires_soon = credentials.expires_soon(days=1)
+            expires_soon = credentials.expires_soon(60 * 60 * 24)
             self.response.write('Credentials expire in less than one day: {}.<br /><br />'.format(expires_soon))
             
             # An expiring access token can be exchanged for a fresh one by the provider.
@@ -222,14 +224,10 @@ ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, handler_method='anymethod'),
           webapp2.Route(r'/action', Action),
           webapp2.Route(r'/', Home)]
 
-# And instantiate the WSGI application.
-app = webapp2.WSGIApplication(ROUTES, debug=True)
-
 # Wrap the WSGI app in middleware.
-app = authomatic.middleware(app,
+app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
                             config=CONFIG,
-                            openid_store=NDBOpenIDStore,
-                            report_errors=False)
+                            report_errors=True)
 
 
 
