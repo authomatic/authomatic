@@ -1178,7 +1178,7 @@ class UserInfoResponse(Response):
         #: :class:`.User` instance.
         self.user = user
 
-def access(credentials, url, method='GET', headers={}, max_redirects=5, content_parser=None):
+def access(credentials, url, params=None, method='GET', headers={}, max_redirects=5, content_parser=None):
     """
     Accesses **protected resource** on behalf of the **user**.
     
@@ -1205,8 +1205,13 @@ def access(credentials, url, method='GET', headers={}, max_redirects=5, content_
     ProviderClass = credentials.provider_class
     
     # Access resource and return response.
-    return ProviderClass.access_with_credentials(credentials, url, method,
-                                                 headers, max_redirects, content_parser)
+    return ProviderClass.access_with_credentials(credentials=credentials,
+                                                 url=url,
+                                                 params=params,
+                                                 method=method,
+                                                 headers=headers,
+                                                 max_redirects=max_redirects,
+                                                 content_parser=content_parser)
     
     
 

@@ -444,13 +444,15 @@ class AuthorisationProvider(BaseProvider):
     
     
     @classmethod
-    def access_with_credentials(cls, credentials, url, method='GET', headers={}, max_redirects=5, content_parser=None):
+    def access_with_credentials(cls, credentials, url, params=None, method='GET',
+                                headers={}, max_redirects=5, content_parser=None):
         
         cls._log(logging.INFO, 'Accessing protected resource {}.'.format(url))
         
         request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                         credentials=credentials,
                                                         url=url,
+                                                        params=params,
                                                         method=method,
                                                         csrf=cls.csrf_generator())
         

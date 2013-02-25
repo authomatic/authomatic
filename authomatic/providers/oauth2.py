@@ -68,8 +68,8 @@ class OAuth2(providers.AuthorisationProvider):
     
     
     @classmethod
-    def _create_request_elements(cls, request_type, credentials, url, method='GET',
-                                 redirect_uri='', scope='', csrf='', params=None):
+    def _create_request_elements(cls, request_type, credentials, url, params=None,
+                                 method='GET', redirect_uri='', scope='', csrf=''):
         
         params = params or {}
         

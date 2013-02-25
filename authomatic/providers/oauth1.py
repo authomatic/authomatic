@@ -194,8 +194,10 @@ class OAuth1(providers.AuthorisationProvider):
     #===========================================================================
     
     @classmethod
-    def _create_request_elements(cls, request_type, credentials, url, method='GET',
-                                 verifier='', callback='', csrf='', params={}):
+    def _create_request_elements(cls, request_type, credentials, url, params=None,
+                                 method='GET', verifier='', callback='', csrf=''):
+        
+        params = params or {}
         
         consumer_key = credentials.consumer_key or ''
         consumer_secret = credentials.consumer_secret or ''

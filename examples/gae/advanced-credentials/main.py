@@ -161,10 +161,12 @@ class Action(webapp2.RequestHandler):
             # This is provider specific so I leave it up to you to find out how.
                         
             # Prepare the URL for Facebook Graph API
-            url = 'https://graph.facebook.com/{}/feed?message={}'.format(user_id, message)
+            url = 'https://graph.facebook.com/{}/feed'.format(user_id)
             
             # Access user's protected resource.
-            response = authomatic.access(credentials, url, 'POST')
+            response = authomatic.access(credentials, url,
+                                         params={'message': message},
+                                         method='POST')
             
             # Parse response.
             post_id = response.data.get('id')
@@ -182,10 +184,13 @@ class Action(webapp2.RequestHandler):
         if credentials.provider_name == 'tw':
             
             # Prepare the Twitter API URL.
-            url = 'https://api.twitter.com/1.1/statuses/update.json?status={}'.format(message)
+#            url = 'https://api.twitter.com/1.1/statuses/update.json?status={}'.format(message)
             
              # Access user's protected resource.
-            response = authomatic.access(credentials, url, 'POST')
+            response = authomatic.access(credentials,
+                                         url='https://api.twitter.com/1.1/statuses/update.json',
+                                         params={'status': message},
+                                         method='POST')
             
             # Parse response.
             error = response.data.get('errors')
