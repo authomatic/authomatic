@@ -894,18 +894,14 @@ class Credentials(ReprMixin):
     
     @property
     def expires_in(self):
-        """
-        
-        """
-        
-        if self._expires_in:
-            return self._expires_in
-        else:
-            None
-    
+       return self._expires_in
     
     @expires_in.setter
     def expires_in(self, value):
+        """
+        Computes :attr:`.expiration_time` when the value is set.
+        """
+        
         if value:
             self.expiration_time = int(time.time()) + int(value)
             self._expires_in = value
@@ -916,6 +912,7 @@ class Credentials(ReprMixin):
         """
         ``True`` if credentials are valid, ``False`` if expired.
         """
+        
         if self.expiration_time:
             return self.expiration_time > int(time.time())
         else:
@@ -925,8 +922,10 @@ class Credentials(ReprMixin):
     def expires_soon(self, seconds):
         """
         Returns ``True`` if credentials expire sooner than specified.
-        The method has the same signature as :func:`datetime.timedelta`.
         
+        :param int seconds:
+            Number of seconds.
+            
         :returns:
             ``True`` if credentials expire sooner than specified, else ``False``.
         """
@@ -938,6 +937,19 @@ class Credentials(ReprMixin):
     
     
     def refresh(self):
+        """
+        Refreshes the credentials only if needed. It does nothing in other cases.
+        
+        .. note::
+        
+            The credentials will be refreshed only if it gives sense
+            i.e. only |oauth2|_ has the notion of credentials *refreshment/extension*.
+            And there are also differences across providers
+            e.g. Google supports refreshment only if there is a ``refresh_token`` in the credentials and
+            that in turn is present only if you ``access_type`` parameter was set to ``offline``
+            in the **user authorisation request**.
+        """
+        
         if hasattr(self.provider_class, 'refresh_credentials'):
             return self.provider_class.refresh_credentials(self)
     
@@ -955,8 +967,7 @@ class Credentials(ReprMixin):
     
     def serialize(self):
         """
-        Converts the credentials to a possibly minimal :class:`tuple` and serializes it
-        to a percent encoded :class:`string` to be stored for later use.
+        Converts the credentials to a percent encoded string to be stored for later use.
         
         :returns:
             :class:`string`
@@ -974,10 +985,13 @@ class Credentials(ReprMixin):
         # Put it together.
         result = (short_name, ) + rest
         
+        # Make sure that all items are strings.
         stringified = [str(i) for i in result]
         
+        # Concatenate by newline.
         concatenated = '\n'.join(stringified)
         
+        # Percent encode.
         return urllib.quote(concatenated, '')
     
     
@@ -985,11 +999,12 @@ class Credentials(ReprMixin):
     def deserialize(cls, credentials):
         """
         A *class method* which reconstructs credentials created by :meth:`serialize`.
+        You can also passit a :class:`.Credentials` instance.
         
         :param dict config:
             The same :doc:`config` used in the :func:`.login` to get the credentials.
         :param str credentials:
-            :class:`string` The serialized credentials.
+            :class:`string` The serialized credentials or :class:`.Credentials` instance.
         
         :returns:
             :class:`.Credentials`
@@ -1003,35 +1018,28 @@ class Credentials(ReprMixin):
         
         split = decoded.split('\n')
         
-        # Percent decode and pickle
-#        unpickled = pickle.loads(base64.urlsafe_b64decode(credentials))
+        # We need the short name to move forward.
+        short_name = int(split[0])
         
-        try:
-            # We need the short name to move forward.
-            short_name = int(split[0])
-            
-            # Get provider config by short name.
-            provider_name = short_name_to_name(settings.config, short_name)
-            cfg = settings.config.get(provider_name)
-            
-            # Get the provider class.
-            ProviderClass = resolve_provider_class(cfg.get('class_'))
-            
-            # Deserialization is provider specific.
-            deserialized = ProviderClass.reconstruct(split, cfg)
-            
-            deserialized.provider_name = provider_name
-            deserialized.provider_class = ProviderClass
-            
-            return deserialized
-                        
-        except (TypeError, IndexError) as e:
-            raise exceptions.CredentialsError('Deserialization failed! Error: {}'.format(e))
+        # Get provider config by short name.
+        provider_name = short_name_to_name(settings.config, short_name)
+        cfg = settings.config.get(provider_name)
+        
+        # Get the provider class.
+        ProviderClass = resolve_provider_class(cfg.get('class_'))
+        
+        # Deserialization is provider specific.
+        deserialized = ProviderClass.reconstruct(split, cfg)
+        
+        deserialized.provider_name = provider_name
+        deserialized.provider_class = ProviderClass
+        
+        return deserialized
 
 
 def credentials(credentials):
     """
-    Deserializes credentials if needed.
+    Deserializes credentials.
     
     :param credentials:
         Credentials serialized with :meth:`.Credentials.serialize` or :class:`.Credentials` instance.
@@ -1171,13 +1179,22 @@ class UserInfoResponse(Response):
 
 def access(credentials, url, method='GET', headers={}, max_redirects=5, content_parser=None):
     """
-    
+    Accesses **protected resource** on behalf of the **user**.
     
     :param credentials:
-    :param url:
-    :param method:
-    :param headers:
-    :param content_parser:
+        The **user's** :class:`.Credentials`.
+        
+    :param str url:
+        The **protected resource** URL.
+        
+    :param str method:
+        HTTP method of the request.
+        
+    :param dict headers:
+        HTTP headers of the request.
+        
+    :param function content_parser:
+        A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
     """
     
     # Deserialize credentials.
