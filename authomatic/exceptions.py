@@ -16,6 +16,10 @@ class MiddlewareError(BaseError):
     pass
 
 
+class SessionError(BaseError):
+    pass
+
+
 class CredentialsError(BaseError):
     pass
 

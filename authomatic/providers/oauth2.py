@@ -162,6 +162,7 @@ class OAuth2(providers.AuthorisationProvider):
     # Exposed methods
     #===========================================================================
     
+    
     @staticmethod
     def to_tuple(credentials):
         
@@ -240,7 +241,6 @@ class OAuth2(providers.AuthorisationProvider):
     def login(self):
         
         # get request parameters from which we can determine the login phase
-        
         authorisation_code = core.middleware.params.get('code')
         error = core.middleware.params.get('error')
         state = core.middleware.params.get('state')      

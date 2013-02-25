@@ -16,17 +16,47 @@ Abstract base classes for implementation of protocol specific providers.
 from authomatic.exceptions import ConfigError, AuthenticationError, FetchError
 import abc
 import authomatic.core
+import authomatic.settings as settings
 import datetime
 import hashlib
 import httplib
 import logging
 import os
 import random
+import sys
+import traceback
 import urlparse
 import uuid
-import authomatic.settings as settings
 
 __all__ = ['BaseProvider', 'AuthorisationProvider', 'AuthenticationProvider', 'login_decorator']
+
+
+def _write_error_traceback(exc_info, traceback):
+    """
+    Writes exception info and traceback to the response.
+    
+    :param tuple exc_info:
+        Output of :finc:`sys.exc_info` function. 
+        
+    :param traceback:
+        Output of :func:`traceback.format_exc` function.
+    """
+    
+    html = """
+    <html>
+        <head>
+            <title>ERROR: {error}</title>
+        </head>
+        <body style="font-family: sans-serif">
+            <h4>The Authomatic library encountered an error!</h4>
+            <h1>{error}</h1>
+            <pre>{traceback}</pre>
+        </body>
+    </html>
+    """
+    
+    authomatic.core.middleware.write(html.format(error=exc_info[1], traceback=traceback))
+
 
 def login_decorator(func):
     """
@@ -40,16 +70,16 @@ def login_decorator(func):
         error = None
         result = None
         
-        if settings.report_errors:
-            # Catch and report errors.
-            try:
-                func(provider, *args, **kwargs)
-            except Exception as e:
+        try:
+            func(provider, *args, **kwargs)
+        except Exception as e:
+            if settings.report_errors:
                 error = e
                 provider._log(logging.ERROR, 'Reported supressed exception: {}!'.format(repr(error)))
-        else:
-            # Don't handle errors.
-            func(provider, *args, **kwargs)
+            else:
+                if settings.debug:
+                    _write_error_traceback(sys.exc_info(), traceback.format_exc())
+                raise
         
         # If there is user or error the login procedure has finished
         if provider.user or error:
@@ -58,9 +88,9 @@ def login_decorator(func):
             
             # Let middleware know that login procedure is over
             authomatic.core.middleware.pending = False
-            
-        # Save session
-        authomatic.core.middleware.session.save()
+        else:
+            # Save session
+            authomatic.core.middleware.session.save()
         
         # Return result       
         if result and provider.callback:

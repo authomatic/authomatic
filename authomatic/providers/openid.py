@@ -80,13 +80,14 @@ class SessionOpenIDStore(object):
     
     _log = lambda level, message: None
     
-    def __init__(self, nonce_timeout=60):
+    def __init__(self, nonce_timeout=None):
         """
         :param int nonce_timeout:
             Nonces older than this in seconds will be considered expired.
+            Default is :data:`.settings.session_max_age`.
         """
         
-        self.nonce_timeout = nonce_timeout
+        self.nonce_timeout = nonce_timeout or settings.session_max_age
     
     def storeAssociation(self, server_url, association):
         self._log(logging.DEBUG, 'SessionOpenIDStore: Storing association to session.')
@@ -158,8 +159,8 @@ class OpenID(providers.AuthenticationProvider):
         Accepts additional keyword arguments:
         
         :param store:
-            Required, :class:`.SessionOpenIDStore` or :class:`.adapters.gae.NDBOpenIDStore` or
-            any object with :class:`openid.store.interface.OpenIDStore` of the `python-openid`_ library.
+            Any object which implements :class:`openid.store.interface.OpenIDStore`
+            of the `python-openid`_ library.
         
         :param bool use_realm:
             Whether to use `OpenID realm <http://openid.net/specs/openid-authentication-2_0-12.html#realms>`_.
@@ -208,9 +209,7 @@ class OpenID(providers.AuthenticationProvider):
         
         super(OpenID, self).__init__(*args, **kwargs)
         
-        self.store = self._kwarg(kwargs, 'store')
-        if not self.store:
-            raise OpenIDError('You need to specify "store" in the config to use OpenID provider.')
+        self.store = self._kwarg(kwargs, 'store', SessionOpenIDStore())
         
         # Realm
         self.use_realm = self._kwarg(kwargs, 'use_realm', True)

@@ -1,6 +1,6 @@
 #TODO: Add coding line to all modules
 # -*- coding: utf-8 -*-
-from authomatic.exceptions import MiddlewareError
+from authomatic.exceptions import MiddlewareError, SessionError
 from urllib import urlencode
 import Cookie
 import base64
@@ -275,7 +275,7 @@ class Session(object):
         
         # Verify signature
         if not signature == self._signature(self.name, encoded, timestamp):
-            return None
+            raise SessionError('Invalid signature "{}"!'.format(signature))
         
         # Verify timestamp
         if int(timestamp) < int(time.time()) - self.max_age:
@@ -351,7 +351,7 @@ class Middleware(object):
     """
     
     def __init__(self, app, config, session_secret, session_max_age=600, secure_cookie=False,
-                 report_errors=True, logging_level=logging.INFO,
+                 report_errors=True, debug=False, logging_level=logging.INFO,
                  prefix='authomatic'):
         """
         :param app:
@@ -373,6 +373,10 @@ class Middleware(object):
             If ``True`` exceptions encountered during the **login procedure**
             will be caught and reported in the :attr:`.LoginResult.error` attribute.
             Default is ``True``.
+        
+        :param bool debug:
+            If ``True`` traceback of exceptions will be written to response.
+            Default is ``False``.
             
         :param int logging_level:
             The logging level treshold as specified in the standard Python
@@ -391,6 +395,7 @@ class Middleware(object):
         # Set global settings.
         settings.config = config
         settings.report_errors = report_errors
+        settings.debug = debug
         settings.prefix = prefix
         settings.secure_cookie = secure_cookie
         settings.session_max_age = session_max_age
@@ -398,6 +403,7 @@ class Middleware(object):
         
         # Set logging level.
         _logger.setLevel(logging_level)
+    
     
     def __call__(self, environ, start_response):
         """
@@ -429,25 +435,20 @@ class Middleware(object):
                                secure=settings.secure_cookie)
         
         # Call the wrapped WSGI app and store it's output for later.
-        exc_info = None
-        try:
-            # The authomatic.login() and other stuff is happening inside this call.
-            app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
-        except Exception:
-            exc_info = sys.exc_info()
+        app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
         
         if self.pending:
             # This middleware intercepts only if the login procedure is pending.
-            start_response(self.status, self.headers, exc_info)
+            start_response(self.status, self.headers, sys.exc_info())
             return self.output
         else:
             # If login procedure has finished.
-            
             # Delete our session kookie.
             app_headers.append(('Set-Cookie', self.session.create_cookie(delete=True)))
             
             # Write out the output of the wrapped WSGI app.
-            start_response(app_status, app_headers, exc_info)
+            start_response(app_status, app_headers, sys.exc_info())
+            
             return app_output
     
     

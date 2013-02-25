@@ -5,6 +5,12 @@ Global variables set up in Middleware.
 import logging
 
 config = None
+
+#: If ``True`` traceback of exceptions will be written to response.
+debug = False
+
+#: If ``True`` exceptions encountered during the **login procedure**
+#: will be caught and reported in the :attr:`.LoginResult.error` attribute.
 report_errors = None
 
 #: Prefix used as the :class:`.Session` cookie name and
