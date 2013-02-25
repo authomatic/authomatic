@@ -21,6 +21,7 @@ import urllib
 import urllib2
 import urlparse
 import webob
+import copy
 
 # Taken from anyjson.py
 try:
@@ -126,18 +127,34 @@ class ReprMixin(object):
 
 class Session(object):
     
+    NOT_JSON_SERIALIZABLE = ['_yadis_services__openid_consumer_',
+                             '_openid_consumer_last_token']
+    
     def __init__(self, secret, key='authomatic', max_age=600):
         self.key = key
         self.secret = secret
         self.max_age = max_age
-        self.data = self._get_data() or {}
+        self._data = {}
+    
+    
+    def save(self):
+        # TODO: Set advanced cookie attributes.
+        middleware.set_header('Set-Cookie', '{}={}'.format(self.key, self._serialize(self.data)))
     
     
     def _get_data(self):
         morsel = Cookie.SimpleCookie(middleware.environ.get('HTTP_COOKIE')).get(self.key)
         if morsel:
             return self._deserialize(morsel.value)
+        else:
+            return {}
     
+    @property
+    def data(self):
+        if not self._data:
+            self._data = self._get_data()
+        return self._data
+        
     
     def _signature(self, *parts):
         signature = hmac.new(self.secret, digestmod=hashlib.sha1)
@@ -159,11 +176,17 @@ class Session(object):
             Serialized value.
         """
         
+        data = copy.deepcopy(value)
+        
         # 1. Serialize
-        # TODO: Use json
-        serialized = pickle.dumps(value)
+        for key in self.NOT_JSON_SERIALIZABLE:
+            if key in data.keys():
+                data[key] = pickle.dumps(data[key])
+        
+        serialized = json.dumps(data)
         
         # 2. Encode
+        # TODO: Use percent encoding.
         encoded = base64.urlsafe_b64encode(serialized)
         
         # Create timestamp
@@ -202,17 +225,18 @@ class Session(object):
         decoded = base64.urlsafe_b64decode(encoded)
         
         # 1. Deserialize
-        # TODO: Use json
-        deserialized = pickle.loads(decoded)
+        deserialized = json.loads(decoded)
+        
+        # Handle unpicke json unserializable values
+        for key in self.NOT_JSON_SERIALIZABLE:
+            if key in deserialized.keys():
+                deserialized[key] = pickle.loads(deserialized[key])
         
         return deserialized
     
     
     def __setitem__(self, key, value):
-        self.data[key] = value
-        
-        # TODO: Set advanced cookie attributes.
-        middleware.set_header('Set-Cookie', '{}={}'.format(self.key, self._serialize(self.data)))
+        self._data[key] = value
     
     
     def __getitem__(self, key):
@@ -220,7 +244,7 @@ class Session(object):
     
     
     def __delitem__(self, key):
-        return self.data.__delitem__(key)
+        return self._data.__delitem__(key)
     
     
     def get(self, key, default=None):
@@ -268,21 +292,19 @@ class Middleware(object):
         self.status = '200 OK'
         self.headers = []
         self.environ = environ
-        self.session = self.session or Session('abcdefg')
+        self.session = Session('abcdefg')
+        
+        exc_info = None
         
         try:
             app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
-        except Exception as e:
-            logging.info('CAUGHT {}'.format(e))
-        
-        logging.info('EXC INFO = {}'.format(exc_info))
+        except Exception:
+            exc_info = sys.exc_info()
         
         if self.pending:
-            logging.info('WSGI: MIDDLEWARE')
             start_response(self.status, self.headers, exc_info)
             return self.output
         else:
-            logging.info('WSGI: APP')
             start_response(app_status, app_headers, exc_info)
             return app_output
     
@@ -409,6 +431,8 @@ def login(provider_name, callback=None, **kwargs):
         :obj:`None` or :class:`.LoginResult`.
     """
     
+    middleware.pending = True
+    
     # TODO: Move report_errors and logging to Middleware
     
     # retrieve required settings for current provider and raise exceptions if missing
@@ -424,8 +448,6 @@ def login(provider_name, callback=None, **kwargs):
     
     # instantiate provider class
     provider = ProviderClass(provider_name, callback, **kwargs)
-    
-    middleware.pending = True
     
     # return login result
     return provider.login()

@@ -271,14 +271,10 @@ class OpenID(providers.AuthenticationProvider):
     @providers.login_decorator
     def login(self):
         """Launches the OpenID authentication procedure."""
-        
                 
         # Instantiate consumer
         self.store._log = self._log
         oi_consumer = consumer.Consumer(core.middleware.session, self.store)
-        
-#        self.adapter.openid_store._log = self._log
-#        oi_consumer = consumer.Consumer(core.middleware.session, self.adapter.openid_store)
         
         # handle realm and XRDS if there is only one query parameter
         if self.use_realm and len(core.middleware.params) == 1:

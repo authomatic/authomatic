@@ -13,7 +13,7 @@ class Login(webapp2.RequestHandler):
     def anymethod(self, provider_name):
         
         result = authomatic.login(provider_name)
-        
+                
         if result:
             
             self.response.write('<a href="..">Home</a><br />')
@@ -227,7 +227,7 @@ ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, handler_method='anymethod'),
 # Wrap the WSGI app in middleware.
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
                             config=CONFIG,
-                            report_errors=True)
+                            report_errors=False)
 
 
 

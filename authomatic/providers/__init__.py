@@ -60,6 +60,9 @@ def login_decorator(func):
             if provider.callback:
                 provider.callback(result)
             return result
+        
+        # Save session
+        authomatic.core.middleware.session.save()
     
     return wrap
 
