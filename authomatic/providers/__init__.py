@@ -38,6 +38,8 @@ def login_decorator(func):
     
     def wrap(provider, *args, **kwargs):
         error = None
+        result = None
+        
         if settings.report_errors:
             # Catch and report errors.
             try:
@@ -57,13 +59,14 @@ def login_decorator(func):
             # Let middleware know that login procedure is over
             authomatic.core.middleware.pending = False
             
-            if provider.callback:
-                provider.callback(result)
-            return result
-        
         # Save session
         authomatic.core.middleware.session.save()
-    
+        
+        # Return result       
+        if result and provider.callback:
+            provider.callback(result)
+        return result
+        
     return wrap
 
 

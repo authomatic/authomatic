@@ -1,10 +1,12 @@
 #TODO: Add coding line to all modules
 # -*- coding: utf-8 -*-
+from authomatic.exceptions import MiddlewareError
 from urllib import urlencode
 import Cookie
 import base64
 import binascii
 import collections
+import copy
 import datetime
 import exceptions
 import hashlib
@@ -21,7 +23,6 @@ import urllib
 import urllib2
 import urlparse
 import webob
-import copy
 
 # Taken from anyjson.py
 try:
@@ -34,11 +35,14 @@ except ImportError:
         # Should work for Python2.6 and higher.
         import json
 
-# Global variable that holds the middleware
-middleware = None
+#===============================================================================
+# Global variables
+#===============================================================================
 
-# Globall variable that holds the logger
+middleware = None
 _logger = logging.getLogger(__name__)
+_counter = None
+
 
 def normalize_dict(dict_):
     """
@@ -126,37 +130,91 @@ class ReprMixin(object):
 
 
 class Session(object):
+    """
+    A dictionary-like secure cookie session implementation.
+    """
     
+    # List of keys which values are not json serializable.
     NOT_JSON_SERIALIZABLE = ['_yadis_services__openid_consumer_',
                              '_openid_consumer_last_token']
     
-    def __init__(self, secret, key='authomatic', max_age=600):
-        self.key = key
+    def __init__(self, secret, name='authomatic', max_age=600, secure=False):
+        """
+        :param str secret:
+            Session secret used to sign the session cookie.
+        :param str name:
+            Session cookie name.
+        :param int max_age:
+            Maximum allowed age of session kookie nonce in seconds.
+        :param bool secure:
+            If ``True`` the session cookie will be saved wit ``Secure`` attribute.
+        """
+        
+        self.name = name
         self.secret = secret
         self.max_age = max_age
+        self.secure = secure
+        
         self._data = {}
     
     
+    def create_cookie(self, delete=None):
+        """
+        Creates the value for ``Set-Cookie`` HTTP header.
+        
+        :param bool delete:
+            If ``True`` the cookie value will be ``deleted`` and the
+            Expires value will be ``Thu, 01-Jan-1970 00:00:01 GMT``.
+        """
+        
+        template = '{name}={value}; Domain={domain}; Path={path}; HttpOnly{secure}{expires}'
+        
+        value = 'deleted' if delete else self._serialize(self.data)
+        
+        return template.format(name=self.name,
+                               value=value,
+                               domain=middleware.domain,
+                               path=middleware.path,
+                               secure='; Secure' if self.secure else '',
+                               expires='; Expires=Thu, 01-Jan-1970 00:00:01 GMT' if delete else '')
+    
+    
     def save(self):
-        # TODO: Set advanced cookie attributes.
-        middleware.set_header('Set-Cookie', '{}={}'.format(self.key, self._serialize(self.data)))
+        """
+        Adds the session cookie to headers.
+        """
+        
+        middleware.set_header('Set-Cookie', self.create_cookie())
     
     
     def _get_data(self):
-        morsel = Cookie.SimpleCookie(middleware.environ.get('HTTP_COOKIE')).get(self.key)
+        """
+        Extracts the session data from cookie.
+        """
+        
+        morsel = Cookie.SimpleCookie(middleware.environ.get('HTTP_COOKIE')).get(self.name)
         if morsel:
             return self._deserialize(morsel.value)
         else:
             return {}
     
+    
     @property
     def data(self):
+        """
+        Gets session data lazily.
+        """
+        
         if not self._data:
             self._data = self._get_data()
         return self._data
         
     
     def _signature(self, *parts):
+        """
+        Creates signature for the session.
+        """
+        
         signature = hmac.new(self.secret, digestmod=hashlib.sha1)
         signature.update('|'.join(parts))
         return signature.hexdigest()
@@ -178,24 +236,26 @@ class Session(object):
         
         data = copy.deepcopy(value)
         
-        # 1. Serialize
+        # 1. Handle non json serializable objects.
         for key in self.NOT_JSON_SERIALIZABLE:
             if key in data.keys():
                 data[key] = pickle.dumps(data[key])
         
+        
+        # 2. Serialize
         serialized = json.dumps(data)
         
-        # 2. Encode
-        # TODO: Use percent encoding.
-        encoded = base64.urlsafe_b64encode(serialized)
+        # 3. Encode
+        # Percent encoding produces smaller result then urlsafe base64.
+        encoded = urllib.quote(serialized, '')
         
         # Create timestamp
         timestamp = str(int(time.time()))
         
         # Create signature
-        signature = self._signature(self.key, encoded, timestamp)
+        signature = self._signature(self.name, encoded, timestamp)
         
-        # 3. Concatenate
+        # 4. Concatenate
         return '|'.join([encoded, timestamp, signature])
     
     
@@ -210,24 +270,24 @@ class Session(object):
             Desrialized object.
         """
         
-        # 3. Split
+        # 4. Split
         encoded, timestamp, signature = value.split('|')
         
         # Verify signature
-        if not signature == self._signature(self.key, encoded, timestamp):
+        if not signature == self._signature(self.name, encoded, timestamp):
             return None
         
         # Verify timestamp
         if int(timestamp) < int(time.time()) - self.max_age:
             return None
         
-        # 2. Decode
-        decoded = base64.urlsafe_b64decode(encoded)
+        # 3. Decode
+        decoded = urllib.unquote(encoded)
         
-        # 1. Deserialize
+        # 2. Deserialize
         deserialized = json.loads(decoded)
         
-        # Handle unpicke json unserializable values
+        # 1. Unpicke non json serializable objects.
         for key in self.NOT_JSON_SERIALIZABLE:
             if key in deserialized.keys():
                 deserialized[key] = pickle.loads(deserialized[key])
@@ -252,73 +312,151 @@ class Session(object):
 
 
 def call_wsgi(app, environ):
+    """
+    Calls a WSGI application.
     
+    :param app:
+        WSGI application.
+        
+    :param dict environ:
+        The WSGI *environ* dictionary.
+    """
+    
+    # Placeholder for status, headers and exec_info.
     args = [None, None]
     
     def start_response(status, headers, exc_info=None):
+        """
+        Dummy start_response to retrieve status, headersand  exc_info from the app.
+        """
+        # Copy values.
         args[:] = [status, headers, exc_info]
     
+    # Call the WSGI app and pass it our start_response.
     app_iter = app(environ, start_response)
     
+    # Unpack values
     status, headers, exc_info = args
     
     return app_iter, status, headers, exc_info
 
 
 class Middleware(object):
+    """
+    WSGI middleware responsible for these task during the **login procedure**:
     
-    def __init__(self, app, config, session=None,
-                 report_errors=True, logging_level=logging.DEBUG,
+    * Introspection of current request.
+    * Response creation.
+    * Session management.
+    """
+    
+    def __init__(self, app, config, session_secret, session_max_age=600, secure_cookie=False,
+                 report_errors=True, logging_level=logging.INFO,
                  prefix='authomatic'):
+        """
+        :param app:
+            WSGI application that should be wrapped.
+            
+        :param dict config:
+            :doc:`config`
+            
+        :param str session_secret:
+            A secret used to sign the :class:`.Session` cookie.
+            
+        :param session_max_age:
+            Maximum allowed age of :class:`.Session` kookie nonce in seconds.
+            
+        :param bool secure_cookie:
+            If ``True`` the :class:`.Session` cookie will be saved wit ``Secure`` attribute.
+            
+        :param bool report_errors:
+            If ``True`` exceptions encountered during the **login procedure**
+            will be caught and reported in the :attr:`.LoginResult.error` attribute.
+            Default is ``True``.
+            
+        :param int logging_level:
+            The logging level treshold as specified in the standard Python
+            `logging library <http://docs.python.org/2/library/logging.html>`_.
+            Default is ``logging.INFO``
+        
+        :param str prefix:
+            Prefix used as the :class:`.Session` cookie name and
+            by which all logs will be prefixed.
+        """
+        
         self.app = app
-        self.session = session
+        self.session_secret = session_secret
         self.pending = False
         
         # Set global settings.
         settings.config = config
         settings.report_errors = report_errors
         settings.prefix = prefix
+        settings.secure_cookie = secure_cookie
+        settings.session_max_age = session_max_age
         settings.logging_level = logging_level
         
         # Set logging level.
         _logger.setLevel(logging_level)
     
     def __call__(self, environ, start_response):
+        """
+        The WSGI mechanism.
+        
+        :param environ:
+        :param start_response:
+        """
+        
         global config
         
+        # Set request specific properties.
         self._post = {}
         self._get = {}
         self.output = []
         self.status = '200 OK'
         self.headers = []
         self.environ = environ
-        self.session = Session('abcdefg')
         
+        self.scheme = self.environ.get('wsgi.url_scheme')
+        self.host = self.environ.get('HTTP_HOST')
+        self.domain = self.host.split(':')[0]
+        self.path = self.environ.get('PATH_INFO')
+        self.url = urlparse.urlunsplit((self.scheme, self.host, self.path, 0, 0))
+        
+        self.session = Session(self.session_secret,
+                               max_age=settings.session_max_age,
+                               name=settings.prefix,
+                               secure=settings.secure_cookie)
+        
+        # Call the wrapped WSGI app and store it's output for later.
         exc_info = None
-        
         try:
+            # The authomatic.login() and other stuff is happening inside this call.
             app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
         except Exception:
             exc_info = sys.exc_info()
         
         if self.pending:
+            # This middleware intercepts only if the login procedure is pending.
             start_response(self.status, self.headers, exc_info)
             return self.output
         else:
+            # If login procedure has finished.
+            
+            # Delete our session kookie.
+            app_headers.append(('Set-Cookie', self.session.create_cookie(delete=True)))
+            
+            # Write out the output of the wrapped WSGI app.
             start_response(app_status, app_headers, exc_info)
             return app_output
     
     
     @property
-    def url(self):
-        scheme = self.environ.get('wsgi.url_scheme')
-        host = self.environ.get('HTTP_HOST')
-        path = self.environ.get('PATH_INFO')
-        return urlparse.urlunsplit((scheme, host, path, 0, 0))
-    
-    
-    @property
     def body(self):
+        """
+        The HTTP request body.
+        """
+        
         length = int(self.environ.get('CONTENT_LENGTH', '0'))
         
         if length:
@@ -328,17 +466,44 @@ class Middleware(object):
             return ''
     
     
-    def _to_dict(self, items):
+    def _clean_dict(self, items):
+        """
+        Converts all single-item values to its index [0] value.
+        
+        :param list items:
+            List of tuples.
+        
+        :returns:
+            :class:`dict`
+        """
+        
         return {k: v[0] if len(v) == 1 else v for k, v in items}
     
     
     def _parse_qs(self, qs):
+        """
+        Parses query string and returns cleaned dictionary.
+        
+        :param str qs:
+            Query string.
+        
+        :returns:
+            :class:`dict`
+        """
+        
         qs = urlparse.parse_qs(qs)
-        return self._to_dict(qs.items())
+        return self._clean_dict(qs.items())
     
     
     @property
     def post(self):
+        """
+        Returns parsed POST parameters.
+        
+        :returns:
+            :class:`dict`
+        """
+        
         if self._post:
             return self._post
         else:
@@ -348,6 +513,13 @@ class Middleware(object):
     
     @property
     def get(self):
+        """
+        Returns parsed GET parameters.
+        
+        :returns:
+            :class:`dict`
+        """
+        
         if self._get:
             return self._get
         else:
@@ -357,6 +529,13 @@ class Middleware(object):
     
     @property
     def params(self):
+        """
+        Returns combined GET and POST parameters.
+        
+        :returns:
+            :class:`dict`
+        """
+        
         res = {}
         
         # Normalize common values of GET and POST to one key with list value.
@@ -372,19 +551,47 @@ class Middleware(object):
     
     
     def set_header(self, key, value):
+        """
+        Appends a HTTP response header.
+        
+        :param str key:
+            The name of the header.
+        
+        :param str value:
+            The header value.
+        """
+        
         self.headers.append((key, value))
     
     
     def write(self, value):
+        """
+        Writes the value to HTTP response
+        
+        :param str value:
+            The string to be written to response.
+        """
         self.output.append(value)
     
     
-    def redirect(self, url):
+    def redirect(self, location):
+        """
+        Writes a ``302 Found`` redirect to specified location.
+        
+        :param str location:
+            The URL to redirect to.
+        """
+        
         self.status = '302 Found'
-        self.set_header('Location', url)
+        self.set_header('Location', location)
 
 
 def setup_middleware(*args, **kwargs):
+    """
+    Instantiates the :class:`.Middleware` and stores it to the
+    :data:`.authomatic.core.middleware` global variable.
+    """
+    
     global middleware
     middleware = Middleware(*args, **kwargs)
     return middleware
@@ -433,8 +640,6 @@ def login(provider_name, callback=None, **kwargs):
     
     middleware.pending = True
     
-    # TODO: Move report_errors and logging to Middleware
-    
     # retrieve required settings for current provider and raise exceptions if missing
     provider_settings = settings.config.get(provider_name)
     if not provider_settings:
@@ -465,8 +670,6 @@ class Counter(object):
         self._count += 1
         return self._count
 
-
-#: A simple counter to be used in the config to generate unique `id` values.
 _counter = Counter()
 
 
@@ -691,6 +894,10 @@ class Credentials(ReprMixin):
     
     @property
     def expires_in(self):
+        """
+        
+        """
+        
         if self._expires_in:
             return self._expires_in
         else:

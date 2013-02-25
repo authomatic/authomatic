@@ -12,6 +12,10 @@ class ConfigError(BaseError):
     pass
 
 
+class MiddlewareError(BaseError):
+    pass
+
+
 class CredentialsError(BaseError):
     pass
 
