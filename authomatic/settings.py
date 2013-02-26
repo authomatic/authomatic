@@ -6,6 +6,10 @@ import logging
 
 config = None
 
+#: A secret string that will be used as the key for signing :class:`.Session` cookie and
+#: as a salt by *CSRF* token generation.
+secret = ''
+
 #: If ``True`` traceback of exceptions will be written to response.
 debug = False
 

@@ -212,8 +212,8 @@ class BaseProvider(object):
         return authomatic.core.middleware.session.get(self._session_key(key))
     
     
-    @classmethod
-    def csrf_generator(cls):
+    @staticmethod
+    def csrf_generator():
         """
         Generates CSRF token.
         
@@ -223,9 +223,17 @@ class BaseProvider(object):
             :class:`str` Random unguessable string.
         """
         
-        # TODO: Move to utils.
+        # Create hash from random string plus salt.
+        hashed = hashlib.md5(str(uuid.uuid4()) + str(settings.secret)).hexdigest()
         
-        return hashlib.md5(str(uuid.uuid4())).hexdigest()
+        # Each time return random portion of the hash.
+        span = 5
+        shift = random.randint(0, span)     
+        res = hashed[shift:shift - span - 1]
+        
+        logging.info('CSRF = {}'.format(res))
+        
+        return res
     
     
     @classmethod
@@ -453,8 +461,7 @@ class AuthorisationProvider(BaseProvider):
                                                         credentials=credentials,
                                                         url=url,
                                                         params=params,
-                                                        method=method,
-                                                        csrf=cls.csrf_generator())
+                                                        method=method)
         
         response = cls._fetch(*request_elements,
                               headers=headers,

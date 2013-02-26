@@ -90,7 +90,7 @@ class OAuth2(providers.AuthorisationProvider):
                 params['client_id'] = consumer_key
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
-                params['state'] = csrf
+                params['state'] = csrf or cls.csrf_generator()
                 params['response_type'] = 'code'
             else:
                 raise OAuth2Error('Credentials with valid consumer_key and arguments redirect_uri, scope and ' + \

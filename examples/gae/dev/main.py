@@ -42,7 +42,6 @@ def headers(handler):
 
 class Home(webapp2.RequestHandler):
     def any(self):
-        raise Exception('HOME')
         headers(self)
         
 
@@ -132,7 +131,7 @@ ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth', handler_method='login'),
           webapp2.Route(r'/', Home, handler_method='any'),]
 
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
-                            session_secret='123456',
+                            secret='YAhe[#{^VlX-cK/$ki:$</vu!B5rTW9xi:fbN/%i pIx@AH}0c/ke4M%|c9*H4#>',
                             config=config.PROVIDERS,
                             report_errors=False,
                             debug=True)

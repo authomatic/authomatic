@@ -350,7 +350,7 @@ class Middleware(object):
     * Session management.
     """
     
-    def __init__(self, app, config, session_secret, session_max_age=600, secure_cookie=False,
+    def __init__(self, app, config, secret, session_max_age=600, secure_cookie=False,
                  report_errors=True, debug=False, logging_level=logging.INFO,
                  prefix='authomatic'):
         """
@@ -360,8 +360,9 @@ class Middleware(object):
         :param dict config:
             :doc:`config`
             
-        :param str session_secret:
-            A secret used to sign the :class:`.Session` cookie.
+        :param str secret:
+            A secret string that will be used as the key for signing :class:`.Session` cookie and
+            as a salt by *CSRF* token generation.
             
         :param session_max_age:
             Maximum allowed age of :class:`.Session` kookie nonce in seconds.
@@ -389,11 +390,11 @@ class Middleware(object):
         """
         
         self.app = app
-        self.session_secret = session_secret
         self.pending = False
         
         # Set global settings.
         settings.config = config
+        settings.secret = secret
         settings.report_errors = report_errors
         settings.debug = debug
         settings.prefix = prefix
@@ -429,7 +430,7 @@ class Middleware(object):
         self.path = self.environ.get('PATH_INFO')
         self.url = urlparse.urlunsplit((self.scheme, self.host, self.path, 0, 0))
         
-        self.session = Session(self.session_secret,
+        self.session = Session(settings.secret,
                                max_age=settings.session_max_age,
                                name=settings.prefix,
                                secure=settings.secure_cookie)

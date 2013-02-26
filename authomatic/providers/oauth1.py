@@ -195,7 +195,7 @@ class OAuth1(providers.AuthorisationProvider):
     
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, params=None,
-                                 method='GET', verifier='', callback='', csrf=''):
+                                 method='GET', verifier='', callback=''):
         
         params = params or {}
         
@@ -253,7 +253,7 @@ class OAuth1(providers.AuthorisationProvider):
             # http://oauth.net/core/1.0a/#rfc.section.9.1
             params['oauth_signature_method'] = cls._signature_generator.method
             params['oauth_timestamp'] = str(int(time.time()))
-            params['oauth_nonce'] = csrf
+            params['oauth_nonce'] = cls.csrf_generator()
             params['oauth_version'] = '1.0'
             
             # add signature to params
@@ -319,7 +319,6 @@ class OAuth1(providers.AuthorisationProvider):
                                                              url=self.access_token_url,
                                                              credentials=self.credentials,
                                                              verifier=verifier,
-                                                             csrf=self.csrf_generator(),
                                                              params=self.access_token_params)
             
             response = self._fetch(*request_elements)
@@ -359,7 +358,6 @@ class OAuth1(providers.AuthorisationProvider):
                                                              credentials=self.credentials,
                                                              url=self.request_token_url,
                                                              callback=core.middleware.url,
-                                                             csrf=self.csrf_generator(),
                                                              params=self.request_token_params)
             
             self._log(logging.INFO, 'Fetching for request token and token secret.')
