@@ -1,28 +1,19 @@
 #TODO: Add coding line to all modules
 # -*- coding: utf-8 -*-
-from authomatic.exceptions import MiddlewareError, SessionError
-from urllib import urlencode
+from authomatic.exceptions import SessionError
 import Cookie
-import base64
-import binascii
 import collections
 import copy
-import datetime
 import exceptions
 import hashlib
 import hmac
-import httplib
 import logging
 import pickle
-import providers
-import random
 import settings
 import sys
 import time
 import urllib
-import urllib2
 import urlparse
-import webob
 
 # Taken from anyjson.py
 try:
@@ -74,6 +65,165 @@ def items_to_dict(items):
         res[k].append(v)
         
     return normalize_dict(dict(res))
+
+
+class Counter(object):
+    """
+    A simple counter to be used in the config to generate unique `id` values.
+    """
+    
+    def __init__(self, start=0):
+        self._count = start
+        
+    def count(self):
+        self._count += 1
+        return self._count
+
+_counter = Counter()
+
+def provider_id():
+    """
+    A simple counter to be used in the config to generate unique `id` values.
+    
+    :returns:
+        :class:`int`.
+     
+    Use it in the :doc:`config` like this:
+    ::
+    
+        import authomatic
+        
+        CONFIG = {
+            'facebook': {
+                 'class_': authomatic.providers.oauth2.Facebook,
+                 'id': authomatic.id(), # returns 1
+                 'consumer_key': '##########',
+                 'consumer_secret': '##########',
+                 'scope': ['user_about_me', 'email']
+            },
+            'google': {
+                 'class_': 'authomatic.providers.oauth2.Google',
+                 'id': authomatic.id(), # returns 2
+                 'consumer_key': '##########',
+                 'consumer_secret': '##########',
+                 'scope': ['https://www.googleapis.com/auth/userinfo.profile',
+                           'https://www.googleapis.com/auth/userinfo.email']
+            },
+            'windows_live': {
+                 'class_': 'oauth2.WindowsLive',
+                 'id': authomatic.id(), # returns 3
+                 'consumer_key': '##########',
+                 'consumer_secret': '##########',
+                 'scope': ['wl.basic', 'wl.emails', 'wl.photos']
+            },
+        }
+    """
+    
+    return _counter.count()
+
+
+def escape(s):
+    """Escape a URL including any /."""
+    return urllib.quote(s.encode('utf-8'), safe='~')
+
+
+def json_qs_parser(body):
+    """
+    Parses response body from json or query string.
+    
+    :param body: string
+    """
+    try:
+        # try json first
+        return json.loads(body)
+    except ValueError:
+        # then query string
+        return dict(urlparse.parse_qsl(body))
+
+
+def import_string(import_name, silent=False):
+    """
+    Imports an object by string in dotted notation.
+    
+    taken `from webapp2.import_string() <http://webapp-improved.appspot.com/api/webapp2.html#webapp2.import_string>`_
+    """
+    
+    try:
+        if '.' in import_name:
+            module, obj = import_name.rsplit('.', 1)
+            return getattr(__import__(module, None, None, [obj]), obj)
+        else:
+            return __import__(import_name)
+    except (ImportError, AttributeError), e:
+        if not silent:
+            raise exceptions.ImportStringError('Import from string failed for path {}'.format(import_name),
+                                               str(e))
+
+
+def resolve_provider_class(class_):
+    """
+    Returns a provider class. 
+    
+    :param class_name: :class:`string` or :class:`authomatic.providers.BaseProvider` subclass.
+    """
+    
+    if type(class_) in (str, unicode):
+        # prepare path for authomatic.providers package
+        path = '.'.join([__package__, 'providers', class_])
+        
+        # try to import class by string from providers module or by fully qualified path
+        return import_string(class_, True) or import_string(path)
+    else:
+        return class_
+
+
+def id_to_name(config, short_name):
+    """
+    Returns the provider :doc:`config` key based on it's
+    ``id`` value.
+    
+    :param dict config:
+        :doc:`config`.
+    :param id:
+        Value of the id parameter in the :ref:`config` to search for.
+    """
+    
+    for k, v in config.items():
+        if v.get('id') == short_name:
+            return k
+            break
+    else:
+        raise Exception('No provider with id={} found in the config!'.format(short_name))
+
+
+def call_wsgi(app, environ):
+    """
+    Calls a WSGI application.
+    
+    :param app:
+        WSGI application.
+        
+    :param dict environ:
+        The WSGI *environ* dictionary.
+    """
+    
+    # Placeholder for status, headers and exec_info.
+    args = [None, None]
+    
+    def start_response(status, headers, exc_info=None):
+        """
+        Dummy start_response to retrieve status, headersand  exc_info from the app.
+        """
+        # Copy values.
+        args[:] = [status, headers, exc_info]
+    
+    # Call the WSGI app and pass it our start_response.
+    app_iter = app(environ, start_response)
+    
+    # Unpack values
+    status, headers, exc_info = args
+    
+    return app_iter, status, headers, exc_info
 
 
 class ReprMixin(object):
@@ -309,36 +459,6 @@ class Session(object):
     
     def get(self, key, default=None):
         return self.data.get(key, default)
-
-
-def call_wsgi(app, environ):
-    """
-    Calls a WSGI application.
-    
-    :param app:
-        WSGI application.
-        
-    :param dict environ:
-        The WSGI *environ* dictionary.
-    """
-    
-    # Placeholder for status, headers and exec_info.
-    args = [None, None]
-    
-    def start_response(status, headers, exc_info=None):
-        """
-        Dummy start_response to retrieve status, headersand  exc_info from the app.
-        """
-        # Copy values.
-        args[:] = [status, headers, exc_info]
-    
-    # Call the WSGI app and pass it our start_response.
-    app_iter = app(environ, start_response)
-    
-    # Unpack values
-    status, headers, exc_info = args
-    
-    return app_iter, status, headers, exc_info
 
 
 class Middleware(object):
@@ -586,194 +706,6 @@ class Middleware(object):
         
         self.status = '302 Found'
         self.set_header('Location', location)
-
-
-def setup_middleware(*args, **kwargs):
-    """
-    Instantiates the :class:`.Middleware` and stores it to the
-    :data:`.authomatic.core.middleware` global variable.
-    """
-    
-    global middleware
-    middleware = Middleware(*args, **kwargs)
-    return middleware
-
-
-def login(provider_name, callback=None, **kwargs):
-    """
-    Launches a login procedure for specified :doc:`provider <providers>` and returns :class:`.LoginResult`.
-    
-    .. warning::
-        Currently the method gets called twice by all :doc:`providers <providers>`. This may change in future.
-        
-        #. First it returns nothing but redirects the **user** to the **provider**,
-           which redirects him back to the enclosing **request handler**.
-        #. Then it gets called again and it finally returns the :class:`.LoginResult`
-           or calls the function specified in the ``callback`` argument with
-           :class:`.LoginResult` passed as argument.
-    
-    :param adapter:
-        Framework specific :doc:`adapter <adapters>`.
-    :param dict config:
-        :doc:`config`
-    :param str provider_name:
-        Name of the provider as specified in the keys of the :doc:`config`.
-    :param callable callback:
-        If specified the function will call the callback with :class:`.LoginResult`
-        passed as argument and will return nothing.
-    :param bool report_errors:
-        If ``True`` errors and exceptions which occur during login will be caught and
-        accessible in the :class:`.LoginResult`.
-        If ``False`` errors and exceptions will not be handled.
-    :param int logging_level:
-        The library logs important events during the login procedure.
-        You can specify the desired logging level with the constants of the
-        `logging <http://docs.python.org/2/library/logging.html>`_ of Python standard library.
-        The main login procedure events have level ``INFO``, others like adapter database access_with_credentials
-        have level ``DEBUG``.
-        
-    .. note::
-        
-        Accepts other :doc:`provider <providers>` specific keyword arguments.
-    
-    :returns:
-        :obj:`None` or :class:`.LoginResult`.
-    """
-    
-    middleware.pending = True
-    
-    # retrieve required settings for current provider and raise exceptions if missing
-    provider_settings = settings.config.get(provider_name)
-    if not provider_settings:
-        raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
-    
-    class_ = provider_settings.get('class_')
-    if not class_:
-        raise exceptions.ConfigError('The "class_" key not specified in the config for provider {}!'.format(provider_name))
-    
-    ProviderClass = resolve_provider_class(class_)
-    
-    # instantiate provider class
-    provider = ProviderClass(provider_name, callback, **kwargs)
-    
-    # return login result
-    return provider.login()
-
-
-class Counter(object):
-    """
-    A simple counter to be used in the config to generate unique `id` values.
-    """
-    
-    def __init__(self, start=0):
-        self._count = start
-        
-    def count(self):
-        self._count += 1
-        return self._count
-
-_counter = Counter()
-
-
-def provider_id():
-    """
-    A simple counter to be used in the config to generate unique `id` values.
-    
-    :returns:
-        :class:`int`.
-     
-    Use it in the :doc:`config` like this:
-    ::
-    
-        import authomatic
-        
-        CONFIG = {
-            'facebook': {
-                 'class_': authomatic.providers.oauth2.Facebook,
-                 'id': authomatic.id(), # returns 1
-                 'consumer_key': '##########',
-                 'consumer_secret': '##########',
-                 'scope': ['user_about_me', 'email']
-            },
-            'google': {
-                 'class_': 'authomatic.providers.oauth2.Google',
-                 'id': authomatic.id(), # returns 2
-                 'consumer_key': '##########',
-                 'consumer_secret': '##########',
-                 'scope': ['https://www.googleapis.com/auth/userinfo.profile',
-                           'https://www.googleapis.com/auth/userinfo.email']
-            },
-            'windows_live': {
-                 'class_': 'oauth2.WindowsLive',
-                 'id': authomatic.id(), # returns 3
-                 'consumer_key': '##########',
-                 'consumer_secret': '##########',
-                 'scope': ['wl.basic', 'wl.emails', 'wl.photos']
-            },
-        }
-    """
-    
-    return _counter.count()
-
-
-def escape(s):
-    """Escape a URL including any /."""
-    return urllib.quote(s.encode('utf-8'), safe='~')
-
-
-def resolve_provider_class(class_):
-    """
-    Returns a provider class. 
-    
-    :param class_name: :class:`string` or :class:`authomatic.providers.BaseProvider` subclass.
-    """
-    
-    if type(class_) in (str, unicode):
-        # prepare path for authomatic.providers package
-        path = '.'.join([__package__, 'providers', class_])
-        
-        # try to import class by string from providers module or by fully qualified path
-        return import_string(class_, True) or import_string(path)
-    else:
-        return class_
-
-
-def import_string(import_name, silent=False):
-    """
-    Imports an object by string in dotted notation.
-    
-    taken `from webapp2.import_string() <http://webapp-improved.appspot.com/api/webapp2.html#webapp2.import_string>`_
-    """
-    
-    try:
-        if '.' in import_name:
-            module, obj = import_name.rsplit('.', 1)
-            return getattr(__import__(module, None, None, [obj]), obj)
-        else:
-            return __import__(import_name)
-    except (ImportError, AttributeError), e:
-        if not silent:
-            raise exceptions.ImportStringError('Import from string failed for path {}'.format(import_name),
-                                               str(e))
-
-
-def short_name_to_name(config, short_name):
-    """
-    Returns the provider :doc:`config` key based on it's
-    ``id`` value.
-    
-    :param dict config:
-        :doc:`config`.
-    :param id:
-        Value of the id parameter in the :ref:`config` to search for.
-    """
-    
-    for k, v in config.items():
-        if v.get('id') == short_name:
-            return k
-            break
-    else:
-        raise Exception('No provider with id={} found in the config!'.format(short_name))
 
 
 class User(ReprMixin):
@@ -1024,7 +956,7 @@ class Credentials(ReprMixin):
         short_name = int(split[0])
         
         # Get provider config by short name.
-        provider_name = short_name_to_name(settings.config, short_name)
+        provider_name = id_to_name(settings.config, short_name)
         cfg = settings.config.get(provider_name)
         
         # Get the provider class.
@@ -1039,19 +971,6 @@ class Credentials(ReprMixin):
         return deserialized
 
 
-def credentials(credentials):
-    """
-    Deserializes credentials.
-    
-    :param credentials:
-        Credentials serialized with :meth:`.Credentials.serialize` or :class:`.Credentials` instance.
-    
-    :returns:
-        :class:`.Credentials`
-    """
-    return Credentials.deserialize(credentials)
-
-
 class LoginResult(ReprMixin):
     """
     Result of the :func:`authomatic.login` function.
@@ -1064,20 +983,6 @@ class LoginResult(ReprMixin):
         self.error = error
         #: A :class:`.User` instance.
         self.user = provider.user
-
-
-def json_qs_parser(body):
-    """
-    Parses response body from json or query string.
-    
-    :param body: string
-    """
-    try:
-        # try json first
-        return json.loads(body)
-    except ValueError:
-        # then query string
-        return dict(urlparse.parse_qsl(body))
 
 
 class Response(ReprMixin):
@@ -1178,6 +1083,96 @@ class UserInfoResponse(Response):
         
         #: :class:`.User` instance.
         self.user = user
+
+
+#===============================================================================
+# Public methods
+#===============================================================================
+
+def setup_middleware(*args, **kwargs):
+    """
+    Instantiates the :class:`.Middleware` and stores it to the
+    :data:`.authomatic.core.middleware` global variable.
+    """
+    
+    global middleware
+    middleware = Middleware(*args, **kwargs)
+    return middleware
+
+
+def login(provider_name, callback=None, **kwargs):
+    """
+    Launches a login procedure for specified :doc:`provider <providers>` and returns :class:`.LoginResult`.
+    
+    .. warning::
+        Currently the method gets called twice by all :doc:`providers <providers>`. This may change in future.
+        
+        #. First it returns nothing but redirects the **user** to the **provider**,
+           which redirects him back to the enclosing **request handler**.
+        #. Then it gets called again and it finally returns the :class:`.LoginResult`
+           or calls the function specified in the ``callback`` argument with
+           :class:`.LoginResult` passed as argument.
+    
+    :param adapter:
+        Framework specific :doc:`adapter <adapters>`.
+    :param dict config:
+        :doc:`config`
+    :param str provider_name:
+        Name of the provider as specified in the keys of the :doc:`config`.
+    :param callable callback:
+        If specified the function will call the callback with :class:`.LoginResult`
+        passed as argument and will return nothing.
+    :param bool report_errors:
+        If ``True`` errors and exceptions which occur during login will be caught and
+        accessible in the :class:`.LoginResult`.
+        If ``False`` errors and exceptions will not be handled.
+    :param int logging_level:
+        The library logs important events during the login procedure.
+        You can specify the desired logging level with the constants of the
+        `logging <http://docs.python.org/2/library/logging.html>`_ of Python standard library.
+        The main login procedure events have level ``INFO``, others like adapter database access_with_credentials
+        have level ``DEBUG``.
+        
+    .. note::
+        
+        Accepts other :doc:`provider <providers>` specific keyword arguments.
+    
+    :returns:
+        :obj:`None` or :class:`.LoginResult`.
+    """
+    
+    middleware.pending = True
+    
+    # retrieve required settings for current provider and raise exceptions if missing
+    provider_settings = settings.config.get(provider_name)
+    if not provider_settings:
+        raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
+    
+    class_ = provider_settings.get('class_')
+    if not class_:
+        raise exceptions.ConfigError('The "class_" key not specified in the config for provider {}!'.format(provider_name))
+    
+    ProviderClass = resolve_provider_class(class_)
+    
+    # instantiate provider class
+    provider = ProviderClass(provider_name, callback, **kwargs)
+    
+    # return login result
+    return provider.login()
+
+
+def credentials(credentials):
+    """
+    Deserializes credentials.
+    
+    :param credentials:
+        Credentials serialized with :meth:`.Credentials.serialize` or :class:`.Credentials` instance.
+    
+    :returns:
+        :class:`.Credentials`
+    """
+    return Credentials.deserialize(credentials)
+
 
 def access(credentials, url, params=None, method='GET', headers={}, max_redirects=5, content_parser=None):
     """
