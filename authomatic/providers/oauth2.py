@@ -189,11 +189,6 @@ class OAuth2(providers.AuthorisationProvider):
         Refreshes :class:`.Credentials` by providing fresh **token**,
         **refresh_token** and **expires_in**.
         
-        :param adapter:
-            :doc:`Adapter <adapters>`
-        :param credentials:
-            :class:`.Credentials`
-        
         :returns:
             :class:`.Response`.
         """

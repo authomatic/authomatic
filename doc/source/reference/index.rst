@@ -8,7 +8,7 @@ Reference
    functions
    classes
    providers
-   adapters
+   extras
 
 
 

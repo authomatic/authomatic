@@ -1,6 +1,6 @@
 
 from google.appengine.ext import testbed, ndb
-from authomatic.adapters.gae_webapp2 import NDBOpenIDStore
+from authomatic.extras.gae.openid import NDBOpenIDStore
 import datetime
 import pytest
 import time

@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Authomatic 0.0.0 documentation" href="../index.html" />
     <link rel="up" title="Reference" href="index.html" />
-    <link rel="next" title="Adapters" href="adapters.html" />
+    <link rel="next" title="Extras" href="extras.html" />
     <link rel="prev" title="Classes" href="classes.html" /> 
   </head>
   <body>
@@ -41,7 +41,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="adapters.html" title="Adapters"
+          <a href="extras.html" title="Extras"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="classes.html" title="Classes"
@@ -282,6 +282,21 @@ those passed through <a class="reference internal" href="functions.html#authomat
 </tbody>
 </table>
 <p>As well as those inherited from <a class="reference internal" href="#authomatic.providers.AuthorisationProvider" title="authomatic.providers.AuthorisationProvider"><tt class="xref py py-class docutils literal"><span class="pre">AuthorisationProvider</span></tt></a> constructor.</p>
+<dl class="classmethod">
+<dt id="authomatic.providers.oauth2.OAuth2.refresh_credentials">
+<em class="property">classmethod </em><tt class="descname">refresh_credentials</tt><big>(</big><em>credentials</em><big>)</big><a class="headerlink" href="#authomatic.providers.oauth2.OAuth2.refresh_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refreshes <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a> by providing fresh <strong>token</strong>,
+<strong>refresh_token</strong> and <strong>expires_in</strong>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="classes.html#authomatic.core.Response" title="authomatic.core.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -368,7 +383,10 @@ those passed through <a class="reference internal" href="functions.html#authomat
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>consumer_key</strong> (<em>str</em>) &#8211; The <em>key</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
 <li><strong>consumer_secret</strong> (<em>str</em>) &#8211; The <em>secret</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
-<li><strong>short_name</strong> &#8211; A unique short name used to serialize <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
+<li><strong>id</strong> &#8211; A unique short name used to serialize <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
+<li><strong>user_authorisation_params</strong> (<em>dict</em>) &#8211; A dictionary of additional request parameters for <strong>user authorisation request</strong>.</li>
+<li><strong>access_token_params</strong> (<em>dict</em>) &#8211; A dictionary of additional request parameters for <strong>access token request</strong>.</li>
+<li><strong>request_token_params</strong> (<em>dict</em>) &#8211; A dictionary of additional request parameters for <strong>request token request</strong>.</li>
 </ul>
 </td>
 </tr>
@@ -395,7 +413,10 @@ see <a class="reference external" href="http://oauth.net/core/1.0a/#auth_step1">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>consumer_key</strong> (<em>str</em>) &#8211; The <em>key</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
 <li><strong>consumer_secret</strong> (<em>str</em>) &#8211; The <em>secret</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
-<li><strong>short_name</strong> &#8211; A unique short name used to serialize <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
+<li><strong>id</strong> &#8211; A unique short name used to serialize <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
+<li><strong>user_authorisation_params</strong> (<em>dict</em>) &#8211; A dictionary of additional request parameters for <strong>user authorisation request</strong>.</li>
+<li><strong>access_token_params</strong> (<em>dict</em>) &#8211; A dictionary of additional request parameters for <strong>access token request</strong>.</li>
+<li><strong>request_token_params</strong> (<em>dict</em>) &#8211; A dictionary of additional request parameters for <strong>request token request</strong>.</li>
 </ul>
 </td>
 </tr>
@@ -440,6 +461,8 @@ The login procedure requires <strong>one more fetch</strong> and up to <strong>8
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>store</strong> &#8211; Any object which implements <tt class="xref py py-class docutils literal"><span class="pre">openid.store.interface.OpenIDStore</span></tt>
+of the <a class="reference external" href="http://pypi.python.org/pypi/python-openid/">python-openid</a> library.</li>
 <li><strong>use_realm</strong> (<em>bool</em>) &#8211; Whether to use <a class="reference external" href="http://openid.net/specs/openid-authentication-2_0-12.html#realms">OpenID realm</a>.
 If <tt class="docutils literal"><span class="pre">True</span></tt> the realm HTML document will be accessible at
 <tt class="docutils literal"><span class="pre">{current</span> <span class="pre">url}?{realm_param}={realm_param}</span></tt>
@@ -484,6 +507,8 @@ Default = <tt class="xref py py-attr docutils literal"><span class="pre">OpenID.
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>store</strong> &#8211; Any object which implements <tt class="xref py py-class docutils literal"><span class="pre">openid.store.interface.OpenIDStore</span></tt>
+of the <a class="reference external" href="http://pypi.python.org/pypi/python-openid/">python-openid</a> library.</li>
 <li><strong>use_realm</strong> (<em>bool</em>) &#8211; <p>Whether to use <a class="reference external" href="http://openid.net/specs/openid-authentication-2_0-12.html#realms">OpenID realm</a>.
 If <tt class="docutils literal"><span class="pre">True</span></tt> the realm HTML document will be accessible at
 <tt class="docutils literal"><span class="pre">{current</span> <span class="pre">url}?{realm_param}={realm_param}</span></tt>
@@ -533,6 +558,8 @@ Default = <tt class="xref py py-attr docutils literal"><span class="pre">OpenID.
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>store</strong> &#8211; Any object which implements <tt class="xref py py-class docutils literal"><span class="pre">openid.store.interface.OpenIDStore</span></tt>
+of the <a class="reference external" href="http://pypi.python.org/pypi/python-openid/">python-openid</a> library.</li>
 <li><strong>use_realm</strong> (<em>bool</em>) &#8211; <p>Whether to use <a class="reference external" href="http://openid.net/specs/openid-authentication-2_0-12.html#realms">OpenID realm</a>.
 If <tt class="docutils literal"><span class="pre">True</span></tt> the realm HTML document will be accessible at
 <tt class="docutils literal"><span class="pre">{current</span> <span class="pre">url}?{realm_param}={realm_param}</span></tt>
@@ -636,7 +663,7 @@ Moreover the <tt class="xref py py-attr docutils literal"><span class="pre">user
 <tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.login_decorator" title="authomatic.providers.login_decorator"><tt class="xref py py-obj docutils literal"><span class="pre">login_decorator</span></tt></a>(func)</td>
 <td>Decorator to be used by the <a class="reference internal" href="#authomatic.providers.BaseProvider.login" title="authomatic.providers.BaseProvider.login"><tt class="xref py py-meth docutils literal"><span class="pre">BaseProvider.login()</span></tt></a>.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.BaseProvider" title="authomatic.providers.BaseProvider"><tt class="xref py py-obj docutils literal"><span class="pre">BaseProvider</span></tt></a>(adapter,&nbsp;config,&nbsp;provider_name)</td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.BaseProvider" title="authomatic.providers.BaseProvider"><tt class="xref py py-obj docutils literal"><span class="pre">BaseProvider</span></tt></a>(provider_name[,&nbsp;callback,&nbsp;prefix])</td>
 <td>Abstract base class for all providers.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.AuthorisationProvider" title="authomatic.providers.AuthorisationProvider"><tt class="xref py py-obj docutils literal"><span class="pre">AuthorisationProvider</span></tt></a>(*args,&nbsp;**kwargs)</td>
@@ -657,20 +684,8 @@ which makes the <a class="reference internal" href="#authomatic.providers.BasePr
 
 <dl class="class">
 <dt id="authomatic.providers.BaseProvider">
-<em class="property">class </em><tt class="descclassname">authomatic.providers.</tt><tt class="descname">BaseProvider</tt><big>(</big><em>adapter</em>, <em>config</em>, <em>provider_name</em>, <em>callback=None</em>, <em>report_errors=True</em>, <em>logging_level=20</em>, <em>prefix='authomatic'</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers.html#BaseProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.BaseProvider" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">authomatic.providers.</tt><tt class="descname">BaseProvider</tt><big>(</big><em>provider_name</em>, <em>callback=None</em>, <em>prefix='authomatic'</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers.html#BaseProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.BaseProvider" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract base class for all providers.</p>
-<dl class="attribute">
-<dt id="authomatic.providers.BaseProvider.adapter">
-<tt class="descname">adapter</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.BaseProvider.adapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <a class="reference internal" href="adapters.html"><em>platform adapter</em></a>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.BaseProvider.config">
-<tt class="descname">config</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.BaseProvider.config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="config.html"><em>Config</em></a></p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="authomatic.providers.BaseProvider.name">
 <tt class="descname">name</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.BaseProvider.name" title="Permalink to this definition">¶</a></dt>
@@ -682,27 +697,6 @@ which makes the <a class="reference internal" href="#authomatic.providers.BasePr
 <tt class="descname">callback</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.BaseProvider.callback" title="Permalink to this definition">¶</a></dt>
 <dd><p><tt class="xref py py-class docutils literal"><span class="pre">callable</span></tt> An optional callback called when the login procedure
 is finished with <a class="reference internal" href="classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">core.LoginResult</span></tt></a> passed as argument.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.BaseProvider.report_errors">
-<tt class="descname">report_errors</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.BaseProvider.report_errors" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt> If <tt class="docutils literal"><span class="pre">True</span></tt> exceptions which occur inside the <a class="reference internal" href="#authomatic.providers.BaseProvider.login" title="authomatic.providers.BaseProvider.login"><tt class="xref py py-meth docutils literal"><span class="pre">login()</span></tt></a>
-will be caught and reported in the <a class="reference internal" href="classes.html#authomatic.core.LoginResult.error" title="authomatic.core.LoginResult.error"><tt class="xref py py-attr docutils literal"><span class="pre">core.LoginResult.error</span></tt></a>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.BaseProvider.logging_level">
-<tt class="descname">logging_level</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.BaseProvider.logging_level" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">int</span></tt> The logging level treshold as specified in the standard Python
-<a class="reference external" href="http://docs.python.org/2/library/logging.html">logging library</a>.
-If <tt class="docutils literal"><span class="pre">None</span></tt> or <tt class="docutils literal"><span class="pre">False</span></tt> there will be no logs. Default is <tt class="docutils literal"><span class="pre">logging.INFO</span></tt>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="authomatic.providers.BaseProvider.prefix">
-<tt class="descname">prefix</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.BaseProvider.prefix" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Prefix used by storing values to session.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -748,9 +742,9 @@ not empty when the method runs out of it&#8217;s flow or when there are errors.<
 </table>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="staticmethod">
 <dt id="authomatic.providers.BaseProvider.csrf_generator">
-<em class="property">classmethod </em><tt class="descname">csrf_generator</tt><big>(</big><big>)</big><a class="headerlink" href="#authomatic.providers.BaseProvider.csrf_generator" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><tt class="descname">csrf_generator</tt><big>(</big><big>)</big><a class="headerlink" href="#authomatic.providers.BaseProvider.csrf_generator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates CSRF token.</p>
 <p>Inspired by this article <a class="reference external" href="http://blog.ptsecurity.com/2012/10/random-number-security-in-python.html">http://blog.ptsecurity.com/2012/10/random-number-security-in-python.html</a></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -769,7 +763,7 @@ not empty when the method runs out of it&#8217;s flow or when there are errors.<
 <dt id="authomatic.providers.AuthorisationProvider">
 <em class="property">class </em><tt class="descclassname">authomatic.providers.</tt><tt class="descname">AuthorisationProvider</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers.html#AuthorisationProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.AuthorisationProvider" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base provider for <em>authorisation protocols</em> i.e. protocols which allow a <strong>consumer</strong>
-to be authorized by a <strong>provider</strong> to access <strong>protected resources</strong> of a <strong>user</strong>.
+to be authorized by a <strong>provider</strong> to access_with_credentials <strong>protected resources</strong> of a <strong>user</strong>.
 e.g. <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> or <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a>.</p>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -779,7 +773,9 @@ e.g. <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> or <
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>consumer_key</strong> (<em>str</em>) &#8211; The <em>key</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
 <li><strong>consumer_secret</strong> (<em>str</em>) &#8211; The <em>secret</em> assigned to our application (<strong>consumer</strong>) by the <strong>provider</strong>.</li>
-<li><strong>short_name</strong> &#8211; A unique short name used to serialize <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
+<li><strong>id</strong> (<em>int</em>) &#8211; A unique numeric ID used to serialize <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a>.</li>
+<li><strong>user_authorisation_params</strong> (<em>dict</em>) &#8211; A dictionary of additional request parameters for <strong>user authorisation request</strong>.</li>
+<li><strong>access_token_params</strong> (<em>dict</em>) &#8211; A dictionary of additional request parameters for <strong>access_with_credentials token request</strong>.</li>
 </ul>
 </td>
 </tr>
@@ -788,14 +784,14 @@ e.g. <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> or <
 <dl class="attribute">
 <dt id="authomatic.providers.AuthorisationProvider.credentials">
 <tt class="descname">credentials</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.credentials" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">core.Credentials</span></tt> to access <strong>user&#8217;s protected resources</strong>.</p>
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">core.Credentials</span></tt> to access_with_credentials <strong>user&#8217;s protected resources</strong>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.providers.AuthorisationProvider.user_authorisation_url">
 <tt class="descname">user_authorisation_url</tt><a class="reference internal" href="../_modules/authomatic/providers.html#AuthorisationProvider.user_authorisation_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.user_authorisation_url" title="Permalink to this definition">¶</a></dt>
 <dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> URL to which we redirect the <strong>user</strong> to grant our app i.e. the <strong>consumer</strong>
-an <strong>authorisation</strong> to access his <strong>protected resources</strong>.
+an <strong>authorisation</strong> to access_with_credentials his <strong>protected resources</strong>.
 see <a class="reference external" href="http://tools.ietf.org/html/rfc6749#section-4.1.1">http://tools.ietf.org/html/rfc6749#section-4.1.1</a> and
 <a class="reference external" href="http://oauth.net/core/1.0a/#auth_step2">http://oauth.net/core/1.0a/#auth_step2</a>.</p>
 </dd></dl>
@@ -803,7 +799,7 @@ see <a class="reference external" href="http://tools.ietf.org/html/rfc6749#secti
 <dl class="attribute">
 <dt id="authomatic.providers.AuthorisationProvider.access_token_url">
 <tt class="descname">access_token_url</tt><a class="reference internal" href="../_modules/authomatic/providers.html#AuthorisationProvider.access_token_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.access_token_url" title="Permalink to this definition">¶</a></dt>
-<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> URL where we can get the <em>access token</em> to access <strong>protected resources</strong> of a <strong>user</strong>.
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> URL where we can get the <em>access_with_credentials token</em> to access_with_credentials <strong>protected resources</strong> of a <strong>user</strong>.
 see <a class="reference external" href="http://tools.ietf.org/html/rfc6749#section-4.1.3">http://tools.ietf.org/html/rfc6749#section-4.1.3</a> and
 <a class="reference external" href="http://oauth.net/core/1.0a/#auth_step3">http://oauth.net/core/1.0a/#auth_step3</a>.</p>
 </dd></dl>
@@ -849,100 +845,11 @@ see <a class="reference external" href="http://tools.ietf.org/html/rfc6749#secti
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>deserialized_tuple</strong> (<em>tuple</em>) &#8211; A tuple which first index is the <tt class="xref py py-attr docutils literal"><span class="pre">short_name</span></tt> and the rest
+<li><strong>deserialized_tuple</strong> (<em>tuple</em>) &#8211; A tuple which first index is the <a class="reference internal" href="classes.html#authomatic.core.User.id" title="authomatic.core.User.id"><tt class="xref py py-attr docutils literal"><span class="pre">id</span></tt></a> and the rest
 are all the items of the <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt> created by <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.to_tuple" title="authomatic.providers.AuthorisationProvider.to_tuple"><tt class="xref py py-meth docutils literal"><span class="pre">to_tuple()</span></tt></a>.</li>
 <li><strong>cfg</strong> (<em>dict</em>) &#8211; <a class="reference internal" href="config.html"><em>Config</em></a></li>
 </ul>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="authomatic.providers.AuthorisationProvider.fetch_async">
-<tt class="descname">fetch_async</tt><big>(</big><em>adapter</em>, <em>credentials</em>, <em>url</em>, <em>content_parser</em>, <em>method='GET'</em>, <em>headers={}</em>, <em>response_parser=None</em><big>)</big><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.fetch_async" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetches protected resource asynchronously.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Whether fetch calls are really asynchronous depends on the <a class="reference internal" href="adapters.html"><em>Adapter</em></a> implementation!</p>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>adapter</strong> &#8211; The same <a class="reference internal" href="adapters.html"><em>adapter</em></a> instance which was used in the <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a>
-function to get the <strong>user&#8217;s</strong> <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">core.Credentials</span></tt></a>.</li>
-<li><strong>credentials</strong> (<em>core.Credentials</em>) &#8211; <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a> of the <strong>user</strong> whose
-<strong>protected resource</strong> we want to access.</li>
-<li><strong>url</strong> (<em>str</em>) &#8211; URL of the protected resource. Can contain query parameters.</li>
-<li><strong>method</strong> (<em>str</em>) &#8211; HTTP method of the request.</li>
-<li><strong>content_parser</strong> (<em>callable</em>) &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">callable</span></tt> as described in <tt class="xref py py-attr docutils literal"><span class="pre">core.Response.content_parser</span></tt>.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">adapters.RPC</span></tt></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="authomatic.providers.AuthorisationProvider.create_request">
-<tt class="descname">create_request</tt><big>(</big><em>url</em>, <em>method='GET'</em>, <em>content_parser=None</em>, <em>response_parser=None</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers.html#AuthorisationProvider.create_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.create_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates an authorized <a class="reference internal" href="classes.html#authomatic.core.Request" title="authomatic.core.Request"><tt class="xref py py-class docutils literal"><span class="pre">request</span></tt></a> to <strong>protected resources</strong> of a <strong>user</strong>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>url</strong> (<em>str</em>) &#8211; URL of the protected resource. Can contain query parameters.</li>
-<li><strong>method</strong> (<em>str</em>) &#8211; HTTP method of the request.</li>
-<li><strong>content_parser</strong> (<em>callable</em>) &#8211; A callable as described in <a class="reference internal" href="classes.html#authomatic.core.Response.content_parser" title="authomatic.core.Response.content_parser"><tt class="xref py py-attr docutils literal"><span class="pre">core.Response.content_parser</span></tt></a>.</li>
-<li><strong>response_parser</strong> (<em>callable</em>) &#8211; A callable as described in <tt class="xref py py-attr docutils literal"><span class="pre">core.Request.response_parser</span></tt>.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="classes.html#authomatic.core.Request" title="authomatic.core.Request"><tt class="xref py py-class docutils literal"><span class="pre">core.Request</span></tt></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="authomatic.providers.AuthorisationProvider.fetch">
-<tt class="descname">fetch</tt><big>(</big><em>url</em>, <em>method='GET'</em>, <em>headers={}</em>, <em>response_parser=None</em>, <em>content_parser=None</em><big>)</big><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.fetch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetches protected resource.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>url</strong> &#8211; </li>
-<li><strong>method</strong> &#8211; </li>
-<li><strong>headers</strong> &#8211; </li>
-<li><strong>response_parser</strong> &#8211; </li>
-<li><strong>content_parser</strong> &#8211; </li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="authomatic.providers.AuthorisationProvider.fetch_user_info">
-<tt class="descname">fetch_user_info</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/authomatic/providers.html#AuthorisationProvider.fetch_user_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.fetch_user_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes <strong>synchronous</strong> request to <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.user_info_url" title="authomatic.providers.AuthorisationProvider.user_info_url"><tt class="xref py py-attr docutils literal"><span class="pre">user_info_url</span></tt></a> and
-returns the <a class="reference internal" href="classes.html#authomatic.core.UserInfoResponse" title="authomatic.core.UserInfoResponse"><tt class="xref py py-class docutils literal"><span class="pre">core.UserInfoResponse</span></tt></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="classes.html#authomatic.core.UserInfoResponse" title="authomatic.core.UserInfoResponse"><tt class="xref py py-class docutils literal"><span class="pre">core.UserInfoResponse</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -966,22 +873,6 @@ returns the <a class="reference internal" href="classes.html#authomatic.core.Use
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="authomatic.providers.AuthorisationProvider.user_info_request">
-<tt class="descname">user_info_request</tt><a class="reference internal" href="../_modules/authomatic/providers.html#AuthorisationProvider.user_info_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.AuthorisationProvider.user_info_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an <strong>asynchronous</strong> <a class="reference internal" href="classes.html#authomatic.core.Request" title="authomatic.core.Request"><tt class="xref py py-class docutils literal"><span class="pre">request</span></tt></a> to <a class="reference internal" href="#authomatic.providers.AuthorisationProvider.user_info_url" title="authomatic.providers.AuthorisationProvider.user_info_url"><tt class="xref py py-attr docutils literal"><span class="pre">user_info_url</span></tt></a>
-whose <a class="reference internal" href="classes.html#authomatic.core.Request.get_response" title="authomatic.core.Request.get_response"><tt class="xref py py-meth docutils literal"><span class="pre">get_response()</span></tt></a> method returns
-a <a class="reference internal" href="classes.html#authomatic.core.UserInfoResponse" title="authomatic.core.UserInfoResponse"><tt class="xref py py-class docutils literal"><span class="pre">core.UserInfoResponse</span></tt></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="classes.html#authomatic.core.Request" title="authomatic.core.Request"><tt class="xref py py-class docutils literal"><span class="pre">core.Request</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -992,7 +883,7 @@ authenticate a <em>claimed identity</em> of a <strong>user</strong>. e.g. <a cla
 <dl class="attribute">
 <dt id="authomatic.providers.AuthenticationProvider.has_protected_resources">
 <tt class="descname">has_protected_resources</tt><em class="property"> = False</em><a class="headerlink" href="#authomatic.providers.AuthenticationProvider.has_protected_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether the <strong>provider</strong> supports access to
+<dd><p>Indicates whether the <strong>provider</strong> supports access_with_credentials to
 <strong>user&#8217;s</strong> protected resources.</p>
 </dd></dl>
 
@@ -1023,8 +914,8 @@ authenticate a <em>claimed identity</em> of a <strong>user</strong>. e.g. <a cla
   <p class="topless"><a href="classes.html"
                         title="previous chapter">Classes</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="adapters.html"
-                        title="next chapter">Adapters</a></p>
+  <p class="topless"><a href="extras.html"
+                        title="next chapter">Extras</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/reference/providers.txt"
@@ -1057,7 +948,7 @@ authenticate a <em>claimed identity</em> of a <strong>user</strong>. e.g. <a cla
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="adapters.html" title="Adapters"
+          <a href="extras.html" title="Extras"
              >next</a> |</li>
         <li class="right" >
           <a href="classes.html" title="Classes"

@@ -6,8 +6,13 @@ import logging
 import openid.store.interface
 
 
-
 class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
+    """
+    |gae| `NDB <https://developers.google.com/appengine/docs/python/ndb/>`_
+    based implementation of the :class:`openid.store.interface.OpenIDStore`
+    interface of the `python-openid`_ library.
+    """
+    
     serialized = ndb.StringProperty()
     expiration_date = ndb.DateTimeProperty()
     # we need issued to sort by most recently issued
@@ -24,24 +29,6 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
         lifetime = datetime.timedelta(0, association.lifetime)
         
         expiration_date = issued + lifetime
-        
-        cls._log(logging.DEBUG, 'NDBOpenIDStore: Getting or inserting OpenID association from datastore.')
-        
-        
-        
-        cls._log(logging.DEBUG, '------------------------------------------------')
-        cls._log(logging.DEBUG, '| Association')
-        cls._log(logging.DEBUG, '------------------------------------------------')
-        cls._log(logging.DEBUG, '| server_url = {}'.format(server_url))
-        cls._log(logging.DEBUG, '|')
-        cls._log(logging.DEBUG, '| Association:')
-        cls._log(logging.DEBUG, '| \t issued = {}'.format(association.issued))
-        cls._log(logging.DEBUG, '| \t lifetime = {}'.format(association.lifetime))
-        cls._log(logging.DEBUG, '| \t handle = {}'.format(association.handle))
-        cls._log(logging.DEBUG, '------------------------------------------------')
-        
-        
-        
         entity = cls.get_or_insert(association.handle, parent=ndb.Key('ServerUrl', server_url))
         
         entity.serialized = association.serialize()
@@ -100,15 +87,6 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     @classmethod
     def useNonce(cls, server_url, timestamp, salt):
         
-        cls._log(logging.DEBUG, '------------------------------------------------')
-        cls._log(logging.DEBUG, '| Nonce')
-        cls._log(logging.DEBUG, '------------------------------------------------')
-        cls._log(logging.DEBUG, '| server_url = {}'.format(server_url))
-        cls._log(logging.DEBUG, '| timestamp = {}'.format(timestamp))
-        cls._log(logging.DEBUG, '| salt = {}'.format(salt))
-        cls._log(logging.DEBUG, '------------------------------------------------')
-        
-        
         # check whether there is already an entity with the same ancestor path in the datastore
         key = ndb.Key('ServerUrl', str(server_url) or 'x', 'TimeStamp', str(timestamp), cls, str(salt))
         
@@ -117,12 +95,13 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
         
         if result:
             # if so, the nonce is not valid so return False
+            cls._log(logging.WARNING, 'NDBOpenIDStore: Nonce was allready used!')
             return False
         else:
             # if not, store the key to datastore and return True
             nonce = cls(key=key)
             nonce.expiration_date = datetime.datetime.fromtimestamp(timestamp) + datetime.timedelta(0, openid.store.nonce.SKEW)
-            cls._log(logging.DEBUG, 'NDBOpenIDStore: Putting OpenID nonce to datastore.')
+            cls._log(logging.DEBUG, 'NDBOpenIDStore: Putting new nonce to datastore.')
             nonce.put()
             return True
     

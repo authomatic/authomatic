@@ -56,72 +56,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-authomatic">
-<span id="functions"></span><h1>Functions<a class="headerlink" href="#module-authomatic" title="Permalink to this headline">¶</a></h1>
-<p>This is the only interface that you should ever need to get <strong>user info</strong> and <strong>credentials</strong>
-from a <strong>provider</strong> and to make asynchronous calls to their <strong>protected resources</strong>.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Whether fetch calls are really asynchronous depends on the <a class="reference internal" href="adapters.html"><em>Adapter</em></a> implementation!</p>
-</div>
-<p>This is a simple webapp2 example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">webapp2</span>
-<span class="kn">import</span> <span class="nn">authomatic</span>
-<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">gaewebapp2</span>
-
-<span class="c"># HTTP request handler</span>
-<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
-    
-    <span class="c"># accept both GET and POST HTTP methods</span>
-    <span class="k">def</span> <span class="nf">anymethod</span><span class="p">(</span><span class="n">provider_name</span><span class="p">):</span>
-        
-        <span class="c"># first we need platform adapter</span>
-        <span class="n">adapter</span> <span class="o">=</span> <span class="n">gaewebapp2</span><span class="o">.</span><span class="n">GAEWebapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        
-        <span class="c"># login by the provider</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-            
-            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Login failed because {}!&#39;</span><span class="o">.</span><span class="n">formar</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
-            <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Hi {}!&#39;</span><span class="o">.</span><span class="n">formar</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-                
-                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="p">:</span>
-                    <span class="c"># if there are credentials we can access user&#39;s protected resources</span>
-                   
-                    <span class="c"># we can serialize store credentials to DB or elsewhere</span>
-                    <span class="n">sc</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
-                    
-                    <span class="c"># we can test provider type</span>
-                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">==</span> <span class="s">&#39;fb&#39;</span><span class="p">:</span>
-                        
-                        <span class="c"># fetch multiple protected resources at once with serialized credentials</span>
-                        <span class="n">request1</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">async_fetch</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
-                                                          <span class="s">&#39;https://graph.facebook.com/me/og.follows&#39;</span><span class="p">,</span>
-                                                          <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span> <span class="c"># returns immediately</span>
-                        <span class="n">request2</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">async_fetch</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
-                                                          <span class="s">&#39;https://graph.facebook.com/me/news.reads?&#39;</span> <span class="o">+</span> \
-                                                          <span class="s">&#39;article=http://example.com/article&#39;</span><span class="p">,</span>
-                                                          <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span> <span class="c"># returns immediately</span>
-                        <span class="n">request3</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">async_fetch</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
-                                                          <span class="s">&#39;https://graph.facebook.com/me/video.watches?&#39;</span> <span class="o">+</span> \
-                                                          <span class="s">&#39;video=http://example.com/video&#39;</span><span class="p">,</span>
-                                                          <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span> <span class="c"># returns immediately</span>
-                        
-                        <span class="c"># they all now run in parallel</span>
-                        <span class="c"># so you can do other stuff while the requests fly through the Internet</span>
-                        
-                        <span class="c"># collect results</span>
-                        <span class="n">response1</span> <span class="o">=</span> <span class="n">request1</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span> <span class="c"># returns when it has result</span>
-                        <span class="n">response2</span> <span class="o">=</span> <span class="n">request2</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span> <span class="c"># returns when it has result</span>
-                        <span class="n">response3</span> <span class="o">=</span> <span class="n">request3</span><span class="o">.</span><span class="n">get_response</span><span class="p">()</span> <span class="c"># returns when it has result</span>
-</pre></div>
-</div>
+  <div class="section" id="functions">
+<h1>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-authomatic"></span><p>This is the only interface that you should ever need to get <strong>user info</strong> and <strong>credentials</strong>
+from a <strong>provider</strong> and to make asynchronous calls to <strong>protected resources</strong> of the <strong>user</strong>.</p>
 <dl class="function">
 <dt id="authomatic.login">
-<tt class="descclassname">authomatic.</tt><tt class="descname">login</tt><big>(</big><em>adapter</em>, <em>config</em>, <em>provider_name</em>, <em>callback=None</em>, <em>report_errors=True</em>, <em>logging_level=10</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#authomatic.login" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">authomatic.</tt><tt class="descname">login</tt><big>(</big><em>provider_name</em>, <em>callback=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#authomatic.login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Launches a login procedure for specified <a class="reference internal" href="providers.html"><em>provider</em></a> and returns <a class="reference internal" href="classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
@@ -139,7 +80,7 @@ or calls the function specified in the <tt class="docutils literal"><span class=
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>adapter</strong> &#8211; Framework specific <a class="reference internal" href="adapters.html"><em>adapter</em></a>.</li>
+<li><strong>adapter</strong> &#8211; Framework specific <tt class="xref doc docutils literal"><span class="pre">adapter</span></tt>.</li>
 <li><strong>config</strong> (<em>dict</em>) &#8211; <a class="reference internal" href="config.html"><em>Config</em></a></li>
 <li><strong>provider_name</strong> (<em>str</em>) &#8211; Name of the provider as specified in the keys of the <a class="reference internal" href="config.html"><em>Config</em></a>.</li>
 <li><strong>callback</strong> (<em>callable</em>) &#8211; If specified the function will call the callback with <a class="reference internal" href="classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>
@@ -150,7 +91,7 @@ If <tt class="docutils literal"><span class="pre">False</span></tt> errors and e
 <li><strong>logging_level</strong> (<em>int</em>) &#8211; The library logs important events during the login procedure.
 You can specify the desired logging level with the constants of the
 <a class="reference external" href="http://docs.python.org/2/library/logging.html">logging</a> of Python standard library.
-The main login procedure events have level <tt class="docutils literal"><span class="pre">INFO</span></tt>, others like adapter database access
+The main login procedure events have level <tt class="docutils literal"><span class="pre">INFO</span></tt>, others like adapter database access_with_credentials
 have level <tt class="docutils literal"><span class="pre">DEBUG</span></tt>.</li>
 </ul>
 </td>
@@ -166,112 +107,6 @@ have level <tt class="docutils literal"><span class="pre">DEBUG</span></tt>.</li
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt> or <a class="reference internal" href="classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="authomatic.short_name">
-<tt class="descclassname">authomatic.</tt><tt class="descname">short_name</tt><big>(</big><big>)</big><a class="headerlink" href="#authomatic.short_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>A simple counter to be used in the config to generate unique <cite>short_name</cite> values.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>.</td>
-</tr>
-</tbody>
-</table>
-<p>Use it in the <a class="reference internal" href="config.html"><em>Config</em></a> like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">authomatic</span>
-
-<span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>
-         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">short_name</span><span class="p">(),</span> <span class="c"># returns 1</span>
-         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
-         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
-         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">]</span>
-    <span class="p">},</span>
-    <span class="s">&#39;google&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="s">&#39;authomatic.providers.oauth2.Google&#39;</span><span class="p">,</span>
-         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">short_name</span><span class="p">(),</span> <span class="c"># returns 2</span>
-         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
-         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
-         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;https://www.googleapis.com/auth/userinfo.profile&#39;</span><span class="p">,</span>
-                   <span class="s">&#39;https://www.googleapis.com/auth/userinfo.email&#39;</span><span class="p">]</span>
-    <span class="p">},</span>
-    <span class="s">&#39;windows_live&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="s">&#39;oauth2.WindowsLive&#39;</span><span class="p">,</span>
-         <span class="s">&#39;short_name&#39;</span><span class="p">:</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">short_name</span><span class="p">(),</span> <span class="c"># returns 3</span>
-         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
-         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
-         <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;wl.basic&#39;</span><span class="p">,</span> <span class="s">&#39;wl.emails&#39;</span><span class="p">,</span> <span class="s">&#39;wl.photos&#39;</span><span class="p">]</span>
-    <span class="p">},</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="authomatic.async_fetch">
-<tt class="descclassname">authomatic.</tt><tt class="descname">async_fetch</tt><big>(</big><em>adapter</em>, <em>config</em>, <em>credentials</em>, <em>url</em>, <em>method='GET'</em>, <em>content_parser=None</em><big>)</big><a class="headerlink" href="#authomatic.async_fetch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetches protected resource asynchronously.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Whether fetch calls are really asynchronous depends on the <a class="reference internal" href="adapters.html"><em>Adapter</em></a> implementation!</p>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>adapter</strong> &#8211; <a class="reference internal" href="adapters.html"><em>Adapter</em></a></li>
-<li><strong>config</strong> &#8211; The same <a class="reference internal" href="config.html"><em>Config</em></a> used in the <a class="reference internal" href="#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">login()</span></tt></a> function to get the credentials.</li>
-<li><strong>credentials</strong> &#8211; <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a> or <a class="reference internal" href="classes.html#authomatic.core.Credentials.serialize" title="authomatic.core.Credentials.serialize"><tt class="xref py py-meth docutils literal"><span class="pre">serialized</span> <span class="pre">credentials</span></tt></a>
-of the <strong>user</strong> whose <strong>protected resource</strong> we want to access.</li>
-<li><strong>url</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> The URL of the protected resource.
-Can contain query parameters.</li>
-<li><strong>method</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> HTTP method of the request.</li>
-<li><strong>content_parser</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">callable</span></tt> as described in <a class="reference internal" href="classes.html#authomatic.core.Response.content_parser" title="authomatic.core.Response.content_parser"><tt class="xref py py-attr docutils literal"><span class="pre">Response.content_parser</span></tt></a>.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="classes.html#authomatic.core.Request" title="authomatic.core.Request"><tt class="xref py py-class docutils literal"><span class="pre">Request</span></tt></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="authomatic.fetch">
-<tt class="descclassname">authomatic.</tt><tt class="descname">fetch</tt><big>(</big><em>adapter</em>, <em>config</em>, <em>credentials</em>, <em>url</em>, <em>method='GET'</em>, <em>content_parser=None</em><big>)</big><a class="headerlink" href="#authomatic.fetch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetches protected resource.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Internally it&#8217;s just a wrapper of
-<tt class="docutils literal"><span class="pre">authomatic.async_fetch(adapter,</span> <span class="pre">url,</span> <span class="pre">credentials,</span> <span class="pre">method,</span> <span class="pre">content_parser).get_response()</span></tt>.</p>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>adapter</strong> &#8211; <a class="reference internal" href="adapters.html"><em>Adapter</em></a></li>
-<li><strong>config</strong> &#8211; The same <a class="reference internal" href="config.html"><em>Config</em></a> used in the <a class="reference internal" href="#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">login()</span></tt></a> function to get the credentials.</li>
-<li><strong>credentials</strong> &#8211; <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a> or <a class="reference internal" href="classes.html#authomatic.core.Credentials.serialize" title="authomatic.core.Credentials.serialize"><tt class="xref py py-meth docutils literal"><span class="pre">serialized</span> <span class="pre">credentials</span></tt></a>
-of the <strong>user</strong> whose <strong>protected resource</strong> we want to access.</li>
-<li><strong>url</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> The URL of the protected resource.
-Can contain query parameters.</li>
-<li><strong>method</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> HTTP method of the request.</li>
-<li><strong>content_parser</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">callable</span></tt> as described in <a class="reference internal" href="classes.html#authomatic.core.Response.content_parser" title="authomatic.core.Response.content_parser"><tt class="xref py py-attr docutils literal"><span class="pre">Response.content_parser</span></tt></a>.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="classes.html#authomatic.core.Response" title="authomatic.core.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a></p>
-</td>
 </tr>
 </tbody>
 </table>

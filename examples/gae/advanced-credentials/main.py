@@ -1,6 +1,5 @@
 # main.py
 
-from authomatic.adapters.gae.openid import NDBOpenIDStore
 from config import CONFIG
 import authomatic
 import logging

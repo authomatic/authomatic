@@ -1,28 +1,22 @@
 # main.py
 
 import webapp2
-from authomatic.adapters.gae.openid import NDBOpenIDStore
 import authomatic
 from config import CONFIG
-
 
 # Create a simple request handler for the login procedure.
 class Login(webapp2.RequestHandler):
     
-    # The handler must accept GET and POST http methods.
-    # Accept the "provider_name" URL variable.
-    def anymethod(self, provider_name):
+    # The handler must accept GET and POST http methods and
+    # catch the "provider_name" URL variable.
+    def any(self, provider_name):
                 
-        # Get user from provider.
+        # It all begins with login.
         result = authomatic.login(provider_name)
         
-        # Dont write anything to the response if there is no result!!!
-        
         if result:
-            
-            # If there is result, the login procedure has finished,
-            # And you can write to the response.
-            self.response.write('<a href="..">Home</a><br />!')
+            # If there is result, the login procedure has finished.
+            self.response.write('<a href="..">Home</a>')
             
             if result.error:
                 # Login procedure finished with an error.
@@ -31,14 +25,14 @@ class Login(webapp2.RequestHandler):
             elif result.user:
                 # Hooray, we have the user!
                 
-                # But wait, we need to update his info first.
-                # This is only neccessary by AuthorisationProvider i.e. OAuth 2.0 and OAuth 1.0a.
+                # OAuth 2.0 and OAuth 1.0a provide only limited user data on login,
+                # We need to update the user to get richer info.
                 result.user.update()
                 
                 # Welcome the user.
-                self.response.write('Hi {},<br />'.format(result.user.name))
-                self.response.write('Your id is: {}<br />'.format(result.user.id))
-                self.response.write('Your email is: {}<br />'.format(result.user.email))
+                self.response.write('<h1>Hi {},</h1>'.format(result.user.name))
+                self.response.write('<h2>Your id is: {}</h2>'.format(result.user.id))
+                self.response.write('<h2>Your email is: {}</h2>'.format(result.user.email))
                 
                 # Seems like we're done, but there's more we can do...
                 
@@ -49,55 +43,62 @@ class Login(webapp2.RequestHandler):
                     # Each provider has it's specific API.
                     if result.provider.name == 'fb':
                         
-                        self.response.write('Your are logged in with Facebook.<br />')
+                        self.response.write('Your are logged in with Facebook,<br />')
                         
-                        # We will post this message to the user's Facebook timeline.
-                        message = 'Can it be that it is all so simple now?'
+                        # We will access the user's 5 most recent statuses.
+                        url = 'https://graph.facebook.com/{}?fields=feed.limit(5).fields(message)'
+                        url = url.format(result.user.id)
                         
-                        # Construct the Facebook Graph API URL.
-                        url = 'https://graph.facebook.com/{}/feed?message={}'.format(result.user.id, message)
+                        # Access user's protected resource.
+                        response = result.provider.access(url)
                         
-                        # Post to timeline on user's behalf (_access his protected resource).
-                        response = result.provider.access(url, method='POST')
-                        
-                        # Parse response.
-                        post_id = response.data.get('id')
-                        error = response.data.get('error')
-                        
-                        # We're done!
-                        if error:
-                            self.response.write('Damn that error: {}!'.format(error))
-                        elif post_id:
-                            self.response.write('You just posted a post with id ' + \
-                                                '{} to your Facebook timeline!'.format(post_id))
+                        if response.status == 200:
+                            # Parse response.
+                            messages = response.data.get('feed').get('data')
+                            error = response.data.get('error')
+                            
+                            if error:
+                                self.response.write('Damn that error: {}!'.format(error))
+                            elif messages:
+                                self.response.write('and these are your 5 most recent statuses:<br /><br />')
+                                for message in messages:
+                                    
+                                    text = message.get('message')
+                                    date = message.get('created_time')
+                                    
+                                    self.response.write('<h3>{}</h3>'.format(text))
+                                    self.response.write('Posted on: {}'.format(date))
                         else:
-                            self.response.write('Damn that unknown error!')
+                            self.response.write('Damn that unknown error!<br />')
+                            self.response.write('Status: {}'.format(response.status))
                         
                     if result.provider.name == 'tw':
                         
-                        self.response.write('Your are logged in with Twitter.<br />')
+                        self.response.write('Your are logged in with Twitter,<br />')
                         
-                        # We will tweet this message on the users timeline.
-                        status = 'Can it be that it is all so simple now?'
+                        # We will get the user's 5 most recent tweets.
+                        url = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
                         
-                        # Construct the Twitter API URL
-                        # Note: You need to set your Twitter app _access to "Read and Write"!
-                        url = 'https://api.twitter.com/1.1/statuses/update.json?status={}'.format(status)
-                        
-                        # Tweet on user's behalf (_access his protected resource).
-                        response = result.provider.access(url, method='POST')
-                        
+                        # You can pass a dictionary of querystring parameters.
+                        response = result.provider.access(url, {'count': 5})
+                                                
                         # Parse response.
-                        error = response.data.get('errors')
-                        tweet_id = response.data.get('id')
-                        
-                        # We're done!
-                        if error:
-                            self.response.write('Damn that error: {}!'.format(error))
-                        elif tweet_id:
-                            self.response.write('You just tweeted a tweet with id {}!'.format(tweet_id))
+                        if response.status == 200:
+                            if type(response.data) is list:
+                                # Twitter returns the tweets as a JSON list.
+                                self.response.write('and these are your 5 most recent tweets:')
+                                for tweet in response.data:
+                                    text = tweet.get('text')
+                                    date = tweet.get('created_at')
+                                    
+                                    self.response.write('<h3>{}</h3>'.format(text))
+                                    self.response.write('Tweeted on: {}'.format(date))
+                                    
+                            elif response.data.get('errors'):
+                                self.response.write('Damn that error: {}!'.format(response.data.get('errors')))
                         else:
-                            self.response.write('Damn that unknown error!')
+                            self.response.write('Damn that unknown error!<br />')
+                            self.response.write('Status: {}'.format(response.status))
 
 
 # Create a home request handler just that you don't have to enter the urls manually.
@@ -127,19 +128,14 @@ class Home(webapp2.RequestHandler):
         ''')
 
 
-# Finally create the routes.
-ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='anymethod'),
+# Create routes.
+ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/', Home)]
 
-# And instantiate the WSGI application.
-app = webapp2.WSGIApplication(ROUTES, debug=True)
+# Instantiate the webapp2 WSGI application.
+webapp_app = webapp2.WSGIApplication(ROUTES, debug=True)
 
-# Wrap the WSGI app in middleware.
-app = authomatic.middleware(app,
-                            config=CONFIG,
-                            openid_store=NDBOpenIDStore,
-                            report_errors=False)
-
-
-
-
+# Finally wrapp the app in authomatic middleware.
+app = authomatic.middleware(webapp_app,
+                            config=CONFIG, # Here goes the config.
+                            secret='some random secret string')

@@ -11,10 +11,9 @@ You can and should specify the keyword arguments for each :doc:`provider class <
 
 .. note::
    
-   In fact the config cann be any object implementing a subset of :class:`dict` interface as
-   specified in the :class:`.adapters.BaseConfig` abstract class.
+   In fact the config cann be any object implementing a subset of :class:`dict` interface.
    
-   If your app is running on |gae|_ you can use the :func:`.adapters.gae.ndb_config`.
+   If your app is running on |gae|_ you can use the :func:`.extras.gae.ndb_config`.
 
 
 The **config** must have following structure:

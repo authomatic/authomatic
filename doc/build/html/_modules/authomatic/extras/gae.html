@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>authomatic.extras.gae &mdash; Authomatic 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Authomatic 0.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="authomatic" href="../../authomatic.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../authomatic.html" accesskey="U">authomatic</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for authomatic.extras.gae</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Google App Engine Adapters</span>
+<span class="sd">--------------------------</span>
+
+<span class="sd">Adapters and utilities to be used on |gae|_.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">ndb</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">exceptions</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;ndb_config&#39;</span><span class="p">,</span> <span class="s">&#39;Webapp2Adapter&#39;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">GAEError</span><span class="p">(</span><span class="n">exceptions</span><span class="o">.</span><span class="n">BaseError</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">NDBConfig</span><span class="p">(</span><span class="n">ndb</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    |gae| `NDB &lt;https://developers.google.com/appengine/docs/python/ndb/&gt;`_</span>
+<span class="sd">    based :doc:`config`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
+    <span class="n">provider_name</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">(</span> <span class="p">)</span>
+    <span class="n">class_</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    
+    <span class="c"># AuthorisationProvider</span>
+    <span class="n">short_name</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+    <span class="n">consumer_key</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    
+    <span class="c"># OAuth2</span>
+    <span class="n">scope</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    
+    <span class="c"># AuthenticationProvider</span>
+    <span class="n">identifier_param</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    
+    <span class="c"># OpenID</span>
+    <span class="n">use_realm</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">BooleanProperty</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">realm_body</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">realm_param</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">xrds_param</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">sreg</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">sreg_required</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">ax_required</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">pape</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resembles the dict.get(key[, default=None]) method</span>
+<span class="sd">        </span>
+<span class="sd">        Returns a provider config dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">==</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">result_dict</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;scope&#39;</span><span class="p">,</span> <span class="s">&#39;sreg&#39;</span><span class="p">,</span> <span class="s">&#39;sreg_required&#39;</span><span class="p">,</span> <span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="s">&#39;ax_required&#39;</span><span class="p">,</span> <span class="s">&#39;pape&#39;</span><span class="p">,</span> <span class="p">):</span>
+                <span class="n">prop</span> <span class="o">=</span> <span class="n">result_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">prop</span><span class="p">:</span>
+                    <span class="n">result_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">prop</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+
+            <span class="k">return</span> <span class="n">result_dict</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">default</span>
+    
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="c"># get all items</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
+        <span class="c"># return list of dictionaries</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+    
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates an Example entity if the model is empty</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">fetch</span><span class="p">()):</span>
+            
+            <span class="n">example</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_or_insert</span><span class="p">(</span><span class="s">&#39;Example&#39;</span><span class="p">)</span>
+            
+            <span class="n">example</span><span class="o">.</span><span class="n">class_</span> <span class="o">=</span> <span class="s">&#39;Provider class e.g. &quot;authomatic.providers.oauth2.Facebook&quot;.&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">=</span> <span class="s">&#39;Your custom provider name e.g. &quot;fb&quot;.&#39;</span>
+            
+            <span class="c"># TODO: Implement all new arguments including openid store.</span>
+            
+            <span class="c"># AuthorisationProvider</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">consumer_key</span> <span class="o">=</span> <span class="s">&#39;Consumer key.&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="o">=</span> <span class="s">&#39;Consumer secret&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">short_name</span> <span class="o">=</span> <span class="mi">1</span>
+            
+            <span class="c"># OAuth2</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="s">&#39;coma, separated, list, of, scopes&#39;</span>
+            
+            <span class="c"># AuthenticationProvider</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">identifier_param</span> <span class="o">=</span> <span class="s">&#39;User identifier to authenticate e.g. &quot;me.yahoo.com&quot;.&#39;</span>
+            
+            <span class="c"># OpenID</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">use_realm</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">realm_body</span> <span class="o">=</span> <span class="s">&#39;Contents of the HTML body tag of the realm.&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">realm_param</span> <span class="o">=</span> <span class="s">&#39;Name of the query parameter to be used to serve the realm (leave empty for default).&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">xrds_param</span> <span class="o">=</span> <span class="s">&#39; The name of the query parameter to be used to serve the XRDS document (leave empty for default).&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">sreg</span> <span class="o">=</span> <span class="s">&#39;list, of, strings, of, optional, SREG, fields, (leave empty for defaults)&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">sreg_required</span> <span class="o">=</span> <span class="s">&#39;list, of, strings, of, required, SREG, fields, (leave empty for defaults)&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="s">&#39;list, of, strings, of, optional, AX, schemas, (leave empty for defaults)&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">ax_required</span> <span class="o">=</span> <span class="s">&#39;list, of, strings, of, required, AX, schemas, (leave empty for defaults)&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">pape</span> <span class="o">=</span> <span class="s">&#39;list, of, strings, of, optional, PAPE, policies, (leave empty for defaults)&#39;</span>
+            
+            <span class="n">example</span><span class="o">.</span><span class="n">put</span><span class="p">()</span>
+            
+            <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;{}://{}/_ah/admin/datastore?kind={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;wsgi.url_scheme&#39;</span><span class="p">),</span>
+                                                               <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;HTTP_HOST&#39;</span><span class="p">),</span>
+                                                               <span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+            
+            <span class="k">raise</span> <span class="n">GAEError</span><span class="p">(</span><span class="s">&#39;A NDBConfig data model was created! &#39;</span> <span class="o">+</span> \
+                           <span class="s">&#39;Go to {} and populate it with data!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="ndb_config"><a class="viewcode-back" href="../../../reference/extras.html#authomatic.extras.gae.ndb_config">[docs]</a><span class="k">def</span> <span class="nf">ndb_config</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Allows you to have a **datastore** :doc:`config` instead of a hardcoded one.</span>
+<span class="sd">    </span>
+<span class="sd">    This function creates an **&quot;Example&quot;** entity of kind **&quot;NDBConfig&quot;** in the datastore</span>
+<span class="sd">    if the model is empty and raises and error to inform you that you should populate the model with data.</span>
+<span class="sd">        </span>
+<span class="sd">    .. note::</span>
+<span class="sd">    </span>
+<span class="sd">        The *Datastore Viewer* in the ``_ah/admin/`` wont let you add properties to a model</span>
+<span class="sd">        if there is not an entity with that property already.</span>
+<span class="sd">        Therefore it is a good idea to keep the **&quot;Example&quot;** entity (which has all</span>
+<span class="sd">        possible properties set) in the datastore.</span>
+<span class="sd">    </span>
+<span class="sd">    :raises:</span>
+<span class="sd">        :exc:`.GAEError`</span>
+<span class="sd">    </span>
+<span class="sd">    :returns:</span>
+<span class="sd">        :class:`.NDBConfig`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">NDBConfig</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">NDBConfig</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Authomatic 0.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../authomatic.html" >authomatic</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Peter Hudec.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

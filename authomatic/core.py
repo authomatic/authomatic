@@ -465,9 +465,11 @@ class Middleware(object):
     """
     WSGI middleware responsible for these task during the **login procedure**:
     
-    * Introspection of current request.
-    * Response creation.
-    * Session management.
+    
+        * Introspection of current request.
+        * Response creation.
+        * Session management.
+    
     """
     
     def __init__(self, app, config, secret, session_max_age=600, secure_cookie=False,
@@ -550,6 +552,7 @@ class Middleware(object):
         self.path = self.environ.get('PATH_INFO')
         self.url = urlparse.urlunsplit((self.scheme, self.host, self.path, 0, 0))
         
+        # TODO: allow custom sessions.
         self.session = Session(settings.secret,
                                max_age=settings.session_max_age,
                                name=settings.prefix,
@@ -1113,29 +1116,16 @@ def login(provider_name, callback=None, **kwargs):
            or calls the function specified in the ``callback`` argument with
            :class:`.LoginResult` passed as argument.
     
-    :param adapter:
-        Framework specific :doc:`adapter <adapters>`.
-    :param dict config:
-        :doc:`config`
     :param str provider_name:
         Name of the provider as specified in the keys of the :doc:`config`.
     :param callable callback:
         If specified the function will call the callback with :class:`.LoginResult`
         passed as argument and will return nothing.
     :param bool report_errors:
-        If ``True`` errors and exceptions which occur during login will be caught and
-        accessible in the :class:`.LoginResult`.
-        If ``False`` errors and exceptions will not be handled.
-    :param int logging_level:
-        The library logs important events during the login procedure.
-        You can specify the desired logging level with the constants of the
-        `logging <http://docs.python.org/2/library/logging.html>`_ of Python standard library.
-        The main login procedure events have level ``INFO``, others like adapter database access_with_credentials
-        have level ``DEBUG``.
         
     .. note::
         
-        Accepts other :doc:`provider <providers>` specific keyword arguments.
+        Accepts additional keyword arguments that will be passed t :doc:`provider` constructor.
     
     :returns:
         :obj:`None` or :class:`.LoginResult`.

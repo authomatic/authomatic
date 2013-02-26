@@ -1,37 +1,26 @@
 """
-Google App Engine Adapters
---------------------------
+|gae| Extras
+------------
 
-Adapters and utilities to be used on |gae|_.
-
+Utilities you can use when using this library on |gae|_.
 """
 
-from authomatic import adapters
-from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
-from urllib import urlencode
-from webapp2_extras import sessions
-import authomatic.core as core
-import datetime
-import logging
 import os
-import pickle
-import urlparse
-
-__all__ = ['ndb_config', 'Webapp2Adapter']
+from authomatic import exceptions
 
 
-class Webapp2AdapterError(Exception):
-    pass
+__all__ = ['ndb_config']
 
 
-class GAEError(Exception):
+class GAEError(exceptions.BaseError):
     pass
 
 
 class NDBConfig(ndb.Model):
     """
-    Datastore model for providers configuration    
+    |gae| `NDB <https://developers.google.com/appengine/docs/python/ndb/>`_
+    based :doc:`config`.
     """
         
     provider_name = ndb.StringProperty( )
@@ -105,6 +94,8 @@ class NDBConfig(ndb.Model):
             example.class_ = 'Provider class e.g. "authomatic.providers.oauth2.Facebook".'
             example.provider_name = 'Your custom provider name e.g. "fb".'
             
+            # TODO: Implement all new arguments including openid store.
+            
             # AuthorisationProvider
             example.consumer_key = 'Consumer key.'
             example.consumer_secret = 'Consumer secret'
@@ -127,7 +118,6 @@ class NDBConfig(ndb.Model):
             example.ax_required = 'list, of, strings, of, required, AX, schemas, (leave empty for defaults)'
             example.pape = 'list, of, strings, of, optional, PAPE, policies, (leave empty for defaults)'
             
-            
             example.put()
             
             url = '{}://{}/_ah/admin/datastore?kind={}'.format(os.environ.get('wsgi.url_scheme'),
@@ -148,7 +138,7 @@ def ndb_config():
     .. note::
     
         The *Datastore Viewer* in the ``_ah/admin/`` wont let you add properties to a model
-        if there is not an entity with that property already.
+        if there is not an entity with that property allready.
         Therefore it is a good idea to keep the **"Example"** entity (which has all
         possible properties set) in the datastore.
     
@@ -161,69 +151,6 @@ def ndb_config():
     
     NDBConfig.initialize()
     return NDBConfig
-
-
-class _GAESessionWrapper(adapters.BaseSession):
-    
-    JSON_SERIALIZABLE_KEY = 'json_serializable'
-    
-    def __init__(self, session, response):
-        self.session = session
-        self.response = response
-    
-    
-    def _from_json_serializable(self, value):
-        """
-        Detects if value was created by self._save_json_serializable() and
-        returns its original value if so or returns unchanged value.
-        
-        :param value:
-        """
-        
-        if isinstance(value, dict) and value.get(self.JSON_SERIALIZABLE_KEY):
-            return pickle.loads(value.get(self.JSON_SERIALIZABLE_KEY))
-        else:
-            return value
-    
-    
-    def _save_json_serializable(self, key, value):
-        """
-        Converts non JSON serializable objects to {JSON_SERIALIZABLE_KEY, pickle.dumps(value)} dictionary.
-        
-        The securecookie session backend complains that YadisServiceManager is not JSON serializable.
-        We go around this by pickling the value to a dictionary,
-        which we can identify by the key for unpickling when retrieved from session.
-        
-        :param key:
-        :param value:
-        """
-        
-        try:
-            self.session.__setitem__(key, value)
-            self.session.container.save_session(self.response)
-        except TypeError:
-            # if value is not JSON serializable pickle it to a JSON serializable dictionary
-            # with identifiable key.
-            json_serializable = {self.JSON_SERIALIZABLE_KEY: pickle.dumps(value)}
-            self.session.__setitem__(key, json_serializable)
-            self.session.container.save_session(self.response)
-    
-    
-    def __setitem__(self, key, value):
-        self._save_json_serializable(key, value)
-        
-    
-    def __delitem__(self, key):
-        self.session.__delitem__(key)
-        self.session.container.save_session(self.response)
-    
-    
-    def __getitem__(self, key):
-        return self._from_json_serializable(self.session.__getitem__(key))
-        
-    
-    def get(self, key):
-        return self._from_json_serializable(self.session.get(key, None))
 
 
 

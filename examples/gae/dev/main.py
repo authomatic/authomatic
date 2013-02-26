@@ -1,4 +1,3 @@
-from authomatic.adapters.gae.openid import NDBOpenIDStore
 import authomatic
 import config
 import os

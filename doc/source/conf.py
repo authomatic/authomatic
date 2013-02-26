@@ -57,9 +57,6 @@ rst_prolog = """
 .. _python-openid: http://pypi.python.org/pypi/python-openid/
 
 .. |classmethod| replace:: Must be a classmethod!
-
-.. |async| replace:: Whether fetch calls are really asynchronous depends on the :doc:`Adapter <adapters>` implementation!
-
 """
 
 # -- General configuration -----------------------------------------------------
