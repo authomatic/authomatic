@@ -376,7 +376,7 @@ class AuthorisationProvider(BaseProvider):
         
         self.consumer_key = self._kwarg(kwargs, 'consumer_key')
         self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
-        self.id = int(self._kwarg(kwargs, 'id'))
+        self.id = int(self._kwarg(kwargs, 'id', 0))
         
         self.user_authorisation_params = self._kwarg(kwargs, 'user_authorisation_params', {})
         self.access_token_params = self._kwarg(kwargs, 'access_token_params', {})
@@ -472,9 +472,14 @@ class AuthorisationProvider(BaseProvider):
         return response
     
     
-    def access(self, url, method='GET', headers={}, max_redirects=5, content_parser=None):
-        return self.access_with_credentials(self.credentials, url, method,
-                                            headers, max_redirects, content_parser)
+    def access(self, url, params=None, method='GET', headers={}, max_redirects=5, content_parser=None):
+        return self.access_with_credentials(credentials=self.credentials,
+                                            url=url,
+                                            params=params,
+                                            method=method,
+                                            headers=headers,
+                                            max_redirects=max_redirects,
+                                            content_parser=content_parser)
     
     
     @abc.abstractmethod
