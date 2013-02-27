@@ -61,7 +61,7 @@ class Login(webapp2.RequestHandler):
 #            session_store.save_sessions(self.response)
         
         
-        session = gae.Webapp2Session('abcdef', self, backend='datastore')
+        session = gae.Webapp2Session('abcdef', self)
         
         
         result = authomatic.login(provider_name,

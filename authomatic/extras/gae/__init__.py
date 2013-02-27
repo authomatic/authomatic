@@ -21,10 +21,16 @@ class GAEError(exceptions.BaseError):
 
 class Webapp2Session(interfaces.BaseSession):
     def __init__(self, secret, handler, cookie_name='webapp2authomatic',
-                 backend='securecookie', config=None):
+                 backend='memcache', config=None):
         """
         A simple wrapper for |webapp2|_ sessions.
         See: `http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html`_.
+        
+        .. warning::
+            
+            Do not use the ``'securecookie'`` backend by :class:`.providers.OpenID`
+            provider. The `python-openid`_ library saves non json serializable objects to session
+            which the ``'securecookie'`` backend cannot cope with.
         
         :param str secret:
             The session secret.
@@ -36,7 +42,7 @@ class Webapp2Session(interfaces.BaseSession):
             The name of the session kookie.
         
         :param backend:
-            The session backend. One of ``securecookie``, ``memcache`` or ``datastore``.
+            The session backend. One of ``'memcache'`` or ``'datastore'``.
             
         :param config:
             The session config.
@@ -48,7 +54,7 @@ class Webapp2Session(interfaces.BaseSession):
         
         self.backend = backend
         self.session_store = sessions.SessionStore(handler.request, self.config)
-        self.session_dict = self.session_store.get_session(backend)
+        self.session_dict = self.session_store.get_session(backend=backend)
     
     
     def save(self):

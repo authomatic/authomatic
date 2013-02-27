@@ -333,7 +333,7 @@ class Session(object):
         """
         Adds the session cookie to headers.
         """
-        logging.info('SESSION SETTING COOKIE')
+        
         # Set the cookie header.
         middleware.set_header('Set-Cookie', self.create_cookie())
         
@@ -345,7 +345,7 @@ class Session(object):
         """
         Extracts the session data from cookie.
         """
-        logging.info('SESSION READING COOKIE')
+        
         morsel = Cookie.SimpleCookie(middleware.environ.get('HTTP_COOKIE')).get(self.name)
         if morsel:
             return self._deserialize(morsel.value)
@@ -1177,9 +1177,10 @@ def login(provider_name, callback=None, session=None, session_save_method=None, 
         :obj:`None` or :class:`.LoginResult`.
     """
     
-    logging.info('LOGIN SETTING SESSION to {}'.format(session))
+    # Handle custom session.
     middleware.set_session(session, session_save_method)
     
+    # Inform middleware that the login procedure started.
     middleware.pending = True
     
     # retrieve required settings for current provider and raise exceptions if missing
@@ -1187,10 +1188,10 @@ def login(provider_name, callback=None, session=None, session_save_method=None, 
     if not provider_settings:
         raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
+    # Resolve provider class.
     class_ = provider_settings.get('class_')
     if not class_:
         raise exceptions.ConfigError('The "class_" key not specified in the config for provider {}!'.format(provider_name))
-    
     ProviderClass = resolve_provider_class(class_)
     
     # instantiate provider class
@@ -1210,6 +1211,7 @@ def credentials(credentials):
     :returns:
         :class:`.Credentials`
     """
+    
     return Credentials.deserialize(credentials)
 
 
