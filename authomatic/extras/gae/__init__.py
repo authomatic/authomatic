@@ -5,9 +5,11 @@
 Utilities you can use when using this library on |gae|_.
 """
 
-from google.appengine.ext import ndb
-import os
 from authomatic import exceptions
+from authomatic.extras import interfaces
+from google.appengine.ext import ndb
+from webapp2_extras import sessions
+import os
 
 
 __all__ = ['ndb_config']
@@ -16,6 +18,58 @@ __all__ = ['ndb_config']
 class GAEError(exceptions.BaseError):
     pass
 
+
+class Webapp2Session(interfaces.BaseSession):
+    def __init__(self, secret, handler, cookie_name='webapp2authomatic',
+                 backend='securecookie', config=None):
+        """
+        A simple wrapper for |webapp2|_ sessions.
+        See: `http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html`_.
+        
+        :param str secret:
+            The session secret.
+            
+        :param handler:
+            A :class:`webapp2.RequestHandler` instance.
+        
+        :param str cookie_name:
+            The name of the session kookie.
+        
+        :param backend:
+            The session backend. One of ``securecookie``, ``memcache`` or ``datastore``.
+            
+        :param config:
+            The session config.
+        """
+        
+        self.handler = handler
+        self.config = config or dict(secret_key=secret,
+                                     cookie_name=cookie_name)
+        
+        self.backend = backend
+        self.session_store = sessions.SessionStore(handler.request, self.config)
+        self.session_dict = self.session_store.get_session(backend)
+    
+    
+    def save(self):
+        return self.session_store.save_sessions(self.handler.response)
+    
+    
+    def __setitem__(self, key, value):
+        return self.session_dict.__setitem__(key, value)
+    
+    
+    def __getitem__(self, key):
+        return self.session_dict.__getitem__(key)
+    
+    
+    def __delitem__(self, key):
+        return self.session_dict.__delitem__(key)
+    
+    
+    def get(self, key):
+        return self.session_dict.get(key)
+        
 
 class NDBConfig(ndb.Model):
     """

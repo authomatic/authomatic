@@ -90,7 +90,8 @@ def login_decorator(func):
             authomatic.core.middleware.pending = False
         else:
             # Save session
-            authomatic.core.middleware.session.save()
+            authomatic.core.middleware.save_session()
+#            authomatic.core.middleware.session.save()
         
         # Return result       
         if result and provider.callback:

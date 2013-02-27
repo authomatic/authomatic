@@ -3,7 +3,9 @@ import config
 import os
 import sys
 import webapp2
+from webapp2_extras import sessions
 import logging
+from authomatic.extras import gae
 
 from authomatic.providers import BaseProvider
 
@@ -48,7 +50,24 @@ class Login(webapp2.RequestHandler):
     
     def login(self, provider_name):
         
-        result = authomatic.login(provider_name, callback=self.callback)
+#        session_config = dict(secret_key='abcdef',
+#                              cookie_name='webapp2session')
+#        
+#        session_store = sessions.SessionStore(self.request, session_config)
+#        session = session_store.get_session(backend='datastore')
+#        
+#        def session_save_method():
+#            logging.info('SAVING WEBAPP2 SESSION')
+#            session_store.save_sessions(self.response)
+        
+        
+        session = gae.Webapp2Session('abcdef', self, backend='datastore')
+        
+        
+        result = authomatic.login(provider_name,
+                                  callback=self.callback,
+                                  session=session,
+                                  session_save_method=session.save)
         
         if result:
             if result.user:

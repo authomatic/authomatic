@@ -1,6 +1,6 @@
 #TODO: Add coding line to all modules
 # -*- coding: utf-8 -*-
-from authomatic.exceptions import SessionError
+from authomatic.exceptions import SessionError, MiddlewareError
 import Cookie
 import collections
 import copy
@@ -333,15 +333,19 @@ class Session(object):
         """
         Adds the session cookie to headers.
         """
-        
+        logging.info('SESSION SETTING COOKIE')
+        # Set the cookie header.
         middleware.set_header('Set-Cookie', self.create_cookie())
+        
+        # Reset data
+        self._data = {}
     
     
     def _get_data(self):
         """
         Extracts the session data from cookie.
         """
-        
+        logging.info('SESSION READING COOKIE')
         morsel = Cookie.SimpleCookie(middleware.environ.get('HTTP_COOKIE')).get(self.name)
         if morsel:
             return self._deserialize(morsel.value)
@@ -473,8 +477,8 @@ class Middleware(object):
     """
     
     def __init__(self, app, config, secret, session_max_age=600, secure_cookie=False,
-                 report_errors=True, debug=False, logging_level=logging.INFO,
-                 prefix='authomatic'):
+                 session=None, session_save_method=None, report_errors=True, debug=False,
+                 logging_level=logging.INFO, prefix='authomatic'):
         """
         :param app:
             WSGI application that should be wrapped.
@@ -491,7 +495,13 @@ class Middleware(object):
             
         :param bool secure_cookie:
             If ``True`` the :class:`.Session` cookie will be saved wit ``Secure`` attribute.
-            
+        
+        :param session:
+            Custom dictionary-like session implementation.
+        
+        :param callable session_save_method:
+            A method of the supplied session or any mechanism that saves the session data and cookie.
+        
         :param bool report_errors:
             If ``True`` exceptions encountered during the **login procedure**
             will be caught and reported in the :attr:`.LoginResult.error` attribute.
@@ -524,6 +534,9 @@ class Middleware(object):
         settings.session_max_age = session_max_age
         settings.logging_level = logging_level
         
+        self.set_session(session, session_save_method)
+        
+        
         # Set logging level.
         _logger.setLevel(logging_level)
     
@@ -552,28 +565,61 @@ class Middleware(object):
         self.path = self.environ.get('PATH_INFO')
         self.url = urlparse.urlunsplit((self.scheme, self.host, self.path, 0, 0))
         
-        # TODO: allow custom sessions.
-        self.session = Session(settings.secret,
-                               max_age=settings.session_max_age,
-                               name=settings.prefix,
-                               secure=settings.secure_cookie)
-        
         # Call the wrapped WSGI app and store it's output for later.
         app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
         
         if self.pending:
             # This middleware intercepts only if the login procedure is pending.
+            if not isinstance(self.session, Session):
+                # We must use the "Set-Cookie" header of the wrapped app
+                # if custom session was specified.
+                cookie_value = dict(app_headers).get('Set-Cookie', '')
+                session_header = ('Set-Cookie', cookie_value)
+                self.headers.append(session_header)
+            
             start_response(self.status, self.headers, sys.exc_info())
             return self.output
         else:
             # If login procedure has finished.
-            # Delete our session kookie.
-            app_headers.append(('Set-Cookie', self.session.create_cookie(delete=True)))
+            if isinstance(self.session, Session):
+                # If default session is used, delete our session cookie.
+                app_headers.append(('Set-Cookie', self.session.create_cookie(delete=True)))
             
             # Write out the output of the wrapped WSGI app.
             start_response(app_status, app_headers, sys.exc_info())
             
             return app_output
+    
+    
+    def set_session(self, session, session_save_method):
+        """
+        Allows for a custom dictionary-like session to be used.
+        The session must implement the :class:`.extras.interfaces.BaseSession` interface.
+        
+        :param dict session:
+            A dictionary-like session instance.
+            
+        :param callable session_save_method:
+            A callable that saves the session data and sets the session cookie to response.
+        """
+        
+        if session is None:
+            # Use default session.
+            self.session = Session(settings.secret,
+                                   max_age=settings.session_max_age,
+                                   name=settings.prefix,
+                                   secure=settings.secure_cookie)
+            
+            self.save_session = self.session.save
+        else:
+            # Use custom session.
+            if session_save_method is None:
+                raise MiddlewareError('If you want to use custom "session", you must also ' + \
+                                      'specify with the "session_save_method" argument!')
+            else:
+                self.session = session
+                self.save_session = session_save_method
+        
     
     
     @property
@@ -1103,7 +1149,7 @@ def setup_middleware(*args, **kwargs):
     return middleware
 
 
-def login(provider_name, callback=None, **kwargs):
+def login(provider_name, callback=None, session=None, session_save_method=None, **kwargs):
     """
     Launches a login procedure for specified :doc:`provider <providers>` and returns :class:`.LoginResult`.
     
@@ -1130,6 +1176,9 @@ def login(provider_name, callback=None, **kwargs):
     :returns:
         :obj:`None` or :class:`.LoginResult`.
     """
+    
+    logging.info('LOGIN SETTING SESSION to {}'.format(session))
+    middleware.set_session(session, session_save_method)
     
     middleware.pending = True
     
