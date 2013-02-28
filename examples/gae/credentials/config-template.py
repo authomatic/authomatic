@@ -1,29 +1,34 @@
 # config.py
 
 from authomatic.providers import oauth2, oauth1, openid, gaeopenid
+import authomatic
 
 CONFIG = {
+    
     'tw': { # Your internal provider name
            
            # Provider class
            'class_': oauth1.Twitter,
            
            # Twitter is an AuthorisationProvider so we need to set several other properties:
-           'consumer_key': '##########',
-           'consumer_secret': '##########',
+           'consumer_key': '####################',
+           'consumer_secret': '####################',
+           'id': authomatic.provider_id()
     },
     
-    # Facebook
     'fb': {
            
            'class_': oauth2.Facebook,
            
            # Facebook is an AuthorisationProvider too.
-           'consumer_key': '##########',
-           'consumer_secret': '##########',
+           'consumer_key': '####################',
+           'consumer_secret': '####################',
+           'id': authomatic.provider_id(),
            
-           # But it is also an OAuth 2.0 provider and it needs scope.
-           'scope': ['user_about_me', 'email', 'publish_stream']
+           # We need the "publish_stream" scope to post to users timeline,
+           # the "offline_access" scope to be able to refresh credentials,
+           # and the other scopes to get user info.
+           'scope': ['publish_stream', 'offline_access', 'user_about_me', 'email'],
     },
     
     'gae_oi': {
@@ -39,5 +44,6 @@ CONFIG = {
            # OpenID based on python-openid library works everywhere,
            # is flexible, but requires more resources.
            'class_': openid.OpenID,
+           'store': openid.SessionOpenIDStore,
     }
 }

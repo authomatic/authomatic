@@ -50,18 +50,18 @@ class Login(webapp2.RequestHandler):
     
     def login(self, provider_name):
         
-#        session_config = dict(secret_key='abcdef',
-#                              cookie_name='webapp2session')
-#        
-#        session_store = sessions.SessionStore(self.request, session_config)
-#        session = session_store.get_session(backend='datastore')
-#        
-#        def session_save_method():
-#            logging.info('SAVING WEBAPP2 SESSION')
-#            session_store.save_sessions(self.response)
+        session_config = dict(secret_key='abcdef',
+                              cookie_name='webapp2session')
+        
+        session_store = sessions.SessionStore(self.request, session_config)
+        ses = session_store.get_session(backend='datastore')
+        
+        def session_save_method():
+            logging.info('SAVING WEBAPP2 SESSION')
+            session_store.save_sessions(self.response)
         
         
-        session = gae.Webapp2Session('abcdef', self)
+        session = gae.Webapp2Session(self, ses)
         
         
         result = authomatic.login(provider_name,

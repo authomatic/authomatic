@@ -1,6 +1,8 @@
 *.class
 *.pyc
 *.pyo
+doc/build
+build/
 config.py
 .pydevproject
 .project

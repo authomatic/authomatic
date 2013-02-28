@@ -3,27 +3,27 @@
 from authomatic.providers import oauth2, oauth1, openid, gaeopenid
 
 CONFIG = {
+    
     'tw': { # Your internal provider name
            
            # Provider class
            'class_': oauth1.Twitter,
            
            # Twitter is an AuthorisationProvider so we need to set several other properties:
-           'consumer_key': '##########',
-           'consumer_secret': '##########',
+           'consumer_key': '########################',
+           'consumer_secret': '########################',
     },
     
-    # Facebook
     'fb': {
            
            'class_': oauth2.Facebook,
            
            # Facebook is an AuthorisationProvider too.
-           'consumer_key': '##########',
-           'consumer_secret': '##########',
+           'consumer_key': '########################',
+           'consumer_secret': '########################',
            
-           # It is also an OAuth 2.0 provider and it needs scope.
-           'scope': ['user_about_me', 'email', 'publish_stream']
+           # But it is also an OAuth 2.0 provider and it needs scope.
+           'scope': ['user_about_me', 'email', 'publish_stream'],
     },
     
     'gae_oi': {

@@ -187,7 +187,7 @@ class OAuth2(providers.AuthorisationProvider):
     def refresh_credentials(cls, credentials):
         """
         Refreshes :class:`.Credentials` by providing fresh **token**,
-        **refresh_token** and **expires_in**.
+        **refresh_token** and **expire_in**.
         
         :returns:
             :class:`.Response`.
@@ -220,7 +220,7 @@ class OAuth2(providers.AuthorisationProvider):
         # Update credentials only if there is access token.
         if access_token:
             credentials.token = access_token
-            credentials.expires_in = response.data.get('expires_in')
+            credentials.expire_in = response.data.get('expire_in')
             
             # Update refresh token only if there is a new one.
             if refresh_token:
@@ -288,10 +288,10 @@ class OAuth2(providers.AuthorisationProvider):
             if refresh_token:
                 self._log(logging.INFO, 'Got refresh access token.')
             
-            # OAuth 2.0 credentials need only access token, refresh token and expires_in.
+            # OAuth 2.0 credentials need only access token, refresh token and expire_in.
             self.credentials.token = access_token
             self.credentials.refresh_token = refresh_token
-            self.credentials.expires_in = response.data.get('expires_in')
+            self.credentials.expire_in = response.data.get('expire_in')
             # so we can reset these two guys
             self.credentials.consumer_key = ''
             self.credentials.consumer_secret = ''
@@ -366,8 +366,8 @@ class Facebook(OAuth2):
         We need to override this method to fix Facebooks naming deviation.
         """
         
-        # Facebook returns "expires" instead of "expires_in".
-        credentials.expires_in = data.get('expires')
+        # Facebook returns "expires" instead of "expire_in".
+        credentials.expire_in = data.get('expires')
         
         return credentials
 

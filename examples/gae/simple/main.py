@@ -30,7 +30,7 @@ class Login(webapp2.RequestHandler):
                 result.user.update()
                 
                 # Welcome the user.
-                self.response.write('<h1>Hi {},</h1>'.format(result.user.name))
+                self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
                 self.response.write('<h2>Your id is: {}</h2>'.format(result.user.id))
                 self.response.write('<h2>Your email is: {}</h2>'.format(result.user.email))
                 

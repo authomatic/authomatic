@@ -4,6 +4,7 @@ from authomatic.exceptions import SessionError, MiddlewareError
 import Cookie
 import collections
 import copy
+import datetime
 import exceptions
 import hashlib
 import hmac
@@ -838,13 +839,13 @@ class Credentials(ReprMixin):
         #: :class:`str` User **access_with_credentials token secret**.
         self.token_secret = kwargs.get('token_secret', '')
         
-        #: :class:`datetime.datetime()` Expiration date of the **access_with_credentials token**.
+        #: :class:`int` Expiration date as UNIX timestamp.
         self.expiration_time = int(kwargs.get('expiration_time', 0))
         
         #: A :doc:`Provider <providers>` instance**.
         provider = kwargs.get('provider')
         
-        self._expires_in = int(kwargs.get('expires_in', 0))
+        self.expire_in = int(kwargs.get('expire_in', 0))
         
         if provider:
             #: :class:`str` Provider name specified in the :doc:`config`.
@@ -876,18 +877,44 @@ class Credentials(ReprMixin):
     
     
     @property
-    def expires_in(self):
-       return self._expires_in
+    def expire_in(self):
+        """
+        
+        """
+        
+        return self._expire_in
     
-    @expires_in.setter
-    def expires_in(self, value):
+    @expire_in.setter
+    def expire_in(self, value):
         """
         Computes :attr:`.expiration_time` when the value is set.
         """
         
         if value:
-            self.expiration_time = int(time.time()) + int(value)
-            self._expires_in = value
+            self._expiration_time = int(time.time()) + int(value)
+            self._expire_in = value
+    
+    
+    @property
+    def expiration_time(self):
+        return self._expiration_time
+    
+    @expiration_time.setter
+    def expiration_time(self, value):
+        self._expiration_time = int(value)
+        self._expire_in = self._expiration_time - int(time.time())
+    
+    
+    @property
+    def expiration_date(self):
+        """
+        Expiration date as :class:`datetime.datetime` or ``None`` if credentials never expire.
+        """
+        
+        if self.expire_in < 0:
+            return None
+        else:
+            return datetime.datetime.fromtimestamp(self.expiration_time)
     
     
     @property
@@ -902,7 +929,7 @@ class Credentials(ReprMixin):
             return True
     
     
-    def expires_soon(self, seconds):
+    def expire_soon(self, seconds):
         """
         Returns ``True`` if credentials expire sooner than specified.
         
@@ -919,9 +946,11 @@ class Credentials(ReprMixin):
             return False
     
     
-    def refresh(self):
+    def refresh(self, force=False, soon=86400):
         """
-        Refreshes the credentials only if needed. It does nothing in other cases.
+        Refreshes the credentials only if the **provider** supports it and
+        if it will expire in less than one day.
+        It does nothing in other cases.
         
         .. note::
         
@@ -929,12 +958,19 @@ class Credentials(ReprMixin):
             i.e. only |oauth2|_ has the notion of credentials *refreshment/extension*.
             And there are also differences across providers
             e.g. Google supports refreshment only if there is a ``refresh_token`` in the credentials and
-            that in turn is present only if you ``access_type`` parameter was set to ``offline``
+            that in turn is present only if the ``access_type`` parameter was set to ``offline``
             in the **user authorisation request**.
+        
+        :param bool force:
+            If ``True`` the credentials will be refreshed even if they won't expire soon.
+        
+        :param int soon:
+            Number of seconds specifying what means *soon*.
         """
         
         if hasattr(self.provider_class, 'refresh_credentials'):
-            return self.provider_class.refresh_credentials(self)
+            if force or self.expire_soon(soon):
+                return self.provider_class.refresh_credentials(self)
     
     
     def provider_type_class(self):

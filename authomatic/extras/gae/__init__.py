@@ -20,23 +20,31 @@ class GAEError(exceptions.BaseError):
 
 
 class Webapp2Session(interfaces.BaseSession):
-    def __init__(self, secret, handler, cookie_name='webapp2authomatic',
+    def __init__(self, handler, session=None, secret=None, cookie_name='webapp2authomatic',
                  backend='memcache', config=None):
         """
-        A simple wrapper for |webapp2|_ sessions.
-        See: `http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html`_.
+        A simple wrapper for |webapp2|_ sessions. If you provide a session
+        it wrapps it and adds the :meth:`.save` method.
+        
+        If you don't provide a session it creates a new one but you must provide the :data:`.secret`. 
+        
+        For more about |webapp2| sessions see:
+        `http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html`_.
         
         .. warning::
             
-            Do not use the ``'securecookie'`` backend by :class:`.providers.OpenID`
-            provider. The `python-openid`_ library saves non json serializable objects to session
+            Do not use the ``'securecookie'`` backend with :class:`.providers.OpenID`
+            provider. The `python-openid`_ library saves **non json serializable** objects to session
             which the ``'securecookie'`` backend cannot cope with.
-        
-        :param str secret:
-            The session secret.
             
         :param handler:
             A :class:`webapp2.RequestHandler` instance.
+        
+        :param session:
+            A :class:`webapp2_extras.session.SessionDict` instance.
+        
+        :param str secret:
+            The session secret.
         
         :param str cookie_name:
             The name of the session kookie.
@@ -49,16 +57,22 @@ class Webapp2Session(interfaces.BaseSession):
         """
         
         self.handler = handler
-        self.config = config or dict(secret_key=secret,
-                                     cookie_name=cookie_name)
         
-        self.backend = backend
-        self.session_store = sessions.SessionStore(handler.request, self.config)
-        self.session_dict = self.session_store.get_session(backend=backend)
-    
-    
+        if session is None:
+            if not secret:
+                raise GAEError('Either session or secret must be specified!')
+            else:
+                # Create new session.
+                cfg = config or dict(secret_key=secret, cookie_name=cookie_name)
+                session_store = sessions.SessionStore(handler.request, cfg)
+                self.session_dict = session_store.get_session(backend=backend)
+        else:
+            # Use supplied session.
+            self.session_dict = session
+        
+        
     def save(self):
-        return self.session_store.save_sessions(self.handler.response)
+        return self.session_dict.container.save_session(self.handler.response)
     
     
     def __setitem__(self, key, value):
