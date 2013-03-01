@@ -2,7 +2,7 @@ Simple Example
 --------------
 
 In this tutorial we will create a simple |gae|_ |webapp2|_ application
-that will be able to log the **user** in with Facebook, Twitter and |openid|
+that will be able to log the **user** in with Facebook, Twitter and |openid|_
 and retrieve the **user's** 5 most recent tweets/statuses.
 
 First create the :doc:`/reference/config` dictionary:

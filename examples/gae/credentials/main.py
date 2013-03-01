@@ -10,28 +10,26 @@ from config import CONFIG
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
         
-        # Logg the user in.
+        # Log the user in.
         result = authomatic.login(provider_name)
-                
-        if result:
-            self.response.write('<a href="..">Home</a>')
-            if result.user:
-                result.user.update()
-                self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
-                
-                # Save the user name and ID to cookies that we can use it in other handlers.
-                self.response.set_cookie('user_id', result.user.id)
-                self.response.set_cookie('user_name', urllib.quote(result.user.name))
-                
-                if result.user.credentials:
-                    # Serialize credentials and store it as well.
-                    serialized_credentials = result.user.credentials.serialize()
-                    self.response.set_cookie('credentials', serialized_credentials)
-                    
-            elif result.error:
-                self.response.set_cookie('error', urllib.quote(result.error.message))
+        
+        if result.user:
+            result.user.update()
+            self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
             
-            self.redirect('/')
+            # Save the user name and ID to cookies that we can use it in other handlers.
+            self.response.set_cookie('user_id', result.user.id)
+            self.response.set_cookie('user_name', urllib.quote(result.user.name))
+            
+            if result.user.credentials:
+                # Serialize credentials and store it as well.
+                serialized_credentials = result.user.credentials.serialize()
+                self.response.set_cookie('credentials', serialized_credentials)
+                
+        elif result.error:
+            self.response.set_cookie('error', urllib.quote(result.error.message))
+        
+        self.redirect('/')
 
 
 class Home(webapp2.RequestHandler):

@@ -10,7 +10,7 @@ CONFIG = {
            # Provider class
            'class_': oauth1.Twitter,
            
-           # Twitter is an AuthorisationProvider so we need to set several other properties:
+           # Twitter is an AuthorisationProvider so we need to set several other properties too:
            'consumer_key': '####################',
            'consumer_secret': '####################',
            'id': authomatic.provider_id()
@@ -20,7 +20,7 @@ CONFIG = {
            
            'class_': oauth2.Facebook,
            
-           # Facebook is an AuthorisationProvider too.
+           # Facebook is AuthorisationProvider too.
            'consumer_key': '####################',
            'consumer_secret': '####################',
            'id': authomatic.provider_id(),
