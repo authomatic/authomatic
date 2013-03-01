@@ -68,7 +68,7 @@ def login_decorator(func):
     
     def wrap(provider, *args, **kwargs):
         error = None
-        result = None
+        result = authomatic.core.LoginResult(provider)
         
         try:
             func(provider, *args, **kwargs)
@@ -83,15 +83,18 @@ def login_decorator(func):
         
         # If there is user or error the login procedure has finished
         if provider.user or error:
-            result = authomatic.core.LoginResult(provider, error)
-            provider._log(logging.INFO, 'Procedure finished.')
-            
+            # Add error to result
+            result.error = error
             # Let middleware know that login procedure is over
             authomatic.core.middleware.pending = False
+            provider._log(logging.INFO, 'Procedure finished.')
         else:
             # Save session
             authomatic.core.middleware.save_session()
-#            authomatic.core.middleware.session.save()
+        
+        logging.info('RESULT: {}'.format(result))
+        logging.info('error: {}'.format(result.error))
+        logging.info('user: {}'.format(result.user))
         
         # Return result       
         if result and provider.callback:

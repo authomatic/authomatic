@@ -1061,13 +1061,28 @@ class LoginResult(ReprMixin):
     Result of the :func:`authomatic.login` function.
     """
     
-    def __init__(self, provider, error=None):
+    def __init__(self, provider):
         #: A :doc:`provider <providers>` instance.
         self.provider = provider
+        
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
-        self.error = error
-        #: A :class:`.User` instance.
-        self.user = provider.user
+        self.error = None
+    
+    @property
+    def user(self):
+        """
+        A :class:`.User` instance.
+        """
+        
+        return self.provider.user
+    
+    @property
+    def pending(self):
+        """
+        ``False`` if the *login procedure* has finished, ``True`` if still pending.
+        """
+        
+        return middleware.pending
 
 
 class Response(ReprMixin):
