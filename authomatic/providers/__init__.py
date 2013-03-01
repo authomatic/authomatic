@@ -455,37 +455,6 @@ class AuthorisationProvider(BaseProvider):
         """
     
     
-    @classmethod
-    def access_with_credentials(cls, credentials, url, params=None, method='GET',
-                                headers={}, max_redirects=5, content_parser=None):
-        
-        cls._log(logging.INFO, 'Accessing protected resource {}.'.format(url))
-        
-        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                        credentials=credentials,
-                                                        url=url,
-                                                        params=params,
-                                                        method=method)
-        
-        response = cls._fetch(*request_elements,
-                              headers=headers,
-                              max_redirects=max_redirects,
-                              content_parser=content_parser)
-        
-        cls._log(logging.INFO, 'Got response. HTTP status = {}.'.format(response.status))
-        return response
-    
-    
-    def access(self, url, params=None, method='GET', headers={}, max_redirects=5, content_parser=None):
-        return self.access_with_credentials(credentials=self.credentials,
-                                            url=url,
-                                            params=params,
-                                            method=method,
-                                            headers=headers,
-                                            max_redirects=max_redirects,
-                                            content_parser=content_parser)
-    
-    
     @abc.abstractmethod
     def _create_request_elements(self, request_type, credentials, url, method='GET'):
         """
@@ -511,10 +480,99 @@ class AuthorisationProvider(BaseProvider):
             A (url, body, method) tuple.
         """
     
-    
     #===========================================================================
     # Exposed methods
     #===========================================================================
+    
+    @classmethod
+    def access_with_credentials(cls, credentials, url, params=None, method='GET',
+                                headers={}, max_redirects=5, content_parser=None):
+        """
+        Fetches the **protected resource** of the **user** to whome belong
+        the supplied :data:`.credentials`.
+        
+        :param credentials:
+        The **user's** :class:`.Credentials` (serialized or normal).
+            
+        :param str url:
+            The **protected resource** URL.
+            
+        :param str method:
+            HTTP method of the request.
+            
+        :param dict headers:
+            HTTP headers of the request.
+            
+        :param int max_redirects:
+            Maximum number of HTTP redirects to follow.
+            
+        :param function content_parser:
+            A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
+        
+        :returns:
+            :class:`.Response`
+        """
+        
+        cls._log(logging.INFO, 'Accessing protected resource {}.'.format(url))
+        
+        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                        credentials=credentials,
+                                                        url=url,
+                                                        params=params,
+                                                        method=method)
+        
+        response = cls._fetch(*request_elements,
+                              headers=headers,
+                              max_redirects=max_redirects,
+                              content_parser=content_parser)
+        
+        cls._log(logging.INFO, 'Got response. HTTP status = {}.'.format(response.status))
+        return response
+    
+    
+    def access(self, url, params=None, method='GET', headers={}, max_redirects=5, content_parser=None):
+        """
+        Fetches the **protected resource** of the logged in **user**.
+        
+        :param credentials:
+        The **user's** :class:`.Credentials` (serialized or normal).
+            
+        :param str method:
+            HTTP method of the request.
+            
+        :param dict headers:
+            HTTP headers of the request.
+            
+        :param int max_redirects:
+            Maximum number of HTTP redirects to follow.
+            
+        :param function content_parser:
+            A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
+        
+        :returns:
+            :class:`.Response`
+        """
+        
+        return self.access_with_credentials(credentials=self.credentials,
+                                            url=url,
+                                            params=params,
+                                            method=method,
+                                            headers=headers,
+                                            max_redirects=max_redirects,
+                                            content_parser=content_parser)
+
+
+    def async_access(self, *args, **kwargs):
+        """
+        Same as :meth:`.access` but runs asynchronously in a separate thread.
+        
+        .. warning:: |async|
+        
+        :returns:
+            :class:`.Future` instance representing the separate thread.
+        """
+        
+        return authomatic.core.Future(self.access, *args, **kwargs)
     
     
     def update_user(self):
@@ -526,26 +584,15 @@ class AuthorisationProvider(BaseProvider):
             Makes a request to :attr:`.user_info_url`!
         
         :returns:
-            :class:`.core.User`
+            :class:`.UserInfoResponse`
         """
         
-        return self.access_user_info().user
-    
-    
-    def access_user_info(self):
-        response = self.access_with_credentials(self.credentials, self.user_info_url)
-        
-        # Create user.
-        self.user = self._update_or_create_user(response.data)
-        
-        # Return UserInfoResponse.
-        return authomatic.core.UserInfoResponse(self.user, response.httplib_response)
+        return self._access_user_info()
     
     
     #===========================================================================
     # Internal methods
     #===========================================================================
-    
     
     def _check_consumer(self):
         """
@@ -586,6 +633,23 @@ class AuthorisationProvider(BaseProvider):
         """
         return credentials
     
+    
+    def _access_user_info(self):
+        """
+        Accesses the :attr:`.user_info_url`.
+        
+        :returns:
+            :class:`.UserInfoResponse`
+        """
+        
+        response = self.access_with_credentials(self.credentials, self.user_info_url)
+        
+        # Create user.
+        self.user = self._update_or_create_user(response.data)
+        
+        # Return UserInfoResponse.
+        return authomatic.core.UserInfoResponse(self.user, response.httplib_response)
+    
 
 class AuthenticationProvider(BaseProvider):
     """
@@ -600,8 +664,10 @@ class AuthenticationProvider(BaseProvider):
     def __init__(self, *args, **kwargs):   
         super(AuthenticationProvider, self).__init__(*args, **kwargs)
         
+        # Allow for custom name for the "id" querystring parameter.
         self.identifier_param = kwargs.get('identifier_param', 'id')
         
+        # Get the identifier from request params.
         self.identifier = authomatic.core.middleware.params.get(self.identifier_param)
         
         

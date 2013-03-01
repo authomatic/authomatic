@@ -87,7 +87,59 @@ by passing it to the :func:`authomatic.access` function along with the **resourc
 Asynchronous Requests
 ---------------------
 
-Bla
+Following functions fetch remote URLs and
+block the current thread till the :class:`.Response` returns:
+
+* :func:`.authomatic.access`
+* :meth:`.AuthorisationProvider.access`
+* :meth:`.User.update`
+* :meth:`.Credentials.refresh`
+
+If yo need to call more than one of them in a single *request handler*,
+or if there is another, **time consuming** task you need to do,
+there is an **asynchronous** alternative to each of the mentioned functions.
+
+* :func:`.authomatic.async_access`
+* :meth:`.AuthorisationProvider.async_access`
+* :meth:`.User.async_update`
+* :meth:`.Credentials.async_refresh`
+
+.. warning:: |async|
+
+These **asynchronous** alternatives all return a :class:`.Future` instance which
+represents the separate thread in which their **synchronous** brethrens are running.
+You should call all the **asynchronous** functions you want to use at once,
+then do your **time consuming** tasks and finally collect the results of the functions
+by calling the :meth:`get_result() <.Future.get_result>` method of each of the
+:class:`.Future` instances.
+
+::
+   
+   # These guys will run in parallel and each returns immediately.
+   user_future = user.async_update()
+   credentials_future = user.credentials.async_refresh()
+   foo_future = authomatic.access(user.credentials, 'http://api.example.com/foo')
+   bar_future = authomatic.access(user.credentials, 'http://api.example.com/bar')
+   
+   # Do your time consuming task.
+   time.sleep(5)
+   
+   # Collect results:
+   
+   # Updates the User instance in place and returns response.
+   user_response = user_future.get_result()
+   if user_response.status == 200:
+      print 'User updated successfully.'
+   
+   # Refreshes the Credentials instance in place and returns response.
+   credentials_response = credentials_future.get_result()
+   if credentials_response.status == 200:
+      print 'Credentials refreshed successfully.'
+   
+   foo_response = foo_future.get_result()
+   bar_response = bar_future.get_result()
+
+   
 
 Session
 -------

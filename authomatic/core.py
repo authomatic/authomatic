@@ -12,6 +12,7 @@ import logging
 import pickle
 import settings
 import sys
+import threading
 import time
 import urllib
 import urlparse
@@ -278,6 +279,56 @@ class ReprMixin(object):
         args = ', '.join(args)
         
         return '{}({})'.format(name, args)
+
+
+class Future(threading.Thread):
+    """
+    Represents an activity run in a separate thread.
+    Subclasses :class:`threading.Thread`, adds :attr:`.get_result` method.
+    
+    .. warning:: |async|
+    
+    """
+    
+    def __init__(self, func, *args, **kwargs):
+        """
+        :param callable func:
+            The function to be run in separate thread.
+        
+        Calls :data:`func` in separate thread and returns immediately.
+        Accepts arbitrary positional and keyword arguments which will be passed to :data:`func`.
+        """
+        
+        super(Future, self).__init__()
+        self._func = func
+        self._args = args
+        self._kwargs = kwargs
+        self._result = None
+        
+        self.start()
+    
+    
+    def run(self):
+        self._result = self._func(*self._args, **self._kwargs)
+    
+    
+    def get_result(self, timeout=None):
+        """
+        Waits for the wrapped :data:`func` to finish and returns its result.
+        
+        .. note::
+            
+            This will block the flow of controll until the :data:`func` returns.
+        
+        :param timeout:
+            :class:`float` or ``None`` A timeout for the :data:`func` to return in seconds.
+        
+        :returns:
+            The result of the wrapped :data:`func`.
+        """
+        
+        self.join(timeout)
+        return self._result
 
 
 class Session(object):
@@ -821,6 +872,19 @@ class User(ReprMixin):
         """
         
         return self.provider.update_user()
+    
+    
+    def async_update(self):
+        """
+        Same as :meth:`.update` but runs asynchronously in a separate thread.
+        
+        .. warning:: |async|
+        
+        :returns:
+            :class:`.Future` instance representing the separate thread.
+        """
+        
+        return Future(self.update)
 
 
 class Credentials(ReprMixin):
@@ -971,6 +1035,19 @@ class Credentials(ReprMixin):
         if hasattr(self.provider_class, 'refresh_credentials'):
             if force or self.expire_soon(soon):
                 return self.provider_class.refresh_credentials(self)
+    
+    
+    def async_refresh(self, *args, **kwargs):
+        """
+        Same as :meth:`.refresh` but runs asynchronously in a separate thread.
+        
+        .. warning:: |async|
+        
+        :returns:
+            :class:`.Future` instance representing the separate thread.
+        """
+        
+        return Future(self.refresh, *args, **kwargs)
     
     
     def provider_type_class(self):
@@ -1189,6 +1266,7 @@ class UserInfoResponse(Response):
 # Public methods
 #===============================================================================
 
+
 def setup_middleware(*args, **kwargs):
     """
     Instantiates the :class:`.Middleware` and stores it to the
@@ -1202,10 +1280,10 @@ def setup_middleware(*args, **kwargs):
 
 def login(provider_name, callback=None, session=None, session_save_method=None, **kwargs):
     """
-    Launches a login procedure for specified :doc:`provider <providers>` and returns :class:`.LoginResult`.
+    Launches a login procedure for specified :doc:`provider </reference/providers>` and returns :class:`.LoginResult`.
     
     .. warning::
-        Currently the method gets called twice by all :doc:`providers <providers>`. This may change in future.
+        Currently the method gets called twice by all :doc:`providers </reference/providers>`. This may change in future.
         
         #. First it returns nothing but redirects the **user** to the **provider**,
            which redirects him back to the enclosing **request handler**.
@@ -1271,7 +1349,7 @@ def access(credentials, url, params=None, method='GET', headers={}, max_redirect
     Accesses **protected resource** on behalf of the **user**.
     
     :param credentials:
-        The **user's** :class:`.Credentials`.
+        The **user's** :class:`.Credentials` (serialized or normal).
         
     :param str url:
         The **protected resource** URL.
@@ -1282,8 +1360,14 @@ def access(credentials, url, params=None, method='GET', headers={}, max_redirect
     :param dict headers:
         HTTP headers of the request.
         
+    :param int max_redirects:
+        Maximum number of HTTP redirects to follow.
+        
     :param function content_parser:
         A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
+    
+    :returns:
+        :class:`.Response`
     """
     
     # Deserialize credentials.
@@ -1300,7 +1384,19 @@ def access(credentials, url, params=None, method='GET', headers={}, max_redirect
                                                  headers=headers,
                                                  max_redirects=max_redirects,
                                                  content_parser=content_parser)
+
+
+def async_access(*args, **kwargs):
+    """
+    Same as :func:`.access` but runs asynchronously in a separate thread.
     
+    .. warning:: |async|
+    
+    :returns:
+        :class:`.Future` instance representing the separate thread.
+    """
+    
+    return Future(access, *args, **kwargs)
     
 
 

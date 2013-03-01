@@ -2,4 +2,4 @@ Functions
 ---------
 
 .. automodule:: authomatic
-   :members: login, short_name, async_fetch, fetch
+   :members: middleware, login, provider_id, credentials, access, async_access

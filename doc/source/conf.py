@@ -57,6 +57,9 @@ rst_prolog = """
 .. _python-openid: http://pypi.python.org/pypi/python-openid/
 
 .. |classmethod| replace:: Must be a classmethod!
+
+.. |async| replace:: The internal implementation of the future pattern is quite naive. Use with caution!
+
 """
 
 # -- General configuration -----------------------------------------------------
