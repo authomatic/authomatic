@@ -10,17 +10,14 @@ class Login(webapp2.RequestHandler):
     # The handler must accept GET and POST http methods and
     # catch the "provider_name" URL variable.
     def any(self, provider_name):
+        self.response.write('<a href="..">Home</a>')
                 
         # It all begins with login.
         result = authomatic.login(provider_name)
         
-
-        # If there is result, the login procedure has finished.
-        self.response.write('<a href="..">Home</a>')
-        
         if result.error:
             # Login procedure finished with an error.
-            self.response.write('Damn that error: {}!'.format(result.error.message))
+            self.response.write('<h2>Damn that error: {}</h2>'.format(result.error.message))
         
         elif result.user:
             # Hooray, we have the user!
@@ -67,7 +64,7 @@ class Login(webapp2.RequestHandler):
                                 date = message.get('created_time')
                                 
                                 self.response.write('<h3>{}</h3>'.format(text))
-                                self.response.write('Posted on: {}'.format(date))
+                                self.response.write('Posted on: {}<br /><br />'.format(date))
                     else:
                         self.response.write('Damn that unknown error!<br />')
                         self.response.write('Status: {}'.format(response.status))

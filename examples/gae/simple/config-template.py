@@ -9,7 +9,7 @@ CONFIG = {
            # Provider class
            'class_': oauth1.Twitter,
            
-           # Twitter is an AuthorisationProvider so we need to set several other properties:
+           # Twitter is an AuthorisationProvider so we need to set several other properties too:
            'consumer_key': '########################',
            'consumer_secret': '########################',
     },
