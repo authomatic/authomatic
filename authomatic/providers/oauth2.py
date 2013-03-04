@@ -34,6 +34,10 @@ class OAuth2(providers.AuthorisationProvider):
                       password='password',  
                       client_credentials='client_credentials')
     
+    #: :class:`bool` If ``True`` the **provider** will be set up to request an *offline access token*.
+    #: default is ``False``. 
+    offline = False
+    
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
@@ -53,7 +57,6 @@ class OAuth2(providers.AuthorisationProvider):
     #===========================================================================
     # Internal methods
     #===========================================================================
-    
     
     def _scope_parser(self, scope):
         """
@@ -355,6 +358,17 @@ class Facebook(OAuth2):
     _term_dict = OAuth2._term_dict.copy()
     _term_dict['refresh_token'] = 'fb_exchange_token'
     
+    
+    def __init__(self, *args, **kwargs):
+        super(Facebook, self).__init__(*args, **kwargs)
+        
+        # Handle special Facebook requirements to be able to refresh the access token.
+        if self.offline:
+            # Facebook needs an offline_access scope.
+            if not 'offline_access' in self.scope:
+                self.scope.append('offline_access')
+    
+    
     @staticmethod
     def _user_parser(user, data):
         user.picture = 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))
@@ -379,6 +393,15 @@ class Google(OAuth2):
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
     user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
     
+    def __init__(self, *args, **kwargs):
+        super(Google, self).__init__(*args, **kwargs)
+        
+        # Handle special Google requirements to be able to refresh the access token.
+        if self.offline:
+            # Google needs access_type=offline param in the user authorisation request.
+            if not 'access_type' in self.user_authorisation_params:
+                self.user_authorisation_params['access_type'] = 'offline'
+        
     
     @staticmethod
     def _refresh_credentials_if(credentials):
