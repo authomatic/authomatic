@@ -5,7 +5,7 @@ from config import CONFIG
 
 def links(handler):
     for p in CONFIG.keys():
-        handler.response.write('<a href="login/{p}">{p}</a><br />'.format(p=p))
+        handler.response.write('<a href="auth/{p}">{p}</a><br />'.format(p=p))
     handler.response.write('<br /><br />')
 
 
@@ -14,14 +14,21 @@ def loop(handler, obj):
     for k, v in obj.__dict__.items():
         if not k in ('data', 'gae_user', 'credentials', 'content'):
             style = 'color: red' if not v else ''
-            handler.response.write('<tr style="{}"><td>{}</td><td>{}</td></tr>'.format(style, k, v))
+            handler.response.write('<tr style="{}"><td>{}:</td><td>{}</td></tr>'.format(style, k, v))
     handler.response.write('</table>')
 
 
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
+        self.response.write("""<!DOCTYPE html><html>
+        <head>
+            <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=sunburst"></script>
+        </head>
+        """)
+        
+        self.response.write('<body>')
         self.response.write('<a href="..">Home</a> | ')
-        self.response.write('<a href="../login/{}">Retry</a>'.format(provider_name))
+        self.response.write('<a href="../auth/{}">Retry</a>'.format(provider_name))
         
         result = authomatic.login(provider_name)
         
@@ -32,6 +39,7 @@ class Login(webapp2.RequestHandler):
             result.user.update()
             
             self.response.write('<h3>User</h3>')
+            self.response.write('<img src="{}" width="100" height="100" />'.format(result.user.picture))
             loop(self, result.user)
             
             if result.user.credentials:
@@ -44,22 +52,25 @@ class Login(webapp2.RequestHandler):
                 
                 if response:
                     self.response.write('<h3>Refresh status: {}</h3>'.format(response.status))
+            
+            self.response.write('<pre id="ui" class="prettyprint"></pre>')
+            
+            self.response.write("""
+            <script type="text/javascript">
+                ui = document.getElementById('ui');
+                ui.innerHTML = JSON.stringify({}, undefined, 4);
+            </script>
+            """.format(result.user.content))
         
-        self.response.write('<pre><code id="ui"><code></pre>')
-        
-        self.response.write("""
-        <script type="text/javascript">
-            ui = document.getElementById('ui');
-            ui.innerHTML = JSON.stringify({}, undefined, 4);
-        </script>
-        """.format(result.user.content))
+        self.response.write('</body></html>')
+
 
 class Home(webapp2.RequestHandler):
     def get(self):
         links(self)
 
 
-ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
+ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/', Home)]
 
 
