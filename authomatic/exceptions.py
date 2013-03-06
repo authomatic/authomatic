@@ -1,11 +1,27 @@
+# -*- coding: utf-8 -*-
+"""
+Provides various exception types for the library.
+"""
+
 class BaseError(Exception):
-    def __init__(self, message, original_message='', url='', code=None):
-        super(BaseError, self).__init__(message)        
+    """
+    Base error for all errors.
+    """
+    
+    def __init__(self, message, original_message='', url='', status=None):
+        super(BaseError, self).__init__(message)
+        
+        #: Error message.
         self.message = message
+        
+        #: Original message.
         self.original_message = original_message
+        
+        #: URL related with the error.
         self.url = url
-        # TODO: Rename to "status" to be consistent wit Response.status.
-        self.code = code
+        
+        #: HTTP status code related with the error.
+        self.status = status
 
 
 class ConfigError(BaseError):
@@ -58,6 +74,7 @@ class CancellationError(BaseError):
 
 class FailureError(BaseError):
     pass
+
 
 class FetchError(BaseError):
     pass

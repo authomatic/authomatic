@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-OAuth 2.0 Providers
+|oauth2| Providers
 -------------------
 
 Providers which implement the |oauth2|_ protocol.
@@ -20,7 +21,9 @@ import logging
 import authomatic.core as core
 import authomatic.settings as settings
 
+
 __all__ = ['Facebook', 'Google', 'WindowsLive', 'OAuth2']
+
 
 class OAuth2(providers.AuthorisationProvider):
     """
@@ -60,7 +63,7 @@ class OAuth2(providers.AuthorisationProvider):
     
     def _scope_parser(self, scope):
         """
-        Override this to handle differences between accepted format of scope across different providers.
+        Override this to handle differences between accepted format of scope across providers.
         
         :attr list scope:
             List of scopes.
@@ -73,6 +76,9 @@ class OAuth2(providers.AuthorisationProvider):
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, params=None,
                                  method='GET', redirect_uri='', scope='', csrf=''):
+        """
+        Creates |oauth2| request elements.
+        """
         
         params = params or {}
         
@@ -147,7 +153,7 @@ class OAuth2(providers.AuthorisationProvider):
     @staticmethod
     def _refresh_credentials_if(credentials):
         """
-        Override this to specify conditions when it is worth to refresh credentials.
+        Override this to specify conditions when it gives sense to refresh credentials.
         
         .. warning:: |classmethod|
         
@@ -165,19 +171,15 @@ class OAuth2(providers.AuthorisationProvider):
     # Exposed methods
     #===========================================================================
     
-    
     @staticmethod
     def to_tuple(credentials):
-        
         # OAuth 2.0 needs only token, refresh_token and expiration date.
         return (credentials.token, credentials.refresh_token, credentials.expiration_time)
     
     
     @classmethod
     def reconstruct(cls, deserialized_tuple, cfg):
-        
         provider_id, token, refresh_token, expiration_time = deserialized_tuple
-        
         return core.Credentials(token=token,
                                 refresh_token=refresh_token,
                                 provider_type=cls.get_type(),
@@ -189,8 +191,10 @@ class OAuth2(providers.AuthorisationProvider):
     @classmethod
     def refresh_credentials(cls, credentials):
         """
-        Refreshes :class:`.Credentials` by providing fresh **token**,
-        **refresh_token** and **expire_in**.
+        Refreshes :class:`.Credentials` if it gives sense.
+        
+        :param credentials:
+            :class:`.Credentials` to be refreshed.
         
         :returns:
             :class:`.Response`.
@@ -283,7 +287,7 @@ class OAuth2(providers.AuthorisationProvider):
                 raise FailureError('Failed to obtain OAuth 2.0 access token from {}! HTTP status code: {}.'\
                                   .format(self.access_token_url, response.status),
                                   original_message=response.content,
-                                  code=response.status,
+                                  status=response.status,
                                   url=self.access_token_url)
             
             self._log(logging.INFO, 'Got access token.')

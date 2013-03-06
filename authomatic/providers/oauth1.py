@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-OAuth 1.0a Providers
+|oauth1| Providers
 --------------------
 
 Providers which implement the |oauth1|_ protocol.
@@ -24,15 +25,18 @@ import time
 import urllib
 import urlparse
 
+
 __all__ = ['OAuth1', 'Twitter']
+
 
 def _normalize_params(params):
     """
     Returns a normalized query string sorted first by key, then by value
-    excluding the "realm" and "oauth_signature" parameters
+    excluding the ``realm`` and ``oauth_signature`` parameters
     as specified here: http://oauth.net/core/1.0a/#rfc.section.9.1.1
     
-    params: dict or list of tuples
+    :param params:
+        :class:`dict` or :class:`list` of tuples.
     """
     
     if type(params) == dict:
@@ -59,12 +63,10 @@ def _join_by_ampersand(*args):
 def _create_base_string(method, base, params):
     """
     Returns base string for HMAC-SHA1 signature
-    
     as specified in: http://oauth.net/core/1.0a/#rfc.section.9.1.3
     """
     
     normalized_qs = _normalize_params(params)
-    
     return _join_by_ampersand(method, base, normalized_qs)
 
 
@@ -75,6 +77,7 @@ class BaseSignatureGenerator(object):
     
     __metaclass__ = abc.ABCMeta
     
+    #: :class:`str` The name of the signature method.
     method = ''
     
     @abc.abstractmethod
@@ -89,12 +92,16 @@ class BaseSignatureGenerator(object):
         
         :param str method:
             HTTP method of the request to be signed.
+            
         :param str base:
             Base URL of the request without query string an fragment.
+            
         :param dict params:
             Dictionary or list of tuples of the request parameters.
+            
         :param str consumer_secret:
             :attr:`.core.Consumer.secret`
+            
         :param str token_secret:
             Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.
         
@@ -119,6 +126,7 @@ class HMACSHA1Generator(BaseSignatureGenerator):
         
         :param str consumer_secret:
             :attr:`.core.Consumer.secret`
+            
         :param str token_secret:
             Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.
         
@@ -134,6 +142,24 @@ class HMACSHA1Generator(BaseSignatureGenerator):
         """
         Returns HMAC-SHA1 signature
         as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2
+        
+        :param str method:
+            HTTP method of the request to be signed.
+            
+        :param str base:
+            Base URL of the request without query string an fragment.
+            
+        :param dict params:
+            Dictionary or list of tuples of the request parameters.
+            
+        :param str consumer_secret:
+            :attr:`.core.Consumer.secret`
+            
+        :param str token_secret:
+            Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.
+        
+        :returns:
+            The signature string.
         """
         
         base_string = _create_base_string(method, base, params)
@@ -152,30 +178,35 @@ class OAuth1(providers.AuthorisationProvider):
     
     _signature_generator = HMACSHA1Generator
     
-    # TODO: Move to AuthorisationProvider???
     REQUEST_TOKEN_REQUEST_TYPE = 1
     
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
         
-        :arg str consumer_key:
+        :param str consumer_key:
             The *key* assigned to our application (**consumer**) by the **provider**.
-        :arg str consumer_secret:
+            
+        :param str consumer_secret:
             The *secret* assigned to our application (**consumer**) by the **provider**.
-        :arg id:
+            
+        :param id:
             A unique short name used to serialize :class:`.Credentials`.
-        :arg dict user_authorisation_params:
+            
+        :param dict user_authorisation_params:
             A dictionary of additional request parameters for **user authorisation request**.
-        :arg dict access_token_params:
+            
+        :param dict access_token_params:
             A dictionary of additional request parameters for **access token request**.
-        :arg dict request_token_params:
+            
+        :param dict request_token_params:
             A dictionary of additional request parameters for **request token request**.
         """
         
         super(OAuth1, self).__init__(*args, **kwargs)
         
         self.request_token_params = self._kwarg(kwargs, 'request_token_params', {})
+    
     
     #===========================================================================
     # Abstract properties
@@ -196,6 +227,9 @@ class OAuth1(providers.AuthorisationProvider):
     @classmethod
     def _create_request_elements(cls, request_type, credentials, url, params=None,
                                  method='GET', verifier='', callback=''):
+        """
+        Creates |oauth1| request elements.
+        """
         
         params = params or {}
         
@@ -276,7 +310,6 @@ class OAuth1(providers.AuthorisationProvider):
     # Exposed methods
     #===========================================================================
     
-    
     @staticmethod
     def to_tuple(credentials):
         return (credentials.token, credentials.token_secret)
@@ -296,7 +329,6 @@ class OAuth1(providers.AuthorisationProvider):
     
     @providers.login_decorator
     def login(self):
-        
         # get request parameters from which we can determine the login phase
         denied = core.middleware.params.get('denied')
         verifier = core.middleware.params.get('oauth_verifier', '')
@@ -327,7 +359,7 @@ class OAuth1(providers.AuthorisationProvider):
                 raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
                                    .format(self.access_token_url, response.status),
                                    original_message=response.content,
-                                   code=response.status,
+                                   status=response.status,
                                    url=self.access_token_url)
             
             self._log(logging.INFO, 'Got access token.')
@@ -368,7 +400,7 @@ class OAuth1(providers.AuthorisationProvider):
                 raise FailureError('Failed to obtain request token from {}! HTTP status code: {}.'\
                                   .format(self.request_token_url, response.status),
                                   original_message=response.content,
-                                  code=response.status,
+                                  status=response.status,
                                   url=self.request_token_url)
             
             # extract request token
