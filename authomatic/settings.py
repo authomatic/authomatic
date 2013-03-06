@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 """
-Global variables set up in Middleware.
+Global variables used throughout the library, set up in Middleware.
 """
 
 import logging
 
+#: The :doc:`config`.
 config = None
 
 #: A secret string that will be used as the key for signing :class:`.Session` cookie and

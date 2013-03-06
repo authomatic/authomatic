@@ -1,18 +1,21 @@
 Config
 ------
 
-The **config** is a constant where you specify which providers you want to use
-and how should they be configured. It is not tied to any specific location inside your project's
-folder structure. You only need to pass it to the :func:`authomatic.login` function as argument.
+The config is a dictionary listing all the **providers** you want to use in your app.
+The keys are your internal **provider** names or slugs,
+the values are dictionaries specifying configuration for a particular **provider** name.
 
-It is a dictionary of dictionaries which maps your custom provider names to
-:doc:`provider classes <providers>`.
-You can and should specify the keyword arguments for each :doc:`provider class <providers>` here.
+Choose a particular provider by assigning a |provider-class|_ to the ``"class_"`` key of
+the nested *configuration dictionary*. All the other keys are just keyword arguments
+which will be passed to the chosen |provider-class|_ constructor.
+
+There is one special ``"__defaults__"`` key under which you can specify default
+keyword arguments for all providers. Keyword arguments specified in particular **providers**
+will override the default values.
 
 .. note::
    
-   In fact the config cann be any object implementing a subset of :class:`dict` interface.
-   
+   In fact the config can be any object implementing a :func:`get` and :func:`values` method.
    If your app is running on |gae|_ you can use the :func:`.extras.gae.ndb_config`.
 
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Interfaces
 ^^^^^^^^^^
@@ -29,9 +30,6 @@ class BaseSession(object):
     def __setitem__(self, key, value):
         """
         Same as :meth:`dict.__setitem__`.
-        
-        :param key:
-        :param value:
         """
     
     
@@ -39,8 +37,6 @@ class BaseSession(object):
     def __getitem__(self, key):
         """
         Same as :meth:`dict.__getitem__`.
-        
-        :param key:
         """
     
     
@@ -48,8 +44,6 @@ class BaseSession(object):
     def __delitem__(self, key):
         """
         Same as :meth:`dict.__delitem__`.
-        
-        :param key:
         """
     
     
@@ -57,8 +51,6 @@ class BaseSession(object):
     def get(self, key):
         """
         Same as :meth:`dict.get`.
-        
-        :param key:
         """
 
 
@@ -73,8 +65,6 @@ class BaseConfig(object):
     def get(self, key):
         """
         Same as :attr:`dict.get`.
-        
-        :param key:
         """
     
     @abc.abstractmethod

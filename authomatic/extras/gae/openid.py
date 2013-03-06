@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # We need absolute iport to import from openid library which has the same name as this module
 from __future__ import absolute_import
 from google.appengine.ext import ndb
@@ -42,7 +43,6 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     
     @classmethod
     def cleanupAssociations(cls):
-        
         # query for all expired
         cls._log(logging.DEBUG, 'NDBOpenIDStore: Querying datastore for OpenID associations.')
         query = cls.query(cls.expiration_date <= datetime.datetime.now())
@@ -59,7 +59,6 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     
     @classmethod
     def getAssociation(cls, server_url, handle=None):
-        
         cls.cleanupAssociations()
         
         if handle:
@@ -83,6 +82,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
             cls._log(logging.DEBUG, 'NDBOpenIDStore: Deleting OpenID association from datastore.')
             key.delete()
             return True
+    
     
     @classmethod
     def useNonce(cls, server_url, timestamp, salt):

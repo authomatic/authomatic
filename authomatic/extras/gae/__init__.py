@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 |gae| Extras
 ------------
@@ -12,7 +13,7 @@ from webapp2_extras import sessions
 import os
 
 
-__all__ = ['ndb_config']
+__all__ = ['ndb_config', 'Webapp2Session']
 
 
 class GAEError(exceptions.BaseError):
@@ -211,7 +212,7 @@ def ndb_config():
         
     .. note::
     
-        The *Datastore Viewer* in the ``_ah/admin/`` wont let you add properties to a model
+        The *Datastore Viewer* in the ``_ah/admin/`` won't let you add properties to a model
         if there is not an entity with that property allready.
         Therefore it is a good idea to keep the **"Example"** entity (which has all
         possible properties set) in the datastore.

@@ -1,14 +1,10 @@
+# -*- coding: utf-8 -*-
 """
-OpenID Providers
+|openid| Providers
 ----------------------------------
 
 Providers which implement the |openid|_ protocol based on the
 `python-openid`_ library.
-
-.. warning::
-    
-    This implementation is more expensive than :class:`.GAEOpenID`.
-    The login procedure requires **one more fetch** and up to **8 DB accesses**!
 
 .. autosummary::
     
@@ -33,9 +29,11 @@ import logging
 import time
 import pprint
 
+
 __all__ = ['OpenID', 'Yahoo', 'Google']
 
-# supress openid logging to stderr
+
+# Supress openid logging.
 oidutil.log = lambda message, level=0: None
 
 
@@ -49,6 +47,7 @@ REALM_HTML = \
     <body>{body}</body>
 </html>
 """
+
 
 XRDS_XML = \
 """
@@ -126,7 +125,7 @@ class OpenID(providers.AuthenticationProvider):
     """
     |openid|_ provider based on the `python-openid`_ library.    
     """
-        
+    
     AX = ['http://axschema.org/contact/email',
           'http://schema.openid.net/contact/email',
           'http://axschema.org/namePerson',
@@ -209,6 +208,7 @@ class OpenID(providers.AuthenticationProvider):
         
         super(OpenID, self).__init__(*args, **kwargs)
         
+        # Allow for other openid store implementations.
         self.store = self._kwarg(kwargs, 'store', SessionOpenIDStore())
         
         # Realm
@@ -269,7 +269,6 @@ class OpenID(providers.AuthenticationProvider):
     
     @providers.login_decorator
     def login(self):
-        """Launches the OpenID authentication procedure."""
                 
         # Instantiate consumer
         self.store._log = self._log

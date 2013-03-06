@@ -1,4 +1,3 @@
-#TODO: Add coding line to all modules
 # -*- coding: utf-8 -*-
 from authomatic.exceptions import SessionError, MiddlewareError
 import Cookie
@@ -85,7 +84,7 @@ _counter = Counter()
 
 def provider_id():
     """
-    A simple counter to be used in the config to generate unique `id` values.
+    A simple counter to be used in the config to generate unique `IDs`.
     
     :returns:
         :class:`int`.
@@ -98,14 +97,14 @@ def provider_id():
         CONFIG = {
             'facebook': {
                  'class_': authomatic.providers.oauth2.Facebook,
-                 'id': authomatic.id(), # returns 1
+                 'id': authomatic.provider_id(), # returns 1
                  'consumer_key': '##########',
                  'consumer_secret': '##########',
                  'scope': ['user_about_me', 'email']
             },
             'google': {
                  'class_': 'authomatic.providers.oauth2.Google',
-                 'id': authomatic.id(), # returns 2
+                 'id': authomatic.provider_id(), # returns 2
                  'consumer_key': '##########',
                  'consumer_secret': '##########',
                  'scope': ['https://www.googleapis.com/auth/userinfo.profile',
@@ -113,7 +112,7 @@ def provider_id():
             },
             'windows_live': {
                  'class_': 'oauth2.WindowsLive',
-                 'id': authomatic.id(), # returns 3
+                 'id': authomatic.provider_id(), # returns 3
                  'consumer_key': '##########',
                  'consumer_secret': '##########',
                  'scope': ['wl.basic', 'wl.emails', 'wl.photos']
@@ -1271,6 +1270,46 @@ def setup_middleware(*args, **kwargs):
     """
     Instantiates the :class:`.Middleware` and stores it to the
     :data:`.authomatic.core.middleware` global variable.
+    
+    :param app:
+            WSGI application to wrap.
+        
+    :param dict config:
+        :doc:`config`
+        
+    :param str secret:
+        A secret string that will be used as the key for signing :class:`.Session` cookie and
+        as a salt by *CSRF* token generation.
+        
+    :param session_max_age:
+        Maximum allowed age of :class:`.Session` kookie nonce in seconds.
+        
+    :param bool secure_cookie:
+        If ``True`` the :class:`.Session` cookie will be saved wit ``Secure`` attribute.
+    
+    :param session:
+        Custom dictionary-like session implementation.
+    
+    :param callable session_save_method:
+        A method of the supplied session or any mechanism that saves the session data and cookie.
+    
+    :param bool report_errors:
+        If ``True`` exceptions encountered during the **login procedure**
+        will be caught and reported in the :attr:`.LoginResult.error` attribute.
+        Default is ``True``.
+    
+    :param bool debug:
+        If ``True`` traceback of exceptions will be written to response.
+        Default is ``False``.
+        
+    :param int logging_level:
+        The logging level treshold as specified in the standard Python
+        `logging library <http://docs.python.org/2/library/logging.html>`_.
+        Default is ``logging.INFO``
+    
+    :param str prefix:
+        Prefix used as the :class:`.Session` cookie name and
+        by which all logs will be prefixed.
     """
     
     global middleware

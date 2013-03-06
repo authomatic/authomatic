@@ -1,18 +1,19 @@
+# -*- coding: utf-8 -*-
 """
 Google App Engine OpenID Providers
 ----------------------------------
 
-Providers which implement the |openid|_ protocol based on the |gae_users_api|_.
+|openid|_ provider implementations based on the |gae_users_api|_.
 
 .. note::
 
-    When using the :class:`GAEOpenID` provider, the :class:`user <.core.User>` object
+    When using the :class:`GAEOpenID` provider, the :class:`.User` object
     will always have only the
-    :attr:`user_id <.core.User.user_id>`,
-    :attr:`email <.core.User.email>`,
-    :attr:`gae_user <.core.User.gae_user>`
+    :attr:`.User.user_id`,
+    :attr:`.User.email`,
+    :attr:`.User.gae_user`
     attributes populated with data.
-    Moreover the :attr:`user_id <.core.User.user_id>` will always be empty on the
+    Moreover the :attr:`.User.user_id` will always be empty on the
     `GAE Development Server <https://developers.google.com/appengine/docs/python/tools/devserver>`_.
 
 .. autosummary::
@@ -30,7 +31,9 @@ import logging
 import authomatic.core as core
 import authomatic.settings as settings
 
+
 __all__ = ['GAEOpenID', 'Yahoo', 'Google']
+
 
 class GAEOpenID(providers.AuthenticationProvider):
     """
@@ -77,16 +80,18 @@ class GAEOpenID(providers.AuthenticationProvider):
             else:
                 raise FailureError('Unable to authenticate identifier "{}"!'.format(self.identifier))
 
+
 class Yahoo(GAEOpenID):
     """
-    :class:`.GAEOpenID` provider with the :attr:`.identifier` predefined to ``"me.yahoo.com"``.
+    :class:`.GAEOpenID` provider with the :attr:`.identifier` set to ``"me.yahoo.com"``.
     """
     
     identifier = 'me.yahoo.com'
 
+
 class Google(GAEOpenID):
     """
-    :class:`.GAEOpenID` provider with the :attr:`.identifier` predefined to ``"https://www.google.com/accounts/o8/id"``.
+    :class:`.GAEOpenID` provider with the :attr:`.identifier` set to ``"https://www.google.com/accounts/o8/id"``.
     """
     
     identifier = 'https://www.google.com/accounts/o8/id'

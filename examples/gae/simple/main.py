@@ -9,7 +9,7 @@ class Login(webapp2.RequestHandler):
     
     # The handler must accept GET and POST http methods and
     # catch the "provider_name" URL variable.
-    def any(self, provider_name):
+    def any(self, provider_name): # Accept any HTTP method.
         self.response.write('<a href="..">Home</a>')
                 
         # It all begins with login.
@@ -23,7 +23,7 @@ class Login(webapp2.RequestHandler):
             # Hooray, we have the user!
             
             # OAuth 2.0 and OAuth 1.0a provide only limited user data on login,
-            # We need to update the user to get richer info.
+            # We need to update the user to get more info.
             result.user.update()
             
             # Welcome the user.
@@ -51,14 +51,14 @@ class Login(webapp2.RequestHandler):
                     
                     if response.status == 200:
                         # Parse response.
-                        messages = response.data.get('feed').get('data')
+                        statuses = response.data.get('feed').get('data')
                         error = response.data.get('error')
                         
                         if error:
                             self.response.write('Damn that error: {}!'.format(error))
-                        elif messages:
+                        elif statuses:
                             self.response.write('and these are your 5 most recent statuses:<br /><br />')
-                            for message in messages:
+                            for message in statuses:
                                 
                                 text = message.get('message')
                                 date = message.get('created_time')

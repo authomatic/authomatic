@@ -1,3 +1,16 @@
 eclipse.preferences.version=1
+encoding//authomatic/__init__.py=utf-8
+encoding//authomatic/core.py=utf-8
+encoding//authomatic/exceptions.py=utf-8
+encoding//authomatic/extras/__init__.py=utf-8
+encoding//authomatic/extras/gae/__init__.py=utf-8
+encoding//authomatic/extras/gae/openid.py=utf-8
+encoding//authomatic/extras/interfaces.py=utf-8
+encoding//authomatic/providers/__init__.py=utf-8
+encoding//authomatic/providers/gaeopenid.py=utf-8
+encoding//authomatic/providers/oauth1.py=utf-8
+encoding//authomatic/providers/oauth2.py=utf-8
+encoding//authomatic/providers/openid.py=utf-8
+encoding//authomatic/settings.py=utf-8
 encoding//doc/source/conf.py=utf-8
 encoding//examples/gae/dev/main.py=utf-8
