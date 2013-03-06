@@ -450,7 +450,7 @@ class Twitter(OAuth1):
     @staticmethod
     def _user_parser(user, data):
         user.username = data.get('screen_name')
-        user.picture = data.get('profile_image_url')
+        user.picture = 'http://api.twitter.com/1/users/profile_image?screen_name={}&size=original'.format(data.get('screen_name'))
         user.locale = data.get('lang')
         user.link = data.get('url')
         return user

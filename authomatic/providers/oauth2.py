@@ -37,10 +37,6 @@ class OAuth2(providers.AuthorisationProvider):
                       password='password',  
                       client_credentials='client_credentials')
     
-    #: :class:`bool` If ``True`` the **provider** will be set up to request an *offline access token*.
-    #: default is ``False``. 
-    offline = False
-    
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
@@ -49,12 +45,17 @@ class OAuth2(providers.AuthorisationProvider):
             List of strings specifying requested permissions as described in the
             `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
         
+        :param bool offline:
+            If ``True`` the **provider** will be set up to request an *offline access token*.
+            default is ``False``.
+        
         As well as those inherited from :class:`.AuthorisationProvider` constructor.
         """
         
         super(OAuth2, self).__init__(*args, **kwargs)
         
         self.scope = self._kwarg(kwargs, 'scope', [])
+        self.offline = self._kwarg(kwargs, 'offline', False)
     
     
     #===========================================================================
@@ -402,10 +403,13 @@ class Google(OAuth2):
         
         # Handle special Google requirements to be able to refresh the access token.
         if self.offline:
-            # Google needs access_type=offline param in the user authorisation request.
             if not 'access_type' in self.user_authorisation_params:
+                # Google needs access_type=offline param in the user authorisation request.
                 self.user_authorisation_params['access_type'] = 'offline'
-        
+            if not 'approval_prompt' in self.user_authorisation_params:
+                # And also approval_prompt=force.
+                self.user_authorisation_params['approval_prompt'] = 'force'
+    
     
     @staticmethod
     def _refresh_credentials_if(credentials):
@@ -435,9 +439,17 @@ class WindowsLive(OAuth2):
     access_token_url = 'https://oauth.live.com/token'
     user_info_url = 'https://apis.live.net/v5.0/me'
     
+    def __init__(self, *args, **kwargs):
+        super(WindowsLive, self).__init__(*args, **kwargs)
+        
+        if self.offline:
+            if not 'wl.offline_access' in self.scope:
+                self.scope.append('wl.offline_access')
+    
     @staticmethod
     def _user_parser(user, data):
         user.email = data.get('emails', {}).get('preferred')
+        user.picture = 'https://apis.live.net/v5.0/{}/picture'.format(data.get('id'))
         return user
 
 
