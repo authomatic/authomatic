@@ -3,7 +3,7 @@ Providers
 
 Providers are abstractions of the **provider** party of the
 **provider**/**consumer**/**user** triangle and they are the very core of this library.
-There is no reason for you to instatniate them manualy.
+There is no reason for you to instantiate them manualy.
 You only should specify them in the :doc:`config` and access members of their instances
 available in the :class:`.LoginResult` returned by the :func:`authomatic.login` function.
 
@@ -12,8 +12,8 @@ through the :func:`authomatic.login` function's keyword arguments or through the
 
 .. note::
 
-   Keyword arguments passed through :doc:`config` take precedence over
-   those passed through :func:`authomatic.login`.
+   Keyword arguments passed through :func:`authomatic.login` will override
+   the values set in :doc:`config`.
 
 ::
 

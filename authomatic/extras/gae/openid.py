@@ -14,6 +14,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     interface of the `python-openid`_ library.
     """
     
+    
     serialized = ndb.StringProperty()
     expiration_date = ndb.DateTimeProperty()
     # we need issued to sort by most recently issued

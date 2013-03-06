@@ -25,7 +25,7 @@ It's very simple. You only need to do these three steps to have the **user** log
 If everything goes good, you will get a :class:`.User` object with informations like
 :attr:`.User.name`, :attr:`.User.id` or :attr:`.User.email`.
 Moreover, if the **user** has logged in with an |oauth2|_ or |oauth1|_ provider,
-you will be able to access **his protected resources**.
+you will be able to access **his/her protected resources**.
 
 Create the Config
 -----------------
@@ -103,8 +103,8 @@ Advanced
 ========
 
 Apart from getting the **user** logged in you can use **his/her**
-credentials_ to **access his/her protected resources**.
-Make `asynchronous requests`_ and use your own session_ implementation.
+credentials_ to **access his/her protected resources**,
+make `asynchronous requests`_ and use your own session_ implementation.
 
 
 Credentials

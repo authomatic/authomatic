@@ -283,7 +283,7 @@ class ReprMixin(object):
 class Future(threading.Thread):
     """
     Represents an activity run in a separate thread.
-    Subclasses :class:`threading.Thread`, adds :attr:`.get_result` method.
+    Subclasses the standard library :class:`threading.Thread` and adds :attr:`.get_result` method.
     
     .. warning:: |async|
     
@@ -317,7 +317,7 @@ class Future(threading.Thread):
         
         .. note::
             
-            This will block the flow of controll until the :data:`func` returns.
+            This will block the **calling thread** until the :data:`func` returns.
         
         :param timeout:
             :class:`float` or ``None`` A timeout for the :data:`func` to return in seconds.
@@ -810,9 +810,9 @@ class Middleware(object):
 
 class User(ReprMixin):
     """
-    Provides unified interface to selected **user** informations returned by different **providers**.
+    Provides unified interface to selected **user** info returned by different **providers**.
     
-    .. note:: The format of property values may vary across providers.
+    .. note:: The value format may vary across providers.
     """
     
     def __init__(self, provider, **kwargs):
@@ -1268,8 +1268,8 @@ class UserInfoResponse(Response):
 
 def setup_middleware(*args, **kwargs):
     """
-    Instantiates the :class:`.Middleware` and stores it to the
-    :data:`.authomatic.core.middleware` global variable.
+    Wrapps your WSGI application in middleware which adds the **authorisation/authentication**
+    capability to it.
     
     :param app:
             WSGI application to wrap.
@@ -1322,27 +1322,25 @@ def login(provider_name, callback=None, session=None, session_save_method=None, 
     Launches a login procedure for specified :doc:`provider </reference/providers>` and returns :class:`.LoginResult`.
     
     .. warning::
-        Currently the method gets called twice by all :doc:`providers </reference/providers>`. This may change in future.
         
-        #. First it returns nothing but redirects the **user** to the **provider**,
-           which redirects him back to the enclosing **request handler**.
-        #. Then it gets called again and it finally returns the :class:`.LoginResult`
-           or calls the function specified in the ``callback`` argument with
-           :class:`.LoginResult` passed as argument.
+        The function redirects the **user** to the **provider** which in turn redirects the
+        **user** back to the *request handler* where this function was called.
     
     :param str provider_name:
         Name of the provider as specified in the keys of the :doc:`config`.
+        
     :param callable callback:
         If specified the function will call the callback with :class:`.LoginResult`
         passed as argument and will return nothing.
+        
     :param bool report_errors:
         
     .. note::
         
-        Accepts additional keyword arguments that will be passed t :doc:`provider` constructor.
+        Accepts additional keyword arguments that will be passed to :doc:`provider` constructor.
     
     :returns:
-        :obj:`None` or :class:`.LoginResult`.
+        :class:`.LoginResult`
     """
     
     # Handle custom session.
