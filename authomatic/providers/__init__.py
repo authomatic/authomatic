@@ -329,7 +329,7 @@ class BaseProvider(object):
         return authomatic.core.Response(response, content_parser)
     
     
-    def _update_or_create_user(self, data, credentials=None):
+    def _update_or_create_user(self, data, credentials=None, content=None):
         """
         Updates or creates :attr:`.user`.
         
@@ -340,12 +340,13 @@ class BaseProvider(object):
         if not self.user:
             self.user = authomatic.core.User(self, credentials=credentials)
         
-        self.user.raw_user_info = data
+        self.user.content = content
+        self.user.data = data
         
         # Update.
         for key in self.user.__dict__.keys():
-            # Exclude raw_user_info.
-            if key is not 'raw_user_info':
+            # Exclude data.
+            if key not in ('data', 'content'):
                 # Extract every data item whose key matches the user property name,
                 # but only if it has a value.
                 value = data.get(key)
@@ -682,7 +683,7 @@ class AuthorisationProvider(BaseProvider):
         response = self.access_with_credentials(self.credentials, self.user_info_url)
         
         # Create user.
-        self.user = self._update_or_create_user(response.data)
+        self.user = self._update_or_create_user(response.data, content=response.content)
         
         # Return UserInfoResponse.
         return authomatic.core.UserInfoResponse(self.user, response.httplib_response)

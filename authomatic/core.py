@@ -824,7 +824,10 @@ class User(ReprMixin):
         
         #: A :class:`dict` containing all the **user** information returned by the **provider**.
         #: The structure differs across **providers**.
-        self.raw_user_info = kwargs.get('raw_user_info')
+        self.data = kwargs.get('data')
+        
+        #: The :attr:`.Response.content` of the request made to update the user.
+        self.content = kwargs.get('content')
         
         #: :class:`str` ID assigned to the **user** by the **provider**.
         self.id = kwargs.get('id')

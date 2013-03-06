@@ -126,7 +126,7 @@ class Login(webapp2.RequestHandler):
                 event.user.update()
                 
             for k, v in event.user.__dict__.iteritems():
-                if k != 'raw_user_info':
+                if k != 'data':
                     self.response.write('{}: {}<br />'.format(k, v))
                     if k == 'gae_user' and v:
                         for kk, vv in v.__dict__.iteritems():
@@ -135,7 +135,7 @@ class Login(webapp2.RequestHandler):
             
             self.response.write('<br /><br />')
             self.response.write('Raw User Info:<br /><br />')
-            self.response.write(event.user.raw_user_info)
+            self.response.write(event.user.data)
 
 
 class Test(webapp2.RequestHandler):
