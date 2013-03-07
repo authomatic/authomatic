@@ -22,7 +22,7 @@ import authomatic.core as core
 import authomatic.settings as settings
 
 
-__all__ = ['Facebook', 'Google', 'WindowsLive', 'OAuth2']
+__all__ = ['Facebook', 'Google', 'WindowsLive', 'OAuth2', 'Viadeo']
 
 
 class OAuth2(providers.AuthorisationProvider):
@@ -100,7 +100,7 @@ class OAuth2(providers.AuthorisationProvider):
         
         if request_type == cls.USER_AUTHORISATION_REQUEST_TYPE:
             # User authorisation request.
-            if consumer_key and redirect_uri and scope and csrf:
+            if consumer_key and redirect_uri and csrf:
                 params['client_id'] = consumer_key
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
@@ -123,7 +123,7 @@ class OAuth2(providers.AuthorisationProvider):
                                   'redirect_uri are required to create OAuth 2.0 acces token request elements!')
         
         elif request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
-            # Access token request.
+            # Refresh access token request.
             if refresh_token and consumer_key and consumer_secret:
                 params[cls._x_term_dict['refresh_token']] = refresh_token
                 params['client_id'] = consumer_key
@@ -357,7 +357,14 @@ class OAuth2(providers.AuthorisationProvider):
 
 
 class Facebook(OAuth2):
-    """Facebook |oauth2|_ provider."""
+    """
+    Facebook |oauth2|_ provider.
+    
+    * Dashboard: https://developers.facebook.com/apps
+    * Docs: http://developers.facebook.com/docs/howtos/login/server-side-login/
+    * API reference: http://developers.facebook.com/docs/reference/api/
+    * API explorer: http://developers.facebook.com/tools/explorer
+    """
     
     user_authorisation_url = 'https://www.facebook.com/dialog/oauth'
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
@@ -398,7 +405,14 @@ class Facebook(OAuth2):
 
 
 class Google(OAuth2):
-    """Google |oauth2|_ provider."""
+    """
+    Google |oauth2|_ provider.
+    
+    * Dashboard: https://code.google.com/apis/console/
+    * Docs: https://developers.google.com/accounts/docs/OAuth2
+    * API reference: https://developers.google.com/gdata/docs/directory
+    * API explorer: https://developers.google.com/oauthplayground/
+    """
     
     user_authorisation_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
@@ -442,7 +456,13 @@ class Google(OAuth2):
     
     
 class WindowsLive(OAuth2):
-    """Windows Live |oauth2|_ provider."""
+    """
+    Windows Live |oauth2|_ provider.
+    
+    * Dashboard: https://manage.dev.live.com/Applications/Index
+    * Docs: http://msdn.microsoft.com/en-us/library/live/hh826528.aspx
+    * API explorer: http://isdk.dev.live.com/?mkt=en-us
+    """
     
     user_authorisation_url = 'https://oauth.live.com/authorize'
     access_token_url = 'https://oauth.live.com/token'
@@ -463,4 +483,45 @@ class WindowsLive(OAuth2):
         user.picture = 'https://apis.live.net/v5.0/{}/picture'.format(data.get('id'))
         return user
 
+
+class Viadeo(OAuth2):
+    """
+    Viadeo |oauth2|_ provider.
+    
+    * Dashboard: http://dev.viadeo.com/dashboard/
+    * Docs: http://dev.viadeo.com/documentation/authentication/oauth-authentication/
+    * API reference: http://dev.viadeo.com/documentation/
+    
+    .. note::
+        
+        Viadeo doesn't support **credentials refreshment**.
+        As stated in their `docs <http://dev.viadeo.com/documentation/authentication/oauth-authentication/>`_:
+            "The access token has an infinite time to live."
+    
+    """
+    
+    user_authorisation_url = 'https://secure.viadeo.com/oauth-provider/authorize2'
+    access_token_url = 'https://secure.viadeo.com/oauth-provider/access_token2'
+    user_info_url = 'https://api.viadeo.com/me'
+    
+    
+    @staticmethod
+    def _x_refresh_credentials_if(credentials):
+        return False
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.username = data.get('nickname')
+        user.picture = data.get('picture_large')
+        user.picture = data.get('picture_large')
+        user.locale = data.get('language')
+        user.email = data.get('')
+        user.email = data.get('')
+        user.country = data.get('location', {}).get('country')
+        user.city = data.get('location', {}).get('city')
+        user.postal_code = data.get('location', {}).get('zipcode')
+        user.timezone = data.get('location', {}).get('timezone')
+        
+        return user
 

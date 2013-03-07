@@ -440,6 +440,10 @@ class OAuth1(providers.AuthorisationProvider):
 class Twitter(OAuth1):
     """
     Twitter |oauth1|_ provider.
+    
+    * Dashboard: https://dev.twitter.com/apps
+    * Docs: https://dev.twitter.com/docs
+    * API reference: https://dev.twitter.com/docs/api
     """
     
     request_token_url = 'https://api.twitter.com/oauth/request_token'

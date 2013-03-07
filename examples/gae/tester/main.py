@@ -5,7 +5,7 @@ from config import CONFIG
 
 def links(handler):
     for p in CONFIG.keys():
-        handler.response.write('<a href="auth/{p}">{p}</a><br />'.format(p=p))
+        handler.response.write('<a href="login/{p}">{p}</a><br />'.format(p=p))
     handler.response.write('<br /><br />')
 
 
@@ -28,7 +28,7 @@ class Login(webapp2.RequestHandler):
         
         self.response.write('<body>')
         self.response.write('<a href="..">Home</a> | ')
-        self.response.write('<a href="../auth/{}">Retry</a>'.format(provider_name))
+        self.response.write('<a href="../login/{}">Retry</a>'.format(provider_name))
         
         result = authomatic.login(provider_name)
         
@@ -52,6 +52,7 @@ class Login(webapp2.RequestHandler):
                 
                 if response:
                     self.response.write('<h3>Refresh status: {}</h3>'.format(response.status))
+                    self.response.write('<pre class="prettyprint">{}</pre>'.format(response.content))
             
             self.response.write('<pre id="ui" class="prettyprint"></pre>')
             
@@ -70,10 +71,11 @@ class Home(webapp2.RequestHandler):
         links(self)
 
 
-ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, handler_method='any'),
+ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/', Home)]
 
 
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
                             config=CONFIG, # Here goes the config.
-                            secret='some random secret string')
+                            secret='some random secret string',
+                            report_errors=False)

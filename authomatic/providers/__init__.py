@@ -98,10 +98,6 @@ def login_decorator(func):
             # Save session
             authomatic.core.middleware.save_session()
         
-        logging.info('RESULT: {}'.format(result))
-        logging.info('error: {}'.format(result.error))
-        logging.info('user: {}'.format(result.user))
-        
         # Return result       
         if result and provider.callback:
             provider.callback(result)
@@ -168,7 +164,7 @@ class BaseProvider(object):
         Updates and returns :attr:`.user`.
         
         :returns:
-            :class:`.core.User`
+            :class:`.User`
         """
         
         return self.user
@@ -620,7 +616,7 @@ class AuthorisationProvider(BaseProvider):
     
     def update_user(self):
         """
-        Updates the :attr:`.user`.
+        Updates the :attr:`.BaseProvider.user`.
         
         .. warning::
         
