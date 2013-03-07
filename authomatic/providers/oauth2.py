@@ -33,9 +33,13 @@ class OAuth2(providers.AuthorisationProvider):
     # I intruduced this dictionary because of Facebook,
     # who likes to invent its own terminology for OAuth 2.0!!!
     _x_term_dict = dict(refresh_token='refresh_token',
-                      authorization_code='authorization_code',
-                      password='password',  
-                      client_credentials='client_credentials')
+                        authorization_code='authorization_code',
+                        password='password',
+                        client_credentials='client_credentials')
+    
+    #: A scope preset to get most of the **user** info.
+    #: Use it in the :doc:`config` like ``{'scope': oauth2.Facebook.user_info_scope}``.
+    user_info_scope = []
     
     def __init__(self, *args, **kwargs):
         """
@@ -359,6 +363,8 @@ class Facebook(OAuth2):
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
     user_info_url = 'https://graph.facebook.com/me'
     
+    user_info_scope = ['user_about_me', 'email']
+    
     # Facebook is original as usual and has its own name for "refresh_token"!!!
     _x_term_dict = OAuth2._x_term_dict.copy()
     _x_term_dict['refresh_token'] = 'fb_exchange_token'
@@ -397,6 +403,9 @@ class Google(OAuth2):
     user_authorisation_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
     user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
+    
+    user_info_scope = ['https://www.googleapis.com/auth/userinfo.profile',
+                       'https://www.googleapis.com/auth/userinfo.email']
     
     def __init__(self, *args, **kwargs):
         super(Google, self).__init__(*args, **kwargs)
@@ -438,6 +447,8 @@ class WindowsLive(OAuth2):
     user_authorisation_url = 'https://oauth.live.com/authorize'
     access_token_url = 'https://oauth.live.com/token'
     user_info_url = 'https://apis.live.net/v5.0/me'
+    
+    user_info_scope = ['wl.basic', 'wl.emails', 'wl.photos']
     
     def __init__(self, *args, **kwargs):
         super(WindowsLive, self).__init__(*args, **kwargs)
