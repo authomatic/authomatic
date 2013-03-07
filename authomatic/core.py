@@ -857,6 +857,8 @@ class User(ReprMixin):
         self.birth_date = kwargs.get('birth_date')
         #: :class:`str` Country.
         self.country = kwargs.get('country')
+        #: :class:`str` City.
+        self.city = kwargs.get('city')
         #: :class:`str` Postal code.
         self.postal_code = kwargs.get('postal_code')
         #: Instance of the Google App Engine Users API
