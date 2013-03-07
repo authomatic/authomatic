@@ -234,7 +234,7 @@ class OpenID(providers.AuthenticationProvider):
     
     
     @staticmethod
-    def _user_parser(user, data):
+    def _x_user_parser(user, data):
         
         user.first_name = data.get('ax', {}).get('http://openid.net/schema/namePerson/first')
         user.last_name = data.get('ax', {}).get('http://openid.net/schema/namePerson/last')

@@ -32,7 +32,7 @@ class OAuth2(providers.AuthorisationProvider):
     
     # I intruduced this dictionary because of Facebook,
     # who likes to invent its own terminology for OAuth 2.0!!!
-    _term_dict = dict(refresh_token='refresh_token',
+    _x_term_dict = dict(refresh_token='refresh_token',
                       authorization_code='authorization_code',
                       password='password',  
                       client_credentials='client_credentials')
@@ -62,7 +62,7 @@ class OAuth2(providers.AuthorisationProvider):
     # Internal methods
     #===========================================================================
     
-    def _scope_parser(self, scope):
+    def _x_scope_parser(self, scope):
         """
         Override this to handle differences between accepted format of scope across providers.
         
@@ -113,7 +113,7 @@ class OAuth2(providers.AuthorisationProvider):
                 params['client_id'] = consumer_key
                 params['client_secret'] = consumer_secret
                 params['redirect_uri'] = redirect_uri
-                params['grant_type'] = cls._term_dict['authorization_code']
+                params['grant_type'] = cls._x_term_dict['authorization_code']
             else:
                 raise OAuth2Error('Credentials with valid token, consumer_key, consumer_secret and argument ' + \
                                   'redirect_uri are required to create OAuth 2.0 acces token request elements!')
@@ -121,10 +121,10 @@ class OAuth2(providers.AuthorisationProvider):
         elif request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
             # Access token request.
             if refresh_token and consumer_key and consumer_secret:
-                params[cls._term_dict['refresh_token']] = refresh_token
+                params[cls._x_term_dict['refresh_token']] = refresh_token
                 params['client_id'] = consumer_key
                 params['client_secret'] = consumer_secret
-                params['grant_type'] = cls._term_dict['refresh_token']
+                params['grant_type'] = cls._x_term_dict['refresh_token']
             else:
                 raise OAuth2Error('Credentials with valid refresh_token, consumer_key, consumer_secret ' + \
                                   'are required to create OAuth 2.0 refresh token request elements!')
@@ -152,7 +152,7 @@ class OAuth2(providers.AuthorisationProvider):
     
     
     @staticmethod
-    def _refresh_credentials_if(credentials):
+    def _x_refresh_credentials_if(credentials):
         """
         Override this to specify conditions when it gives sense to refresh credentials.
         
@@ -201,7 +201,7 @@ class OAuth2(providers.AuthorisationProvider):
             :class:`.Response`.
         """
         
-        if not cls._refresh_credentials_if(credentials):
+        if not cls._x_refresh_credentials_if(credentials):
             return
         
         # We need consumer key and secret to make this kind of request.
@@ -235,7 +235,7 @@ class OAuth2(providers.AuthorisationProvider):
                 credentials.refresh_token = refresh_token
             
             # Handle different naming conventions across providers.
-            credentials = cls._credentials_parser(credentials, response.data)
+            credentials = cls._x_credentials_parser(credentials, response.data)
         
         return response
     
@@ -305,7 +305,7 @@ class OAuth2(providers.AuthorisationProvider):
             self.credentials.consumer_secret = ''
             
             # update credentials
-            self.credentials = self._credentials_parser(self.credentials, response.data)            
+            self.credentials = self._x_credentials_parser(self.credentials, response.data)            
             
             # create user
             self._update_or_create_user(response.data, self.credentials)
@@ -343,7 +343,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                             credentials=self.credentials,
                                                             url=self.user_authorisation_url,
                                                             redirect_uri=core.middleware.url,
-                                                            scope=self._scope_parser(self.scope),
+                                                            scope=self._x_scope_parser(self.scope),
                                                             csrf=csrf,
                                                             params=self.user_authorisation_params)
             
@@ -360,8 +360,8 @@ class Facebook(OAuth2):
     user_info_url = 'https://graph.facebook.com/me'
     
     # Facebook is original as usual and has its own name for "refresh_token"!!!
-    _term_dict = OAuth2._term_dict.copy()
-    _term_dict['refresh_token'] = 'fb_exchange_token'
+    _x_term_dict = OAuth2._x_term_dict.copy()
+    _x_term_dict['refresh_token'] = 'fb_exchange_token'
     
     
     def __init__(self, *args, **kwargs):
@@ -375,12 +375,12 @@ class Facebook(OAuth2):
     
     
     @staticmethod
-    def _user_parser(user, data):
+    def _x_user_parser(user, data):
         user.picture = 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))
         return user
         
     @staticmethod
-    def _credentials_parser(credentials, data):
+    def _x_credentials_parser(credentials, data):
         """
         We need to override this method to fix Facebooks naming deviation.
         """
@@ -412,20 +412,20 @@ class Google(OAuth2):
     
     
     @staticmethod
-    def _refresh_credentials_if(credentials):
+    def _x_refresh_credentials_if(credentials):
         # Refres credentials only if there is refresh_token.
         return credentials.refresh_token
     
     
     @staticmethod
-    def _user_parser(user, data):
+    def _x_user_parser(user, data):
         user.name = data.get('name')
         user.first_name = data.get('given_name')
         user.last_name = data.get('family_name')
         return user
     
     
-    def _scope_parser(self, scope):
+    def _x_scope_parser(self, scope):
         """
         Google has space-separated scopes
         """
@@ -447,7 +447,7 @@ class WindowsLive(OAuth2):
                 self.scope.append('wl.offline_access')
     
     @staticmethod
-    def _user_parser(user, data):
+    def _x_user_parser(user, data):
         user.email = data.get('emails', {}).get('preferred')
         user.picture = 'https://apis.live.net/v5.0/{}/picture'.format(data.get('id'))
         return user

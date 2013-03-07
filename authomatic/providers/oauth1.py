@@ -367,7 +367,7 @@ class OAuth1(providers.AuthorisationProvider):
             self.credentials.token = response.data.get('oauth_token', '')
             self.credentials.token_secret = response.data.get('oauth_token_secret', '')
             
-            self.credentials = self._credentials_parser(self.credentials, response.data)
+            self.credentials = self._x_credentials_parser(self.credentials, response.data)
             
             self._update_or_create_user(response.data, self.credentials)
             
@@ -448,7 +448,7 @@ class Twitter(OAuth1):
     user_info_url = 'https://api.twitter.com/1/account/verify_credentials.json'
     
     @staticmethod
-    def _user_parser(user, data):
+    def _x_user_parser(user, data):
         user.username = data.get('screen_name')
         user.picture = 'http://api.twitter.com/1/users/profile_image?screen_name={}&size=original'.format(data.get('screen_name'))
         user.locale = data.get('lang')

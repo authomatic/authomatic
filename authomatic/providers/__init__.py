@@ -5,6 +5,11 @@ Abstract Classes for Providers
 
 Abstract base classes for implementation of protocol specific providers.
 
+.. note::
+    
+    Attributes prefixed with ``_x_`` serve the purpose of unification
+    of differences across providers.
+
 .. autosummary::
     
     login_decorator
@@ -354,13 +359,13 @@ class BaseProvider(object):
                     setattr(self.user, key, value)
                     
         # Handle different structure of data by different providers.
-        self.user = self._user_parser(self.user, data)
+        self.user = self._x_user_parser(self.user, data)
         
         return self.user    
     
     
     @staticmethod
-    def _user_parser(user, data):
+    def _x_user_parser(user, data):
         """
         Handles different structure of user info data by different providers.
         
@@ -656,7 +661,7 @@ class AuthorisationProvider(BaseProvider):
     
     
     @staticmethod
-    def _credentials_parser(credentials, data):
+    def _x_credentials_parser(credentials, data):
         """
         Override this to handle differences in naming conventions across providers.
         
