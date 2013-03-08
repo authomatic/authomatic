@@ -371,9 +371,13 @@ class BaseProvider(object):
         self.user = self._x_user_parser(self.user, data)
         
         # If there is no user.name,
-        if not self.user.name and self.user.first_name and self.user.last_name:
-            # Create it from first name and last name if available.
-            self.user.name = ' '.join((self.user.first_name, self.user.last_name))
+        if not self.user.name:
+            if self.user.first_name and self.user.last_name:
+                # Create it from first name and last name if available.
+                self.user.name = ' '.join((self.user.first_name, self.user.last_name))
+            else:
+                # Or use one of them.
+                self.user.name = self.user.first_name or self.user.last_name
         
         return self.user    
     

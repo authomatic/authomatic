@@ -38,7 +38,8 @@ class OAuth2(providers.AuthorisationProvider):
     _x_term_dict = dict(refresh_token='refresh_token',
                         authorization_code='authorization_code',
                         password='password',
-                        client_credentials='client_credentials')
+                        client_credentials='client_credentials',
+                        access_token='access_token')
     
     #: A scope preset to get most of the **user** info.
     #: Use it in the :doc:`config` like ``{'scope': oauth2.Facebook.user_info_scope}``.
@@ -144,7 +145,7 @@ class OAuth2(providers.AuthorisationProvider):
             if credentials.token_type == cls.BEARER:
                 pass
             elif token:
-                params['access_token'] = token
+                params[cls._x_term_dict['access_token']] = token
             else:
                 raise OAuth2Error('Credentials with valid token are required to create ' + \
                                   'OAuth 2.0 protected resources request elements!')
@@ -525,6 +526,44 @@ class Facebook(OAuth2):
     def _x_refresh_credentials_if(credentials):
         # Allways refresh.
         return True
+
+
+class Foursquare(OAuth2):
+    """
+    Foursquare |oauth2|_ provider.
+    
+    * Dashboard: https://foursquare.com/developers/apps
+    * Docs: https://developer.foursquare.com/overview/auth.html
+    * API reference: https://developer.foursquare.com/docs/
+    """
+    
+    # Foursquare uses OAuth 1.0 "oauth_token" for what should be "access_token" in OAuth 2.0!
+    _x_term_dict = OAuth2._x_term_dict.copy()
+    _x_term_dict['access_token'] = 'oauth_token'
+    
+    user_authorisation_url = 'https://foursquare.com/oauth2/authenticate'
+    access_token_url = 'https://foursquare.com/oauth2/access_token'
+    user_info_url = 'https://api.foursquare.com/v2/users/self'
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        _resp = data.get('response', {})
+        _user = _resp.get('user', {})
+        
+        user.id = _user.get('id')
+        user.first_name = _user.get('firstName')
+        user.last_name = _user.get('lastName')
+        user.gender = _user.get('gender')
+        user.picture = _user.get('photo')
+        
+        user.city, user.country = _user.get('homeCity', ', ').split(', ')
+        
+        _contact = _user.get('contact', {})
+        user.email = _contact.get('email')
+        user.phone = _contact.get('phone')
+        
+        return user
 
 
 class Google(OAuth2):
