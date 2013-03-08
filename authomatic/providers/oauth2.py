@@ -174,7 +174,8 @@ class OAuth2(providers.AuthorisationProvider):
             ``True`` or ``False``
         """
         
-        return True
+        if credentials.refresh_token:
+            return True
     
     
     #===========================================================================
@@ -406,7 +407,8 @@ class Facebook(OAuth2):
     def _x_user_parser(user, data):
         user.picture = 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))
         return user
-        
+    
+    
     @staticmethod
     def _x_credentials_parser(credentials, data):
         """
@@ -417,6 +419,12 @@ class Facebook(OAuth2):
         credentials.expire_in = data.get('expires')
         
         return credentials
+    
+    
+    @staticmethod
+    def _x_refresh_credentials_if(credentials):
+        # Allways refresh.
+        return True
 
 
 class Google(OAuth2):
@@ -447,12 +455,6 @@ class Google(OAuth2):
             if not 'approval_prompt' in self.user_authorisation_params:
                 # And also approval_prompt=force.
                 self.user_authorisation_params['approval_prompt'] = 'force'
-    
-    
-    @staticmethod
-    def _x_refresh_credentials_if(credentials):
-        # Refres credentials only if there is refresh_token.
-        return credentials.refresh_token
     
     
     @staticmethod
@@ -504,12 +506,34 @@ class Reddit(OAuth2):
             credentials.token_type = cls.BEARER
         return credentials
     
+
+class DeviantART(OAuth2):
+    """
+    DeviantART |oauth2|_ provider.
+    
+    * Dashboard: https://www.deviantart.com/settings/myapps
+    * Docs: http://www.deviantart.com/developers/oauth2
+    * API reference: http://www.deviantart.com/developers/oauth2
+    """
+    
+    user_authorisation_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
+    access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
+    user_info_url = 'https://www.deviantart.com/api/draft15/user/whoami'
+    
+    user_info_scope = ['identity']
+    
+    def __init__(self, *args, **kwargs):
+        super(DeviantART, self).__init__(*args, **kwargs)
+        
+        if self.offline:
+            if not 'grant_type' in self.access_token_params:
+                self.access_token_params['grant_type'] = 'refresh_token'
     
     @staticmethod
-    def _x_refresh_credentials_if(credentials):
-        if credentials.refresh_token:
-            return True
-    
+    def _x_user_parser(user, data):
+        user.picture = data.get('usericonurl')
+        return user
+
 
 class WindowsLive(OAuth2):
     """
@@ -577,6 +601,7 @@ class Viadeo(OAuth2):
     
     @staticmethod
     def _x_refresh_credentials_if(credentials):
+        # Never refresh.
         return False
     
     
@@ -594,4 +619,17 @@ class Viadeo(OAuth2):
         user.timezone = data.get('location', {}).get('timezone')
         
         return user
+
+
+
+
+
+
+
+
+
+
+
+
+
 
