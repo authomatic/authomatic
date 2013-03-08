@@ -386,6 +386,10 @@ class Bitly(OAuth2):
     """
     Bitly |oauth2|_ provider.
     
+    .. warning::
+        
+        |no-csrf|
+    
     * Dashboard: http://dev.bitly.com/my_apps.html
     * Docs: http://dev.bitly.com/authentication.html
     * API reference: http://dev.bitly.com/api.html
@@ -416,14 +420,29 @@ class Bitly(OAuth2):
         user.link = info.get('profile_url')
         
         return user
+
+
+class Cosm(OAuth2):
+    """
+    Cosm |oauth2|_ provider.
     
+    .. note::
+        
+        Cosm doesn't provide any *user info URL*.
     
-    @classmethod
-    def _x_credentials_parser(cls, credentials, data):
-        
-        logging.info('CREDENTIALS: {}'.format(data))
-        
-        return credentials
+    * Dashboard: https://cosm.com/users/peterhudec/apps
+    * Docs: https://cosm.com/docs/
+    * API reference: https://cosm.com/docs/v2/
+    """
+    
+    user_authorisation_url = 'https://cosm.com/oauth/authenticate'
+    access_token_url = 'https://cosm.com/oauth/token'
+    user_info_url = ''
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.id = user.username = data.get('user')
+        return user
 
 
 class DeviantART(OAuth2):

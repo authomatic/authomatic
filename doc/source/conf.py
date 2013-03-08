@@ -63,6 +63,8 @@ rst_prolog = """
 .. |provider-class| replace:: provider class
 .. _provider-class: /reference/providers
 
+.. |no-csrf| replace:: This provider doesn't support CSRF protection!
+
 """
 
 # -- General configuration -----------------------------------------------------
