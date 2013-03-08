@@ -372,6 +372,34 @@ class OAuth2(providers.AuthorisationProvider):
             core.middleware.redirect(request_elements[0])
 
 
+class DeviantART(OAuth2):
+    """
+    DeviantART |oauth2|_ provider.
+    
+    * Dashboard: https://www.deviantart.com/settings/myapps
+    * Docs: http://www.deviantart.com/developers/oauth2
+    * API reference: http://www.deviantart.com/developers/oauth2
+    """
+    
+    user_authorisation_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
+    access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
+    user_info_url = 'https://www.deviantart.com/api/draft15/user/whoami'
+    
+    user_info_scope = ['identity']
+    
+    def __init__(self, *args, **kwargs):
+        super(DeviantART, self).__init__(*args, **kwargs)
+        
+        if self.offline:
+            if not 'grant_type' in self.access_token_params:
+                self.access_token_params['grant_type'] = 'refresh_token'
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.picture = data.get('usericonurl')
+        return user
+
+
 class Facebook(OAuth2):
     """
     Facebook |oauth2|_ provider.
@@ -507,71 +535,6 @@ class Reddit(OAuth2):
         return credentials
     
 
-class DeviantART(OAuth2):
-    """
-    DeviantART |oauth2|_ provider.
-    
-    * Dashboard: https://www.deviantart.com/settings/myapps
-    * Docs: http://www.deviantart.com/developers/oauth2
-    * API reference: http://www.deviantart.com/developers/oauth2
-    """
-    
-    user_authorisation_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
-    access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
-    user_info_url = 'https://www.deviantart.com/api/draft15/user/whoami'
-    
-    user_info_scope = ['identity']
-    
-    def __init__(self, *args, **kwargs):
-        super(DeviantART, self).__init__(*args, **kwargs)
-        
-        if self.offline:
-            if not 'grant_type' in self.access_token_params:
-                self.access_token_params['grant_type'] = 'refresh_token'
-    
-    @staticmethod
-    def _x_user_parser(user, data):
-        user.picture = data.get('usericonurl')
-        return user
-
-
-class WindowsLive(OAuth2):
-    """
-    Windows Live |oauth2|_ provider.
-    
-    * Dashboard: https://manage.dev.live.com/Applications/Index
-    * Docs: http://msdn.microsoft.com/en-us/library/live/hh826528.aspx
-    * API explorer: http://isdk.dev.live.com/?mkt=en-us
-    """
-    
-    user_authorisation_url = 'https://oauth.live.com/authorize'
-    access_token_url = 'https://oauth.live.com/token'
-    user_info_url = 'https://apis.live.net/v5.0/me'
-    
-    user_info_scope = ['wl.basic', 'wl.emails', 'wl.photos']
-    
-    def __init__(self, *args, **kwargs):
-        super(WindowsLive, self).__init__(*args, **kwargs)
-        
-        if self.offline:
-            if not 'wl.offline_access' in self.scope:
-                self.scope.append('wl.offline_access')
-    
-    
-    @classmethod
-    def _x_credentials_parser(cls, credentials, data):
-        if data.get('token_type') == 'bearer':
-            credentials.token_type = cls.BEARER
-        return credentials
-    
-    
-    @staticmethod
-    def _x_user_parser(user, data):
-        user.email = data.get('emails', {}).get('preferred')
-        user.picture = 'https://apis.live.net/v5.0/{}/picture'.format(data.get('id'))
-        return user
-
-
 class Viadeo(OAuth2):
     """
     Viadeo |oauth2|_ provider.
@@ -618,6 +581,43 @@ class Viadeo(OAuth2):
         user.postal_code = data.get('location', {}).get('zipcode')
         user.timezone = data.get('location', {}).get('timezone')
         
+        return user
+
+
+class WindowsLive(OAuth2):
+    """
+    Windows Live |oauth2|_ provider.
+    
+    * Dashboard: https://manage.dev.live.com/Applications/Index
+    * Docs: http://msdn.microsoft.com/en-us/library/live/hh826528.aspx
+    * API explorer: http://isdk.dev.live.com/?mkt=en-us
+    """
+    
+    user_authorisation_url = 'https://oauth.live.com/authorize'
+    access_token_url = 'https://oauth.live.com/token'
+    user_info_url = 'https://apis.live.net/v5.0/me'
+    
+    user_info_scope = ['wl.basic', 'wl.emails', 'wl.photos']
+    
+    def __init__(self, *args, **kwargs):
+        super(WindowsLive, self).__init__(*args, **kwargs)
+        
+        if self.offline:
+            if not 'wl.offline_access' in self.scope:
+                self.scope.append('wl.offline_access')
+    
+    
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.email = data.get('emails', {}).get('preferred')
+        user.picture = 'https://apis.live.net/v5.0/{}/picture'.format(data.get('id'))
         return user
 
 
