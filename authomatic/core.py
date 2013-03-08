@@ -853,6 +853,8 @@ class User(ReprMixin):
         self.locale = kwargs.get('locale')
         #: :class:`str` E-mail.
         self.email = kwargs.get('email')
+        #: :class:`str` phone.
+        self.phone = kwargs.get('phone')
         #: :class:`str` Picture URL.
         self.picture = kwargs.get('picture')
         #: :class:`datetime.datetime()` birth date .
