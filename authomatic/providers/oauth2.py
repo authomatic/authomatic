@@ -868,7 +868,58 @@ class WindowsLive(OAuth2):
         return user
 
 
-
+class Yammer(OAuth2):
+    """
+    Yammer |oauth2|_ provider.
+    
+    .. warning::
+        
+        |no-csrf|
+    
+    * Dashboard: https://www.yammer.com/client_applications
+    * Docs: https://developer.yammer.com/authentication/
+    * API reference: https://developer.yammer.com/restapi/
+    """
+    
+    user_authorisation_url = 'https://www.yammer.com/dialog/oauth'
+    access_token_url = 'https://www.yammer.com/oauth2/access_token.json'
+    user_info_url = 'https://www.yammer.com/api/v1/users/current.json'
+    
+    supports_csrf_protection = False
+    
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        
+        _access_token = data.get('access_token', {})
+        credentials.token = _access_token.get('token')
+        _expire_in = _access_token.get('expires_at', 0)
+        if _expire_in:
+            credentials.expire_in = _expire_in
+        
+        return credentials
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        user.username = data.get('name')
+        user.name = data.get('full_name')
+        user.birth_date = data.get('birth_date')
+        user.link = data.get('web_url')
+        user.picture = data.get('mugshot_url')
+        
+        # Contact
+        _contact = data.get('contact', {})
+        
+        _phones = _contact.get('phone_numbers', [])
+        user.phone = _phones[0] if len(_phones) else None
+        
+        _emails = _contact.get('email_addresses', [])
+        for email in _emails:
+            if email.get('type', '') == 'primary':
+                user.email = email.get('address')
+                break
+        
+        return user
 
 
 
