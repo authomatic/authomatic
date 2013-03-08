@@ -366,9 +366,14 @@ class BaseProvider(object):
                 value = data.get(key)
                 if value:
                     setattr(self.user, key, value)
-                    
+             
         # Handle different structure of data by different providers.
         self.user = self._x_user_parser(self.user, data)
+        
+        # If there is no user.name,
+        if not self.user.name and self.user.first_name and self.user.last_name:
+            # Create it from first name and last name if available.
+            self.user.name = ' '.join((self.user.first_name, self.user.last_name))
         
         return self.user    
     
