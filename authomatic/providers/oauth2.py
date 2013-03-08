@@ -23,7 +23,7 @@ import base64
 import logging
 
 
-__all__ = ['OAuth2', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'Google', 'Reddit',
+__all__ = ['OAuth2', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'GitHub', 'Google', 'Reddit',
            'Viadeo', 'WindowsLive']
 
 
@@ -120,7 +120,7 @@ class OAuth2(providers.AuthorisationProvider):
         
         elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
             # Access token request.
-            if token and consumer_key and consumer_secret and redirect_uri:
+            if consumer_key and consumer_secret:
                 params['code'] = token
                 params['client_id'] = consumer_key
                 params['client_secret'] = consumer_secret
@@ -268,27 +268,36 @@ class OAuth2(providers.AuthorisationProvider):
         error = core.middleware.params.get('error')
         state = core.middleware.params.get('state')      
         
-#        if authorisation_code and state:
-        if authorisation_code:
-            #===================================================================
-            # Phase 2 after redirect with success
-            #===================================================================
+        if authorisation_code or not self.user_authorisation_url:
             
-            self._log(logging.INFO, 'Continuing OAuth 2.0 authorisation procedure after redirect.')
-            
-            # validate CSRF token
-            if self.supports_csrf_protection:
-                self._log(logging.INFO, 'Validating request by comparing request state with stored state.')
-                stored_state = self._session_get('state')
+            if authorisation_code:
+                #===================================================================
+                # Phase 2 after redirect with success
+                #===================================================================
                 
-                if not stored_state:
-                    raise FailureError('Unable to retrieve stored state!')
-                elif not stored_state == state:
-                    raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state),
-                                       url=self.user_authorisation_url)
-                self._log(logging.INFO, 'Request is valid.')
-            else:
-                self._log(logging.WARN, 'Skipping CSRF validation!')
+                self._log(logging.INFO, 'Continuing OAuth 2.0 authorisation procedure after redirect.')
+                
+                # validate CSRF token
+                if self.supports_csrf_protection:
+                    self._log(logging.INFO, 'Validating request by comparing request state with stored state.')
+                    stored_state = self._session_get('state')
+                    
+                    if not stored_state:
+                        raise FailureError('Unable to retrieve stored state!')
+                    elif not stored_state == state:
+                        raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state),
+                                           url=self.user_authorisation_url)
+                    self._log(logging.INFO, 'Request is valid.')
+                else:
+                    self._log(logging.WARN, 'Skipping CSRF validation!')
+            
+            elif not self.user_authorisation_url:
+                #===================================================================
+                # Phase 1 without user authorisation redirect.
+                #===================================================================
+                
+                self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure without ' + \
+                                        'user authorisation redirect.')
             
             # exchange authorisation code for access token by the provider
             self._log(logging.INFO, 'Fetching access token from {}.'.format(self.access_token_url))
@@ -323,12 +332,12 @@ class OAuth2(providers.AuthorisationProvider):
             if refresh_token:
                 self._log(logging.INFO, 'Got refresh access token.')
             
-            # OAuth 2.0 credentials need only access token, refresh token and expire_in.
+            # OAuth 2.0 credentials need access_token, refresh_token, token_type and expire_in.
             self.credentials.token = access_token
             self.credentials.refresh_token = refresh_token
             self.credentials.expire_in = response.data.get('expire_in')
             self.credentials.token_type = response.data.get('token_type', '')
-            # so we can reset these two guys
+            # sWe don't need these two guys anymore.
             self.credentials.consumer_key = ''
             self.credentials.consumer_secret = ''
             
@@ -633,6 +642,46 @@ class Google(OAuth2):
         """
         return ' '.join(scope)
     
+
+class Instagram(OAuth2):
+    """
+    Instagram |oauth2|_ provider.
+    
+    * Dashboard: 
+    * Docs: http://instagram.com/developer/authentication/
+    * API reference: http://instagram.com/developer/api-console/
+    """
+    
+    user_authorisation_url = 'https://api.instagram.com/oauth/authorize'
+    access_token_url = 'https://api.instagram.com/oauth/access_token'
+    user_info_url = 'https://api.instagram.com/v1/users/self'
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+#        user.username = data.get('login')
+        return user
+
+
+class PayPal(OAuth2):
+    """
+    PayPal |oauth2|_ provider.
+    
+    .. warning::
+        
+        Bla
+    
+    * Dashboard: https://developer.paypal.com/webapps/developer/applications
+    * Docs: https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/
+    * API reference: 
+    """
+    
+    _x_term_dict = OAuth2._x_term_dict.copy()
+    _x_term_dict['authorization_code'] = 'client_credentials'
+    
+    user_authorisation_url = ''
+    access_token_url = 'https://api.sandbox.paypal.com/v1/oauth2/token'
+    user_info_url = ''
+
 
 class Reddit(OAuth2):
     """
