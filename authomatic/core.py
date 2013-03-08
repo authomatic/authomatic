@@ -529,7 +529,8 @@ class Middleware(object):
     
     def __init__(self, app, config, secret, session_max_age=600, secure_cookie=False,
                  session=None, session_save_method=None, report_errors=True, debug=False,
-                 logging_level=logging.INFO, prefix='authomatic'):
+                 logging_level=logging.INFO, prefix='authomatic',
+                 fetch_headers={}):
         """
         :param app:
             WSGI application that should be wrapped.
@@ -584,6 +585,7 @@ class Middleware(object):
         settings.secure_cookie = secure_cookie
         settings.session_max_age = session_max_age
         settings.logging_level = logging_level
+        settings.fetch_headers = fetch_headers
         
         self.set_session(session, session_save_method)
         
@@ -898,13 +900,16 @@ class Credentials(ReprMixin):
     
     def __init__(self, **kwargs):
         
-        #: :class:`str` User **access_with_credentials token**.
+        #: :class:`str` User **access token**.
         self.token = kwargs.get('token', '')
         
-        #: :class:`str` User **access_with_credentials token**.
+        #: :class:`str` Access token type.
+        self.token_type = kwargs.get('token_type', '')
+        
+        #: :class:`str` Refresh token.
         self.refresh_token = kwargs.get('refresh_token', '')
         
-        #: :class:`str` User **access_with_credentials token secret**.
+        #: :class:`str` Access token secret.
         self.token_secret = kwargs.get('token_secret', '')
         
         #: :class:`int` Expiration date as UNIX timestamp.
@@ -1357,6 +1362,7 @@ def login(provider_name, callback=None, session=None, session_save_method=None, 
     # retrieve required settings for current provider and raise exceptions if missing
     provider_settings = settings.config.get(provider_name)
     if not provider_settings:
+        pass
         raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
     
     # Resolve provider class.

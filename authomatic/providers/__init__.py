@@ -23,6 +23,7 @@ from authomatic.exceptions import ConfigError, AuthenticationError, FetchError
 import abc
 import authomatic.core
 import authomatic.settings as settings
+import base64
 import datetime
 import hashlib
 import httplib
@@ -283,11 +284,16 @@ class BaseProvider(object):
             A callable to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
         """
         
-        cls._log(logging.DEBUG, 'Fetching url {}'.format(url))
-        
         # Prepare URL elements
         scheme, host, path, query, fragment = urlparse.urlsplit(url)
         request_path = urlparse.urlunsplit((None, None, path, query, None))
+        
+        # Apply headers from settings.
+        headers.update(settings.fetch_headers)
+        
+        cls._log(logging.DEBUG, 'Fetching url {}'.format(url))
+        cls._log(logging.DEBUG, u'\t\u251C headers: {}'.format(headers))
+        cls._log(logging.DEBUG, u'\t\u2514 body: {}'.format(body))
         
         # Connect
         connection = httplib.HTTPSConnection(host)
@@ -326,6 +332,8 @@ class BaseProvider(object):
                                  status=response.status)
         else:
             cls._log(logging.DEBUG, 'Got response from {}'.format(url))
+            cls._log(logging.DEBUG, u'\t\u251C status: {}'.format(response.status))
+            cls._log(logging.DEBUG, u'\t\u2514 headers: {}'.format(response.getheaders()))
                 
         return authomatic.core.Response(response, content_parser)
     
@@ -386,6 +394,8 @@ class AuthorisationProvider(BaseProvider):
     PROTECTED_RESOURCE_REQUEST_TYPE = 4
     REFRESH_TOKEN_REQUEST_TYPE = 5
     
+    BEARER = 'Bearer'
+    
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
@@ -413,6 +423,8 @@ class AuthorisationProvider(BaseProvider):
         self.id = int(self._kwarg(kwargs, 'id', 0))
         
         self.user_authorisation_params = self._kwarg(kwargs, 'user_authorisation_params', {})
+        self.access_token_headers = self._kwarg(kwargs, 'user_authorisation_headers', {})
+        
         self.access_token_params = self._kwarg(kwargs, 'access_token_params', {})
         
         #: :class:`.Credentials` to access **user's protected resources**.
@@ -560,6 +572,11 @@ class AuthorisationProvider(BaseProvider):
                                                         params=params,
                                                         method=method)
         
+        # Handle token type. See: http://tools.ietf.org/html/rfc6749#section-7.1
+        if credentials.token_type == cls.BEARER:
+            # http://tools.ietf.org/html/rfc6750#section-2.1
+            headers.update({'Authorization': 'Bearer {}'.format(credentials.token)})
+        
         response = cls._fetch(*request_elements,
                               headers=headers,
                               max_redirects=max_redirects,
@@ -632,6 +649,25 @@ class AuthorisationProvider(BaseProvider):
     #===========================================================================
     # Internal methods
     #===========================================================================
+    
+    @classmethod
+    def _authorisation_header(cls, credentials):
+        """
+        Creates authorisation headers.
+        See: http://en.wikipedia.org/wiki/Basic_access_authentication.
+        
+        :param credentials:
+            :class:`.Credentials`
+        
+        :returns:
+            Headers as :class:`dict`.
+        """
+        
+        res = ':'.join((credentials.consumer_key, credentials.consumer_secret))
+        res = base64.b64encode(res)
+        return {'Authorization': 'Basic {}'.format(res),
+                'Content-Type': 'application/x-www-form-urlencoded'}
+    
     
     def _check_consumer(self):
         """

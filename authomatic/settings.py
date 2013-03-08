@@ -32,3 +32,5 @@ session_max_age = 600
 #: :class:`int` The logging level treshold as specified in the standard Python
 #: `logging library <http://docs.python.org/2/library/logging.html>`_.
 logging_level = logging.INFO
+
+fetch_headers = {}

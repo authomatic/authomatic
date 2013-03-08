@@ -1,6 +1,9 @@
-import webapp2
-import authomatic
 from config import CONFIG
+import authomatic
+import logging
+import webapp2
+import logging
+from authomatic.settings import logging_level, fetch_headers
 
 
 def links(handler):
@@ -36,10 +39,16 @@ class Login(webapp2.RequestHandler):
             self.response.write('<h4>ERROR: {}</h4>'.format(result.error.message))
         
         elif result.user:
-            result.user.update()
+            response = result.user.update()
+            if response:
+                self.response.write('<h3>User refresh status: {}</h3>'.format(response.status))
+                self.response.write('<pre class="prettyprint">{}</pre>'.format(response.content))
+                logging.info('RESPONSE CONTENT {}'.format(response.content))
             
             self.response.write('<h3>User</h3>')
-            self.response.write('<img src="{}" width="100" height="100" />'.format(result.user.picture))
+            if result.user.picture:
+                self.response.write('<img src="{}" width="100" height="100" />'.format(result.user.picture))
+            
             loop(self, result.user)
             
             if result.user.credentials:
@@ -75,7 +84,12 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/', Home)]
 
 
+
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
                             config=CONFIG, # Here goes the config.
                             secret='some random secret string',
-                            report_errors=False)
+                            report_errors=False,
+                            logging_level=logging.DEBUG)
+
+
+

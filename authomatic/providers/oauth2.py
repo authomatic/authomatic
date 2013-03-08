@@ -17,9 +17,10 @@ Providers which implement the |oauth2|_ protocol.
 from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 from urllib import urlencode
-import logging
 import authomatic.core as core
 import authomatic.settings as settings
+import base64
+import logging
 
 
 __all__ = ['Facebook', 'Google', 'WindowsLive', 'OAuth2', 'Viadeo']
@@ -29,6 +30,8 @@ class OAuth2(providers.AuthorisationProvider):
     """
     Base class for |oauth2|_ providers.
     """
+    
+    TOKEN_TYPES = ['', 'Bearer']
     
     # I intruduced this dictionary because of Facebook,
     # who likes to invent its own terminology for OAuth 2.0!!!
@@ -135,7 +138,9 @@ class OAuth2(providers.AuthorisationProvider):
         
         elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             # Protected resource request.
-            if token:
+            if credentials.token_type == cls.BEARER:
+                pass
+            elif token:
                 params['access_token'] = token
             else:
                 raise OAuth2Error('Credentials with valid token are required to create ' + \
@@ -176,21 +181,25 @@ class OAuth2(providers.AuthorisationProvider):
     # Exposed methods
     #===========================================================================
     
-    @staticmethod
-    def to_tuple(credentials):
-        # OAuth 2.0 needs only token, refresh_token and expiration date.
-        return (credentials.token, credentials.refresh_token, credentials.expiration_time)
+    
+    @classmethod
+    def to_tuple(cls, credentials):
+        return (credentials.token,
+                credentials.refresh_token,
+                credentials.expiration_time,
+                cls.TOKEN_TYPES.index(credentials.token_type))
     
     
     @classmethod
     def reconstruct(cls, deserialized_tuple, cfg):
-        provider_id, token, refresh_token, expiration_time = deserialized_tuple
+        provider_id, token, refresh_token, expiration_time, token_type = deserialized_tuple
         return core.Credentials(token=token,
                                 refresh_token=refresh_token,
                                 provider_type=cls.get_type(),
                                 provider_id=provider_id,
                                 expiration_time=expiration_time,
-                                provider_class=cls)
+                                provider_class=cls,
+                                token_type=cls.TOKEN_TYPES[token_type])
     
     
     @classmethod
@@ -219,7 +228,8 @@ class OAuth2(providers.AuthorisationProvider):
                                                         method='POST')
         
         cls._log(logging.INFO, 'Refreshing credentials.')
-        response = cls._fetch(*request_elements)
+        response = cls._fetch(*request_elements,
+                              headers=cls._authorisation_header(credentials))
         
         # We no longer need consumer info.
         credentials.consumer_key = None
@@ -283,14 +293,18 @@ class OAuth2(providers.AuthorisationProvider):
                                                              redirect_uri=core.middleware.url,
                                                              params=self.access_token_params)
             
-            response = self._fetch(*request_elements)
+            # Add Authorisation headers.
+            self.access_token_headers.update(self._authorisation_header(self.credentials))
+            
+            response = self._fetch(*request_elements,
+                                   headers=self.access_token_headers)
             
             access_token = response.data.get('access_token', '')
             refresh_token = response.data.get('refresh_token', '')
             
             if response.status != 200 or not access_token:
-                raise FailureError('Failed to obtain OAuth 2.0 access token from {}! HTTP status code: {}.'\
-                                  .format(self.access_token_url, response.status),
+                raise FailureError('Failed to obtain OAuth 2.0 access token from {}! HTTP status: {}, message: {}.'\
+                                  .format(self.access_token_url, response.status, response.content),
                                   original_message=response.content,
                                   status=response.status,
                                   url=self.access_token_url)
@@ -304,6 +318,7 @@ class OAuth2(providers.AuthorisationProvider):
             self.credentials.token = access_token
             self.credentials.refresh_token = refresh_token
             self.credentials.expire_in = response.data.get('expire_in')
+            self.credentials.token_type = response.data.get('token_type', '')
             # so we can reset these two guys
             self.credentials.consumer_key = ''
             self.credentials.consumer_secret = ''
@@ -454,7 +469,48 @@ class Google(OAuth2):
         """
         return ' '.join(scope)
     
+
+class Reddit(OAuth2):
+    """
+    Reddit |oauth2|_ provider.
     
+    .. note::
+        
+        Currently credentials refreshment returns ``{"error": "invalid_request"}``.
+    
+    * Dashboard: https://ssl.reddit.com/prefs/apps
+    * Docs: https://github.com/reddit/reddit/wiki/OAuth2
+    * API reference: http://www.reddit.com/dev/api
+    """
+    
+    user_authorisation_url = 'https://ssl.reddit.com/api/v1/authorize'
+    access_token_url = 'https://ssl.reddit.com/api/v1/access_token'
+    user_info_url = 'https://oauth.reddit.com/api/v1/me.json'
+    
+    user_info_scope = ['identity']
+    
+    def __init__(self, *args, **kwargs):
+        super(Reddit, self).__init__(*args, **kwargs)
+        
+        if self.offline:
+            if not 'duration' in self.user_authorisation_params:
+                # http://www.reddit.com/r/changelog/comments/11jab9/reddit_change_permanent_oauth_grants_using/
+                self.user_authorisation_params['duration'] = 'permanent'
+    
+    
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
+    
+    
+    @staticmethod
+    def _x_refresh_credentials_if(credentials):
+        if credentials.refresh_token:
+            return True
+    
+
 class WindowsLive(OAuth2):
     """
     Windows Live |oauth2|_ provider.
@@ -476,6 +532,14 @@ class WindowsLive(OAuth2):
         if self.offline:
             if not 'wl.offline_access' in self.scope:
                 self.scope.append('wl.offline_access')
+    
+    
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
+    
     
     @staticmethod
     def _x_user_parser(user, data):
@@ -503,6 +567,12 @@ class Viadeo(OAuth2):
     user_authorisation_url = 'https://secure.viadeo.com/oauth-provider/authorize2'
     access_token_url = 'https://secure.viadeo.com/oauth-provider/access_token2'
     user_info_url = 'https://api.viadeo.com/me'
+    
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer_token':
+            credentials.token_type = cls.BEARER
+        return credentials
     
     
     @staticmethod
