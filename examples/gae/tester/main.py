@@ -54,6 +54,8 @@ class Login(webapp2.RequestHandler):
             if result.user.credentials:
                 # loop through credentials attrs
                 self.response.write('<h3>Credentials</h3>')
+                self.response.write('<h5>expiration time: {}</h5>'.format(result.user.credentials.expiration_time))
+                self.response.write('<h5>expiration date: {}</h5>'.format(result.user.credentials.expiration_date))
                 loop(self, result.user.credentials)
                 
                 # refresh credentials

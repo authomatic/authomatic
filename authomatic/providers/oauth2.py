@@ -23,8 +23,8 @@ import base64
 import logging
 
 
-__all__ = ['OAuth2', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'GitHub', 'Google', 'Reddit',
-           'Viadeo', 'WindowsLive']
+__all__ = ['OAuth2', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'GitHub',
+           'Google', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive']
 
 
 class OAuth2(providers.AuthorisationProvider):
@@ -643,6 +643,7 @@ class Google(OAuth2):
         return ' '.join(scope)
     
 
+# TODO:
 class Instagram(OAuth2):
     """
     Instagram |oauth2|_ provider.
@@ -668,11 +669,12 @@ class PayPal(OAuth2):
     
     .. warning::
         
-        Bla
+        Paypal doesn't redirect the **user** to authorise your app!
+        It grants you an **access token** based on your **app's** key and secret instead.
     
     * Dashboard: https://developer.paypal.com/webapps/developer/applications
     * Docs: https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/
-    * API reference: 
+    * API reference: https://developer.paypal.com/webapps/developer/docs/api/
     """
     
     _x_term_dict = OAuth2._x_term_dict.copy()
@@ -716,7 +718,30 @@ class Reddit(OAuth2):
         if data.get('token_type') == 'bearer':
             credentials.token_type = cls.BEARER
         return credentials
+
+
+# TODO:
+class SinaWeibo(OAuth2):
+    """
+    Sina Weibo |oauth2|_ provider.
     
+    .. warning::
+        
+        Not implemented yet!
+    
+    * Dashboard: http://open.weibo.com/apps
+    * Docs: http://open.weibo.com/wiki/Oauth2
+    * API reference: http://open.weibo.com/wiki/API%E6%96%87%E6%A1%A3/en
+    """
+    
+    user_authorisation_url = 'https://api.weibo.com/oauth2/authorize'
+    access_token_url = 'https://api.weibo.com/oauth2/access_token'
+    user_info_url = ''
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        return user
+
 
 class Viadeo(OAuth2):
     """
@@ -763,6 +788,45 @@ class Viadeo(OAuth2):
         user.city = data.get('location', {}).get('city')
         user.postal_code = data.get('location', {}).get('zipcode')
         user.timezone = data.get('location', {}).get('timezone')
+        
+        return user
+
+
+class VK(OAuth2):
+    """
+    VK.com |oauth2|_ provider.
+    
+    * Dashboard: Could not find any. You must do it like this: http://vk.com/editapp?id={consumer_key}
+    * Docs: http://vk.com/developers.php?oid=-17680044&p=Authorizing_Sites
+    * API reference: http://vk.com/developers.php?oid=-17680044&p=API_Method_Description
+    """
+    
+    user_authorisation_url = 'http://api.vkontakte.ru/oauth/authorize'
+    access_token_url = 'https://api.vkontakte.ru/oauth/access_token'
+    user_info_url = 'https://api.vk.com/method/getProfiles?' + \
+                    'fields=uid,first_name,last_name,nickname,sex,bdate,city,country,timezone,photo_big'
+    
+    
+    def __init__(self, *args, **kwargs):
+        super(VK, self).__init__(*args, **kwargs)
+        
+        if self.offline:
+            if not 'offline' in self.scope:
+                self.scope.append('offline')
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        _resp = data.get('response', [{}])[0]
+        
+        user.id = _resp.get('uid')
+        user.first_name = _resp.get('first_name')
+        user.last_name = _resp.get('last_name')
+        user.nickname = _resp.get('nickname')
+        user.city = _resp.get('city')
+        user.country = _resp.get('country')
+        user.timezone = _resp.get('timezone')
+        user.picture = _resp.get('photo_big')
         
         return user
 
