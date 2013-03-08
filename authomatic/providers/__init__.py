@@ -651,7 +651,8 @@ class AuthorisationProvider(BaseProvider):
             :class:`.UserInfoResponse`
         """
         
-        return self._access_user_info()
+        if self.user_info_url:
+            return self._access_user_info()
     
     
     #===========================================================================
