@@ -23,7 +23,8 @@ import base64
 import logging
 
 
-__all__ = ['Facebook', 'Google', 'WindowsLive', 'OAuth2', 'Viadeo']
+__all__ = ['OAuth2', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'Google', 'Reddit',
+           'Viadeo', 'WindowsLive']
 
 
 class OAuth2(providers.AuthorisationProvider):
@@ -563,6 +564,28 @@ class Foursquare(OAuth2):
         user.email = _contact.get('email')
         user.phone = _contact.get('phone')
         
+        return user
+
+
+class GitHub(OAuth2):
+    """
+    GitHub |oauth2|_ provider.
+    
+    * Dashboard: https://github.com/settings/applications/
+    * Docs: http://developer.github.com/v3/#authentication
+    * API reference: http://developer.github.com/v3/
+    """
+    
+    user_authorisation_url = 'https://github.com/login/oauth/authorize'
+    access_token_url = 'https://github.com/login/oauth/access_token'
+    user_info_url = 'https://api.github.com/user'
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.username = data.get('login')
+        user.picture = data.get('avatar_url')
+        user.link = data.get('html_url')
+        user.city, user.country = data.get('location', ', ').split(', ')
         return user
 
 
