@@ -384,12 +384,12 @@ class Session(object):
         """
         Adds the session cookie to headers.
         """
-        
-        # Set the cookie header.
-        middleware.set_header('Set-Cookie', self.create_cookie())
-        
-        # Reset data
-        self._data = {}
+        if self.data:
+            # Set the cookie header.
+            middleware.set_header('Set-Cookie', self.create_cookie())
+            
+            # Reset data
+            self._data = {}
     
     
     def _get_data(self):

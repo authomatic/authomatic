@@ -44,6 +44,9 @@ class OAuth2(providers.AuthorisationProvider):
     #: Use it in the :doc:`config` like ``{'scope': oauth2.Facebook.user_info_scope}``.
     user_info_scope = []
     
+    #: :class:`bool` If ``False``, the provider doesn't support CSRF protection.
+    supports_csrf_protection = True
+    
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
@@ -103,7 +106,7 @@ class OAuth2(providers.AuthorisationProvider):
         
         if request_type == cls.USER_AUTHORISATION_REQUEST_TYPE:
             # User authorisation request.
-            if consumer_key and redirect_uri and csrf:
+            if consumer_key and redirect_uri and (csrf or not cls.supports_csrf_protection):
                 params['client_id'] = consumer_key
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
@@ -263,7 +266,8 @@ class OAuth2(providers.AuthorisationProvider):
         error = core.middleware.params.get('error')
         state = core.middleware.params.get('state')      
         
-        if authorisation_code and state:
+#        if authorisation_code and state:
+        if authorisation_code:
             #===================================================================
             # Phase 2 after redirect with success
             #===================================================================
@@ -271,16 +275,18 @@ class OAuth2(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Continuing OAuth 2.0 authorisation procedure after redirect.')
             
             # validate CSRF token
-            self._log(logging.INFO, 'Validating request by comparing request state with stored state.')
-            stored_state = self._session_get('state')
-            
-            if not stored_state:
-                raise FailureError('Unable to retrieve stored state!')
-            elif not stored_state == state:
-                raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state),
-                                   url=self.user_authorisation_url)
-            
-            self._log(logging.INFO, 'Request is valid.')
+            if self.supports_csrf_protection:
+                self._log(logging.INFO, 'Validating request by comparing request state with stored state.')
+                stored_state = self._session_get('state')
+                
+                if not stored_state:
+                    raise FailureError('Unable to retrieve stored state!')
+                elif not stored_state == state:
+                    raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state),
+                                       url=self.user_authorisation_url)
+                self._log(logging.INFO, 'Request is valid.')
+            else:
+                self._log(logging.WARN, 'Skipping CSRF validation!')
             
             # exchange authorisation code for access token by the provider
             self._log(logging.INFO, 'Fetching access token from {}.'.format(self.access_token_url))
@@ -354,10 +360,14 @@ class OAuth2(providers.AuthorisationProvider):
             
             self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure.')
             
-            # generate csfr
-            csrf = self.csrf_generator()
-            # and store it to session
-            self._session_set('state', csrf)
+            csrf = ''
+            if self.supports_csrf_protection:
+                # generate csfr
+                csrf = self.csrf_generator()
+                # and store it to session
+                self._session_set('state', csrf)
+            else:
+                self._log(logging.WARN, 'Provider doesn\'t support CSRF validation!')
                         
             request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                             credentials=self.credentials,
@@ -370,6 +380,50 @@ class OAuth2(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
             
             core.middleware.redirect(request_elements[0])
+
+
+class Bitly(OAuth2):
+    """
+    Bitly |oauth2|_ provider.
+    
+    * Dashboard: http://dev.bitly.com/my_apps.html
+    * Docs: http://dev.bitly.com/authentication.html
+    * API reference: http://dev.bitly.com/api.html
+    """
+    
+    supports_csrf_protection = False
+    _x_use_authorisation_header = False
+    
+    user_authorisation_url = 'https://bitly.com/oauth/authorize'
+    access_token_url = 'https://api-ssl.bitly.com/oauth/access_token'
+    user_info_url = 'https://api-ssl.bitly.com/v3/user/info'
+    
+    def __init__(self, *args, **kwargs):
+        super(Bitly, self).__init__(*args, **kwargs)
+        
+        if self.offline:
+            if not 'grant_type' in self.access_token_params:
+                self.access_token_params['grant_type'] = 'refresh_token'
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        info = data.get('data', {})
+        
+        user.id = info.get('login')
+        user.name = info.get('full_name')
+        user.username = info.get('display_name')
+        user.picture = info.get('profile_image')
+        user.link = info.get('profile_url')
+        
+        return user
+    
+    
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        
+        logging.info('CREDENTIALS: {}'.format(data))
+        
+        return credentials
 
 
 class DeviantART(OAuth2):
@@ -385,14 +439,13 @@ class DeviantART(OAuth2):
     access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
     user_info_url = 'https://www.deviantart.com/api/draft15/user/whoami'
     
-    user_info_scope = ['identity']
-    
     def __init__(self, *args, **kwargs):
         super(DeviantART, self).__init__(*args, **kwargs)
         
         if self.offline:
             if not 'grant_type' in self.access_token_params:
                 self.access_token_params['grant_type'] = 'refresh_token'
+    
     
     @staticmethod
     def _x_user_parser(user, data):

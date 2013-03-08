@@ -288,6 +288,9 @@ class BaseProvider(object):
         scheme, host, path, query, fragment = urlparse.urlsplit(url)
         request_path = urlparse.urlunsplit((None, None, path, query, None))
         
+        if method in ('POST', 'PUT', 'PATCH'):
+            headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
+        
         # Apply headers from settings.
         headers.update(settings.fetch_headers)
         
@@ -395,6 +398,9 @@ class AuthorisationProvider(BaseProvider):
     REFRESH_TOKEN_REQUEST_TYPE = 5
     
     BEARER = 'Bearer'
+    
+    # Whether to use the HTTP Authorisation header.
+    _x_use_authorisation_header = True
     
     def __init__(self, *args, **kwargs):
         """
@@ -653,7 +659,7 @@ class AuthorisationProvider(BaseProvider):
     @classmethod
     def _authorisation_header(cls, credentials):
         """
-        Creates authorisation headers.
+        Creates authorisation headers if the provider supports it.
         See: http://en.wikipedia.org/wiki/Basic_access_authentication.
         
         :param credentials:
@@ -663,10 +669,12 @@ class AuthorisationProvider(BaseProvider):
             Headers as :class:`dict`.
         """
         
-        res = ':'.join((credentials.consumer_key, credentials.consumer_secret))
-        res = base64.b64encode(res)
-        return {'Authorization': 'Basic {}'.format(res),
-                'Content-Type': 'application/x-www-form-urlencoded'}
+        if cls._x_use_authorisation_header:
+            res = ':'.join((credentials.consumer_key, credentials.consumer_secret))
+            res = base64.b64encode(res)
+            return {'Authorization': 'Basic {}'.format(res)}
+        else:
+            return {}
     
     
     def _check_consumer(self):
