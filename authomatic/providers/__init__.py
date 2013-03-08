@@ -294,9 +294,10 @@ class BaseProvider(object):
         # Apply headers from settings.
         headers.update(settings.fetch_headers)
         
-        cls._log(logging.DEBUG, 'Fetching url {}'.format(url))
-        cls._log(logging.DEBUG, u'\t\u251C headers: {}'.format(headers))
-        cls._log(logging.DEBUG, u'\t\u2514 body: {}'.format(body))
+        cls._log(logging.DEBUG, u'Fetching...')
+        cls._log(logging.DEBUG, u' \u251C\u2500 url: {}'.format(url))
+        cls._log(logging.DEBUG, u' \u251C\u2500 headers: {}'.format(headers))
+        cls._log(logging.DEBUG, u' \u2514\u2500 body: {}'.format(body))
         
         # Connect
         connection = httplib.HTTPSConnection(host)
@@ -334,9 +335,10 @@ class BaseProvider(object):
                                  url=location,
                                  status=response.status)
         else:
-            cls._log(logging.DEBUG, 'Got response from {}'.format(url))
-            cls._log(logging.DEBUG, u'\t\u251C status: {}'.format(response.status))
-            cls._log(logging.DEBUG, u'\t\u2514 headers: {}'.format(response.getheaders()))
+            cls._log(logging.DEBUG, u'Got response:')
+            cls._log(logging.DEBUG, u' \u251C\u2500 url: {}'.format(url))
+            cls._log(logging.DEBUG, u' \u251C\u2500 status: {}'.format(response.status))
+            cls._log(logging.DEBUG, u' \u2514\u2500 headers: {}'.format(response.getheaders()))
                 
         return authomatic.core.Response(response, content_parser)
     
