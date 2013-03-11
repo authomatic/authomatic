@@ -89,8 +89,8 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
 
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
                             config=CONFIG, # Here goes the config.
-                            secret='some random secret string',
-                            report_errors=False,
+                            secret='dsgdfgdgj5fd5g4fmjnfggf6gnkfgn5fngh4n564d3vr54er5',
+                            report_errors=True,
                             logging_level=logging.DEBUG)
 
 

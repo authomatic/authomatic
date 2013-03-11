@@ -26,7 +26,7 @@ import urllib
 import urlparse
 
 
-__all__ = ['OAuth1', 'Twitter']
+__all__ = ['OAuth1', 'Bitbucket', 'Twitter']
 
 
 def _normalize_params(params):
@@ -460,6 +460,32 @@ class Bitbucket(OAuth1):
         user.last_name = _user.get('last_name')
         user.picture = _user.get('avatar')
         user.link = _user.get('resource_uri')
+        return user
+
+
+class Flickr(OAuth1):
+    """
+    Flickr |oauth1|_ provider.
+    
+    * Dashboard: https://www.flickr.com/services/apps/
+    * Docs: https://www.flickr.com/services/api/auth.oauth.html
+    * API reference: https://www.flickr.com/services/api/
+    """
+    
+    request_token_url = 'http://www.flickr.com/services/oauth/request_token'
+    user_authorisation_url = 'http://www.flickr.com/services/oauth/authorize'
+    access_token_url = 'http://www.flickr.com/services/oauth/access_token'
+    user_info_url = 'http://api.flickr.com/services/rest?method=flickr.test.login&format=json&nojsoncallback=1'
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        _user = data.get('user', {})
+        
+        user.name = data.get('fullname') or _user.get('username', {}).get('_content')
+        user.id = data.get('user_nsid') or _user.get('id')
+        
         return user
 
 
