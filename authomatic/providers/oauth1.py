@@ -540,3 +540,50 @@ class Tumblr(OAuth1):
         
         return user
 
+
+class Vimeo(OAuth1):
+    """
+    Vimeo |oauth1|_ provider.
+    
+    .. warning::
+        
+        Vimeo needs one more fetch to get rich user info!
+    
+    * Dashboard: https://developer.vimeo.com/apps
+    * Docs: 
+    * API reference: https://developer.vimeo.com/apis
+    """
+    
+    request_token_url = 'https://vimeo.com/oauth/request_token'
+    user_authorisation_url = 'https://vimeo.com/oauth/authorize'
+    access_token_url = 'https://vimeo.com/oauth/access_token'
+    user_info_url = 'http://vimeo.com/api/rest/v2?format=json&method=vimeo.oauth.checkAccessToken'
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        _user = data.get('oauth', {}).get('user', {})
+        user.name = _user.get('display_name')
+        user.id = _user.get('id')
+        user.username = _user.get('username')
+        
+        # Vimeo needs user ID to get rich info so we need to make one more fetch.
+        if user.id:
+            response = user.provider.access('http://vimeo.com/api/v2/{}/info.json'.format(user.username))
+            if response and response.status == 200:
+                user.name = response.data.get('display_name')
+                user.city, user.country = response.data.get('location', ',').split(',')
+                user.city = user.city.strip()
+                user.country = user.country.strip()
+                user.link = response.data.get('profile_url')
+                user.picture = response.data.get('portrait_huge')
+        
+        return user
+
+
+
+
+
+
+
