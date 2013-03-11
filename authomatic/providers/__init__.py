@@ -300,7 +300,11 @@ class BaseProvider(object):
         cls._log(logging.DEBUG, u' \u2514\u2500 body: {}'.format(body))
         
         # Connect
-        connection = httplib.HTTPSConnection(host)
+        if scheme.lower() == 'https':
+            connection = httplib.HTTPSConnection(host)
+        else:
+            connection = httplib.HTTPConnection(host)
+            
         try:
             connection.request(method, request_path, body, headers)
         except Exception as e:
