@@ -43,7 +43,6 @@ class Login(webapp2.RequestHandler):
             if response:
                 self.response.write('<h3>User refresh status: {}</h3>'.format(response.status))
                 self.response.write('<pre class="prettyprint">{}</pre>'.format(response.content))
-                logging.info('RESPONSE CONTENT {}'.format(response.content))
             
             self.response.write('<h3>User</h3>')
             if result.user.picture:
@@ -90,7 +89,7 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
                             config=CONFIG, # Here goes the config.
                             secret='dsgdfgdgj5fd5g4fmjnfggf6gnkfgn5fngh4n564d3vr54er5',
-                            report_errors=True,
+                            report_errors=False,
                             logging_level=logging.DEBUG)
 
 

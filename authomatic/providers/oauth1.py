@@ -26,7 +26,7 @@ import urllib
 import urlparse
 
 
-__all__ = ['OAuth1', 'Bitbucket', 'Twitter']
+__all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Twitter']
 
 
 def _normalize_params(params):
@@ -509,5 +509,34 @@ class Twitter(OAuth1):
         user.picture = 'http://api.twitter.com/1/users/profile_image?screen_name={}&size=original'.format(data.get('screen_name'))
         user.locale = data.get('lang')
         user.link = data.get('url')
+        return user
+
+
+class Tumblr(OAuth1):
+    """
+    Tumblr |oauth1|_ provider.
+    
+    * Dashboard: http://www.tumblr.com/oauth/apps
+    * Docs: http://www.tumblr.com/docs/en/api/v2#auth
+    * API reference: http://www.tumblr.com/docs/en/api/v2
+    """
+    
+    request_token_url = 'http://www.tumblr.com/oauth/request_token'
+    user_authorisation_url = 'http://www.tumblr.com/oauth/authorize'
+    access_token_url = 'http://www.tumblr.com/oauth/access_token'
+    user_info_url = 'http://api.tumblr.com/v2/user/info'
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        _user = data.get('response', {}).get('user', {})
+        
+        user.username = user.id = _user.get('name')
+        user.link = _user.get('blogs', [{}])[0].get('url')
+        
+        if user.link:
+            _host = urlparse.urlsplit(user.link).netloc
+            user.picture = 'http://api.tumblr.com/v2/blog/{}/avatar/512'.format(_host)
+        
         return user
 
