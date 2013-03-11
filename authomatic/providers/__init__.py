@@ -741,7 +741,11 @@ class AuthorisationProvider(BaseProvider):
             :class:`.UserInfoResponse`
         """
         
-        response = self.access_with_credentials(self.credentials, self.user_info_url)
+        url = self.user_info_url.format(**self.user.__dict__)
+        
+        logging.info('USER INFO URL: {}'.format(url))
+        
+        response = self.access_with_credentials(self.credentials, url)
         
         # Create user.
         self.user = self._update_or_create_user(response.data, content=response.content)
