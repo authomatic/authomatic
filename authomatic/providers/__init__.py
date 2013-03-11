@@ -380,8 +380,8 @@ class BaseProvider(object):
                 # Create it from first name and last name if available.
                 self.user.name = ' '.join((self.user.first_name, self.user.last_name))
             else:
-                # Or use one of them.
-                self.user.name = self.user.first_name or self.user.last_name
+                # Or use one of these.
+                self.user.name = self.user.username or self.user.first_name or self.user.last_name
         
         return self.user    
     
