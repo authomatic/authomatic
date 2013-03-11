@@ -922,6 +922,40 @@ class Yammer(OAuth2):
         return user
 
 
+class Yandex(OAuth2):
+    """
+    Yandex |oauth2|_ provider.
+    
+    * Dashboard: https://oauth.yandex.com/client/my
+    * Docs: http://api.yandex.com/oauth/doc/dg/reference/obtain-access-token.xml
+    * API reference: 
+    """
+    
+    user_authorisation_url = 'https://oauth.yandex.com/authorize'
+    access_token_url = 'https://oauth.yandex.com/token'
+    user_info_url = 'https://login.yandex.ru/info'
+    
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        # http://api.yandex.ru/login/doc/dg/reference/response.xml
+        user.name = data.get('real_name')
+        user.nickname = data.get('display_name')
+        user.gender = data.get('Sex')
+        user.email = data.get('Default_email')
+        user.birth_date = data.get('birthday')
+        
+        return user
+
+
+
 
 
 
