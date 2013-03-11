@@ -437,6 +437,32 @@ class OAuth1(providers.AuthorisationProvider):
             core.middleware.redirect(request_elements[0])
 
 
+class Bitbucket(OAuth1):
+    """
+    Bitbucket |oauth1|_ provider.
+    
+    * Dashboard: https://bitbucket.org/account/user/peterhudec/api
+    * Docs: https://confluence.atlassian.com/display/BITBUCKET/oauth+Endpoint
+    * API reference: https://confluence.atlassian.com/display/BITBUCKET/Using+the+Bitbucket+REST+APIs
+    """
+    
+    request_token_url = 'https://bitbucket.org/!api/1.0/oauth/request_token'
+    user_authorisation_url = 'https://bitbucket.org/!api/1.0/oauth/authenticate'
+    access_token_url = 'https://bitbucket.org/!api/1.0/oauth/access_token'
+    user_info_url = 'https://api.bitbucket.org/1.0/user'
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        _user = data.get('user', {})
+        user.username = _user.get('username')
+        user.name = _user.get('display_name')
+        user.first_name = _user.get('first_name')
+        user.last_name = _user.get('last_name')
+        user.picture = _user.get('avatar')
+        user.link = _user.get('resource_uri')
+        return user
+
+
 class Twitter(OAuth1):
     """
     Twitter |oauth1|_ provider.
