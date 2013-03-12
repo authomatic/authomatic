@@ -15,6 +15,7 @@ import threading
 import time
 import urllib
 import urlparse
+from xml.etree import ElementTree
 
 # Taken from anyjson.py
 try:
@@ -130,16 +131,33 @@ def escape(s):
 
 def json_qs_parser(body):
     """
-    Parses response body from json or query string.
+    Parses response body from JSON, XML or query string.
     
-    :param body: string
+    :param body:
+        string
+    
+    :returns:
+        :class:`dict`, :class:`list` if input is JSON or query string,
+        :class:`xml.etree.ElementTree.Element` if XML.
     """
+    
     try:
-        # try json first
+        # Try JSON first.
+        logging.info('JSON')
         return json.loads(body)
-    except ValueError:
-        # then query string
-        return dict(urlparse.parse_qsl(body))
+    except:
+        pass
+    
+    try:
+        # Then XML.
+        logging.info('XML')
+        return ElementTree.fromstring(body)
+    except:
+        pass
+    
+    # Finally query string.
+    logging.info('QS')
+    return dict(urlparse.parse_qsl(body))
 
 
 def import_string(import_name, silent=False):
