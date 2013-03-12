@@ -397,8 +397,8 @@ class OAuth1(providers.AuthorisationProvider):
             
             # check if response status is OK
             if response.status != 200:
-                raise FailureError('Failed to obtain request token from {}! HTTP status code: {}.'\
-                                  .format(self.request_token_url, response.status),
+                raise FailureError('Failed to obtain request token from {}! HTTP status code: {} content: {}'\
+                                  .format(self.request_token_url, response.status, response.content),
                                   original_message=response.content,
                                   status=response.status,
                                   url=self.request_token_url)
@@ -550,7 +550,7 @@ class Vimeo(OAuth1):
         Vimeo needs one more fetch to get rich user info!
     
     * Dashboard: https://developer.vimeo.com/apps
-    * Docs: 
+    * Docs: https://developer.vimeo.com/apis/advanced#oauth-endpoints
     * API reference: https://developer.vimeo.com/apis
     """
     
@@ -578,6 +578,40 @@ class Vimeo(OAuth1):
                 user.country = user.country.strip()
                 user.link = response.data.get('profile_url')
                 user.picture = response.data.get('portrait_huge')
+        
+        return user
+
+
+class Xero(OAuth1):
+    """
+    Xero |oauth1|_ provider.
+    
+    .. note::
+        
+        API returns XML!
+    
+    * Dashboard: https://api.xero.com/Application
+    * Docs: http://blog.xero.com/developer/api-overview/public-applications/
+    * API reference: http://blog.xero.com/developer/api/
+    """
+    
+    request_token_url = 'https://api.xero.com/oauth/RequestToken'
+    user_authorisation_url = 'https://api.xero.com/oauth/Authorize'
+    access_token_url = 'https://api.xero.com/oauth/AccessToken'
+    user_info_url = 'https://api.xero.com/api.xro/2.0/Users'
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        # Data is xml.etree.ElementTree.Element object.
+        if type(data) is not dict:
+            # But only on user.update()
+            
+            _user = data.find('Users/User')
+            
+            user.id = _user.find('UserID').text
+            user.first_name = _user.find('FirstName').text
+            user.last_name = _user.find('LastName').text
         
         return user
 

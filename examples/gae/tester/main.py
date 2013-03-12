@@ -1,9 +1,10 @@
+from authomatic.settings import logging_level, fetch_headers
 from config import CONFIG
 import authomatic
+import cgi
+import logging
 import logging
 import webapp2
-import logging
-from authomatic.settings import logging_level, fetch_headers
 
 
 def links(handler):
@@ -64,14 +65,19 @@ class Login(webapp2.RequestHandler):
                     self.response.write('<h3>Refresh status: {}</h3>'.format(response.status))
                     self.response.write('<pre class="prettyprint">{}</pre>'.format(response.content))
             
-            self.response.write('<pre id="ui" class="prettyprint"></pre>')
+            self.response.write('<pre id="ui" class="prettyprint">{}</pre>'.format(cgi.escape(result.user.content)))
             
             self.response.write("""
             <script type="text/javascript">
                 ui = document.getElementById('ui');
-                ui.innerHTML = JSON.stringify({}, undefined, 4);
+                try {{
+                    ui.innerHTML = JSON.stringify({0}, undefined, 4);
+                }} catch(e) {{
+                    console.log('XML');
+                }}
+                    
             </script>
-            """.format(result.user.content))
+            """.format(result.user.content.replace('\n', ' ')))
         
         self.response.write('</body></html>')
 
