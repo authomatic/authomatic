@@ -34,8 +34,7 @@ class OAuth2(providers.AuthorisationProvider):
     
     TOKEN_TYPES = ['', 'Bearer']
     
-    # I intruduced this dictionary because of Facebook,
-    # who likes to invent its own terminology for OAuth 2.0!!!
+    # This is for providers who like to invent their own terminology. There is plenty of them!
     _x_term_dict = dict(refresh_token='refresh_token',
                         authorization_code='authorization_code',
                         password='password',
@@ -659,7 +658,45 @@ class Instagram(OAuth2):
     
     @staticmethod
     def _x_user_parser(user, data):
-#        user.username = data.get('login')
+        return user
+
+
+class LinkedIn(OAuth2):
+    """
+    Linked In |oauth2|_ provider.
+    
+    .. note::
+        
+        Doesn't support access token refreshment.
+    
+    * Dashboard: https://www.linkedin.com/secure/developer
+    * Docs: http://developer.linkedin.com/documents/authentication
+    * API reference: http://developer.linkedin.com/rest
+    """
+    
+    user_authorisation_url = 'https://www.linkedin.com/uas/oauth2/authorization'
+    access_token_url = 'https://www.linkedin.com/uas/oauth2/accessToken'
+    user_info_url = 'https://api.linkedin.com/v1/people/~:' + \
+                    '(id,first-name,last-name,formatted-name,location,picture-url,public-profile-url,email-address,date-of-birth,phone-numbers)?format=json'
+    
+    user_info_scope = ['r_fullprofile', 'r_emailaddress', 'r_contactinfo']
+    
+    # LinkedIn too has it's own terminology!
+    _x_term_dict = OAuth2._x_term_dict.copy()
+    _x_term_dict['access_token'] = 'oauth2_access_token'
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        user.first_name = data.get('firstName')
+        user.last_name = data.get('lastName')
+        user.email = data.get('emailAddress')
+        user.name = data.get('formattedName')
+        user.country = data.get('location', {}).get('name')
+        user.phone = data.get('phoneNumbers', {}).get('values', [{}])[0].get('phoneNumber')
+        user.picture = data.get('pictureUrl')
+        user.link = data.get('publicProfileUrl')
+        
         return user
 
 
@@ -718,29 +755,6 @@ class Reddit(OAuth2):
         if data.get('token_type') == 'bearer':
             credentials.token_type = cls.BEARER
         return credentials
-
-
-# TODO:
-class SinaWeibo(OAuth2):
-    """
-    Sina Weibo |oauth2|_ provider.
-    
-    .. warning::
-        
-        Not implemented yet!
-    
-    * Dashboard: http://open.weibo.com/apps
-    * Docs: http://open.weibo.com/wiki/Oauth2
-    * API reference: http://open.weibo.com/wiki/API%E6%96%87%E6%A1%A3/en
-    """
-    
-    user_authorisation_url = 'https://api.weibo.com/oauth2/authorize'
-    access_token_url = 'https://api.weibo.com/oauth2/access_token'
-    user_info_url = ''
-    
-    @staticmethod
-    def _x_user_parser(user, data):
-        return user
 
 
 class Viadeo(OAuth2):
