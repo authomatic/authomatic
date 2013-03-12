@@ -65,7 +65,7 @@ class Login(webapp2.RequestHandler):
                     self.response.write('<h3>Refresh status: {}</h3>'.format(response.status))
                     self.response.write('<pre class="prettyprint">{}</pre>'.format(response.content))
             
-            self.response.write('<pre id="ui" class="prettyprint">{}</pre>'.format(cgi.escape(result.user.content)))
+            self.response.write('<pre id="ui" class="prettyprint">{}</pre>'.format(cgi.escape(result.user.content or '')))
             
             self.response.write("""
             <script type="text/javascript">
@@ -77,7 +77,7 @@ class Login(webapp2.RequestHandler):
                 }}
                     
             </script>
-            """.format(result.user.content.replace('\n', ' ')))
+            """.format(result.user.content.replace('\n', ' ')) if result.user.content else '')
         
         self.response.write('</body></html>')
 

@@ -110,7 +110,7 @@ class BaseSignatureGenerator(object):
         """
 
 
-class HMACSHA1Generator(BaseSignatureGenerator):
+class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
     """
     HMAC-SHA1 signature generator.
     See: http://oauth.net/core/1.0a/#anchor15
@@ -171,12 +171,29 @@ class HMACSHA1Generator(BaseSignatureGenerator):
         return signature
 
 
+class PLAINTEXTSignatureGenerator(BaseSignatureGenerator):
+    """
+    PLAINTEXT signature generator.
+    See: http://oauth.net/core/1.0a/#anchor21
+    """
+    
+    method = 'PLAINTEXT'
+    
+    @classmethod
+    def create_signature(cls, method, base, params, consumer_secret, token_secret=''):
+        
+        consumer_secret = urllib.quote(consumer_secret, '')
+        token_secret = urllib.quote(token_secret, '')
+        
+        return urllib.quote('&'.join((consumer_secret, token_secret)), '')
+
+
 class OAuth1(providers.AuthorisationProvider):
     """
     Base class for |oauth1|_ providers.    
     """
     
-    _signature_generator = HMACSHA1Generator
+    _signature_generator = HMACSHA1SignatureGenerator
     
     REQUEST_TOKEN_REQUEST_TYPE = 1
     
@@ -577,6 +594,27 @@ class Tumblr(OAuth1):
             user.picture = 'http://api.tumblr.com/v2/blog/{}/avatar/512'.format(_host)
         
         return user
+
+
+class UbuntuOne(OAuth1):
+    """
+    Ubuntu One |oauth1|_ provider.
+    
+    .. warning::
+        
+        Uses the `PLAINTEXT <http://oauth.net/core/1.0a/#anchor21>`_ Signature method!
+    
+    * Dashboard: https://one.ubuntu.com/developer/account_admin/auth/web
+    * Docs: https://one.ubuntu.com/developer/account_admin/auth/web
+    * API reference: https://one.ubuntu.com/developer/contents
+    """
+    
+    _signature_generator = PLAINTEXTSignatureGenerator
+    
+    request_token_url = 'https://one.ubuntu.com/oauth/request/'
+    user_authorisation_url = 'https://one.ubuntu.com/oauth/authorize/'
+    access_token_url = 'https://one.ubuntu.com/oauth/access/'
+    user_info_url = 'https://one.ubuntu.com/api/account/'
 
 
 class Vimeo(OAuth1):
