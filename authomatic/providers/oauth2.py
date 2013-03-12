@@ -392,6 +392,39 @@ class OAuth2(providers.AuthorisationProvider):
             core.middleware.redirect(request_elements[0])
 
 
+class Behance(OAuth2):
+    """
+    Behance |oauth2|_ provider.
+    
+    * Dashboard: http://www.behance.net/dev/apps
+    * Docs: http://www.behance.net/dev/authentication
+    * API reference: http://www.behance.net/dev/api/endpoints/
+    """
+    
+    user_authorisation_url = 'https://www.behance.net/v2/oauth/authenticate'
+    access_token_url = 'https://www.behance.net/v2/oauth/token'
+    user_info_url = ''
+    
+    user_info_scope = ['activity_read']
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        _user = data.get('user', {})
+        
+        user.id = _user.get('id')
+        user.first_name = _user.get('first_name')
+        user.last_name = _user.get('last_name')
+        user.username = _user.get('username')
+        user.city = _user.get('city')
+        user.country = _user.get('country')
+        user.link = _user.get('url')
+        user.name = _user.get('display_name')
+        user.picture = _user.get('images', {}).get('138')
+        
+        return user
+
+
 class Bitly(OAuth2):
     """
     Bitly |oauth2|_ provider.
