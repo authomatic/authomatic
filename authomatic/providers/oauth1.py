@@ -616,6 +616,47 @@ class Xero(OAuth1):
         return user
 
 
+class Yahoo(OAuth1):
+    """
+    Yahoo |oauth1|_ provider.
+    
+    * Dashboard: https://developer.apps.yahoo.com/dashboard/
+    * Docs: http://developer.yahoo.com/oauth/guide/oauth-auth-flow.html
+    * API: http://developer.yahoo.com/everything.html
+    * API explorer: http://developer.yahoo.com/yql/console/
+    """
+    
+    request_token_url = 'https://api.login.yahoo.com/oauth/v2/get_request_token'
+    user_authorisation_url = 'https://api.login.yahoo.com/oauth/v2/request_auth'
+    access_token_url = 'https://api.login.yahoo.com/oauth/v2/get_token'
+    user_info_url = 'http://query.yahooapis.com/v1/yql?q=select%20*%20from%20social.profile%20where%20guid%3Dme&format=json&callback='
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        _user = data.get('query', {}).get('results', {}).get('profile', {})
+        
+        user.id = _user.get('guid')
+        user.gender = _user.get('gender')
+        user.nickname = _user.get('nickname')
+        user.link = _user.get('profileUrl')
+        
+        user.picture = _user.get('image', {}).get('imageUrl')
+        
+        user.city, user.country = _user.get('location', ',').split(',')
+        user.city = user.city.strip()
+        user.country = user.country.strip()
+        
+        _date = _user.get('birthdate')
+        _year = _user.get('birthYear')
+        
+        if _date and _year:
+            user.birth_date = _date + '/' + _year
+        
+        return user
+
+
 
 
 
