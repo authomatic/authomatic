@@ -489,6 +489,44 @@ class Flickr(OAuth1):
         return user
 
 
+class Plurk(OAuth1):
+    """
+    Plurk |oauth1|_ provider.
+    
+    * Dashboard: http://www.plurk.com/PlurkApp/
+    * Docs: 
+    * API: http://www.plurk.com/API
+    * API explorer: http://www.plurk.com/OAuth/test/
+    """
+    
+    request_token_url = 'http://www.plurk.com/OAuth/request_token'
+    user_authorisation_url = 'http://www.plurk.com/OAuth/authorize'
+    access_token_url = 'http://www.plurk.com/OAuth/access_token'
+    user_info_url = 'http://www.plurk.com/APP/Profile/getOwnProfile'
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        _user = data.get('user_info', {})
+        
+        user.locale = _user.get('default_lang')
+        user.username = _user.get('display_name')
+        user.id = _user.get('id') or _user.get('uid')
+        user.nickname = _user.get('nick_name')
+        user.birth_date = _user.get('date_of_birth')
+        user.name = _user.get('full_name')
+        user.gender = _user.get('gender')
+        user.timezone = _user.get('timezone')
+        user.picture = 'http://avatars.plurk.com/{}-big2.jpg'.format(user.id)
+        
+        user.city, user.country = _user.get('location', ',').split(',')
+        user.city = user.city.strip()
+        user.country = user.country.strip()
+        
+        return user
+
+
 class Twitter(OAuth1):
     """
     Twitter |oauth1|_ provider.
