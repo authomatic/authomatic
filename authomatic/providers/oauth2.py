@@ -20,6 +20,7 @@ from urllib import urlencode
 import authomatic.core as core
 import authomatic.settings as settings
 import base64
+import datetime
 import logging
 
 
@@ -951,21 +952,26 @@ class Yammer(OAuth2):
         
         user.username = data.get('name')
         user.name = data.get('full_name')
-        user.birth_date = data.get('birth_date')
         user.link = data.get('web_url')
         user.picture = data.get('mugshot_url')
         
+        user.city, user.country = data.get('location', ',').split(',')
+        user.city = user.city.strip()
+        user.country = user.country.strip()
+        
         # Contact
         _contact = data.get('contact', {})
-        
-        _phones = _contact.get('phone_numbers', [])
-        user.phone = _phones[0] if len(_phones) else None
-        
+        user.phone = _contact.get('phone_numbers', [{}])[0].get('number')
         _emails = _contact.get('email_addresses', [])
         for email in _emails:
             if email.get('type', '') == 'primary':
                 user.email = email.get('address')
                 break
+        
+        try:
+            user.birth_date = datetime.datetime.strptime(data.get('birth_date'), "%B %d")
+        except:
+            user.birth_date = data.get('birth_date')
         
         return user
 
@@ -998,7 +1004,11 @@ class Yandex(OAuth2):
         user.nickname = data.get('display_name')
         user.gender = data.get('Sex')
         user.email = data.get('Default_email')
-        user.birth_date = data.get('birthday')
+        
+        try:
+            user.birth_date = datetime.datetime.strptime(data.get('birthday'), "%Y-%m-%d")
+        except:
+            user.birth_date = data.get('birthday')
         
         return user
 

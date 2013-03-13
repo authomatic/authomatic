@@ -560,7 +560,7 @@ class AuthorisationProvider(BaseProvider):
     
     @classmethod
     def access_with_credentials(cls, credentials, url, params=None, method='GET',
-                                headers={}, max_redirects=5, content_parser=None):
+                                headers=None, max_redirects=5, content_parser=None):
         """
         Fetches the **protected resource** of the **user** to whom belong
         the supplied :data:`.credentials`.
@@ -586,6 +586,8 @@ class AuthorisationProvider(BaseProvider):
         :returns:
             :class:`.Response`
         """
+        
+        headers = headers or {}
         
         cls._log(logging.INFO, 'Accessing protected resource {}.'.format(url))
         

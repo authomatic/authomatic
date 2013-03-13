@@ -875,7 +875,7 @@ class User(ReprMixin):
         self.phone = kwargs.get('phone')
         #: :class:`str` Picture URL.
         self.picture = kwargs.get('picture')
-        #: :class:`datetime.datetime()` birth date .
+        #: Birth date as :class:`datetime.datetime()` or :class:`str` if parsing failed or ``None``.
         self.birth_date = kwargs.get('birth_date')
         #: :class:`str` Country.
         self.country = kwargs.get('country')

@@ -16,11 +16,12 @@ from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth1Error
 from urllib import urlencode
 import abc
+import authomatic.core as core
 import binascii
+import datetime
 import hashlib
 import hmac
 import logging
-import authomatic.core as core
 import time
 import urllib
 import urlparse
@@ -561,7 +562,6 @@ class Plurk(OAuth1):
         user.username = _user.get('display_name')
         user.id = _user.get('id') or _user.get('uid')
         user.nickname = _user.get('nick_name')
-        user.birth_date = _user.get('date_of_birth')
         user.name = _user.get('full_name')
         user.gender = _user.get('gender')
         user.timezone = _user.get('timezone')
@@ -570,6 +570,11 @@ class Plurk(OAuth1):
         user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
         user.country = user.country.strip()
+        
+        try:
+            user.birth_date = datetime.datetime.strptime(_user.get('date_of_birth'), "%a, %d %b %Y %H:%M:%S %Z")
+        except:
+            user.birth_date = data.get('date_of_birth')
         
         return user
 
@@ -758,7 +763,11 @@ class Yahoo(OAuth1):
         _year = _user.get('birthYear')
         
         if _date and _year:
-            user.birth_date = _date + '/' + _year
+            _full = _date + '/' + _year
+            try:
+                user.birth_date = datetime.datetime.strptime(_full, "%m/%d/%Y")
+            except:
+                user.birth_date = _full
         
         return user
 
