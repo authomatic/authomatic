@@ -39,7 +39,8 @@ class OAuth2(providers.AuthorisationProvider):
                         authorization_code='authorization_code',
                         password='password',
                         client_credentials='client_credentials',
-                        access_token='access_token')
+                        access_token='access_token',
+                        authorisation_header_bearer='Bearer')
     
     #: A scope preset to get most of the **user** info.
     #: Use it in the :doc:`config` like ``{'scope': oauth2.Facebook.user_info_scope}``.

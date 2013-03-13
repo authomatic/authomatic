@@ -506,6 +506,36 @@ class Flickr(OAuth1):
         return user
 
 
+class Meetup(OAuth1):
+    """
+    Meetup |oauth1|_ provider.
+    
+    .. note::
+        
+        Meetup also supports |oauth2| but you need the **user ID** to update the **user** info,
+        which they don't provide in the |oauth2| access token response.
+    
+    * Dashboard: http://www.meetup.com/meetup_api/oauth_consumers/
+    * Docs: http://www.meetup.com/meetup_api/auth/#oauth
+    * API: http://www.meetup.com/meetup_api/docs/
+    """
+    
+    request_token_url = 'https://api.meetup.com/oauth/request/'
+    user_authorisation_url = 'http://www.meetup.com/authorize/'
+    access_token_url = 'https://api.meetup.com/oauth/access/'
+    user_info_url = 'https://api.meetup.com/2/member/{id}'
+    
+    
+    @staticmethod
+    def _x_user_parser(user, data):
+        
+        user.id = data.get('id') or data.get('member_id')
+        user.locale = data.get('lang')
+        user.picture = data.get('photo', {}).get('photo_link')
+        
+        return user
+
+
 class Plurk(OAuth1):
     """
     Plurk |oauth1|_ provider.

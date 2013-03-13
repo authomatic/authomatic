@@ -414,6 +414,8 @@ class AuthorisationProvider(BaseProvider):
     
     BEARER = 'Bearer'
     
+    _x_term_dict = {}
+    
     # Whether to use the HTTP Authorisation header.
     _x_use_authorisation_header = True
     
@@ -596,7 +598,8 @@ class AuthorisationProvider(BaseProvider):
         # Handle token type. See: http://tools.ietf.org/html/rfc6749#section-7.1
         if credentials.token_type == cls.BEARER:
             # http://tools.ietf.org/html/rfc6750#section-2.1
-            headers.update({'Authorization': 'Bearer {}'.format(credentials.token)})
+            bearer_name = cls._x_term_dict.get('authorisation_header_bearer', 'Bearer')
+            headers.update({'Authorization': '{} {}'.format(bearer_name, credentials.token)})
         
         response = cls._fetch(*request_elements,
                               headers=headers,
