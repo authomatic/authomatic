@@ -58,6 +58,18 @@ class Login(webapp2.RequestHandler):
                 self.response.write('<h5>expiration date: {}</h5>'.format(result.user.credentials.expiration_date))
                 loop(self, result.user.credentials)
                 
+                json_input = """
+                {{"credentials": "{}",
+                "url": "http://example.com",
+                "method": "GET",
+                "params": {{"a": 1, "b": 2}},
+                "headers": {{"c": 3, "d": 4}}}}
+                """.format(result.user.credentials.serialize())
+                
+                self.response.write('<h3>JSON Request elements</h3>')
+                re = authomatic.request_elements(json_input=json_input, return_json=True)
+                self.response.write('<pre class="prettyprint">{}</pre>'.format(re))
+                
                 # refresh credentials
                 response = result.user.credentials.refresh(force=True)
                 

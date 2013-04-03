@@ -80,3 +80,7 @@ class FetchError(BaseError):
     pass
 
 
+class RequestElementsError(BaseError):
+    pass
+
+

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from authomatic.exceptions import SessionError, MiddlewareError
+from authomatic.exceptions import SessionError, MiddlewareError, \
+    CredentialsError, RequestElementsError
+from xml.etree import ElementTree
 import Cookie
 import collections
 import copy
@@ -15,7 +17,6 @@ import threading
 import time
 import urllib
 import urlparse
-from xml.etree import ElementTree
 
 # Taken from anyjson.py
 try:
@@ -1534,6 +1535,108 @@ def async_access(*args, **kwargs):
     """
     
     return Future(access, *args, **kwargs)
+
+
+def request_elements(credentials=None, url=None, method='GET', params=None,
+                     headers=None, json_input=None, return_json=False):
+    """
+    Creates request elements for accessing **protected resource of a user**.
+    Required arguments are :data:`credentials` and :data:`url`.
+    You can pass :data:`credentials`, :data:`url`, :data:`method`, :data:`params` and :data:`headers`
+    as a JSON object.
+    
+    :param credentials:
+        The **user's** credentials (can be serialized).
+        
+    :param str url:
+        The url of the protected resource.
+        
+    :param str method:
+        The HTTP method of the request.
+        
+    :param dict params:
+        Dictionary of request parameters.
+        
+    :param dict headers:
+        Dictionary of request headers
+        
+    :param str json_input:
+        you can pass :data:`credentials`, :data:`url`, :data:`method`, :data:`params` and :data:`headers`
+        in a JSON object. Values from arguments will be used for missing properties.
+        
+        ::
+            
+            {
+                "credentials": "###",
+                "url": "https://example.com/api",
+                "method": "POST",
+                "params": {
+                    "foo": "bar"
+                },
+                "headers": {
+                    "baz": "bing"
+                }
+            }
+        
+    :param bool return_json:
+        if ``True`` the function returns a json object.
+        
+        ::
+            
+            {
+                "url": "https://example.com/api",
+                "body": "access_token=###&foo=bar&...",
+                "method": "POST",
+                "headers": {
+                    "baz": "bing",
+                    "Authorisation": "Bearer ###"
+                }
+            }
+        
+    :returns:
+        ``(url, body, method, headers)`` tuple or JSON string.
+    """
+    
+    # Parse values from JSON
+    if json_input:
+        parsed_input = json.loads(json_input)
+        logging.info('JSON INPUT: {}'.format(parsed_input))
+        
+        credentials = parsed_input.get('credentials', credentials)
+        url = parsed_input.get('url', url)
+        method = parsed_input.get('method', method)
+        params = parsed_input.get('params', params)
+        headers = parsed_input.get('headers', headers)
+    
+    if not credentials and url:
+        raise RequestElementsError('To create request elements, you must provide credentials ' +\
+                                    'and url either as keyword arguments or in the JSON object!')
+    
+    # Get the provider class
+    credentials = Credentials.deserialize(credentials)
+    ProviderClass = credentials.provider_class
+    
+    # Create request elements
+    request_elements = ProviderClass.create_request_elements(ProviderClass.PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                             credentials=credentials,
+                                                             url=url,
+                                                             method=method,
+                                                             params=params,
+                                                             headers=headers)
+    
+    if return_json:
+        url, body, method, headers = request_elements
+        return json.dumps(dict(url=url,
+                               body=body,
+                               method=method,
+                               headers=headers))
+        
+    else:
+        return request_elements
+
+
+
+
 
 
 
