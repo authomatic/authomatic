@@ -220,4 +220,5 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
 # Wrap the WSGI app in middleware.
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
                             config=CONFIG,
+                            report_errors=False,
                             secret='a-long-secret-string')

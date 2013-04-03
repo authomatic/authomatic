@@ -253,13 +253,14 @@ class OAuth1(providers.AuthorisationProvider):
     #===========================================================================
     
     @classmethod
-    def _create_request_elements(cls, request_type, credentials, url, params=None,
+    def create_request_elements(cls, request_type, credentials, url, params=None, headers=None,
                                  method='GET', verifier='', callback=''):
         """
         Creates |oauth1| request elements.
         """
         
         params = params or {}
+        headers = headers or {}
         
         consumer_key = credentials.consumer_key or ''
         consumer_secret = credentials.consumer_secret or ''
@@ -331,7 +332,7 @@ class OAuth1(providers.AuthorisationProvider):
         else:
             url = url + '?' + params
         
-        return url, body, method
+        return url, body, method, headers
     
     
     #===========================================================================
@@ -375,7 +376,7 @@ class OAuth1(providers.AuthorisationProvider):
             self.credentials.token = request_token
             self.credentials.token_secret = token_secret
             
-            request_elements = self._create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
+            request_elements = self.create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
                                                              url=self.access_token_url,
                                                              credentials=self.credentials,
                                                              verifier=verifier,
@@ -414,7 +415,7 @@ class OAuth1(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Starting OAuth 1.0a authorisation procedure.')
             
             # Fetch for request token
-            request_elements = self._create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
+            request_elements = self.create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
                                                              credentials=self.credentials,
                                                              url=self.request_token_url,
                                                              callback=core.middleware.url,
@@ -455,7 +456,7 @@ class OAuth1(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Got request token and token secret')
             
             # Create User Authorization URL
-            request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
+            request_elements = self.create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                              credentials=self.credentials,
                                                              url=self.user_authorisation_url,
                                                              params=self.user_authorisation_params)

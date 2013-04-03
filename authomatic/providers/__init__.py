@@ -529,7 +529,7 @@ class AuthorisationProvider(BaseProvider):
     
     
     @abc.abstractmethod
-    def _create_request_elements(self, request_type, credentials, url, method='GET'):
+    def create_request_elements(self, request_type, credentials, url, method='GET', params=None, headers=None):
         """
         Must create a :class:`tuple` with this structure ``(url, body, method)``,
         where *url* must be the request URL without query parameters and fragment,
@@ -549,11 +549,17 @@ class AuthorisationProvider(BaseProvider):
         :param str url:
             URL of the request.
             
-        :param method:
+        :param str method:
             HTTP method of the request.
+            
+        :param dict params:
+            Dictionary of request parameters.
+            
+        :param dict headers:
+            Dictionary of request headers.
         
         :returns:
-            A ``(url, body, method)`` :class:`tuple`.
+            A ``(url, body, method, headers)`` :class:`tuple`.
         """
     
     
@@ -594,20 +600,13 @@ class AuthorisationProvider(BaseProvider):
         
         cls._log(logging.INFO, 'Accessing protected resource {}.'.format(url))
         
-        request_elements = cls._create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
+        request_elements = cls.create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                         credentials=credentials,
                                                         url=url,
                                                         params=params,
                                                         method=method)
         
-        # Handle token type. See: http://tools.ietf.org/html/rfc6749#section-7.1
-        if credentials.token_type == cls.BEARER:
-            # http://tools.ietf.org/html/rfc6750#section-2.1
-            bearer_name = cls._x_term_dict.get('authorisation_header_bearer', 'Bearer')
-            headers.update({'Authorization': '{} {}'.format(bearer_name, credentials.token)})
-        
         response = cls._fetch(*request_elements,
-                              headers=headers,
                               max_redirects=max_redirects,
                               content_parser=content_parser)
         

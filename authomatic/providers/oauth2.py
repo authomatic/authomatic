@@ -100,12 +100,13 @@ class OAuth2(providers.AuthorisationProvider):
     
     
     @classmethod
-    def _create_request_elements(cls, request_type, credentials, url, params=None,
-                                 method='GET', redirect_uri='', scope='', csrf=''):
+    def create_request_elements(cls, request_type, credentials, url, method='GET', params=None, headers=None,
+                                 redirect_uri='', scope='', csrf=''):
         """
         Creates |oauth2| request elements.
         """
         
+        headers = headers or {}
         params = params or {}
         
         consumer_key = credentials.consumer_key or ''
@@ -127,6 +128,9 @@ class OAuth2(providers.AuthorisationProvider):
                 params['scope'] = scope
                 params['state'] = csrf or cls.csrf_generator()
                 params['response_type'] = 'code'
+                
+                # Add authorisation header
+                headers.update(cls._authorisation_header(credentials))
             else:
                 raise OAuth2Error('Credentials with valid consumer_key and arguments redirect_uri, scope and ' + \
                                   'state are required to create OAuth 2.0 user authorisation request elements!')
@@ -156,8 +160,13 @@ class OAuth2(providers.AuthorisationProvider):
         
         elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             # Protected resource request.
+            
+            # Add Authorisation header. See: http://tools.ietf.org/html/rfc6749#section-7.1
             if credentials.token_type == cls.BEARER:
-                pass
+                # http://tools.ietf.org/html/rfc6750#section-2.1
+                bearer_name = cls._x_term_dict.get('authorisation_header_bearer', 'Bearer')
+                headers.update({'Authorization': '{} {}'.format(bearer_name, credentials.token)})
+                
             elif token:
                 params[cls._x_term_dict['access_token']] = token
             else:
@@ -175,7 +184,7 @@ class OAuth2(providers.AuthorisationProvider):
             # Send params as query string
             url = url + '?' + params
         
-        return url, body, method
+        return url, body, method, headers
     
     
     @staticmethod
@@ -241,14 +250,13 @@ class OAuth2(providers.AuthorisationProvider):
         credentials.consumer_key = cfg.get('consumer_key')
         credentials.consumer_secret = cfg.get('consumer_secret')
         
-        request_elements = cls._create_request_elements(request_type=cls.REFRESH_TOKEN_REQUEST_TYPE,
+        request_elements = cls.create_request_elements(request_type=cls.REFRESH_TOKEN_REQUEST_TYPE,
                                                         credentials=credentials,
                                                         url=cls.access_token_url,
                                                         method='POST')
         
         cls._log(logging.INFO, 'Refreshing credentials.')
-        response = cls._fetch(*request_elements,
-                              headers=cls._authorisation_header(credentials))
+        response = cls._fetch(*request_elements)
         
         # We no longer need consumer info.
         credentials.consumer_key = None
@@ -317,18 +325,18 @@ class OAuth2(providers.AuthorisationProvider):
             
             self.credentials.token = authorisation_code
             
-            request_elements = self._create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
+            request_elements = self.create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
                                                              credentials=self.credentials,
                                                              url=self.access_token_url,
                                                              method='POST',
                                                              redirect_uri=core.middleware.url,
-                                                             params=self.access_token_params)
+                                                             params=self.access_token_params,
+                                                             headers=self.access_token_headers)
             
             # Add Authorisation headers.
-            self.access_token_headers.update(self._authorisation_header(self.credentials))
+#            self.access_token_headers.update(self._authorisation_header(self.credentials))
             
-            response = self._fetch(*request_elements,
-                                   headers=self.access_token_headers)
+            response = self._fetch(*request_elements)
             
             access_token = response.data.get('access_token', '')
             refresh_token = response.data.get('refresh_token', '')
@@ -393,7 +401,7 @@ class OAuth2(providers.AuthorisationProvider):
             else:
                 self._log(logging.WARN, 'Provider doesn\'t support CSRF validation!')
                         
-            request_elements = self._create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
+            request_elements = self.create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                             credentials=self.credentials,
                                                             url=self.user_authorisation_url,
                                                             redirect_uri=core.middleware.url,
