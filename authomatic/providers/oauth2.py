@@ -7,10 +7,23 @@ Providers which implement the |oauth2|_ protocol.
 
 .. autosummary::
     
-    Facebook
-    Google
-    WindowsLive
     OAuth2
+    Behance
+    Bitly
+    Cosm
+    DeviantART
+    Facebook
+    Foursquare
+    GitHub
+    Google
+    LinkedIn
+    PayPal
+    Reddit
+    Viadeo
+    VK
+    WindowsLive
+    Yammer
+    Yandex
     
 """
 
@@ -19,13 +32,12 @@ from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 from urllib import urlencode
 import authomatic.core as core
 import authomatic.settings as settings
-import base64
 import datetime
 import logging
 
 
-__all__ = ['OAuth2', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'GitHub',
-           'Google', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive']
+__all__ = ['OAuth2', 'Behance', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'GitHub',
+           'Google', 'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive', 'Yammer', 'Yandex']
 
 
 class OAuth2(providers.AuthorisationProvider):
@@ -203,10 +215,10 @@ class OAuth2(providers.AuthorisationProvider):
         return core.Credentials(token=token,
                                 refresh_token=refresh_token,
                                 provider_type=cls.get_type(),
-                                provider_id=provider_id,
+                                provider_id=int(provider_id),
                                 expiration_time=expiration_time,
                                 provider_class=cls,
-                                token_type=cls.TOKEN_TYPES[token_type])
+                                token_type=cls.TOKEN_TYPES[int(token_type)])
     
     
     @classmethod
@@ -396,7 +408,7 @@ class OAuth2(providers.AuthorisationProvider):
 
 class Behance(OAuth2):
     """
-    Behance |oauth2|_ provider.
+    Behance |oauth2| provider.
     
     * Dashboard: http://www.behance.net/dev/apps
     * Docs: http://www.behance.net/dev/authentication
@@ -429,7 +441,7 @@ class Behance(OAuth2):
 
 class Bitly(OAuth2):
     """
-    Bitly |oauth2|_ provider.
+    Bitly |oauth2| provider.
     
     .. warning::
         
@@ -469,7 +481,7 @@ class Bitly(OAuth2):
 
 class Cosm(OAuth2):
     """
-    Cosm |oauth2|_ provider.
+    Cosm |oauth2| provider.
     
     .. note::
         
@@ -492,7 +504,7 @@ class Cosm(OAuth2):
 
 class DeviantART(OAuth2):
     """
-    DeviantART |oauth2|_ provider.
+    DeviantART |oauth2| provider.
     
     * Dashboard: https://www.deviantart.com/settings/myapps
     * Docs: http://www.deviantart.com/developers/oauth2
@@ -519,7 +531,7 @@ class DeviantART(OAuth2):
 
 class Facebook(OAuth2):
     """
-    Facebook |oauth2|_ provider.
+    Facebook |oauth2| provider.
     
     * Dashboard: https://developers.facebook.com/apps
     * Docs: http://developers.facebook.com/docs/howtos/login/server-side-login/
@@ -574,7 +586,7 @@ class Facebook(OAuth2):
 
 class Foursquare(OAuth2):
     """
-    Foursquare |oauth2|_ provider.
+    Foursquare |oauth2| provider.
     
     * Dashboard: https://foursquare.com/developers/apps
     * Docs: https://developer.foursquare.com/overview/auth.html
@@ -612,7 +624,7 @@ class Foursquare(OAuth2):
 
 class GitHub(OAuth2):
     """
-    GitHub |oauth2|_ provider.
+    GitHub |oauth2| provider.
     
     * Dashboard: https://github.com/settings/applications/
     * Docs: http://developer.github.com/v3/#authentication
@@ -634,7 +646,7 @@ class GitHub(OAuth2):
 
 class Google(OAuth2):
     """
-    Google |oauth2|_ provider.
+    Google |oauth2| provider.
     
     * Dashboard: https://code.google.com/apis/console/
     * Docs: https://developers.google.com/accounts/docs/OAuth2
@@ -680,7 +692,7 @@ class Google(OAuth2):
 # TODO:
 class Instagram(OAuth2):
     """
-    Instagram |oauth2|_ provider.
+    Instagram |oauth2| provider.
     
     * Dashboard: 
     * Docs: http://instagram.com/developer/authentication/
@@ -698,7 +710,7 @@ class Instagram(OAuth2):
 
 class LinkedIn(OAuth2):
     """
-    Linked In |oauth2|_ provider.
+    Linked In |oauth2| provider.
     
     .. note::
         
@@ -737,7 +749,7 @@ class LinkedIn(OAuth2):
 
 class PayPal(OAuth2):
     """
-    PayPal |oauth2|_ provider.
+    PayPal |oauth2| provider.
     
     .. warning::
         
@@ -759,7 +771,7 @@ class PayPal(OAuth2):
 
 class Reddit(OAuth2):
     """
-    Reddit |oauth2|_ provider.
+    Reddit |oauth2| provider.
     
     .. note::
         
@@ -794,7 +806,7 @@ class Reddit(OAuth2):
 
 class Viadeo(OAuth2):
     """
-    Viadeo |oauth2|_ provider.
+    Viadeo |oauth2| provider.
     
     * Dashboard: http://dev.viadeo.com/dashboard/
     * Docs: http://dev.viadeo.com/documentation/authentication/oauth-authentication/
@@ -804,7 +816,7 @@ class Viadeo(OAuth2):
         
         Viadeo doesn't support **credentials refreshment**.
         As stated in their `docs <http://dev.viadeo.com/documentation/authentication/oauth-authentication/>`_:
-            "The access token has an infinite time to live."
+        "The access token has an infinite time to live."
     
     """
     
@@ -843,7 +855,7 @@ class Viadeo(OAuth2):
 
 class VK(OAuth2):
     """
-    VK.com |oauth2|_ provider.
+    VK.com |oauth2| provider.
     
     * Dashboard: Could not find any. You must do it like this: http://vk.com/editapp?id={consumer_key}
     * Docs: http://vk.com/developers.php?oid=-17680044&p=Authorizing_Sites
@@ -882,7 +894,7 @@ class VK(OAuth2):
 
 class WindowsLive(OAuth2):
     """
-    Windows Live |oauth2|_ provider.
+    Windows Live |oauth2| provider.
     
     * Dashboard: https://manage.dev.live.com/Applications/Index
     * Docs: http://msdn.microsoft.com/en-us/library/live/hh826528.aspx
@@ -919,7 +931,7 @@ class WindowsLive(OAuth2):
 
 class Yammer(OAuth2):
     """
-    Yammer |oauth2|_ provider.
+    Yammer |oauth2| provider.
     
     .. warning::
         
@@ -978,7 +990,7 @@ class Yammer(OAuth2):
 
 class Yandex(OAuth2):
     """
-    Yandex |oauth2|_ provider.
+    Yandex |oauth2| provider.
     
     * Dashboard: https://oauth.yandex.com/client/my
     * Docs: http://api.yandex.com/oauth/doc/dg/reference/obtain-access-token.xml

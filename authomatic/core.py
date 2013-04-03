@@ -1161,6 +1161,27 @@ class Credentials(ReprMixin):
         
         return deserialized
 
+_JS_CALLBACK_HTML = """
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+</head>
+<body>
+<script type="text/javascript">
+{user}
+{error}
+var result = {{}};
+result.user = user;
+result.error = error;
+result.provider_name = "{provider_name}";
+{custom}
+window.opener.{callback}(result);
+window.close();
+</script>
+</body>
+</html>
+"""
 
 class LoginResult(ReprMixin):
     """
@@ -1173,6 +1194,54 @@ class LoginResult(ReprMixin):
         
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = None
+    
+    def js_callback(self, callback, **kwargs):
+        """
+        Returns HTML with javascript that calls the specified javascript callback
+        on the opener of the login handler with a ``result`` object passed to it
+        and subsequently closes itself.
+        
+        :param str callback:
+            The name of the javascript callback.
+            
+        :param **kwargs:
+            Additional keyword arguments will be added as properties to the javascript result object.
+        
+        :returns:
+            HTML with javascript that calls the calback on the opener and closes itself.
+        """
+        
+        # User
+        if self.user:
+            user = 'var user = {};\n'
+            for k, v in self.user.__dict__.items():
+                if not k in ('gae_user', 'provider', 'credentials', 'data', 'content'):
+                    user += 'user.{} = "{}";\n'.format(k, v or '')
+            
+            user += 'user.content = {};\n'.format(self.user.content or '{}')
+            user += 'user.credentials = "{}";\n'.format(self.user.credentials.serialize() if self.user.credentials else '')
+        else:
+            user = 'var user = null;\n'
+        
+        # Error
+        if self.error:
+            error = 'var error = {};\n'
+            for k, v in self.error.__dict__.items():
+                error += 'error.{} = "{}";\n'.format(k, v or '')
+        else:
+            error = 'var error = null;\n'
+        
+        # Custom properties
+        custom = ''
+        for k, v in kwargs.items():
+            v = 'null' if v is None else v
+            custom += 'result.{} = {};\n'.format(k, v)
+        
+        return _JS_CALLBACK_HTML.format(user=user,
+                                        error=error,
+                                        provider_name=self.provider.name,
+                                        custom=custom,
+                                        callback=callback)
     
     @property
     def user(self):
@@ -1465,8 +1534,6 @@ def async_access(*args, **kwargs):
     """
     
     return Future(access, *args, **kwargs)
-    
-
 
 
 

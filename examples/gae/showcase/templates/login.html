@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+	<title>{{ provider_name }}</title>
+</head>
+<body>
+	<script type="text/javascript">
+	
+		var user = null;
+	{% if result.user %}
+		user = {};
+		user.content = {{ result.user.content or 'null' }};
+		user.id = '{{ result.user.id or '' }}';
+		user.username = '{{ result.user.username or '' }}';
+		user.name = '{{ result.user.name or '' }}';
+		user.firstName = '{{ result.user.first_name or '' }}';
+		user.lastName = '{{ result.user.last_name or '' }}';
+		user.nickname = '{{ result.user.nickname or '' }}';
+		user.link = '{{ result.user.link or '' }}';
+		user.gender = '{{ result.user.gender or '' }}';
+		user.timezone = '{{ result.user.timezone or '' }}';
+		user.locale = '{{ result.user.locale or '' }}';
+		user.email = '{{ result.user.email or '' }}';
+		user.phone = '{{ result.user.phone or '' }}';
+		user.picture = '{{ result.user.picture or '' }}';
+		user.birthDate = '{{ result.user.birth_date or '' }}';
+		user.country = '{{ result.user.country or '' }}';
+		user.city = '{{ result.user.city or '' }}';
+		user.postalCode = '{{ result.user.postal_code or '' }}';
+	{% endif %}
+	
+		var error = null;
+	{% if result.error %}
+		error = {};
+		error.message = '{{ result.error.message or '' }}';
+		error.originalMessage = '{{ result.error.original_message or '' }}';
+		error.url = '{{ result.error.url or '' }}';
+		error.status = {{ result.error.status or 'null' }};
+	{% endif %}
+		
+		var result = {};
+		result.user = user;
+		result.error = error;
+		
+		window.opener.loginCallback(result);
+		window.close();
+	</script>
+</body>
+</html>

@@ -3,18 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Authomatic is a ...
-
-Table Of Contents
-=================
-
 .. toctree::
+   :hidden:
    
+   self
    reference/index
    examples/index
 
-Basic Usage
-===========
+
+
+Usage
+=====
 
 It's very simple. You only need to do these three steps to have the **user** logged in:
 
@@ -129,7 +128,8 @@ It would be useles if they could not be deserialized back to original.
 
 .. note::
    
-   The deserialization is dependent on the :doc:`reference/config` used when they have been serialized.
+   The deserialization of the credentials is dependent on the :doc:`reference/config`
+   used when the credentials have been serialized.
    You can deserialize them in a different application as long as you wrapp it in the
    :func:`authomatic.middleware` with the same :doc:`reference/config`.
 
@@ -161,7 +161,7 @@ If they are not valid anymore you must call the :func:`authomatic.login` functio
 ::
    
    if credentials.expire_soon():
-      response = credentials.refresh():
+      response = credentials.refresh()
       if response and response.status == 200:
          print 'Credentials have been refreshed succesfully.'
 
@@ -273,7 +273,7 @@ You guessed it didn't you? There is one in the :mod:`authomatic.extras.gae` modu
                                    session=session,
                                    session_save_method=session.save)
 
-If you are allready using a |webapp2| session you can do it like this:
+If you are allready using a |webapp2| session you can do it like this: 
 
 ::
    

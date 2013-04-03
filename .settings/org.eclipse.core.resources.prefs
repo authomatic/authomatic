@@ -12,5 +12,6 @@ encoding//authomatic/providers/oauth1.py=utf-8
 encoding//authomatic/providers/oauth2.py=utf-8
 encoding//authomatic/providers/openid.py=utf-8
 encoding//authomatic/settings.py=utf-8
+encoding//doc/source/_themes/foundation_sphinx_theme/sample_project/source/conf.py=utf-8
 encoding//doc/source/conf.py=utf-8
 encoding//examples/gae/dev/main.py=utf-8

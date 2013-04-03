@@ -412,6 +412,8 @@ class OpenID(providers.AuthenticationProvider):
                 self._log(logging.INFO, 'Writing an auto-submit HTML form to the response.')
                 form = auth_request.htmlMarkup(realm, return_to, False, dict(id='openid_form'))
                 core.middleware.write(form)
+        else:
+            raise OpenIDError('No identifier specified!')
 
 
 

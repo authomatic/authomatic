@@ -116,7 +116,7 @@ class BaseProvider(object):
     
     __metaclass__ = abc.ABCMeta
     
-    def __init__(self, provider_name, callback=None,
+    def __init__(self, provider_name, callback=None, js_callback=None,
                  prefix='authomatic', **kwargs):
         
         #: :class:`str` The provider name as specified in the :doc:`config`.
@@ -125,6 +125,9 @@ class BaseProvider(object):
         #: :class:`callable` An optional callback called when the login procedure
         #: is finished with :class:`.core.LoginResult` passed as argument.
         self.callback = callback
+        
+        #: :class:`str` Name of an optional javascript callback.
+        self.js_callback = js_callback
                 
         #: :class:`.core.User`.
         self.user = None

@@ -7,8 +7,17 @@ Providers which implement the |oauth1|_ protocol.
 
 .. autosummary::
     
-    Twitter
     OAuth1
+    Bitbucket
+    Flickr
+    Meetup
+    Plurk
+    Twitter
+    Tumblr
+    UbuntuOne
+    Vimeo
+    Xero
+    Yahoo
     
 """
 
@@ -27,7 +36,8 @@ import urllib
 import urlparse
 
 
-__all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Twitter']
+__all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Meetup', 'Plurk', 'Twitter', 'Tumblr', 'UbuntuOne',
+           'Vimeo', 'Xero', 'Yahoo']
 
 
 def _normalize_params(params):
@@ -457,7 +467,7 @@ class OAuth1(providers.AuthorisationProvider):
 
 class Bitbucket(OAuth1):
     """
-    Bitbucket |oauth1|_ provider.
+    Bitbucket |oauth1| provider.
     
     * Dashboard: https://bitbucket.org/account/user/peterhudec/api
     * Docs: https://confluence.atlassian.com/display/BITBUCKET/oauth+Endpoint
@@ -483,7 +493,7 @@ class Bitbucket(OAuth1):
 
 class Flickr(OAuth1):
     """
-    Flickr |oauth1|_ provider.
+    Flickr |oauth1| provider.
     
     * Dashboard: https://www.flickr.com/services/apps/
     * Docs: https://www.flickr.com/services/api/auth.oauth.html
@@ -509,7 +519,7 @@ class Flickr(OAuth1):
 
 class Meetup(OAuth1):
     """
-    Meetup |oauth1|_ provider.
+    Meetup |oauth1| provider.
     
     .. note::
         
@@ -539,7 +549,7 @@ class Meetup(OAuth1):
 
 class Plurk(OAuth1):
     """
-    Plurk |oauth1|_ provider.
+    Plurk |oauth1| provider.
     
     * Dashboard: http://www.plurk.com/PlurkApp/
     * Docs: 
@@ -581,7 +591,7 @@ class Plurk(OAuth1):
 
 class Twitter(OAuth1):
     """
-    Twitter |oauth1|_ provider.
+    Twitter |oauth1| provider.
     
     * Dashboard: https://dev.twitter.com/apps
     * Docs: https://dev.twitter.com/docs
@@ -604,7 +614,7 @@ class Twitter(OAuth1):
 
 class Tumblr(OAuth1):
     """
-    Tumblr |oauth1|_ provider.
+    Tumblr |oauth1| provider.
     
     * Dashboard: http://www.tumblr.com/oauth/apps
     * Docs: http://www.tumblr.com/docs/en/api/v2#auth
@@ -633,7 +643,7 @@ class Tumblr(OAuth1):
 
 class UbuntuOne(OAuth1):
     """
-    Ubuntu One |oauth1|_ provider.
+    Ubuntu One |oauth1| provider.
     
     .. warning::
         
@@ -654,7 +664,7 @@ class UbuntuOne(OAuth1):
 
 class Vimeo(OAuth1):
     """
-    Vimeo |oauth1|_ provider.
+    Vimeo |oauth1| provider.
     
     .. warning::
         
@@ -695,7 +705,7 @@ class Vimeo(OAuth1):
 
 class Xero(OAuth1):
     """
-    Xero |oauth1|_ provider.
+    Xero |oauth1| provider.
     
     .. note::
         
@@ -729,7 +739,7 @@ class Xero(OAuth1):
 
 class Yahoo(OAuth1):
     """
-    Yahoo |oauth1|_ provider.
+    Yahoo |oauth1| provider.
     
     * Dashboard: https://developer.apps.yahoo.com/dashboard/
     * Docs: http://developer.yahoo.com/oauth/guide/oauth-auth-flow.html
