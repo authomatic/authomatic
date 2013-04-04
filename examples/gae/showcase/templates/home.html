@@ -27,9 +27,9 @@
 {% endmacro %}
 
 {% block scripts %}
-<!--
-<script id="prettify" src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=desert"></script>
--->
+
+<script type="text/javascript" src="static/js/authomatic.js"></script>
+
 {% endblock %}
 
 {% block body %}
@@ -124,6 +124,7 @@
 {% block script %}
 <script type="text/javascript">
 	
+	/*
 	(function($){
 		window.authomatic = {};
 		window.authomatic.popup = {};
@@ -160,8 +161,11 @@
 	
 	authomatic.popup.width = 1000;
 	authomatic.popup.height = 600;
+	*/
 	
 	$(document).ready(function (e) {
+		
+		$().authomatic.popup();
 		
 		// disable empty form
 		

@@ -112,6 +112,8 @@ class BaseProvider(object):
     Abstract base class for all providers.
     """
     
+    PROVIDER_TYPE_ID = 0
+    
     _repr_ignore = ('user',)
     
     __metaclass__ = abc.ABCMeta
@@ -177,6 +179,20 @@ class BaseProvider(object):
     #===========================================================================
     # Internal methods
     #===========================================================================
+    
+    @property
+    def type_id(self):
+        """
+        A :class:`float` reprezenting the provider implementation id used for
+        serialization of :class:`.Credentials` and to identify the type of provider in JavaScript.
+        The part before period denotes the type of the provider, the part after period denotes the class id
+        e.g. ``oauth2.Facebook.type_id = 2.5``, ``oauth1.Twitter.type_id = 1.5``.
+        """
+        
+        cls = self.__class__
+        mod = sys.modules.get(cls.__module__)
+        return self.PROVIDER_TYPE_ID + float(mod.PROVIDER_ID_MAP.index(cls)) / 10
+    
     
     def _kwarg(self, kwargs, kwname, default=None):
         """
@@ -446,16 +462,16 @@ class AuthorisationProvider(BaseProvider):
         
         self.consumer_key = self._kwarg(kwargs, 'consumer_key')
         self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
-        self.id = int(self._kwarg(kwargs, 'id', 0))
         
         self.user_authorisation_params = self._kwarg(kwargs, 'user_authorisation_params', {})
         self.access_token_headers = self._kwarg(kwargs, 'user_authorisation_headers', {})
         
         self.access_token_params = self._kwarg(kwargs, 'access_token_params', {})
         
+        self.id = self._kwarg(kwargs, 'id')
+        
         #: :class:`.Credentials` to access **user's protected resources**.
         self.credentials = authomatic.core.Credentials(provider=self)
-    
     
     #===========================================================================
     # Abstract properties
@@ -511,7 +527,7 @@ class AuthorisationProvider(BaseProvider):
     
     
     @abc.abstractmethod
-    def reconstruct(self, deserialized_tuple, cfg):
+    def reconstruct(self, deserialized_tuple, credentials, cfg):
         """
         Must convert the :data:`deserialized_tuple` back to :class:`.Credentials`.
         
@@ -522,9 +538,12 @@ class AuthorisationProvider(BaseProvider):
         :param tuple deserialized_tuple:
             A tuple whose first index is the :attr:`.id` and the rest
             are all the items of the :class:`tuple` created by :meth:`.to_tuple`.
+        
+        :param credentials:
+            A :class:`.Credentials` instance.
             
         :param dict cfg:
-            :doc:`config`
+            Provider configuration from :doc:`config`. 
         """
     
     
@@ -781,7 +800,8 @@ class AuthenticationProvider(BaseProvider):
         # Get the identifier from request params.
         self.identifier = authomatic.core.middleware.params.get(self.identifier_param)
         
-        
+
+PROVIDER_ID_MAP = [BaseProvider, AuthorisationProvider, AuthenticationProvider]
         
 
 

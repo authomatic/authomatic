@@ -40,6 +40,7 @@ __all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Meetup', 'Plurk', 'Twitter', 'Tumbl
            'Vimeo', 'Xero', 'Yahoo']
 
 
+
 def _normalize_params(params):
     """
     Returns a normalized query string sorted first by key, then by value
@@ -206,6 +207,7 @@ class OAuth1(providers.AuthorisationProvider):
     
     _signature_generator = HMACSHA1SignatureGenerator
     
+    PROVIDER_TYPE_ID = 1
     REQUEST_TOKEN_REQUEST_TYPE = 1
     
     def __init__(self, *args, **kwargs):
@@ -339,21 +341,23 @@ class OAuth1(providers.AuthorisationProvider):
     # Exposed methods
     #===========================================================================
     
+    
     @staticmethod
     def to_tuple(credentials):
         return (credentials.token, credentials.token_secret)
     
     
     @classmethod
-    def reconstruct(cls, deserialized_tuple, cfg):
-        provider_id, token, token_secret = deserialized_tuple
+    def reconstruct(cls, deserialized_tuple, credentials, cfg):
         
-        return core.Credentials(token=token,
-                                       token_secret=token_secret,
-                                       provider_type=cls.get_type(),
-                                       provider_id=provider_id,
-                                       consumer_key=cfg.get('consumer_key', ''),
-                                       consumer_secret=cfg.get('consumer_secret', ''))
+        token, token_secret = deserialized_tuple
+        
+        credentials.token = token
+        credentials.token_secret = token_secret
+        credentials.consumer_key = cfg.get('consumer_key', '')
+        credentials.consumer_secret = cfg.get('consumer_secret', '')
+        
+        return credentials
     
     
     @providers.login_decorator
@@ -782,6 +786,10 @@ class Yahoo(OAuth1):
         
         return user
 
+
+# The provider type ID is generated from this list's indexes!
+# Allways apppend new providers at the end so that ids of existing providers dont change!
+PROVIDER_ID_MAP = [OAuth1, Bitbucket, Flickr, Meetup, Plurk, Twitter, Tumblr, UbuntuOne, Vimeo, Xero, Yahoo]
 
 
 

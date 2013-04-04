@@ -948,8 +948,11 @@ class Credentials(ReprMixin):
             #: :class:`str` Provider type e.g. ``"authomatic.providers.oauth2.OAuth2"``.
             self.provider_type = provider.get_type()
             
+            #: :class:`str` Provider type e.g. ``"authomatic.providers.oauth2.OAuth2"``.
+            self.provider_type_id = provider.type_id
+            
             #: :class:`str` Provider short name specified in the :doc:`config`.
-            self.provider_id = int(provider.id)            
+            self.provider_id = int(provider.id)
             
             #: :class:`class` Provider class.
             self.provider_class = provider.__class__
@@ -963,7 +966,8 @@ class Credentials(ReprMixin):
         else:
             self.provider_name = kwargs.get('provider_name', '')
             self.provider_type = kwargs.get('provider_type', '')
-            self.provider_id = int(kwargs.get('provider_id'))
+            self.provider_type_id = kwargs.get('provider_type_id')
+            self.provider_id = kwargs.get('provider_id')
             self.provider_class = kwargs.get('provider_class')
             
             self.consumer_key = kwargs.get('consumer_key', '')
@@ -1099,17 +1103,15 @@ class Credentials(ReprMixin):
             :class:`string`
         """
         
-        # Short_name must be the first item in the tuple by all providers.
-        short_name = self.provider_id
-        # It always must be present!
-        if short_name is None:
-            raise exceptions.ConfigError('The provider config must have a "id" key set to a unique value to be able to serialize credentials!')
+        if self.provider_id is None:
+            raise exceptions.ConfigError('To serialize credentials you need to specify a unique ' + \
+                                         'integer under the "id" key in the config for each provider!')
         
-        # Get the remaining items for the tuple.
+        # Get the provider type specific items.
         rest = self.provider_type_class().to_tuple(self)
         
-        # Put it together.
-        result = (short_name, ) + rest
+        # Provider ID and provider type ID are allways the first two items.
+        result = (self.provider_id, self.provider_type_id) + rest
         
         # Make sure that all items are strings.
         stringified = [str(i) for i in result]
@@ -1144,23 +1146,32 @@ class Credentials(ReprMixin):
         
         split = decoded.split('\n')
         
-        # We need the short name to move forward.
-        short_name = int(split[0])
+        # We need the provider ID to move forward.
+        if split[0] is None:
+            raise CredentialsError('To deserialize credentials you need to specify a unique ' + \
+                                   'integer under the "id" key in the config for each provider!')
+            
+        provider_id = int(split[0])
         
         # Get provider config by short name.
-        provider_name = id_to_name(settings.config, short_name)
+        provider_name = id_to_name(settings.config, provider_id)
         cfg = settings.config.get(provider_name)
         
         # Get the provider class.
         ProviderClass = resolve_provider_class(cfg.get('class_'))
         
-        # Deserialization is provider specific.
-        deserialized = ProviderClass.reconstruct(split, cfg)
+        deserialized = Credentials()
         
+        deserialized.provider_id = provider_id
+        deserialized.provider_type = ProviderClass.get_type()
+        deserialized.provider_type_id = float(split[1])
+        deserialized.provider_class = ProviderClass
         deserialized.provider_name = provider_name
         deserialized.provider_class = ProviderClass
         
-        return deserialized
+        # Add provider type specific properties is provider specific.
+        return ProviderClass.reconstruct(split[2:], deserialized, cfg)
+
 
 _JS_CALLBACK_HTML = """
 <!DOCTYPE html>

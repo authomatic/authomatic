@@ -45,6 +45,7 @@ class OAuth2(providers.AuthorisationProvider):
     Base class for |oauth2|_ providers.
     """
     
+    PROVIDER_TYPE_ID = 2
     TOKEN_TYPES = ['', 'Bearer']
     
     # This is for providers who like to invent their own terminology. There is plenty of them!
@@ -219,15 +220,16 @@ class OAuth2(providers.AuthorisationProvider):
     
     
     @classmethod
-    def reconstruct(cls, deserialized_tuple, cfg):
-        provider_id, token, refresh_token, expiration_time, token_type = deserialized_tuple
-        return core.Credentials(token=token,
-                                refresh_token=refresh_token,
-                                provider_type=cls.get_type(),
-                                provider_id=int(provider_id),
-                                expiration_time=expiration_time,
-                                provider_class=cls,
-                                token_type=cls.TOKEN_TYPES[int(token_type)])
+    def reconstruct(cls, deserialized_tuple, credentials, cfg):
+        
+        token, refresh_token, expiration_time, token_type = deserialized_tuple
+        
+        credentials.token = token
+        credentials.refresh_token = refresh_token
+        credentials.expiration_time = expiration_time
+        credentials.token_type=cls.TOKEN_TYPES[int(token_type)]
+        
+        return credentials
     
     
     @classmethod
@@ -695,25 +697,6 @@ class Google(OAuth2):
         Google has space-separated scopes
         """
         return ' '.join(scope)
-    
-
-# TODO:
-class Instagram(OAuth2):
-    """
-    Instagram |oauth2| provider.
-    
-    * Dashboard: 
-    * Docs: http://instagram.com/developer/authentication/
-    * API reference: http://instagram.com/developer/api-console/
-    """
-    
-    user_authorisation_url = 'https://api.instagram.com/oauth/authorize'
-    access_token_url = 'https://api.instagram.com/oauth/access_token'
-    user_info_url = 'https://api.instagram.com/v1/users/self'
-    
-    @staticmethod
-    def _x_user_parser(user, data):
-        return user
 
 
 class LinkedIn(OAuth2):
@@ -1033,7 +1016,10 @@ class Yandex(OAuth2):
         return user
 
 
-
+# The provider type ID is generated from this list's indexes!
+# Allways apppend new providers at the end so that ids of existing providers dont change!
+PROVIDER_ID_MAP = [OAuth2, Behance, Bitly, Cosm, DeviantART, Facebook, Foursquare, GitHub, Google, LinkedIn,
+          PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex]
 
 
 
