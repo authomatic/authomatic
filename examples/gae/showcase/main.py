@@ -56,8 +56,18 @@ class Action(BaseHandler):
             self.response.write(response.content)
 
 
+class JSON(BaseHandler):
+    def get(self):
+        self.response.write('<h1>JSON endpoint start</h1>')
+        
+        authomatic.json_endpoint()
+        
+        self.response.write('<h1>JSON endpoint end</h1>')
+
+
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/action', Action),
+          webapp2.Route(r'/json', JSON),
           webapp2.Route(r'/', Home)]
 
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),

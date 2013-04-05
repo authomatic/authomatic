@@ -593,7 +593,7 @@ class Middleware(object):
         """
         
         self.app = app
-        self.pending = False
+        self.block = False
         
         # Set global settings.
         settings.config = config
@@ -640,8 +640,8 @@ class Middleware(object):
         # Call the wrapped WSGI app and store it's output for later.
         app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
         
-        if self.pending:
-            # This middleware intercepts only if the login procedure is pending.
+        if self.block:
+            # This middleware intercepts only if the login procedure is block.
             if not isinstance(self.session, Session):
                 # We must use the "Set-Cookie" header of the wrapped app
                 # if custom session was specified.
@@ -1251,7 +1251,7 @@ class LoginResult(ReprMixin):
         
         return _JS_CALLBACK_HTML.format(user=user,
                                         error=error,
-                                        provider_name=self.provider.name,
+                                        provider_name=self.provider.name if self.provider else '',
                                         custom=custom,
                                         callback=callback)
     
@@ -1261,7 +1261,7 @@ class LoginResult(ReprMixin):
         A :class:`.User` instance.
         """
         
-        return self.provider.user
+        return self.provider.user if self.provider else None
     
     @property
     def pending(self):
@@ -1269,7 +1269,7 @@ class LoginResult(ReprMixin):
         ``False`` if the *login procedure* has finished, ``True`` if still pending.
         """
         
-        return middleware.pending
+        return middleware.block
 
 
 class Response(ReprMixin):
@@ -1430,7 +1430,11 @@ def setup_middleware(*args, **kwargs):
 
 def login(provider_name, callback=None, session=None, session_save_method=None, **kwargs):
     """
-    Launches a login procedure for specified :doc:`provider </reference/providers>` and returns :class:`.LoginResult`.
+    If :data:`provider_name` specified, launches the login procedure
+    for coresponding :doc:`provider </reference/providers>` and
+    returns :class:`.LoginResult`.
+    
+    If :data:`provider_name` is empty, acts like :func:`.json_endpoint`.
     
     .. warning::
         
@@ -1454,29 +1458,34 @@ def login(provider_name, callback=None, session=None, session_save_method=None, 
         :class:`.LoginResult`
     """
     
-    # Handle custom session.
-    middleware.set_session(session, session_save_method)
+    if provider_name:
+        # Handle custom session.
+        middleware.set_session(session, session_save_method)
+        
+        # Inform middleware that the login procedure started.
+        middleware.block = True
+        
+        # retrieve required settings for current provider and raise exceptions if missing
+        provider_settings = settings.config.get(provider_name)
+        if not provider_settings:
+            raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
+        
+        # Resolve provider class.
+        class_ = provider_settings.get('class_')
+        if not class_:
+            raise exceptions.ConfigError('The "class_" key not specified in the config for provider {}!'.format(provider_name))
+        ProviderClass = resolve_provider_class(class_)
+        
+        # instantiate provider class
+        provider = ProviderClass(provider_name, callback, **kwargs)
+        
+        # return login result
+        return provider.login()
     
-    # Inform middleware that the login procedure started.
-    middleware.pending = True
-    
-    # retrieve required settings for current provider and raise exceptions if missing
-    provider_settings = settings.config.get(provider_name)
-    if not provider_settings:
-        pass
-        raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
-    
-    # Resolve provider class.
-    class_ = provider_settings.get('class_')
-    if not class_:
-        raise exceptions.ConfigError('The "class_" key not specified in the config for provider {}!'.format(provider_name))
-    ProviderClass = resolve_provider_class(class_)
-    
-    # instantiate provider class
-    provider = ProviderClass(provider_name, callback, **kwargs)
-    
-    # return login result
-    return provider.login()
+    else:
+        # Act like JSON endpoint.
+        json_endpoint()
+        return LoginResult(None)
 
 
 def credentials(credentials):
@@ -1646,7 +1655,61 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
         return request_elements
 
 
-
+def json_endpoint(param_name='json'):
+    """
+    Converts a *request handler* to a JSON endpoint which you can call from JavaScript.
+    
+    Just call it inside a *request handler* like this:
+    
+    ::
+        
+        class JSONHandler(RequestHandler):
+            def get(self):
+                authomatic.json_endpoint()
+    
+    The handler will now accept a JSON object in the ``json`` url parameter like this:
+    
+    ::
+        
+        {
+            "credentials": "",
+            "url": "https://example.com",
+            "method": "POST",
+            "params": {"foo": "bar"},
+            "headers": {"baz": "bing"},
+        }
+    
+    and will write a JSON object like this to the response:
+    
+    ::
+        
+        {
+            "url": "https://example.com",
+            "method": "POST",
+            "body": "oauth_nonce=123&oauth_timestamp=456&oauth_consumer_key=###&...",
+            "headers": {
+                "baz": "bing",
+                "Other-Provider": "specific; headers"
+            },
+        }
+    
+    .. note::
+        
+        The function blocks every other writes to the response inside the handler.
+    
+    :param str param_name:
+        The name of the url parameter. Default is ``'json'``.
+    """
+    
+    middleware.block = True
+    
+    json_input = middleware.params.get(param_name)
+    
+    if json_input:
+        req_elements = request_elements(json_input=json_input, return_json=True)
+        middleware.set_header('Content-Type', 'application/json; charset=UTF-8')
+        middleware.set_header('Content-Length', str(len(req_elements)))
+        middleware.write(req_elements)
 
 
 

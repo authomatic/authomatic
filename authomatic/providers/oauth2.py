@@ -1017,7 +1017,7 @@ class Yandex(OAuth2):
 
 
 # The provider type ID is generated from this list's indexes!
-# Allways apppend new providers at the end so that ids of existing providers dont change!
+# Allways apppend new providers at the end so that ids of existing providers don't change!
 PROVIDER_ID_MAP = [OAuth2, Behance, Bitly, Cosm, DeviantART, Facebook, Foursquare, GitHub, Google, LinkedIn,
           PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex]
 

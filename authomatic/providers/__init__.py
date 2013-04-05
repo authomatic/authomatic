@@ -93,7 +93,7 @@ def login_decorator(func):
             # Add error to result
             result.error = error
             # Let middleware know that login procedure is over
-            authomatic.core.middleware.pending = False
+            authomatic.core.middleware.block = False
             provider._log(logging.INFO, 'Procedure finished.')
         else:
             # Save session

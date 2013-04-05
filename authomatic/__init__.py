@@ -9,5 +9,5 @@ and access **his/her protected resources**.
 """
 
 from core import login, provider_id, access, async_access, credentials, request_elements, \
-    setup_middleware as middleware
+    json_endpoint, setup_middleware as middleware
 import settings
