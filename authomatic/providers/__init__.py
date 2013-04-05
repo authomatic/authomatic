@@ -24,6 +24,7 @@ import abc
 import authomatic.core
 import authomatic.settings as settings
 import base64
+import copy
 import datetime
 import hashlib
 import httplib
@@ -152,6 +153,22 @@ class BaseProvider(object):
     #===========================================================================
     # Exposed methods
     #===========================================================================
+    
+    def to_dict(self):
+        """
+        Converts the provider instance to a :class:`dict`.
+        
+        :returns:
+            :class:`dict`
+        """
+        
+        return dict(name=self.name,
+                    id=self.id,
+                    type_id=self.type_id,
+                    type=self.get_type(),
+                    scope=self.scope if hasattr(self, 'scope') else None,
+                    offline=self.offline,
+                    user=self.user.id)
     
     @classmethod
     def get_type(cls):

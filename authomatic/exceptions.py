@@ -22,6 +22,9 @@ class BaseError(Exception):
         
         #: HTTP status code related with the error.
         self.status = status
+    
+    def to_dict(self):
+        return self.__dict__
 
 
 class ConfigError(BaseError):

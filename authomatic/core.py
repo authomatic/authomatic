@@ -912,6 +912,26 @@ class User(ReprMixin):
         """
         
         return Future(self.update)
+    
+    def to_dict(self):
+        """
+        Converts the :class:`.User` instance to a :class:`dict`.
+        
+        :returns:
+            :class:`dict`
+        """
+        
+        # copy the dictionary
+        d = copy.copy(self.__dict__)
+        
+        # Keep only the provider name to avoid circular reference
+        d['provider'] = self.provider.name
+        d['credentials'] = self.credentials.serialize()
+        
+        # Remove content
+        d.pop('content')
+        
+        return d
 
 
 class Credentials(ReprMixin):
@@ -1173,28 +1193,6 @@ class Credentials(ReprMixin):
         return ProviderClass.reconstruct(split[2:], deserialized, cfg)
 
 
-_JS_CALLBACK_HTML = """
-<!DOCTYPE html>
-<html>
-<head>
-<title></title>
-</head>
-<body>
-<script type="text/javascript">
-{user}
-{error}
-var result = {{}};
-result.user = user;
-result.error = error;
-result.provider_name = "{provider_name}";
-{custom}
-window.opener.{callback}(result);
-window.close();
-</script>
-</body>
-</html>
-"""
-
 class LoginResult(ReprMixin):
     """
     Result of the :func:`authomatic.login` function.
@@ -1207,53 +1205,52 @@ class LoginResult(ReprMixin):
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = None
     
-    def js_callback(self, callback, **kwargs):
+    def js_callback(self, callback_name, indent=None, title='Login | {}', custom=None):
         """
         Returns HTML with javascript that calls the specified javascript callback
-        on the opener of the login handler with a ``result`` object passed to it
+        on the opener of the login handler with a ``result`` JSON object passed to it
         and subsequently closes itself.
         
-        :param str callback:
-            The name of the javascript callback.
+        :param str callback_name:
+            The name of the javascript callback e.g ``foo.bar.loginCallback``
+            will result in ``window.opener.foo.bar.loginCallback(result);`` in the HTML.
+        
+        :param int indent:
+            The number of spaces to indent the JSON result object.
+            If ``0`` or negative, only newlines are added.
+            If ``None``, no newlines are added.
+        
+        :param str title:
+            The text of the HTML title. You can use ``{}`` tag inside,
+            which will be replaced with the provider name.
             
-        :param **kwargs:
-            Additional keyword arguments will be added as properties to the javascript result object.
+        :param custom:
+            Any JSON serializable object that will be passed to the ``result.custom`` attribute.
         
         :returns:
-            HTML with javascript that calls the calback on the opener and closes itself.
+            HTML with JavaScript that calls the calback on the opener,
+            passing it the ``result`` JSON object and then closes itself.
         """
         
-        # User
-        if self.user:
-            user = 'var user = {};\n'
-            for k, v in self.user.__dict__.items():
-                if not k in ('gae_user', 'provider', 'credentials', 'data', 'content'):
-                    user += 'user.{} = "{}";\n'.format(k, v or '')
-            
-            user += 'user.content = {};\n'.format(self.user.content or '{}')
-            user += 'user.credentials = "{}";\n'.format(self.user.credentials.serialize() if self.user.credentials else '')
-        else:
-            user = 'var user = null;\n'
+        html = '\n'.join((
+            '<!DOCTYPE html>',
+            '<html>',
+            '<head><title>{title}</title></head>',
+            '<body>',
+            '<script type="text/javascript">',
+            'var result = {result};',
+            'result.custom = {custom};',
+            'window.opener.{callback}(result);',
+            'window.close();',
+            '</script>',
+            '</body>',
+            '</html>',
+        ))
         
-        # Error
-        if self.error:
-            error = 'var error = {};\n'
-            for k, v in self.error.__dict__.items():
-                error += 'error.{} = "{}";\n'.format(k, v or '')
-        else:
-            error = 'var error = null;\n'
-        
-        # Custom properties
-        custom = ''
-        for k, v in kwargs.items():
-            v = 'null' if v is None else v
-            custom += 'result.{} = {};\n'.format(k, v)
-        
-        return _JS_CALLBACK_HTML.format(user=user,
-                                        error=error,
-                                        provider_name=self.provider.name if self.provider else '',
-                                        custom=custom,
-                                        callback=callback)
+        return html.format(result=self.to_json(indent),
+                           custom=json.dumps(custom),
+                           callback=callback_name,
+                           title=title.format(self.provider.name))
     
     @property
     def user(self):
@@ -1270,6 +1267,14 @@ class LoginResult(ReprMixin):
         """
         
         return middleware.block
+    
+    
+    def to_dict(self):
+        return dict(provider=self.provider, user=self.user, error=self.error)
+    
+    
+    def to_json(self, indent=4):
+        return json.dumps(self, default=lambda obj: obj.to_dict(), indent=indent)
 
 
 class Response(ReprMixin):

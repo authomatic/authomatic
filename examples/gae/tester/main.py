@@ -38,12 +38,16 @@ class Login(webapp2.RequestHandler):
         
         if result.error:
             self.response.write('<h4>ERROR: {}</h4>'.format(result.error.message))
+            
+            self.response.write('<h3>error to dict</h3>')
+            self.response.write('<pre class="prettyprint">{}</pre>'.format(result.error.to_dict()))
         
         elif result.user:
             response = result.user.update()
             if response:
                 self.response.write('<h3>User refresh status: {}</h3>'.format(response.status))
                 self.response.write('<pre class="prettyprint">{}</pre>'.format(response.content))
+            
             
             self.response.write('<h3>User</h3>')
             if result.user.picture:
@@ -91,6 +95,12 @@ class Login(webapp2.RequestHandler):
             </script>
             """.format(result.user.content.replace('\n', ' ')) if result.user.content else '')
         
+        self.response.write('<h3>Result js callback HTML</h3>')
+        self.response.write('<pre class="prettyprint">{}</pre>'\
+                            .format(cgi.escape(result.js_callback('callback', indent=4,
+                                                                  custom=dict(foo='bar', baz="bing")))))
+            
+        
         self.response.write('</body></html>')
 
 
@@ -111,7 +121,7 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
                             config=CONFIG, # Here goes the config.
                             secret='dsgdfgdgj5fd5g4fmjnfggf6gnkfgn5fngh4n564d3vr54er5',
-                            report_errors=False,
+                            report_errors=True,
                             logging_level=logging.DEBUG)
 
 
