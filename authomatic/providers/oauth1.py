@@ -329,16 +329,7 @@ class OAuth1(providers.AuthorisationProvider):
             params['oauth_signature'] = cls._signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
             logging.info('CRE: params = {}'.format(params))
         
-        params = urlencode(params)
-        
-        body = None
-        
-        if method in ('POST', 'PUT'):
-            body = params
-        else:
-            url = url + '?' + params
-        
-        return url, body, method, headers
+        return core.RequestElements(url, method, params, headers)
     
     
     #===========================================================================
@@ -469,9 +460,9 @@ class OAuth1(providers.AuthorisationProvider):
                                                              url=self.user_authorisation_url,
                                                              params=self.user_authorisation_params)
             
-            self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
+            self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements.full_url))
             
-            core.middleware.redirect(request_elements[0])
+            core.middleware.redirect(request_elements.full_url)
 
 
 class Bitbucket(OAuth1):

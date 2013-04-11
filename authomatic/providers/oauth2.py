@@ -174,18 +174,7 @@ class OAuth2(providers.AuthorisationProvider):
                 raise OAuth2Error('Credentials with valid token are required to create ' + \
                                   'OAuth 2.0 protected resources request elements!')
         
-        params = urlencode(params)
-        
-        body = None
-        
-        if method in ('POST', 'PUT'):
-            # Send params in the body
-            body = params
-        else:
-            # Send params as query string
-            url = url + '?' + params
-        
-        return url, body, method, headers
+        return core.RequestElements(url, method, params, headers)
     
     
     @staticmethod
@@ -411,9 +400,9 @@ class OAuth2(providers.AuthorisationProvider):
                                                             csrf=csrf,
                                                             params=self.user_authorisation_params)
             
-            self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements[0]))
+            self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements.full_url))
             
-            core.middleware.redirect(request_elements[0])
+            core.middleware.redirect(request_elements.full_url)
 
 
 class Behance(OAuth2):

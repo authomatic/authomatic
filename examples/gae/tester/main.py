@@ -3,9 +3,7 @@ from config import CONFIG
 import authomatic
 import cgi
 import logging
-import logging
 import webapp2
-
 
 def links(handler):
     for p in CONFIG.keys():

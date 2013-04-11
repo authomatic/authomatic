@@ -33,6 +33,7 @@ import os
 import random
 import sys
 import traceback
+import urllib
 import urlparse
 import uuid
 
@@ -298,18 +299,18 @@ class BaseProvider(object):
         
     
     @classmethod
-    def _fetch(cls, url, body='', method='GET', headers={}, max_redirects=5, content_parser=None):
+    def _fetch(cls, url, method='GET', params=None, headers=None, max_redirects=5, content_parser=None):
         """
         Fetches a URL.
         
         :param str url:
             The URL to fetch.
-        
-        :param str body:
-            The request body.
             
         :param str method:
             HTTP method of the request.
+            
+        :param dict params:
+            Dictionary of request parameters.
             
         :param dict headers:
             HTTP headers of the request.
@@ -321,20 +322,24 @@ class BaseProvider(object):
             A callable to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
         """
         
+        params = params or {}
+        headers = headers or {}
+        
         # Prepare URL elements
         scheme, host, path, query, fragment = urlparse.urlsplit(url)
+        query = urllib.urlencode(params)
         request_path = urlparse.urlunsplit((None, None, path, query, None))
-        
-        if method in ('POST', 'PUT', 'PATCH'):
-            headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
         
         # Apply headers from settings.
         headers.update(settings.fetch_headers)
         
-        cls._log(logging.DEBUG, u'Fetching...')
+        if method in ('POST', 'PUT', 'PATCH'):
+            headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
+        
         cls._log(logging.DEBUG, u' \u251C\u2500 url: {}'.format(url))
-        cls._log(logging.DEBUG, u' \u251C\u2500 headers: {}'.format(headers))
-        cls._log(logging.DEBUG, u' \u2514\u2500 body: {}'.format(body))
+        cls._log(logging.DEBUG, u' \u251C\u2500 method: {}'.format(method))
+        cls._log(logging.DEBUG, u' \u251C\u2500 params: {}'.format(params))
+        cls._log(logging.DEBUG, u' \u2514\u2500 headers: {}'.format(headers))
         
         # Connect
         if scheme.lower() == 'https':
@@ -343,7 +348,7 @@ class BaseProvider(object):
             connection = httplib.HTTPConnection(host)
             
         try:
-            connection.request(method, request_path, body, headers)
+            connection.request(method, request_path, query, headers)
         except Exception as e:
             raise FetchError('Could not connect!',
                              original_message=e.message,
@@ -571,11 +576,7 @@ class AuthorisationProvider(BaseProvider):
     @abc.abstractmethod
     def create_request_elements(self, request_type, credentials, url, method='GET', params=None, headers=None):
         """
-        Must create a :class:`tuple` with this structure ``(url, body, method)``,
-        where *url* must be the request URL without query parameters and fragment,
-        *body* is the request body and *method* is the :data:`method`.
-        
-        TODO: Add an option to include params dictionary as last item of the tuple.
+        Must return :class:`.RequestElements`.
         
         .. warning::
         
@@ -601,7 +602,7 @@ class AuthorisationProvider(BaseProvider):
             Dictionary of request headers.
         
         :returns:
-            A ``(url, body, method, headers)`` :class:`tuple`.
+            :class:`.RequestElements`
         """
     
     

@@ -144,20 +144,17 @@ def json_qs_parser(body):
     
     try:
         # Try JSON first.
-        logging.info('JSON')
         return json.loads(body)
     except:
         pass
     
     try:
         # Then XML.
-        logging.info('XML')
         return ElementTree.fromstring(body)
     except:
         pass
     
     # Finally query string.
-    logging.info('QS')
     return dict(urlparse.parse_qsl(body))
 
 
@@ -606,11 +603,10 @@ class Middleware(object):
         settings.logging_level = logging_level
         settings.fetch_headers = fetch_headers
         
-        self.set_session(session, session_save_method)
-        
-        
         # Set logging level.
         _logger.setLevel(logging_level)
+        
+        self.set_session(session, session_save_method)
     
     
     def __call__(self, environ, start_response):
@@ -1389,6 +1385,64 @@ class UserInfoResponse(Response):
 #===============================================================================
 
 
+class RequestElements(tuple):
+    """
+    A tuple of ``(url, method, params, headers)`` request elements.
+    With some additional properties.
+    """
+    
+    def __new__(cls, url, method, params, headers):
+        return tuple.__new__(cls, (url, method, params, headers))
+      
+    @property
+    def url(self):
+        """
+        Request URL.
+        """
+        
+        return self[0]
+        
+    @property
+    def method(self):
+        """
+        HTTP method of the request.
+        """
+        
+        return self[1]
+        
+    @property
+    def params(self):
+        """
+        Dictionary of request parameters.
+        """
+        
+        return self[2]
+        
+    @property
+    def headers(self):
+        """
+        Dictionary of request headers.
+        """
+        
+        return self[3]
+        
+    @property
+    def query_string(self):
+        """
+        Query string of the request.
+        """
+        
+        return urllib.urlencode(self.params)
+        
+    @property
+    def full_url(self):
+        """
+        URL with query string.
+        """
+        
+        return self.url + '?' + self.query_string
+
+
 def setup_middleware(*args, **kwargs):
     """
     Wrapps your WSGI application in middleware which adds the **authorisation/authentication**
@@ -1632,7 +1686,6 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
     # Parse values from JSON
     if json_input:
         parsed_input = json.loads(json_input)
-        logging.info('JSON INPUT: {}'.format(parsed_input))
         
         credentials = parsed_input.get('credentials', credentials)
         url = parsed_input.get('url', url)
@@ -1722,11 +1775,6 @@ def json_endpoint():
     params = middleware.params.get('params')
     params = json.loads(params) if params else {}
     
-    logging.info('ENDPOINT PARAMS:')
-    logging.info('url = {}'.format(url))
-    logging.info('params = {}'.format(params))
-    logging.info('method = {}'.format(method))
-    
     ProviderClass = Credentials.deserialize(credentials).provider_class
     
     if request_type == 'auto':
@@ -1738,10 +1786,6 @@ def json_endpoint():
         # Access protected resource
         response = access(credentials, url, params, method)
         result = response.content
-        
-        logging.info('FETCH RESULT:')
-        logging.info('content = {}'.format(response.content))
-        logging.info('headers = {}'.format(response.getheaders()))
         
         # Forward status
         middleware.status = str(response.status) + ' ' + str(response.reason)
@@ -1761,8 +1805,6 @@ def json_endpoint():
                                             method=method,
                                             params=params,
                                             return_json=True)
-        
-        logging.info('REQUEST ELEMENTS: {}'.format(result))
         
         middleware.set_header('Content-Type', 'application/json')
     else:
