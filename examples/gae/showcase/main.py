@@ -36,10 +36,10 @@ class Login(BaseHandler):
         if result.user:
             result.user.update()
             if result.user.credentials:
-                apis = config.CONFIG.get(provider_name, {}).get('_apis', {}).keys()
+                apis = config.CONFIG.get(provider_name, {}).get('_apis', {})
             
         self.response.write(result.js_callback('loginCallback',
-                                               apis=json.dumps(apis)))
+                                               custom=dict(apis=apis)))
 
 class Action(BaseHandler):
     def get(self):
@@ -65,9 +65,15 @@ class JSON(BaseHandler):
         self.response.write('<h1>JSON endpoint end</h1>')
 
 
+class Test(BaseHandler):
+    def get(self):
+        self.rr('test.html')
+
+
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/action', Action),
           webapp2.Route(r'/json', JSON),
+          webapp2.Route(r'/test', Test),
           webapp2.Route(r'/', Home)]
 
 app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),

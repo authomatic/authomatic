@@ -555,6 +555,8 @@ class Facebook(OAuth2):
     
     user_info_scope = ['user_about_me', 'email']
     
+    same_origin = False
+    
     # Facebook is original as usual and has its own name for "refresh_token"!!!
     _x_term_dict = OAuth2._x_term_dict.copy()
     _x_term_dict['refresh_token'] = 'fb_exchange_token'
@@ -611,6 +613,8 @@ class Foursquare(OAuth2):
     access_token_url = 'https://foursquare.com/oauth2/access_token'
     user_info_url = 'https://api.foursquare.com/v2/users/self'
     
+    same_origin = False
+    
     @staticmethod
     def _x_user_parser(user, data):
         
@@ -645,6 +649,8 @@ class GitHub(OAuth2):
     access_token_url = 'https://github.com/login/oauth/access_token'
     user_info_url = 'https://api.github.com/user'
     
+    same_origin = False
+    
     @staticmethod
     def _x_user_parser(user, data):
         user.username = data.get('login')
@@ -652,6 +658,12 @@ class GitHub(OAuth2):
         user.link = data.get('html_url')
         user.city, user.country = data.get('location', ', ').split(', ')
         return user
+    
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
 
 
 class Google(OAuth2):

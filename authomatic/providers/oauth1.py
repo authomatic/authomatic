@@ -40,7 +40,6 @@ __all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Meetup', 'Plurk', 'Twitter', 'Tumbl
            'Vimeo', 'Xero', 'Yahoo']
 
 
-
 def _normalize_params(params):
     """
     Returns a normalized query string sorted first by key, then by value
@@ -178,9 +177,11 @@ class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
         key = cls._create_key(consumer_secret, token_secret)
         
         hashed = hmac.new(key, base_string, hashlib.sha1)
-        signature = binascii.b2a_base64(hashed.digest())[:-1]
         
-        return signature
+        
+        base64_encoded = binascii.b2a_base64(hashed.digest())[:-1]
+        
+        return base64_encoded
 
 
 class PLAINTEXTSignatureGenerator(BaseSignatureGenerator):
@@ -261,7 +262,9 @@ class OAuth1(providers.AuthorisationProvider):
         Creates |oauth1| request elements.
         """
         
+        logging.info('CRE: params = {}'.format(params))
         params = params or {}
+        logging.info('CRE: params = {}'.format(params))
         headers = headers or {}
         
         consumer_key = credentials.consumer_key or ''
@@ -321,9 +324,10 @@ class OAuth1(providers.AuthorisationProvider):
             params['oauth_nonce'] = cls.csrf_generator()
             params['oauth_version'] = '1.0'
             
+            logging.info('CRE: params = {}'.format(params))
             # add signature to params
             params['oauth_signature'] = cls._signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
-        
+            logging.info('CRE: params = {}'.format(params))
         
         params = urlencode(params)
         
@@ -487,7 +491,7 @@ class Bitbucket(OAuth1):
     @staticmethod
     def _x_user_parser(user, data):
         _user = data.get('user', {})
-        user.username = _user.get('username')
+        user.username = user.id = _user.get('username')
         user.name = _user.get('display_name')
         user.first_name = _user.get('first_name')
         user.last_name = _user.get('last_name')
@@ -607,7 +611,7 @@ class Twitter(OAuth1):
     user_authorisation_url = 'https://api.twitter.com/oauth/authorize'
     access_token_url = 'https://api.twitter.com/oauth/access_token'
     user_info_url = 'https://api.twitter.com/1/account/verify_credentials.json'
-    
+        
     @staticmethod
     def _x_user_parser(user, data):
         user.username = data.get('screen_name')
@@ -755,8 +759,10 @@ class Yahoo(OAuth1):
     request_token_url = 'https://api.login.yahoo.com/oauth/v2/get_request_token'
     user_authorisation_url = 'https://api.login.yahoo.com/oauth/v2/request_auth'
     access_token_url = 'https://api.login.yahoo.com/oauth/v2/get_token'
-    user_info_url = 'http://query.yahooapis.com/v1/yql?q=select%20*%20from%20social.profile%20where%20guid%3Dme&format=json&callback='
+    user_info_url = 'http://query.yahooapis.com/v1/yql?q=select%20*%20from%20social.profile%20where%20guid%3Dme&format=json'
     
+#    same_origin = False
+    same_origin = True
     
     @staticmethod
     def _x_user_parser(user, data):

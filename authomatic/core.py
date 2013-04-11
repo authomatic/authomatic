@@ -927,9 +927,13 @@ class User(ReprMixin):
         # Keep only the provider name to avoid circular reference
         d['provider'] = self.provider.name
         d['credentials'] = self.credentials.serialize()
+        d['birth_date'] = str(d['birth_date'])
         
         # Remove content
         d.pop('content')
+        
+        if isinstance(self.data, ElementTree.Element):
+            d['data'] = None
         
         return d
 
@@ -1247,10 +1251,13 @@ class LoginResult(ReprMixin):
             '</html>',
         ))
         
-        return html.format(result=self.to_json(indent),
-                           custom=json.dumps(custom),
-                           callback=callback_name,
-                           title=title.format(self.provider.name))
+        if not self.pending:
+            return html.format(result=self.to_json(indent),
+                               custom=json.dumps(custom),
+                               callback=callback_name,
+                               title=title.format(self.provider.name if self.provider else ''))
+        else:
+            return ''
     
     @property
     def user(self):
@@ -1660,7 +1667,7 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
         return request_elements
 
 
-def json_endpoint(param_name='json'):
+def json_endpoint():
     """
     Converts a *request handler* to a JSON endpoint which you can call from JavaScript.
     
@@ -1701,20 +1708,73 @@ def json_endpoint(param_name='json'):
     .. note::
         
         The function blocks every other writes to the response inside the handler.
-    
-    :param str param_name:
-        The name of the url parameter. Default is ``'json'``.
     """
     
     middleware.block = True
+    AUTHOMATIC_HEADER = 'Authomatic-Response-To'
     
-    json_input = middleware.params.get(param_name)
+    # Collect request params
+    request_type = middleware.params.get('type', 'auto')
+    json_input = middleware.params.get('json')
+    credentials = middleware.params.get('credentials')
+    url = middleware.params.get('url')
+    method = middleware.params.get('method')
+    params = middleware.params.get('params')
+    params = json.loads(params) if params else {}
     
-    if json_input:
-        req_elements = request_elements(json_input=json_input, return_json=True)
-        middleware.set_header('Content-Type', 'application/json; charset=UTF-8')
-        middleware.set_header('Content-Length', str(len(req_elements)))
-        middleware.write(req_elements)
+    logging.info('ENDPOINT PARAMS:')
+    logging.info('url = {}'.format(url))
+    logging.info('params = {}'.format(params))
+    logging.info('method = {}'.format(method))
+    
+    ProviderClass = Credentials.deserialize(credentials).provider_class
+    
+    if request_type == 'auto':
+        # If provider requires same origin policy, fetch. Else return request elements.
+        request_type = 'fetch' if ProviderClass.same_origin else 'elements'
+    
+    result = ''
+    if request_type == 'fetch':
+        # Access protected resource
+        response = access(credentials, url, params, method)
+        result = response.content
+        
+        logging.info('FETCH RESULT:')
+        logging.info('content = {}'.format(response.content))
+        logging.info('headers = {}'.format(response.getheaders()))
+        
+        # Forward status
+        middleware.status = str(response.status) + ' ' + str(response.reason)
+        
+        # Forward headers
+        for k, v in response.getheaders():
+            if k not in ('x-frame-options',):
+                middleware.set_header(k, v)
+        
+    elif request_type == 'elements':
+        # Create request elements
+        if json_input:
+            result = request_elements(json_input=json_input, return_json=True)
+        else:
+            result = request_elements(credentials=credentials,
+                                            url=url,
+                                            method=method,
+                                            params=params,
+                                            return_json=True)
+        
+        logging.info('REQUEST ELEMENTS: {}'.format(result))
+        
+        middleware.set_header('Content-Type', 'application/json')
+    else:
+        middleware.status = '400 Bad Request'
+        # TODO: Write JSON error message to response
+        
+    # Add the authomatic header
+    middleware.set_header(AUTHOMATIC_HEADER, request_type)
+    
+    # Write result to response
+    middleware.write(result)
+    
 
 
 

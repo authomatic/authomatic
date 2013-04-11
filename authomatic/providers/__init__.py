@@ -167,8 +167,7 @@ class BaseProvider(object):
                     type_id=self.type_id,
                     type=self.get_type(),
                     scope=self.scope if hasattr(self, 'scope') else None,
-                    offline=self.offline,
-                    user=self.user.id)
+                    user=self.user.id if self.user else None)
     
     @classmethod
     def get_type(cls):
@@ -206,9 +205,11 @@ class BaseProvider(object):
         e.g. ``oauth2.Facebook.type_id = 2.5``, ``oauth1.Twitter.type_id = 1.5``.
         """
         
+        # FIXME: type 1.1 and 1.10 are the same! It needs to be string.
+        
         cls = self.__class__
         mod = sys.modules.get(cls.__module__)
-        return self.PROVIDER_TYPE_ID + float(mod.PROVIDER_ID_MAP.index(cls)) / 10
+        return self.PROVIDER_TYPE_ID + float(mod.PROVIDER_ID_MAP.index(cls)) / 1000
     
     
     def _kwarg(self, kwargs, kwname, default=None):
@@ -452,6 +453,9 @@ class AuthorisationProvider(BaseProvider):
     
     _x_term_dict = {}
     
+    #: If ``True`` the provider doesn't support Cross-site HTTP requests.
+    same_origin = True
+    
     # Whether to use the HTTP Authorisation header.
     _x_use_authorisation_header = True
     
@@ -570,6 +574,8 @@ class AuthorisationProvider(BaseProvider):
         Must create a :class:`tuple` with this structure ``(url, body, method)``,
         where *url* must be the request URL without query parameters and fragment,
         *body* is the request body and *method* is the :data:`method`.
+        
+        TODO: Add an option to include params dictionary as last item of the tuple.
         
         .. warning::
         

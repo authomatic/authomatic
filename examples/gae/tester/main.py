@@ -47,6 +47,12 @@ class Login(webapp2.RequestHandler):
             if response:
                 self.response.write('<h3>User refresh status: {}</h3>'.format(response.status))
                 self.response.write('<pre class="prettyprint">{}</pre>'.format(response.content))
+                
+                self.response.write('<h3>Access-Control-Allow-Origin</h3>')
+                self.response.write('<pre class="prettyprint">{}</pre>'.format(response.getheader('Access-Control-Allow-Origin')))
+                
+                self.response.write('<h3>User headers</h3>')
+                self.response.write('<pre class="prettyprint">{}</pre>'.format(response.getheaders()))
             
             
             self.response.write('<h3>User</h3>')

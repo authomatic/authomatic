@@ -2110,18 +2110,18 @@ button.button.large {
 /* Standard Forms */
 /* line 247, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_forms.scss */
 form {
-  margin: 0 0 1em;
+  margin: 0 0 1.5em;
 }
 
 /* Using forms within rows, we need to set some defaults */
 /* line 62, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_forms.scss */
 form .row .row {
-  margin: -0.5em;
+  margin: -0.75em;
 }
 /* line 65, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_forms.scss */
 form .row .row .column,
 form .row .row .columns {
-  padding: 0 0.5em;
+  padding: 0 0.75em;
 }
 /* line 68, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_forms.scss */
 form .row .row.collapse {
@@ -2135,7 +2135,7 @@ form .row .row.collapse .columns {
 /* line 76, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_forms.scss */
 form .row input.column,
 form .row input.columns {
-  padding-left: 0.5em;
+  padding-left: 0.75em;
 }
 
 /* Label Styles */
@@ -2155,8 +2155,8 @@ label.right {
 }
 /* line 255, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_forms.scss */
 label.inline {
-  margin: 0 0 1em 0;
-  padding: 0.625em 0;
+  margin: 0 0 1.5em 0;
+  padding: 0.875em 0;
 }
 
 /* Attach elements to the beginning or end of an input */
@@ -2174,8 +2174,8 @@ label.inline {
   border-width: 1px;
   overflow: hidden;
   font-size: 0.875em;
-  height: 2.3125em;
-  line-height: 2.3125em;
+  height: 3.0625em;
+  line-height: 3.0625em;
 }
 
 /* Adjust padding, alignment and radius if pre/post element is a button */
@@ -2356,9 +2356,9 @@ textarea {
   color: rgba(0, 0, 0, 0.75);
   display: block;
   font-size: 0.875em;
-  margin: 0 0 1em 0;
-  padding: 0.5em;
-  height: 2.3125em;
+  margin: 0 0 1.5em 0;
+  padding: 0.75em;
+  height: 3.0625em;
   width: 100%;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -2449,8 +2449,8 @@ label.error {
 small.error {
   display: block;
   padding: 0.375em 0.25em;
-  margin-top: -1.3125em;
-  margin-bottom: 1em;
+  margin-top: -1.8125em;
+  margin-bottom: 1.5em;
   font-size: 0.75em;
   font-weight: bold;
   background: #c60f13;
@@ -2516,7 +2516,7 @@ form.custom .custom.dropdown {
   display: block;
   position: relative;
   top: 0;
-  height: 2.3125em;
+  height: 3.0625em;
   margin-bottom: 1.25em;
   margin-top: 0px;
   padding: 0px;
@@ -2539,20 +2539,20 @@ form.custom .custom.dropdown ul {
 form.custom .custom.dropdown .current {
   cursor: default;
   white-space: nowrap;
-  line-height: 2.25em;
+  line-height: 3em;
   color: rgba(0, 0, 0, 0.75);
   text-decoration: none;
   overflow: hidden;
   display: block;
-  margin-left: 0.5em;
-  margin-right: 2.3125em;
+  margin-left: 0.75em;
+  margin-right: 3.0625em;
 }
 /* line 139, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_custom-forms.scss */
 form.custom .custom.dropdown .selector {
   cursor: default;
   position: absolute;
-  width: 2.5em;
-  height: 2.3125em;
+  width: 3.75em;
+  height: 3.0625em;
   display: block;
   right: 0;
   top: 0;
@@ -2568,7 +2568,7 @@ form.custom .custom.dropdown .selector:after {
   border: solid 5px;
   border-color: #aaaaaa transparent transparent transparent;
   position: absolute;
-  left: 0.9375em;
+  left: 1.5625em;
   top: 50%;
   margin-top: -3px;
 }
@@ -5537,28 +5537,34 @@ table tfoot tr td {
   max-width: 800px;
 }
 
-/* line 42, ../sass/app.sass */
+/* line 45, ../sass/app.sass */
+form {
+  margin: 0em;
+  font-size: 1em;
+}
+
+/* line 49, ../sass/app.sass */
 .hidden {
   display: none;
 }
 
-/* line 45, ../sass/app.sass */
+/* line 52, ../sass/app.sass */
 #header {
   background-color: #4a404e;
   color: #f4f0e4;
   padding: 1em 0em;
 }
-/* line 50, ../sass/app.sass */
+/* line 57, ../sass/app.sass */
 #header #logo {
   margin: 1em 0em;
 }
 
-/* line 53, ../sass/app.sass */
+/* line 60, ../sass/app.sass */
 #sub-header {
   background-color: #6f6573;
   color: #f4f0e4;
 }
-/* line 57, ../sass/app.sass */
+/* line 64, ../sass/app.sass */
 #sub-header #motto {
   text-align: center;
   font-weight: bold;
@@ -5566,28 +5572,33 @@ table tfoot tr td {
   margin-bottom: 0em;
 }
 
-/* line 63, ../sass/app.sass */
+/* line 71, ../sass/app.sass */
+#user-apis form, #user-apis form > input[type=submit] {
+  width: 100%;
+}
+/* line 74, ../sass/app.sass */
+#user-apis input[type=text] {
+  background-color: white;
+}
+
+/* line 77, ../sass/app.sass */
 #user {
   background-color: #f4f0e4;
   padding: 2em 0em;
 }
-/* line 67, ../sass/app.sass */
+/* line 81, ../sass/app.sass */
 #user .info span {
   color: #dd0b79;
   overflow: scroll;
 }
-/* line 71, ../sass/app.sass */
+/* line 85, ../sass/app.sass */
 #user #user-picture {
   -webkit-border-radius: 10px;
   border-radius: 10px;
   width: 100%;
   height: 100%;
 }
-/* line 77, ../sass/app.sass */
-#user #user-apis a {
-  width: 100%;
-}
-/* line 80, ../sass/app.sass */
+/* line 90, ../sass/app.sass */
 #user #user-data-wrapper {
   -webkit-border-radius: 10px;
   border-radius: 10px;
@@ -5597,7 +5608,7 @@ table tfoot tr td {
   padding: 1em;
   margin: 1em 0em 0em 0em;
 }
-/* line 87, ../sass/app.sass */
+/* line 97, ../sass/app.sass */
 #user #user-data-wrapper #user-data {
   overflow: hidden;
   white-space: pre;
@@ -5605,26 +5616,26 @@ table tfoot tr td {
   overflow-y: scroll;
 }
 
-/* line 94, ../sass/app.sass */
+/* line 104, ../sass/app.sass */
 #error {
   background-color: #dd0b79;
   color: #4a404e;
   padding: 2em 0em;
   font-weight: bold;
 }
-/* line 99, ../sass/app.sass */
+/* line 109, ../sass/app.sass */
 #error span {
   font-weight: normal;
 }
 
-/* line 102, ../sass/app.sass */
+/* line 112, ../sass/app.sass */
 hr {
   border: none;
   border-bottom: 2px dotted #6f6573;
   margin: 2em 0em;
 }
 
-/* line 107, ../sass/app.sass */
+/* line 117, ../sass/app.sass */
 input[type=text] {
   -webkit-border-radius: 0;
   border-radius: 0;
@@ -5637,7 +5648,7 @@ input[type=text] {
   background-color: #f4f0e4;
 }
 
-/* line 111, ../sass/app.sass */
+/* line 121, ../sass/app.sass */
 .provider-button {
   border-style: solid;
   border-width: 1px;
@@ -5687,307 +5698,305 @@ input[type=text] {
   -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
 }
-/* line 121, ../sass/app.sass */
+/* line 131, ../sass/app.sass */
 .provider-button img {
   float: right;
   width: 16px;
   height: 16px;
 }
 
-/* line 127, ../sass/app.sass */
+/* line 137, ../sass/app.sass */
 .provider-button.bitbucket {
   color: #205081;
   background-color: #efeff0;
   border-color: #e3e3e4;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.bitbucket:hover {
   background-color: #e3e3e4;
 }
 
-/* line 130, ../sass/app.sass */
+/* line 140, ../sass/app.sass */
 .provider-button.flickr {
   color: white;
   background-color: #ff0084;
   border-color: #f2007d;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.flickr:hover {
   background-color: #f2007d;
 }
 
-/* line 133, ../sass/app.sass */
+/* line 143, ../sass/app.sass */
 .provider-button.meetup {
   color: #e51937;
   background-color: #edefed;
   border-color: #e1e3e1;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.meetup:hover {
   background-color: #e1e3e1;
 }
 
-/* line 136, ../sass/app.sass */
+/* line 146, ../sass/app.sass */
 .provider-button.plurk {
   color: white;
   background-color: #cf682f;
   border-color: #c4622c;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.plurk:hover {
   background-color: #c4622c;
 }
 
-/* line 139, ../sass/app.sass */
+/* line 149, ../sass/app.sass */
 .provider-button.tumblr {
   color: #2c4762;
   background-color: #9babba;
   border-color: #93a2b0;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.tumblr:hover {
   background-color: #93a2b0;
 }
 
-/* line 142, ../sass/app.sass */
+/* line 152, ../sass/app.sass */
 .provider-button.twitter {
   color: #00aced;
   background-color: #f8f8f8;
   border-color: #ebebeb;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.twitter:hover {
   background-color: #ebebeb;
 }
 
-/* line 145, ../sass/app.sass */
+/* line 155, ../sass/app.sass */
 .provider-button.ubuntuone {
   color: #dd4713;
   background-color: #fcece7;
   border-color: #efe0db;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.ubuntuone:hover {
   background-color: #efe0db;
 }
 
-/* line 148, ../sass/app.sass */
+/* line 158, ../sass/app.sass */
 .provider-button.vimeo {
   color: white;
   background-color: #172322;
   border-color: #152120;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.vimeo:hover {
   background-color: #152120;
 }
 
-/* line 151, ../sass/app.sass */
+/* line 161, ../sass/app.sass */
 .provider-button.xero {
   color: #00b7e2;
   background-color: #45474d;
   border-color: #414349;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.xero:hover {
   background-color: #414349;
 }
 
-/* line 154, ../sass/app.sass */
+/* line 164, ../sass/app.sass */
 .provider-button.yahoo {
   color: #6e329d;
   background-color: #fafafc;
   border-color: #ededef;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.yahoo:hover {
   background-color: #ededef;
 }
 
-/* line 158, ../sass/app.sass */
+/* line 168, ../sass/app.sass */
 .provider-button.behance {
   color: white;
   background-color: #1a1a1a;
   border-color: #181818;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.behance:hover {
   background-color: #181818;
 }
 
-/* line 161, ../sass/app.sass */
+/* line 171, ../sass/app.sass */
 .provider-button.bitly {
   color: #ee6123;
   background-color: #f3f8fb;
   border-color: #e6ebee;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.bitly:hover {
   background-color: #e6ebee;
 }
 
-/* line 164, ../sass/app.sass */
+/* line 174, ../sass/app.sass */
 .provider-button.cosm {
   color: #f1592a;
   background-color: #f2f4f5;
   border-color: #e5e7e8;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.cosm:hover {
   background-color: #e5e7e8;
 }
 
-/* line 167, ../sass/app.sass */
+/* line 177, ../sass/app.sass */
 .provider-button.deviantart {
   color: #47594e;
   background-color: #d4dfd0;
   border-color: #c9d3c5;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.deviantart:hover {
   background-color: #c9d3c5;
 }
 
-/* line 170, ../sass/app.sass */
+/* line 180, ../sass/app.sass */
 .provider-button.facebook {
   color: #3b5998;
   background-color: #ededed;
   border-color: #e1e1e1;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.facebook:hover {
   background-color: #e1e1e1;
 }
 
-/* line 173, ../sass/app.sass */
+/* line 183, ../sass/app.sass */
 .provider-button.foursquare {
   color: white;
   background-color: #8dc540;
   border-color: #85bb3c;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.foursquare:hover {
   background-color: #85bb3c;
 }
 
-/* line 176, ../sass/app.sass */
+/* line 186, ../sass/app.sass */
 .provider-button.github {
   color: #4a4a4a;
   background-color: #f5cdb6;
   border-color: #e8c2ac;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.github:hover {
   background-color: #e8c2ac;
 }
 
-/* line 179, ../sass/app.sass */
+/* line 189, ../sass/app.sass */
 .provider-button.google {
   color: #2d2d2d;
   background-color: #f1f1f1;
   border-color: #e4e4e4;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.google:hover {
   background-color: #e4e4e4;
 }
 
-/* line 182, ../sass/app.sass */
+/* line 192, ../sass/app.sass */
 .provider-button.linkedin {
   color: #010101;
   background-color: whitesmoke;
   border-color: #e8e8e8;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.linkedin:hover {
   background-color: #e8e8e8;
 }
 
-/* line 185, ../sass/app.sass */
+/* line 195, ../sass/app.sass */
 .provider-button.paypal {
   color: #00457c;
   background-color: whitesmoke;
   border-color: #e8e8e8;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.paypal:hover {
   background-color: #e8e8e8;
 }
 
-/* line 188, ../sass/app.sass */
+/* line 198, ../sass/app.sass */
 .provider-button.reddit {
   color: orangered;
   background-color: #cee3f8;
   border-color: #c3d7eb;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.reddit:hover {
   background-color: #c3d7eb;
 }
 
-/* line 191, ../sass/app.sass */
+/* line 201, ../sass/app.sass */
 .provider-button.viadeo {
   color: #282828;
   background-color: #f8f9fb;
   border-color: #ebecee;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.viadeo:hover {
   background-color: #ebecee;
 }
 
-/* line 194, ../sass/app.sass */
+/* line 204, ../sass/app.sass */
 .provider-button.vk {
   color: #43658b;
   background-color: #d9e1e8;
   border-color: #ced5dc;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.vk:hover {
   background-color: #ced5dc;
 }
 
-/* line 197, ../sass/app.sass */
+/* line 207, ../sass/app.sass */
 .provider-button.yammer {
   color: #009ac7;
   background-color: whitesmoke;
   border-color: #e8e8e8;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.yammer:hover {
   background-color: #e8e8e8;
 }
 
-/* line 200, ../sass/app.sass */
+/* line 210, ../sass/app.sass */
 .provider-button.windows_live {
   color: white;
   background-color: #f89a1e;
   border-color: #eb921c;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.windows_live:hover {
   background-color: #eb921c;
 }
 
-/* line 203, ../sass/app.sass */
+/* line 213, ../sass/app.sass */
 .provider-button.yandex {
   color: white;
   background-color: #ff000a;
   border-color: #f20009;
 }
-/* line 38, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 .provider-button.yandex:hover {
   background-color: #f20009;
 }
 
 @media only screen and (min-width: 48em) {
-  /* line 209, ../sass/app.sass */
-  #user #user-apis a {
+  /* line 218, ../sass/app.sass */
+  #user-apis form, #user-apis form > input[type=submit] {
+    margin-right: 1em;
+    display: inline-block;
+    vertical-align: top;
     width: auto;
-    margin-left: 1em;
-  }
-  /* line 212, ../sass/app.sass */
-  #user #user-apis a:first-child {
-    margin-left: 0em;
   }
 }
