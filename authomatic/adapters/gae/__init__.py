@@ -6,8 +6,8 @@
 Utilities you can use when using this library on |gae|_.
 """
 
-from authomatic import exceptions
-from authomatic.extras import interfaces
+from authomatic import exceptions, adapters
+from authomatic.adapters import interfaces
 from google.appengine.ext import ndb
 from webapp2_extras import sessions
 import os
@@ -18,6 +18,25 @@ __all__ = ['ndb_config', 'Webapp2Session']
 
 class GAEError(exceptions.BaseError):
     pass
+
+
+class Webapp2Adapter(adapters.WebObBaseAdapter):
+    """
+    Adapter to be used with the |webapp2|_ framework on |gae|_.
+    """
+    
+    request = None
+    response = None
+    
+    def __init__(self, handler):
+        """
+        :param handler:
+        
+            A |webapp2|_ :class:`RequestHandler` instance.
+        """
+        
+        self.request = handler.request
+        self.response = handler.response
 
 
 class Webapp2Session(interfaces.BaseSession):

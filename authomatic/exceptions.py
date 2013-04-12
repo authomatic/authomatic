@@ -31,10 +31,6 @@ class ConfigError(BaseError):
     pass
 
 
-class MiddlewareError(BaseError):
-    pass
-
-
 class SessionError(BaseError):
     pass
 

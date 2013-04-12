@@ -46,17 +46,17 @@ class GAEOpenID(providers.AuthenticationProvider):
     def login(self):
         """Launches the OpenID authentication procedure."""
         
-        if core.middleware.params.get(self.identifier_param):
+        if self.params.get(self.identifier_param):
             #===================================================================
             # Phase 1 before redirect.
             #===================================================================
             self._log(logging.INFO, 'Starting OpenID authentication procedure.')
             
-            url = users.create_login_url(dest_url=core.middleware.url, federated_identity=self.identifier)
+            url = users.create_login_url(dest_url=self.url, federated_identity=self.identifier)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(url))
             
-            core.middleware.redirect(url)
+            self.redirect(url)
         else:
             #===================================================================
             # Phase 2 after redirect.

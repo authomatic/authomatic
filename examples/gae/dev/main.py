@@ -3,13 +3,8 @@ import config
 import os
 import sys
 import webapp2
-from webapp2_extras import sessions
 import logging
-from authomatic.extras import gae
-
-from authomatic.providers import BaseProvider
-
-from google.appengine.api import urlfetch
+from authomatic.adapters import gae
 
 def headers(handler):
         
@@ -50,29 +45,15 @@ class Login(webapp2.RequestHandler):
     
     def login(self, provider_name):
         
-        session_config = dict(secret_key='abcdef',
-                              cookie_name='webapp2session')
-        
-        session_store = sessions.SessionStore(self.request, session_config)
-        ses = session_store.get_session(backend='datastore')
-        
-        def session_save_method():
-            logging.info('SAVING WEBAPP2 SESSION')
-            session_store.save_sessions(self.response)
-        
-        
-        session = gae.Webapp2Session(self, ses)
-        
-        
-        result = authomatic.login(provider_name,
-                                  callback=self.callback,
-                                  session=session,
-                                  session_save_method=session.save)
+        result = authomatic.login(gae.Webapp2Adapter(self),
+                                  provider_name,
+                                  callback=self.callback)
         
         if result:
             if result.user:
                 user_response = result.user.update()
-                self.response.write('<br /><br />status = {}<br />'.format(user_response.status))
+                if user_response:
+                    self.response.write('<br /><br />status = {}<br />'.format(user_response.status))
                 
                 self.response.write('<br /><br />Hi {}<br />'.format(result.user.name))
                 self.response.write('your ID is {}<br />'.format(result.user.id))
@@ -150,11 +131,12 @@ ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth', handler_method='login'),
           webapp2.Route(r'/test', Test, handler_method='any'),
           webapp2.Route(r'/', Home, handler_method='any'),]
 
-app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
-                            secret='YAhe[#{^VlX-cK/$ki:$</vu!B5rTW9xi:fbN/%i pIx@AH}0c/ke4M%|c9*H4#>',
-                            config=config.PROVIDERS,
-                            report_errors=False,
-                            debug=True)
+authomatic.setup(secret='YAhe[#{^VlX-cK/$ki:$</vu!B5rTW9xi:fbN/%i pIx@AH}0c/ke4M%|c9*H4#>',
+                 config=config.PROVIDERS,
+                 report_errors=False,
+                 debug=True)
+
+app = webapp2.WSGIApplication(ROUTES, debug=True)
 
 
 

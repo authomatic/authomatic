@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from authomatic.exceptions import SessionError, MiddlewareError, \
+from authomatic.exceptions import SessionError, \
     CredentialsError, RequestElementsError
 from xml.etree import ElementTree
 import Cookie
@@ -30,10 +30,9 @@ except ImportError:
         import json
 
 #===============================================================================
-# Global variables
+# Global variables !!!
 #===============================================================================
 
-middleware = None
 _logger = logging.getLogger(__name__)
 _counter = None
 
@@ -325,7 +324,7 @@ class Session(object):
     NOT_JSON_SERIALIZABLE = ['_yadis_services__openid_consumer_',
                              '_openid_consumer_last_token']
     
-    def __init__(self, secret, name='authomatic', max_age=600, secure=False):
+    def __init__(self, adapter, secret, name='authomatic', max_age=600, secure=False):
         """
         :param str secret:
             Session secret used to sign the session cookie.
@@ -337,6 +336,7 @@ class Session(object):
             If ``True`` the session cookie will be saved wit ``Secure`` attribute.
         """
         
+        self.adapter = adapter
         self.name = name
         self.secret = secret
         self.max_age = max_age
@@ -358,10 +358,13 @@ class Session(object):
         
         value = 'deleted' if delete else self._serialize(self.data)
         
+        split_url = urlparse.urlsplit(self.adapter.url)
+        domain = split_url.netloc.split(':')[0]
+        
         return template.format(name=self.name,
                                value=value,
-                               domain=middleware.domain,
-                               path=middleware.path,
+                               domain=domain,
+                               path=split_url.path,
                                secure='; Secure' if self.secure else '',
                                expires='; Expires=Thu, 01-Jan-1970 00:00:01 GMT' if delete else '')
     
@@ -370,12 +373,17 @@ class Session(object):
         """
         Adds the session cookie to headers.
         """
+        
         if self.data:
             # Set the cookie header.
-            middleware.set_header('Set-Cookie', self.create_cookie())
+            self.adapter.set_header('Set-Cookie', self.create_cookie())
             
             # Reset data
             self._data = {}
+    
+    
+    def delete(self):
+        self.adapter.set_header('Set-Cookie', self.create_cookie(delete=True))
     
     
     def _get_data(self):
@@ -383,11 +391,8 @@ class Session(object):
         Extracts the session data from cookie.
         """
         
-        morsel = Cookie.SimpleCookie(middleware.environ.get('HTTP_COOKIE')).get(self.name)
-        if morsel:
-            return self._deserialize(morsel.value)
-        else:
-            return {}
+        cookie = self.adapter.cookies.get(self.name)
+        return self._deserialize(cookie) if cookie else {}
     
     
     @property
@@ -500,328 +505,6 @@ class Session(object):
     
     def get(self, key, default=None):
         return self.data.get(key, default)
-
-
-def call_wsgi(app, environ):
-    """
-    Calls a WSGI application.
-    
-    :param app:
-        WSGI application.
-        
-    :param dict environ:
-        The WSGI *environ* dictionary.
-    """
-    
-    # Placeholder for status, headers and exec_info.
-    args = [None, None]
-    
-    def start_response(status, headers, exc_info=None):
-        """
-        Dummy start_response to retrieve status, headersand  exc_info from the app.
-        """
-        # Copy values.
-        args[:] = [status, headers, exc_info]
-    
-    # Call the WSGI app and pass it our start_response.
-    app_iter = app(environ, start_response)
-    
-    # Unpack values
-    status, headers, exc_info = args
-    
-    return app_iter, status, headers, exc_info
-
-
-class Middleware(object):
-    """
-    WSGI middleware responsible for these task during the **login procedure**:
-    
-    
-        * Introspection of current request.
-        * Response creation.
-        * Session management.
-    
-    """
-    
-    def __init__(self, app, config, secret, session_max_age=600, secure_cookie=False,
-                 session=None, session_save_method=None, report_errors=True, debug=False,
-                 logging_level=logging.INFO, prefix='authomatic',
-                 fetch_headers={}):
-        """
-        :param app:
-            WSGI application that should be wrapped.
-            
-        :param dict config:
-            :doc:`config`
-            
-        :param str secret:
-            A secret string that will be used as the key for signing :class:`.Session` cookie and
-            as a salt by *CSRF* token generation.
-            
-        :param session_max_age:
-            Maximum allowed age of :class:`.Session` kookie nonce in seconds.
-            
-        :param bool secure_cookie:
-            If ``True`` the :class:`.Session` cookie will be saved wit ``Secure`` attribute.
-        
-        :param session:
-            Custom dictionary-like session implementation.
-        
-        :param callable session_save_method:
-            A method of the supplied session or any mechanism that saves the session data and cookie.
-        
-        :param bool report_errors:
-            If ``True`` exceptions encountered during the **login procedure**
-            will be caught and reported in the :attr:`.LoginResult.error` attribute.
-            Default is ``True``.
-        
-        :param bool debug:
-            If ``True`` traceback of exceptions will be written to response.
-            Default is ``False``.
-            
-        :param int logging_level:
-            The logging level treshold as specified in the standard Python
-            `logging library <http://docs.python.org/2/library/logging.html>`_.
-            Default is ``logging.INFO``
-        
-        :param str prefix:
-            Prefix used as the :class:`.Session` cookie name and
-            by which all logs will be prefixed.
-        """
-        
-        self.app = app
-        self.block = False
-        
-        # Set global settings.
-        settings.config = config
-        settings.secret = secret
-        settings.report_errors = report_errors
-        settings.debug = debug
-        settings.prefix = prefix
-        settings.secure_cookie = secure_cookie
-        settings.session_max_age = session_max_age
-        settings.logging_level = logging_level
-        settings.fetch_headers = fetch_headers
-        
-        # Set logging level.
-        _logger.setLevel(logging_level)
-        
-        self.set_session(session, session_save_method)
-    
-    
-    def __call__(self, environ, start_response):
-        """
-        The WSGI mechanism.
-        
-        :param environ:
-        :param start_response:
-        """
-        
-        global config
-        
-        # Set request specific properties.
-        self._post = {}
-        self._get = {}
-        self.output = []
-        self.status = '200 OK'
-        self.headers = []
-        self.environ = environ
-        
-        self.scheme = self.environ.get('wsgi.url_scheme')
-        self.host = self.environ.get('HTTP_HOST')
-        self.domain = self.host.split(':')[0]
-        self.path = self.environ.get('PATH_INFO')
-        self.url = urlparse.urlunsplit((self.scheme, self.host, self.path, 0, 0))
-        
-        # Call the wrapped WSGI app and store it's output for later.
-        app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
-        
-        if self.block:
-            if not isinstance(self.session, Session):
-                # We must use the "Set-Cookie" header of the wrapped app
-                # if custom session was specified.
-                cookie_value = dict(app_headers).get('Set-Cookie', '')
-                session_header = ('Set-Cookie', cookie_value)
-                self.headers.append(session_header)
-            
-            start_response(self.status, self.headers, sys.exc_info())
-            output = self.output
-        else:
-            if isinstance(self.session, Session):
-                # If default session is used, delete our session cookie.
-                app_headers.append(('Set-Cookie', self.session.create_cookie(delete=True)))
-            
-            # Write out the output of the wrapped WSGI app.
-            start_response(app_status, app_headers, sys.exc_info())
-            
-            output = app_output
-            
-        self.block = False
-        return output
-    
-    def set_session(self, session, session_save_method):
-        """
-        Allows for a custom dictionary-like session to be used.
-        The session must implement the :class:`.extras.interfaces.BaseSession` interface.
-        
-        :param dict session:
-            A dictionary-like session instance.
-            
-        :param callable session_save_method:
-            A callable that saves the session data and sets the session cookie to response.
-        """
-        
-        if session is None:
-            # Use default session.
-            self.session = Session(settings.secret,
-                                   max_age=settings.session_max_age,
-                                   name=settings.prefix,
-                                   secure=settings.secure_cookie)
-            
-            self.save_session = self.session.save
-        else:
-            # Use custom session.
-            if session_save_method is None:
-                raise MiddlewareError('If you want to use custom "session", you must also ' + \
-                                      'specify with the "session_save_method" argument!')
-            else:
-                self.session = session
-                self.save_session = session_save_method
-        
-    
-    @property
-    def body(self):
-        """
-        The HTTP request body.
-        """
-        
-        length = int(self.environ.get('CONTENT_LENGTH', '0'))
-        
-        if length:
-            body = self.environ.get('wsgi.input').read(length)
-            return body
-        else:
-            return ''
-    
-    
-    def _clean_dict(self, items):
-        """
-        Converts all single-item values to its index [0] value.
-        
-        :param list items:
-            List of tuples.
-        
-        :returns:
-            :class:`dict`
-        """
-        
-        return {k: v[0] if len(v) == 1 else v for k, v in items}
-    
-    
-    def _parse_qs(self, qs):
-        """
-        Parses query string and returns cleaned dictionary.
-        
-        :param str qs:
-            Query string.
-        
-        :returns:
-            :class:`dict`
-        """
-        
-        qs = urlparse.parse_qs(qs)
-        return self._clean_dict(qs.items())
-    
-    
-    @property
-    def post(self):
-        """
-        Returns parsed POST parameters.
-        
-        :returns:
-            :class:`dict`
-        """
-        
-        if self._post:
-            return self._post
-        else:
-            self._post = self._parse_qs(self.body)
-            return self._post
-    
-    
-    @property
-    def get(self):
-        """
-        Returns parsed GET parameters.
-        
-        :returns:
-            :class:`dict`
-        """
-        
-        if self._get:
-            return self._get
-        else:
-            self._get = self._parse_qs(self.environ.get('QUERY_STRING'))
-            return self._get
-    
-    
-    @property
-    def params(self):
-        """
-        Returns combined GET and POST parameters.
-        
-        :returns:
-            :class:`dict`
-        """
-        
-        res = {}
-        
-        # Normalize common values of GET and POST to one key with list value.
-        for k, v in self.get.items():
-            if k in self.post:
-                vp = self.post[k]
-                vp = vp if type(vp) is list else [vp]
-                vg = v if type(v) is list else [v]                
-                res[k] = vg + vp
-            else:
-                res[k] = v
-        return res
-    
-    
-    def set_header(self, key, value):
-        """
-        Appends a HTTP response header.
-        
-        :param str key:
-            The name of the header.
-        
-        :param str value:
-            The header value.
-        """
-        
-        self.headers.append((key, value))
-    
-    
-    def write(self, value):
-        """
-        Writes the value to HTTP response
-        
-        :param str value:
-            The string to be written to response.
-        """
-        self.output.append(value)
-    
-    
-    def redirect(self, location):
-        """
-        Writes a ``302 Found`` redirect to specified location.
-        
-        :param str location:
-            The URL to redirect to.
-        """
-        
-        self.status = '302 Found'
-        self.set_header('Location', location)
 
 
 class User(ReprMixin):
@@ -971,7 +654,7 @@ class Credentials(ReprMixin):
             self.provider_type_id = provider.type_id
             
             #: :class:`str` Provider short name specified in the :doc:`config`.
-            self.provider_id = int(provider.id)
+            self.provider_id = int(provider.id) if provider.id else None
             
             #: :class:`class` Provider class.
             self.provider_class = provider.__class__
@@ -1188,7 +871,7 @@ class Credentials(ReprMixin):
         deserialized.provider_name = provider_name
         deserialized.provider_class = ProviderClass
         
-        # Add provider type specific properties is provider specific.
+        # Add provider type specific properties.
         return ProviderClass.reconstruct(split[2:], deserialized, cfg)
 
 
@@ -1246,13 +929,10 @@ class LoginResult(ReprMixin):
             '</html>',
         ))
         
-        if not self.pending:
-            return html.format(result=self.to_json(indent),
-                               custom=json.dumps(custom),
-                               callback=callback_name,
-                               title=title.format(self.provider.name if self.provider else ''))
-        else:
-            return ''
+        return html.format(result=self.to_json(indent),
+                           custom=json.dumps(custom),
+                           callback=callback_name,
+                           title=title.format(self.provider.name if self.provider else ''))
     
     @property
     def user(self):
@@ -1261,14 +941,6 @@ class LoginResult(ReprMixin):
         """
         
         return self.provider.user if self.provider else None
-    
-    @property
-    def pending(self):
-        """
-        ``False`` if the *login procedure* has finished, ``True`` if still pending.
-        """
-        
-        return middleware.block
     
     
     def to_dict(self):
@@ -1442,14 +1114,11 @@ class RequestElements(tuple):
         return self.url + '?' + self.query_string
 
 
-def setup_middleware(*args, **kwargs):
+def setup(config, secret, session_max_age=600, secure_cookie=False,
+             session=None, session_save_method=None, report_errors=True, debug=False,
+             logging_level=logging.INFO, prefix='authomatic',
+             fetch_headers={}):
     """
-    Wrapps your WSGI application in middleware which adds the **authorisation/authentication**
-    capability to it.
-    
-    :param app:
-            WSGI application to wrap.
-        
     :param dict config:
         :doc:`config`
         
@@ -1488,12 +1157,21 @@ def setup_middleware(*args, **kwargs):
         by which all logs will be prefixed.
     """
     
-    global middleware
-    middleware = Middleware(*args, **kwargs)
-    return middleware
+    settings.config = config
+    settings.secret = secret
+    settings.report_errors = report_errors
+    settings.debug = debug
+    settings.prefix = prefix
+    settings.secure_cookie = secure_cookie
+    settings.session_max_age = session_max_age
+    settings.logging_level = logging_level
+    settings.fetch_headers = fetch_headers
+    
+    # Set logging level.
+    _logger.setLevel(logging_level)
 
 
-def login(provider_name, callback=None, session=None, session_save_method=None, **kwargs):
+def login(adapter, provider_name, callback=None, session=None, session_save_method=None, **kwargs):
     """
     If :data:`provider_name` specified, launches the login procedure
     for coresponding :doc:`provider </reference/providers>` and
@@ -1524,16 +1202,22 @@ def login(provider_name, callback=None, session=None, session_save_method=None, 
     """
     
     if provider_name:
-        # Handle custom session.
-        middleware.set_session(session, session_save_method)
-        
-        # Inform middleware that the login procedure started.
-        middleware.block = True
-        
         # retrieve required settings for current provider and raise exceptions if missing
         provider_settings = settings.config.get(provider_name)
         if not provider_settings:
             raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
+        
+        if session and session_save_method:
+            session = session
+            session_save_method = session_save_method
+        else:
+            session = Session(adapter=adapter,
+                               secret=settings.secret,
+                               max_age=settings.session_max_age,
+                               name=settings.prefix,
+                               secure=settings.secure_cookie)
+            
+            session_save_method = session.save
         
         # Resolve provider class.
         class_ = provider_settings.get('class_')
@@ -1542,7 +1226,12 @@ def login(provider_name, callback=None, session=None, session_save_method=None, 
         ProviderClass = resolve_provider_class(class_)
         
         # instantiate provider class
-        provider = ProviderClass(provider_name, callback, **kwargs)
+        provider = ProviderClass(adapter=adapter,
+                                 provider_name=provider_name,
+                                 callback=callback,
+                                 session=session,
+                                 session_save_method=session_save_method,
+                                 **kwargs)
         
         # return login result
         return provider.login()
@@ -1714,7 +1403,7 @@ def request_elements(credentials=None, url=None, method='GET',
         return request_elements
 
 
-def json_endpoint():
+def json_endpoint(adapter):
     """
     Converts a *request handler* to a JSON endpoint which you can call from JavaScript.
     
@@ -1759,19 +1448,15 @@ def json_endpoint():
         The function blocks all writes to the response inside the handler.
     """
     
-    middleware.block = True
     AUTHOMATIC_HEADER = 'Authomatic-Response-To'
-    
-    logging.info('JSON ENDPOINT {}'.format(middleware.params))
-    logging.info('JSON ENDPOINT block =  {}'.format(middleware.block))
-    
+        
     # Collect request params
-    request_type = middleware.params.get('type', 'auto')
-    json_input = middleware.params.get('json')
-    credentials = middleware.params.get('credentials')
-    url = middleware.params.get('url')
-    method = middleware.params.get('method', 'GET')
-    params = middleware.params.get('params')
+    request_type = adapter.params.get('type', 'auto')
+    json_input = adapter.params.get('json')
+    credentials = adapter.params.get('credentials')
+    url = adapter.params.get('url')
+    method = adapter.params.get('method', 'GET')
+    params = adapter.params.get('params')
     params = json.loads(params) if params else {}
     
     ProviderClass = Credentials.deserialize(credentials).provider_class
@@ -1787,12 +1472,12 @@ def json_endpoint():
         result = response.content
         
         # Forward status
-        middleware.status = str(response.status) + ' ' + str(response.reason)
+        adapter.status = str(response.status) + ' ' + str(response.reason)
         
         # Forward headers
         for k, v in response.getheaders():
             if k not in ('x-frame-options',):
-                middleware.set_header(k, v)
+                adapter.set_header(k, v)
         
     elif request_type == 'elements':
         # Create request elements
@@ -1805,19 +1490,17 @@ def json_endpoint():
                                       params=params,
                                       return_json=True)
         
-        middleware.set_header('Content-Type', 'application/json')
+        adapter.set_header('Content-Type', 'application/json')
     else:
-        middleware.status = '400 Bad Request'
+        adapter.status = '400 Bad Request'
         # TODO: Write JSON error message to response
     
     
-    logging.info('JSON ENDPOINT block =  {}'.format(middleware.block))
-    
     # Add the authomatic header
-    middleware.set_header(AUTHOMATIC_HEADER, request_type)
+    adapter.set_header(AUTHOMATIC_HEADER, request_type)
     
     # Write result to response
-    middleware.write(result)
+    adapter.write(result)
     
 
 

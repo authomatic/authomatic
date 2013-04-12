@@ -1,4 +1,5 @@
 import authomatic
+from authomatic.adapters import gae
 import config
 import jinja2
 import json
@@ -31,15 +32,16 @@ class Home(BaseHandler):
 
 class Login(BaseHandler):
     def any(self, provider_name):
-        result = authomatic.login(provider_name)
-        apis = []
-        if result.user:
-            result.user.update()
-            if result.user.credentials:
-                apis = config.CONFIG.get(provider_name, {}).get('_apis', {})
-            
-        self.response.write(result.js_callback('loginCallback',
-                                               custom=dict(apis=apis)))
+        result = authomatic.login(gae.Webapp2Adapter(self), provider_name)
+        if result:
+            apis = []
+            if result.user:
+                result.user.update()
+                if result.user.credentials:
+                    apis = config.CONFIG.get(provider_name, {}).get('_apis', {})
+                
+            self.response.write(result.js_callback('loginCallback',
+                                                   custom=dict(apis=apis)))
 
 class Action(BaseHandler):
     def get(self):
@@ -58,7 +60,7 @@ class Action(BaseHandler):
 
 class JSON(BaseHandler):
     def get(self):
-        self.response.write(authomatic.json_endpoint())
+        authomatic.json_endpoint(gae.Webapp2Adapter(self))
 
 
 class Test(BaseHandler):
@@ -72,8 +74,9 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/test', Test),
           webapp2.Route(r'/', Home)]
 
-app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
-                            config=config.CONFIG,
-                            secret='dsgdfgdgj5fd5g4fmjnfggf6gnkfgn5fngh4n564d3vr54er5',
-                            report_errors=True,
-                            logging_level=logging.DEBUG)
+authomatic.setup(config=config.CONFIG,
+                 secret='dsgdfgdgj5fd5g4fmjnfggf6gnkfgn5fngh4n564d3vr54er5',
+                 report_errors=True,
+                 logging_level=logging.DEBUG)
+
+app = webapp2.WSGIApplication(ROUTES, debug=True)

@@ -79,24 +79,25 @@ class SessionOpenIDStore(object):
     
     _log = lambda level, message: None
     
-    def __init__(self, nonce_timeout=None):
+    def __init__(self, session, nonce_timeout=None):
         """
         :param int nonce_timeout:
             Nonces older than this in seconds will be considered expired.
             Default is :data:`.settings.session_max_age`.
         """
         
+        self.session = session
         self.nonce_timeout = nonce_timeout or settings.session_max_age
     
     def storeAssociation(self, server_url, association):
         self._log(logging.DEBUG, 'SessionOpenIDStore: Storing association to session.')
         # Allways store only one association as a tuple.
-        core.middleware.session['oia'] = (server_url, association.handle, association.serialize())
+        self.session['oia'] = (server_url, association.handle, association.serialize())
     
     
     def getAssociation(self, server_url, handle=None):
         # Try to get association.
-        assoc = core.middleware.session.get('oia')
+        assoc = self.session.get('oia')
         
         if assoc and assoc[0] == server_url:
             # If found deserialize and return it.
@@ -209,7 +210,7 @@ class OpenID(providers.AuthenticationProvider):
         super(OpenID, self).__init__(*args, **kwargs)
         
         # Allow for other openid store implementations.
-        self.store = self._kwarg(kwargs, 'store', SessionOpenIDStore())
+        self.store = self._kwarg(kwargs, 'store', SessionOpenIDStore(self.session))
         
         # Realm
         self.use_realm = self._kwarg(kwargs, 'use_realm', True)
@@ -272,12 +273,12 @@ class OpenID(providers.AuthenticationProvider):
                 
         # Instantiate consumer
         self.store._log = self._log
-        oi_consumer = consumer.Consumer(core.middleware.session, self.store)
+        oi_consumer = consumer.Consumer(self.session, self.store)
         
         # handle realm and XRDS if there is only one query parameter
-        if self.use_realm and len(core.middleware.params) == 1:
-            realm_request = core.middleware.params.get(self.realm_param)
-            xrds_request = core.middleware.params.get(self.xrds_param)                
+        if self.use_realm and len(self.params) == 1:
+            realm_request = self.params.get(self.realm_param)
+            xrds_request = self.params.get(self.xrds_param)                
         else:
             realm_request = None
             xrds_request = None
@@ -289,8 +290,8 @@ class OpenID(providers.AuthenticationProvider):
             #===================================================================
             
             self._log(logging.INFO, 'Writing OpenID realm HTML to the response.')
-            xrds_location = '{u}?{x}={x}'.format(u=core.middleware.url, x=self.xrds_param)
-            core.middleware.write(REALM_HTML.format(xrds_location=xrds_location, body=self.realm_body))
+            xrds_location = '{u}?{x}={x}'.format(u=self.url, x=self.xrds_param)
+            self.write(REALM_HTML.format(xrds_location=xrds_location, body=self.realm_body))
             
         elif xrds_request:
             #===================================================================
@@ -298,10 +299,10 @@ class OpenID(providers.AuthenticationProvider):
             #===================================================================
             
             self._log(logging.INFO, 'Writing XRDS XML document to the response.')
-            core.middleware.set_header('Content-Type', 'application/xrds+xml')
-            core.middleware.write(XRDS_XML.format(return_to=core.middleware.url))
+            self.set_header('Content-Type', 'application/xrds+xml')
+            self.write(XRDS_XML.format(return_to=self.url))
         
-        elif core.middleware.params.get('openid.mode'):
+        elif self.params.get('openid.mode'):
             #===================================================================
             # Phase 2 after redirect
             #===================================================================
@@ -309,7 +310,7 @@ class OpenID(providers.AuthenticationProvider):
             self._log(logging.INFO, 'Continuing OpenID authentication procedure after redirect.')
             
             # complete the authentication process
-            response = oi_consumer.complete(core.middleware.params, core.middleware.url)            
+            response = oi_consumer.complete(self.params, self.url)            
             
             # on success
             if response.status == consumer.SUCCESS:
@@ -359,7 +360,7 @@ class OpenID(providers.AuthenticationProvider):
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
             
-        elif core.middleware.params.get(self.identifier_param):
+        elif self.params.get(self.identifier_param):
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
@@ -395,9 +396,9 @@ class OpenID(providers.AuthenticationProvider):
             
             # prepare realm and return_to URLs
             if self.use_realm:
-                realm = return_to = '{u}?{r}={r}'.format(u=core.middleware.url, r=self.realm_param)
+                realm = return_to = '{u}?{r}={r}'.format(u=self.url, r=self.realm_param)
             else:
-                realm = return_to = core.middleware.url
+                realm = return_to = self.url
                         
             url = auth_request.redirectURL(realm, return_to)
             
@@ -405,13 +406,13 @@ class OpenID(providers.AuthenticationProvider):
                 # can be redirected
                 url = auth_request.redirectURL(realm, return_to)
                 self._log(logging.INFO, 'Redirecting user to {}.'.format(url))
-                core.middleware.redirect(url)
+                self.redirect(url)
             else:
                 # must be sent as POST
                 # this writes a html post form with auto-submit
                 self._log(logging.INFO, 'Writing an auto-submit HTML form to the response.')
                 form = auth_request.htmlMarkup(realm, return_to, False, dict(id='openid_form'))
-                core.middleware.write(form)
+                self.write(form)
         else:
             raise OpenIDError('No identifier specified!')
 

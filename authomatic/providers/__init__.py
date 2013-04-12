@@ -36,13 +36,14 @@ import traceback
 import urllib
 import urlparse
 import uuid
+from authomatic.core import Session
 
 __all__ = ['BaseProvider', 'AuthorisationProvider', 'AuthenticationProvider', 'login_decorator']
 
 
-def _write_error_traceback(exc_info, traceback):
+def _error_traceback_html(exc_info, traceback):
     """
-    Writes exception info and traceback to the response.
+    Generates error traceback HTML.
     
     :param tuple exc_info:
         Output of :finc:`sys.exc_info` function. 
@@ -64,7 +65,7 @@ def _write_error_traceback(exc_info, traceback):
     </html>
     """
     
-    authomatic.core.middleware.write(html.format(error=exc_info[1], traceback=traceback))
+    return html.format(error=exc_info[1], traceback=traceback)
 
 
 def login_decorator(func):
@@ -87,24 +88,28 @@ def login_decorator(func):
                 provider._log(logging.ERROR, 'Reported supressed exception: {}!'.format(repr(error)))
             else:
                 if settings.debug:
-                    _write_error_traceback(sys.exc_info(), traceback.format_exc())
+                    # TODO: Check whether it actually works without middleware
+                    provider.write(_error_traceback_html(sys.exc_info(), traceback.format_exc()))
                 raise
         
         # If there is user or error the login procedure has finished
         if provider.user or error:
+            result = authomatic.core.LoginResult(provider)
             # Add error to result
             result.error = error
-            # Let middleware know that login procedure is over
-            authomatic.core.middleware.block = False
+            
+            # delete session cookie
+            if isinstance(provider.session, authomatic.core.Session):
+                provider.session.delete()
+            
             provider._log(logging.INFO, 'Procedure finished.')
+            
+            if provider.callback:
+                provider.callback(result)
+            return result
         else:
             # Save session
-            authomatic.core.middleware.save_session()
-        
-        # Return result       
-        if result and provider.callback:
-            provider.callback(result)
-        return result
+            provider.save_session()
         
     return wrap
 
@@ -120,8 +125,14 @@ class BaseProvider(object):
     
     __metaclass__ = abc.ABCMeta
     
-    def __init__(self, provider_name, callback=None, js_callback=None,
+    def __init__(self, adapter, provider_name, session=None, session_save_method=None, callback=None, js_callback=None,
                  prefix='authomatic', **kwargs):
+        
+        self.adapter = adapter
+        
+        self.session = session
+        self.save_session = session_save_method
+        
         
         #: :class:`str` The provider name as specified in the :doc:`config`.
         self.name = provider_name
@@ -135,6 +146,37 @@ class BaseProvider(object):
                 
         #: :class:`.core.User`.
         self.user = None
+    
+    
+    ###############################################
+    # From Middleware
+    ###############################################
+    
+    @property
+    def url(self):
+        return self.adapter.url
+    
+    
+    @property
+    def params(self):
+        return self.adapter.params
+    
+    
+    def write(self, value):
+        self.adapter.write(value)
+    
+    
+    def set_header(self, key, value):
+        self.adapter.set_header(key, value)
+    
+    
+    def set_status(self, status):
+        self.adapter.set_status(status)
+    
+    
+    def redirect(self, url):
+        self.set_status('302 Found')
+        self.set_header('Location', url)
     
     
     #===========================================================================
@@ -189,8 +231,6 @@ class BaseProvider(object):
         :returns:
             :class:`.User`
         """
-        
-        return self.user
     
     
     #===========================================================================
@@ -251,13 +291,13 @@ class BaseProvider(object):
     def _session_set(self, key, value):
         """Saves a value to session."""
         
-        authomatic.core.middleware.session[self._session_key(key)] = value
+        self.session[self._session_key(key)] = value
     
     
     def _session_get(self, key):
         """Retrieves a value from session."""
         
-        return authomatic.core.middleware.session.get(self._session_key(key))
+        return self.session.get(self._session_key(key))
     
     
     @staticmethod
@@ -417,10 +457,14 @@ class BaseProvider(object):
                 value = data.get(key)
                 if value:
                     setattr(self.user, key, value)
-             
+        
         # Handle different structure of data by different providers.
         self.user = self._x_user_parser(self.user, data)
         
+        if self.user.id:
+            self.user.id = str(self.user.id)
+        
+        # TODO: Move to User
         # If there is no user.name,
         if not self.user.name:
             if self.user.first_name and self.user.last_name:
@@ -798,8 +842,6 @@ class AuthorisationProvider(BaseProvider):
         
         url = self.user_info_url.format(**self.user.__dict__)
         
-        logging.info('USER INFO URL: {}'.format(url))
-        
         response = self.access_with_credentials(self.credentials, url)
         
         # Create user.
@@ -827,7 +869,7 @@ class AuthenticationProvider(BaseProvider):
         self.identifier_param = kwargs.get('identifier_param', 'id')
         
         # Get the identifier from request params.
-        self.identifier = authomatic.core.middleware.params.get(self.identifier_param)
+        self.identifier = self.params.get(self.identifier_param)
         
 
 PROVIDER_ID_MAP = [BaseProvider, AuthorisationProvider, AuthenticationProvider]

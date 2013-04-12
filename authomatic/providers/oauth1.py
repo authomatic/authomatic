@@ -354,9 +354,9 @@ class OAuth1(providers.AuthorisationProvider):
     @providers.login_decorator
     def login(self):
         # get request parameters from which we can determine the login phase
-        denied = core.middleware.params.get('denied')
-        verifier = core.middleware.params.get('oauth_verifier', '')
-        request_token = core.middleware.params.get('oauth_token', '')
+        denied = self.params.get('denied')
+        verifier = self.params.get('oauth_verifier', '')
+        request_token = self.params.get('oauth_token', '')
         
         if request_token and verifier:
             # Phase 2 after redirect with success
@@ -413,7 +413,7 @@ class OAuth1(providers.AuthorisationProvider):
             request_elements = self.create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
                                                              credentials=self.credentials,
                                                              url=self.request_token_url,
-                                                             callback=core.middleware.url,
+                                                             callback=self.url,
                                                              params=self.request_token_params)
             
             self._log(logging.INFO, 'Fetching for request token and token secret.')
@@ -458,7 +458,7 @@ class OAuth1(providers.AuthorisationProvider):
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements.full_url))
             
-            core.middleware.redirect(request_elements.full_url)
+            self.redirect(request_elements.full_url)
 
 
 class Bitbucket(OAuth1):
@@ -602,6 +602,7 @@ class Twitter(OAuth1):
     @staticmethod
     def _x_user_parser(user, data):
         user.username = data.get('screen_name')
+        user.id = data.get('id') or data.get('user_id')
         user.picture = 'http://api.twitter.com/1/users/profile_image?screen_name={}&size=original'.format(data.get('screen_name'))
         user.locale = data.get('lang')
         user.link = data.get('url')

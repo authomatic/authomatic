@@ -1,35 +1,41 @@
 # main.py
 
+from authomatic.adapters import gae
+from config import CONFIG
 import authomatic
+import logging
 import urllib
 import webapp2
 
-from config import CONFIG
 
 
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
         
         # Log the user in.
-        result = authomatic.login(provider_name)
+        result = authomatic.login(gae.Webapp2Adapter(self), provider_name)
         
-        if result.user:
-            result.user.update()
-            self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
-            
-            # Save the user name and ID to cookies that we can use it in other handlers.
-            self.response.set_cookie('user_id', result.user.id)
-            self.response.set_cookie('user_name', urllib.quote(result.user.name))
-            
-            if result.user.credentials:
-                # Serialize credentials and store it as well.
-                serialized_credentials = result.user.credentials.serialize()
-                self.response.set_cookie('credentials', serialized_credentials)
+        if result:
+            if result.user:
+                result.user.update()
+                self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
                 
-        elif result.error:
-            self.response.set_cookie('error', urllib.quote(result.error.message))
-        
-        self.redirect('/')
+                # Save the user name and ID to cookies that we can use it in other handlers.
+                
+                logging.info('UID {}'.format(result.user.id))
+                logging.info('UID type {}'.format(type(result.user.id)))
+                self.response.set_cookie('user_id', result.user.id)
+                self.response.set_cookie('user_name', urllib.quote(result.user.name))
+                
+                if result.user.credentials:
+                    # Serialize credentials and store it as well.
+                    serialized_credentials = result.user.credentials.serialize()
+                    self.response.set_cookie('credentials', serialized_credentials)
+                    
+            elif result.error:
+                self.response.set_cookie('error', urllib.quote(result.error.message))
+            
+            self.redirect('/')
 
 
 class Home(webapp2.RequestHandler):
@@ -51,6 +57,7 @@ class Home(webapp2.RequestHandler):
             
             if serialized_credentials:
                 # Deserialize credentials.
+                logging.info('SERIALIZED CREDENTIALS: {}'.format(serialized_credentials))
                 credentials = authomatic.credentials(serialized_credentials)
                 
                 name = credentials.provider_name
@@ -216,9 +223,11 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/logout', Logout),
           webapp2.Route(r'/', Home)]
 
+authomatic.setup(config=CONFIG,
+                 report_errors=False,
+                 secret='a-long-secret-string')
 
-# Wrap the WSGI app in middleware.
-app = authomatic.middleware(webapp2.WSGIApplication(ROUTES, debug=True),
-                            config=CONFIG,
-                            report_errors=False,
-                            secret='a-long-secret-string')
+app = webapp2.WSGIApplication(ROUTES, debug=True)
+
+
+

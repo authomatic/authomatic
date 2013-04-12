@@ -276,9 +276,9 @@ class OAuth2(providers.AuthorisationProvider):
     def login(self):
         
         # get request parameters from which we can determine the login phase
-        authorisation_code = core.middleware.params.get('code')
-        error = core.middleware.params.get('error')
-        state = core.middleware.params.get('state')      
+        authorisation_code = self.params.get('code')
+        error = self.params.get('error')
+        state = self.params.get('state')      
         
         if authorisation_code or not self.user_authorisation_url:
             
@@ -320,7 +320,7 @@ class OAuth2(providers.AuthorisationProvider):
                                                              credentials=self.credentials,
                                                              url=self.access_token_url,
                                                              method='POST',
-                                                             redirect_uri=core.middleware.url,
+                                                             redirect_uri=self.url,
                                                              params=self.access_token_params,
                                                              headers=self.access_token_headers)
             
@@ -368,8 +368,8 @@ class OAuth2(providers.AuthorisationProvider):
             # Phase 2 after redirect with error
             #===================================================================
             
-            error_reason = core.middleware.params.get('error_reason')
-            error_description = core.middleware.params.get('error_description')
+            error_reason = self.params.get('error_reason')
+            error_description = self.params.get('error_description')
             
             if error_reason == 'user_denied':
                 raise CancellationError(error_description, url=self.user_authorisation_url)
@@ -395,14 +395,14 @@ class OAuth2(providers.AuthorisationProvider):
             request_elements = self.create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
                                                             credentials=self.credentials,
                                                             url=self.user_authorisation_url,
-                                                            redirect_uri=core.middleware.url,
+                                                            redirect_uri=self.url,
                                                             scope=self._x_scope_parser(self.scope),
                                                             csrf=csrf,
                                                             params=self.user_authorisation_params)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements.full_url))
             
-            core.middleware.redirect(request_elements.full_url)
+            self.redirect(request_elements.full_url)
 
 
 class Behance(OAuth2):
