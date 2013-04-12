@@ -58,11 +58,7 @@ class Action(BaseHandler):
 
 class JSON(BaseHandler):
     def get(self):
-        self.response.write('<h1>JSON endpoint start</h1>')
-        
-        authomatic.json_endpoint()
-        
-        self.response.write('<h1>JSON endpoint end</h1>')
+        self.response.write(authomatic.json_endpoint())
 
 
 class Test(BaseHandler):

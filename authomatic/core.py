@@ -636,9 +636,6 @@ class Middleware(object):
         # Call the wrapped WSGI app and store it's output for later.
         app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
         
-        logging.info('MIDDLEWARE app_headers: {}'.format(app_headers))
-        logging.info('MIDDLEWARE environ: {}'.format(environ))
-        
         if self.block:
             if not isinstance(self.session, Session):
                 # We must use the "Set-Cookie" header of the wrapped app
@@ -691,7 +688,6 @@ class Middleware(object):
                 self.session = session
                 self.save_session = session_save_method
         
-    
     
     @property
     def body(self):
