@@ -262,9 +262,7 @@ class OAuth1(providers.AuthorisationProvider):
         Creates |oauth1| request elements.
         """
         
-        logging.info('CRE: params = {}'.format(params))
         params = params or {}
-        logging.info('CRE: params = {}'.format(params))
         headers = headers or {}
         
         consumer_key = credentials.consumer_key or ''
@@ -324,11 +322,9 @@ class OAuth1(providers.AuthorisationProvider):
             params['oauth_nonce'] = cls.csrf_generator()
             params['oauth_version'] = '1.0'
             
-            logging.info('CRE: params = {}'.format(params))
             # add signature to params
             params['oauth_signature'] = cls._signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
-            logging.info('CRE: params = {}'.format(params))
-        
+            
         return core.RequestElements(url, method, params, headers)
     
     

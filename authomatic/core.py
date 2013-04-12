@@ -213,36 +213,6 @@ def id_to_name(config, short_name):
         raise Exception('No provider with id={} found in the config!'.format(short_name))
 
 
-def call_wsgi(app, environ):
-    """
-    Calls a WSGI application.
-    
-    :param app:
-        WSGI application.
-        
-    :param dict environ:
-        The WSGI *environ* dictionary.
-    """
-    
-    # Placeholder for status, headers and exec_info.
-    args = [None, None]
-    
-    def start_response(status, headers, exc_info=None):
-        """
-        Dummy start_response to retrieve status, headersand  exc_info from the app.
-        """
-        # Copy values.
-        args[:] = [status, headers, exc_info]
-    
-    # Call the WSGI app and pass it our start_response.
-    app_iter = app(environ, start_response)
-    
-    # Unpack values
-    status, headers, exc_info = args
-    
-    return app_iter, status, headers, exc_info
-
-
 class ReprMixin(object):
     """
     Provides __repr__() method with output *ClassName(arg1=value, arg2=value)*.
@@ -532,6 +502,36 @@ class Session(object):
         return self.data.get(key, default)
 
 
+def call_wsgi(app, environ):
+    """
+    Calls a WSGI application.
+    
+    :param app:
+        WSGI application.
+        
+    :param dict environ:
+        The WSGI *environ* dictionary.
+    """
+    
+    # Placeholder for status, headers and exec_info.
+    args = [None, None]
+    
+    def start_response(status, headers, exc_info=None):
+        """
+        Dummy start_response to retrieve status, headersand  exc_info from the app.
+        """
+        # Copy values.
+        args[:] = [status, headers, exc_info]
+    
+    # Call the WSGI app and pass it our start_response.
+    app_iter = app(environ, start_response)
+    
+    # Unpack values
+    status, headers, exc_info = args
+    
+    return app_iter, status, headers, exc_info
+
+
 class Middleware(object):
     """
     WSGI middleware responsible for these task during the **login procedure**:
@@ -636,8 +636,10 @@ class Middleware(object):
         # Call the wrapped WSGI app and store it's output for later.
         app_output, app_status, app_headers, exc_info = call_wsgi(self.app, environ)
         
+        logging.info('MIDDLEWARE app_headers: {}'.format(app_headers))
+        logging.info('MIDDLEWARE environ: {}'.format(environ))
+        
         if self.block:
-            # This middleware intercepts only if the login procedure is block.
             if not isinstance(self.session, Session):
                 # We must use the "Set-Cookie" header of the wrapped app
                 # if custom session was specified.
@@ -646,9 +648,8 @@ class Middleware(object):
                 self.headers.append(session_header)
             
             start_response(self.status, self.headers, sys.exc_info())
-            return self.output
+            output = self.output
         else:
-            # If login procedure has finished.
             if isinstance(self.session, Session):
                 # If default session is used, delete our session cookie.
                 app_headers.append(('Set-Cookie', self.session.create_cookie(delete=True)))
@@ -656,8 +657,10 @@ class Middleware(object):
             # Write out the output of the wrapped WSGI app.
             start_response(app_status, app_headers, sys.exc_info())
             
-            return app_output
-    
+            output = app_output
+            
+        self.block = False
+        return output
     
     def set_session(self, session, session_save_method):
         """
@@ -1184,7 +1187,7 @@ class Credentials(ReprMixin):
         
         deserialized.provider_id = provider_id
         deserialized.provider_type = ProviderClass.get_type()
-        deserialized.provider_type_id = float(split[1])
+        deserialized.provider_type_id = split[1]
         deserialized.provider_class = ProviderClass
         deserialized.provider_name = provider_name
         deserialized.provider_class = ProviderClass
@@ -1623,12 +1626,12 @@ def async_access(*args, **kwargs):
     return Future(access, *args, **kwargs)
 
 
-def request_elements(credentials=None, url=None, method='GET', params=None,
-                     headers=None, json_input=None, return_json=False):
+def request_elements(credentials=None, url=None, method='GET',
+                     params=None, json_input=None, return_json=False):
     """
     Creates request elements for accessing **protected resource of a user**.
     Required arguments are :data:`credentials` and :data:`url`.
-    You can pass :data:`credentials`, :data:`url`, :data:`method`, :data:`params` and :data:`headers`
+    You can pass :data:`credentials`, :data:`url`, :data:`method`, and :data:`params`
     as a JSON object.
     
     :param credentials:
@@ -1643,9 +1646,6 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
     :param dict params:
         Dictionary of request parameters.
         
-    :param dict headers:
-        Dictionary of request headers
-        
     :param str json_input:
         you can pass :data:`credentials`, :data:`url`, :data:`method`, :data:`params` and :data:`headers`
         in a JSON object. Values from arguments will be used for missing properties.
@@ -1658,9 +1658,6 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
                 "method": "POST",
                 "params": {
                     "foo": "bar"
-                },
-                "headers": {
-                    "baz": "bing"
                 }
             }
         
@@ -1671,8 +1668,11 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
             
             {
                 "url": "https://example.com/api",
-                "body": "access_token=###&foo=bar&...",
                 "method": "POST",
+                "params": {
+                    "access_token": "###",
+                    "foo": "bar"
+                },
                 "headers": {
                     "baz": "bing",
                     "Authorisation": "Bearer ###"
@@ -1680,7 +1680,7 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
             }
         
     :returns:
-        ``(url, body, method, headers)`` tuple or JSON string.
+        :class:`.RequestElements` or JSON string.
     """
     
     # Parse values from JSON
@@ -1691,11 +1691,10 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
         url = parsed_input.get('url', url)
         method = parsed_input.get('method', method)
         params = parsed_input.get('params', params)
-        headers = parsed_input.get('headers', headers)
     
     if not credentials and url:
         raise RequestElementsError('To create request elements, you must provide credentials ' +\
-                                    'and url either as keyword arguments or in the JSON object!')
+                                    'and URL either as keyword arguments or in the JSON object!')
     
     # Get the provider class
     credentials = Credentials.deserialize(credentials)
@@ -1706,14 +1705,13 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
                                                              credentials=credentials,
                                                              url=url,
                                                              method=method,
-                                                             params=params,
-                                                             headers=headers)
+                                                             params=params)
     
     if return_json:
-        url, body, method, headers = request_elements
+        url, method, params, headers = request_elements
         return json.dumps(dict(url=url,
-                               body=body,
                                method=method,
+                               params=params,
                                headers=headers))
         
     else:
@@ -1740,8 +1738,7 @@ def json_endpoint():
             "credentials": "",
             "url": "https://example.com",
             "method": "POST",
-            "params": {"foo": "bar"},
-            "headers": {"baz": "bing"},
+            "params": {"foo": "bar"}
         }
     
     and will write a JSON object like this to the response:
@@ -1749,29 +1746,35 @@ def json_endpoint():
     ::
         
         {
-            "url": "https://example.com",
+            "url": "https://example.com/api",
             "method": "POST",
-            "body": "oauth_nonce=123&oauth_timestamp=456&oauth_consumer_key=###&...",
+            "params": {
+                "access_token": "###",
+                "foo": "bar"
+            },
             "headers": {
                 "baz": "bing",
-                "Other-Provider": "specific; headers"
-            },
+                "Authorisation": "Bearer ###"
+            }
         }
     
     .. note::
         
-        The function blocks every other writes to the response inside the handler.
+        The function blocks all writes to the response inside the handler.
     """
     
     middleware.block = True
     AUTHOMATIC_HEADER = 'Authomatic-Response-To'
+    
+    logging.info('JSON ENDPOINT {}'.format(middleware.params))
+    logging.info('JSON ENDPOINT block =  {}'.format(middleware.block))
     
     # Collect request params
     request_type = middleware.params.get('type', 'auto')
     json_input = middleware.params.get('json')
     credentials = middleware.params.get('credentials')
     url = middleware.params.get('url')
-    method = middleware.params.get('method')
+    method = middleware.params.get('method', 'GET')
     params = middleware.params.get('params')
     params = json.loads(params) if params else {}
     
@@ -1801,16 +1804,19 @@ def json_endpoint():
             result = request_elements(json_input=json_input, return_json=True)
         else:
             result = request_elements(credentials=credentials,
-                                            url=url,
-                                            method=method,
-                                            params=params,
-                                            return_json=True)
+                                      url=url,
+                                      method=method,
+                                      params=params,
+                                      return_json=True)
         
         middleware.set_header('Content-Type', 'application/json')
     else:
         middleware.status = '400 Bad Request'
         # TODO: Write JSON error message to response
-        
+    
+    
+    logging.info('JSON ENDPOINT block =  {}'.format(middleware.block))
+    
     # Add the authomatic header
     middleware.set_header(AUTHOMATIC_HEADER, request_type)
     

@@ -4,12 +4,9 @@ $(document).ready(function (e) {
 	
 	authomatic.popup();
 	
-	var s = authomatic.format('x {user.id} x {user.name} x {pokus} x', {user:{"id": 123, name: 'hudo'}, pokus: 'keket'});
-	console.log(s);
-	
 	$pokus = $('#pokus');
 	
-	// pokus();
+	pokus();
 	
 	$('form.api-post').submit(function(e) {
 		e.preventDefault();

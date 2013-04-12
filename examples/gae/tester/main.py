@@ -66,6 +66,11 @@ class Login(webapp2.RequestHandler):
                 self.response.write('<h5>expiration date: {}</h5>'.format(result.user.credentials.expiration_date))
                 loop(self, result.user.credentials)
                 
+                self.response.write('<h3>Serialized credentials</h3>')
+                serialized_credentials = result.user.credentials.serialize()
+                endpoint_url = '/login/?type=elements&url=http://example.com&credentials=' + serialized_credentials
+                self.response.write('<a href="{}" target="_blank">{}</a>'.format(endpoint_url, serialized_credentials))
+                
                 json_input = """
                 {{"credentials": "{}",
                 "url": "http://example.com",

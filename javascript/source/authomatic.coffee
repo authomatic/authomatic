@@ -1,9 +1,78 @@
 $ = jQuery
 
+###########################################################
+# Internal functions
+###########################################################
+
 log = (args...) ->
   if authomatic.defaults.logging
     console.log 'Authomatic:', args...
 
+parseQueryString = (queryString) ->
+  result = {}
+  for item in queryString.split('&')
+    [k, v] = item.split('=')
+    v = decodeURIComponent(v)
+    if result.hasOwnProperty k
+      if Array.isArray result[k]
+        result[k].push(v)
+      else
+        result[k] = [result[k], v]
+    else
+      result[k] = v
+  result
+
+parseUrl = (url) ->
+  log('parseUrl', url)
+  questionmarkIndex = url.indexOf('?')
+  if questionmarkIndex >= 0
+    u = url.substring(0, questionmarkIndex)
+    qs = url.substring(questionmarkIndex + 1)
+  else
+    u = url
+
+  url: u
+  query: qs
+  params: parseQueryString(qs) if qs
+
+deserializeCredentials = (credentials) ->
+  sc = decodeURIComponent(credentials).split('\n')
+
+  typeId = sc[1]
+  [type, subtype] = typeId.split('-')
+
+  id: parseInt(sc[0])
+  typeId: typeId
+  type: parseInt(type)
+  subtype: parseInt(subtype)
+  rest: sc[2..]
+
+getProviderClass = (credentials) ->
+  {type, subtype} = deserializeCredentials(credentials)
+  
+  if type is 1
+    Oauth1Provider
+  else if type is 2
+    OAuth2JsonpProvider
+  else
+    BaseProvider
+
+format = (template, substitute) ->
+  # Replace all {object.value} tags
+  template.replace /{([^}]*)}/g, (match, tag)->
+    # Traverse through dotted path in substitute
+    target = substitute
+    for level in tag.split('.')
+      target = target[level]
+    # Return value of the last object in the path
+
+    # TODO: URL encode
+    target
+
+
+###########################################################
+# Global objects
+###########################################################
 
 window.authomatic = new class Authomatic
   defaults:
@@ -49,61 +118,16 @@ window.authomatic = new class Authomatic
       if validator($form)
         @_openWindow(url, width, height)
   
-  splitUrl: (url) ->
-    url: url.substring(0, url.indexOf('?'))
-    qs: url.substring(url.indexOf('?') + 1)
-  
-  parseQueryString: (queryString) ->
-    result = {}
-    for item in queryString.split('&')
-      [k, v] = item.split('=')
-      if result.hasOwnProperty k
-        if Array.isArray result[k]
-          result[k].push(v)
-        else
-          result[k] = [result[k], v]
-      else
-        result[k] = v
-    result
-  
-  deserializeCredentials: (credentials) ->
-    sc = decodeURIComponent(credentials).split('\n')
-    id: parseInt(sc[0])
-    type: parseFloat(sc[1])
-    rest: sc[2..]
-  
-  getProviderClass: (credentials) ->
-    type = @deserializeCredentials(credentials).type
-    
-    if type > 1 and type < 2
-      Oauth1Provider
-    
-    else if type > 1 and type < 3
-      # OAuth 2.0
-      OAuth2JsonpProvider
-    
-    else
-      BaseProvider
-  
   access: (credentials, url, options) ->
     options = $.extend(authomatic.accessDefaults, options)
     
-    url = @format(url, options.substitute)
+    url = format(url, options.substitute)
     
-    Provider = @getProviderClass(credentials)
+    Provider = getProviderClass(credentials)
     log("Instantiating #{Provider.name}.")
     provider = new Provider(options.backend, credentials, url, options)
     provider.access()
-  
-  format: (template, substitute) ->
-    # Replace all {object.value} tags
-    template.replace /{([^}]*)}/g, (match, tag)->
-      # Traverse through dotted path in substitute
-      target = substitute
-      for level in tag.split('.')
-        target = target[level]
-      # Return value of the last object in the path
-      target
+
   
   @jsonPCallbackCounter: 0
   
@@ -135,52 +159,70 @@ window.authomatic = new class Authomatic
 
 
 class BaseProvider
-  constructor: (@backend, @credentials, @url, options) ->
+  constructor: (@backend, @credentials, url, options) ->
     defaults =
       method: 'GET'
       params: {}
       complete: (jqXHR, status) -> log('access complete', jqXHR, status)
       success: (data, status, jqXHR) -> log('access succeded', data, jqXHR, status)
     
-    @options = $.extend(defaults, options)
-    @deserializedCredentials = authomatic.deserializeCredentials(@credentials)
+    options = $.extend(defaults, options)
+    
+    @deserializedCredentials = deserializeCredentials(@credentials)
     @providerID = @deserializedCredentials.id
     @providerType = @deserializedCredentials.type
     @credentialsRest = @deserializedCredentials.rest
+
+    parsedUrl = parseUrl(url)
+    @url = parsedUrl.url
+    @method = options.method
+    @params = $.extend(parsedUrl.params, options.params)
+
+    @completeCallback = options.complete
+    @successCallback = options.success
   
   contactBackend: (callback) =>
     data =
       credentials: @credentials
       url: @url
-      method: @options.method
-      params: @options.params
+      method: @method
+      params: JSON.stringify(@params)
     
-    log "Contacting backend at #{@backend}."
+    log "Contacting backend at #{@backend}.", data
     $.get(@backend, data, callback)
   
   contactProvider: (requestElements) =>
-    {url, method, params, headers, body} = requestElements
+    {url, method, params, headers} = requestElements
     
-    params = authomatic.parseQueryString(body) if body
+    options =
+      type: method
+      data: params
+      headers: headers
+      complete: @completeCallback
+      success: @successCallback
     
-    @options['type'] = method
-    @options['data'] = params
-    @options['headers'] = headers
-    
-    log "Contacting provider.", url, @options
-    $.ajax(url, @options)
-      
+    log "Contacting provider.", url, options
+    $.ajax(url, options)
   
   access: =>
-    @contactBackend (data, textStatus, jqXHR) =>
-      responseTo = jqXHR?.getResponseHeader 'Authomatic-Response-To'
+    callback = (data, textStatus, jqXHR) =>
+      # Find out whether backend returned fetch result or request elements.
+      responseTo = jqXHR?.getResponseHeader('Authomatic-Response-To')
+
       if responseTo is 'fetch'
         log "Fetch data returned from backend.", data
-        @options.success(data, status, jqXHR)
-        @options.complete(jqXHR, textStatus)
+        @successCallback(data, status, jqXHR)
+        @completeCallback(jqXHR, textStatus)
+
       else if responseTo is 'elements'
         log "Request elements data returned from backend.", data
         @contactProvider(data)
+
+      else
+        log "WTF.", data, textStatus, jqXHR
+    
+    @contactBackend(callback)
+
 
 class Oauth1Provider extends BaseProvider
 
@@ -252,24 +294,33 @@ class OAuth2JsonpProvider extends OAuth2CrossDomainProvider
 window.pokus = ->
   backend = 'http://authomatic.com:8080/json'
   
-  twUrl = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
-  twCredentials = '5%0A1.5%0A1186245026-TI2YCrKLCsdXH7PeFE8zZPReKDSQ5BZxHzpjjel%0A1Xhim7w8N9rOs05WWC8rnwIzkSz1lCMMW9TSPLVtfk'
+  # Twitter
+  twCredentials = '5%0A1-5%0A1186245026-TI2YCrKLCsdXH7PeFE8zZPReKDSQ5BZxHzpjjel%0A1Xhim7w8N9rOs05WWC8rnwIzkSz1lCMMW9TSPLVtfk'
   
-  fbUrl = 'https://graph.facebook.com/737583375/feed'
-  fbCredentials = '15%0A2.5%0ABAAG3FAWiCwIBAJn0CKLOphV4meEbBvUcGcAXIN0z1Pv2JtCrziXlKvM99WX3p4YxI9oHC02ZCpsv7d3CZCsTMy9lqZAohaypwb3nGSKAscqngzFVTOULGLRd5ygXQYtqcka1iERfZAfZA8KQjx7Mps0izinhKyV0EGCJo1HhQcOjx1QYiCAEp%0A%0A1370766038%0A0'
-  
-  options =
+  twPostUrl = 'https://api.twitter.com/1.1/statuses/update.json'
+  twPostOptions =
     method: 'POST'
     params:
-      message: 'keket'
+      status: 'keket'
     success: (data, status, jqXHR) -> log('hura, podarilo sa:', data)
-      
+
+  twGetUrl = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
+  twGetOptions =
+    method: 'GET'
+    success: (data, status, jqXHR) -> log('hura, podarilo sa:', data)
+
+  # Facebook
+  fbUrl = 'https://graph.facebook.com/737583375/feed'
+  fbCredentials = '15%0A2-5%0ABAAG3FAWiCwIBAJn0CKLOphV4meEbBvUcGcAXIN0z1Pv2JtCrziXlKvM99WX3p4YxI9oHC02ZCpsv7d3CZCsTMy9lqZAohaypwb3nGSKAscqngzFVTOULGLRd5ygXQYtqcka1iERfZAfZA8KQjx7Mps0izinhKyV0EGCJo1HhQcOjx1QYiCAEp%0A%0A1370766038%0A0'
+  
+  
+  log('POKUS', parseUrl('http://example.com/foo/bar?a=1&b=2&c=3&b=4&d=%3F%2F%24%26'))
   
   # provider = new OAuth2JsonpProvider(backend, fbCredentials, fbUrl, options)
   # provider.access()
   
   authomatic.accessDefaults.backend = 'http://authomatic.com:8080/json'
-  authomatic.access(fbCredentials, fbUrl, options)
+  authomatic.access(twCredentials, twPostUrl, twPostOptions)
 
 ########################################################################################
 

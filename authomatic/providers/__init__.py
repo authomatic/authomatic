@@ -200,17 +200,16 @@ class BaseProvider(object):
     @property
     def type_id(self):
         """
-        A :class:`float` reprezenting the provider implementation id used for
+        A short string reprezenting the provider implementation id used for
         serialization of :class:`.Credentials` and to identify the type of provider in JavaScript.
-        The part before period denotes the type of the provider, the part after period denotes the class id
-        e.g. ``oauth2.Facebook.type_id = 2.5``, ``oauth1.Twitter.type_id = 1.5``.
+        The part before hyphen denotes the type of the provider, the part after hyphen denotes the class id
+        e.g. ``oauth2.Facebook.type_id = '2-5'``, ``oauth1.Twitter.type_id = '1-5'``.
         """
-        
-        # FIXME: type 1.1 and 1.10 are the same! It needs to be string.
         
         cls = self.__class__
         mod = sys.modules.get(cls.__module__)
-        return self.PROVIDER_TYPE_ID + float(mod.PROVIDER_ID_MAP.index(cls)) / 1000
+        
+        return str(self.PROVIDER_TYPE_ID) + '-' + str(mod.PROVIDER_ID_MAP.index(cls))
     
     
     def _kwarg(self, kwargs, kwname, default=None):
@@ -324,20 +323,26 @@ class BaseProvider(object):
         
         params = params or {}
         headers = headers or {}
+        body = None
         
-        # Prepare URL elements
         scheme, host, path, query, fragment = urlparse.urlsplit(url)
+        
         query = urllib.urlencode(params)
-        request_path = urlparse.urlunsplit((None, None, path, query, None))
         
         # Apply headers from settings.
         headers.update(settings.fetch_headers)
         
         if method in ('POST', 'PUT', 'PATCH'):
+            body = query
+            query = None
             headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
         
-        cls._log(logging.DEBUG, u' \u251C\u2500 url: {}'.format(url))
+        request_path = urlparse.urlunsplit((None, None, path, query, None))
+        
+        cls._log(logging.DEBUG, u' \u251C\u2500 host: {}'.format(host))
+        cls._log(logging.DEBUG, u' \u251C\u2500 path: {}'.format(request_path))
         cls._log(logging.DEBUG, u' \u251C\u2500 method: {}'.format(method))
+        cls._log(logging.DEBUG, u' \u251C\u2500 body: {}'.format(body))
         cls._log(logging.DEBUG, u' \u251C\u2500 params: {}'.format(params))
         cls._log(logging.DEBUG, u' \u2514\u2500 headers: {}'.format(headers))
         
@@ -348,7 +353,7 @@ class BaseProvider(object):
             connection = httplib.HTTPConnection(host)
             
         try:
-            connection.request(method, request_path, query, headers)
+            connection.request(method, request_path, body, headers)
         except Exception as e:
             raise FetchError('Could not connect!',
                              original_message=e.message,
@@ -371,7 +376,7 @@ class BaseProvider(object):
                 
                 # Call this method again.
                 response = cls._fetch(url=location,
-                                      body=body,
+                                      params=params,
                                       method=method,
                                       headers=headers,
                                       max_redirects=remaining_redirects)
