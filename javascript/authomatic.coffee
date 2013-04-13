@@ -1,8 +1,20 @@
 $ = jQuery
 
+defaults =
+  backend: null
+  substitute: {}
+  params: {}
+  jsonpCallbackPrefix: 'authomaticJsonpCallback'
+  beforeBackend: (data) ->
+  backendComplete: (data, status, jqXHR) ->
+  beforeSend: (jqXHR) ->
+  success: (data, status, jqXHR) ->
+  complete: (jqXHR, status) ->
+
 ###########################################################
 # Internal functions
 ###########################################################
+
 
 log = (args...) ->
   if authomatic.defaults.logging
@@ -51,6 +63,7 @@ getProviderClass = (credentials) ->
   {type, subtype} = deserializeCredentials(credentials)
   
   if type is 1
+    # Oauth1Provider
     Oauth1Provider
   else if type is 2
     OAuth2JsonpProvider
@@ -69,6 +82,17 @@ format = (template, substitute) ->
     # TODO: URL encode
     target
 
+addJsonpCallback = (callback) =>
+  Authomatic.jsonPCallbackCounter += 1
+  name = "#{defaults.jsonpCallbackPrefix}#{Authomatic.jsonPCallbackCounter}"
+  path = "window.#{name}"
+  window[name] = (data) =>
+    log('Calling jsonp callback:', path)
+    callback?(data)
+    log('Deleting jsonp callback:', path)
+    delete @[name]
+  log("Adding #{path} jsonp callback")
+  name
 
 ###########################################################
 # Global objects
@@ -77,27 +101,18 @@ format = (template, substitute) ->
 window.authomatic = new class Authomatic
   defaults:
     logging: on
-    endpoint: null
-    method: "GET"
-    params: {}
-    headers: {}
-    substitute: {}
-    beforeEndpoint: (jqXHR) ->
-    afterEndpoint: (jqXHR) ->
-    beforeSend: (jqXHR) ->
-    success: (data, status, jqXHR) ->
-    error: (jqXHR) ->
-    done: (jqXHR) ->
   
+  # TODO: Move to root
   accessDefaults:
     backend: null
     substitute: {}
-    beforeEndpoint: (jqXHR) ->
-    afterEndpoint: (jqXHR) ->
+    params: {}
+    jsonpCallbackPrefix: 'authomaticJsonpCallback'
+    beforeBackend: (data) ->
+    backendComplete: (data, status, jqXHR) ->
     beforeSend: (jqXHR) ->
     success: (data, status, jqXHR) ->
-    error: (jqXHR) ->
-    done: (jqXHR) ->
+    complete: (jqXHR, status) ->
   
   _openWindow: (url, width, height) ->
     top = (screen.height / 2) - (height / 2)
@@ -118,9 +133,7 @@ window.authomatic = new class Authomatic
       if validator($form)
         @_openWindow(url, width, height)
   
-  access: (credentials, url, options) ->
-    options = $.extend(authomatic.accessDefaults, options)
-    
+  access: (credentials, url, options = {}) ->
     url = format(url, options.substitute)
     
     Provider = getProviderClass(credentials)
@@ -160,79 +173,97 @@ window.authomatic = new class Authomatic
 
 class BaseProvider
   constructor: (@backend, @credentials, url, options) ->
-    defaults =
-      method: 'GET'
-      params: {}
-      complete: (jqXHR, status) -> log('access complete', jqXHR, status)
-      success: (data, status, jqXHR) -> log('access succeded', data, jqXHR, status)
-    
-    options = $.extend(defaults, options)
-    
+    @options = {}
+    $.extend(@options, defaults, options)
+
+    @backendRequestType = 'auto'
+
+    # Credentials
     @deserializedCredentials = deserializeCredentials(@credentials)
     @providerID = @deserializedCredentials.id
     @providerType = @deserializedCredentials.type
     @credentialsRest = @deserializedCredentials.rest
 
+    # Request elements
     parsedUrl = parseUrl(url)
     @url = parsedUrl.url
-    @method = options.method
-    @params = $.extend(parsedUrl.params, options.params)
-
-    @completeCallback = options.complete
-    @successCallback = options.success
+    @params = {}
+    $.extend(@params, parsedUrl.params, @options.params)
   
   contactBackend: (callback) =>
     data =
+      type: @backendRequestType
       credentials: @credentials
       url: @url
-      method: @method
+      method: @options.method
       params: JSON.stringify(@params)
     
-    log "Contacting backend at #{@backend}.", data
-    $.get(@backend, data, callback)
+    @options.beforeBackend(data)
+    log "Contacting backend at #{@options.backend}.", data
+    $.get(@options.backend, data, callback)
   
   contactProvider: (requestElements) =>
     {url, method, params, headers} = requestElements
-    
+
     options =
       type: method
       data: params
       headers: headers
-      complete: @completeCallback
-      success: @successCallback
+      complete: @options.complete
+      success: @options.success
     
     log "Contacting provider.", url, options
     $.ajax(url, options)
   
   access: =>
     callback = (data, textStatus, jqXHR) =>
+      @options.backendComplete(data, textStatus, jqXHR)
+
       # Find out whether backend returned fetch result or request elements.
       responseTo = jqXHR?.getResponseHeader('Authomatic-Response-To')
 
       if responseTo is 'fetch'
-        log "Fetch data returned from backend.", data
-        @successCallback(data, status, jqXHR)
-        @completeCallback(jqXHR, textStatus)
+        log "Fetch data returned from backend.", jqXHR.getResponseHeader('content-type'), data
+        @options.success(data, status, jqXHR)
 
       else if responseTo is 'elements'
         log "Request elements data returned from backend.", data
         @contactProvider(data)
 
-      else
-        log "WTF.", data, textStatus, jqXHR
-    
+      @options.complete(jqXHR, textStatus)
+
     @contactBackend(callback)
 
 
-class Oauth1Provider extends BaseProvider
+class Oauth1Provider extends Oauth1Provider
+  constructor: (args...) ->
+    super(args...)
+    
+    # Generate JSONP callback
+    @jsonpCallbackName = addJsonpCallback(@options.success)
 
-class Oauth1JsonpProvider extends Oauth1Provider
-  # TODO: Implement Oauth1JsonpProvider
-  # 1. Generate JSONP callback.
-  # 2. Sign request elements at backend including JSONP callback.
-  #   FIXME: Backend should allways return url and params separately
-  # 3. Remove JSONP callback from request elements params
-  # 4. Pass JSONP callback to jQuery.json
+    # Add JSONP callback to params to be included in the OAuth 1.0a signature
+    $.extend(@params, callback: @jsonpCallbackName)
+
+  contactProvider: (requestElements) =>
+    {url, method, params, headers} = requestElements
+
+    # We must remove the JSONP callback from params, because jQuery will add it too and
+    # the OAuth 1.0a signature would not be valid if there are two callback params in the querystring.
+    delete params.callback
+
+    options =
+      type: method
+      data: params
+      headers: headers
+      jsonpCallback: @jsonpCallbackName # jQuery needs this to make a JSONP request.
+      cache: true # If false, jQuery would add a nonce to query string which would break signature.
+      dataType: 'jsonp'
+      complete: @options.log
+    
+    @optionscomplete "Contacting provider with JSONP callback #{@jsonpCallbackName}.", url, options
+    $.ajax(url, options)
+
 
 class Oauth2Provider extends BaseProvider
   constructor: (args...) ->
@@ -259,7 +290,8 @@ class Oauth2Provider extends BaseProvider
     else
       # Else pass it as querystring parameter
       @options.params[@_x_accessToken] = @accessToken
-  
+
+
 class OAuth2CrossDomainProvider extends Oauth2Provider
   access: =>
     @handlePOST()
@@ -272,6 +304,7 @@ class OAuth2CrossDomainProvider extends Oauth2Provider
       headers: @options.headers
     
     @contactProvider(requestElements)
+
 
 class OAuth2JsonpProvider extends OAuth2CrossDomainProvider
   contactProvider: (requestElements) =>
@@ -292,7 +325,7 @@ class OAuth2JsonpProvider extends OAuth2CrossDomainProvider
 
 
 window.pokus = ->
-  backend = 'http://authomatic.com:8080/json'
+  defaults.backend = 'http://authomatic.com:8080/login/'
   
   # Twitter
   twCredentials = '5%0A1-5%0A1186245026-TI2YCrKLCsdXH7PeFE8zZPReKDSQ5BZxHzpjjel%0A1Xhim7w8N9rOs05WWC8rnwIzkSz1lCMMW9TSPLVtfk'
@@ -307,6 +340,8 @@ window.pokus = ->
   twGetUrl = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
   twGetOptions =
     method: 'GET'
+    params:
+      pokus: 'POKUS'
     success: (data, status, jqXHR) -> log('hura, podarilo sa:', data)
 
   # Facebook
@@ -319,8 +354,28 @@ window.pokus = ->
   # provider = new OAuth2JsonpProvider(backend, fbCredentials, fbUrl, options)
   # provider.access()
   
-  authomatic.accessDefaults.backend = 'http://authomatic.com:8080/json'
-  authomatic.access(twCredentials, twPostUrl, twPostOptions)
+  authomatic.access twCredentials, 'https://api.twitter.com/1.1/statuses/user_timeline.json',
+    method: 'GET'
+    params:
+      a: 'a'
+      b: 'b'
+    success: (data, status, jqXHR) ->
+      log('Pokus 1:', data)
+
+  # authomatic.access twCredentials, 'https://api.twitter.com/1.1/statuses/user_timeline.json?lofas={lofas}',
+  #   method: 'GET'
+  #   substitute:
+  #     lofas: 'lofas'
+  #   success: (data, status, jqXHR) ->
+  #     log('Pokus 2:', data)
+
+  # authomatic.access twCredentials, 'https://api.twitter.com/1.1/statuses/user_timeline.json',
+  #   method: 'GET'
+  #   params:
+  #     c: 'c'
+  #     d: 'd'
+  #   success: (data, status, jqXHR) ->
+  #     log('Pokus 3:', data)
 
 ########################################################################################
 
@@ -328,6 +383,4 @@ window.pokus = ->
 window.cb = (data) ->
   console.log 'CALLBACK', data
 
-
-    
-
+# @ sourceMappingURL=authomatic.map
