@@ -175,8 +175,8 @@ class WebObBaseAdapter(BaseAdapter):
     
     
     def set_header(self, key, value):
-        logging.info('WEBOB ADAPTER setting headers: {}: {}'.format(key, value  ))
-        self.response.headerlist.append((key, value))
+#        self.response.headerlist.append((key, str(value)))
+        self.response.headers[key] = str(value)
     
     
     def set_status(self, status):
