@@ -1238,8 +1238,7 @@ def login(adapter, provider_name, callback=None, session=None, session_save_meth
     
     else:
         # Act like JSON endpoint.
-        json_endpoint()
-        return LoginResult(None)
+        json_endpoint(adapter)
 
 
 def credentials(credentials):
@@ -1462,10 +1461,16 @@ def json_endpoint(adapter):
     ProviderClass = Credentials.deserialize(credentials).provider_class
     
     if request_type == 'auto':
-        # If provider requires same origin policy, fetch. Else return request elements.
-        request_type = 'fetch' if ProviderClass.same_origin else 'elements'
+        # If there is a "callback" param, it's a JSONP request.
+        jsonp = params.get('callback')
+        
+        if ProviderClass.supports_jsonp:
+            request_type = 'elements'
+        else:
+            # Remove the JSONP callback
+            params.pop('callback')
+            request_type = 'fetch'
     
-    result = ''
     if request_type == 'fetch':
         # Access protected resource
         response = access(credentials, url, params, method)
@@ -1474,10 +1479,11 @@ def json_endpoint(adapter):
         # Forward status
         adapter.status = str(response.status) + ' ' + str(response.reason)
         
+        logging.info('HEADERS')
         # Forward headers
         for k, v in response.getheaders():
-            if k not in ('x-frame-options',):
-                adapter.set_header(k, v)
+            logging.info('    {}: {}'.format(k, v))
+            adapter.set_header(k, v)
         
     elif request_type == 'elements':
         # Create request elements
@@ -1492,8 +1498,7 @@ def json_endpoint(adapter):
         
         adapter.set_header('Content-Type', 'application/json')
     else:
-        adapter.status = '400 Bad Request'
-        # TODO: Write JSON error message to response
+        result = '{"error": "Bad Request!"}'
     
     
     # Add the authomatic header
