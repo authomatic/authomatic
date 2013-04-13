@@ -510,6 +510,9 @@ class AuthorisationProvider(BaseProvider):
     #: If ``True`` the provider doesn't support Cross-site HTTP requests.
     same_origin = True
     
+    #: :class:`bool` Whether the provider supports JSONP requests.
+    supports_jsonp = False
+    
     # Whether to use the HTTP Authorisation header.
     _x_use_authorisation_header = True
     
