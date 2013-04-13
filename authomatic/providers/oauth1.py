@@ -553,6 +553,7 @@ class Plurk(OAuth1):
     * API explorer: http://www.plurk.com/OAuth/test/
     """
     
+    
     request_token_url = 'http://www.plurk.com/OAuth/request_token'
     user_authorisation_url = 'http://www.plurk.com/OAuth/authorize'
     access_token_url = 'http://www.plurk.com/OAuth/access_token'
@@ -598,7 +599,9 @@ class Twitter(OAuth1):
     user_authorisation_url = 'https://api.twitter.com/oauth/authorize'
     access_token_url = 'https://api.twitter.com/oauth/access_token'
     user_info_url = 'https://api.twitter.com/1/account/verify_credentials.json'
-        
+    
+    supports_jsonp = True
+     
     @staticmethod
     def _x_user_parser(user, data):
         user.username = data.get('screen_name')
@@ -623,6 +626,7 @@ class Tumblr(OAuth1):
     access_token_url = 'http://www.tumblr.com/oauth/access_token'
     user_info_url = 'http://api.tumblr.com/v2/user/info'
     
+    supports_jsonp = True
     
     @staticmethod
     def _x_user_parser(user, data):
@@ -749,8 +753,8 @@ class Yahoo(OAuth1):
     access_token_url = 'https://api.login.yahoo.com/oauth/v2/get_token'
     user_info_url = 'http://query.yahooapis.com/v1/yql?q=select%20*%20from%20social.profile%20where%20guid%3Dme&format=json'
     
-#    same_origin = False
-    same_origin = True
+    same_origin = False
+    supports_jsonp = True
     
     @staticmethod
     def _x_user_parser(user, data):
