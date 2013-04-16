@@ -1505,7 +1505,8 @@ def json_endpoint(adapter):
             request_type = 'elements'
         else:
             # Remove the JSONP callback
-            params.pop('callback')
+            if params.get('callback'):
+                params.pop('callback')
             request_type = 'fetch'
     
     if request_type == 'fetch':
