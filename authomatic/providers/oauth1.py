@@ -257,7 +257,7 @@ class OAuth1(providers.AuthorisationProvider):
     
     @classmethod
     def create_request_elements(cls, request_type, credentials, url, params=None, headers=None,
-                                 method='GET', verifier='', callback=''):
+                                body='', method='GET', verifier='', callback=''):
         """
         Creates |oauth1| request elements.
         """
@@ -325,7 +325,7 @@ class OAuth1(providers.AuthorisationProvider):
             # add signature to params
             params['oauth_signature'] = cls._signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
             
-        return core.RequestElements(url, method, params, headers)
+        return core.RequestElements(url, method, params, headers, body)
     
     
     #===========================================================================

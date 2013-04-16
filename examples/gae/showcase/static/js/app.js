@@ -1,12 +1,10 @@
 $(document).ready(function (e) {
 	
-	authomatic.accessDefaults.backend = 'http://authomatic.com:8080/login/';
-	
 	authomatic.popup();
 	
-	$pokus = $('#pokus');
-	
 	pokus();
+	
+	$pokus = $('#pokus');
 	
 	$('form.api-post').submit(function(e) {
 		e.preventDefault();
@@ -66,9 +64,7 @@ $(document).ready(function (e) {
 						$form.attr('action', url);
 						$form.attr('method', method);
 						
-						if (method == 'GET'){
-							$form.append('<input type="submit" class="button radius" value="' + title + '" />');
-						} else if (method == 'POST'){
+						if (placeholder){
 							var formHTML = [
 								'<div class="row collapse">',
 									'<div class="large-7 small-8 columns">',
@@ -81,6 +77,8 @@ $(document).ready(function (e) {
 							].join('');
 								
 							$form.append(formHTML);
+						} else {
+							$form.append('<input type="submit" class="button radius" value="' + title + '" />');
 						}
 						
 						$form.submit(function(e){

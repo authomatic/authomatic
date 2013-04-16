@@ -1,24 +1,29 @@
 $ = jQuery
 
-defaults =
+jsonPCallbackCounter = 0
+
+globalOptions =
+  logging: on
+  popupWidth: 800
+  pupupHeight: 600
   backend: null
   substitute: {}
   params: {}
+  headers: {}
+  body: ''
   jsonpCallbackPrefix: 'authomaticJsonpCallback'
-  beforeBackend: (data) ->
-  backendComplete: (data, status, jqXHR) ->
-  beforeSend: (jqXHR) ->
-  success: (data, status, jqXHR) ->
-  complete: (jqXHR, status) ->
+  beforeBackend: null
+  backendComplete: null
+  success: null
+  complete: null
+
 
 ###########################################################
 # Internal functions
 ###########################################################
 
-
 log = (args...) ->
-  if authomatic.defaults.logging
-    console.log 'Authomatic:', args...
+  console?.log 'Authomatic:', args... if globalOptions.logging
 
 parseQueryString = (queryString) ->
   result = {}
@@ -63,11 +68,20 @@ getProviderClass = (credentials) ->
   {type, subtype} = deserializeCredentials(credentials)
   
   if type is 1
-    # Oauth1Provider
+    # OAuth 1.0a providers.
     Oauth1Provider
   else if type is 2
-    OAuth2JsonpProvider
+    # OAuth 2 providers.
+    if subtype is 6
+      # Foursquare needs special treatment.
+      Foursquare
+    else if subtype is 9
+      # And so does LinkedIn.
+      LinkedIn
+    else
+      Oauth2Provider
   else
+    # Base provider allways works.
     BaseProvider
 
 format = (template, substitute) ->
@@ -82,13 +96,15 @@ format = (template, substitute) ->
     # TODO: URL encode
     target
 
-addJsonpCallback = (callback) =>
+# TODO: Not needed anymore
+addJsonpCallback = (localSuccessCallback) =>
   Authomatic.jsonPCallbackCounter += 1
-  name = "#{defaults.jsonpCallbackPrefix}#{Authomatic.jsonPCallbackCounter}"
+  name = "#{globalOptions.jsonpCallbackPrefix}#{Authomatic.jsonPCallbackCounter}"
   path = "window.#{name}"
   window[name] = (data) =>
     log('Calling jsonp callback:', path)
-    callback?(data)
+    globalOptions.success(data)
+    localSuccessCallback?(data)
     log('Deleting jsonp callback:', path)
     delete @[name]
   log("Adding #{path} jsonp callback")
@@ -99,20 +115,11 @@ addJsonpCallback = (callback) =>
 ###########################################################
 
 window.authomatic = new class Authomatic
-  defaults:
-    logging: on
+  @jsonPCallbackCounter: 0
   
-  # TODO: Move to root
-  accessDefaults:
-    backend: null
-    substitute: {}
-    params: {}
-    jsonpCallbackPrefix: 'authomaticJsonpCallback'
-    beforeBackend: (data) ->
-    backendComplete: (data, status, jqXHR) ->
-    beforeSend: (jqXHR) ->
-    success: (data, status, jqXHR) ->
-    complete: (jqXHR, status) ->
+  setup: (options) ->
+    $.extend(globalOptions, options)
+    log 'Setting up authomatic to:', globalOptions
   
   _openWindow: (url, width, height) ->
     top = (screen.height / 2) - (height / 2)
@@ -120,8 +127,7 @@ window.authomatic = new class Authomatic
     settings = "width=#{width},height=#{height},top=#{top},left=#{left}"
     window.open(url, "authomatic:#{url}", settings)
   
-  popup: (width = 800, height = 600, validator = (($form)-> true),
-                    aSelector = 'a.authomatic', formSelector = 'form.authomatic') ->
+  popup: (width = 800, height = 600, validator = (($form)-> true), aSelector = 'a.authomatic', formSelector = 'form.authomatic') ->
     $(aSelector).click (e) =>
       e.preventDefault()
       @_openWindow(e.target.href, width, height)
@@ -134,49 +140,36 @@ window.authomatic = new class Authomatic
         @_openWindow(url, width, height)
   
   access: (credentials, url, options = {}) ->
-    url = format(url, options.substitute)
+    localEvents =
+      beforeBackend: null
+      backendComplete: null
+      success: null
+      complete: null
+
+    # Merge options with global options and local events
+    updatedOptions = {}
+    $.extend(updatedOptions, globalOptions, localEvents, options)
+
+    # Format url.
+    url = format(url, updatedOptions.substitute)
     
+    log 'access options', updatedOptions, globalOptions
+
     Provider = getProviderClass(credentials)
-    log("Instantiating #{Provider.name}.")
-    provider = new Provider(options.backend, credentials, url, options)
+    provider = new Provider(options.backend, credentials, url, updatedOptions)
+    log 'Instantiating provider:', provider
     provider.access()
 
-  
-  @jsonPCallbackCounter: 0
-  
-  addJsonpCallback: (callback) =>
-    Authomatic.jsonPCallbackCounter += 1
-    name = "jsonpCallback#{Authomatic.jsonPCallbackCounter}"
-    path = "authomatic.#{name}"
-    @[name] = (data) =>
-      log('Calling jsonp callback:', path)
-      callback?(data)
-      log('Deleting jsonp callback:', path)
-      delete @[name]
-    log('Adding jsonp callback:', path)
-    path
 
 ########################################################################################
 
-# Providers with Access-Control-Allow-Origin: *
-#
-# Facebook
-# Github
-# Yahoo
-# Foursquare
-# 
-
-# Yet to test
-#
-# Behance
 
 
 class BaseProvider
-  constructor: (@backend, @credentials, url, options) ->
-    @options = {}
-    $.extend(@options, defaults, options)
-
+  constructor: (@backend, @credentials, url, @options) ->
     @backendRequestType = 'auto'
+    @jsonpRequest = no
+    @jsonpCallbackName = "#{globalOptions.jsonpCallbackPrefix}#{jsonPCallbackCounter}"
 
     # Credentials
     @deserializedCredentials = deserializeCredentials(@credentials)
@@ -191,142 +184,155 @@ class BaseProvider
     $.extend(@params, parsedUrl.params, @options.params)
   
   contactBackend: (callback) =>
+    if @jsonpRequest and @options.method is not 'GET'
+      @backendRequestType = 'fetch'
+
     data =
       type: @backendRequestType
       credentials: @credentials
       url: @url
       method: @options.method
+      body: @options.body
       params: JSON.stringify(@params)
+      headers: JSON.stringify(@options.headers)
     
-    @options.beforeBackend(data)
+    globalOptions.beforeBackend?(data)
+    @options.beforeBackend?(data)
     log "Contacting backend at #{@options.backend}.", data
     $.get(@options.backend, data, callback)
   
   contactProvider: (requestElements) =>
-    {url, method, params, headers} = requestElements
+    {url, method, params, headers, body} = requestElements
 
+    # Try cross domain request first.
     options =
       type: method
       data: params
       headers: headers
-      complete: @options.complete
-      success: @options.success
+      complete: [
+        ((jqXHR, textStatus) -> log 'Request complete.', textStatus, jqXHR)
+        globalOptions.complete
+        @options.complete
+      ]
+      success: [
+        ((data) -> log 'Request successfull.', data)
+        globalOptions.success
+        @options.success
+      ]
+      error: (jqXHR, textStatus, errorThrown) =>
+        # If cross domain fails,
+        if jqXHR.state() is 'rejected'
+          if @options.method is 'GET'
+            log 'Cross domain request failed! trying JSONP request.'
+            # access again but with JSONP request type.
+            @jsonpRequest = yes
+          else
+            @backendRequestType = 'fetch'
+          @access()
+
+    if @jsonpRequest
+      # Add JSONP arguments to options
+      jsonpOptions =
+        jsonpCallback: @jsonpCallbackName
+        cache: true # If false, jQuery would add a nonce to query string which would break signature.
+        dataType: 'jsonp'
+        error: (jqXHR, textStatus, errorThrown) ->
+          # If JSONP fails, there is not much to do.
+          log 'JSONP failed! State:', jqXHR.state()
+      $.extend(options, jsonpOptions)
+      log "Contacting provider with JSONP request.", url, options
+    else
+      log "Contacting provider with cross domain request", url, options
     
-    log "Contacting provider.", url, options
     $.ajax(url, options)
   
   access: =>
+    log 'ACCESSS'
     callback = (data, textStatus, jqXHR) =>
-      @options.backendComplete(data, textStatus, jqXHR)
+      # Call backend complete callbacks.
+      globalOptions.backendComplete?(data, textStatus, jqXHR)
+      @options.backendComplete?(data, textStatus, jqXHR)
 
       # Find out whether backend returned fetch result or request elements.
       responseTo = jqXHR?.getResponseHeader('Authomatic-Response-To')
 
       if responseTo is 'fetch'
         log "Fetch data returned from backend.", jqXHR.getResponseHeader('content-type'), data
-        @options.success(data, status, jqXHR)
+        # Call success and complete callbacks manually.
+        globalOptions.success?(data)
+        @options.success?(data)
+        globalOptions.complete?(jqXHR, textStatus)
+        @options.complete?(jqXHR, textStatus)
 
       else if responseTo is 'elements'
         log "Request elements data returned from backend.", data
         @contactProvider(data)
 
-      @options.complete(jqXHR, textStatus)
-
+    # Increase JSONP callback counter for next JSONP request.
+    jsonPCallbackCounter += 1 if @jsonpRequest
     @contactBackend(callback)
 
 
-class Oauth1Provider extends Oauth1Provider
-  constructor: (args...) ->
-    super(args...)
-    
-    # Generate JSONP callback
-    @jsonpCallbackName = addJsonpCallback(@options.success)
-
-    # Add JSONP callback to params to be included in the OAuth 1.0a signature
+class Oauth1Provider extends BaseProvider
+  access: () ->
+    @jsonpRequest = yes
+    # Add JSONP callback name to params to be included in the OAuth 1.0a signature
     $.extend(@params, callback: @jsonpCallbackName)
-
+    super()
+    
   contactProvider: (requestElements) =>
-    {url, method, params, headers} = requestElements
-
     # We must remove the JSONP callback from params, because jQuery will add it too and
     # the OAuth 1.0a signature would not be valid if there are two callback params in the querystring.
-    delete params.callback
-
-    options =
-      type: method
-      data: params
-      headers: headers
-      jsonpCallback: @jsonpCallbackName # jQuery needs this to make a JSONP request.
-      cache: true # If false, jQuery would add a nonce to query string which would break signature.
-      dataType: 'jsonp'
-      complete: @options.log
-    
-    @optionscomplete "Contacting provider with JSONP callback #{@jsonpCallbackName}.", url, options
-    $.ajax(url, options)
+    delete requestElements.params.callback
+    super(requestElements)
 
 
 class Oauth2Provider extends BaseProvider
+
+  _x_accessToken: 'access_token'
+  _x_bearer: 'Bearer'
+
   constructor: (args...) ->
     super(args...)
-    # Handle different naming conventions.
-    @_x_unifyDifferences()
+    
     # Unpack credentials elements.
     [@accessToken, @refreshToken, @expirationTime, @tokenType] = @credentialsRest
-  
-  _x_unifyDifferences: =>
-    @_x_bearer = 'Bearer'
-    @_x_accessToken = 'access_token'
-  
-  handlePOST: =>
-    if @options.method in ['POST', 'PUT']
-      # remove querystring from url, convert to dict and add to params
-      {url, qs} = authomatic.splitUrl(@url)
-      @params = $.extend(@options.params, authomatic.parseQueryString(qs))
-  
-  handleTokenType: =>
+
+    # Handle token type.
     if @tokenType is '1'
       # If token type is "1" which means "Bearer", pass access token in authorisation header
-      @options.headers['Authorization'] = "#{@_x_bearer} #{accessToken}"
+      @options.headers['Authorization'] = "#{@_x_bearer} #{@accessToken}"
     else
       # Else pass it as querystring parameter
-      @options.params[@_x_accessToken] = @accessToken
+      @params[@_x_accessToken] = @accessToken
+
+  access: () =>
+    if @backendRequestType is 'fetch'
+      super()
+    else
+      # Skip backend and go directly to provider.
+      requestElements =
+        url: @url
+        method: @options.method
+        params: @params
+        headers: @options.headers
+        body: @options.body
+
+      @contactProvider(requestElements)
 
 
-class OAuth2CrossDomainProvider extends Oauth2Provider
-  access: =>
-    @handlePOST()
-    @handleTokenType()
-    
-    requestElements = 
-      url: @url
-      method: @options.method
-      params: @options.params
-      headers: @options.headers
-    
-    @contactProvider(requestElements)
+class Foursquare extends Oauth2Provider
+  _x_accessToken: 'oauth_token'
 
+class Google extends Oauth2Provider
+  _x_bearer: 'OAuth'
 
-class OAuth2JsonpProvider extends OAuth2CrossDomainProvider
-  contactProvider: (requestElements) =>
-    {url, method, params, headers, body} = requestElements
-    
-    params = authomatic.parseQueryString(body) if body
-    
-    @options.type = method
-    @options.data = params
-    @options.headers = headers
-    
-    @options.jsonpCallback = authomatic.addJsonpCallback(@options.success)
-    # @options.cache = true
-    # @options.dataType = 'jsonp'
-    
-    log "Contacting provider.", url, @options
-    $.ajax(url, @options)
+class LinkedIn extends Oauth2Provider
+  _x_accessToken: 'oauth2_access_token'
+
 
 
 window.pokus = ->
-  defaults.backend = 'http://authomatic.com:8080/login/'
-  
   # Twitter
   twCredentials = '5%0A1-5%0A1186245026-TI2YCrKLCsdXH7PeFE8zZPReKDSQ5BZxHzpjjel%0A1Xhim7w8N9rOs05WWC8rnwIzkSz1lCMMW9TSPLVtfk'
   
@@ -348,34 +354,31 @@ window.pokus = ->
   fbUrl = 'https://graph.facebook.com/737583375/feed'
   fbCredentials = '15%0A2-5%0ABAAG3FAWiCwIBAJn0CKLOphV4meEbBvUcGcAXIN0z1Pv2JtCrziXlKvM99WX3p4YxI9oHC02ZCpsv7d3CZCsTMy9lqZAohaypwb3nGSKAscqngzFVTOULGLRd5ygXQYtqcka1iERfZAfZA8KQjx7Mps0izinhKyV0EGCJo1HhQcOjx1QYiCAEp%0A%0A1370766038%0A0'
   
-  
-  log('POKUS', parseUrl('http://example.com/foo/bar?a=1&b=2&c=3&b=4&d=%3F%2F%24%26'))
-  
-  # provider = new OAuth2JsonpProvider(backend, fbCredentials, fbUrl, options)
-  # provider.access()
-  
-  authomatic.access twCredentials, 'https://api.twitter.com/1.1/statuses/user_timeline.json',
-    method: 'GET'
-    params:
-      a: 'a'
-      b: 'b'
+  # Behance
+  beCredentials = '11%0A2-1%0AN.W7MpNX5nTCgfwG3HLJTlc2KIZP5VMp%0A%0A0%0A0'
+  beURL = 'http://behance.net/v2/collections/6870767/follow'
+
+  # LinkedIn
+  liCredentials = '19%0A2-9%0AAQVK822aqXqSUjScKzJJ-4ErqXT1OHvmEjcaX2OUNRtXdjFAsWbOUjnqzQYeiyztWjCenEXV3aNvTOVgrrpm0eoXxIUHbcr8qhsT5o9LCo5Molecguf6YPc9UHYWMOO_1kZ_eLO0M805f5GMYs4zGw8GyyCw6ATNRk6TlLECAt-od8Tu-S4%0A%0A0%0A0'
+  liURL = 'https://api.linkedin.com/v1/people/~/shares'
+
+  authomatic.setup(backend: 'http://authomatic.com:8080/login/')
+
+  authomatic.access liCredentials, liURL,
+    method: 'POST'
+    headers:
+      'x-li-format': 'json'
+      'content-type': 'application/json'
+    body:
+      JSON.stringify
+        comment: 'Pokus'
+        content:
+          title: 'Ebenci'
+          "submitted-url": "http://peterhudec.com"
+        visibility:
+          code: 'anyone'
     success: (data, status, jqXHR) ->
-      log('Pokus 1:', data)
-
-  # authomatic.access twCredentials, 'https://api.twitter.com/1.1/statuses/user_timeline.json?lofas={lofas}',
-  #   method: 'GET'
-  #   substitute:
-  #     lofas: 'lofas'
-  #   success: (data, status, jqXHR) ->
-  #     log('Pokus 2:', data)
-
-  # authomatic.access twCredentials, 'https://api.twitter.com/1.1/statuses/user_timeline.json',
-  #   method: 'GET'
-  #   params:
-  #     c: 'c'
-  #     d: 'd'
-  #   success: (data, status, jqXHR) ->
-  #     log('Pokus 3:', data)
+      log('VYSLEDOK:', data, status, jqXHR)
 
 ########################################################################################
 

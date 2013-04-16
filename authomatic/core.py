@@ -1058,12 +1058,12 @@ class UserInfoResponse(Response):
 
 class RequestElements(tuple):
     """
-    A tuple of ``(url, method, params, headers)`` request elements.
+    A tuple of ``(url, method, params, headers, body)`` request elements.
     With some additional properties.
     """
     
-    def __new__(cls, url, method, params, headers):
-        return tuple.__new__(cls, (url, method, params, headers))
+    def __new__(cls, url, method, params, headers, body):
+        return tuple.__new__(cls, (url, method, params, headers, body))
       
     @property
     def url(self):
@@ -1098,6 +1098,14 @@ class RequestElements(tuple):
         return self[3]
         
     @property
+    def body(self):
+        """
+        :class:`str` Body of ``POST``, ``PUT`` and ``PATCH`` requests.
+        """
+        
+        return self[4]
+        
+    @property
     def query_string(self):
         """
         Query string of the request.
@@ -1112,6 +1120,13 @@ class RequestElements(tuple):
         """
         
         return self.url + '?' + self.query_string
+    
+    def to_json(self):
+        return json.dumps(dict(url=self.url,
+                          method=self.method,
+                          params=self.params,
+                          headers=self.headers,
+                          body=self.body))
 
 
 def setup(config, secret, session_max_age=600, secure_cookie=False,
@@ -1255,7 +1270,7 @@ def credentials(credentials):
     return Credentials.deserialize(credentials)
 
 
-def access(credentials, url, params=None, method='GET', headers={}, max_redirects=5, content_parser=None):
+def access(credentials, url, params=None, method='GET', headers=None, body='', max_redirects=5, content_parser=None):
     """
     Accesses **protected resource** on behalf of the **user**.
     
@@ -1270,6 +1285,9 @@ def access(credentials, url, params=None, method='GET', headers={}, max_redirect
         
     :param dict headers:
         HTTP headers of the request.
+            
+    :param str body:
+        Body of ``POST``, ``PUT`` and ``PATCH`` requests.
         
     :param int max_redirects:
         Maximum number of HTTP redirects to follow.
@@ -1286,13 +1304,14 @@ def access(credentials, url, params=None, method='GET', headers={}, max_redirect
     
     # Resolve provider class.
     ProviderClass = credentials.provider_class
-    
+    logging.info('ACCESS HEADERS: {}'.format(headers))
     # Access resource and return response.
     return ProviderClass.access_with_credentials(credentials=credentials,
                                                  url=url,
                                                  params=params,
                                                  method=method,
                                                  headers=headers,
+                                                 body=body,
                                                  max_redirects=max_redirects,
                                                  content_parser=content_parser)
 
@@ -1310,8 +1329,8 @@ def async_access(*args, **kwargs):
     return Future(access, *args, **kwargs)
 
 
-def request_elements(credentials=None, url=None, method='GET',
-                     params=None, json_input=None, return_json=False):
+def request_elements(credentials=None, url=None, method='GET', params=None,
+                     headers=None, body='', json_input=None, return_json=False):
     """
     Creates request elements for accessing **protected resource of a user**.
     Required arguments are :data:`credentials` and :data:`url`.
@@ -1330,6 +1349,12 @@ def request_elements(credentials=None, url=None, method='GET',
     :param dict params:
         Dictionary of request parameters.
         
+    :param dict headers:
+        Dictionary of request headers.
+            
+    :param str body:
+        Body of ``POST``, ``PUT`` and ``PATCH`` requests.
+        
     :param str json_input:
         you can pass :data:`credentials`, :data:`url`, :data:`method`, :data:`params` and :data:`headers`
         in a JSON object. Values from arguments will be used for missing properties.
@@ -1342,7 +1367,12 @@ def request_elements(credentials=None, url=None, method='GET',
                 "method": "POST",
                 "params": {
                     "foo": "bar"
-                }
+                },
+                "headers": {
+                    "baz": "bing",
+                    "Authorisation": "Bearer ###"
+                },
+                "body": "Foo bar baz bing."
             }
         
     :param bool return_json:
@@ -1360,7 +1390,8 @@ def request_elements(credentials=None, url=None, method='GET',
                 "headers": {
                     "baz": "bing",
                     "Authorisation": "Bearer ###"
-                }
+                },
+                "body": "Foo bar baz bing."
             }
         
     :returns:
@@ -1375,6 +1406,8 @@ def request_elements(credentials=None, url=None, method='GET',
         url = parsed_input.get('url', url)
         method = parsed_input.get('method', method)
         params = parsed_input.get('params', params)
+        headers = parsed_input.get('headers', headers)
+        body = parsed_input.get('body', body)
     
     if not credentials and url:
         raise RequestElementsError('To create request elements, you must provide credentials ' +\
@@ -1389,14 +1422,12 @@ def request_elements(credentials=None, url=None, method='GET',
                                                              credentials=credentials,
                                                              url=url,
                                                              method=method,
-                                                             params=params)
+                                                             params=params,
+                                                             headers=headers,
+                                                             body=body)
     
     if return_json:
-        url, method, params, headers = request_elements
-        return json.dumps(dict(url=url,
-                               method=method,
-                               params=params,
-                               headers=headers))
+        return request_elements.to_json()
         
     else:
         return request_elements
@@ -1455,8 +1486,14 @@ def json_endpoint(adapter):
     credentials = adapter.params.get('credentials')
     url = adapter.params.get('url')
     method = adapter.params.get('method', 'GET')
+    body = adapter.params.get('body', '')
+    
+    
     params = adapter.params.get('params')
     params = json.loads(params) if params else {}
+    
+    headers = adapter.params.get('headers')
+    headers = json.loads(headers) if headers else {}
     
     ProviderClass = Credentials.deserialize(credentials).provider_class
     
@@ -1473,7 +1510,8 @@ def json_endpoint(adapter):
     
     if request_type == 'fetch':
         # Access protected resource
-        response = access(credentials, url, params, method)
+        logging.info('FETCH HEADERS: {}'.format(headers))
+        response = access(credentials, url, params, method, headers, body)
         result = response.content
         
         # Forward status
@@ -1494,6 +1532,8 @@ def json_endpoint(adapter):
                                       url=url,
                                       method=method,
                                       params=params,
+                                      headers=headers,
+                                      body=body,
                                       return_json=True)
         
         adapter.set_header('Content-Type', 'application/json')

@@ -101,8 +101,8 @@ class OAuth2(providers.AuthorisationProvider):
     
     
     @classmethod
-    def create_request_elements(cls, request_type, credentials, url, method='GET', params=None, headers=None,
-                                 redirect_uri='', scope='', csrf=''):
+    def create_request_elements(cls, request_type, credentials, url, method='GET', params=None,
+                                headers=None, body='', redirect_uri='', scope='', csrf=''):
         """
         Creates |oauth2| request elements.
         """
@@ -174,7 +174,7 @@ class OAuth2(providers.AuthorisationProvider):
                 raise OAuth2Error('Credentials with valid token are required to create ' + \
                                   'OAuth 2.0 protected resources request elements!')
         
-        return core.RequestElements(url, method, params, headers)
+        return core.RequestElements(url, method, params, headers, body)
     
     
     @staticmethod
@@ -324,9 +324,6 @@ class OAuth2(providers.AuthorisationProvider):
                                                              params=self.access_token_params,
                                                              headers=self.access_token_headers)
             
-            # Add Authorisation headers.
-#            self.access_token_headers.update(self._authorisation_header(self.credentials))
-            
             response = self._fetch(*request_elements)
             
             access_token = response.data.get('access_token', '')
@@ -419,6 +416,12 @@ class Behance(OAuth2):
     user_info_url = ''
     
     user_info_scope = ['activity_read']
+    
+    def _x_scope_parser(self, scope):
+        """
+        Behance has pipe-separated scopes
+        """
+        return '|'.join(scope)
     
     @staticmethod
     def _x_user_parser(user, data):
@@ -671,6 +674,9 @@ class Google(OAuth2):
     
     user_info_scope = ['https://www.googleapis.com/auth/userinfo.profile',
                        'https://www.googleapis.com/auth/userinfo.email']
+    
+    _x_term_dict = OAuth2._x_term_dict.copy()
+    _x_term_dict['authorisation_header_bearer'] = 'OAuth'
     
     def __init__(self, *args, **kwargs):
         super(Google, self).__init__(*args, **kwargs)

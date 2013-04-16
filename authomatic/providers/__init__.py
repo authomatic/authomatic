@@ -338,7 +338,7 @@ class BaseProvider(object):
         
     
     @classmethod
-    def _fetch(cls, url, method='GET', params=None, headers=None, max_redirects=5, content_parser=None):
+    def _fetch(cls, url, method='GET', params=None, headers=None, body='', max_redirects=5, content_parser=None):
         """
         Fetches a URL.
         
@@ -354,6 +354,9 @@ class BaseProvider(object):
         :param dict headers:
             HTTP headers of the request.
             
+        :param str body:
+            Body of ``POST``, ``PUT`` and ``PATCH`` requests.
+            
         :param int max_redirects:
             Number of maximum HTTP redirects to follow.
             
@@ -363,7 +366,6 @@ class BaseProvider(object):
         
         params = params or {}
         headers = headers or {}
-        body = None
         
         scheme, host, path, query, fragment = urlparse.urlsplit(url)
         
@@ -373,9 +375,11 @@ class BaseProvider(object):
         headers.update(settings.fetch_headers)
         
         if method in ('POST', 'PUT', 'PATCH'):
-            body = query
-            query = None
-            headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
+            if not body:
+                # Put querystring to body
+                body = query
+                query = None
+                headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
         
         request_path = urlparse.urlunsplit((None, None, path, query, None))
         
@@ -626,7 +630,7 @@ class AuthorisationProvider(BaseProvider):
     
     
     @abc.abstractmethod
-    def create_request_elements(self, request_type, credentials, url, method='GET', params=None, headers=None):
+    def create_request_elements(self, request_type, credentials, url, method='GET', params=None, headers=None, body=''):
         """
         Must return :class:`.RequestElements`.
         
@@ -652,6 +656,9 @@ class AuthorisationProvider(BaseProvider):
             
         :param dict headers:
             Dictionary of request headers.
+            
+        :param str body:
+            Body of ``POST``, ``PUT`` and ``PATCH`` requests.
         
         :returns:
             :class:`.RequestElements`
@@ -664,7 +671,7 @@ class AuthorisationProvider(BaseProvider):
     
     @classmethod
     def access_with_credentials(cls, credentials, url, params=None, method='GET',
-                                headers=None, max_redirects=5, content_parser=None):
+                                headers=None, body='', max_redirects=5, content_parser=None):
         """
         Fetches the **protected resource** of the **user** to whom belong
         the supplied :data:`.credentials`.
@@ -680,6 +687,9 @@ class AuthorisationProvider(BaseProvider):
             
         :param dict headers:
             HTTP headers of the request.
+            
+        :param str body:
+            Body of ``POST``, ``PUT`` and ``PATCH`` requests.
             
         :param int max_redirects:
             Maximum number of HTTP redirects to follow.
@@ -698,7 +708,9 @@ class AuthorisationProvider(BaseProvider):
         request_elements = cls.create_request_elements(request_type=cls.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                         credentials=credentials,
                                                         url=url,
+                                                        body=body,
                                                         params=params,
+                                                        headers=headers,
                                                         method=method)
         
         response = cls._fetch(*request_elements,
