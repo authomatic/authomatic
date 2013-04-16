@@ -858,6 +858,23 @@ class VK(OAuth2):
     * Dashboard: Could not find any. You must do it like this: http://vk.com/editapp?id={consumer_key}
     * Docs: http://vk.com/developers.php?oid=-17680044&p=Authorizing_Sites
     * API reference: http://vk.com/developers.php?oid=-17680044&p=API_Method_Description
+    
+    .. note::
+        
+        VK uses a `bitmask scope <http://vk.com/developers.php?oid=-17680044&p=Application_Rights>`_!
+        Use it like this:
+        
+        ::
+            
+            CONFIG = {
+                'vk': {
+                    'class_': oauth2.VK,
+                    'consumer_key': '#####',
+                    'consumer_secret': '#####',
+                    'id': authomatic.provider_id(),
+                    'scope': ['1024'] # Allways a single item.
+            }
+    
     """
     
     user_authorisation_url = 'http://api.vkontakte.ru/oauth/authorize'

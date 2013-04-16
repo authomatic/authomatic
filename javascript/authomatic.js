@@ -99,9 +99,14 @@
       return Oauth1Provider;
     } else if (type === 2) {
       if (subtype === 6) {
-        return Foursquare;
+        Foursquare;
+      }
+      if (subtype === 8) {
+        return Google;
       } else if (subtype === 9) {
         return LinkedIn;
+      } else if (subtype === 12) {
+        return BaseProvider;
       } else {
         return Oauth2Provider;
       }
@@ -501,28 +506,8 @@
     beURL = 'http://behance.net/v2/collections/6870767/follow';
     liCredentials = '19%0A2-9%0AAQVK822aqXqSUjScKzJJ-4ErqXT1OHvmEjcaX2OUNRtXdjFAsWbOUjnqzQYeiyztWjCenEXV3aNvTOVgrrpm0eoXxIUHbcr8qhsT5o9LCo5Molecguf6YPc9UHYWMOO_1kZ_eLO0M805f5GMYs4zGw8GyyCw6ATNRk6TlLECAt-od8Tu-S4%0A%0A0%0A0';
     liURL = 'https://api.linkedin.com/v1/people/~/shares';
-    authomatic.setup({
+    return authomatic.setup({
       backend: 'http://authomatic.com:8080/login/'
-    });
-    return authomatic.access(liCredentials, liURL, {
-      method: 'POST',
-      headers: {
-        'x-li-format': 'json',
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        comment: 'Pokus',
-        content: {
-          title: 'Ebenci',
-          "submitted-url": "http://peterhudec.com"
-        },
-        visibility: {
-          code: 'anyone'
-        }
-      }),
-      success: function(data, status, jqXHR) {
-        return log('VYSLEDOK:', data, status, jqXHR);
-      }
     });
   };
 

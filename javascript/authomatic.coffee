@@ -75,9 +75,15 @@ getProviderClass = (credentials) ->
     if subtype is 6
       # Foursquare needs special treatment.
       Foursquare
+    if subtype is 8
+      # So does Google.
+      Google
     else if subtype is 9
       # And so does LinkedIn.
       LinkedIn
+    else if subtype is 12
+      # Viadeo supports neither CORS nor JSONP.
+      BaseProvider
     else
       Oauth2Provider
   else
@@ -364,21 +370,21 @@ window.pokus = ->
 
   authomatic.setup(backend: 'http://authomatic.com:8080/login/')
 
-  authomatic.access liCredentials, liURL,
-    method: 'POST'
-    headers:
-      'x-li-format': 'json'
-      'content-type': 'application/json'
-    body:
-      JSON.stringify
-        comment: 'Pokus'
-        content:
-          title: 'Ebenci'
-          "submitted-url": "http://peterhudec.com"
-        visibility:
-          code: 'anyone'
-    success: (data, status, jqXHR) ->
-      log('VYSLEDOK:', data, status, jqXHR)
+  # authomatic.access liCredentials, liURL,
+  #   method: 'POST'
+  #   headers:
+  #     'x-li-format': 'json'
+  #     'content-type': 'application/json'
+  #   body:
+  #     JSON.stringify
+  #       comment: 'Pokus'
+  #       content:
+  #         title: 'Ebenci'
+  #         "submitted-url": "http://peterhudec.com"
+  #       visibility:
+  #         code: 'anyone'
+  #   success: (data, status, jqXHR) ->
+  #     log('VYSLEDOK:', data, status, jqXHR)
 
 ########################################################################################
 

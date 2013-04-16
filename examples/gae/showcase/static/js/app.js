@@ -96,7 +96,8 @@ $(document).ready(function (e) {
 								method: method,
 								substitute: {message: message, user: result.user},
 								success: function(data){
-									$userData.html(JSON.stringify(data, undefined, 4));
+									var niceData = JSON.stringify(data, undefined, 4);
+									$userData.html(niceData);
 								},
 								complete: function(jqXHR, status){
 									$('#user-data-loader').slideUp('fast', function(){
