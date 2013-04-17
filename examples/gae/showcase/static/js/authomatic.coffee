@@ -69,8 +69,12 @@ getProviderClass = (credentials) ->
   {type, subtype} = deserializeCredentials(credentials)
   
   if type is 1
-    # OAuth 1.0a providers.
-    Oauth1Provider
+    if subtype is 2
+      # Flickr needs special treatment.
+      Flickr  
+    else
+      # OAuth 1.0a providers.
+      Oauth1Provider
   else if type is 2
     # OAuth 2 providers.
     if subtype is 6
@@ -85,8 +89,8 @@ getProviderClass = (credentials) ->
     else if subtype is 14
       # So does WindowsLive.
       WindowsLive
-    else if subtype is 12
-      # Viadeo supports neither CORS nor JSONP.
+    else if subtype in [12, 15]
+      # Viadeo and Yammer support neither CORS nor JSONP.
       BaseProvider
     else
       Oauth2Provider
@@ -180,6 +184,9 @@ window.authomatic = new class Authomatic
 
 
 class BaseProvider
+
+  _x_jsonpCallbackParamName: 'callback'
+
   constructor: (@backend, @credentials, url, @options) ->
     @backendRequestType = 'auto'
     @jsonpRequest = no
@@ -223,6 +230,7 @@ class BaseProvider
       type: method
       data: params
       headers: headers
+      beforeSend: (jqXHR, settings) -> log 'BEFORE SEND', jqXHR, settings
       complete: [
         ((jqXHR, textStatus) -> log 'Request complete.', textStatus, jqXHR)
         globalOptions.complete
@@ -248,6 +256,7 @@ class BaseProvider
       # Add JSONP arguments to options
       jsonpOptions =
         jsonpCallback: @jsonpCallbackName
+        jsonp: @_x_jsonpCallbackParamName
         cache: true # If false, jQuery would add a nonce to query string which would break signature.
         dataType: 'jsonp'
         error: (jqXHR, textStatus, errorThrown) ->
@@ -291,7 +300,10 @@ class Oauth1Provider extends BaseProvider
   access: () ->
     @jsonpRequest = yes
     # Add JSONP callback name to params to be included in the OAuth 1.0a signature
-    $.extend(@params, callback: @jsonpCallbackName)
+
+    @params[@_x_jsonpCallbackParamName] = @jsonpCallbackName
+
+    # $.extend(@params, @_x_jsonpCallbackParamName: @jsonpCallbackName)
     super()
     
   contactProvider: (requestElements) =>
@@ -299,6 +311,11 @@ class Oauth1Provider extends BaseProvider
     # the OAuth 1.0a signature would not be valid if there are two callback params in the querystring.
     delete requestElements.params.callback
     super(requestElements)
+
+
+class Flickr extends Oauth1Provider
+  _x_jsonpCallbackParamName: 'jsoncallback'
+
 
 
 class Oauth2Provider extends BaseProvider
@@ -336,7 +353,6 @@ class Oauth2Provider extends BaseProvider
         body: @options.body
 
       @contactProvider(requestElements)
-
 
 class Foursquare extends Oauth2Provider
   _x_accessToken: 'oauth_token'
