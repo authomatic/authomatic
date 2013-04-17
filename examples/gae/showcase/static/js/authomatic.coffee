@@ -7,6 +7,7 @@ globalOptions =
   popupWidth: 800
   pupupHeight: 600
   backend: null
+  forceBackend: off
   substitute: {}
   params: {}
   headers: {}
@@ -79,8 +80,11 @@ getProviderClass = (credentials) ->
       # So does Google.
       Google
     else if subtype is 9
-      # And so does LinkedIn.
+      # So does LinkedIn.
       LinkedIn
+    else if subtype is 14
+      # So does WindowsLive.
+      WindowsLive
     else if subtype is 12
       # Viadeo supports neither CORS nor JSONP.
       BaseProvider
@@ -161,7 +165,11 @@ window.authomatic = new class Authomatic
     
     log 'access options', updatedOptions, globalOptions
 
-    Provider = getProviderClass(credentials)
+    if updatedOptions.forceBackend
+      Provider = BaseProvider
+    else
+      Provider = getProviderClass(credentials)
+
     provider = new Provider(options.backend, credentials, url, updatedOptions)
     log 'Instantiating provider:', provider
     provider.access()
@@ -304,6 +312,9 @@ class Oauth2Provider extends BaseProvider
     # Unpack credentials elements.
     [@accessToken, @refreshToken, @expirationTime, @tokenType] = @credentialsRest
 
+    @handleTokenType()
+
+  handleTokenType: =>
     # Handle token type.
     if @tokenType is '1'
       # If token type is "1" which means "Bearer", pass access token in authorisation header
@@ -336,6 +347,15 @@ class Google extends Oauth2Provider
 class LinkedIn extends Oauth2Provider
   _x_accessToken: 'oauth2_access_token'
 
+class WindowsLive extends Oauth2Provider
+  handleTokenType: =>
+    # Handle token type.
+    if @tokenType is '1'
+      # If token type is "1" which means "Bearer", pass access token in authorisation header
+      @options.headers['Authorization'] = "#{@_x_bearer} #{@accessToken}"
+    
+    # Windows Live allways needs access token in querystring.
+    @params[@_x_accessToken] = @accessToken
 
 
 window.pokus = ->
