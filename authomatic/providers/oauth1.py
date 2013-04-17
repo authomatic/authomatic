@@ -501,6 +501,7 @@ class Flickr(OAuth1):
     access_token_url = 'http://www.flickr.com/services/oauth/access_token'
     user_info_url = 'http://api.flickr.com/services/rest?method=flickr.test.login&format=json&nojsoncallback=1'
     
+    supports_jsonp = True
     
     @staticmethod
     def _x_user_parser(user, data):
