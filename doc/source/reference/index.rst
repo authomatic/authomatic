@@ -9,6 +9,7 @@ Reference
    classes
    providers
    extras
+   javascript
 
 
 
