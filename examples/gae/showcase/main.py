@@ -39,39 +39,10 @@ class Login(BaseHandler):
                 result.user.update()
                 if result.user.credentials:
                     apis = config.CONFIG.get(provider_name, {}).get('_apis', {})
-                
-            self.response.write(result.js_callback('loginCallback',
-                                                   custom=dict(apis=apis)))
-
-class Action(BaseHandler):
-    def get(self):
-        provider_name = self.request.params.get('provider', '')
-        api = self.request.params.get('api', '')
-        credentials = self.request.params.get('credentials', '')
-        user_id = self.request.params.get('user_id', '')
-        
-        method, url = config.CONFIG.get(provider_name, {}).get('_apis', {}).get(api, (None, None))
-        
-        if method and url:
-            url = url.format(id=user_id)
-            response = authomatic.access(credentials, url, method=method)
-            self.response.write(response.content)
-
-
-class JSON(BaseHandler):
-    def get(self):
-        authomatic.json_endpoint(gae.Webapp2Adapter(self))
-
-
-class Test(BaseHandler):
-    def get(self):
-        self.rr('test.html')
+            self.response.write(result.js_callback(custom=dict(apis=apis)))
 
 
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
-          webapp2.Route(r'/action', Action),
-          webapp2.Route(r'/json', JSON),
-          webapp2.Route(r'/test', Test),
           webapp2.Route(r'/', Home)]
 
 authomatic.setup(config=config.CONFIG,

@@ -1,58 +1,36 @@
 $(document).ready(function (e) {
+	var $user = $('#user');
+	var $error = $('#error');
 	
-	authomatic.popup();
-	
-	pokus();
-	
-	$pokus = $('#pokus');
-	
-	$('form.api-post').submit(function(e) {
-		e.preventDefault();
-		var message = $(e.target).find('input[name=message]').val();
-		console.log('message:', message);
-	});
-	
-	// disable empty form
-	
-	window.loginCallback = function(result){
-		if(result.user){
-			
-			console.log('credentials:', result.user.credentials);
-			
-			$pokus.click(function (e) {
-				e.preventDefault();
-				$.fn.authomatic.access(result.user.credentials, 'https://example.com');
-			});
-			
-			$('#error').slideUp(1000, function () {
-				
-				console.log('LOGIN RESULT:', result);
-				
-				var jsonParam = {
-					"credentials": result.user.credentials,
-					"url": "https://example.com",
-					"method": "POST" 
-				};
-				
-				var testURL = 'login/?json=' + encodeURIComponent(JSON.stringify(jsonParam));
-				$('#test').attr('href', testURL);
-				
-				var $userData = $('#user-data');
-				
+	authomatic.setup({
+		// Called when the popup gets open.
+		onPopupOpen: function(url) {
+			$user.slideUp(1500);
+			$error.slideUp('fast');
+		},
+		// Called when the login procedure is over.
+		onLoginComplete: function(result) {
+			if(result.user) {
+				// Populate user info with data from login result
 				$('#user-name').html(result.user.name);
 				$('#user-id').html(result.user.id);
 				$('#user-email').html(result.user.email);
 				$('#user-picture').attr('src', result.user.picture);
-				$userData.html(JSON.stringify(result.user.data, undefined, 4));
 				$('#user-provider').html(result.provider.name);
-				$('#user').slideDown(2000);
+				$user.slideDown(1500);
 				
+				var $userData = $('#user-data');
+				$userData.html(JSON.stringify(result.user.data, undefined, 4));
+				
+				// Check if there are APIs that we passed to the result.custom object
+				// through LoginResult.js_callback() in the login handler.
 				if(result.custom.apis){
+					// Select the APIs container and delete APIs from previous logins.
 					$apis = $('#user-apis');
 					$apis.empty();
 					
+					// Populate the container with API forms.
 					for (var i in result.custom.apis){
-						
 						var title = i
 						var api = result.custom.apis[i];
 						var method = api[0];
@@ -65,6 +43,7 @@ $(document).ready(function (e) {
 						$form.attr('method', method);
 						
 						if (placeholder){
+							// Form with input field.
 							var formHTML = [
 								'<div class="row collapse">',
 									'<div class="large-7 small-8 columns">',
@@ -78,9 +57,11 @@ $(document).ready(function (e) {
 								
 							$form.append(formHTML);
 						} else {
+							// Form with just the submit button.
 							$form.append('<input type="submit" class="button radius" value="' + title + '" />');
 						}
 						
+						// Add behavior to the form.
 						$form.submit(function(e){
 							e.preventDefault();
 							var $form = $(e.target);
@@ -88,18 +69,22 @@ $(document).ready(function (e) {
 							var method = $form.attr('method');
 							var message = $form.find('input[name=message]').val();
 							
+							// Show loader
 							$userData.slideUp('fast', function(){
 								$('#user-data-loader').slideDown('fast');
 							});
 							
+							// Access protected resource
 							authomatic.access(result.user.credentials, url, {
 								method: method,
 								substitute: {message: message, user: result.user},
-								success: function(data){
+								onAccessSuccess: function(data){
+									// Called only on success.
 									var niceData = JSON.stringify(data, undefined, 4);
 									$userData.html(niceData);
 								},
-								complete: function(jqXHR, status){
+								onAccessComplete: function(jqXHR, status){
+									// Allways called.
 									$('#user-data-loader').slideUp('fast', function(){
 										if(status == 'error'){
 											$userData.html(jqXHR.responseText);
@@ -110,16 +95,18 @@ $(document).ready(function (e) {
 							})
 						});
 						
+						// Append the form to container.
 						$apis.append($form);
 					}
 				}
-				
-			});
-		}else if(result.error){
-			$('#user').slideUp(2000, function () {
-				$('#error-message').html(result.error.message);
-				$('#error').slideDown(1000);
-			});
+			} else if (result.error) {
+				$('#user').slideUp('fast', function () {
+					$('#error-message').html(result.error.message);
+					$error.slideDown('fast');
+				});
+			}
 		}
-	};
+	});
+	
+	authomatic.popupInit();
 });
