@@ -887,7 +887,7 @@ class LoginResult(ReprMixin):
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = None
     
-    def js_callback(self, callback_name, indent=None, title='Login | {}', custom=None):
+    def js_callback(self, callback_name=None, indent=None, title='Login | {}', custom=None):
         """
         Returns HTML with javascript that calls the specified javascript callback
         on the opener of the login handler with a ``result`` JSON object passed to it
@@ -922,7 +922,15 @@ class LoginResult(ReprMixin):
             '<script type="text/javascript">',
             'var result = {result};',
             'result.custom = {custom};',
-            'window.opener.{callback}(result);',
+            
+            # Call specified callback
+            'if (typeof window.opener.{callback} === "function") window.opener.{callback}(result);' if callback_name else '',
+            
+            # Call authomatic.loginComplete() if present
+            'if (typeof window.opener.authomatic !== "undefined" && window.opener.authomatic !== null) {{',
+            '    if (typeof window.opener.authomatic.loginComplete === "function") window.opener.authomatic.loginComplete(result);',
+            '}}',
+            
             'window.close();',
             '</script>',
             '</body>',
