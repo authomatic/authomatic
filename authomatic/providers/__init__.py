@@ -125,13 +125,13 @@ class BaseProvider(object):
     
     __metaclass__ = abc.ABCMeta
     
-    def __init__(self, adapter, provider_name, session=None, session_save_method=None, callback=None, js_callback=None,
+    def __init__(self, adapter, provider_name, session=None, session_saver=None, callback=None, js_callback=None,
                  prefix='authomatic', **kwargs):
         
         self.adapter = adapter
         
         self.session = session
-        self.save_session = session_save_method
+        self.save_session = session_saver
         
         
         #: :class:`str` The provider name as specified in the :doc:`config`.

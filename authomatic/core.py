@@ -1194,7 +1194,7 @@ def setup(config, secret, session_max_age=600, secure_cookie=False,
     _logger.setLevel(logging_level)
 
 
-def login(adapter, provider_name, callback=None, session=None, session_save_method=None, **kwargs):
+def login(adapter, provider_name, callback=None, session=None, session_saver=None, **kwargs):
     """
     If :data:`provider_name` specified, launches the login procedure
     for coresponding :doc:`provider </reference/providers>` and
@@ -1230,9 +1230,9 @@ def login(adapter, provider_name, callback=None, session=None, session_save_meth
         if not provider_settings:
             raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
         
-        if session and session_save_method:
+        if session and session_saver:
             session = session
-            session_save_method = session_save_method
+            session_saver = session_saver
         else:
             session = Session(adapter=adapter,
                                secret=settings.secret,
@@ -1240,7 +1240,7 @@ def login(adapter, provider_name, callback=None, session=None, session_save_meth
                                name=settings.prefix,
                                secure=settings.secure_cookie)
             
-            session_save_method = session.save
+            session_saver = session.save
         
         # Resolve provider class.
         class_ = provider_settings.get('class_')
@@ -1253,7 +1253,7 @@ def login(adapter, provider_name, callback=None, session=None, session_save_meth
                                  provider_name=provider_name,
                                  callback=callback,
                                  session=session,
-                                 session_save_method=session_save_method,
+                                 session_saver=session_saver,
                                  **kwargs)
         
         # return login result
