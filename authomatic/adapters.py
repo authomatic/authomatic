@@ -10,6 +10,17 @@ writing the body, headers and status to the response.
 Since implementation of these features varies across Python web frameworks,
 the Authomatic library uses **adapters** to unify these differences into a single interface.
 
+Available Adapters
+^^^^^^^^^^^^^^^^^^
+
+Currently there is only the :class:`.Webapp2Adapter` available.
+
+.. autoclass:: Webapp2Adapter
+    :members:
+
+Implementing an Adapter
+^^^^^^^^^^^^^^^^^^^^^^^
+
 Implementing an adapter for a Python web framework is pretty easy.
 
 You do it by subclassing the :class:`.BaseAdapter` abstract class.
@@ -24,10 +35,6 @@ override the constructor.
     
 .. autoclass:: WebObBaseAdapter
     :members:
-    
-.. autoclass:: Webapp2Adapter
-    :members:
-
 """
 
 import abc
@@ -114,12 +121,10 @@ class WebObBaseAdapter(BaseAdapter):
     """
     Abstract base class for adapters for |webob|_ based frameworks.
     
-    If you use this base class you only need to implement these three :class:`.BaseAdapter` members:
-    
-    * :meth:`.BaseAdapter.fetch_async`
-    * :meth:`.BaseAdapter.response_parser`
-    * :attr:`.BaseAdapter.openid_store`
-    
+    If you use this base class you only need to set the
+    :attr:`.BaseAdapter.request` to the |webob|_ :class:`Request` and
+    :attr:`.BaseAdapter.response` to the |webob|_ :class:`Response`
+    in the constructor.
     """
     
     @abc.abstractproperty
@@ -135,7 +140,6 @@ class WebObBaseAdapter(BaseAdapter):
        Must be a |webob|_ :class:`Response`.
         """
     
-    
     #===========================================================================
     # Request
     #===========================================================================
@@ -149,9 +153,11 @@ class WebObBaseAdapter(BaseAdapter):
     def params(self):
         return dict(self.request.params)
     
+    
     @property
     def headers(self):
         return dict(self.request.headers)
+    
     
     @property
     def cookies(self):
