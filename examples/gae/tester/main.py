@@ -1,7 +1,7 @@
 from authomatic.settings import logging_level, fetch_headers
 from config import CONFIG
 import authomatic
-from authomatic.adapters import gae
+from authomatic.adapters import Webapp2Adapter
 import cgi
 import logging
 import webapp2
@@ -24,7 +24,7 @@ def loop(handler, obj):
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
         
-        result = authomatic.login(gae.Webapp2Adapter(self), provider_name)
+        result = authomatic.login(Webapp2Adapter(self), provider_name)
         
         if result:
             self.response.write("""<!DOCTYPE html><html>

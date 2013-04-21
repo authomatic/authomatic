@@ -1,6 +1,6 @@
 # main.py
 
-from authomatic.adapters import gae
+from authomatic.adapters import Webapp2Adapter
 from config import CONFIG
 import authomatic
 import logging
@@ -13,7 +13,7 @@ class Login(webapp2.RequestHandler):
     def any(self, provider_name):
         
         # Log the user in.
-        result = authomatic.login(gae.Webapp2Adapter(self), provider_name)
+        result = authomatic.login(Webapp2Adapter(self), provider_name)
         
         if result:
             if result.user:

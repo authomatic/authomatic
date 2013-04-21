@@ -3,6 +3,7 @@
 import webapp2
 import authomatic
 from authomatic.adapters import Webapp2Adapter
+from authomatic.extras import gae
 from config import CONFIG
 
 # Create a simple request handler for the login procedure.
@@ -11,10 +12,14 @@ class Login(webapp2.RequestHandler):
     # The handler must accept GET and POST http methods and
     # Accept any HTTP method and catch the "provider_name" URL variable.
     def any(self, provider_name):
-                
+        
+        session = gae.Webapp2Session(self, secret='abc')
+        
         # It all begins with login.
         result = authomatic.login(Webapp2Adapter(self), # Framework adapter.
-                                  provider_name) # Provider name extracted from url.
+                                  provider_name, # Provider name extracted from url.
+                                  session=session,
+                                  session_saver=session.save) 
         
         # Do not write anything to the response if there is no result!
         if result:
@@ -136,7 +141,8 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/', Home)]
 
 authomatic.setup(config=CONFIG, # Here goes the config.
-                 secret='some random secret string')
+                 secret='some random secret string',
+                 report_errors=False)
 
 # Instantiate the webapp2 WSGI application.
 app = webapp2.WSGIApplication(ROUTES, debug=True)

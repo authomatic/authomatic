@@ -4,7 +4,7 @@ import os
 import sys
 import webapp2
 import logging
-from authomatic.adapters import gae
+from authomatic.adapters import Webapp2Adapter
 
 def headers(handler):
         
@@ -45,7 +45,7 @@ class Login(webapp2.RequestHandler):
     
     def login(self, provider_name):
         
-        result = authomatic.login(gae.Webapp2Adapter(self),
+        result = authomatic.login(Webapp2Adapter(self),
                                   provider_name,
                                   callback=self.callback)
         

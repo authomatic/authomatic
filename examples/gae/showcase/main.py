@@ -1,5 +1,5 @@
 import authomatic
-from authomatic.adapters import gae
+from authomatic.adapters import Webapp2Adapter
 import config
 import jinja2
 import json
@@ -32,7 +32,7 @@ class Home(BaseHandler):
 
 class Login(BaseHandler):
     def any(self, provider_name):
-        result = authomatic.login(gae.Webapp2Adapter(self), provider_name)
+        result = authomatic.login(Webapp2Adapter(self), provider_name)
         if result:
             apis = []
             if result.user:

@@ -5,6 +5,5 @@ This is the only interface that you should ever need to get a **user** logged in
 and access **his/her protected resources**.
 """
 
-from core import setup, login, provider_id, access, async_access, credentials, request_elements, \
-    json_endpoint
+from core import setup, login, provider_id, access, async_access, credentials, request_elements, json_endpoint
 import settings
