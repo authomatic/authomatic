@@ -1,12 +1,21 @@
+
+.. _js:
+
 JavaScript
 ----------
 
-There is the ``authomatic.js`` library available with a tiny interface which makes your life even easier.
+The ``authomatic.js`` library is here to make your life even easier.
+It has a very tiny interface similar to it's Python sibling.
+Yo can use it to:
+
+* Process the *login procedure* in a popup window.
+* Access **protected resources** in the most efficient way without any hussle.
 
 .. warning::
    
-   The library is dependent on |jquery|!
+   The library is dependent on |jquery|_!
 
+.. _js_setup:
 
 .. js:function:: authomatic.setup(options)
    
@@ -63,7 +72,8 @@ There is the ``authomatic.js`` library available with a tiny interface which mak
          
          :js:data:`function` Called when the popup gets closed after the login procedure is complete.
          Accepts the :js:data:`.loginResult` object as the only argument.
-            
+
+.. _js_popup_init:
 
 .. js:function:: authomatic.popupInit
    
@@ -76,6 +86,9 @@ There is the ``authomatic.js`` library available with a tiny interface which mak
       <!DOCTYPE html>
       <html>
          <head>
+            <title>Login Popup Example<title>
+            <!-- authomatic.js is dependent on jQuery -->
+            <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
             <script type="text/javascript" src="authomatic.js"></script>
          </head>
          <body>
@@ -95,6 +108,8 @@ There is the ``authomatic.js`` library available with a tiny interface which mak
             
          </body>
       </html>
+
+.. _js_access:
 
 .. js:function:: authomatic.access(credentials, url[, options])
    

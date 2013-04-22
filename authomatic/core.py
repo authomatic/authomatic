@@ -1142,6 +1142,13 @@ def setup(config, secret, session_max_age=600, secure_cookie=False,
              logging_level=logging.INFO, prefix='authomatic',
              fetch_headers={}):
     """
+    Sets up the Authomatic library.
+    
+    .. warning::
+        
+        You MUST call this function if you want to use this library,
+        otherwise it just won't work!
+    
     :param dict config:
         :doc:`config`
         
@@ -1200,12 +1207,12 @@ def login(adapter, provider_name, callback=None, session=None, session_saver=Non
     for coresponding :doc:`provider </reference/providers>` and
     returns :class:`.LoginResult`.
     
-    If :data:`provider_name` is empty, acts like :func:`.json_endpoint`.
+    If :data:`provider_name` is empty, acts like :func:`.backend`.
     
     .. warning::
         
-        The function redirects the **user** to the **provider** which in turn redirects the
-        **user** back to the *request handler* where this function was called.
+        The function redirects the **user** to the **provider** which in turn redirects
+        **him/her** back to the *request handler* where this function was called.
     
     :param str provider_name:
         Name of the provider as specified in the keys of the :doc:`config`.
@@ -1260,8 +1267,8 @@ def login(adapter, provider_name, callback=None, session=None, session_saver=Non
         return provider.login()
     
     else:
-        # Act like JSON endpoint.
-        json_endpoint(adapter)
+        # Act like backend.
+        backend(adapter)
 
 
 def credentials(credentials):
@@ -1441,32 +1448,63 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
         return request_elements
 
 
-def json_endpoint(adapter):
+def backend(adapter):
     """
-    Converts a *request handler* to a JSON endpoint which you can call from JavaScript.
+    Converts a *request handler* to a JSON backend which you can use with :ref:`authomatic.js <js>`.
     
     Just call it inside a *request handler* like this:
     
     ::
         
-        class JSONHandler(RequestHandler):
+        class JSONHandler(webapp2.RequestHandler):
             def get(self):
-                authomatic.json_endpoint()
+                authomatic.backend(Webapp2Adapter(self))
     
-    The handler will now accept a JSON object in the ``json`` url parameter like this:
+    :param adapter:
+        The only argument is an :doc:`adapter <adapters>`.
     
-    ::
+    The *request handler* will now accept these request parameters:
+    
+    :param str type:
+        Type of the request. Either ``auto``, ``fetch`` or ``elements``. Default is ``auto``.
+    
+    :param str credentials:
+        Serialized :class:`.Credentials`.
+    
+    :param str url:
+        URL of the **protected resource** request.
+    
+    :param str method:
+        HTTP method of the **protected resource** request.
+    
+    :param str body:
+        HTTP body of the **protected resource** request.
+    
+    :param JSON params:
+        HTTP params of the **protected resource** request as a JSON object.
+    
+    :param JSON headers:
+        HTTP headers of the **protected resource** request as a JSON object.
+    
+    :param JSON json:
+        You can pass all of the aformentioned params except ``type`` in a JSON object.
         
-        {
-            "credentials": "",
-            "url": "https://example.com",
-            "method": "POST",
-            "params": {"foo": "bar"}
-        }
+        .. code-block:: javascript
+            
+            {
+                "credentials": "######",
+                "url": "https://example.com",
+                "method": "POST",
+                "params": {"foo": "bar"},
+                "headers": {"baz": "bing"},
+                "body": "the body of the request"
+            }
     
-    and will write a JSON object like this to the response:
+    Depending on the ``type`` param, the handler will either write
+    a JSON object with *request elements* to the response,
+    and add an ``Authomatic-Response-To: elements`` response header, ...
     
-    ::
+    .. code-block:: javascript
         
         {
             "url": "https://example.com/api",
@@ -1477,13 +1515,17 @@ def json_endpoint(adapter):
             },
             "headers": {
                 "baz": "bing",
-                "Authorisation": "Bearer ###"
+                "Authorization": "Bearer ###"
             }
         }
     
-    .. note::
+    ... or make a fetch to the **protected resource** and forward it's response
+    content, status and headers with an additional ``Authomatic-Response-To: fetch`` header
+    to the response.
+    
+    .. warning::
         
-        The function blocks all writes to the response inside the handler.
+        The backend will not work if you write anything to the response in the handler!
     """
     
     AUTHOMATIC_HEADER = 'Authomatic-Response-To'
@@ -1519,14 +1561,12 @@ def json_endpoint(adapter):
     
     if request_type == 'fetch':
         # Access protected resource
-        logging.info('FETCH HEADERS: {}'.format(headers))
         response = access(credentials, url, params, method, headers, body)
         result = response.content
         
         # Forward status
         adapter.status = str(response.status) + ' ' + str(response.reason)
         
-        logging.info('HEADERS')
         # Forward headers
         for k, v in response.getheaders():
             logging.info('    {}: {}'.format(k, v))

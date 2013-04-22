@@ -10,21 +10,21 @@
    reference/index
    examples/index
 
-
-
 Usage
 =====
 
 It's very simple. You only need to do these three steps to have the **user** logged in:
 
-* Configure **providers** that you want to use in the :doc:`/reference/config` dictionary.
-* Wrap your WSGI app in the :func:`.authomatic.middleware`.
-* Call the :func:`.authomatic.login` function inside a *request handler*.
+#. List and configure **providers** which you want to use in the :doc:`/reference/config` dictionary.
+#. Set up the library with :func:`.authomatic.setup`.
+#. Log the **user** in by calling :func:`.authomatic.login` inside a *request handler*.
 
 If everything goes good, you will get a :class:`.User` object with informations like
 :attr:`.User.name`, :attr:`.User.id` or :attr:`.User.email`.
 Moreover, if the **user** has logged in with an |oauth2|_ or |oauth1|_ provider,
 you will be able to access **his/her protected resources**.
+
+.. contents::
 
 Create the Config
 -----------------
@@ -42,12 +42,11 @@ Twitter under ``"tw"``, |openid| under ``"oi"`` and |gae| |openid| under ``"gae_
 
 .. literalinclude:: ../../examples/gae/simple/config-template.py
 
-Wrap Your WSGI App In Middleware
---------------------------------
+Setup the Library
+-----------------
 
-You add the **authorisation/authentication** capability to your WSGI app
-by wrapping it in the :func:`authomatic.middleware`.
-You need to pass it the original WSGI app, the :doc:`reference/config` and a random secret string.
+The Authomatic library must be setup before you use it.
+You need to pass it at least the :doc:`reference/config` and a random secret string.
 
 ::
    
@@ -56,73 +55,89 @@ You need to pass it the original WSGI app, the :doc:`reference/config` and a ran
    
    ROUTES = [webapp2.Route(r'/login/<:.*>', 'Login', handler_method='any')]
    
+   # Setup the library.
+   authomatic.setup(CONFIG, 'your-super-secret-string')
+
    # Instantiate your framework's WSGI app.
    original_app = webapp2.WSGIApplication(ROUTES, debug=True)
-   
-   # Wrapp it in middleware.
-   wrapped_app = authomatic.middleware(original_app, CONFIG, 'your-super-secret-string')
 
-Call the Login Method
----------------------
+
+Log the User In
+---------------
 
 Now you can log the **user** in by calling the :func:`authomatic.login` function inside a *request handler*.
 The *request handler* MUST be able to recieve both ``GET`` and ``POST`` HTTP methods.
-You need to pass it one of the provider names which you specified in the keys of your :doc:`reference/config`.
-Wi will get it from the URL slug.
+You need to pass it an :doc:`adapter <reference/adapters>` for your framework
+and one of the provider names which you specified in the keys of your :doc:`reference/config`.
+Wi will get the provider name from the URL slug.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 3-4, 6, 8, 12, 16
+   :lines: 3-7, 9, 12-13, 16-17
 
 The :func:`authomatic.login` function will redirect the **user** to the **provider**,
-which will promt **him/her** to authorise your app (**the consumer**) to access **his/her**
-protected resources (|oauth1| and |oauth2|), or to verify **his/her** claimed ID (|openid|).
+which will promt **him/her** to authorize your app (**the consumer**) to access **his/her**
+protected resources (|oauth1|_ and |oauth2|_), or to verify **his/her** claimed ID (|openid|_).
 The **provider** then redirect the **user** back to this *request handler*.
 
-The :func:`authomatic.login` function returns a :class:`.LoginResult`.
-If the *login procedure* is over there will be either a :attr:`.LoginResult.error`
-or in better case a :attr:`.LoginResult.user`.
+If the *login procedure* is over, :func:`authomatic.login` returns a :class:`.LoginResult`.
+You can check for errors in :attr:`.LoginResult.error`
+or in better case for a :class:`.User` in :attr:`.LoginResult.user`.
 The :class:`.User` object has plenty of usefull properties.
 
-.. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 18, 20, 22, 26-27, 30-32
+.. warning::
+   
+   Do not write anything to the response unless the *login procedure* is over!
+   The :func:`authomatic.login` either returns ``None``,
+   which means that the *login procedure* si still pending,
+   or a :class:`.LoginResult` which means that the *login procedure* is over.
 
-If there are :attr:`.User.credentials`, the **user** is logged in with |oauth1| or |oauth2|
-and we can access **his/her protected resources**.
-
-.. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 46-47, 50
-
-The call returns a :class:`.Response` object. The :attr:`.Response.data` contains the parsed
-response content.
+Check whether *login procedure* is over.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 52, 54-55, 57-67
+   :lines: 20, 22
+
+Check for errors, but hope that there is a :class:`.User`.
+If so, we have an authenticated **user** logged in.
+Before we print a welcoming message we need to update the :class:`.User`
+to get more info about **him/her**.
+ 
+.. literalinclude:: ../../examples/gae/simple/main.py
+   :lines: 24, 26, 28, 33, 36-38
 
 Advanced
 ========
 
-Apart from getting the **user** logged in you can use **his/her**
-credentials_ to **access his/her protected resources**,
-make `asynchronous requests`_ and use your own session_ implementation.
+Logging a **user** in is nice, but you can do more.
+
+You can use the **user's** credentials_ to **access his/her protected resources**,
+make `asynchronous requests`_, use your own session_ implementation and
+Save your backend's resources by utilizing the :doc:`authomatic.js <reference/javascript>`
+javascript_ library.
 
 
 Credentials
 -----------
 
-If the **user** has logged in with an :class:`.AuthorisationProvider` i.e. |oauth1|_ or |oauth2|_,
-the :attr:`.User.credentials` attribute will contain a :class:`.Credentials` object.
+If the :class:`.User` has :attr:`.User.credentials`,
+**he/she** is logged in either with |oauth1|_ or |oauth2|_,
+both of which are subclasses of :class:`.AuthorisationProvider`.
+That means, that we can access the **user's protected resources**.
+Lets get the **user's** five most recent facebook statuses.
 
-::
-   
-   if result.user.credentials:
-      # User logged in with Oauth 2.0 or Oauth 1.0a
-      credentials = result.user.credentials
+.. literalinclude:: ../../examples/gae/simple/main.py
+   :lines: 44, 47, 49, 52-53, 56
+
+The call returns a :class:`.Response` object. The :attr:`.Response.data` contains the parsed
+response content.
+
+.. literalinclude:: ../../examples/gae/simple/main.py
+   :lines: 58, 60-76
 
 Credentials can be serialized to a lightweight url-safe string.
 
 ::
    
-   serialized = credentials.serialize()
+   serialized_credentials = credentials.serialize()
 
 It would be useles if they could not be deserialized back to original.
 
@@ -130,12 +145,11 @@ It would be useles if they could not be deserialized back to original.
    
    The deserialization of the credentials is dependent on the :doc:`reference/config`
    used when the credentials have been serialized.
-   You can deserialize them in a different application as long as you wrapp it in the
-   :func:`authomatic.middleware` with the same :doc:`reference/config`.
+   You can deserialize them in a different application as long as you use the same :doc:`reference/config`.
 
 ::
    
-   credentials = authomatic.credentials(serialized)
+   credentials = authomatic.credentials(serialized_credentials)
 
 They know the provider name which you specified in the :doc:`reference/config`.
 
@@ -143,7 +157,7 @@ They know the provider name which you specified in the :doc:`reference/config`.
    
    provider_name = credentials.provider_name
 
-|oauth2| credentials have limited lifetime. You can check whether they are still valid,
+|oauth2|_ credentials have limited lifetime. You can check whether they are still valid,
 in how many seconds they expire, get the date and time or UNIX timestamp of their expiration
 and find out whether they expire soon.
 
@@ -155,8 +169,8 @@ and find out whether they expire soon.
    expire_on = credentials.expiration_time # 1362080855
    should_refresh = credentials.expire_soon(60 * 60 * 24) # True if expire in less than one day
 
-You can refresh the credentials if they will expire soon.
-If they are not valid anymore you must call the :func:`authomatic.login` function to get new credentials.
+You can refresh the credentials while they are still valid.
+Otherwise you must repeat the :func:`authomatic.login` procedure to get new credentials.
 
 ::
    
@@ -166,11 +180,15 @@ If they are not valid anymore you must call the :func:`authomatic.login` functio
          print 'Credentials have been refreshed succesfully.'
 
 Finally use the credentials (serialized or deserialized) to access **protected resourcess** of the **user**
-by passing it to the :func:`authomatic.access` function along with the **resource** URL.
+to whom they belong by passing them to the :func:`authomatic.access` function along with the **resource** URL.
 
 ::
    
-   response = authomatic.access(credentials, 'https://graph.facebook.com/#####?fields=birthday')
+   response = authomatic.access(credentials, 'https://graph.facebook.com/{id}?fields=birthday')
+
+You can find out more about :class:`.Credentials` in the :doc:`reference/index`.
+There is also a short :doc:`tutorial about credentials <examples/credentials>`
+in the :doc:`examples/index` section.
 
 Asynchronous Requests
 ---------------------
@@ -185,7 +203,7 @@ block the current thread till they return a :class:`.Response`.
 
 If you need to call more than one of them in a single *request handler*,
 or if there is another **time consuming** task you need to do,
-there is an **asynchronous** alternative to each of the functions.
+there is an **asynchronous** alternative to each of these functions.
 
 * :func:`.authomatic.async_access`
 * :meth:`.AuthorisationProvider.async_access`
@@ -232,8 +250,9 @@ by calling the :meth:`get_result() <.Future.get_result>` method of each of the
 Session
 -------
 
-The library uses a default **secure cookie** based session to store state during the *login procedure*.
-If you want to use another session implementation you can pass it
+The :func:`authomatic.login` function uses a default **secure cookie** based session
+to store state during the *login procedure*.
+If you want to use different session implementation you can pass it
 together with its **save method** to the :func:`authomatic.login` function.
 The only requirement is that the session implementation must have a dictionary-like interface.
 
@@ -242,6 +261,7 @@ The only requirement is that the session implementation must have a dictionary-l
    import webapp2
    from webapp2_extras import sessions
    import authomatic
+   from authomatic.adapters import Webapp2Adapter
    
    class Login(webapp2.RequestHandler):
       def any(self, provider_name):
@@ -251,9 +271,10 @@ The only requirement is that the session implementation must have a dictionary-l
          session = session_store.get_session()
          session_saver = lambda: session_store.save_sessions(self.response)
          
-         result = authomatic.login(provider_name,
+         result = authomatic.login(Webapp2Adapter(self),
+                                   provider_name,
                                    session=session,
-                                   session_save_method=session_saver)
+                                   session_saver=session_saver)
 
 Man, isn't there a simpler way to make a |webapp2| session?
 You guessed it didn't you? There is one in the :mod:`authomatic.extras.gae` module:
@@ -262,16 +283,18 @@ You guessed it didn't you? There is one in the :mod:`authomatic.extras.gae` modu
    
    import webapp2
    import authomatic
+   from authomatic.adapters import Webapp2Adapter
    from authomatic.extras import gae
    
    class Login(webapp2.RequestHandler):
       def any(self, provider_name):
          
-         session = gae.Webapp2Session(self, 'your-super-confidential-secret')
+         session = gae.Webapp2Session(self, secret='your-super-confidential-secret')
          
-         result = authomatic.login(provider_name,
+         result = authomatic.login(Webapp2Adapter(self),
+                                   provider_name,
                                    session=session,
-                                   session_save_method=session.save)
+                                   session_saver=session.save)
 
 If you are allready using a |webapp2| session you can do it like this: 
 
@@ -279,19 +302,137 @@ If you are allready using a |webapp2| session you can do it like this:
    
    import webapp2
    import authomatic
+   from authomatic.adapters import Webapp2Adapter
    from authomatic.extras import gae
    
    class Login(webapp2.RequestHandler):
       def any(self, provider_name):
          
-         session = gae.Webapp2Session(self, self.session)
+         session = gae.Webapp2Session(self, session=self.session)
          
-         result = authomatic.login(provider_name,
+         result = authomatic.login(Webapp2Adapter(self),
+                                   provider_name,
                                    session=session,
-                                   session_save_method=session.save)
+                                   session_saver=session.save)
+
+JavaScript
+----------
+
+Popup
+^^^^^
+
+The :func:`authomatic.login` function redirects the **user** to the **provider**
+to ask him for **his/her** consent. If you rather want to make the redirect in a popup,
+the :ref:`authomatic.popupInit() <js_popup_init>` function of the
+:ref:`javascript.js <js>` library with conjunction with :meth:`.LoginResult.js_callback`
+make it a breeze.
+
+Just add the ``authomatic`` class to your *login handler* links and forms
+and change their default behavior by calling the :ref:`authomatic.popupInit() <js_popup_init>` function.
+The elements will now open a 600 x 800 centered popup on click or submit respectively.
+you can change the popup dimensions with the :ref:`authomatic.setup() <js_setup>`.
+
+Set the ``onLoginComplete`` event handler to the :ref:`authomatic.setup() <js_setup>` function,
+which should accept a ``result`` argument.
+
+.. code-block:: html
 
 
+   <!DOCTYPE html>
+   <html>
+      <head>
+
+         <title>Login Popup Example<title>
+
+         <!-- authomatic.js is dependent on jQuery -->
+         <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+         <script type="text/javascript" src="authomatic.js"></script>
+
+      </head>
+      <body>
+         
+         <!-- Opens a popup with location = "login/facebook" -->
+         <a class="authomatic" href="login/facebook">Login with Facebook</a>
+         
+         <!-- Opens a popup with location = "login/openid?id=me.yahoo.com" -->
+         <form class="authomatic" action="login/openid" method="GET">
+            <input type="text" name="id" value="me.yahoo.com" />
+            <input type="submit" value="Login with OpenID" />
+         </form>
+         
+         <script type="text/javascript">
+
+            // Set up the library
+            authomatic.setup({
+               popupWidth: 600,
+               pupupHeight: 400,
+               onLoginComplete: function(result) {
+                  // Handle the login result when the popup closes.
+                  if (result.user) {
+                     alert('Hi ' + result.user.name);
+                  } else if (result.error) {
+                     alert('Error occured: ' + result.error.message);
+                  }
+               }
+            });
+
+            // Change behavior of links and form of class="authomatic"
+            authomatic.popupInit();
+
+         </script>
+         
+      </body>
+   </html>
+
+In your *login handler* just write the return value of the :meth:`.LoginResult.js_callback` method
+to the response.
+
+.. code-block:: python
+   :emphasize-lines: 11
    
+   import webapp2
+   import authomatic
+   from authomatic.adapters import Webapp2Adapter
+
+   class Login(webapp2.RequestHandler):
+       def any(self, provider_name):
+           result = authomatic.login(Webapp2Adapter(self), provider_name)
+           if result:
+               if result.user:
+                   result.user.update()
+               self.response.write(result.js_callback())
+
+The :meth:`.LoginResult.js_callback` generates a HTML that closes the popup when the *login procedure*
+is over and triggers the ``onLoginComplete`` event handler with a JSON *login result* object passed as argument.
+The *login result* object has similar structure as the :class:`.LoginResult`.
+
+Access
+^^^^^^
+
+Accessing the **user's protected resources** and **provider APIs** is very easy
+thanks to the :func:`authomatic.access` function, but you could save your backend's resources
+by delegating it to the **user's** browser.
    
+This however is easier said then done because some **providers** do not support
+*cross-domain* and *JSONP* requests and all |oauth1|_ request need to be signed
+with the **consumer secret** by the backend.
+Leave alone special request requirements invented by some zealous providers
+on top of the |oauth1|_ and |oauth2|_ standards.
+
+The :ref:`authomatic.access() <js_access>` function of the :ref:`javascript.js <js>` library
+solves this for you. It encapsulates solutions of all the aforementioned issues and
+allways makes the request in the most efficient way.
+
+.. code-block:: javascript
    
-   
+   authomatic.access(loginResult.user.credentials, 'https://graph.facebook.com/{id}/feed',{
+      substitute: loginResult.user, // replaces the {id} in the URL with loginResult.user.id.
+      onAccessSuccess: function(data) {
+         alert('Your most recent status is: ' + data.data[0].story);
+      },
+      onAccessComplete: function(textStatus) {
+         if (textStatus == 'error') {
+            alert('We were unable to get your Facebook feed!');
+         }
+      }
+   });

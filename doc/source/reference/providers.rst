@@ -15,6 +15,8 @@ through the :func:`authomatic.login` function's keyword arguments or through the
    Keyword arguments passed through :func:`authomatic.login` will override
    the values set in :doc:`config`.
 
+.. contents::
+
 ::
 
     CONFIG = {

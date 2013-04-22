@@ -14,7 +14,7 @@ class Login(webapp2.RequestHandler):
                 
         # It all begins with login.
         result = authomatic.login(Webapp2Adapter(self), # Framework adapter.
-                                  provider_name) # Provider name extracted from url.
+                                  provider_name) # Provider name extracted from URL.
         
         # Do not write anything to the response if there is no result!
         if result:
@@ -30,7 +30,8 @@ class Login(webapp2.RequestHandler):
                 
                 # OAuth 2.0 and OAuth 1.0a provide only limited user data on login,
                 # We need to update the user to get more info.
-                result.user.update()
+                if not (result.user.name and result.user.id):
+                    result.user.update()
                 
                 # Welcome the user.
                 self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
@@ -45,7 +46,6 @@ class Login(webapp2.RequestHandler):
                     
                     # Each provider has it's specific API.
                     if result.provider.name == 'fb':
-                        
                         self.response.write('Your are logged in with Facebook,<br />')
                         
                         # We will access the user's 5 most recent statuses.
@@ -76,7 +76,6 @@ class Login(webapp2.RequestHandler):
                             self.response.write('Status: {}'.format(response.status))
                         
                     if result.provider.name == 'tw':
-                        
                         self.response.write('Your are logged in with Twitter,<br />')
                         
                         # We will get the user's 5 most recent tweets.
@@ -106,7 +105,6 @@ class Login(webapp2.RequestHandler):
 
 # Create a home request handler just that you don't have to enter the urls manually.
 class Home(webapp2.RequestHandler):
-    
     def get(self):
         
         # Create links to the Login handler.

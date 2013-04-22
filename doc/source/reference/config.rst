@@ -5,13 +5,12 @@ The config is a dictionary listing all the **providers** you want to use in your
 The keys are your internal **provider** names or slugs,
 the values are dictionaries specifying configuration for a particular **provider** name.
 
-Choose a particular provider by assigning a |provider-class|_ to the ``"class_"`` key of
+Choose a provider implementation by assigning a |provider-class|_ to the ``"class_"`` key of
 the nested *configuration dictionary*. All the other keys are just keyword arguments
 which will be passed to the chosen |provider-class|_ constructor.
 
 There is one special ``"__defaults__"`` key under which you can specify default
-keyword arguments for all providers. Keyword arguments specified in particular **providers**
-will override the default values.
+keyword arguments for all providers. Values of specific **providers** will override the default values.
 
 .. note::
    

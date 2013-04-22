@@ -1,12 +1,11 @@
 # main.py
 
-from authomatic.adapters import Webapp2Adapter
-from config import CONFIG
-import authomatic
-import logging
 import urllib
 import webapp2
+import authomatic
+from authomatic.adapters import Webapp2Adapter
 
+from config import CONFIG
 
 
 class Login(webapp2.RequestHandler):
@@ -21,9 +20,6 @@ class Login(webapp2.RequestHandler):
                 self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
                 
                 # Save the user name and ID to cookies that we can use it in other handlers.
-                
-                logging.info('UID {}'.format(result.user.id))
-                logging.info('UID type {}'.format(type(result.user.id)))
                 self.response.set_cookie('user_id', result.user.id)
                 self.response.set_cookie('user_name', urllib.quote(result.user.name))
                 
@@ -57,7 +53,6 @@ class Home(webapp2.RequestHandler):
             
             if serialized_credentials:
                 # Deserialize credentials.
-                logging.info('SERIALIZED CREDENTIALS: {}'.format(serialized_credentials))
                 credentials = authomatic.credentials(serialized_credentials)
                 
                 name = credentials.provider_name
@@ -223,11 +218,6 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/logout', Logout),
           webapp2.Route(r'/', Home)]
 
-authomatic.setup(config=CONFIG,
-                 report_errors=False,
-                 secret='a-long-secret-string')
+authomatic.setup(config=CONFIG, secret='a-long-secret-string')
 
 app = webapp2.WSGIApplication(ROUTES, debug=True)
-
-
-

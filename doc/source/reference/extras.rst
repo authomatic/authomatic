@@ -1,10 +1,12 @@
 Extras
 ======
 
-Currently there is only extra stuff for |gae|_.
+Currently the only extra stuff available is for |gae|_.
+
+.. contents::
 
 .. automodule:: authomatic.extras.gae
-   :members:
+   :members: ndb_config, Webapp2Session
 
 .. autoclass:: authomatic.extras.gae.openid.NDBOpenIDStore
    :no-members:

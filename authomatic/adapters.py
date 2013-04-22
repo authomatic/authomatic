@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Framework Adapters
-------------------
+Adapters
+--------
 
 The :func:`authomatic.login` function needs access to functionality like
 getting the url of the handler where it is called, getting the request params, headers and cookies and
@@ -9,6 +9,8 @@ writing the body, headers and status to the response.
 
 Since implementation of these features varies across Python web frameworks,
 the Authomatic library uses **adapters** to unify these differences into a single interface.
+
+.. contents::
 
 Available Adapters
 ^^^^^^^^^^^^^^^^^^

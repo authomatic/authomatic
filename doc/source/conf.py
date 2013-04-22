@@ -55,6 +55,9 @@ rst_prolog = """
 .. |gae_users_api| replace:: Google App Engine Users API
 .. _gae_users_api: https://developers.google.com/appengine/docs/python/users/
 
+.. |jquery| replace:: jQuery
+.. _jquery: http://jquery.com/
+
 .. _python-openid: http://pypi.python.org/pypi/python-openid/
 
 .. |classmethod| replace:: Must be a classmethod!
@@ -63,6 +66,7 @@ rst_prolog = """
 
 .. |provider-class| replace:: provider class
 .. _provider-class: /reference/providers
+
 
 .. |no-csrf| replace:: This provider doesn't support CSRF protection!
 
@@ -161,7 +165,7 @@ html_theme_path = ['_themes/foundation_sphinx_theme']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'auth<sub>o</sub>matic'
+html_title = 'Authomatic'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
