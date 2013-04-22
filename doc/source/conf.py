@@ -31,7 +31,6 @@ sys.path[0:0] = [
     os.path.abspath('_themes/foundation_sphinx_theme'),
 ]
 
-
 rst_prolog = """
 
 .. |webob| replace:: WebOb
@@ -58,6 +57,8 @@ rst_prolog = """
 .. |jquery| replace:: jQuery
 .. _jquery: http://jquery.com/
 
+.. |pyopenid| replace:: python-openid
+.. _pyopenid:
 .. _python-openid: http://pypi.python.org/pypi/python-openid/
 
 .. |classmethod| replace:: Must be a classmethod!

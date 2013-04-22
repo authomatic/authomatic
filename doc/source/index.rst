@@ -10,6 +10,14 @@
    reference/index
    examples/index
 
+==========
+Authomatic
+==========
+
+.. include:: ../../README.rst
+   :start-line: 22
+   :end-line: 46
+
 Usage
 =====
 
@@ -102,10 +110,10 @@ Before we print a welcoming message we need to update the :class:`.User`
 to get more info about **him/her**.
  
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 24, 26, 28, 33, 36-38
+   :lines: 24, 26, 28, 33-34, 37-39
 
 Advanced
-========
+--------
 
 Logging a **user** in is nice, but you can do more.
 
@@ -116,7 +124,7 @@ javascript_ library.
 
 
 Credentials
------------
+^^^^^^^^^^^
 
 If the :class:`.User` has :attr:`.User.credentials`,
 **he/she** is logged in either with |oauth1|_ or |oauth2|_,
@@ -125,7 +133,7 @@ That means, that we can access the **user's protected resources**.
 Lets get the **user's** five most recent facebook statuses.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 44, 47, 49, 52-53, 56
+   :lines: 45, 48-49, 52-53, 56
 
 The call returns a :class:`.Response` object. The :attr:`.Response.data` contains the parsed
 response content.
@@ -191,7 +199,7 @@ There is also a short :doc:`tutorial about credentials <examples/credentials>`
 in the :doc:`examples/index` section.
 
 Asynchronous Requests
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 Following functions fetch remote URLs and
 block the current thread till they return a :class:`.Response`.
@@ -248,7 +256,7 @@ by calling the :meth:`get_result() <.Future.get_result>` method of each of the
    
 
 Session
--------
+^^^^^^^
 
 The :func:`authomatic.login` function uses a default **secure cookie** based session
 to store state during the *login procedure*.
@@ -316,10 +324,10 @@ If you are allready using a |webapp2| session you can do it like this:
                                    session_saver=session.save)
 
 JavaScript
-----------
+^^^^^^^^^^
 
 Popup
-^^^^^
+"""""
 
 The :func:`authomatic.login` function redirects the **user** to the **provider**
 to ask him for **his/her** consent. If you rather want to make the redirect in a popup,
@@ -407,7 +415,7 @@ is over and triggers the ``onLoginComplete`` event handler with a JSON *login re
 The *login result* object has similar structure as the :class:`.LoginResult`.
 
 Access
-^^^^^^
+""""""
 
 Accessing the **user's protected resources** and **provider APIs** is very easy
 thanks to the :func:`authomatic.access` function, but you could save your backend's resources
