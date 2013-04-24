@@ -1,9 +1,10 @@
 Extras
 ======
 
-Currently the only extra stuff available is for |gae|_.
-
 .. contents::
+   :backlinks: none
+
+Currently the only extra stuff available is for |gae|_.
 
 .. automodule:: authomatic.extras.gae
    :members: ndb_config, Webapp2Session

@@ -15,7 +15,14 @@ Create the ``main.py`` module and import what's needed.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 1-8
+   :lines: 1-9
+
+Pass the :doc:`/reference/config` to :func:`authomatic.setup` together with
+a random secret string used for session and CSRF token generation.
+
+.. literalinclude:: ../../../examples/gae/credentials/main.py
+   :language: python
+   :lines: 12
 
 Add a simple request handler which accepts ``GET`` and ``POST`` HTTP methods and
 recieves the ``provider_name`` URL variable.
@@ -23,14 +30,14 @@ Log the **user** in by calling the :func:`.authomatic.login` function.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 11, 12, 15
+   :lines: 14, 15, 18
 
 If there is :attr:`.LoginResult.user`, the *login procedure* was successful
 and we can welcome the **user**.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 17-20
+   :lines: 20-23
 
 Save the **user's** name and ID to cookies so we can use them in other handlers.
 We use cookies only for simplicity of the example,
@@ -38,93 +45,93 @@ in real app you will probably use some *User* datamodel.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 23-24
+   :lines: 26-27
 
 If the **user** has logged in with Facebook or Twitter, **he/she** gave us :class:`.Credentials`.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 26
+   :lines: 29
 
 You can serialize the :class:`.Credentials` into a lightweight URL-safe string.
 Store also the serialized credentials to a cookie.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 28-29
+   :lines: 31-32
 
 Store also the possible error message to a cookie.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 31-32
+   :lines: 34-35
 
 Redirect the **user** to the *Home* handler which we are going to create next.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 34
+   :lines: 37
 
 The *Home* handler only needs a ``GET`` method.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 37-38
+   :lines: 40-41
 
 Create links to the *Login* handler.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 40-41
+   :lines: 43-44
 
 Retrieve the stored values from cookies.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 44-47
+   :lines: 47-50
 
 Handle possible errors.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 49-50
+   :lines: 52-53
 
 If there is no error, there must be a **user** ID.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 51-52
+   :lines: 54-55
 
 Let's look at what we can do with the :class:`.Credentials`.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 54
+   :lines: 57
 
 We can deserialize them.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 56
+   :lines: 59
 
 They know the **provider** name which we defined in the :doc:`/reference/config`.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 58-62
+   :lines: 61-65
 
-:class:`.Credentials` issued by |oauth2| providers have limited lifetime.
+:class:`.Credentials` issued by |oauth2|_ providers have limited lifetime.
 We can test whether they are still valid.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 64
+   :lines: 67
 
 Whether they expire soon.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 65
+   :lines: 68
 
 The remaining number of seconds till they expire.
 
@@ -134,7 +141,7 @@ The remaining number of seconds till they expire.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 66
+   :lines: 69
 
 Their expiration date.
 
@@ -144,7 +151,7 @@ Their expiration date.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 67
+   :lines: 70
 
 We can refresh the :class:`.Credentials` without the **user** while they are valid.
 If they are expired we only can get new :class:`.Credentials` by repeating the *login procedure*
@@ -155,14 +162,14 @@ Inform the **user** about **his/her** :class:`.Credentials` and create links to
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 69-92
+   :lines: 72-97
 
 Create the *Refresh* handler, retrieve the serialized :class:`.Credentials` from
 the cookie, deserialize them and get their expiration date.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 95-100, 102
+   :lines: 100-106
 
 Refresh the :class:`.Credentials` with the :meth:`.Credentials.refresh` method.
 It returns a :class:`.Response object`, but only if the :class:`.Credentials` support refreshment.
@@ -176,7 +183,7 @@ Otherwise the method returns ``None``.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 104-127
+   :lines: 108-131
 
 The most interesting things will happen in the *Action* handler.
 Let's first create a method for ``GET`` requests which will accept the ``provider_name`` URL variable. 
@@ -184,13 +191,13 @@ Inside create a simple HTML form which submits to this handler's ``POST`` method
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 130-144
+   :lines: 134-148
 
 In the ``POST`` method, retrieve the message from POST parameters and the values from cookies.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 146-148, 150-152
+   :lines: 150-152, 154-156
 
 Let's first post a status to the **user's** Facebook timeline by accessing the
 `Facebook Graph API <http://developers.facebook.com/docs/reference/api/>`_ endpoint.
@@ -204,7 +211,7 @@ Prepare the URL.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 154, 156
+   :lines: 158, 160
 
 Access the **protected resource** of the **user** by calling the :func:`authomatic.access` function.
 You must pass it the :class:`.Credentials` (normal or serialized) and the URL.
@@ -214,14 +221,14 @@ The function returns a :class:`.Response` object.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 159-161
+   :lines: 163-165
 
 Parse the :class:`.Response`. The :attr:`.Response.data` is a data structure (list or dictionary)
 parsed from the :attr:`.Response.content` which usually is JSON.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 164-174
+   :lines: 168-178
 
 Do the same with Twitter.
 
@@ -232,39 +239,32 @@ Do the same with Twitter.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 176-192
+   :lines: 180-203
 
 Let the **user** repeat the action.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 195-200
+   :lines: 206-211
 
 The *Logout* handler is pretty simple. We just need to delete all those cookies we set
 and redirect the **user** to the *Home* handler.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 203-204, 206-208, 211
+   :lines: 214-215, 217-219, 222
 
-Finally create routes to all those handlers, ...
-
-.. literalinclude:: ../../../examples/gae/credentials/main.py
-   :language: python
-   :lines: 215-219
-
-Very important, you must call the :func:`authomatic.setup` and pass it at least
-the :doc:`/reference/config` and a random secret string used for session and CSRF token generation.
+Finally create routes to all those handlers,
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 221
+   :lines: 226-230
 
-Finally instantiate the |webapp2| WSGI application.
+and instantiate the |webapp2| WSGI application.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
-   :lines: 223
+   :lines: 233
 
 Don't forget to create the ``app.yaml`` file.
 

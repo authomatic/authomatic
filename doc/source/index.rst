@@ -18,12 +18,15 @@ Authomatic
    :start-line: 22
    :end-line: 46
 
+.. contents::
+   :backlinks: none
+
 Usage
 =====
 
-It's very simple. You only need to do these three steps to have the **user** logged in:
+So you want your app to be able to log a **user** in with **Facebook**, **Twitter**, **|openid|** or whatever?
+It's death simple (hence the *Deadsimpleauth*). Just go through these two steps:
 
-#. List and configure **providers** which you want to use in the :doc:`/reference/config` dictionary.
 #. Set up the library with :func:`.authomatic.setup`.
 #. Log the **user** in by calling :func:`.authomatic.login` inside a *request handler*.
 
@@ -32,43 +35,31 @@ If everything goes good, you will get a :class:`.User` object with informations 
 Moreover, if the **user** has logged in with an |oauth2|_ or |oauth1|_ provider,
 you will be able to access **his/her protected resources**.
 
-.. contents::
-
-Create the Config
+Setup the Library
 -----------------
 
-The :doc:`reference/config` is a dictionary of **providers** you want to use in your app.
-The keys are your internal **provider** names or slugs,
-the values are dictionaries specifying configuration for a particular **provider** name.
+The Authomatic library must be set up before you can use it
+by calling the :func:`.authomatic.setup` function.
+
+You must pass it a :doc:`reference/config` dictionary and
+a random secret string used for session signing and CSRF token generation.
+
+.. literalinclude:: ../../examples/gae/simple/main.py
+   :lines: 1-7
+
+The :doc:`reference/config` is a dictionary in which you configure
+:doc:`reference/providers` you want to use in your app.
+The keys are your internal **provider** names and
+values are dictionaries specifying configuration for a particular **provider** name.
 
 Choose a particular provider by assigning a |provider-class|_ to the ``"class_"`` key of
 the nested *configuration dictionary*. All the other keys are just keyword arguments,
 which will be passed to the chosen |provider-class|_ constructor.
 
-In this sample :doc:`reference/config` we specify that Facebook will be available under the ``"fb"`` slug,
+In this sample *config* we specify that Facebook will be available under the ``"fb"`` slug,
 Twitter under ``"tw"``, |openid| under ``"oi"`` and |gae| |openid| under ``"gae_oi"``:
 
 .. literalinclude:: ../../examples/gae/simple/config-template.py
-
-Setup the Library
------------------
-
-The Authomatic library must be setup before you use it.
-You need to pass it at least the :doc:`reference/config` and a random secret string.
-
-::
-   
-   import webapp2
-   from config import CONFIG
-   
-   ROUTES = [webapp2.Route(r'/login/<:.*>', 'Login', handler_method='any')]
-   
-   # Setup the library.
-   authomatic.setup(CONFIG, 'your-super-secret-string')
-
-   # Instantiate your framework's WSGI app.
-   original_app = webapp2.WSGIApplication(ROUTES, debug=True)
-
 
 Log the User In
 ---------------
@@ -77,15 +68,15 @@ Now you can log the **user** in by calling the :func:`authomatic.login` function
 The *request handler* MUST be able to recieve both ``GET`` and ``POST`` HTTP methods.
 You need to pass it an :doc:`adapter <reference/adapters>` for your framework
 and one of the provider names which you specified in the keys of your :doc:`reference/config`.
-Wi will get the provider name from the URL slug.
+We will get the provider name from the URL slug.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 3-7, 9, 12-13, 16-17
+   :lines: 13, 17, 20
 
 The :func:`authomatic.login` function will redirect the **user** to the **provider**,
 which will promt **him/her** to authorize your app (**the consumer**) to access **his/her**
-protected resources (|oauth1|_ and |oauth2|_), or to verify **his/her** claimed ID (|openid|_).
-The **provider** then redirect the **user** back to this *request handler*.
+protected resources (|oauth1|_ and |oauth2|_), or to verify **his/her** claimed ID (|openid|_ and |persona|_).
+The **provider** then redirects the **user** back to *this request handler*.
 
 If the *login procedure* is over, :func:`authomatic.login` returns a :class:`.LoginResult`.
 You can check for errors in :attr:`.LoginResult.error`
@@ -102,15 +93,15 @@ The :class:`.User` object has plenty of usefull properties.
 Check whether *login procedure* is over.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 20, 22
+   :lines: 23, 25
 
-Check for errors, but hope that there is a :class:`.User`.
+Check for errors, but hope that there is a :attr:`.LoginResult.user`.
 If so, we have an authenticated **user** logged in.
 Before we print a welcoming message we need to update the :class:`.User`
 to get more info about **him/her**.
  
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 24, 26, 28, 33-34, 37-39
+   :lines: 27, 29, 31, 36-37, 40-42
 
 Advanced
 --------
@@ -133,13 +124,13 @@ That means, that we can access the **user's protected resources**.
 Lets get the **user's** five most recent facebook statuses.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 45, 48-49, 52-53, 56
+   :lines: 48, 51-52, 55-56, 59
 
 The call returns a :class:`.Response` object. The :attr:`.Response.data` contains the parsed
 response content.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 58, 60-76
+   :lines: 61, 63-79
 
 Credentials can be serialized to a lightweight url-safe string.
 
@@ -297,6 +288,7 @@ You guessed it didn't you? There is one in the :mod:`authomatic.extras.gae` modu
    class Login(webapp2.RequestHandler):
       def any(self, provider_name):
          
+         # Creates a new Webapp2 session.
          session = gae.Webapp2Session(self, secret='your-super-confidential-secret')
          
          result = authomatic.login(Webapp2Adapter(self),
@@ -304,7 +296,7 @@ You guessed it didn't you? There is one in the :mod:`authomatic.extras.gae` modu
                                    session=session,
                                    session_saver=session.save)
 
-If you are allready using a |webapp2| session you can do it like this: 
+If you are already using a |webapp2| session you can do it like this: 
 
 ::
    
@@ -316,6 +308,7 @@ If you are allready using a |webapp2| session you can do it like this:
    class Login(webapp2.RequestHandler):
       def any(self, provider_name):
          
+         # Wrapps an existing Webapp2 session.
          session = gae.Webapp2Session(self, session=self.session)
          
          result = authomatic.login(Webapp2Adapter(self),

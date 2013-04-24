@@ -1,12 +1,15 @@
 # main.py
 
 import urllib
+
 import webapp2
 import authomatic
 from authomatic.adapters import Webapp2Adapter
 
 from config import CONFIG
 
+# Setup Authomatic.
+authomatic.setup(config=CONFIG, secret='a-long-secret-string')
 
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
@@ -55,11 +58,11 @@ class Home(webapp2.RequestHandler):
                 # Deserialize credentials.
                 credentials = authomatic.credentials(serialized_credentials)
                 
-                name = credentials.provider_name
-                
                 self.response.write("""
-                <p>You are logged in with <b>{}</b> and we have your credentials.</p>
-                """.format(dict(fb='Facebook', tw='Twitter')[name]))
+                <p>
+                    You are logged in with <b>{}</b> and we have your credentials.
+                </p>
+                """.format(dict(fb='Facebook', tw='Twitter')[credentials.provider_name]))
                 
                 valid = 'still' if credentials.valid else 'not anymore'
                 expire_soon = 'less' if credentials.expire_soon(60 * 60 * 24) else 'more'
@@ -84,7 +87,9 @@ class Home(webapp2.RequestHandler):
                     """.format(credentials.provider_name))
                 else:
                     self.response.write("""
-                    <p>You must repeat the <b>login procedure</b>to get new credentials.</p>
+                    <p>
+                        Repeat the <b>login procedure</b>to get new credentials.
+                    </p>
                     <a href="login/{}">Refresh</a>
                     """.format(credentials.provider_name))
             
@@ -98,7 +103,6 @@ class Refresh(webapp2.RequestHandler):
         
         serialized_credentials = self.request.cookies.get('credentials')
         credentials = authomatic.credentials(serialized_credentials)
-        
         old_expiration = credentials.expiration_date
         
         response = credentials.refresh(force=True)
@@ -186,10 +190,17 @@ class Action(webapp2.RequestHandler):
             if error:
                 self.response.write('<p>Damn that error: {}!</p>'.format(error))
             elif tweet_id:
-                self.response.write('<p>You just tweeted a tweet with id {}.</p>'.format(tweet_id))
+                self.response.write("""
+                <p>
+                    You just tweeted a tweet with id {}.
+                </p>
+                """.format(tweet_id))
             else:
-                self.response.write('<p>Damn that unknown error! Status code: {}</p>'\
-                                    .format(response.status))
+                self.response.write("""
+                <p>
+                    Damn that unknown error! Status code: {}
+                </p>
+                """.format(response.status))
         
         # Let the user repeat the action.
         self.response.write("""
@@ -218,6 +229,5 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/logout', Logout),
           webapp2.Route(r'/', Home)]
 
-authomatic.setup(config=CONFIG, secret='a-long-secret-string')
-
+# Instantiate the WSGI application.
 app = webapp2.WSGIApplication(ROUTES, debug=True)

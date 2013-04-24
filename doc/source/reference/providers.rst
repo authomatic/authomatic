@@ -1,6 +1,9 @@
 Providers
 ---------
 
+.. contents::
+   :backlinks: none
+
 Providers are abstractions of the **provider** party of the
 **provider**/**consumer**/**user** triangle and they are the very core of this library.
 There is no reason for you to instantiate them manualy.
@@ -14,8 +17,6 @@ through the :func:`authomatic.login` function's keyword arguments or through the
 
    Keyword arguments passed through :func:`authomatic.login` will override
    the values set in :doc:`config`.
-
-.. contents::
 
 ::
 

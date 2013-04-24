@@ -6,4 +6,4 @@ build/
 config.py
 .pydevproject
 .project
-
+.sass-cache

@@ -3,7 +3,11 @@
 import webapp2
 import authomatic
 from authomatic.adapters import Webapp2Adapter
+
 from config import CONFIG
+
+# Setup Authomatic.
+authomatic.setup(config=CONFIG, secret='some random secret string')
 
 # Create a simple request handler for the login procedure.
 class Login(webapp2.RequestHandler):
@@ -13,8 +17,7 @@ class Login(webapp2.RequestHandler):
     def any(self, provider_name):
                 
         # It all begins with login.
-        result = authomatic.login(Webapp2Adapter(self), # Framework adapter.
-                                  provider_name) # Provider name extracted from URL.
+        result = authomatic.login(Webapp2Adapter(self), provider_name)
         
         # Do not write anything to the response if there is no result!
         if result:
@@ -46,10 +49,10 @@ class Login(webapp2.RequestHandler):
                     
                     # Each provider has it's specific API.
                     if result.provider.name == 'fb':
-                        self.response.write('Your are logged in with Facebook,<br />')
+                        self.response.write('Your are logged in with Facebook.<br />')
                         
                         # We will access the user's 5 most recent statuses.
-                        url = 'https://graph.facebook.com/{}?fields=feed.limit(5).fields(message)'
+                        url = 'https://graph.facebook.com/{}?fields=feed.limit(5)'
                         url = url.format(result.user.id)
                         
                         # Access user's protected resource.
@@ -63,20 +66,20 @@ class Login(webapp2.RequestHandler):
                             if error:
                                 self.response.write('Damn that error: {}!'.format(error))
                             elif statuses:
-                                self.response.write('and these are your 5 most recent statuses:<br /><br />')
+                                self.response.write('Your 5 most recent statuses:<br />')
                                 for message in statuses:
                                     
                                     text = message.get('message')
                                     date = message.get('created_time')
                                     
                                     self.response.write('<h3>{}</h3>'.format(text))
-                                    self.response.write('Posted on: {}<br /><br />'.format(date))
+                                    self.response.write('Posted on: {}'.format(date))
                         else:
                             self.response.write('Damn that unknown error!<br />')
                             self.response.write('Status: {}'.format(response.status))
                         
                     if result.provider.name == 'tw':
-                        self.response.write('Your are logged in with Twitter,<br />')
+                        self.response.write('Your are logged in with Twitter.<br />')
                         
                         # We will get the user's 5 most recent tweets.
                         url = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
@@ -88,7 +91,7 @@ class Login(webapp2.RequestHandler):
                         if response.status == 200:
                             if type(response.data) is list:
                                 # Twitter returns the tweets as a JSON list.
-                                self.response.write('and these are your 5 most recent tweets:')
+                                self.response.write('Your 5 most recent tweets:')
                                 for tweet in response.data:
                                     text = tweet.get('text')
                                     date = tweet.get('created_at')
@@ -97,7 +100,8 @@ class Login(webapp2.RequestHandler):
                                     self.response.write('Tweeted on: {}'.format(date))
                                     
                             elif response.data.get('errors'):
-                                self.response.write('Damn that error: {}!'.format(response.data.get('errors')))
+                                self.response.write('Damn that error: {}!'.\
+                                                    format(response.data.get('errors')))
                         else:
                             self.response.write('Damn that unknown error!<br />')
                             self.response.write('Status: {}'.format(response.status))
@@ -132,9 +136,6 @@ class Home(webapp2.RequestHandler):
 # Create routes.
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/', Home)]
-
-authomatic.setup(config=CONFIG, # Here goes the config.
-                 secret='some random secret string')
 
 # Instantiate the webapp2 WSGI application.
 app = webapp2.WSGIApplication(ROUTES, debug=True)

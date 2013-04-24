@@ -158,7 +158,7 @@ html_theme_options = {
     'logo_mobile': 'img/authomatic-broken.svg',
     'logo_screen': 'img/authomatic-horizontal.svg',
     'top_bar_force_fit': True,
-    'css_theme': 'cards'
+    'stylesheet': 'css/authomatic.css',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
