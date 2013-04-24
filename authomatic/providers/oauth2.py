@@ -547,10 +547,10 @@ class Facebook(OAuth2):
     
     @classmethod
     def _x_request_elements_filter(cls, request_type, request_elements, credentials):
-        # As allways, Facebook has it's original name for "refresh_token"!
-        url, method, params, headers, body = request_elements
         
         if request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
+            # As allways, Facebook has it's original name for "refresh_token"!
+            url, method, params, headers, body = request_elements
             params['fb_exchange_token'] = params.pop('refresh_token')
             params['grant_type'] = 'fb_exchange_token'
             request_elements = core.RequestElements(url, method, params, headers, body)
@@ -957,7 +957,6 @@ class WindowsLive(OAuth2):
         if self.offline:
             if not 'wl.offline_access' in self.scope:
                 self.scope.append('wl.offline_access')
-    
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
