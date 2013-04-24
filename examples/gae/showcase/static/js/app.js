@@ -2,6 +2,11 @@ $(document).ready(function (e) {
 	var $user = $('#user');
 	var $error = $('#error');
 	
+	$('form.persona').on('click', function(e){
+		e.preventDefault();
+		alert('Mozilla Persona is not implemented yet!');
+	});
+	
 	authomatic.setup({
 		// Called when the popup gets open.
 		onPopupOpen: function(url) {

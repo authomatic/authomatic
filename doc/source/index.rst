@@ -16,7 +16,7 @@ Authomatic
 
 .. include:: ../../README.rst
    :start-line: 22
-   :end-line: 46
+   :end-line: 50
 
 .. contents::
    :backlinks: none

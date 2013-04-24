@@ -100,7 +100,16 @@
 	</div>
 	<div class="large-4 columns">
 		<h3>Mozilla Persona</h3>
-		{{ form('persona') }}
+		<form class="persona">
+			<div class="row collapse">
+				<div class="large-7 small-8 columns">
+					<input type="text" name="id" placeholder="Comming soon">
+				</div>
+				<div class="large-5 small-4 columns">
+					<input type="submit" class="button postfix radius disabled" value="Authenticate" />
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
 
@@ -122,4 +131,6 @@
 </div>
 {% endblock %}
 {% block script %}
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<script src="https://login.persona.org/include.js"></script>
 {% endblock %}

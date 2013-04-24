@@ -20,9 +20,9 @@ Authomatic
 .. |pyopenid| replace:: python-openid
 .. _pyopenid: http://pypi.python.org/pypi/python-openid/
 
-Authomatic is an authorization/authentication client library for Python web applications
+Authomatic is an **authorization/authentication** client library for Python web applications
 inspired by `Alex Vagin's <http://alex.cloudware.it/>`_ `Simpleauth <http://code.google.com/p/gae-simpleauth/>`_.
-In fact I wanted to name it *Deathsimpleauth* but that would be too long.
+In fact I wanted to name it *Deathsimpleauth* but that would be too long a name.
 
 Features
 ========
@@ -42,7 +42,12 @@ Features
 		**Foursquare**, **GitHub**, **Google**, **LinkedIn**, **PayPal**, **Reddit**, **Viadeo**,
 		**VK**, **WindowsLive**, **Yammer** and **Yandex**.
 	*	|pyopenid|_ and |gae|_ based |openid|_.
-	*	Mozilla Persona.
+
+.. note::
+
+	To cool down your excitement a little bit,
+	the library is in its very early stage
+	and there are practically no tests!
 
 Usage
 =====
