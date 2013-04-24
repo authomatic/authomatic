@@ -324,8 +324,10 @@ class OAuth1(providers.AuthorizationProvider):
             
             # add signature to params
             params['oauth_signature'] = cls._signature_generator.create_signature(method, url, params, consumer_secret, token_secret)
-            
-        return core.RequestElements(url, method, params, headers, body)
+        
+        request_elements = core.RequestElements(url, method, params, headers, body)
+        
+        return cls._x_request_elements_filter(request_type, request_elements, credentials)
     
     
     #===========================================================================

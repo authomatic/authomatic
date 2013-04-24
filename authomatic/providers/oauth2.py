@@ -48,14 +48,6 @@ class OAuth2(providers.AuthorizationProvider):
     PROVIDER_TYPE_ID = 2
     TOKEN_TYPES = ['', 'Bearer']
     
-    # This is for providers who like to invent their own terminology. There is plenty of them!
-    _x_term_dict = dict(refresh_token='refresh_token',
-                        authorization_code='authorization_code',
-                        password='password',
-                        client_credentials='client_credentials',
-                        access_token='access_token',
-                        authorization_header_bearer='Bearer')
-    
     #: A scope preset to get most of the **user** info.
     #: Use it in the :doc:`config` like ``{'scope': oauth2.Facebook.user_info_scope}``.
     user_info_scope = []
@@ -143,7 +135,10 @@ class OAuth2(providers.AuthorizationProvider):
                 params['client_id'] = consumer_key
                 params['client_secret'] = consumer_secret
                 params['redirect_uri'] = redirect_uri
-                params['grant_type'] = cls._x_term_dict['authorization_code']
+                params['grant_type'] = 'authorization_code'
+                
+                # TODO: Chenck whether all providers accept it
+                headers.update(cls._authorization_header(credentials))
             else:
                 raise OAuth2Error('Credentials with valid token, consumer_key, consumer_secret and argument ' + \
                                   'redirect_uri are required to create OAuth 2.0 acces token request elements!')
@@ -151,10 +146,10 @@ class OAuth2(providers.AuthorizationProvider):
         elif request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
             # Refresh access token request.
             if refresh_token and consumer_key and consumer_secret:
-                params[cls._x_term_dict['refresh_token']] = refresh_token
+                params['refresh_token'] = refresh_token
                 params['client_id'] = consumer_key
                 params['client_secret'] = consumer_secret
-                params['grant_type'] = cls._x_term_dict['refresh_token']
+                params['grant_type'] = 'refresh_token'
             else:
                 raise OAuth2Error('Credentials with valid refresh_token, consumer_key, consumer_secret ' + \
                                   'are required to create OAuth 2.0 refresh token request elements!')
@@ -165,16 +160,17 @@ class OAuth2(providers.AuthorizationProvider):
             # Add Authorization header. See: http://tools.ietf.org/html/rfc6749#section-7.1
             if credentials.token_type == cls.BEARER:
                 # http://tools.ietf.org/html/rfc6750#section-2.1
-                bearer_name = cls._x_term_dict.get('authorization_header_bearer', 'Bearer')
-                headers.update({'Authorization': '{} {}'.format(bearer_name, credentials.token)})
+                headers.update({'Authorization': 'Bearer {}'.format(credentials.token)})
                 
             elif token:
-                params[cls._x_term_dict['access_token']] = token
+                params['access_token'] = token
             else:
                 raise OAuth2Error('Credentials with valid token are required to create ' + \
                                   'OAuth 2.0 protected resources request elements!')
         
-        return core.RequestElements(url, method, params, headers, body)
+        request_elements = core.RequestElements(url, method, params, headers, body)
+        
+        return cls._x_request_elements_filter(request_type, request_elements, credentials)
     
     
     @staticmethod
@@ -549,9 +545,17 @@ class Facebook(OAuth2):
     
     same_origin = False
     
-    # Facebook is original as usual and has its own name for "refresh_token"!!!
-    _x_term_dict = OAuth2._x_term_dict.copy()
-    _x_term_dict['refresh_token'] = 'fb_exchange_token'
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        # As allways, Facebook has it's original name for "refresh_token"!
+        url, method, params, headers, body = request_elements
+        
+        if request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
+            params['fb_exchange_token'] = params.pop('refresh_token')
+            params['grant_type'] = 'fb_exchange_token'
+            request_elements = core.RequestElements(url, method, params, headers, body)
+        
+        return request_elements
     
     
     def __init__(self, *args, **kwargs):
@@ -597,15 +601,24 @@ class Foursquare(OAuth2):
     * API reference: https://developer.foursquare.com/docs/
     """
     
-    # Foursquare uses OAuth 1.0 "oauth_token" for what should be "access_token" in OAuth 2.0!
-    _x_term_dict = OAuth2._x_term_dict.copy()
-    _x_term_dict['access_token'] = 'oauth_token'
-    
     user_authorization_url = 'https://foursquare.com/oauth2/authenticate'
     access_token_url = 'https://foursquare.com/oauth2/access_token'
     user_info_url = 'https://api.foursquare.com/v2/users/self'
     
     same_origin = False
+    
+    
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        
+        if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
+            # Foursquare uses OAuth 1.0 "oauth_token" for what should be "access_token" in OAuth 2.0!
+            url, method, params, headers, body = request_elements
+            params['oauth_token'] = params.pop('access_token')
+            request_elements = core.RequestElements(url, method, params, headers, body)
+        
+        return request_elements
+    
     
     @staticmethod
     def _x_user_parser(user, data):
@@ -675,9 +688,6 @@ class Google(OAuth2):
     user_info_scope = ['https://www.googleapis.com/auth/userinfo.profile',
                        'https://www.googleapis.com/auth/userinfo.email']
     
-    _x_term_dict = OAuth2._x_term_dict.copy()
-    _x_term_dict['authorization_header_bearer'] = 'OAuth'
-    
     def __init__(self, *args, **kwargs):
         super(Google, self).__init__(*args, **kwargs)
         
@@ -726,9 +736,17 @@ class LinkedIn(OAuth2):
     
     user_info_scope = ['r_fullprofile', 'r_emailaddress', 'r_contactinfo']
     
-    # LinkedIn too has it's own terminology!
-    _x_term_dict = OAuth2._x_term_dict.copy()
-    _x_term_dict['access_token'] = 'oauth2_access_token'
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        
+        if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
+            # LinkedIn too has it's own terminology!
+            url, method, params, headers, body = request_elements
+            params['oauth2_access_token'] = params.pop('access_token')
+            request_elements = core.RequestElements(url, method, params, headers, body)
+        
+        return request_elements
+    
     
     @staticmethod
     def _x_user_parser(user, data):
@@ -759,8 +777,18 @@ class PayPal(OAuth2):
     * API reference: https://developer.paypal.com/webapps/developer/docs/api/
     """
     
-    _x_term_dict = OAuth2._x_term_dict.copy()
-    _x_term_dict['authorization_code'] = 'client_credentials'
+    _x_use_authorization_header = True
+    
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        
+        if request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
+            url, method, params, headers, body = request_elements
+            params['grant_type'] = 'client_credentials'
+            request_elements = core.RequestElements(url, method, params, headers, body)
+        
+        return request_elements
+    
     
     user_authorization_url = ''
     access_token_url = 'https://api.sandbox.paypal.com/v1/oauth2/token'

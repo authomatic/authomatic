@@ -830,6 +830,29 @@ class AuthorizationProvider(BaseProvider):
         return base, params
     
     
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        """
+        Override this to handle special request requirements of zealous providers.
+        
+        .. warning:: |classmethod|
+        
+        :param int request_type:
+            Type of request.
+            
+        :param request_elements:
+            :class:`.RequestElements`
+            
+        :param credentials:
+            :class:`.Credentials`
+            
+        :returns:
+            :class:`.RequestElements`
+        """
+        
+        return request_elements
+    
+    
     @staticmethod
     def _x_credentials_parser(credentials, data):
         """
