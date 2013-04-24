@@ -22,9 +22,9 @@ through the :func:`authomatic.login` function's keyword arguments or through the
 
     CONFIG = {
         'facebook': {
-            'class_': oauth2.Facebook, # Subclass of AuthorisationProvider
+            'class_': oauth2.Facebook, # Subclass of AuthorizationProvider
 
-            # AuthorisationProvider specific keyword arguments:
+            # AuthorizationProvider specific keyword arguments:
             'short_name': 1,
             'consumer_key': '###################',
             'consumer_secret': '###################',
@@ -67,7 +67,7 @@ Additional keyword arguments by provider type:
 +                                  +---------------------------+-----------+-+
 |                                  | offline                   |           | |
 +                                  +---------------------------+-----------+-+
-|                                  | user_authorisation_params |           | |
+|                                  | user_authorization_params |           | |
 +                                  +---------------------------+-----------+-+
 |                                  | access_token_params       |           | |
 +----------------------------------+---------------------------+-----------+-+
@@ -79,7 +79,7 @@ Additional keyword arguments by provider type:
 +                                  +---------------------------+-----------+-+
 |                                  | request_token_params      |           | |
 +                                  +---------------------------+-----------+-+
-|                                  | user_authorisation_params |           | |
+|                                  | user_authorization_params |           | |
 +                                  +---------------------------+-----------+-+
 |                                  | access_token_params       |           | |
 +----------------------------------+---------------------------+-----------+-+

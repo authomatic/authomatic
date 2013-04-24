@@ -72,7 +72,7 @@ Now we can welcome the **user** by name.
 Seems like we're done, but we can do more:
 
 If there are :class:`credentials <.core.Credentials>` the **user** has logged in with an
-:class:`AuthorisationProvider <.providers.AuthorisationProvider>`
+:class:`AuthorizationProvider <.providers.AuthorizationProvider>`
 i.e. |oauth1|_ or |oauth2|_ and we can access **his/her** **protected resources**.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py

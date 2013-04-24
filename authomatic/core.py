@@ -759,7 +759,7 @@ class Credentials(ReprMixin):
             And there are also differences across providers
             e.g. Google supports refreshment only if there is a ``refresh_token`` in the credentials and
             that in turn is present only if the ``access_type`` parameter was set to ``offline``
-            in the **user authorisation request**.
+            in the **user authorization request**.
         
         :param bool force:
             If ``True`` the credentials will be refreshed even if they won't expire soon.
@@ -1385,7 +1385,7 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
                 },
                 "headers": {
                     "baz": "bing",
-                    "Authorisation": "Bearer ###"
+                    "Authorization": "Bearer ###"
                 },
                 "body": "Foo bar baz bing."
             }
@@ -1404,7 +1404,7 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
                 },
                 "headers": {
                     "baz": "bing",
-                    "Authorisation": "Bearer ###"
+                    "Authorization": "Bearer ###"
                 },
                 "body": "Foo bar baz bing."
             }

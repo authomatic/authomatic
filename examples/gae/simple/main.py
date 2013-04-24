@@ -43,7 +43,7 @@ class Login(webapp2.RequestHandler):
                 
                 # Seems like we're done, but there's more we can do...
                 
-                # If there are credentials (only by AuthorisationProvider),
+                # If there are credentials (only by AuthorizationProvider),
                 # we can _access user's protected resources.
                 if result.user.credentials:
                     

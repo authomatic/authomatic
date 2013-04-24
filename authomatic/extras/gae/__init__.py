@@ -100,7 +100,7 @@ class NDBConfig(ndb.Model):
     provider_name = ndb.StringProperty( )
     class_ = ndb.StringProperty()
     
-    # AuthorisationProvider
+    # AuthorizationProvider
     short_name = ndb.IntegerProperty()
     consumer_key = ndb.StringProperty()
     consumer_secret = ndb.StringProperty()
@@ -170,7 +170,7 @@ class NDBConfig(ndb.Model):
             
             # TODO: Implement all new arguments including openid store.
             
-            # AuthorisationProvider
+            # AuthorizationProvider
             example.consumer_key = 'Consumer key.'
             example.consumer_secret = 'Consumer secret'
             example.short_name = 1

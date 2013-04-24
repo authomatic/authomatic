@@ -14,7 +14,7 @@ Abstract base classes for implementation of protocol specific providers.
     
     login_decorator
     BaseProvider
-    AuthorisationProvider
+    AuthorizationProvider
     AuthenticationProvider
 
 """
@@ -38,7 +38,7 @@ import urlparse
 import uuid
 from authomatic.core import Session
 
-__all__ = ['BaseProvider', 'AuthorisationProvider', 'AuthenticationProvider', 'login_decorator']
+__all__ = ['BaseProvider', 'AuthorizationProvider', 'AuthenticationProvider', 'login_decorator']
 
 
 def _error_traceback_html(exc_info, traceback):
@@ -495,14 +495,14 @@ class BaseProvider(object):
         return user
 
 
-class AuthorisationProvider(BaseProvider):
+class AuthorizationProvider(BaseProvider):
     """
-    Base provider for *authorisation protocols* i.e. protocols which allow a **provider**
+    Base provider for *authorization protocols* i.e. protocols which allow a **provider**
     to authorize a **consumer** to access **protected resources** of a **user**.
     e.g. `OAuth 2.0 <http://oauth.net/2/>`_ or `OAuth 1.0a <http://oauth.net/core/1.0a/>`_.    
     """
         
-    USER_AUTHORISATION_REQUEST_TYPE = 2
+    USER_AUTHORIZATION_REQUEST_TYPE = 2
     ACCESS_TOKEN_REQUEST_TYPE = 3
     PROTECTED_RESOURCE_REQUEST_TYPE = 4
     REFRESH_TOKEN_REQUEST_TYPE = 5
@@ -517,8 +517,8 @@ class AuthorisationProvider(BaseProvider):
     #: :class:`bool` Whether the provider supports JSONP requests.
     supports_jsonp = False
     
-    # Whether to use the HTTP Authorisation header.
-    _x_use_authorisation_header = True
+    # Whether to use the HTTP Authorization header.
+    _x_use_authorization_header = True
     
     def __init__(self, *args, **kwargs):
         """
@@ -533,20 +533,20 @@ class AuthorisationProvider(BaseProvider):
         :arg int id:
             A unique numeric ID used to serialize :class:`.Credentials`.
             
-        :arg dict user_authorisation_params:
-            A dictionary of additional request parameters for **user authorisation request**.
+        :arg dict user_authorization_params:
+            A dictionary of additional request parameters for **user authorization request**.
             
         :arg dict access_token_params:
             A dictionary of additional request parameters for **access_with_credentials token request**.
         """
         
-        super(AuthorisationProvider, self).__init__(*args, **kwargs)
+        super(AuthorizationProvider, self).__init__(*args, **kwargs)
         
         self.consumer_key = self._kwarg(kwargs, 'consumer_key')
         self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
         
-        self.user_authorisation_params = self._kwarg(kwargs, 'user_authorisation_params', {})
-        self.access_token_headers = self._kwarg(kwargs, 'user_authorisation_headers', {})
+        self.user_authorization_params = self._kwarg(kwargs, 'user_authorization_params', {})
+        self.access_token_headers = self._kwarg(kwargs, 'user_authorization_headers', {})
         
         self.access_token_params = self._kwarg(kwargs, 'access_token_params', {})
         
@@ -560,10 +560,10 @@ class AuthorisationProvider(BaseProvider):
     #===========================================================================
         
     @abc.abstractproperty
-    def user_authorisation_url(self):
+    def user_authorization_url(self):
         """
         :class:`str` URL to which we redirect the **user** to grant our app i.e. the **consumer**
-        an **authorisation** to access his **protected resources**.
+        an **authorization** to access his **protected resources**.
         see http://tools.ietf.org/html/rfc6749#section-4.1.1 and
         http://oauth.net/core/1.0a/#auth_step2.
         """
@@ -787,9 +787,9 @@ class AuthorisationProvider(BaseProvider):
     #===========================================================================
     
     @classmethod
-    def _authorisation_header(cls, credentials):
+    def _authorization_header(cls, credentials):
         """
-        Creates authorisation headers if the provider supports it.
+        Creates authorization headers if the provider supports it.
         See: http://en.wikipedia.org/wiki/Basic_access_authentication.
         
         :param credentials:
@@ -799,7 +799,7 @@ class AuthorisationProvider(BaseProvider):
             Headers as :class:`dict`.
         """
         
-        if cls._x_use_authorisation_header:
+        if cls._x_use_authorization_header:
             res = ':'.join((credentials.consumer_key, credentials.consumer_secret))
             res = base64.b64encode(res)
             return {'Authorization': 'Basic {}'.format(res)}
@@ -887,7 +887,7 @@ class AuthenticationProvider(BaseProvider):
         self.identifier = self.params.get(self.identifier_param)
         
 
-PROVIDER_ID_MAP = [BaseProvider, AuthorisationProvider, AuthenticationProvider]
+PROVIDER_ID_MAP = [BaseProvider, AuthorizationProvider, AuthenticationProvider]
         
 
 

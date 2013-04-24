@@ -119,7 +119,7 @@ Credentials
 
 If the :class:`.User` has :attr:`.User.credentials`,
 **he/she** is logged in either with |oauth1|_ or |oauth2|_,
-both of which are subclasses of :class:`.AuthorisationProvider`.
+both of which are subclasses of :class:`.AuthorizationProvider`.
 That means, that we can access the **user's protected resources**.
 Lets get the **user's** five most recent facebook statuses.
 
@@ -196,7 +196,7 @@ Following functions fetch remote URLs and
 block the current thread till they return a :class:`.Response`.
 
 * :func:`.authomatic.access`
-* :meth:`.AuthorisationProvider.access`
+* :meth:`.AuthorizationProvider.access`
 * :meth:`.User.update`
 * :meth:`.Credentials.refresh`
 
@@ -205,7 +205,7 @@ or if there is another **time consuming** task you need to do,
 there is an **asynchronous** alternative to each of these functions.
 
 * :func:`.authomatic.async_access`
-* :meth:`.AuthorisationProvider.async_access`
+* :meth:`.AuthorizationProvider.async_access`
 * :meth:`.User.async_update`
 * :meth:`.Credentials.async_refresh`
 

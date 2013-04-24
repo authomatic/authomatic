@@ -201,7 +201,7 @@ class PLAINTEXTSignatureGenerator(BaseSignatureGenerator):
         return urllib.quote('&'.join((consumer_secret, token_secret)), '')
 
 
-class OAuth1(providers.AuthorisationProvider):
+class OAuth1(providers.AuthorizationProvider):
     """
     Base class for |oauth1|_ providers.    
     """
@@ -224,8 +224,8 @@ class OAuth1(providers.AuthorisationProvider):
         :param id:
             A unique short name used to serialize :class:`.Credentials`.
             
-        :param dict user_authorisation_params:
-            A dictionary of additional request parameters for **user authorisation request**.
+        :param dict user_authorization_params:
+            A dictionary of additional request parameters for **user authorization request**.
             
         :param dict access_token_params:
             A dictionary of additional request parameters for **access token request**.
@@ -276,7 +276,7 @@ class OAuth1(providers.AuthorisationProvider):
         # add extracted params to future params
         params.update(dict(base_params))
         
-        if request_type == cls.USER_AUTHORISATION_REQUEST_TYPE:
+        if request_type == cls.USER_AUTHORIZATION_REQUEST_TYPE:
             # no need for signature
             if token:
                 params['oauth_token'] = token
@@ -360,7 +360,7 @@ class OAuth1(providers.AuthorisationProvider):
         
         if request_token and verifier:
             # Phase 2 after redirect with success
-            self._log(logging.INFO, 'Continuing OAuth 1.0a authorisation procedure after redirect.')
+            self._log(logging.INFO, 'Continuing OAuth 1.0a authorization procedure after redirect.')
             token_secret = self._session_get('token_secret')
             if not token_secret:
                 raise FailureError('Unable to retrieve token secret from storage!')
@@ -402,12 +402,12 @@ class OAuth1(providers.AuthorisationProvider):
         elif denied:
             # Phase 2 after redirect denied
             raise CancellationError('User denied the request token {} during a redirect to {}!'.\
-                                  format(denied, self.user_authorisation_url),
+                                  format(denied, self.user_authorization_url),
                                   original_message=denied,
-                                  url=self.user_authorisation_url)
+                                  url=self.user_authorization_url)
         else:
             # Phase 1 before redirect
-            self._log(logging.INFO, 'Starting OAuth 1.0a authorisation procedure.')
+            self._log(logging.INFO, 'Starting OAuth 1.0a authorization procedure.')
             
             # Fetch for request token
             request_elements = self.create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
@@ -434,13 +434,13 @@ class OAuth1(providers.AuthorisationProvider):
                                   original_message=response.content,
                                   url=self.request_token_url)
             
-            # we need request token for user authorisation redirect
+            # we need request token for user authorization redirect
             self.credentials.token = request_token
                         
             # extract token secret and save it to storage
             token_secret = response.data.get('oauth_token_secret')
             if token_secret:
-                # we need token secret after user authorisation redirect to get access token
+                # we need token secret after user authorization redirect to get access token
                 self._session_set('token_secret', token_secret)
             else:
                 raise FailureError('Failed to obtain token secret from {}!'.format(self.request_token_url),
@@ -451,10 +451,10 @@ class OAuth1(providers.AuthorisationProvider):
             self._log(logging.INFO, 'Got request token and token secret')
             
             # Create User Authorization URL
-            request_elements = self.create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
+            request_elements = self.create_request_elements(request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
                                                              credentials=self.credentials,
-                                                             url=self.user_authorisation_url,
-                                                             params=self.user_authorisation_params)
+                                                             url=self.user_authorization_url,
+                                                             params=self.user_authorization_params)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements.full_url))
             
@@ -471,7 +471,7 @@ class Bitbucket(OAuth1):
     """
     
     request_token_url = 'https://bitbucket.org/!api/1.0/oauth/request_token'
-    user_authorisation_url = 'https://bitbucket.org/!api/1.0/oauth/authenticate'
+    user_authorization_url = 'https://bitbucket.org/!api/1.0/oauth/authenticate'
     access_token_url = 'https://bitbucket.org/!api/1.0/oauth/access_token'
     user_info_url = 'https://api.bitbucket.org/1.0/user'
     
@@ -497,7 +497,7 @@ class Flickr(OAuth1):
     """
     
     request_token_url = 'http://www.flickr.com/services/oauth/request_token'
-    user_authorisation_url = 'http://www.flickr.com/services/oauth/authorize'
+    user_authorization_url = 'http://www.flickr.com/services/oauth/authorize'
     access_token_url = 'http://www.flickr.com/services/oauth/access_token'
     user_info_url = 'http://api.flickr.com/services/rest?method=flickr.test.login&format=json&nojsoncallback=1'
     
@@ -529,7 +529,7 @@ class Meetup(OAuth1):
     """
     
     request_token_url = 'https://api.meetup.com/oauth/request/'
-    user_authorisation_url = 'http://www.meetup.com/authorize/'
+    user_authorization_url = 'http://www.meetup.com/authorize/'
     access_token_url = 'https://api.meetup.com/oauth/access/'
     user_info_url = 'https://api.meetup.com/2/member/{id}'
     
@@ -556,7 +556,7 @@ class Plurk(OAuth1):
     
     
     request_token_url = 'http://www.plurk.com/OAuth/request_token'
-    user_authorisation_url = 'http://www.plurk.com/OAuth/authorize'
+    user_authorization_url = 'http://www.plurk.com/OAuth/authorize'
     access_token_url = 'http://www.plurk.com/OAuth/access_token'
     user_info_url = 'http://www.plurk.com/APP/Profile/getOwnProfile'
     
@@ -597,7 +597,7 @@ class Twitter(OAuth1):
     """
     
     request_token_url = 'https://api.twitter.com/oauth/request_token'
-    user_authorisation_url = 'https://api.twitter.com/oauth/authorize'
+    user_authorization_url = 'https://api.twitter.com/oauth/authorize'
     access_token_url = 'https://api.twitter.com/oauth/access_token'
     user_info_url = 'https://api.twitter.com/1/account/verify_credentials.json'
     
@@ -623,7 +623,7 @@ class Tumblr(OAuth1):
     """
     
     request_token_url = 'http://www.tumblr.com/oauth/request_token'
-    user_authorisation_url = 'http://www.tumblr.com/oauth/authorize'
+    user_authorization_url = 'http://www.tumblr.com/oauth/authorize'
     access_token_url = 'http://www.tumblr.com/oauth/access_token'
     user_info_url = 'http://api.tumblr.com/v2/user/info'
     
@@ -659,7 +659,7 @@ class UbuntuOne(OAuth1):
     _signature_generator = PLAINTEXTSignatureGenerator
     
     request_token_url = 'https://one.ubuntu.com/oauth/request/'
-    user_authorisation_url = 'https://one.ubuntu.com/oauth/authorize/'
+    user_authorization_url = 'https://one.ubuntu.com/oauth/authorize/'
     access_token_url = 'https://one.ubuntu.com/oauth/access/'
     user_info_url = 'https://one.ubuntu.com/api/account/'
 
@@ -678,7 +678,7 @@ class Vimeo(OAuth1):
     """
     
     request_token_url = 'https://vimeo.com/oauth/request_token'
-    user_authorisation_url = 'https://vimeo.com/oauth/authorize'
+    user_authorization_url = 'https://vimeo.com/oauth/authorize'
     access_token_url = 'https://vimeo.com/oauth/access_token'
     user_info_url = 'http://vimeo.com/api/rest/v2?format=json&method=vimeo.oauth.checkAccessToken'
     
@@ -719,7 +719,7 @@ class Xero(OAuth1):
     """
     
     request_token_url = 'https://api.xero.com/oauth/RequestToken'
-    user_authorisation_url = 'https://api.xero.com/oauth/Authorize'
+    user_authorization_url = 'https://api.xero.com/oauth/Authorize'
     access_token_url = 'https://api.xero.com/oauth/AccessToken'
     user_info_url = 'https://api.xero.com/api.xro/2.0/Users'
     
@@ -750,7 +750,7 @@ class Yahoo(OAuth1):
     """
     
     request_token_url = 'https://api.login.yahoo.com/oauth/v2/get_request_token'
-    user_authorisation_url = 'https://api.login.yahoo.com/oauth/v2/request_auth'
+    user_authorization_url = 'https://api.login.yahoo.com/oauth/v2/request_auth'
     access_token_url = 'https://api.login.yahoo.com/oauth/v2/get_token'
     user_info_url = 'http://query.yahooapis.com/v1/yql?q=select%20*%20from%20social.profile%20where%20guid%3Dme&format=json'
     

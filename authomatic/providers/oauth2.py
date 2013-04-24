@@ -40,7 +40,7 @@ __all__ = ['OAuth2', 'Behance', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Four
            'Google', 'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive', 'Yammer', 'Yandex']
 
 
-class OAuth2(providers.AuthorisationProvider):
+class OAuth2(providers.AuthorizationProvider):
     """
     Base class for |oauth2|_ providers.
     """
@@ -54,7 +54,7 @@ class OAuth2(providers.AuthorisationProvider):
                         password='password',
                         client_credentials='client_credentials',
                         access_token='access_token',
-                        authorisation_header_bearer='Bearer')
+                        authorization_header_bearer='Bearer')
     
     #: A scope preset to get most of the **user** info.
     #: Use it in the :doc:`config` like ``{'scope': oauth2.Facebook.user_info_scope}``.
@@ -75,7 +75,7 @@ class OAuth2(providers.AuthorisationProvider):
             If ``True`` the **provider** will be set up to request an *offline access token*.
             default is ``False``.
         
-        As well as those inherited from :class:`.AuthorisationProvider` constructor.
+        As well as those inherited from :class:`.AuthorizationProvider` constructor.
         """
         
         super(OAuth2, self).__init__(*args, **kwargs)
@@ -121,8 +121,8 @@ class OAuth2(providers.AuthorisationProvider):
         # Add params extracted from URL.
         params.update(dict(base_params))
         
-        if request_type == cls.USER_AUTHORISATION_REQUEST_TYPE:
-            # User authorisation request.
+        if request_type == cls.USER_AUTHORIZATION_REQUEST_TYPE:
+            # User authorization request.
             if consumer_key and redirect_uri and (csrf or not cls.supports_csrf_protection):
                 params['client_id'] = consumer_key
                 params['redirect_uri'] = redirect_uri
@@ -130,11 +130,11 @@ class OAuth2(providers.AuthorisationProvider):
                 params['state'] = csrf or cls.csrf_generator()
                 params['response_type'] = 'code'
                 
-                # Add authorisation header
-                headers.update(cls._authorisation_header(credentials))
+                # Add authorization header
+                headers.update(cls._authorization_header(credentials))
             else:
                 raise OAuth2Error('Credentials with valid consumer_key and arguments redirect_uri, scope and ' + \
-                                  'state are required to create OAuth 2.0 user authorisation request elements!')
+                                  'state are required to create OAuth 2.0 user authorization request elements!')
         
         elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
             # Access token request.
@@ -162,10 +162,10 @@ class OAuth2(providers.AuthorisationProvider):
         elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             # Protected resource request.
             
-            # Add Authorisation header. See: http://tools.ietf.org/html/rfc6749#section-7.1
+            # Add Authorization header. See: http://tools.ietf.org/html/rfc6749#section-7.1
             if credentials.token_type == cls.BEARER:
                 # http://tools.ietf.org/html/rfc6750#section-2.1
-                bearer_name = cls._x_term_dict.get('authorisation_header_bearer', 'Bearer')
+                bearer_name = cls._x_term_dict.get('authorization_header_bearer', 'Bearer')
                 headers.update({'Authorization': '{} {}'.format(bearer_name, credentials.token)})
                 
             elif token:
@@ -276,18 +276,18 @@ class OAuth2(providers.AuthorisationProvider):
     def login(self):
         
         # get request parameters from which we can determine the login phase
-        authorisation_code = self.params.get('code')
+        authorization_code = self.params.get('code')
         error = self.params.get('error')
         state = self.params.get('state')      
         
-        if authorisation_code or not self.user_authorisation_url:
+        if authorization_code or not self.user_authorization_url:
             
-            if authorisation_code:
+            if authorization_code:
                 #===================================================================
                 # Phase 2 after redirect with success
                 #===================================================================
                 
-                self._log(logging.INFO, 'Continuing OAuth 2.0 authorisation procedure after redirect.')
+                self._log(logging.INFO, 'Continuing OAuth 2.0 authorization procedure after redirect.')
                 
                 # validate CSRF token
                 if self.supports_csrf_protection:
@@ -298,23 +298,23 @@ class OAuth2(providers.AuthorisationProvider):
                         raise FailureError('Unable to retrieve stored state!')
                     elif not stored_state == state:
                         raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state),
-                                           url=self.user_authorisation_url)
+                                           url=self.user_authorization_url)
                     self._log(logging.INFO, 'Request is valid.')
                 else:
                     self._log(logging.WARN, 'Skipping CSRF validation!')
             
-            elif not self.user_authorisation_url:
+            elif not self.user_authorization_url:
                 #===================================================================
-                # Phase 1 without user authorisation redirect.
+                # Phase 1 without user authorization redirect.
                 #===================================================================
                 
-                self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure without ' + \
-                                        'user authorisation redirect.')
+                self._log(logging.INFO, 'Starting OAuth 2.0 authorization procedure without ' + \
+                                        'user authorization redirect.')
             
-            # exchange authorisation code for access token by the provider
+            # exchange authorization code for access token by the provider
             self._log(logging.INFO, 'Fetching access token from {}.'.format(self.access_token_url))
             
-            self.credentials.token = authorisation_code
+            self.credentials.token = authorization_code
             
             request_elements = self.create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
                                                              credentials=self.credentials,
@@ -369,16 +369,16 @@ class OAuth2(providers.AuthorisationProvider):
             error_description = self.params.get('error_description')
             
             if error_reason == 'user_denied':
-                raise CancellationError(error_description, url=self.user_authorisation_url)
+                raise CancellationError(error_description, url=self.user_authorization_url)
             else:
-                raise FailureError(error_description, url=self.user_authorisation_url)
+                raise FailureError(error_description, url=self.user_authorization_url)
             
         else:
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
             
-            self._log(logging.INFO, 'Starting OAuth 2.0 authorisation procedure.')
+            self._log(logging.INFO, 'Starting OAuth 2.0 authorization procedure.')
             
             csrf = ''
             if self.supports_csrf_protection:
@@ -389,13 +389,13 @@ class OAuth2(providers.AuthorisationProvider):
             else:
                 self._log(logging.WARN, 'Provider doesn\'t support CSRF validation!')
                         
-            request_elements = self.create_request_elements(request_type=self.USER_AUTHORISATION_REQUEST_TYPE,
+            request_elements = self.create_request_elements(request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
                                                             credentials=self.credentials,
-                                                            url=self.user_authorisation_url,
+                                                            url=self.user_authorization_url,
                                                             redirect_uri=self.url,
                                                             scope=self._x_scope_parser(self.scope),
                                                             csrf=csrf,
-                                                            params=self.user_authorisation_params)
+                                                            params=self.user_authorization_params)
             
             self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements.full_url))
             
@@ -411,7 +411,7 @@ class Behance(OAuth2):
     * API reference: http://www.behance.net/dev/api/endpoints/
     """
     
-    user_authorisation_url = 'https://www.behance.net/v2/oauth/authenticate'
+    user_authorization_url = 'https://www.behance.net/v2/oauth/authenticate'
     access_token_url = 'https://www.behance.net/v2/oauth/token'
     user_info_url = ''
     
@@ -455,9 +455,9 @@ class Bitly(OAuth2):
     """
     
     supports_csrf_protection = False
-    _x_use_authorisation_header = False
+    _x_use_authorization_header = False
     
-    user_authorisation_url = 'https://bitly.com/oauth/authorize'
+    user_authorization_url = 'https://bitly.com/oauth/authorize'
     access_token_url = 'https://api-ssl.bitly.com/oauth/access_token'
     user_info_url = 'https://api-ssl.bitly.com/v3/user/info'
     
@@ -494,7 +494,7 @@ class Cosm(OAuth2):
     * API reference: https://cosm.com/docs/v2/
     """
     
-    user_authorisation_url = 'https://cosm.com/oauth/authenticate'
+    user_authorization_url = 'https://cosm.com/oauth/authenticate'
     access_token_url = 'https://cosm.com/oauth/token'
     user_info_url = ''
     
@@ -513,7 +513,7 @@ class DeviantART(OAuth2):
     * API reference: http://www.deviantart.com/developers/oauth2
     """
     
-    user_authorisation_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
+    user_authorization_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
     access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
     user_info_url = 'https://www.deviantart.com/api/draft15/user/whoami'
     
@@ -541,7 +541,7 @@ class Facebook(OAuth2):
     * API explorer: http://developers.facebook.com/tools/explorer
     """
     
-    user_authorisation_url = 'https://www.facebook.com/dialog/oauth'
+    user_authorization_url = 'https://www.facebook.com/dialog/oauth'
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
     user_info_url = 'https://graph.facebook.com/me'
     
@@ -601,7 +601,7 @@ class Foursquare(OAuth2):
     _x_term_dict = OAuth2._x_term_dict.copy()
     _x_term_dict['access_token'] = 'oauth_token'
     
-    user_authorisation_url = 'https://foursquare.com/oauth2/authenticate'
+    user_authorization_url = 'https://foursquare.com/oauth2/authenticate'
     access_token_url = 'https://foursquare.com/oauth2/access_token'
     user_info_url = 'https://api.foursquare.com/v2/users/self'
     
@@ -637,7 +637,7 @@ class GitHub(OAuth2):
     * API reference: http://developer.github.com/v3/
     """
     
-    user_authorisation_url = 'https://github.com/login/oauth/authorize'
+    user_authorization_url = 'https://github.com/login/oauth/authorize'
     access_token_url = 'https://github.com/login/oauth/access_token'
     user_info_url = 'https://api.github.com/user'
     
@@ -668,7 +668,7 @@ class Google(OAuth2):
     * API explorer: https://developers.google.com/oauthplayground/
     """
     
-    user_authorisation_url = 'https://accounts.google.com/o/oauth2/auth'
+    user_authorization_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
     user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
     
@@ -676,19 +676,19 @@ class Google(OAuth2):
                        'https://www.googleapis.com/auth/userinfo.email']
     
     _x_term_dict = OAuth2._x_term_dict.copy()
-    _x_term_dict['authorisation_header_bearer'] = 'OAuth'
+    _x_term_dict['authorization_header_bearer'] = 'OAuth'
     
     def __init__(self, *args, **kwargs):
         super(Google, self).__init__(*args, **kwargs)
         
         # Handle special Google requirements to be able to refresh the access token.
         if self.offline:
-            if not 'access_type' in self.user_authorisation_params:
-                # Google needs access_type=offline param in the user authorisation request.
-                self.user_authorisation_params['access_type'] = 'offline'
-            if not 'approval_prompt' in self.user_authorisation_params:
+            if not 'access_type' in self.user_authorization_params:
+                # Google needs access_type=offline param in the user authorization request.
+                self.user_authorization_params['access_type'] = 'offline'
+            if not 'approval_prompt' in self.user_authorization_params:
                 # And also approval_prompt=force.
-                self.user_authorisation_params['approval_prompt'] = 'force'
+                self.user_authorization_params['approval_prompt'] = 'force'
     
     
     @staticmethod
@@ -719,7 +719,7 @@ class LinkedIn(OAuth2):
     * API reference: http://developer.linkedin.com/rest
     """
     
-    user_authorisation_url = 'https://www.linkedin.com/uas/oauth2/authorization'
+    user_authorization_url = 'https://www.linkedin.com/uas/oauth2/authorization'
     access_token_url = 'https://www.linkedin.com/uas/oauth2/accessToken'
     user_info_url = 'https://api.linkedin.com/v1/people/~:' + \
                     '(id,first-name,last-name,formatted-name,location,picture-url,public-profile-url,email-address,date-of-birth,phone-numbers)?format=json'
@@ -751,7 +751,7 @@ class PayPal(OAuth2):
     
     .. warning::
         
-        Paypal doesn't redirect the **user** to authorise your app!
+        Paypal doesn't redirect the **user** to authorize your app!
         It grants you an **access token** based on your **app's** key and secret instead.
     
     * Dashboard: https://developer.paypal.com/webapps/developer/applications
@@ -762,7 +762,7 @@ class PayPal(OAuth2):
     _x_term_dict = OAuth2._x_term_dict.copy()
     _x_term_dict['authorization_code'] = 'client_credentials'
     
-    user_authorisation_url = ''
+    user_authorization_url = ''
     access_token_url = 'https://api.sandbox.paypal.com/v1/oauth2/token'
     user_info_url = ''
 
@@ -780,7 +780,7 @@ class Reddit(OAuth2):
     * API reference: http://www.reddit.com/dev/api
     """
     
-    user_authorisation_url = 'https://ssl.reddit.com/api/v1/authorize'
+    user_authorization_url = 'https://ssl.reddit.com/api/v1/authorize'
     access_token_url = 'https://ssl.reddit.com/api/v1/access_token'
     user_info_url = 'https://oauth.reddit.com/api/v1/me.json'
     
@@ -790,9 +790,9 @@ class Reddit(OAuth2):
         super(Reddit, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'duration' in self.user_authorisation_params:
+            if not 'duration' in self.user_authorization_params:
                 # http://www.reddit.com/r/changelog/comments/11jab9/reddit_change_permanent_oauth_grants_using/
-                self.user_authorisation_params['duration'] = 'permanent'
+                self.user_authorization_params['duration'] = 'permanent'
     
     
     @classmethod
@@ -818,7 +818,7 @@ class Viadeo(OAuth2):
     
     """
     
-    user_authorisation_url = 'https://secure.viadeo.com/oauth-provider/authorize2'
+    user_authorization_url = 'https://secure.viadeo.com/oauth-provider/authorize2'
     access_token_url = 'https://secure.viadeo.com/oauth-provider/access_token2'
     user_info_url = 'https://api.viadeo.com/me'
     
@@ -864,20 +864,21 @@ class VK(OAuth2):
         VK uses a `bitmask scope <http://vk.com/developers.php?oid=-17680044&p=Application_Rights>`_!
         Use it like this:
         
-        ::
-            
-            CONFIG = {
-                'vk': {
-                    'class_': oauth2.VK,
-                    'consumer_key': '#####',
-                    'consumer_secret': '#####',
-                    'id': authomatic.provider_id(),
-                    'scope': ['1024'] # Allways a single item.
-            }
+    .. code-block:: python
+        :emphasize-lines: 7
+        
+        CONFIG = {
+            'vk': {
+                'class_': oauth2.VK,
+                'consumer_key': '#####',
+                'consumer_secret': '#####',
+                'id': authomatic.provider_id(),
+                'scope': ['1024'] # Allways a single item.
+        }
     
     """
     
-    user_authorisation_url = 'http://api.vkontakte.ru/oauth/authorize'
+    user_authorization_url = 'http://api.vkontakte.ru/oauth/authorize'
     access_token_url = 'https://api.vkontakte.ru/oauth/access_token'
     user_info_url = 'https://api.vk.com/method/getProfiles?' + \
                     'fields=uid,first_name,last_name,nickname,sex,bdate,city,country,timezone,photo_big'
@@ -916,7 +917,7 @@ class WindowsLive(OAuth2):
     * API explorer: http://isdk.dev.live.com/?mkt=en-us
     """
     
-    user_authorisation_url = 'https://oauth.live.com/authorize'
+    user_authorization_url = 'https://oauth.live.com/authorize'
     access_token_url = 'https://oauth.live.com/token'
     user_info_url = 'https://apis.live.net/v5.0/me'
     
@@ -957,7 +958,7 @@ class Yammer(OAuth2):
     * API reference: https://developer.yammer.com/restapi/
     """
     
-    user_authorisation_url = 'https://www.yammer.com/dialog/oauth'
+    user_authorization_url = 'https://www.yammer.com/dialog/oauth'
     access_token_url = 'https://www.yammer.com/oauth2/access_token.json'
     user_info_url = 'https://www.yammer.com/api/v1/users/current.json'
     
@@ -1012,7 +1013,7 @@ class Yandex(OAuth2):
     * API reference: 
     """
     
-    user_authorisation_url = 'https://oauth.yandex.com/authorize'
+    user_authorization_url = 'https://oauth.yandex.com/authorize'
     access_token_url = 'https://oauth.yandex.com/token'
     user_info_url = 'https://login.yandex.ru/info'
     
