@@ -24,17 +24,21 @@ __all__ = ['ndb_config', 'Webapp2Session']
 class GAEError(exceptions.BaseError):
     pass
 
+
 class Webapp2Session(interfaces.BaseSession):
+    """
+    A simple wrapper for |webapp2|_ sessions. If you provide a session
+    it wrapps it and adds the :meth:`.save` method.
+    
+    If you don't provide a session it creates a new one but you must provide the :data:`.secret`. 
+    
+    For more about |webapp2| sessions see:
+    `http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html`_.
+    """
+    
     def __init__(self, handler, session=None, secret=None, cookie_name='webapp2authomatic',
                  backend='memcache', config=None):
         """
-        A simple wrapper for |webapp2|_ sessions. If you provide a session
-        it wrapps it and adds the :meth:`.save` method.
-        
-        If you don't provide a session it creates a new one but you must provide the :data:`.secret`. 
-        
-        For more about |webapp2| sessions see:
-        `http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html`_.
         
         .. warning::
             
@@ -216,10 +220,10 @@ def ndb_config():
         
     .. note::
     
-        The *Datastore Viewer* in the ``_ah/admin/`` won't let you add properties to a model
-        if there is not an entity with that property allready.
+        The *Datastore Viewer* of the |gae|_ admin won't let you add properties to a model
+        if there is not an entity with that property already.
         Therefore it is a good idea to keep the **"Example"** entity (which has all
-        possible properties set) in the datastore.
+        properties set) in the datastore.
     
     :raises:
         :exc:`.GAEError`
