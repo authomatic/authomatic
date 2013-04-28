@@ -1,6 +1,6 @@
 # app.yaml
 
-application: authomatic-simple-example
+application: authomatic-extras-example
 version: 0
 runtime: python27
 api_version: 1

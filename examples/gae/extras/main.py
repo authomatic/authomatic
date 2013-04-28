@@ -6,6 +6,10 @@ from authomatic.adapters import Webapp2Adapter
 from authomatic.extras import gae
 from config import CONFIG
 
+authomatic.setup(config=gae.ndb_config(), # Here goes the config.
+                 secret='some random secret string',
+                 report_errors=False)
+
 # Create a simple request handler for the login procedure.
 class Login(webapp2.RequestHandler):
     
@@ -139,10 +143,6 @@ class Home(webapp2.RequestHandler):
 # Create routes.
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/', Home)]
-
-authomatic.setup(config=CONFIG, # Here goes the config.
-                 secret='some random secret string',
-                 report_errors=False)
 
 # Instantiate the webapp2 WSGI application.
 app = webapp2.WSGIApplication(ROUTES, debug=True)
