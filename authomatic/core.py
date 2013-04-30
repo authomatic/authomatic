@@ -604,7 +604,7 @@ class User(ReprMixin):
         
         # Keep only the provider name to avoid circular reference
         d['provider'] = self.provider.name
-        d['credentials'] = self.credentials.serialize()
+        d['credentials'] = self.credentials.serialize() if self.credentials else None
         d['birth_date'] = str(d['birth_date'])
         
         # Remove content
@@ -956,7 +956,7 @@ class LoginResult(ReprMixin):
     
     
     def to_json(self, indent=4):
-        return json.dumps(self, default=lambda obj: obj.to_dict(), indent=indent)
+        return json.dumps(self, default=lambda obj: obj.to_dict() if hasattr(obj, 'to_dict') else '', indent=indent)
 
 
 class Response(ReprMixin):

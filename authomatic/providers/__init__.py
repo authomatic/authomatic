@@ -206,7 +206,7 @@ class BaseProvider(object):
         """
         
         return dict(name=self.name,
-                    id=self.id,
+                    id=self.id if hasattr(self, 'id') else None,
                     type_id=self.type_id,
                     type=self.get_type(),
                     scope=self.scope if hasattr(self, 'scope') else None,
@@ -239,17 +239,7 @@ class BaseProvider(object):
     
     @property
     def type_id(self):
-        """
-        A short string reprezenting the provider implementation id used for
-        serialization of :class:`.Credentials` and to identify the type of provider in JavaScript.
-        The part before hyphen denotes the type of the provider, the part after hyphen denotes the class id
-        e.g. ``oauth2.Facebook.type_id = '2-5'``, ``oauth1.Twitter.type_id = '1-5'``.
-        """
-        
-        cls = self.__class__
-        mod = sys.modules.get(cls.__module__)
-        
-        return str(self.PROVIDER_TYPE_ID) + '-' + str(mod.PROVIDER_ID_MAP.index(cls))
+        pass
     
     
     def _kwarg(self, kwargs, kwname, default=None):
@@ -668,6 +658,21 @@ class AuthorizationProvider(BaseProvider):
     #===========================================================================
     # Exposed methods
     #===========================================================================
+    
+    @property
+    def type_id(self):
+        """
+        A short string reprezenting the provider implementation id used for
+        serialization of :class:`.Credentials` and to identify the type of provider in JavaScript.
+        The part before hyphen denotes the type of the provider, the part after hyphen denotes the class id
+        e.g. ``oauth2.Facebook.type_id = '2-5'``, ``oauth1.Twitter.type_id = '1-5'``.
+        """
+        
+        cls = self.__class__
+        mod = sys.modules.get(cls.__module__)
+        
+        return str(self.PROVIDER_TYPE_ID) + '-' + str(mod.PROVIDER_ID_MAP.index(cls))
+    
     
     @classmethod
     def access_with_credentials(cls, credentials, url, params=None, method='GET',
