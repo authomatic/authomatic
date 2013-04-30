@@ -5806,7 +5806,7 @@ a {
 }
 /* line 369, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 a:hover {
-  color: #dd0b79;
+  color: #2fa4f2;
 }
 /* line 371, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 a.headerlink {
@@ -5987,7 +5987,7 @@ ul.breadcrumbs li a {
 }
 /* line 409, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li a:hover {
-  color: #dd0b79;
+  color: #2fa4f2;
 }
 
 /* line 415, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
@@ -6703,7 +6703,7 @@ ul.breadcrumbs li a:hover {
 }
 /* line 86, ../sass/authomatic.sass */
 .highlight .ow, .highlight .o, .highlight .p-Indicator {
-  color: #dd0b79 !important;
+  color: #e01b6a !important;
 }
 /* line 88, ../sass/authomatic.sass */
 .highlight .s, .highlight .s1 {

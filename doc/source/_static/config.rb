@@ -5,10 +5,10 @@ require 'zurb-foundation'
 http_path = "/"
 
 # local
-# css_dir = "css"
+css_dir = "css"
 
 # build
-css_dir = "../../build/html/_static/css"
+# css_dir = "../../build/html/_static/css"
 
 sass_dir = "sass"
 images_dir = "img"

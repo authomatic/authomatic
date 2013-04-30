@@ -175,6 +175,7 @@ html_theme_options = {
     'motto': MOTTO,
     'base_url': 'http://authomatic.org',
     'opengraph_image': 'img/authomatic-seo.gif',
+    'google_analytics_id': 'UA-40552373-1',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
