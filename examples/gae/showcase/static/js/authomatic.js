@@ -174,17 +174,15 @@ npm install -g coffeedoc
     };
 
     Authomatic.prototype.popupInit = function() {
-      var _this = this;
-
       $(globalOptions.popupLinkSelector).click(function(e) {
         e.preventDefault();
-        return openWindow(e.target.href);
+        return openWindow($(this).attr('href'));
       });
       return $(globalOptions.popupFormSelector).submit(function(e) {
         var $form, url;
 
         e.preventDefault();
-        $form = $(e.target);
+        $form = $(this);
         url = $form.attr('action') + '?' + $form.serialize();
         if (globalOptions.popupFormValidator($form)) {
           return openWindow(url);

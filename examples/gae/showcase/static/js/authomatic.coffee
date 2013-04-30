@@ -159,13 +159,13 @@ window.authomatic = new class Authomatic
     log 'Setting up authomatic to:', globalOptions
   
   popupInit: ->
-    $(globalOptions.popupLinkSelector).click (e) =>
+    $(globalOptions.popupLinkSelector).click (e) ->
       e.preventDefault()
-      openWindow(e.target.href)
+      openWindow($(this).attr('href'))
     
-    $(globalOptions.popupFormSelector).submit (e) =>
+    $(globalOptions.popupFormSelector).submit (e) ->
       e.preventDefault()
-      $form = $(e.target);
+      $form = $(this);
       url = $form.attr('action') + '?' + $form.serialize()
       if globalOptions.popupFormValidator($form)
         openWindow(url)
