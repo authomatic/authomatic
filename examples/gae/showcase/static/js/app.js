@@ -1,6 +1,7 @@
 $(document).ready(function (e) {
 	var $user = $('#user');
 	var $error = $('#error');
+	var $userPicture = $('#user-picture');
 	
 	$('form.persona').on('click', function(e){
 		e.preventDefault();
@@ -12,6 +13,7 @@ $(document).ready(function (e) {
 		onPopupOpen: function(url) {
 			$user.slideUp(1500);
 			$error.slideUp('fast');
+			$userPicture.fadeOut();
 		},
 		// Called when the login procedure is over.
 		onLoginComplete: function(result) {
@@ -20,9 +22,13 @@ $(document).ready(function (e) {
 				$('#user-name').html(result.user.name);
 				$('#user-id').html(result.user.id);
 				$('#user-email').html(result.user.email);
-				$('#user-picture').attr('src', result.user.picture);
 				$('#user-provider').html(result.provider.name);
-				$user.slideDown(1500);
+				$user.slideDown(1500, function(e) {
+					if(result.user.picture) {
+						$userPicture.attr('src', result.user.picture);
+						$userPicture.fadeIn();
+					}
+				});
 				
 				var $userData = $('#user-data');
 				$userData.html(JSON.stringify(result.user.data, undefined, 4));

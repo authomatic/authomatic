@@ -2,13 +2,18 @@
 <!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
+{% macro description() -%}
+	This is an example usage of the
+	<a href="http://peterhudec.github.io/authomatic">Authomatic</a> Python library.
+{% endmacro -%}
+
 {% macro providers(providers) %}
 	<ul class="small-block-grid-1 large-block-grid-3">
 	{% for k, v in providers %}
 		{% set name = v._name or k|capitalize %}
 		<li>
 			<a class="authomatic provider-button {{ k }}" href="login/{{ k }}">
-				{{ name }} <img src="{{ v._icon }}" />
+				<span>{{ name }}</span> <img src="{{ v._icon }}" />
 			</a>
 		</li>
 	{% endfor %}
@@ -33,6 +38,14 @@
 	<meta name="viewport" content="width=device-width" />
 	<title>{{ title }}</title>
 	
+	<meta property="og:title" content="{{ title }}" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="{{ base_url }}" />
+	<meta property="og:image" content="{{ base_url }}/static/img/authomatic-seo.gif" />
+	<meta property="og:description" content="{{ description()|striptags }}" />
+	
+	<meta name="description" content="{{ description()|striptags }}">
+	
 	<link rel="stylesheet" href="static/css/normalize.css" />
   	<link rel="stylesheet" href="static/css/app.css" />
 	<script src="static/js/vendor/custom.modernizr.js"></script>
@@ -44,8 +57,8 @@
 		<div id="header">
 			<div class="row">
 				<div class="large-12 columns">
-					<img class="logo hide-for-small" src="static/img/authomatic-precize-4dots-lighter.svg" />
-					<img class="logo show-for-small" src="static/img/authomatic-precize-broken-4dots-lighter.svg" />
+					<img class="logo hide-for-small" src="static/img/authomatic-horizontal-lighter.svg" />
+					<img class="logo show-for-small" src="static/img/authomatic-lighter.svg" />
 				</div>
 			</div>
 		</div>
@@ -53,8 +66,9 @@
 		<div id="sub-header">
 			<div class="row">
 				<p id="motto">
-					This is an example usage of the <a href="">Authomatic</a> Python library.
-					You can see the source code of this app <a href="">here</a>.<br />
+					{{ description() }}
+					You can see the source code of this app
+					<a href="https://github.com/peterhudec/authomatic/tree/master/examples/gae/showcase">here</a>.<br />
 					None of your private data will be saved to any kind of persistent storage like database or session.
 				</p>
 			</div>
@@ -94,7 +108,7 @@
 			</div>
 		</div>
 		
-		<div class="row">
+		<div id="authentication" class="row">
 			<div class="large-12 columns">
 				<h1>Authentication</h1>
 			</div>
@@ -124,7 +138,7 @@
 			</div>
 		</div>
 		
-		<div class="row">
+		<div id="authorization" class="row">
 			<div class="large-12 columns">
 				<h1>Authorization</h1>
 			</div>
@@ -146,8 +160,28 @@
 	  
 		<script type="text/javascript">
 			$(document).foundation();
-		</script>	
-		
+			
+			/**
+			 * Fallback svg to png.
+			 * Taken from Todd Motto's article:
+			 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+			 */
+			if(!Modernizr.svg) {
+			    $('img[src*="svg"]').attr('src', function() {
+			        return $(this).attr('src').replace('.svg', '.png');
+			    });
+			}
+			
+			var _gaq = _gaq || [];
+			  _gaq.push(['_setAccount', 'UA-40554445-1']);
+			  _gaq.push(['_trackPageview']);
+			
+			  (function() {
+			    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			  })();
+		</script>
 		<div id="root_footer"></div>
 	</div>
 	<div id="footer">

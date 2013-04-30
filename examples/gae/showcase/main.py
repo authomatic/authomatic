@@ -36,7 +36,8 @@ class BaseHandler(webapp2.RequestHandler):
 class Home(BaseHandler):
     def get(self):
         self.rr('home.html',
-                title='Authomatic example',
+                title='Authomatic Example',
+                base_url='http://authomatic-example.appspot.com',
                 oauth1=sorted(config.OAUTH1.items()),
                 oauth2=sorted(config.OAUTH2.items()))
 

@@ -5583,18 +5583,21 @@ form {
 #header .logo {
   margin: 1em 0em;
 }
+/* line 63, ../sass/app.sass */
+#header .logo.show-for-small {
+  padding: 0em 1em;
+}
 
-/* line 64, ../sass/app.sass */
+/* line 66, ../sass/app.sass */
 #sub-header {
   background-color: #6f6573;
   color: #f4f0e4;
-  margin-bottom: 2em;
 }
-/* line 69, ../sass/app.sass */
+/* line 70, ../sass/app.sass */
 #sub-header br {
   display: none;
 }
-/* line 72, ../sass/app.sass */
+/* line 73, ../sass/app.sass */
 #sub-header #motto {
   text-align: center;
   font-weight: bold;
@@ -5602,7 +5605,7 @@ form {
   margin-bottom: 0em;
 }
 
-/* line 78, ../sass/app.sass */
+/* line 79, ../sass/app.sass */
 #footer {
   background-color: #4a404e;
   color: #f4f0e4;
@@ -5610,41 +5613,41 @@ form {
   padding: 1em;
 }
 
-/* line 85, ../sass/app.sass */
+/* line 86, ../sass/app.sass */
 #user-apis form, #user-apis form > input[type=submit] {
   width: 100%;
 }
-/* line 88, ../sass/app.sass */
+/* line 89, ../sass/app.sass */
 #user-apis input[type=text] {
   background-color: white;
 }
 
-/* line 91, ../sass/app.sass */
+/* line 92, ../sass/app.sass */
 #user {
   background-color: #f4f0e4;
   padding: 2em 0em;
 }
-/* line 95, ../sass/app.sass */
+/* line 96, ../sass/app.sass */
 #user h1 {
   margin-top: 0em;
 }
-/* line 98, ../sass/app.sass */
+/* line 99, ../sass/app.sass */
 #user .info span {
   color: #dd0b79;
   overflow: scroll;
 }
-/* line 102, ../sass/app.sass */
+/* line 103, ../sass/app.sass */
 #user #user-picture-column {
   text-align: right;
 }
-/* line 105, ../sass/app.sass */
+/* line 106, ../sass/app.sass */
 #user #user-picture {
   -webkit-border-radius: 10px;
   border-radius: 10px;
   width: 5em;
   height: 5em;
 }
-/* line 110, ../sass/app.sass */
+/* line 111, ../sass/app.sass */
 #user #user-data-wrapper {
   -webkit-border-radius: 10px;
   border-radius: 10px;
@@ -5654,7 +5657,7 @@ form {
   padding: 1em;
   margin: 1em 0em 0em 0em;
 }
-/* line 117, ../sass/app.sass */
+/* line 118, ../sass/app.sass */
 #user #user-data-wrapper #user-data {
   overflow: hidden;
   white-space: pre;
@@ -5662,26 +5665,24 @@ form {
   overflow-y: scroll;
 }
 
-/* line 124, ../sass/app.sass */
+/* line 125, ../sass/app.sass */
 #error {
   background-color: #dd0b79;
   color: #4a404e;
   padding: 2em 0em;
   font-weight: bold;
 }
-/* line 129, ../sass/app.sass */
+/* line 130, ../sass/app.sass */
 #error span {
   font-weight: normal;
 }
 
-/* line 132, ../sass/app.sass */
-hr {
-  border: none;
-  border-bottom: 2px dotted #6f6573;
-  margin: 2em 0em;
+/* line 133, ../sass/app.sass */
+#authentication, #authorization {
+  margin-top: 2em;
 }
 
-/* line 137, ../sass/app.sass */
+/* line 136, ../sass/app.sass */
 input[type=text] {
   -webkit-border-radius: 0;
   border-radius: 0;
@@ -5694,12 +5695,12 @@ input[type=text] {
   background-color: #f4f0e4;
 }
 
-/* line 141, ../sass/app.sass */
+/* line 140, ../sass/app.sass */
 #buttons {
   margin-bottom: 2em;
 }
 
-/* line 144, ../sass/app.sass */
+/* line 143, ../sass/app.sass */
 .provider-button {
   border-style: solid;
   border-width: 1px;
@@ -5749,7 +5750,11 @@ input[type=text] {
   -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
 }
-/* line 154, ../sass/app.sass */
+/* line 153, ../sass/app.sass */
+.provider-button span {
+  min-width: 90px;
+}
+/* line 155, ../sass/app.sass */
 .provider-button img {
   float: right;
   width: 16px;
@@ -5757,18 +5762,18 @@ input[type=text] {
 }
 
 @media only screen and (min-width: 48em) {
-  /* line 162, ../sass/app.sass */
+  /* line 163, ../sass/app.sass */
   #sub-header br {
     display: inline;
   }
 
-  /* line 165, ../sass/app.sass */
+  /* line 166, ../sass/app.sass */
   #user #user-picture {
     width: 14.5em;
     height: 14.5em;
   }
 
-  /* line 169, ../sass/app.sass */
+  /* line 170, ../sass/app.sass */
   #user-apis form, #user-apis form > input[type=submit] {
     margin-right: 1em;
     display: inline-block;
@@ -5776,7 +5781,7 @@ input[type=text] {
     width: auto;
   }
 }
-/* line 176, ../sass/app.sass */
+/* line 177, ../sass/app.sass */
 .provider-button.bitbucket {
   color: #205081;
   background-color: #efeff0;
@@ -5787,7 +5792,7 @@ input[type=text] {
   background-color: #e3e3e4;
 }
 
-/* line 179, ../sass/app.sass */
+/* line 180, ../sass/app.sass */
 .provider-button.flickr {
   color: white;
   background-color: #ff0084;
@@ -5798,7 +5803,7 @@ input[type=text] {
   background-color: #f2007d;
 }
 
-/* line 182, ../sass/app.sass */
+/* line 183, ../sass/app.sass */
 .provider-button.meetup {
   color: #e51937;
   background-color: #edefed;
@@ -5809,7 +5814,7 @@ input[type=text] {
   background-color: #e1e3e1;
 }
 
-/* line 185, ../sass/app.sass */
+/* line 186, ../sass/app.sass */
 .provider-button.plurk {
   color: white;
   background-color: #cf682f;
@@ -5820,7 +5825,7 @@ input[type=text] {
   background-color: #c4622c;
 }
 
-/* line 188, ../sass/app.sass */
+/* line 189, ../sass/app.sass */
 .provider-button.tumblr {
   color: #2c4762;
   background-color: #9babba;
@@ -5831,7 +5836,7 @@ input[type=text] {
   background-color: #93a2b0;
 }
 
-/* line 191, ../sass/app.sass */
+/* line 192, ../sass/app.sass */
 .provider-button.twitter {
   color: #00aced;
   background-color: #f8f8f8;
@@ -5842,7 +5847,7 @@ input[type=text] {
   background-color: #ebebeb;
 }
 
-/* line 194, ../sass/app.sass */
+/* line 195, ../sass/app.sass */
 .provider-button.ubuntuone {
   color: #dd4713;
   background-color: #fcece7;
@@ -5853,7 +5858,7 @@ input[type=text] {
   background-color: #efe0db;
 }
 
-/* line 197, ../sass/app.sass */
+/* line 198, ../sass/app.sass */
 .provider-button.vimeo {
   color: white;
   background-color: #172322;
@@ -5864,7 +5869,7 @@ input[type=text] {
   background-color: #152120;
 }
 
-/* line 200, ../sass/app.sass */
+/* line 201, ../sass/app.sass */
 .provider-button.xero {
   color: #00b7e2;
   background-color: #45474d;
@@ -5875,7 +5880,7 @@ input[type=text] {
   background-color: #414349;
 }
 
-/* line 203, ../sass/app.sass */
+/* line 204, ../sass/app.sass */
 .provider-button.yahoo {
   color: #6e329d;
   background-color: #fafafc;
@@ -5886,7 +5891,7 @@ input[type=text] {
   background-color: #ededef;
 }
 
-/* line 207, ../sass/app.sass */
+/* line 208, ../sass/app.sass */
 .provider-button.behance {
   color: white;
   background-color: #1a1a1a;
@@ -5897,7 +5902,7 @@ input[type=text] {
   background-color: #181818;
 }
 
-/* line 210, ../sass/app.sass */
+/* line 211, ../sass/app.sass */
 .provider-button.bitly {
   color: #ee6123;
   background-color: #f3f8fb;
@@ -5908,7 +5913,7 @@ input[type=text] {
   background-color: #e6ebee;
 }
 
-/* line 213, ../sass/app.sass */
+/* line 214, ../sass/app.sass */
 .provider-button.cosm {
   color: #f1592a;
   background-color: #f2f4f5;
@@ -5919,7 +5924,7 @@ input[type=text] {
   background-color: #e5e7e8;
 }
 
-/* line 216, ../sass/app.sass */
+/* line 217, ../sass/app.sass */
 .provider-button.deviantart {
   color: #47594e;
   background-color: #d4dfd0;
@@ -5930,7 +5935,7 @@ input[type=text] {
   background-color: #c9d3c5;
 }
 
-/* line 219, ../sass/app.sass */
+/* line 220, ../sass/app.sass */
 .provider-button.facebook {
   color: #3b5998;
   background-color: #ededed;
@@ -5941,7 +5946,7 @@ input[type=text] {
   background-color: #e1e1e1;
 }
 
-/* line 222, ../sass/app.sass */
+/* line 223, ../sass/app.sass */
 .provider-button.foursquare {
   color: white;
   background-color: #8dc540;
@@ -5952,7 +5957,7 @@ input[type=text] {
   background-color: #85bb3c;
 }
 
-/* line 225, ../sass/app.sass */
+/* line 226, ../sass/app.sass */
 .provider-button.github {
   color: #4a4a4a;
   background-color: #f5cdb6;
@@ -5963,7 +5968,7 @@ input[type=text] {
   background-color: #e8c2ac;
 }
 
-/* line 228, ../sass/app.sass */
+/* line 229, ../sass/app.sass */
 .provider-button.google {
   color: #2d2d2d;
   background-color: #f1f1f1;
@@ -5974,7 +5979,7 @@ input[type=text] {
   background-color: #e4e4e4;
 }
 
-/* line 231, ../sass/app.sass */
+/* line 232, ../sass/app.sass */
 .provider-button.linkedin {
   color: #010101;
   background-color: whitesmoke;
@@ -5985,7 +5990,7 @@ input[type=text] {
   background-color: #e8e8e8;
 }
 
-/* line 234, ../sass/app.sass */
+/* line 235, ../sass/app.sass */
 .provider-button.paypal {
   color: #00457c;
   background-color: whitesmoke;
@@ -5996,7 +6001,7 @@ input[type=text] {
   background-color: #e8e8e8;
 }
 
-/* line 237, ../sass/app.sass */
+/* line 238, ../sass/app.sass */
 .provider-button.reddit {
   color: orangered;
   background-color: #cee3f8;
@@ -6007,7 +6012,7 @@ input[type=text] {
   background-color: #c3d7eb;
 }
 
-/* line 240, ../sass/app.sass */
+/* line 241, ../sass/app.sass */
 .provider-button.viadeo {
   color: #282828;
   background-color: #f8f9fb;
@@ -6018,7 +6023,7 @@ input[type=text] {
   background-color: #ebecee;
 }
 
-/* line 243, ../sass/app.sass */
+/* line 244, ../sass/app.sass */
 .provider-button.vk {
   color: #43658b;
   background-color: #d9e1e8;
@@ -6029,7 +6034,7 @@ input[type=text] {
   background-color: #ced5dc;
 }
 
-/* line 246, ../sass/app.sass */
+/* line 247, ../sass/app.sass */
 .provider-button.yammer {
   color: #009ac7;
   background-color: whitesmoke;
@@ -6040,7 +6045,7 @@ input[type=text] {
   background-color: #e8e8e8;
 }
 
-/* line 249, ../sass/app.sass */
+/* line 250, ../sass/app.sass */
 .provider-button.windows_live {
   color: white;
   background-color: #f89a1e;
@@ -6051,7 +6056,7 @@ input[type=text] {
   background-color: #eb921c;
 }
 
-/* line 252, ../sass/app.sass */
+/* line 253, ../sass/app.sass */
 .provider-button.yandex {
   color: white;
   background-color: #ff000a;

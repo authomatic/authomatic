@@ -60,11 +60,12 @@ form
   
   .logo
     margin: 1em 0em
+    &.show-for-small
+      padding: 0em 1em
 
 #sub-header
   background-color: $color2
   color: $color3
-  margin-bottom: 2em
   
   br
     display: none
@@ -129,10 +130,8 @@ form
   span
     font-weight: normal
 
-hr
-  border: none
-  border-bottom: 2px dotted $color2
-  margin: 2em 0em
+#authentication, #authorization
+  margin-top: 2em
 
 input[type=text]
   @include side-radius(left, $global-radius)
@@ -151,6 +150,8 @@ input[type=text]
   text-align: left
   padding-left: 1em
   padding-right: 1em
+  span
+    min-width: 90px
   img
     float: right
     width: 16px
