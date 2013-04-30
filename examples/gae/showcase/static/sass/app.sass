@@ -1,11 +1,15 @@
+@import compass/layout
 @import foundation/foundation-global
+@include sticky-footer(54px)
 
 $color1: #4a404e
 $color2: #6f6573
-$color3: #f4f0e4
+$color3: #f4f0e4  
 $color4: #dd0b79
 
 $primary-color: $color1
+$anchor-font-color: #5fb9f5
+$anchor-font-color-hover: darken($anchor-font-color, 5%)
 
 // The default font-size is set to 100% of the browser style sheet (usually 16px)
 // for compatibility with brower-based text zoom or user-set defaults.
@@ -54,18 +58,28 @@ form
   color: $color3
   padding: 1em 0em
   
-  #logo
+  .logo
     margin: 1em 0em
 
 #sub-header
   background-color: $color2
   color: $color3
+  margin-bottom: 2em
+  
+  br
+    display: none
   
   #motto
     text-align: center
     font-weight: bold
     padding: 1em
     margin-bottom: 0em
+
+#footer
+  background-color: $color1
+  color: $color3
+  text-align: center
+  padding: 1em
 
 #user-apis
   form, form>input[type=submit]
@@ -78,14 +92,20 @@ form
   background-color: $color3
   padding: 2em 0em
   
+  h1
+    margin-top: 0em
+  
   .info span
     color: $color4
     overflow: scroll
   
+  #user-picture-column
+    text-align: right
+  
   #user-picture
     @include radius
-    width: 100%
-    height: 100%
+    width: 5em
+    height: 5em
   
   #user-data-wrapper
     @include radius
@@ -118,6 +138,9 @@ input[type=text]
   @include side-radius(left, $global-radius)
   background-color: $color3
 
+#buttons
+  margin-bottom: 2em
+
 .provider-button
   @include button-base
   @include button-size($full-width: true)
@@ -132,6 +155,22 @@ input[type=text]
     float: right
     width: 16px
     height: 16px
+
+
+@media #{$small}
+  #sub-header
+    br
+      display: inline
+  #user
+    #user-picture
+      width: 14.5em
+      height: 14.5em      
+  #user-apis
+    form, form>input[type=submit]
+      margin-right: 1em
+      display: inline-block
+      vertical-align: top
+      width: auto
 
 // OAuth 1.0a
 .provider-button.bitbucket
@@ -213,12 +252,5 @@ input[type=text]
 .provider-button.yandex
   @include provider-color(#FF000A)
 
-@media #{$small}
-  #user-apis
-    form, form>input[type=submit]
-      margin-right: 1em
-      display: inline-block
-      vertical-align: top
-      width: auto
   
 

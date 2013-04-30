@@ -902,6 +902,7 @@ class VK(OAuth2):
                 'consumer_secret': '#####',
                 'id': authomatic.provider_id(),
                 'scope': ['1024'] # Allways a single item.
+            }
         }
     
     """

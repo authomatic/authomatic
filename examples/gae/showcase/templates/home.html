@@ -1,4 +1,6 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
 {% macro providers(providers) %}
 	<ul class="small-block-grid-1 large-block-grid-3">
@@ -26,111 +28,130 @@
 	</form>
 {% endmacro %}
 
-{% block scripts %}
-
-<script type="text/javascript" src="static/js/authomatic.js"></script>
-
-{% endblock %}
-
-{% block body %}
-<div id="header">
-	<div class="row">
-		<div class="large-12 columns">
-			<img id="logo" src="static/img/dark-horizontal.svg" />
-		</div>
-	</div>
-</div>
-
-<div id="sub-header">
-	<div class="row">
-		<p id="motto">
-			Example of the Authomatic Python library.
-		</p>
-	</div>
-</div>
-
-<div id="user" class="hidden">
-	<div class="row">
-		<div class="small-8 columns info">
-			<h1>Hi <span id="user-name"></span></h1>
-			<h5>You are logged in with</h5>
-			<h3><span id="user-provider"></span></h3>
-			<h5>Your email is</h5>
-			<h3><span id="user-email"></span></h3>
-			<h5>Your ID is</h5>
-			<h3><span id="user-id"></span></h3>
-		</div>
-		<div class="small-4 columns">
-			<img id="user-picture" />
-		</div>
-	</div>
-	<div class="row">
-		<div class="large-12 columns">
-			<div id="user-apis"></div>
-			<div id="user-data-wrapper">
-				<div id="user-data-loader" class="hidden">Loading ...</div>
-				<pre id="user-data" class="prettyprint"></pre>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div id="error" class="hidden">
-	<div class="row">
-		<div class="large-12 columns">
-			Error: <span id="error-message"></span>
-		</div>
-	</div>
-</div>
-
-<div class="row">
-	<div class="large-12 columns">
-		<h1>Authentication</h1>
-	</div>
-</div>
-
-<div class="row">
-	<div class="large-4 columns">
-		<h3>OpenID</h3>
-		{{ form('openid') }}
-	</div>
-	<div class="large-4 columns">
-		<h3>GAE OpenID</h3>
-		{{ form('gae-openid') }}
-	</div>
-	<div class="large-4 columns">
-		<h3>Mozilla Persona</h3>
-		<form class="persona">
-			<div class="row collapse">
-				<div class="large-7 small-8 columns">
-					<input type="text" name="id" placeholder="Comming soon">
-				</div>
-				<div class="large-5 small-4 columns">
-					<input type="submit" class="button postfix radius disabled" value="Authenticate" />
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>{{ title }}</title>
+	
+	<link rel="stylesheet" href="static/css/normalize.css" />
+  	<link rel="stylesheet" href="static/css/app.css" />
+	<script src="static/js/vendor/custom.modernizr.js"></script>
+	<script src="static/js/vendor/jquery.js"></script>
+	<script type="text/javascript" src="static/js/authomatic.js"></script>
+</head>
+<body>
+	<div id="root">
+		<div id="header">
+			<div class="row">
+				<div class="large-12 columns">
+					<img class="logo hide-for-small" src="static/img/authomatic-precize-4dots-lighter.svg" />
+					<img class="logo show-for-small" src="static/img/authomatic-precize-broken-4dots-lighter.svg" />
 				</div>
 			</div>
-		</form>
+		</div>
+		
+		<div id="sub-header">
+			<div class="row">
+				<p id="motto">
+					This is an example usage of the <a href="">Authomatic</a> Python library.
+					You can see the source code of this app <a href="">here</a>.<br />
+					None of your private data will be saved to any kind of persistent storage like database or session.
+				</p>
+			</div>
+		</div>
+		
+		<div id="user" class="hidden">
+			<div class="row">
+				<div class="small-8 columns info">
+					<h1>Hi <span id="user-name"></span></h1>
+					<h5>You are logged in with</h5>
+					<h3><span id="user-provider"></span></h3>
+					<h5>Your email is</h5>
+					<h3><span id="user-email"></span></h3>
+					<h5>Your ID is</h5>
+					<h3><span id="user-id"></span></h3>
+				</div>
+				<div id="user-picture-column" class="small-4 columns">
+					<img id="user-picture" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-12 columns">
+					<div id="user-apis"></div>
+					<div id="user-data-wrapper">
+						<div id="user-data-loader" class="hidden">Loading ...</div>
+						<pre id="user-data" class="prettyprint"></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="error" class="hidden">
+			<div class="row">
+				<div class="large-12 columns">
+					Error: <span id="error-message"></span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="large-12 columns">
+				<h1>Authentication</h1>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="large-4 columns">
+				<h3>OpenID</h3>
+				{{ form('openid') }}
+			</div>
+			<div class="large-4 columns">
+				<h3>GAE OpenID</h3>
+				{{ form('gae-openid') }}
+			</div>
+			<div class="large-4 columns">
+				<h3>Mozilla Persona</h3>
+				<form class="persona">
+					<div class="row collapse">
+						<div class="large-7 small-8 columns">
+							<input type="text" name="id" placeholder="Comming soon">
+						</div>
+						<div class="large-5 small-4 columns">
+							<input type="submit" class="button postfix radius disabled" value="Authenticate" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="large-12 columns">
+				<h1>Authorization</h1>
+			</div>
+		</div>
+		
+		<div id="buttons" class="row">
+			<div class="small-6 columns">
+				<h3>OAuth 1.0a</h3>
+				{{ providers(oauth1) }}
+			</div>
+			<div class="small-6 columns">
+				<h3>OAuth 2.0</h3>
+				{{ providers(oauth2) }}
+			</div>
+		</div>
+	  	
+		<script src="static/js/foundation/foundation.js"></script>
+		<script src="static/js/app.js"></script>
+	  
+		<script type="text/javascript">
+			$(document).foundation();
+		</script>	
+		
+		<div id="root_footer"></div>
 	</div>
-</div>
-
-<div class="row">
-	<div class="large-12 columns">
-		<h1>Authorisation</h1>
+	<div id="footer">
+		&copy; Copyright 2013, <a href="http://peterhudec.com">Peter Hudec</a>
 	</div>
-</div>
-
-<div class="row">
-	<div class="small-6 columns">
-		<h3>OAuth 1.0a</h3>
-		{{ providers(oauth1) }}
-	</div>
-	<div class="small-6 columns">
-		<h3>OAuth 2.0</h3>
-		{{ providers(oauth2) }}
-	</div>
-</div>
-{% endblock %}
-{% block script %}
-<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-<script src="https://login.persona.org/include.js"></script>
-{% endblock %}
+</body>
+</html>

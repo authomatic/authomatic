@@ -1,40 +1,136 @@
-// pink
-// #dd0b79
 
-// blue
-// #5fb9f5
-
-// dark violet
-// #4a404e
-
-// lighter violet
-// #6f6573
-
-// warm grey
-// #f4f0e4
-
+$dark-violet: #4a404e
+$lighter-violet: #6f6573
+$warm-grey: #f4f0e4
+$warm-grey-light: #faf7f4
+$pink: #dd0b79
+$blue: #5fb9f5
+$yellow: #f2cb05
+$green: #c5ec09
 
 
 // Body text, page header and footer background, object and table headers background.
-$color-1: #4a404e !default
+$color-1: $dark-violet !default
 
 // Page header and footer text and objec headers text.
-$color-2: #f4f0e4 !default
+$color-2: $warm-grey !default
 
 // Object body, topic, footnotes, top bar, breadcrumbs, tables and sidebar background.
-$color-3: #f4f0e4 !default
+$color-3: $warm-grey-light !default
 
 // Body and function/method parameters background.
 $color-4: white !default
 
 // Function/method returns body background and header text, method border, top bar background.
-$color-5: #6f6573 !default
+$color-5: $lighter-violet !default
 
 // Top bar background.
-$color-6: #292827 !default
+// $color-6: #292827
+$color-6: $dark-violet
 
-$link-fg: #5fb9f5
+$link-fg: $blue
+$link-hover-fg: darken($link-fg, 10%)
 
-$returns-value-fg: $color-2
 
-@import "../../_themes/foundation_sphinx_theme/foundation/static/foundation/sass/cards"
+// Header
+$page-header-bg: $lighter-violet !default
+$page-header-fg: $warm-grey-light !default
+
+$breadcrumbs-even-bg: $warm-grey-light
+$breadcrumbs-odd-bg: darken($breadcrumbs-even-bg, 5%)
+
+$topbar-bg: $dark-violet
+
+$returns-value-fg: $warm-grey
+
+$method-border-color: darken($warm-grey-light, 15%)
+
+$admonition-1-header-bg: $yellow
+
+@import "../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards"
+
+
+#header
+  padding: 0em
+  margin-bottom: $margin * 2
+  br
+    display: none
+  .row
+    margin: 0em
+  .columns
+    padding: 0em
+  
+  #logo-container
+    margin: 0em
+    #logo, #logo-mobile
+      padding: $padding * 2
+      padding-bottom: $padding * 2.5
+      margin: 0em
+      max-width: 100%
+      height: auto
+  
+  #motto
+    padding: #{$padding * 1.5} #{$padding} #{$padding * 2}
+    background-color: $warm-grey-light
+    color: $lighter-violet
+    em
+      color: $yellow
+
+.highlight
+  // keyword and self
+  .nx
+    color: $warm-grey-light !important
+  .k, .cp, .kd
+    color: $blue !important
+  .ow, .o, .p-Indicator
+    color: $pink !important
+  .s, .s1
+    color: $yellow !important
+  .nc, .nf, .na, .bp
+    color: $green !important
+  .mi
+    color: $green !important
+  // comments
+  .c, .c1
+    font-style: italic !important
+    color: $lighter-violet !important
+
+@media only screen and (min-width: 768px)
+
+  $mottoTitleLineHeight: 40px
+  $mottoLineHeight: 25px
+  $mottoTopGap: 10px
+  $mottoNumberOfLines: 6
+  $mottoBottomGap: 6px
+  
+  #header
+    padding: $padding * 1.5
+    padding-bottom: $padding * 2
+    .row
+      margin: auto
+    .columns
+      //padding: 0em #{$padding}
+    br
+      display: inline
+  
+    #logo-container
+      #logo, #logo-mobile
+        padding: 0em #{$padding * 2} 0em #{$padding}
+        height: $mottoTitleLineHeight + $mottoLineHeight * $mottoNumberOfLines - $mottoTopGap - $mottoBottomGap
+        margin-top: $mottoTopGap
+    
+    #motto
+      padding: 0em
+      line-height: $mottoLineHeight
+      background-color: transparent
+      color: $warm-grey-light
+      border-left: 2px dotted $dark-violet
+      padding-left: $padding * 1.5
+      span
+        line-height: $mottoTitleLineHeight
+        font-size: 1.5em
+
+
+
+
+

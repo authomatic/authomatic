@@ -28,8 +28,13 @@ sys.path[0:0] = [
     os.path.join(gae_path, 'lib', 'yaml', 'lib'),
     os.path.join(gae_path, 'google', 'appengine', 'ext', 'gql'),
     os.path.abspath('../../'),
-    os.path.abspath('_themes/foundation_sphinx_theme'),
+    os.path.abspath('.'),
+    os.path.abspath('_themes/'),
+    os.path.abspath('_themes/foundation-sphinx-theme'),
+    os.path.abspath('_themes/foundation-sphinx-theme/foundation'),
 ]
+
+print os.path.abspath('_themes/foundation-sphinx-theme')
 
 rst_prolog = """
 
@@ -148,21 +153,32 @@ pygments_style = 'monokai'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#html_theme = 'default'
+# html_theme = 'default'
 html_theme = 'foundation'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
+
+MOTTO = u"""<span>Authomatic</span><br />
+is an <em>authorization</em> / <em>authentication</em><br />
+client library for Python web applications<br />
+inspired by Alex Vagin’s <a href="#">Simpleauth</a>.<br /> 
+In fact, I almost named it <em>Deathsimpleauth</em>,<br /> 
+but that name would be too long<br />
+for a succinct library."""
+
 html_theme_options = {
-    'logo_mobile': 'img/authomatic-broken.svg',
-    'logo_screen': 'img/authomatic-horizontal.svg',
-    'top_bar_force_fit': True,
+    'logo_screen': 'img/authomatic.svg',
     'stylesheet': 'css/authomatic.css',
+    'favicon': 'img/favicon.ico',
+    'motto': MOTTO,
+    'base_url': 'http://authomatic.org',
+    'opengraph_image': 'img/authomatic-seo.gif',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = ['_themes/foundation_sphinx_theme']
+html_theme_path = ['_themes/foundation-sphinx-theme']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".

@@ -3,7 +3,8 @@
 *.pyo
 doc/build
 build/
+_themes/
 config.py
 .pydevproject
 .project
-.sass-cache
+.sass-cache/

@@ -6,17 +6,16 @@
 .. toctree::
    :hidden:
    
-   self
    reference/index
    examples/index
 
-==========
-Authomatic
-==========
+
+Features
+========
 
 .. include:: ../../README.rst
-   :start-line: 22
-   :end-line: 50
+   :start-line: 23
+   :end-line: 45
 
 .. contents::
    :backlinks: none
@@ -24,7 +23,7 @@ Authomatic
 Usage
 =====
 
-So you want your app to be able to log a **user** in with **Facebook**, **Twitter**, **|openid|** or whatever?
+So you want your app to be able to log a **user** in with **Facebook**, **Twitter**, |openid|_ or whatever?
 It's death simple (hence the *Deadsimpleauth*). Just go through these two steps:
 
 #. Set up the library with :func:`.authomatic.setup`.
@@ -45,7 +44,8 @@ You must pass it a :doc:`reference/config` dictionary and
 a random secret string used for session signing and CSRF token generation.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
-   :lines: 1-7
+   :lines: 1-8, 10
+   :emphasize-lines: 9
 
 The :doc:`reference/config` is a dictionary in which you configure
 :doc:`reference/providers` you want to use in your app.
@@ -72,6 +72,7 @@ We will get the provider name from the URL slug.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
    :lines: 13, 17, 20
+   :emphasize-lines: 3
 
 The :func:`authomatic.login` function will redirect the **user** to the **provider**,
 which will promt **him/her** to authorize your app (**the consumer**) to access **his/her**
@@ -125,6 +126,7 @@ Lets get the **user's** five most recent facebook statuses.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
    :lines: 48, 51-52, 55-56, 59
+   :emphasize-lines: 6
 
 The call returns a :class:`.Response` object. The :attr:`.Response.data` contains the parsed
 response content.

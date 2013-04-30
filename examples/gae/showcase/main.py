@@ -1,15 +1,26 @@
-import authomatic
-from authomatic.adapters import Webapp2Adapter
-import config
-import jinja2
+# -*- coding: utf-8 -*-
+
+import os
 import json
 import logging
-import os
+
+import jinja2
 import webapp2
+import authomatic
+from authomatic.adapters import Webapp2Adapter
+
+import config
+
+
+authomatic.setup(config=config.CONFIG,
+                 secret=config.SECRET,
+                 report_errors=True,
+                 logging_level=logging.DEBUG)
+
 
 class BaseHandler(webapp2.RequestHandler):
     """
-    Base handler which adds jinja2 templating and session.
+    Base handler which adds jinja2 templating.
     """
     
     @webapp2.cached_property
@@ -44,10 +55,5 @@ class Login(BaseHandler):
 
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/', Home)]
-
-authomatic.setup(config=config.CONFIG,
-                 secret='dsgdfgdgj5fd5g4fmjnfggf6gnkfgn5fngh4n564d3vr54er5',
-                 report_errors=True,
-                 logging_level=logging.DEBUG)
 
 app = webapp2.WSGIApplication(ROUTES, debug=True)

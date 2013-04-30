@@ -1,7 +1,3 @@
-==========
-Authomatic
-==========
-
 .. |gae| replace:: Google App Engine
 .. _gae: https://developers.google.com/appengine/
 
@@ -20,19 +16,18 @@ Authomatic
 .. |pyopenid| replace:: python-openid
 .. _pyopenid: http://pypi.python.org/pypi/python-openid/
 
-Authomatic is an **authorization/authentication** client library for Python web applications
-inspired by `Alex Vagin's <http://alex.cloudware.it/>`_ `Simpleauth <http://code.google.com/p/gae-simpleauth/>`_.
-In fact I wanted to name it *Deathsimpleauth* but that would be too long a name.
 
 Features
 ========
 
 *	Loosely coupled.
 *	Tiny but powerfull interface.
-*	There is only one **optional** dependency, the |pyopenid|_ library.
-*	Framework agnostic thanks to adapters.
-*	Ready to accomodate future authorization/authentication protocols.
+*	The |pyopenid|_ library is the only **optional** dependency.
+*	CSRF protection.
+*	**Framework agnostic** thanks to adapters.
+*	Ready to accommodate future **authorization/authentication** protocols.
 *	Makes calls to provider APIs a breeze.
+*	Supports **asynchronous requests**.
 *	JavaScript library as a bonus.
 *	Out of the box support for:
 
@@ -45,7 +40,7 @@ Features
 
 .. note::
 
-	To cool down your excitement a little bit,
+	To cool your excitement down a little bit,
 	the library is in its very early stage
 	and there are practically no tests!
 
