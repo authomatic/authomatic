@@ -887,11 +887,15 @@ class LoginResult(ReprMixin):
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = None
     
-    def js_callback(self, callback_name=None, indent=None, title='Login | {}', custom=None):
+    def popup_html(self, callback_name=None, indent=None, title='Login | {}', custom=None):
         """
-        Returns HTML with javascript that calls the specified javascript callback
-        on the opener of the login handler with a ``result`` JSON object passed to it
-        and subsequently closes itself.
+        Returns a HTML with JavaScript that:
+        
+        #.  Triggers the ``options.onLoginComplete`` handler set with the
+            :ref:`authomatic.setup() <js_setup>` function of :ref:`javascript.js <js>`.
+        #.  Calls the JavasSript callback specified by :data:`callback_name`
+            on the opener of the *login handler popup* with a ``result`` JSON object passed to it.
+        #.  Closes itself.
         
         :param str callback_name:
             The name of the javascript callback e.g ``foo.bar.loginCallback``
@@ -904,14 +908,13 @@ class LoginResult(ReprMixin):
         
         :param str title:
             The text of the HTML title. You can use ``{}`` tag inside,
-            which will be replaced with the provider name.
+            which will be replaced by the provider name.
             
         :param custom:
             Any JSON serializable object that will be passed to the ``result.custom`` attribute.
         
         :returns:
-            HTML with JavaScript that calls the calback on the opener,
-            passing it the ``result`` JSON object and then closes itself.
+            :class:`str` with HTML.
         """
         
         html = '\n'.join((

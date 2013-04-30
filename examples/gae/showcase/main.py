@@ -51,7 +51,7 @@ class Login(BaseHandler):
                 result.user.update()
                 if result.user.credentials:
                     apis = config.CONFIG.get(provider_name, {}).get('_apis', {})
-            self.response.write(result.js_callback(custom=dict(apis=apis)))
+            self.response.write(result.popup_html(custom=dict(apis=apis)))
 
 
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
