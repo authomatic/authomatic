@@ -1554,7 +1554,8 @@ def backend(adapter):
         # If there is a "callback" param, it's a JSONP request.
         jsonp = params.get('callback')
         
-        if ProviderClass.supports_jsonp:
+        # JSONP is possible only with GET method.
+        if ProviderClass.supports_jsonp and method is 'GET':
             request_type = 'elements'
         else:
             # Remove the JSONP callback
