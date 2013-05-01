@@ -27,7 +27,7 @@ Features
 *	**Framework agnostic** thanks to adapters.
 *	Ready to accommodate future **authorization/authentication** protocols.
 *	Makes calls to provider APIs a breeze.
-*	Supports **asynchronous requests**.
+*	Supports asynchronous requests.
 *	JavaScript library as a bonus.
 *	Out of the box support for:
 
@@ -47,7 +47,7 @@ Features
 Usage
 =====
 
-Read the `exhaustive documentation <>`_.
+Read the `exhaustive documentation <http://peterhudec.github.io/authomatic>`_.
 
 Live Demo
 =========

@@ -14,8 +14,8 @@ Features
 ========
 
 .. include:: ../../README.rst
-   :start-line: 23
-   :end-line: 45
+   :start-line: 22
+   :end-line: 46
 
 .. contents::
    :backlinks: none
@@ -24,7 +24,19 @@ Usage
 =====
 
 So you want your app to be able to log a **user** in with **Facebook**, **Twitter**, |openid|_ or whatever?
-It's death simple (hence the *Deadsimpleauth*). Just go through these two steps:
+First install **Authomatic** through `PyPi <>`_,
+
+.. code-block:: bash
+   
+   $ pip install authomatic
+
+or clone it from `GitHub <http://github.com/peterhudec/authomatic>`_.
+
+.. code-block:: bash
+   
+   $ git clone git://github.com/peterhudec/authomatic.git
+
+Then it's death simple (hence the *Deadsimpleauth*). Just go through these two steps:
 
 #. Set up the library with :func:`.authomatic.setup`.
 #. Log the **user** in by calling :func:`.authomatic.login` inside a *request handler*.
@@ -76,7 +88,7 @@ We will get the provider name from the URL slug.
 
 The :func:`authomatic.login` function will redirect the **user** to the **provider**,
 which will promt **him/her** to authorize your app (**the consumer**) to access **his/her**
-protected resources (|oauth1|_ and |oauth2|_), or to verify **his/her** claimed ID (|openid|_ and |persona|_).
+protected resources (|oauth1|_ and |oauth2|_), or to verify **his/her** claimed ID (|openid|_).
 The **provider** then redirects the **user** back to *this request handler*.
 
 If the *login procedure* is over, :func:`authomatic.login` returns a :class:`.LoginResult`.
