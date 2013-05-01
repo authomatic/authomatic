@@ -52,8 +52,8 @@ Features
 .. note::
 
 	To cool your excitement down a little bit,
-	the library is in its very early stage
-	and there are practically no tests!
+	the library is in its **very early stage**
+	and there are practically **no tests**!
 
 Usage
 =====
