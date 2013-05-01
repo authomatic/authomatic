@@ -10,7 +10,8 @@ setup(
     description='',
     long_description=open('README.rst').read(),
     keywords='authorization authentication oauth openid',
-    url='https://github.com/peterhudec/authomatic',
+#     url='https://github.com/peterhudec/authomatic',
+    url='http://peterhudec.github.io/authomatic',
     license = 'MIT',
     extras_require={
         'OpenID': ['python-openid'],
