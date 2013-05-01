@@ -16,6 +16,17 @@
 .. |pyopenid| replace:: python-openid
 .. _pyopenid: http://pypi.python.org/pypi/python-openid/
 
+==========
+Authomatic
+==========
+
+Authomatic
+is an **authorization/authentication**
+client library for Python web applications
+inspired by Alex Vagin’s `Simpleauth <http://code.google.com/p/gae-simpleauth/>`_.
+In fact, I almost named it *Deathsimpleauth*,
+but that name would be too long
+for a succinct library.
 
 Features
 ========
@@ -52,4 +63,5 @@ Read the `exhaustive documentation <http://peterhudec.github.io/authomatic>`_.
 Live Demo
 =========
 
-There is a live demo running on `http://authomatic-example.appspot.com`_.
+In short time there will be a live demo running at
+`http://authomatic-example.appspot.com`_
