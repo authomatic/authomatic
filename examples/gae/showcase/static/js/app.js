@@ -11,6 +11,9 @@ $(document).ready(function (e) {
 	authomatic.setup({
 		// Called when the popup gets open.
 		onPopupOpen: function(url) {
+			// Track the event in Google analytics
+			_gaq.push(['_trackEvent', 'Login Buttons', 'Click', url]);
+			
 			$user.slideUp(1500);
 			$error.slideUp('fast');
 			$userPicture.fadeOut();
