@@ -13,7 +13,7 @@
 		{% set name = v._name or k|capitalize %}
 		<li>
 			<a class="authomatic provider-button {{ k }}" href="login/{{ k }}">
-				<span>{{ name }}</span> <img src="{{ v._icon }}" />
+				<span>{{ name }}</span> <img src="static/img/icons/{{ k }}.ico" />
 			</a>
 		</li>
 	{% endfor %}
@@ -37,6 +37,8 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
 	<title>{{ title }}</title>
+	
+	<link rel="shortcut icon" href="{{ base_url }}/static/img/authomatic.ico" />
 	
 	<meta property="og:title" content="{{ title }}" />
 	<meta property="og:type" content="website" />

@@ -9,7 +9,8 @@ import webapp2
 import authomatic
 from authomatic.adapters import Webapp2Adapter
 
-import config
+# import config
+import config_public as config
 
 
 authomatic.setup(config=config.CONFIG,

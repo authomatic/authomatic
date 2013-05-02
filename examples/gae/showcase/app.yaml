@@ -1,4 +1,4 @@
-application: authomatic-showcase
+application: authomatic-example
 version: 0
 runtime: python27
 api_version: 1

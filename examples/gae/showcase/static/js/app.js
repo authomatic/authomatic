@@ -9,10 +9,11 @@ $(document).ready(function (e) {
 	});
 	
 	authomatic.setup({
+		backend: '/login/',
 		// Called when the popup gets open.
 		onPopupOpen: function(url) {
 			// Track the event in Google analytics
-			_gaq.push(['_trackEvent', 'Login Buttons', 'Click', url]);
+			_gaq.push(['_trackEvent', 'Login', 'Start', url]);
 			
 			$user.slideUp(1500);
 			$error.slideUp('fast');
@@ -21,6 +22,7 @@ $(document).ready(function (e) {
 		// Called when the login procedure is over.
 		onLoginComplete: function(result) {
 			if(result.user) {
+				_gaq.push(['_trackEvent', 'Login', 'Success']);
 				// Populate user info with data from login result
 				$('#user-name').html(result.user.name);
 				$('#user-id').html(result.user.id);
@@ -83,6 +85,10 @@ $(document).ready(function (e) {
 							var method = $form.attr('method');
 							var message = $form.find('input[name=message]').val();
 							
+							// Track the event in Google analytics
+							_gaq.push(['_trackEvent', 'Protected Resource', 'Access', url]);
+							_gaq.push(['_trackEvent', 'Protected Resource', 'Access message', message]);
+							
 							// Show loader
 							$userData.slideUp('fast', function(){
 								$('#user-data-loader').slideDown('fast');
@@ -96,12 +102,14 @@ $(document).ready(function (e) {
 									// Called only on success.
 									var niceData = JSON.stringify(data, undefined, 4);
 									$userData.html(niceData);
+									_gaq.push(['_trackEvent', 'Protected Resource', 'Success']);
 								},
 								onAccessComplete: function(jqXHR, status){
 									// Allways called.
 									$('#user-data-loader').slideUp('fast', function(){
 										if(status == 'error'){
 											$userData.html(jqXHR.responseText);
+											_gaq.push(['_trackEvent', 'Protected Resource', 'Error', jqXHR.responseText]);
 										}
 										$userData.slideDown('fast');
 									});
@@ -114,6 +122,8 @@ $(document).ready(function (e) {
 					}
 				}
 			} else if (result.error) {
+				_gaq.push(['_trackEvent', 'Login', 'Error', result.error]);
+				
 				$('#user').slideUp('fast', function () {
 					$('#error-message').html(result.error.message);
 					$error.slideDown('fast');
