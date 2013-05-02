@@ -15,6 +15,9 @@ $(document).ready(function (e) {
 			// Track the event in Google analytics
 			_gaq.push(['_trackEvent', 'Login', 'Start', url]);
 			
+			// Scroll the window to top.
+			$("html, body").animate({ scrollTop: "0px" });
+			
 			$user.slideUp(1500);
 			$error.slideUp('fast');
 			$userPicture.fadeOut();
