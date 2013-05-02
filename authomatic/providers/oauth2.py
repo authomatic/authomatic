@@ -274,6 +274,7 @@ class OAuth2(providers.AuthorizationProvider):
         # get request parameters from which we can determine the login phase
         authorization_code = self.params.get('code')
         error = self.params.get('error')
+        error_message = self.params.get('error_message')
         state = self.params.get('state')      
         
         if authorization_code or not self.user_authorization_url:
@@ -356,20 +357,20 @@ class OAuth2(providers.AuthorizationProvider):
             # We're done!
             #===================================================================
             
-        elif error:
+        elif error or error_message:
             #===================================================================
             # Phase 2 after redirect with error
             #===================================================================
             
             error_reason = self.params.get('error_reason')
-            error_description = self.params.get('error_description')
+            error_description = self.params.get('error_description') or error_message
             
             if error_reason == 'user_denied':
                 raise CancellationError(error_description, url=self.user_authorization_url)
             else:
                 raise FailureError(error_description, url=self.user_authorization_url)
             
-        else:
+        elif not self.params:
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
@@ -445,7 +446,7 @@ class Bitly(OAuth2):
         
         |no-csrf|
     
-    * Dashboard: http://dev.bitly.com/my_apps.html
+    * Dashboard: https://bitly.com/a/oauth_apps
     * Docs: http://dev.bitly.com/authentication.html
     * API reference: http://dev.bitly.com/api.html
     """
@@ -485,7 +486,7 @@ class Cosm(OAuth2):
         
         Cosm doesn't provide any *user info URL*.
     
-    * Dashboard: https://cosm.com/users/peterhudec/apps
+    * Dashboard: https://cosm.com/users/{your_username}/apps
     * Docs: https://cosm.com/docs/
     * API reference: https://cosm.com/docs/v2/
     """
