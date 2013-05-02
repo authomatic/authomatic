@@ -146,6 +146,10 @@ class BaseProvider(object):
                 
         #: :class:`.core.User`.
         self.user = None
+        
+        #: :class:`bool` If ``True``, the :attr:`.BaseProvider.user_authorization_url` will be displayed
+        #: in a *popup mode*, if the **provider** supports it.
+        self.popup = self._kwarg(kwargs, 'popup')
     
     
     ###############################################

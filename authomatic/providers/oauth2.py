@@ -567,6 +567,9 @@ class Facebook(OAuth2):
             # Facebook needs an offline_access scope.
             if not 'offline_access' in self.scope:
                 self.scope.append('offline_access')
+        
+        if self.popup:
+            self.user_authorization_url += '?display=popup'
     
     
     @staticmethod
