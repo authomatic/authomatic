@@ -49,7 +49,7 @@ npm install -g coffeedoc
     var args;
 
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    if (globalOptions.logging) {
+    if (globalOptions.logging && (console.apply != null)) {
       return typeof console !== "undefined" && console !== null ? console.log.apply(console, ['Authomatic:'].concat(__slice.call(args))) : void 0;
     }
   };
