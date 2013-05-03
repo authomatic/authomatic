@@ -9,11 +9,11 @@ import webapp2
 import authomatic
 from authomatic.adapters import Webapp2Adapter
 
-# import config
-import config_public as config
+import config
+# import config_public as config
 
 
-authomatic.setup(config=config.CONFIG,
+authomatic.setup(config=config.config,
                  secret=config.SECRET,
                  report_errors=True,
                  logging_level=logging.DEBUG)
@@ -51,8 +51,11 @@ class Login(BaseHandler):
             if result.user:
                 result.user.update()
                 if result.user.credentials:
-                    apis = config.CONFIG.get(provider_name, {}).get('_apis', {})
-            self.response.write(result.popup_html(custom=dict(apis=apis)))
+                    apis = config.config.get(provider_name, {}).get('_apis', {})
+            
+            nice_provider_name = config.config.get(provider_name, {}).get('_name') or provider_name.capitalize()
+            self.response.write(result.popup_html(custom=dict(apis=apis,
+                                                              provider_name=nice_provider_name)))
 
 
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),

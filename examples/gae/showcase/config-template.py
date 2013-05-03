@@ -11,6 +11,10 @@ DEFAULT_MESSAGE = 'Have you got a bandage?'
 
 SECRET = '##########'
 
+DEFAULTS = {
+    'popup': True,
+}
+
 AUTHENTICATION = {
     'openid': {
         'class_': openid.OpenID,
@@ -308,8 +312,9 @@ OAUTH2 = {
     },
 }
 
-# AConcatenate the configs.
-CONFIG = copy.deepcopy(OAUTH1)
-CONFIG.update(OAUTH2)
-CONFIG.update(AUTHENTICATION)
+# Concatenate the configs.
+config = copy.deepcopy(OAUTH1)
+config.update(OAUTH2)
+config.update(AUTHENTICATION)
+config['__defaults__'] = DEFAULTS
 
