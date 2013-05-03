@@ -887,14 +887,19 @@ class LoginResult(ReprMixin):
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = None
     
-    def popup_js(self, callback_name=None, indent=None, custom=None):
+    def popup_js(self, callback_name=None, indent=None, custom=None, stay_open=False):
+        
+        custom_callback = """
+        if (typeof window.opener.{cb} === "function") {{
+            window.opener.{cb}(result);
+        }}
+        """.format(cb=callback_name) if callback_name else ''
+        
         return """
         var result = {result};
         result.custom = {custom};
         
-        if (typeof window.opener.{callback} === "function") {{
-            window.opener.{callback}(result);
-        }}
+        {custom_callback}
         
         if (typeof window.opener.authomatic !== "undefined" && window.opener.authomatic !== null) {{
             if (typeof window.opener.authomatic.loginComplete === "function") {{
@@ -902,10 +907,11 @@ class LoginResult(ReprMixin):
             }}
         }}
         
-        window.close();
+        {stay_open}window.close();
         """.format(result=self.to_json(indent),
                    custom=json.dumps(custom),
-                   callback=callback_name)
+                   custom_callback=custom_callback,
+                   stay_open='// ' if stay_open else '')
     
     
     def popup_html(self, callback_name=None, indent=None, title='Login | {}', custom=None):
