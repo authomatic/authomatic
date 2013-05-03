@@ -46,7 +46,7 @@ globalOptions =
 
 # Logs to the console if available and if globalOptions.logging is true.
 log = (args...) ->
-  console?.log 'Authomatic:', args... if globalOptions.logging
+  console?.log('Authomatic:', args...) if (globalOptions.logging and console.log?.apply?)
 
 # Opens a new centered window with the URL specified.
 openWindow = (url) ->
