@@ -887,6 +887,27 @@ class LoginResult(ReprMixin):
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = None
     
+    def popup_js(self, callback_name=None, indent=None, custom=None):
+        return """
+        var result = {result};
+        result.custom = {custom};
+        
+        if (typeof window.opener.{callback} === "function") {{
+            window.opener.{callback}(result);
+        }}
+        
+        if (typeof window.opener.authomatic !== "undefined" && window.opener.authomatic !== null) {{
+            if (typeof window.opener.authomatic.loginComplete === "function") {{
+                window.opener.authomatic.loginComplete(result);
+            }}
+        }}
+        
+        window.close();
+        """.format(result=self.to_json(indent),
+                   custom=json.dumps(custom),
+                   callback=callback_name)
+    
+    
     def popup_html(self, callback_name=None, indent=None, title='Login | {}', custom=None):
         """
         Returns a HTML with JavaScript that:
@@ -917,33 +938,18 @@ class LoginResult(ReprMixin):
             :class:`str` with HTML.
         """
         
-        html = '\n'.join((
-            '<!DOCTYPE html>',
-            '<html>',
-            '<head><title>{title}</title></head>',
-            '<body>',
-            '<script type="text/javascript">',
-            'var result = {result};',
-            'result.custom = {custom};',
-            
-            # Call specified callback
-            'if (typeof window.opener.{callback} === "function") window.opener.{callback}(result);' if callback_name else '',
-            
-            # Call authomatic.loginComplete() if present
-            'if (typeof window.opener.authomatic !== "undefined" && window.opener.authomatic !== null) {{',
-            '    if (typeof window.opener.authomatic.loginComplete === "function") window.opener.authomatic.loginComplete(result);',
-            '}}',
-            
-            'window.close();',
-            '</script>',
-            '</body>',
-            '</html>',
-        ))
-        
-        return html.format(result=self.to_json(indent),
-                           custom=json.dumps(custom),
-                           callback=callback_name,
-                           title=title.format(self.provider.name if self.provider else ''))
+        return """
+        <!DOCTYPE html>
+        <html>
+            <head><title>{title}</title></head>
+            <body>
+            <script type="text/javascript">
+                {js}
+            </script>
+            </body>
+        </html>
+        """.format(title=title.format(self.provider.name if self.provider else ''),
+                   js=self.popup_js(callback_name, indent, custom))
     
     @property
     def user(self):
