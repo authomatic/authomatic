@@ -174,7 +174,7 @@ html_theme_options = {
     'stylesheet': 'css/authomatic.css',
     'favicon': 'img/favicon.ico',
     'motto': MOTTO,
-    'base_url': 'http://authomatic.org',
+    'base_url': 'http://peterhudec.github.io/authomatic',
     'opengraph_image': 'img/authomatic-seo.gif',
     'google_analytics_id': 'UA-40552373-1',
 }
