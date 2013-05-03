@@ -2,6 +2,9 @@
 <!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
+{% set user = result.user %}
+{% set error = result.error %}
+
 {% macro description() -%}
 	This is an example usage of the
 	<a href="http://peterhudec.github.io/authomatic">Authomatic</a> Python library.
@@ -12,8 +15,8 @@
 	{% for k, v in providers %}
 		{% set name = v._name or k|capitalize %}
 		<li>
-			<a class="authomatic provider-button {{ k }}" href="login/{{ k }}">
-				<span>{{ name }}</span> <img src="static/img/icons/{{ k }}.ico" />
+			<a class="authomatic provider-button {{ k }}" href="/login/{{ k }}">
+				<span>{{ name }}</span> <img src="/static/img/icons/{{ k }}.ico" />
 			</a>
 		</li>
 	{% endfor %}
@@ -21,7 +24,7 @@
 {% endmacro %}
 
 {% macro form(url) %}
-	<form class="authomatic" action="login/{{ url }}">
+	<form class="authomatic" action="/login/{{ url }}">
 		<div class="row collapse">
 			<div class="large-7 small-8 columns">
 				<input type="text" name="id" placeholder="Your claimed ID">
@@ -34,6 +37,7 @@
 {% endmacro %}
 
 <head>
+	<script type="text/javascript">{{ popup_js }}</script>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
 	<title>{{ title }}</title>
@@ -48,19 +52,19 @@
 	
 	<meta name="description" content="{{ description()|striptags }}">
 	
-	<link rel="stylesheet" href="static/css/normalize.css" />
-  	<link rel="stylesheet" href="static/css/app.css" />
-	<script src="static/js/vendor/custom.modernizr.js"></script>
-	<script src="static/js/vendor/jquery.js"></script>
-	<script type="text/javascript" src="static/js/authomatic.js"></script>
+	<link rel="stylesheet" href="/static/css/normalize.css" />
+  	<link rel="stylesheet" href="/static/css/app.css" />
+	<script type="text/javascript" src="/static/js/vendor/custom.modernizr.js"></script>
+	<script type="text/javascript" src="/static/js/vendor/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/authomatic.js"></script>
 </head>
 <body>
 	<div id="root">
 		<div id="header">
 			<div class="row">
 				<div class="large-12 columns">
-					<img class="logo hide-for-small" src="static/img/authomatic-horizontal-lighter.svg" />
-					<img class="logo show-for-small" src="static/img/authomatic-lighter.svg" />
+					<img class="logo hide-for-small" src="/static/img/authomatic-horizontal-lighter.svg" />
+					<img class="logo show-for-small" src="/static/img/authomatic-lighter.svg" />
 				</div>
 			</div>
 		</div>
@@ -76,19 +80,19 @@
 			</div>
 		</div>
 		
-		<div id="user" class="hidden">
+		<div id="user" class="{{ 'hidden' if not user }}">
 			<div class="row">
 				<div class="small-8 columns info">
-					<h1>Hi <span id="user-name"></span></h1>
-					<h5>You are logged in with</h5>
-					<h3><span id="user-provider"></span></h3>
-					<h5>Your email is</h5>
-					<h3><span id="user-email"></span></h3>
-					<h5>Your ID is</h5>
-					<h3><span id="user-id"></span></h3>
+					<h1>Hi <span id="user-name">{{ user.name if user }}</span></h1>
+					<h5>You are logged in with:</h5>
+					<h3><span id="user-provider">{{ user.provider.name|capitalize if user }}</span></h3>
+					<h5>Your email is:</h5>
+					<h3><span id="user-email">{{ user.email if user }}</span></h3>
+					<h5>Your ID is:</h5>
+					<h3><span id="user-id">{{ user.id if user }}</span></h3>
 				</div>
 				<div id="user-picture-column" class="small-4 columns">
-					<img id="user-picture" />
+					<img id="user-picture" src="{{ user.picture if user }}" />
 				</div>
 			</div>
 			<div class="row">
@@ -96,13 +100,13 @@
 					<div id="user-apis"></div>
 					<div id="user-data-wrapper">
 						<div id="user-data-loader" class="hidden">Loading ...</div>
-						<pre id="user-data" class="prettyprint"></pre>
+						<pre id="user-data" class="prettyprint">{{ user.content if user }}</pre>
 					</div>
 				</div>
 			</div>
 		</div>
 		
-		<div id="error" class="hidden">
+		<div id="error" class="{{ 'hidden' if not error }}">
 			<div class="row">
 				<div class="large-12 columns">
 					Error: <span id="error-message"></span>
@@ -157,8 +161,8 @@
 			</div>
 		</div>
 	  	
-		<script src="static/js/foundation/foundation.js"></script>
-		<script src="static/js/app.js"></script>
+		<script src="/static/js/foundation/foundation.js"></script>
+		<script src="/static/js/app.js"></script>
 	  
 		<script type="text/javascript">
 			$(document).foundation();
