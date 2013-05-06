@@ -892,11 +892,12 @@ class LoginResult(ReprMixin):
         """
         Returns JavaScript that:
         
-        #.  Triggers the ``options.onLoginComplete`` handler set with the
+        #.  Triggers the ``options.onLoginComplete(result, closer)`` handler set with the
             :ref:`authomatic.setup() <js_setup>` function of :ref:`javascript.js <js>`.
         #.  Calls the JavasSript callback specified by :data:`callback_name`
-            on the opener of the *login handler popup* with a ``result`` JSON object passed to it.
-        #.  Closes itself.
+            on the opener of the *login handler popup* and passes it the
+            *login result* JSON object as first argument and the `closer` function which
+            you should call in your callback to close the popup.
         
         :param str callback_name:
             The name of the javascript callback e.g ``foo.bar.loginCallback``
@@ -919,23 +920,31 @@ class LoginResult(ReprMixin):
         
         custom_callback = """
         if (typeof window.opener.{cb} === "function") {{
-            window.opener.{cb}(result);
+            window.opener.{cb}(result, closer);
         }}
         """.format(cb=callback_name) if callback_name else ''
         
+        # TODO: Move the window.close() to the opener
         return """
-        var result = {result};
-        result.custom = {custom};
-        
-        {custom_callback}
-        
-        if (typeof window.opener.authomatic !== "undefined" && window.opener.authomatic !== null) {{
-            if (typeof window.opener.authomatic.loginComplete === "function") {{
-                window.opener.authomatic.loginComplete(result);
+        (function(){{
+            
+            closer = function(){{
+                window.close();
+            }};
+            
+            var result = {result};
+            result.custom = {custom};
+            
+            {custom_callback}
+            
+            if (typeof window.opener.authomatic !== "undefined" && window.opener.authomatic !== null) {{
+                if (typeof window.opener.authomatic.loginComplete === "function") {{
+                    window.opener.authomatic.loginComplete(result, closer);
+                }}
             }}
-        }}
         
-        {stay_open}window.close();
+        }})();
+        
         """.format(result=self.to_json(indent),
                    custom=json.dumps(custom),
                    custom_callback=custom_callback,
@@ -946,11 +955,12 @@ class LoginResult(ReprMixin):
         """
         Returns a HTML with JavaScript that:
         
-        #.  Triggers the ``options.onLoginComplete`` handler set with the
+        #.  Triggers the ``options.onLoginComplete(result, closer)`` handler set with the
             :ref:`authomatic.setup() <js_setup>` function of :ref:`javascript.js <js>`.
         #.  Calls the JavasSript callback specified by :data:`callback_name`
-            on the opener of the *login handler popup* with a ``result`` JSON object passed to it.
-        #.  Closes itself.
+            on the opener of the *login handler popup* and passes it the
+            *login result* JSON object as first argument and the `closer` function which
+            you should call in your callback to close the popup.
         
         :param str callback_name:
             The name of the javascript callback e.g ``foo.bar.loginCallback``
