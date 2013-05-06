@@ -42,7 +42,12 @@
 	<meta name="viewport" content="width=device-width" />
 	<title>{{ title }}</title>
 	
-	<link rel="shortcut icon" href="{{ base_url }}/static/img/authomatic.ico" />
+	<link rel="shortcut icon" href="{{ base_url }}/static/img/favicon.ico" />
+	
+	<link rel="apple-touch-icon" href="/static/img/apple-touch-icon-iphone.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="/static/img/apple-touch-icon-ipad.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="/static/img/apple-touch-icon-iphone4.png" />
+	
 	
 	<meta property="og:title" content="{{ title }}" />
 	<meta property="og:type" content="website" />
@@ -109,7 +114,7 @@
 		<div id="error" class="{{ 'hidden' if not error }}">
 			<div class="row">
 				<div class="large-12 columns">
-					Error: <span id="error-message"></span>
+					Error: <span id="error-message">{{ error.message if error }}</span>
 				</div>
 			</div>
 		</div>

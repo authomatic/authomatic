@@ -57,7 +57,7 @@ $(document).ready(function (e) {
 							var method = api[0];
 							var url = api[1];
 							var placeholder = api[2];
-							var defaultValue = api[3];
+							var defaultValue = api[3] || '';
 							
 							var $form = $('<form />');
 							$form.attr('action', url);

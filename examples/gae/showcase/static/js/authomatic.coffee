@@ -1,3 +1,4 @@
+
 ###
 # CoffeeDoc example documentation #
 
@@ -172,9 +173,14 @@ window.authomatic = new class Authomatic
       else
         globalOptions.onPopupInvalid?($form)
   
-  loginComplete: (result) ->
-    log('Login procedure complete', result)
-    globalOptions.onLoginComplete(result)
+  loginComplete: (result, closer) ->
+    # We need to deepcopy the result before closing the popup.
+    # Otherwise IE would loose the reference to the result object.
+    result_copy = $.extend(true, {}, result)
+    log('Login procedure complete', result_copy)
+    # Now we can close the popup.
+    closer()
+    globalOptions.onLoginComplete(result_copy)
 
   access: (credentials, url, options = {}) ->
     localEvents =
@@ -253,7 +259,6 @@ class BaseProvider
       type: method
       data: params
       headers: headers
-      beforeSend: (jqXHR, settings) -> log 'BEFORE SEND', jqXHR, settings
       complete: [
         ((jqXHR, textStatus) -> log 'Request complete.', textStatus, jqXHR)
         globalOptions.onAccessComplete

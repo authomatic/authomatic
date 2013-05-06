@@ -176,8 +176,9 @@ OAUTH2 = {
         'id': authomatic.provider_id(),
         'scope': oauth2.Facebook.user_info_scope + ['publish_stream'],
         '_apis': {
-            'Get your recent statuses': ('GET', 'https://graph.facebook.com/{user.id}/feed'),
-            'Post a status': ('POST', 'https://graph.facebook.com/{user.id}/feed?message={message}', 'Status', DEFAULT_MESSAGE),
+                  'Get your recent statuses': ('GET', 'https://graph.facebook.com/{user.id}/feed'),
+                  'Share this page': ('POST', 'https://graph.facebook.com/{user.id}/feed?message={message}&link=http://authomatic-example.appspot.com',
+                                      'Enter comment', 'This app is ...'),
         },
     },
     

@@ -9,8 +9,8 @@ import webapp2
 import authomatic
 from authomatic.adapters import Webapp2Adapter
 
-import config
-# import config_public as config
+# import config
+import config_public as config
 
 
 authomatic.setup(config=config.config,
@@ -61,7 +61,7 @@ class Login(BaseHandler):
             
             nice_provider_name = config.config.get(provider_name, {}).get('_name') or provider_name.capitalize()
             
-            render(self, result, result.popup_js(scustom=dict(apis=apis, provider_name=nice_provider_name)))
+            render(self, result, result.popup_js(custom=dict(apis=apis, provider_name=nice_provider_name)))
 
 
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),

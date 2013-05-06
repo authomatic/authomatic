@@ -5,6 +5,16 @@ api_version: 1
 threadsafe: true
 
 handlers:
+- url: /favicon.ico
+  static_files: static/img/favicon.ico
+  upload: static/img/favicon.ico
+  mime_type: image/x-icon
+  
+- url: /apple-touch-icon-precomposed.png
+  static_files: static/img/apple-touch-icon-precomposed.png
+  upload: static/img/apple-touch-icon-precomposed.png
+  mime_type: image/png
+  
 - url: /static
   static_dir: static
 
@@ -19,5 +29,3 @@ skip_files: |
   (config-template\.py)|
   (static/sass)|
   (.*\.rb)
-  
-  
