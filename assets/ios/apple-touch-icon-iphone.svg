@@ -9,15 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="72"
-   height="72"
+   width="57"
+   height="57"
    id="svg4116"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="apple-touch-icon-ipad.svg"
-   inkscape:export-filename="/home/peto/workspace/aptana/authomatic/assets/ios/apple-touch-icon-ipad.png"
-   inkscape:export-xdpi="93.75"
-   inkscape:export-ydpi="93.75">
+   sodipodi:docname="apple-touch-icon-iphone.svg"
+   inkscape:export-filename="/home/peto/Desktop/authomatic_logo/nove/authomatic-seo-75.png"
+   inkscape:export-xdpi="56.255932"
+   inkscape:export-ydpi="56.255932">
   <defs
      id="defs4118" />
   <sodipodi:namedview
@@ -27,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6"
-     inkscape:cx="35.22238"
-     inkscape:cy="29.461568"
+     inkscape:zoom="3.959798"
+     inkscape:cx="38.400928"
+     inkscape:cy="19.521372"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -51,35 +51,35 @@
        visible="true"
        enabled="true"
        snapvisiblegridlinesonly="true"
-       originx="71.499994px"
-       originy="331.49998px" />
+       originx="63.999994px"
+       originy="323.99998px" />
     <sodipodi:guide
        orientation="1,0"
-       position="22.499994,24.499992"
+       position="14.999994,16.999992"
        id="guide3073" />
     <sodipodi:guide
        orientation="0,1"
-       position="37.499994,22.499992"
+       position="29.999994,14.999992"
        id="guide3075" />
     <sodipodi:guide
        orientation="1,0"
-       position="49.499994,22.499992"
+       position="41.999994,14.999992"
        id="guide3077" />
     <sodipodi:guide
        orientation="0,1"
-       position="40.499994,51.499992"
+       position="32.999994,43.999992"
        id="guide3081" />
     <sodipodi:guide
        orientation="0,1"
-       position="33.499994,17.499992"
+       position="25.999994,9.999992"
        id="guide3083" />
     <sodipodi:guide
        orientation="1,0"
-       position="17.499994,32.499992"
+       position="9.9999942,24.999992"
        id="guide3088" />
     <sodipodi:guide
        orientation="1,0"
-       position="54.499994,26.499992"
+       position="46.999994,18.999992"
        id="guide3090" />
   </sodipodi:namedview>
   <metadata
@@ -98,23 +98,17 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-253.49097,-841.85583)">
+     transform="translate(-260.99097,-849.35583)">
     <rect
-       y="841.85583"
-       x="253.49097"
-       height="72"
-       width="72"
+       y="849.35583"
+       x="260.99097"
+       height="57"
+       width="57"
        id="rect3097"
        style="fill:#faf7f4;fill-opacity:1;stroke:none" />
-    <path
-       style="fill:#f2cb05;fill-opacity:1;stroke:none"
-       d="m -39,378 c -7.75602,0 -14,6.24399 -14,14 l 0,27 c 0,7.75601 6.24398,14 14,14 l 27,0 c 7.7560195,0 14,-6.24399 14,-14 l 0,-27 c 0,-7.75601 -6.2439805,-14 -14,-14 l -27,0 z m -0.5,9 c 0.168494,-0.017 0.326875,0 0.5,0 l 27,0 c 2.7700042,0 5,2.23 5,5 l 0,27 c 0,2.77 -2.2299958,5 -5,5 l -27,0 c -2.770004,0 -5,-2.23 -5,-5 l 0,-27 c 0,-2.59688 1.972591,-4.74486 4.5,-5 z"
-       id="rect3094"
-       transform="translate(314.99096,472.36851)"
-       inkscape:connector-curvature="0" />
     <g
        id="g3056"
-       transform="matrix(0.70067732,0,0,0.70067732,82.818781,273.58822)">
+       transform="matrix(0.70067732,0,0,0.70067732,82.818792,264.58842)">
       <g
          transform="translate(-80.008895,330.00916)"
          id="g3020"

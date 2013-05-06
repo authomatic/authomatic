@@ -9,15 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="72"
-   height="72"
+   width="114"
+   height="114"
    id="svg4116"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="apple-touch-icon-ipad.svg"
-   inkscape:export-filename="/home/peto/workspace/aptana/authomatic/assets/ios/apple-touch-icon-ipad.png"
-   inkscape:export-xdpi="93.75"
-   inkscape:export-ydpi="93.75">
+   sodipodi:docname="apple-touch-icon-iphone4.svg"
+   inkscape:export-filename="/home/peto/Desktop/authomatic_logo/nove/authomatic-seo-pixelperfect-75.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4118" />
   <sodipodi:namedview
@@ -27,12 +27,12 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6"
-     inkscape:cx="35.22238"
-     inkscape:cy="29.461568"
+     inkscape:zoom="4"
+     inkscape:cx="76.172431"
+     inkscape:cy="28.198123"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     showgrid="false"
+     showgrid="true"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
@@ -42,45 +42,33 @@
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
-     showguides="false"
+     showguides="true"
      inkscape:guide-bbox="true">
     <inkscape:grid
        type="xygrid"
        id="grid4161"
-       empspacing="5"
+       empspacing="6"
        visible="true"
        enabled="true"
        snapvisiblegridlinesonly="true"
-       originx="71.499994px"
-       originy="331.49998px" />
+       originx="0px"
+       originy="0px" />
     <sodipodi:guide
        orientation="1,0"
-       position="22.499994,24.499992"
+       position="29,40"
        id="guide3073" />
     <sodipodi:guide
        orientation="0,1"
-       position="37.499994,22.499992"
+       position="32,29"
        id="guide3075" />
     <sodipodi:guide
        orientation="1,0"
-       position="49.499994,22.499992"
-       id="guide3077" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="40.499994,51.499992"
-       id="guide3081" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="33.499994,17.499992"
-       id="guide3083" />
-    <sodipodi:guide
-       orientation="1,0"
-       position="17.499994,32.499992"
+       position="85,27"
        id="guide3088" />
     <sodipodi:guide
-       orientation="1,0"
-       position="54.499994,26.499992"
-       id="guide3090" />
+       orientation="0,1"
+       position="20,84"
+       id="guide3184" />
   </sodipodi:namedview>
   <metadata
      id="metadata4121">
@@ -98,23 +86,15 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-253.49097,-841.85583)">
-    <rect
-       y="841.85583"
-       x="253.49097"
-       height="72"
-       width="72"
-       id="rect3097"
-       style="fill:#faf7f4;fill-opacity:1;stroke:none" />
+     transform="translate(-247.24097,-806.10583)">
     <path
        style="fill:#f2cb05;fill-opacity:1;stroke:none"
-       d="m -39,378 c -7.75602,0 -14,6.24399 -14,14 l 0,27 c 0,7.75601 6.24398,14 14,14 l 27,0 c 7.7560195,0 14,-6.24399 14,-14 l 0,-27 c 0,-7.75601 -6.2439805,-14 -14,-14 l -27,0 z m -0.5,9 c 0.168494,-0.017 0.326875,0 0.5,0 l 27,0 c 2.7700042,0 5,2.23 5,5 l 0,27 c 0,2.77 -2.2299958,5 -5,5 l -27,0 c -2.770004,0 -5,-2.23 -5,-5 l 0,-27 c 0,-2.59688 1.972591,-4.74486 4.5,-5 z"
-       id="rect3094"
-       transform="translate(314.99096,472.36851)"
-       inkscape:connector-curvature="0" />
+       d="M 30 0 C 13.380003 0 3.469447e-18 13.380003 0 30 L 0 84 C 0 100.62 13.380003 114 30 114 L 84 114 C 100.62 114 114 100.62 114 84 L 114 30 C 114 13.380003 100.62 3.469447e-18 84 0 L 30 0 z M 29 20 C 29.33699 19.966 29.65375 20 30 20 L 84 20 C 89.54001 20 94 24.46 94 30 L 94 84 C 94 89.54 89.54001 94 84 94 L 30 94 C 24.45999 94 20 89.54 20 84 L 20 30 C 20 24.80624 23.94518 20.51028 29 20 z "
+       transform="translate(247.24097,806.10583)"
+       id="rect3097" />
     <g
        id="g3056"
-       transform="matrix(0.70067732,0,0,0.70067732,82.818781,273.58822)">
+       transform="matrix(1.4013546,0,0,1.4012981,-109.10341,-345.37953)">
       <g
          transform="translate(-80.008895,330.00916)"
          id="g3020"
