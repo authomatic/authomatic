@@ -192,9 +192,13 @@ npm install -g coffeedoc
       });
     };
 
-    Authomatic.prototype.loginComplete = function(result) {
-      log('Login procedure complete', result);
-      return globalOptions.onLoginComplete(result);
+    Authomatic.prototype.loginComplete = function(result, closer) {
+      var result_copy;
+
+      result_copy = $.extend(true, {}, result);
+      log('Login procedure complete', result_copy);
+      closer();
+      return globalOptions.onLoginComplete(result_copy);
     };
 
     Authomatic.prototype.access = function(credentials, url, options) {
@@ -286,9 +290,6 @@ npm install -g coffeedoc
         type: method,
         data: params,
         headers: headers,
-        beforeSend: function(jqXHR, settings) {
-          return log('BEFORE SEND', jqXHR, settings);
-        },
         complete: [
           (function(jqXHR, textStatus) {
             return log('Request complete.', textStatus, jqXHR);
