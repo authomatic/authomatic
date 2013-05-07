@@ -24,7 +24,7 @@ Usage
 =====
 
 So you want your app to be able to log a **user** in with **Facebook**, **Twitter**, |openid|_ or whatever?
-First install **Authomatic** through `PyPi <>`_,
+First install **Authomatic** through `PyPi <https://pypi.python.org/pypi/Authomatic>`_,
 
 .. code-block:: bash
    
@@ -36,7 +36,12 @@ or clone it from `GitHub <http://github.com/peterhudec/authomatic>`_.
    
    $ git clone git://github.com/peterhudec/authomatic.git
 
-Then it's dead simple (hence the *Deadsimpleauth*). Just go through these two steps:
+.. note::
+   
+   On |gae|_ you need to include the :mod:`authomatic` module
+   or a link to it inside your app's directory.
+
+Now it's dead simple (hence the *Deadsimpleauth*). Just go through these two steps:
 
 #. Set up the library with :func:`.authomatic.setup`.
 #. Log the **user** in by calling :func:`.authomatic.login` inside a *request handler*.
