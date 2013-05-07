@@ -15,7 +15,7 @@ Features
 
 .. include:: ../../README.rst
    :start-line: 33
-   :end-line: 57
+   :end-line: 72
 
 .. contents::
    :backlinks: none
@@ -36,7 +36,7 @@ or clone it from `GitHub <http://github.com/peterhudec/authomatic>`_.
    
    $ git clone git://github.com/peterhudec/authomatic.git
 
-Then it's death simple (hence the *Deadsimpleauth*). Just go through these two steps:
+Then it's dead simple (hence the *Deadsimpleauth*). Just go through these two steps:
 
 #. Set up the library with :func:`.authomatic.setup`.
 #. Log the **user** in by calling :func:`.authomatic.login` inside a *request handler*.

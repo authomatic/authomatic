@@ -176,7 +176,16 @@ html_theme_options = {
     'motto': MOTTO,
     'base_url': 'http://peterhudec.github.io/authomatic',
     'opengraph_image': 'img/authomatic-seo.gif',
-    'google_analytics_id': 'UA-40552373-1',
+    'google_analytics_id': 'UA-40554445-4',
+    'social_buttons': True,
+    'facebook_app_id': '249464911861131',
+    'twitter_id': 'AuthomaticPy',
+    'author': 'Peter Hudec',
+    'author_link': 'http://peterhudec.com',
+    'copyright_year': '2012',
+    'google_plus_id': '117034840853387702598',
+    'github_id': 'peterhudec/authomatic',
+    'github_ribbon_image': 'img/github-ribbon-right.png',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

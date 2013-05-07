@@ -24,7 +24,7 @@ Authomatic
 is an **authorization/authentication**
 client library for Python web applications
 inspired by Alex Vagin’s `Simpleauth <http://code.google.com/p/gae-simpleauth/>`_.
-In fact, I almost named it *Deathsimpleauth*,
+In fact, I almost named it *Deadsimpleauth*,
 but that name would be too long
 for a succinct library.
 
@@ -55,13 +55,22 @@ Features
 	the library is in its **very early stage**
 	and there are practically **no tests**!
 
-Usage
-=====
-
-Read the `exhaustive documentation <http://peterhudec.github.io/authomatic>`_.
-
 Live Demo
 =========
 
-In short time there will be a live demo running at
-`http://authomatic-example.appspot.com`_
+There is a live |gae| based demo app running at
+http://authomatic-example.appspot.com which makes use of most of the features.
+
+Contribute
+==========
+
+Any contributions are of course very welcome.
+The project is hosted on `GitHub <https://github.com/peterhudec/authomatic>`_.
+If you find this library useful and are using it in your projects,
+please don't be shy and leave a comment about your usecase on the
+`Authomatic Usecases <https://github.com/peterhudec/authomatic/issues/1>`_ issue.
+
+Usage
+=====
+
+Read the exhaustive documentation at http://peterhudec.github.io/authomatic.
