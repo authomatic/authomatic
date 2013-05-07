@@ -20,8 +20,9 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     # we need issued to sort by most recently issued
     issued = ndb.IntegerProperty()
     
-    # Logging method.
-    _log = lambda level, message: None
+    @staticmethod
+    def _log(*args, **kwargs):
+        pass
     
     @classmethod
     def storeAssociation(cls, server_url, association):

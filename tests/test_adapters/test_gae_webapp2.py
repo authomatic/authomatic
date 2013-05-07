@@ -8,17 +8,6 @@ import time
 from openid.association import Association
 
 
-class AssociationMock(object):
-    def __init__(self, handle, serialized, issued, lifetime):
-        self.handle = handle
-        self.serialized = serialized
-        self.issued = issued
-        self.lifetime = lifetime
-    
-    def serialize(self):
-        return self.serialized
-
-
 class TestNDBOpenIDStore(object):
     
     def setup_method(self, method):
