@@ -58,7 +58,7 @@ Features
 Live Demo
 =========
 
-There is a live |gae| based demo app running at
+There is a |gae| based live demo app running at
 http://authomatic-example.appspot.com which makes use of most of the features.
 
 Contribute
