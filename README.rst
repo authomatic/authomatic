@@ -64,7 +64,7 @@ http://authomatic-example.appspot.com which makes use of most of the features.
 Contribute
 ==========
 
-Any contributions are of course very welcome.
+Contributions of any kind are very welcome.
 The project is hosted on `GitHub <https://github.com/peterhudec/authomatic>`_.
 If you find this library useful and are using it in your projects,
 please don't be shy and leave a comment about your usecase on the
