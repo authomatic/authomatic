@@ -16,18 +16,18 @@ Providers which implement the |openid|_ protocol based on the
 
 # We need absolute iport to import from openid library which has the same name as this module
 from __future__ import absolute_import
-from authomatic import providers
-from authomatic.exceptions import FailureError, CancellationError, OpenIDError
+import datetime
+import logging
+import time
+
 from openid import oidutil
 from openid.consumer import consumer
 from openid.extensions import ax, pape, sreg
 from openid.association import Association
-import authomatic.core as core
+
 import authomatic.settings as settings
-import datetime
-import logging
-import time
-import pprint
+from authomatic import providers
+from authomatic.exceptions import FailureError, CancellationError, OpenIDError
 
 
 __all__ = ['OpenID', 'Yahoo', 'Google']

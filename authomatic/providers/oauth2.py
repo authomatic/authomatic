@@ -27,14 +27,14 @@ Providers which implement the |oauth2|_ protocol.
     
 """
 
-from authomatic import providers
-from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 from urllib import urlencode
-import authomatic.core as core
-import authomatic.settings as settings
 import datetime
 import logging
 
+from authomatic import providers
+from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
+import authomatic.core as core
+import authomatic.settings as settings
 
 __all__ = ['OAuth2', 'Behance', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'GitHub',
            'Google', 'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive', 'Yammer', 'Yandex']

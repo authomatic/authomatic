@@ -19,10 +19,7 @@ Abstract base classes for implementation of protocol specific providers.
 
 """
 
-from authomatic.exceptions import ConfigError, AuthenticationError, FetchError
 import abc
-import authomatic.core
-import authomatic.settings as settings
 import base64
 import copy
 import datetime
@@ -36,7 +33,12 @@ import traceback
 import urllib
 import urlparse
 import uuid
+
+import authomatic.core
+import authomatic.settings as settings
 from authomatic.core import Session
+from authomatic.exceptions import ConfigError, AuthenticationError, FetchError
+
 
 __all__ = ['BaseProvider', 'AuthorizationProvider', 'AuthenticationProvider', 'login_decorator']
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from authomatic.exceptions import SessionError, \
-    CredentialsError, RequestElementsError
+
 from xml.etree import ElementTree
 import Cookie
 import collections
@@ -17,6 +16,8 @@ import threading
 import time
 import urllib
 import urlparse
+
+from authomatic.exceptions import SessionError, CredentialsError, RequestElementsError
 
 # Taken from anyjson.py
 try:

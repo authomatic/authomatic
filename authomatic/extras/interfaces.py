@@ -9,6 +9,7 @@ If you want to implement framework specific extras, use these abstract classes a
 
 import abc
 
+
 class BaseSession(object):
     """
     Abstract class for custom session implementations.

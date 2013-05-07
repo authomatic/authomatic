@@ -21,11 +21,7 @@ Providers which implement the |oauth1|_ protocol.
     
 """
 
-from authomatic import providers
-from authomatic.exceptions import CancellationError, FailureError, OAuth1Error
-from urllib import urlencode
 import abc
-import authomatic.core as core
 import binascii
 import datetime
 import hashlib
@@ -34,6 +30,10 @@ import logging
 import time
 import urllib
 import urlparse
+
+from authomatic import providers
+from authomatic.exceptions import CancellationError, FailureError, OAuth1Error
+import authomatic.core as core
 
 
 __all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Meetup', 'Plurk', 'Twitter', 'Tumblr', 'UbuntuOne',

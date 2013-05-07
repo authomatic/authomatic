@@ -1,10 +1,12 @@
-from authomatic.settings import logging_level, fetch_headers
-from config import CONFIG
-import authomatic
-from authomatic.adapters import Webapp2Adapter
+
 import cgi
 import logging
+
 import webapp2
+import authomatic
+from authomatic.adapters import Webapp2Adapter
+
+from config import CONFIG
 
 def links(handler):
     for p in CONFIG.keys():

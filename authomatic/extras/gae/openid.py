@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+
 # We need absolute iport to import from openid library which has the same name as this module
 from __future__ import absolute_import
-from google.appengine.ext import ndb
-import datetime
 import logging
+import datetime
+
+from google.appengine.ext import ndb
 import openid.store.interface
 
 

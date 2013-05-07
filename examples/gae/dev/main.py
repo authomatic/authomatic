@@ -1,10 +1,12 @@
-import authomatic
-import config
-import os
+
 import sys
+
 import webapp2
-import logging
 from authomatic.adapters import Webapp2Adapter
+import authomatic
+
+import config
+
 
 def headers(handler):
         
