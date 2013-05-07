@@ -6723,7 +6723,7 @@ ul.breadcrumbs li a:hover {
   padding: 40px;
   padding-bottom: 50px;
   margin: 0em;
-  max-width: 100%;
+  width: 100%;
   height: auto;
 }
 /* line 72, ../sass/authomatic.sass */

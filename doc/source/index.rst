@@ -9,7 +9,6 @@
    reference/index
    examples/index
 
-
 Features
 ========
 
