@@ -2,15 +2,14 @@ from setuptools import setup,find_packages
 
 setup(
     name='Authomatic',
-    version='0.0.0',
+    version='0.0.3',
     packages=find_packages(),
+    package_data={'': ['*.txt', '*.rst']},
     author='Peter Hudec',
     author_email='peterhudec@peterhudec.com',
-    license='',
-    description='',
+    description='Authorization / authentication client library for Python web applications',
     long_description=open('README.rst').read(),
     keywords='authorization authentication oauth openid',
-#     url='https://github.com/peterhudec/authomatic',
     url='http://peterhudec.github.io/authomatic',
     license = 'MIT',
     extras_require={

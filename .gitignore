@@ -10,3 +10,5 @@ config_public.py
 .project
 .sass-cache/
 .settings/
+Authomatic.egg-info/
+dist/
