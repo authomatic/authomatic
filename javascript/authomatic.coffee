@@ -47,7 +47,7 @@ globalOptions =
 
 # Logs to the console if available and if globalOptions.logging is true.
 log = (args...) ->
-  console?.log('Authomatic:', args...) if (globalOptions.logging and console.log?.apply?)
+  console?.log('Authomatic:', args...) if (globalOptions.logging and console?.log?.apply?)
 
 # Opens a new centered window with the URL specified.
 openWindow = (url) ->
@@ -176,22 +176,10 @@ window.authomatic = new class Authomatic
   loginComplete: (result, closer) ->
     # We need to deepcopy the result before closing the popup.
     # Otherwise IE would loose the reference to the result object.
-    
-    console.log('Copying result')
-    
     result_copy = $.extend(true, {}, result)
-    
-    console.log('Result copied')
-    
-    
     log('Login procedure complete', result_copy)
     # Now we can close the popup.
-    console.log('Closing popup')
-    
     closer()
-    
-    console.log('Popup closed')
-    
     globalOptions.onLoginComplete(result_copy)
 
   access: (credentials, url, options = {}) ->

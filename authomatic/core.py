@@ -920,9 +920,7 @@ class LoginResult(ReprMixin):
         """
         
         custom_callback = """
-        if (typeof window.opener.{cb} === "function") {{
-            window.opener.{cb}(result, closer);
-        }}
+        try {{ window.opener.{cb}(result, closer); }} catch(e) {{}}
         """.format(cb=callback_name) if callback_name else ''
         
         # TODO: Move the window.close() to the opener
@@ -938,11 +936,7 @@ class LoginResult(ReprMixin):
             
             {custom_callback}
             
-            if (typeof window.opener.authomatic !== "undefined" && window.opener.authomatic !== null) {{
-                if (typeof window.opener.authomatic.loginComplete === "function") {{
-                    window.opener.authomatic.loginComplete(result, closer);
-                }}
-            }}
+            try {{ window.opener.authomatic.loginComplete(result, closer); }} catch(e) {{}}
         
         }})();
         

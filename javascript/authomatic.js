@@ -49,7 +49,7 @@ npm install -g coffeedoc
     var args, _ref;
 
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    if (globalOptions.logging && (((_ref = console.log) != null ? _ref.apply : void 0) != null)) {
+    if (globalOptions.logging && ((typeof console !== "undefined" && console !== null ? (_ref = console.log) != null ? _ref.apply : void 0 : void 0) != null)) {
       return typeof console !== "undefined" && console !== null ? console.log.apply(console, ['Authomatic:'].concat(__slice.call(args))) : void 0;
     }
   };
@@ -195,13 +195,9 @@ npm install -g coffeedoc
     Authomatic.prototype.loginComplete = function(result, closer) {
       var result_copy;
 
-      console.log('Copying result');
       result_copy = $.extend(true, {}, result);
-      console.log('Result copied');
       log('Login procedure complete', result_copy);
-      console.log('Closing popup');
       closer();
-      console.log('Popup closed');
       return globalOptions.onLoginComplete(result_copy);
     };
 
