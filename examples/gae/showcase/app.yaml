@@ -28,4 +28,6 @@ libraries:
 skip_files: |
   (config-template\.py)|
   (static/sass)|
-  (.*\.rb)
+  (static/\.sass-cache)|
+  (.*\.rb)|
+  (.*\.scssc)
