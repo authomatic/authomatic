@@ -66,7 +66,7 @@ npm install -g coffeedoc
     if (typeof globalOptions.onPopupOpen === "function") {
       globalOptions.onPopupOpen(url);
     }
-    return window.open(url, "authomatic:" + url, settings);
+    return window.open(url, '', settings);
   };
 
   parseQueryString = function(queryString) {
@@ -195,9 +195,13 @@ npm install -g coffeedoc
     Authomatic.prototype.loginComplete = function(result, closer) {
       var result_copy;
 
+      console.log('Copying result');
       result_copy = $.extend(true, {}, result);
+      console.log('Result copied');
       log('Login procedure complete', result_copy);
+      console.log('Closing popup');
       closer();
+      console.log('Popup closed');
       return globalOptions.onLoginComplete(result_copy);
     };
 
