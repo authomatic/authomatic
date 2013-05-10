@@ -28,6 +28,8 @@ In fact, I almost named it *Deadsimpleauth*,
 but that name would be too long
 for a succinct library.
 
+For more info visit the project page at http://peterhudec.github.io/authomatic.
+
 Features
 ========
 
