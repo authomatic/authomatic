@@ -174,6 +174,7 @@ html_theme_options = {
     'stylesheet': 'css/authomatic.css',
     'favicon': 'img/favicon.ico',
     'motto': MOTTO,
+    'seo_description': 'Simple yet powerful authorization / authentication client library for Python WEB applications.',
     'base_url': 'http://peterhudec.github.io/authomatic',
     'opengraph_image': 'img/authomatic-seo.gif',
     'google_analytics_id': 'UA-40554445-4',
