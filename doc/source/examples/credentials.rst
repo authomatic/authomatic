@@ -25,7 +25,7 @@ a random secret string used for session and CSRF token generation.
    :lines: 12
 
 Add a simple request handler which accepts ``GET`` and ``POST`` HTTP methods and
-recieves the ``provider_name`` URL variable.
+receives the ``provider_name`` URL variable.
 Log the **user** in by calling the :func:`.authomatic.login` function.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py

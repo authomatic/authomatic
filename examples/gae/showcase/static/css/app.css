@@ -881,7 +881,7 @@ th.hide-for-xlarge {
     display: none !important;
   }
 
-  /* Specific visilbity for tables */
+  /* Specific visibility for tables */
   /* line 140, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_visibility.scss */
   table.show-for-large, table.show-for-large-up, table.hide-for-medium, table.hide-for-medium-down {
     display: table;
@@ -935,7 +935,7 @@ th.hide-for-xlarge {
     display: none !important;
   }
 
-  /* Specific visilbity for tables */
+  /* Specific visibility for tables */
   /* line 185, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_visibility.scss */
   table.show-for-xlarge, table.hide-for-large, table.hide-for-large-down {
     display: table;
@@ -977,7 +977,7 @@ th.hide-for-xlarge {
   display: none !important;
 }
 
-/* Specific visilbity for tables */
+/* Specific visibility for tables */
 /* line 220, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_visibility.scss */
 table.hide-for-landscape, table.show-for-portrait {
   display: table;
@@ -1018,7 +1018,7 @@ th.show-for-portrait {
     display: none !important;
   }
 
-  /* Specific visilbity for tables */
+  /* Specific visibility for tables */
   /* line 249, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_visibility.scss */
   table.show-for-landscape, table.hide-for-portrait {
     display: table;
@@ -1059,7 +1059,7 @@ th.show-for-portrait {
     display: none !important;
   }
 
-  /* Specific visilbity for tables */
+  /* Specific visibility for tables */
   /* line 279, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_visibility.scss */
   table.show-for-portrait, table.hide-for-landscape {
     display: table;
@@ -1108,7 +1108,7 @@ th.show-for-portrait {
   display: none !important;
 }
 
-/* Specific visilbity for tables */
+/* Specific visibility for tables */
 /* line 307, ../../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_visibility.scss */
 table.hide-for-touch {
   display: table;

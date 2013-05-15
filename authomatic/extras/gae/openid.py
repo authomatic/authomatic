@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# We need absolute iport to import from openid library which has the same name as this module
+# We need absolute import to import from openid library which has the same name as this module
 from __future__ import absolute_import
 import logging
 import datetime
@@ -99,7 +99,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
         
         if result:
             # if so, the nonce is not valid so return False
-            cls._log(logging.WARNING, 'NDBOpenIDStore: Nonce was allready used!')
+            cls._log(logging.WARNING, 'NDBOpenIDStore: Nonce was already used!')
             return False
         else:
             # if not, store the key to datastore and return True

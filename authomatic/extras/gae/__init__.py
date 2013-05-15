@@ -28,7 +28,7 @@ class GAEError(exceptions.BaseError):
 class Webapp2Session(interfaces.BaseSession):
     """
     A simple wrapper for |webapp2|_ sessions. If you provide a session
-    it wrapps it and adds the :meth:`.save` method.
+    it wraps it and adds the :meth:`.save` method.
     
     If you don't provide a session it creates a new one but you must provide the :data:`.secret`. 
     
@@ -56,7 +56,7 @@ class Webapp2Session(interfaces.BaseSession):
             The session secret.
         
         :param str cookie_name:
-            The name of the session kookie.
+            The name of the session cookie.
         
         :param backend:
             The session backend. One of ``'memcache'`` or ``'datastore'``.
@@ -180,7 +180,7 @@ class NDBConfig(ndb.Model):
         .. note::
         
             The *Datastore Viewer* in the ``_ah/admin/`` won't let you add properties to a model
-            if there is not an entity with that property allready.
+            if there is not an entity with that property already.
             Therefore it is a good idea to keep the **"Example"** entity (which has all
             possible properties set) in the datastore.
         """

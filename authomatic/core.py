@@ -224,7 +224,7 @@ class ReprMixin(object):
     * listed in _repr_ignore.
     
     Values of attributes listed in _repr_sensitive will be replaced by *###*.
-    Values which repr() string is longer than _repr_lenght_limit will be represented as *ClassName(...)*
+    Values which repr() string is longer than _repr_length_limit will be represented as *ClassName(...)*
     """
     
     #: Iterable of attributes to be ignored.
@@ -232,7 +232,7 @@ class ReprMixin(object):
     #: Iterable of attributes which value should not be visible.
     _repr_sensitive = []
     #: `int` Values longer than this will be truncated to *ClassName(...)*.
-    _repr_lenght_limit = 20
+    _repr_length_limit = 20
     
     
     def __repr__(self):
@@ -253,7 +253,7 @@ class ReprMixin(object):
                     v = '###'
                 
                 # if repr is too long
-                if len(repr(v)) > self._repr_lenght_limit:
+                if len(repr(v)) > self._repr_length_limit:
                     # Truncate to ClassName(...)
                     v = '{}(...)'.format(v.__class__.__name__)
                 else:
@@ -332,7 +332,7 @@ class Session(object):
         :param str name:
             Session cookie name.
         :param int max_age:
-            Maximum allowed age of session kookie nonce in seconds.
+            Maximum allowed age of session cookie nonce in seconds.
         :param bool secure:
             If ``True`` the session cookie will be saved wit ``Secure`` attribute.
         """
@@ -464,7 +464,7 @@ class Session(object):
             The serialized value.
         
         :returns:
-            Desrialized object.
+            Deserialized object.
         """
         
         # 4. Split
@@ -484,7 +484,7 @@ class Session(object):
         # 2. Deserialize
         deserialized = json.loads(decoded)
         
-        # 1. Unpicke non json serializable objects.
+        # 1. Unpickle non json serializable objects.
         for key in self.NOT_JSON_SERIALIZABLE:
             if key in deserialized.keys():
                 deserialized[key] = pickle.loads(deserialized[key])
@@ -618,7 +618,7 @@ class User(ReprMixin):
 
 
 class Credentials(ReprMixin):
-    """Contains all neccessary informations to fetch **user's protected resources**."""
+    """Contains all necessary information to fetch **user's protected resources**."""
     
     _repr_sensitive = ('token', 'refresh_token', 'token_secret', 'consumer_key', 'consumer_secret')
     
@@ -813,7 +813,7 @@ class Credentials(ReprMixin):
         # Get the provider type specific items.
         rest = self.provider_type_class().to_tuple(self)
         
-        # Provider ID and provider type ID are allways the first two items.
+        # Provider ID and provider type ID are always the first two items.
         result = (self.provider_id, self.provider_type_id) + rest
         
         # Make sure that all items are strings.
@@ -830,7 +830,7 @@ class Credentials(ReprMixin):
     def deserialize(cls, credentials):
         """
         A *class method* which reconstructs credentials created by :meth:`serialize`.
-        You can also passit a :class:`.Credentials` instance.
+        You can also pass it a :class:`.Credentials` instance.
         
         :param dict config:
             The same :doc:`config` used in the :func:`.login` to get the credentials.
@@ -895,7 +895,7 @@ class LoginResult(ReprMixin):
         
         #.  Triggers the ``options.onLoginComplete(result, closer)`` handler set with the
             :ref:`authomatic.setup() <js_setup>` function of :ref:`javascript.js <js>`.
-        #.  Calls the JavasSript callback specified by :data:`callback_name`
+        #.  Calls the JavasScript callback specified by :data:`callback_name`
             on the opener of the *login handler popup* and passes it the
             *login result* JSON object as first argument and the `closer` function which
             you should call in your callback to close the popup.
@@ -952,7 +952,7 @@ class LoginResult(ReprMixin):
         
         #.  Triggers the ``options.onLoginComplete(result, closer)`` handler set with the
             :ref:`authomatic.setup() <js_setup>` function of :ref:`javascript.js <js>`.
-        #.  Calls the JavasSript callback specified by :data:`callback_name`
+        #.  Calls the JavasScript callback specified by :data:`callback_name`
             on the opener of the *login handler popup* and passes it the
             *login result* JSON object as first argument and the `closer` function which
             you should call in your callback to close the popup.
@@ -1208,7 +1208,7 @@ def setup(config, secret, session_max_age=600, secure_cookie=False,
         as a salt by *CSRF* token generation.
         
     :param session_max_age:
-        Maximum allowed age of :class:`.Session` kookie nonce in seconds.
+        Maximum allowed age of :class:`.Session` cookie nonce in seconds.
         
     :param bool secure_cookie:
         If ``True`` the :class:`.Session` cookie will be saved wit ``Secure`` attribute.
@@ -1229,7 +1229,7 @@ def setup(config, secret, session_max_age=600, secure_cookie=False,
         Default is ``False``.
         
     :param int logging_level:
-        The logging level treshold as specified in the standard Python
+        The logging level threshold as specified in the standard Python
         `logging library <http://docs.python.org/2/library/logging.html>`_.
         Default is ``logging.INFO``
     
@@ -1255,7 +1255,7 @@ def setup(config, secret, session_max_age=600, secure_cookie=False,
 def login(adapter, provider_name, callback=None, session=None, session_saver=None, **kwargs):
     """
     If :data:`provider_name` specified, launches the login procedure
-    for coresponding :doc:`provider </reference/providers>` and
+    for corresponding :doc:`provider </reference/providers>` and
     returns :class:`.LoginResult`.
     
     If :data:`provider_name` is empty, acts like :func:`.backend`.
@@ -1538,7 +1538,7 @@ def backend(adapter):
         HTTP headers of the **protected resource** request as a JSON object.
     
     :param JSON json:
-        You can pass all of the aformentioned params except ``type`` in a JSON object.
+        You can pass all of the aforementioned params except ``type`` in a JSON object.
         
         .. code-block:: javascript
             
