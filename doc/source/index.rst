@@ -45,7 +45,7 @@ Now it's dead simple (hence the *Deadsimpleauth*). Just go through these two ste
 #. Set up the library with :func:`.authomatic.setup`.
 #. Log the **user** in by calling :func:`.authomatic.login` inside a *request handler*.
 
-If everything goes good, you will get a :class:`.User` object with informations like
+If everything goes good, you will get a :class:`.User` object with information like
 :attr:`.User.name`, :attr:`.User.id` or :attr:`.User.email`.
 Moreover, if the **user** has logged in with an |oauth2|_ or |oauth1|_ provider,
 you will be able to access **his/her protected resources**.
@@ -91,14 +91,14 @@ We will get the provider name from the URL slug.
    :emphasize-lines: 3
 
 The :func:`authomatic.login` function will redirect the **user** to the **provider**,
-which will promt **him/her** to authorize your app (**the consumer**) to access **his/her**
+which will prompt **him/her** to authorize your app (**the consumer**) to access **his/her**
 protected resources (|oauth1|_ and |oauth2|_), or to verify **his/her** claimed ID (|openid|_).
 The **provider** then redirects the **user** back to *this request handler*.
 
 If the *login procedure* is over, :func:`authomatic.login` returns a :class:`.LoginResult`.
 You can check for errors in :attr:`.LoginResult.error`
 or in better case for a :class:`.User` in :attr:`.LoginResult.user`.
-The :class:`.User` object has plenty of usefull properties.
+The :class:`.User` object has plenty of useful properties.
 
 .. warning::
    
@@ -156,7 +156,7 @@ Credentials can be serialized to a lightweight url-safe string.
    
    serialized_credentials = credentials.serialize()
 
-It would be useles if they could not be deserialized back to original.
+It would be useless if they could not be deserialized back to original.
 
 .. note::
    
@@ -194,9 +194,9 @@ Otherwise you must repeat the :func:`authomatic.login` procedure to get new cred
    if credentials.expire_soon():
       response = credentials.refresh()
       if response and response.status == 200:
-         print 'Credentials have been refreshed succesfully.'
+         print 'Credentials have been refreshed successfully.'
 
-Finally use the credentials (serialized or deserialized) to access **protected resourcess** of the **user**
+Finally use the credentials (serialized or deserialized) to access **protected resources** of the **user**
 to whom they belong by passing them to the :func:`authomatic.access` function along with the **resource** URL.
 
 ::
@@ -230,7 +230,7 @@ there is an **asynchronous** alternative to each of these functions.
 .. warning:: |async|
 
 These **asynchronous** alternatives all return a :class:`.Future` instance which
-represents the separate thread in which their **synchronous** brethrens are running.
+represents the separate thread in which their **synchronous** brethren are running.
 You should call all the **asynchronous** functions you want to use at once,
 then do your **time consuming** tasks and finally collect the results of the functions
 by calling the :meth:`get_result() <.Future.get_result>` method of each of the
@@ -326,7 +326,7 @@ If you are already using a |webapp2| session you can do it like this:
    class Login(webapp2.RequestHandler):
       def any(self, provider_name):
          
-         # Wrapps an existing Webapp2 session.
+         # Wraps an existing Webapp2 session.
          session = gae.Webapp2Session(self, session=self.session)
          
          result = authomatic.login(Webapp2Adapter(self),
@@ -384,13 +384,13 @@ which should accept a ``result`` argument.
             // Set up the library
             authomatic.setup({
                popupWidth: 600,
-               pupupHeight: 400,
+               popupHeight: 400,
                onLoginComplete: function(result) {
                   // Handle the login result when the popup closes.
                   if (result.user) {
                      alert('Hi ' + result.user.name);
                   } else if (result.error) {
-                     alert('Error occured: ' + result.error.message);
+                     alert('Error occurred: ' + result.error.message);
                   }
                }
             });
@@ -440,7 +440,7 @@ on top of the |oauth1|_ and |oauth2|_ standards.
 
 The :ref:`authomatic.access() <js_access>` function of the :ref:`javascript.js <js>` library
 solves this for you. It encapsulates solutions of all the aforementioned issues and
-allways makes the request in the most efficient way.
+always makes the request in the most efficient way.
 
 .. code-block:: javascript
    

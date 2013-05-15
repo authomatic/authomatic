@@ -23,7 +23,7 @@ npm install -g coffeedoc
   globalOptions = {
     logging: true,
     popupWidth: 800,
-    pupupHeight: 600,
+    popupHeight: 600,
     popupLinkSelector: 'a.authomatic',
     popupFormSelector: 'form.authomatic',
     popupFormValidator: function($form) {
@@ -58,7 +58,7 @@ npm install -g coffeedoc
     var height, left, settings, top, width;
 
     width = globalOptions.popupWidth;
-    height = globalOptions.pupupHeight;
+    height = globalOptions.popupHeight;
     top = (screen.height / 2) - (height / 2);
     left = (screen.width / 2) - (width / 2);
     settings = "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
@@ -297,7 +297,7 @@ npm install -g coffeedoc
         ],
         success: [
           (function(data) {
-            return log('Request successfull.', data);
+            return log('Request successful.', data);
           }), globalOptions.onAccessSuccess, this.options.onAccessSuccess
         ],
         error: function(jqXHR, textStatus, errorThrown) {

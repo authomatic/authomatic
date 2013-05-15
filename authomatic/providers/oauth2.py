@@ -137,11 +137,11 @@ class OAuth2(providers.AuthorizationProvider):
                 params['redirect_uri'] = redirect_uri
                 params['grant_type'] = 'authorization_code'
                 
-                # TODO: Chenck whether all providers accept it
+                # TODO: Check whether all providers accept it
                 headers.update(cls._authorization_header(credentials))
             else:
                 raise OAuth2Error('Credentials with valid token, consumer_key, consumer_secret and argument ' + \
-                                  'redirect_uri are required to create OAuth 2.0 acces token request elements!')
+                                  'redirect_uri are required to create OAuth 2.0 access token request elements!')
         
         elif request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
             # Refresh access token request.
@@ -550,7 +550,7 @@ class Facebook(OAuth2):
     def _x_request_elements_filter(cls, request_type, request_elements, credentials):
         
         if request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
-            # As allways, Facebook has it's original name for "refresh_token"!
+            # As always, Facebook has it's original name for "refresh_token"!
             url, method, params, headers, body = request_elements
             params['fb_exchange_token'] = params.pop('refresh_token')
             params['grant_type'] = 'fb_exchange_token'
@@ -592,7 +592,7 @@ class Facebook(OAuth2):
     
     @staticmethod
     def _x_refresh_credentials_if(credentials):
-        # Allways refresh.
+        # Always refresh.
         return True
 
 
@@ -905,7 +905,7 @@ class VK(OAuth2):
                 'consumer_key': '#####',
                 'consumer_secret': '#####',
                 'id': authomatic.provider_id(),
-                'scope': ['1024'] # Allways a single item.
+                'scope': ['1024'] # Always a single item.
             }
         }
     
@@ -1074,7 +1074,7 @@ class Yandex(OAuth2):
 
 
 # The provider type ID is generated from this list's indexes!
-# Allways apppend new providers at the end so that ids of existing providers don't change!
+# Always append new providers at the end so that ids of existing providers don't change!
 PROVIDER_ID_MAP = [OAuth2, Behance, Bitly, Cosm, DeviantART, Facebook, Foursquare, GitHub, Google, LinkedIn,
           PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex]
 

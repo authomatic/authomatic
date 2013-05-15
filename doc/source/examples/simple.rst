@@ -23,7 +23,7 @@ a random secret string used for session and CSRF token generation.
    :lines: 10
 
 Add a simple request handler which accepts ``GET`` and ``POST`` HTTP methods and
-recieves the ``provider_name`` URL variable.
+receives the ``provider_name`` URL variable.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
@@ -113,7 +113,7 @@ Do the same with Twitter.
 
 That's it for the *Login* handler.
 
-Now just for convenience that we don't have to enter all the URLs manualy
+Now just for convenience that we don't have to enter all the URLs manually
 let's create a *Home* handler.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py

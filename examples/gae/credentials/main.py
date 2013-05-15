@@ -82,7 +82,7 @@ class Home(webapp2.RequestHandler):
                     self.response.write("""
                     <p>We can refresh them while they are valid.</p>
                     <a href="refresh">OK, refresh them!</a>
-                    <p>Moreover, we can do powerfull stuff with them.</p>
+                    <p>Moreover, we can do powerful stuff with them.</p>
                     <a href="action/{}">Show me what you can do!</a>
                     """.format(credentials.provider_name))
                 else:

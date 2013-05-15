@@ -17,7 +17,7 @@ globalOptions =
   # Popup options
   logging: on
   popupWidth: 800
-  pupupHeight: 600
+  popupHeight: 600
   popupLinkSelector: 'a.authomatic'
   popupFormSelector: 'form.authomatic'
   popupFormValidator: ($form) -> true
@@ -52,7 +52,7 @@ log = (args...) ->
 # Opens a new centered window with the URL specified.
 openWindow = (url) ->
   width = globalOptions.popupWidth
-  height = globalOptions.pupupHeight
+  height = globalOptions.popupHeight
 
   top = (screen.height / 2) - (height / 2)
   left = (screen.width / 2) - (width / 2)

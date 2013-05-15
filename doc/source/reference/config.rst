@@ -37,11 +37,11 @@ The **config** must have following structure:
        },
        
        #===========================================================================
-       # OAutht 2.0
+       # OAuth 2.0
        #===========================================================================
        
        'facebook': { # Provider name.
-            'class_': oauth2.Facebook,  # Provider class. Dont miss the trailing underscore!
+            'class_': oauth2.Facebook,  # Provider class. Don't miss the trailing underscore!
             
             # Provider type specific keyword arguments:
             'short_name': 1, # Unique value used for serialization of credentials only needed by OAuth 2.0 and OAuth 1.0a.
