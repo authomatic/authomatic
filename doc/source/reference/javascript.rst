@@ -9,7 +9,7 @@ It has a very tiny interface similar to it's Python sibling.
 Yo can use it to:
 
 * Process the *login procedure* in a popup window.
-* Access **protected resources** in the most efficient way without any hussle.
+* Access **protected resources** in the most efficient way without any hassle.
 
 .. warning::
    
@@ -36,7 +36,7 @@ Yo can use it to:
          
          :js:data:`int` The width of the popup in pixels. Default is ``800``.
       
-      .. js:attribute:: options.pupupHeight
+      .. js:attribute:: options.popupHeight
          
          :js:data:`int` The height of the popup in pixels. Default is ``600``.
       
@@ -120,7 +120,7 @@ Yo can use it to:
    
    *  By |oauth2|_ providers:
    
-      #. First a *crosss-domain* XHR request is attempted.
+      #. First a *cross-domain* XHR request is attempted.
       #. If that fails it continues either with:
       
          *  A *JSONP* XHR request but only if the provider supports it and the request method is ``'GET'``
@@ -193,7 +193,7 @@ Yo can use it to:
       
       .. warning::
          
-         Callbacks specified in :js:func:`.authomatic.setup` will not be overriden by
+         Callbacks specified in :js:func:`.authomatic.setup` will not be overridden by
          those specified here, but both will be called, whereas those specified in
          :js:func:`.authomatic.setup` will be called first.
       
@@ -209,7 +209,7 @@ Yo can use it to:
       
       .. js:attribute:: options.onAccessSuccess
          
-         :js:data:`function` Called when a successfull response returns from **provider**.
+         :js:data:`function` Called when a successful response returns from **provider**.
          Accepts ``data``, ``textStatus`` and ``jqXHR`` as arguments in the specified order.
       
       .. js:attribute:: options.onAccessComplete

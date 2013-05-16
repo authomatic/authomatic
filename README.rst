@@ -34,7 +34,7 @@ Features
 ========
 
 *	Loosely coupled.
-*	Tiny but powerfull interface.
+*	Tiny but powerful interface.
 *	The |pyopenid|_ library is the only **optional** dependency.
 *	CSRF protection.
 *	**Framework agnostic** thanks to adapters.
@@ -69,8 +69,8 @@ Contribute
 Contributions of any kind are very welcome.
 The project is hosted on `GitHub <https://github.com/peterhudec/authomatic>`_.
 If you find this library useful and are using it in your projects,
-please don't be shy and leave a comment about your usecase on the
-`Authomatic Usecases <https://github.com/peterhudec/authomatic/issues/1>`_ issue.
+please don't be shy and leave a comment about your use case on the
+`Authomatic use cases <https://github.com/peterhudec/authomatic/issues/1>`_ issue.
 
 Usage
 =====

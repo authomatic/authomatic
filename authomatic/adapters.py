@@ -116,7 +116,7 @@ class BaseAdapter(object):
     @abc.abstractmethod
     def set_status(self):
         """
-        To set the staus in JSON endpoint.
+        To set the status in JSON endpoint.
         """
 
 

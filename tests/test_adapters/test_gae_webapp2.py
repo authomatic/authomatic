@@ -273,7 +273,7 @@ class TestNDBOpenIDStore(object):
         # call the tested method
         deleted = NDBOpenIDStore.cleanupNonces()
         
-        # check whether the returned value coresponds with the number of deleted nonces
+        # check whether the returned value corresponds with the number of deleted nonces
         assert deleted == 5
         
         # check whether there there are 5 less nonces
@@ -296,4 +296,3 @@ class TestNDBOpenIDStore(object):
 
 
         
-    

@@ -354,7 +354,7 @@ select {
     float: none !important;
   }
 }
-/* Styles for screens that are atleast 768px; */
+/* Styles for screens that are at least 768px; */
 @media only screen and (min-width: 48em) {
   /* line 146, ../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_grid.scss */
   .row .large-1 {
@@ -4242,7 +4242,7 @@ form.custom .custom.disabled {
   cursor: pointer;
 }
 
-/* Styles for screens that are atleast 768px; */
+/* Styles for screens that are at least 768px; */
 @media only screen and (min-width: 48em) {
   /* line 163, ../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_joyride.scss */
   .joyride-tip-guide {

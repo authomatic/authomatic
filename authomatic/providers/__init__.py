@@ -48,7 +48,7 @@ def _error_traceback_html(exc_info, traceback):
     Generates error traceback HTML.
     
     :param tuple exc_info:
-        Output of :finc:`sys.exc_info` function. 
+        Output of :func:`sys.exc_info` function.
         
     :param traceback:
         Output of :func:`traceback.format_exc` function.
@@ -87,7 +87,7 @@ def login_decorator(func):
         except Exception as e:
             if settings.report_errors:
                 error = e
-                provider._log(logging.ERROR, 'Reported supressed exception: {}!'.format(repr(error)))
+                provider._log(logging.ERROR, 'Reported suppressed exception: {}!'.format(repr(error)))
             else:
                 if settings.debug:
                     # TODO: Check whether it actually works without middleware
@@ -319,7 +319,7 @@ class BaseProvider(object):
     @classmethod
     def _log(cls, level, msg):
         """
-        Logs a message with preformated prefix.
+        Logs a message with pre-formatted prefix.
         
         :param int level:
             Logging level as specified in the
@@ -635,7 +635,7 @@ class AuthorizationProvider(BaseProvider):
             |classmethod|
         
         :param int request_type:
-            Type of the request specified by one of the classe's constants.
+            Type of the request specified by one of the class's constants.
             
         :param credentials:
             :class:`.Credentials` of the **user** whose
@@ -668,7 +668,7 @@ class AuthorizationProvider(BaseProvider):
     @property
     def type_id(self):
         """
-        A short string reprezenting the provider implementation id used for
+        A short string representing the provider implementation id used for
         serialization of :class:`.Credentials` and to identify the type of provider in JavaScript.
         The part before hyphen denotes the type of the provider, the part after hyphen denotes the class id
         e.g. ``oauth2.Facebook.type_id = '2-5'``, ``oauth1.Twitter.type_id = '1-5'``.
@@ -754,7 +754,7 @@ class AuthorizationProvider(BaseProvider):
         :returns:
             :class:`.Response`
         """
-        
+
         return self.access_with_credentials(credentials=self.credentials,
                                             url=url,
                                             params=params,

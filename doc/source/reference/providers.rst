@@ -6,7 +6,7 @@ Providers
 
 Providers are abstractions of the **provider** party of the
 **provider**/**consumer**/**user** triangle and they are the very core of this library.
-There is no reason for you to instantiate them manualy.
+There is no reason for you to instantiate them manually.
 You only should specify them in the :doc:`config` and access members of their instances
 available in the :class:`.LoginResult` returned by the :func:`authomatic.login` function.
 

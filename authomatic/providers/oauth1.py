@@ -789,7 +789,7 @@ class Yahoo(OAuth1):
 
 
 # The provider type ID is generated from this list's indexes!
-# Allways apppend new providers at the end so that ids of existing providers dont change!
+# Always append new providers at the end so that ids of existing providers don't change!
 PROVIDER_ID_MAP = [OAuth1, Bitbucket, Flickr, Meetup, Plurk, Twitter, Tumblr, UbuntuOne, Vimeo, Xero, Yahoo]
 
 

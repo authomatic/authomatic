@@ -14,7 +14,7 @@ Providers which implement the |openid|_ protocol based on the
 
 """
 
-# We need absolute iport to import from openid library which has the same name as this module
+# We need absolute import to import from openid library which has the same name as this module
 from __future__ import absolute_import
 import datetime
 import logging
@@ -33,7 +33,7 @@ from authomatic.exceptions import FailureError, CancellationError, OpenIDError
 __all__ = ['OpenID', 'Yahoo', 'Google']
 
 
-# Supress openid logging.
+# Suppress openid logging.
 oidutil.log = lambda message, level=0: None
 
 
@@ -91,7 +91,7 @@ class SessionOpenIDStore(object):
     
     def storeAssociation(self, server_url, association):
         self._log(logging.DEBUG, 'SessionOpenIDStore: Storing association to session.')
-        # Allways store only one association as a tuple.
+        # Always store only one association as a tuple.
         self.session['oia'] = (server_url, association.handle, association.serialize())
     
     
@@ -225,7 +225,7 @@ class OpenID(providers.AuthenticationProvider):
         # AX
         self.ax = self._kwarg(kwargs, 'ax', self.AX)
         self.ax_required = self._kwarg(kwargs, 'ax_required', self.AX_REQUIRED)
-        # add required schemas to schemas if not allready there
+        # add required schemas to schemas if not already there
         for i in self.ax_required:
             if i not in self.ax:
                 self.ax.append(i)
@@ -319,7 +319,7 @@ class OpenID(providers.AuthenticationProvider):
                 
                 # get user ID
                 data['guid'] = response.getDisplayIdentifier()
-                
+
                 self._log(logging.INFO, 'Authentication successful.')
                 
                 # get user data from AX response
@@ -327,7 +327,7 @@ class OpenID(providers.AuthenticationProvider):
                 if ax_response and ax_response.data:
                     self._log(logging.INFO, 'Got AX data.')
                     ax_data = {}
-                    # conver iterable values to their first item
+                    # convert iterable values to their first item
                     for k, v in ax_response.data.iteritems():
                         if v and type(v) in (list, tuple):
                             ax_data[k] = v[0]
@@ -375,7 +375,7 @@ class OpenID(providers.AuthenticationProvider):
                                    url=self.identifier,
                                    original_message=e.message)
             
-            self._log(logging.INFO, 'Service discovery for identifier {} successfull.'.format(self.identifier))
+            self._log(logging.INFO, 'Service discovery for identifier {} successful.'.format(self.identifier))
             
             # add SREG extension
             # we need to remove required fields from optional fields because addExtension then raises an error
