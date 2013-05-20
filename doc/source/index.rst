@@ -273,6 +273,11 @@ If you want to use different session implementation you can pass it
 together with its **save method** to the :func:`authomatic.login` function.
 The only requirement is that the session implementation must have a dictionary-like interface.
 
+.. note::
+   
+   The default **secure cookie** based session will be deleted immediately after
+   the *login procedure* is over. Custom sessions however, will be preserved.
+
 ::
    
    import webapp2
