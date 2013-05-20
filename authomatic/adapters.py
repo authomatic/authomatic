@@ -7,8 +7,8 @@ Adapters
    :backlinks: none
 
 The :func:`authomatic.login` function needs access to functionality like
-getting the url of the handler where it is called, getting the request params, headers and cookies and
-writing the body, headers and status to the response.
+getting the **URL** of the handler where it is being called, getting the **request params**, **headers** and **cookies** and
+**writing the body**, **headers** and **status** to the response.
 
 Since implementation of these features varies across Python web frameworks,
 the Authomatic library uses **adapters** to unify these differences into a single interface.
@@ -16,17 +16,22 @@ the Authomatic library uses **adapters** to unify these differences into a singl
 Available Adapters
 ^^^^^^^^^^^^^^^^^^
 
-Currently there is only the :class:`.Webapp2Adapter` available.
+If you are missing an adapter for the framework of your choice, which is very likely, since
+currently there is only the :class:`.Webapp2Adapter` available,
+please consider a contribution to this package by :ref:`implementing <implement_adapters>` one.
+Its very easy and shouldn't take you more than a few minutes.
 
 .. autoclass:: Webapp2Adapter
     :members:
+
+.. _implement_adapters:
 
 Implementing an Adapter
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Implementing an adapter for a Python web framework is pretty easy.
 
-You do it by subclassing the :class:`.BaseAdapter` abstract class.
+Do it by subclassing the :class:`.BaseAdapter` abstract class.
 There are only **seven** members that you need to implement.
 
 Moreover if your framework is based on the |webob|_ library
