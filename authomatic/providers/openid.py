@@ -6,6 +6,10 @@
 Providers which implement the |openid|_ protocol based on the
 `python-openid`_ library.
 
+.. warning::
+    
+    This providers are dependent on the |pyopenid|_ package.
+    
 .. autosummary::
     
     OpenID
