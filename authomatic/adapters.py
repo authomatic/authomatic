@@ -243,7 +243,7 @@ class WerkzeugAdapter(BaseAdapter):
 
 
 from functools import wraps
-from authomatic import login
+import authomatic
 
 
 class FlaskAuthomatic(object):
@@ -253,7 +253,8 @@ class FlaskAuthomatic(object):
 
     result = None
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        authomatic.setup(*args, **kwargs)
         from flask import make_response, request, session
         self.make_response = make_response
         self.request = request
@@ -266,7 +267,8 @@ class FlaskAuthomatic(object):
                 adapter = WerkzeugAdapter(self.request, self.make_response())
                 login_kwargs.setdefault('session', self.session)
                 login_kwargs.setdefault('session_saver', self.session_saver)
-                self.result = login(adapter, *login_args, **login_kwargs)
+                self.result = authomatic.login(adapter, *login_args,
+                                               **login_kwargs)
                 self.response = adapter.response
                 return f(*args, **kwargs)
             return decorated

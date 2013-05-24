@@ -3,7 +3,6 @@ import logging
 from authomatic.adapters import FlaskAuthomatic
 from authomatic.providers import oauth2
 from flask import Flask, jsonify
-import authomatic
 
 logger = logging.getLogger('authomatic.core')
 logger.addHandler(logging.StreamHandler())
@@ -12,8 +11,7 @@ logger.addHandler(logging.StreamHandler())
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'some random secret string'
 
-fa = FlaskAuthomatic()
-authomatic.setup(
+fa = FlaskAuthomatic(
     config={
         'fb': {
            'class_': oauth2.Facebook,
