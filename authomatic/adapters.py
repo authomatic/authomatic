@@ -207,31 +207,10 @@ class Webapp2Adapter(WebObBaseAdapter):
         self.response = handler.response
 
 
-class FlaskAdapter(BaseAdapter):
+class WerkzeugAdapter(BaseAdapter):
     """
-    Adapter for the |flask|_ framework.
+    Adapter for |Werkzeug|_ based frameworks.
     """
-
-    def __init__(self):
-        from flask import (request, g, session,
-                           request_started, request_finished)
-        self.request = request
-        self.g = g
-        self.session = session
-        request_started.connect(self.init_headers)
-        request_finished.connect(self.set_headers)
-
-    def init_headers(self, sender):
-        self.g.authomatic_headers = {}
-
-    def set_headers(self, sender, response):
-        if hasattr(self.g, 'authomatic_headers'):
-            response.headers.extend(self.g.authomatic_headers)
-        if hasattr(self.g, 'authomatic_status'):
-            response.status_code = self.g.authomatic_status
-
-    def write(self, value):
-        pass
 
     @property
     def params(self):
@@ -241,9 +220,6 @@ class FlaskAdapter(BaseAdapter):
     def url(self):
         return self.request.base_url
 
-    def set_header(self, key, value):
-        self.g.authomatic_headers[key] = value
-
     @property
     def headers(self):
         return self.request.headers
@@ -252,9 +228,49 @@ class FlaskAdapter(BaseAdapter):
     def cookies(self):
         return self.request.cookies
 
+    def __init__(self, request, response):
+        self.request = request
+        self.response = response
+
+    def write(self, value):
+        self.response.data += value
+
+    def set_header(self, key, value):
+        self.response.headers[key] = value
+
     def set_status(self, status):
-        status = int(status.split(' ')[0])
-        self.g.authomatic_status = int(status)
+        self.response.status = status
+
+
+from functools import wraps
+from authomatic import login
+
+
+class FlaskAuthomatic(object):
+    """
+    Flask Plugin for authomatic support
+    """
+
+    result = None
+
+    def __init__(self):
+        from flask import make_response, request, session
+        self.make_response = make_response
+        self.request = request
+        self.session = session
+
+    def login(self, *login_args, **login_kwargs):
+        def decorator(f):
+            @wraps(f)
+            def decorated(*args, **kwargs):
+                adapter = WerkzeugAdapter(self.request, self.make_response())
+                login_kwargs.setdefault('session', self.session)
+                login_kwargs.setdefault('session_saver', self.session_saver)
+                self.result = login(adapter, *login_args, **login_kwargs)
+                self.response = adapter.response
+                return f(*args, **kwargs)
+            return decorated
+        return decorator
 
     def session_saver(self):
         self.session.modified = True

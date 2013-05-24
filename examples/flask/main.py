@@ -1,6 +1,6 @@
 import logging
 
-from authomatic.adapters import FlaskAdapter
+from authomatic.adapters import FlaskAuthomatic
 from authomatic.providers import oauth2
 from flask import Flask, jsonify
 import authomatic
@@ -8,9 +8,11 @@ import authomatic
 logger = logging.getLogger('authomatic.core')
 logger.addHandler(logging.StreamHandler())
 
-adapter = FlaskAdapter()
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'some random secret string'
+
+fa = FlaskAuthomatic()
 authomatic.setup(
     config={
         'fb': {
@@ -25,20 +27,18 @@ authomatic.setup(
 )
 
 
-@app.route('/fb')
+@app.route('/')
+@fa.login('fb')
 def index():
-    result = authomatic.login(adapter, 'fb',
-                              session=adapter.session,
-                              session_saver=adapter.session_saver)
-    if result:
-        if result.error:
-            return result.error.message
-        elif result.user:
-            if not (result.user.name and result.user.id):
-                result.user.update()
-            return jsonify(name=result.user.name, id=result.user.id)
-
-    return ''
+    if fa.result:
+        if fa.result.error:
+            return fa.result.error.message
+        elif fa.result.user:
+            if not (fa.result.user.name and fa.result.user.id):
+                fa.result.user.update()
+            return jsonify(name=fa.result.user.name, id=fa.result.user.id)
+    else:
+      return fa.response
 
 
 if __name__ == '__main__':
