@@ -240,39 +240,3 @@ class WerkzeugAdapter(BaseAdapter):
 
     def set_status(self, status):
         self.response.status = status
-
-
-from functools import wraps
-import authomatic
-
-
-class FlaskAuthomatic(object):
-    """
-    Flask Plugin for authomatic support
-    """
-
-    result = None
-
-    def __init__(self, *args, **kwargs):
-        authomatic.setup(*args, **kwargs)
-        from flask import make_response, request, session
-        self.make_response = make_response
-        self.request = request
-        self.session = session
-
-    def login(self, *login_args, **login_kwargs):
-        def decorator(f):
-            @wraps(f)
-            def decorated(*args, **kwargs):
-                adapter = WerkzeugAdapter(self.request, self.make_response())
-                login_kwargs.setdefault('session', self.session)
-                login_kwargs.setdefault('session_saver', self.session_saver)
-                self.result = authomatic.login(adapter, *login_args,
-                                               **login_kwargs)
-                self.response = adapter.response
-                return f(*args, **kwargs)
-            return decorated
-        return decorator
-
-    def session_saver(self):
-        self.session.modified = True

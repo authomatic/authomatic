@@ -1,6 +1,6 @@
 import logging
 
-from authomatic.adapters import FlaskAuthomatic
+from authomatic.extras.flask_authomatic import FlaskAuthomatic
 from authomatic.providers import oauth2
 from flask import Flask, jsonify
 
