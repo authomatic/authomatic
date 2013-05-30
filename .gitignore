@@ -12,3 +12,5 @@ config_public.py
 .settings/
 Authomatic.egg-info/
 dist/
+venv/
+virtualenv/
