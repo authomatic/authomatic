@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block body %}
+Login with <a href="login/fb">Facebook</a>.<br />
+Login with <a href="login/tw">Twitter</a>.<br />
+<form action="login/oi">
+    <input type="text" name="id" value="me.yahoo.com" />
+    <input type="submit" value="Authenticate With OpenID">
+</form>
+{% endblock %}
