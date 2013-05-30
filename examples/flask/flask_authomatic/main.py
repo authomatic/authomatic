@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+Created by Mark Steve Samson http://marksteve.com
+"""
+
 import logging
 
 from authomatic.extras.flask import FlaskAuthomatic
@@ -36,7 +41,7 @@ def index():
                 fa.result.user.update()
             return jsonify(name=fa.result.user.name, id=fa.result.user.id)
     else:
-      return fa.response
+        return fa.response
 
 
 if __name__ == '__main__':
