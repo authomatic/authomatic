@@ -111,7 +111,7 @@ class Login(webapp2.RequestHandler):
             
             self.response.write('<h3>Result js callback HTML</h3>')
             self.response.write('<pre class="prettyprint">{}</pre>'\
-                                .format(cgi.escape(result.js_callback('callback', indent=4,
+                                .format(cgi.escape(result.popup_html('callback', indent=4,
                                                                       custom=dict(foo='bar', baz="bing")))))
                 
             
