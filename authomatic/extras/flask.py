@@ -4,22 +4,15 @@ from functools import wraps
 
 from authomatic.adapters import WerkzeugAdapter
 from flask import make_response, request, session
-import authomatic
+from authomatic import Authomatic
 
 
-class FlaskAuthomatic(object):
+class FlaskAuthomatic(Authomatic):
     """
     Flask Plugin for authomatic support
     """
 
     result = None
-
-    def __init__(self, *args, **kwargs):
-        if args or kwargs:
-            self.setup(*args, **kwargs)
-
-    def setup(self, *args, **kwargs):
-        authomatic.setup(*args, **kwargs)
 
     def login(self, *login_args, **login_kwargs):
         """
@@ -28,12 +21,11 @@ class FlaskAuthomatic(object):
         def decorator(f):
             @wraps(f)
             def decorated(*args, **kwargs):
-                adapter = WerkzeugAdapter(request, make_response())
+                self.response = make_response()
+                adapter = WerkzeugAdapter(request, self.response)
                 login_kwargs.setdefault('session', session)
                 login_kwargs.setdefault('session_saver', self.session_saver)
-                self.result = authomatic.login(adapter, *login_args,
-                                               **login_kwargs)
-                self.response = adapter.response
+                self.result = super(FlaskAuthomatic, self).login(adapter, *login_args, **login_kwargs)
                 return f(*args, **kwargs)
             return decorated
         return decorator
