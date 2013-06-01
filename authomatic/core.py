@@ -827,7 +827,7 @@ class Credentials(ReprMixin):
 
 
     @classmethod
-    def deserialize(cls, credentials):
+    def deserialize(cls, config, credentials):
         """
         A *class method* which reconstructs credentials created by :meth:`serialize`.
         You can also pass it a :class:`.Credentials` instance.
@@ -857,8 +857,8 @@ class Credentials(ReprMixin):
         provider_id = int(split[0])
 
         # Get provider config by short name.
-        provider_name = id_to_name(settings.config, provider_id)
-        cfg = settings.config.get(provider_name)
+        provider_name = id_to_name(config, provider_id)
+        cfg = config.get(provider_name)
 
         # Get the provider class.
         ProviderClass = resolve_provider_class(cfg.get('class_'))
@@ -1333,7 +1333,7 @@ def credentials(credentials):
         :class:`.Credentials`
     """
 
-    return Credentials.deserialize(credentials)
+    return Credentials.deserialize(settings.config, credentials)
 
 
 def access(credentials, url, params=None, method='GET', headers=None, body='', max_redirects=5, content_parser=None):
@@ -1366,7 +1366,7 @@ def access(credentials, url, params=None, method='GET', headers=None, body='', m
     """
 
     # Deserialize credentials.
-    credentials = Credentials.deserialize(credentials)
+    credentials = Credentials.deserialize(settings.config, credentials)
 
     # Resolve provider class.
     ProviderClass = credentials.provider_class
@@ -1480,7 +1480,7 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
                                     'and URL either as keyword arguments or in the JSON object!')
 
     # Get the provider class
-    credentials = Credentials.deserialize(credentials)
+    credentials = Credentials.deserialize(settings.config, credentials)
     ProviderClass = credentials.provider_class
 
     # Create request elements
@@ -1596,7 +1596,7 @@ def backend(adapter):
     headers = adapter.params.get('headers')
     headers = json.loads(headers) if headers else {}
 
-    ProviderClass = Credentials.deserialize(credentials).provider_class
+    ProviderClass = Credentials.deserialize(settings.config, credentials).provider_class
 
     if request_type == 'auto':
         # If there is a "callback" param, it's a JSONP request.
