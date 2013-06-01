@@ -21,7 +21,10 @@ Providers which implement the |oauth1|_ protocol.
     
 """
 
+from authomatic import providers
+from authomatic.exceptions import CancellationError, FailureError, OAuth1Error
 import abc
+import authomatic.core as core
 import binascii
 import datetime
 import hashlib
@@ -30,10 +33,8 @@ import logging
 import time
 import urllib
 import urlparse
+import uuid
 
-from authomatic import providers
-from authomatic.exceptions import CancellationError, FailureError, OAuth1Error
-import authomatic.core as core
 
 
 __all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Meetup', 'Plurk', 'Twitter', 'Tumblr', 'UbuntuOne',
@@ -319,7 +320,7 @@ class OAuth1(providers.AuthorizationProvider):
             # http://oauth.net/core/1.0a/#rfc.section.9.1
             params['oauth_signature_method'] = cls._signature_generator.method
             params['oauth_timestamp'] = str(int(time.time()))
-            params['oauth_nonce'] = cls.csrf_generator()
+            params['oauth_nonce'] = cls.csrf_generator(uuid.uuid4())
             params['oauth_version'] = '1.0'
             
             # add signature to params

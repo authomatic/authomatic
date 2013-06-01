@@ -29,7 +29,6 @@ from openid.consumer import consumer
 from openid.extensions import ax, pape, sreg
 from openid.association import Association
 
-import authomatic.settings as settings
 from authomatic import providers
 from authomatic.exceptions import FailureError, CancellationError, OpenIDError
 
@@ -87,11 +86,11 @@ class SessionOpenIDStore(object):
         """
         :param int nonce_timeout:
             Nonces older than this in seconds will be considered expired.
-            Default is :data:`.settings.session_max_age`.
+            Default is 600.
         """
         
         self.session = session
-        self.nonce_timeout = nonce_timeout or settings.session_max_age
+        self.nonce_timeout = nonce_timeout or 600
     
     def storeAssociation(self, server_url, association):
         self._log(logging.DEBUG, 'SessionOpenIDStore: Storing association to session.')

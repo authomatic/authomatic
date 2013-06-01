@@ -622,7 +622,10 @@ class Credentials(ReprMixin):
 
     _repr_sensitive = ('token', 'refresh_token', 'token_secret', 'consumer_key', 'consumer_secret')
 
-    def __init__(self, **kwargs):
+    def __init__(self, config, **kwargs):
+        
+        #: :class:`dict` :ref:`Config`.
+        self.config = config
 
         #: :class:`str` User **access token**.
         self.token = kwargs.get('token', '')
@@ -863,7 +866,7 @@ class Credentials(ReprMixin):
         # Get the provider class.
         ProviderClass = resolve_provider_class(cfg.get('class_'))
 
-        deserialized = Credentials()
+        deserialized = Credentials(config)
 
         deserialized.provider_id = provider_id
         deserialized.provider_type = ProviderClass.get_type()
@@ -1190,8 +1193,7 @@ class RequestElements(tuple):
 
 def setup(config, secret, session_max_age=600, secure_cookie=False,
              session=None, session_save_method=None, report_errors=True, debug=False,
-             logging_level=logging.INFO, prefix='authomatic',
-             fetch_headers={}):
+             logging_level=logging.INFO, prefix='authomatic'):
     """
     Sets up the Authomatic library.
 
@@ -1234,8 +1236,7 @@ def setup(config, secret, session_max_age=600, secure_cookie=False,
         Default is ``logging.INFO``
 
     :param str prefix:
-        Prefix used as the :class:`.Session` cookie name and
-        by which all logs will be prefixed.
+        Prefix used as the :class:`.Session` cookie name.
     """
 
     settings.config = config
@@ -1246,7 +1247,6 @@ def setup(config, secret, session_max_age=600, secure_cookie=False,
     settings.secure_cookie = secure_cookie
     settings.session_max_age = session_max_age
     settings.logging_level = logging_level
-    settings.fetch_headers = fetch_headers
 
     # Set logging level.
     _logger.setLevel(logging_level)
@@ -1307,7 +1307,8 @@ def login(adapter, provider_name, callback=None, session=None, session_saver=Non
         ProviderClass = resolve_provider_class(class_)
 
         # instantiate provider class
-        provider = ProviderClass(adapter=adapter,
+        provider = ProviderClass(settings,
+                                 adapter=adapter,
                                  provider_name=provider_name,
                                  callback=callback,
                                  session=session,

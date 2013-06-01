@@ -34,7 +34,6 @@ import logging
 from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 import authomatic.core as core
-import authomatic.settings as settings
 
 __all__ = ['OAuth2', 'Behance', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'GitHub',
            'Google', 'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive', 'Yammer', 'Yandex']
@@ -94,7 +93,7 @@ class OAuth2(providers.AuthorizationProvider):
     
     @classmethod
     def create_request_elements(cls, request_type, credentials, url, method='GET', params=None,
-                                headers=None, body='', redirect_uri='', scope='', csrf=''):
+                                headers=None, body='', secret=None, redirect_uri='', scope='', csrf=''):
         """
         Creates |oauth2| request elements.
         """
@@ -115,11 +114,12 @@ class OAuth2(providers.AuthorizationProvider):
         
         if request_type == cls.USER_AUTHORIZATION_REQUEST_TYPE:
             # User authorization request.
+            # TODO: Raise error for specific message for each missing argument.
             if consumer_key and redirect_uri and (csrf or not cls.supports_csrf_protection):
                 params['client_id'] = consumer_key
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
-                params['state'] = csrf or cls.csrf_generator()
+                params['state'] = csrf
                 params['response_type'] = 'code'
                 
                 # Add authorization header
@@ -233,7 +233,7 @@ class OAuth2(providers.AuthorizationProvider):
             return
         
         # We need consumer key and secret to make this kind of request.
-        cfg = settings.config.get(credentials.provider_name)
+        cfg = credentials.config.get(credentials.provider_name)
         credentials.consumer_key = cfg.get('consumer_key')
         credentials.consumer_secret = cfg.get('consumer_secret')
         
@@ -380,7 +380,7 @@ class OAuth2(providers.AuthorizationProvider):
             csrf = ''
             if self.supports_csrf_protection:
                 # generate csfr
-                csrf = self.csrf_generator()
+                csrf = self.csrf_generator(self.settings.secret)
                 # and store it to session
                 self._session_set('state', csrf)
             else:

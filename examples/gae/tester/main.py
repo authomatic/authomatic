@@ -17,7 +17,7 @@ def links(handler):
 def loop(handler, obj):
     handler.response.write('<table>')
     for k, v in obj.__dict__.items():
-        if not k in ('data', 'gae_user', 'credentials', 'content'):
+        if not k in ('data', 'gae_user', 'credentials', 'content', 'config'):
             style = 'color: red' if not v else ''
             handler.response.write('<tr style="{}"><td>{}:</td><td>{}</td></tr>'.format(style, k, v))
     handler.response.write('</table>')

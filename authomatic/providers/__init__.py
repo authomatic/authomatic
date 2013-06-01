@@ -35,7 +35,6 @@ import urlparse
 import uuid
 
 import authomatic.core
-import authomatic.settings as settings
 from authomatic.core import Session
 from authomatic.exceptions import ConfigError, AuthenticationError, FetchError
 
@@ -85,11 +84,11 @@ def login_decorator(func):
         try:
             func(provider, *args, **kwargs)
         except Exception as e:
-            if settings.report_errors:
+            if provider.settings.report_errors:
                 error = e
                 provider._log(logging.ERROR, 'Reported suppressed exception: {}!'.format(repr(error)))
             else:
-                if settings.debug:
+                if provider.settings.debug:
                     # TODO: Check whether it actually works without middleware
                     provider.write(_error_traceback_html(sys.exc_info(), traceback.format_exc()))
                 raise
@@ -127,9 +126,10 @@ class BaseProvider(object):
     
     __metaclass__ = abc.ABCMeta
     
-    def __init__(self, adapter, provider_name, session=None, session_saver=None, callback=None, js_callback=None,
+    def __init__(self, settings, adapter, provider_name, session=None, session_saver=None, callback=None, js_callback=None,
                  prefix='authomatic', **kwargs):
         
+        self.settings = settings
         self.adapter = adapter
         
         self.session = session
@@ -268,8 +268,8 @@ class BaseProvider(object):
         """
         
         return kwargs.get(kwname) or \
-               settings.config.get(self.name, {}).get(kwname) or \
-               settings.config.get('__defaults__', {}).get(kwname) or \
+               self.settings.config.get(self.name, {}).get(kwname) or \
+               self.settings.config.get('__defaults__', {}).get(kwname) or \
                default
     
     
@@ -281,7 +281,7 @@ class BaseProvider(object):
             e.g. ``"authomatic:facebook:key"``
         """
         
-        return '{}:{}:{}'.format(settings.prefix, self.name, key)
+        return '{}:{}:{}'.format(self.settings.prefix, self.name, key)
     
     
     def _session_set(self, key, value):
@@ -297,7 +297,7 @@ class BaseProvider(object):
     
     
     @staticmethod
-    def csrf_generator():
+    def csrf_generator(secret):
         """
         Generates CSRF token.
         
@@ -308,7 +308,7 @@ class BaseProvider(object):
         """
         
         # Create hash from random string plus salt.
-        hashed = hashlib.md5(str(uuid.uuid4()) + str(settings.secret)).hexdigest()
+        hashed = hashlib.md5(str(uuid.uuid4()) + str(secret)).hexdigest()
         
         # Each time return random portion of the hash.
         span = 5
@@ -330,7 +330,7 @@ class BaseProvider(object):
             The actual message.
         """
         
-        authomatic.core._logger.log(level, ': '.join((settings.prefix, cls.__name__, msg)))
+        authomatic.core._logger.log(level, ': '.join(('authomatic', cls.__name__, msg)))
         
     
     @classmethod
@@ -366,9 +366,6 @@ class BaseProvider(object):
         scheme, host, path, query, fragment = urlparse.urlsplit(url)
         
         query = urllib.urlencode(params)
-        
-        # Apply headers from settings.
-        headers.update(settings.fetch_headers)
         
         if method in ('POST', 'PUT', 'PATCH'):
             if not body:
@@ -549,7 +546,7 @@ class AuthorizationProvider(BaseProvider):
         self.id = self._kwarg(kwargs, 'id')
         
         #: :class:`.Credentials` to access **user's protected resources**.
-        self.credentials = authomatic.core.Credentials(provider=self)
+        self.credentials = authomatic.core.Credentials(self.settings.config, provider=self)
     
     #===========================================================================
     # Abstract properties
