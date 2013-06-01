@@ -4,24 +4,30 @@
 
 	<a href="/">Home</a>
 	
+	{# Check for errors. #}
 	{% if result.error %}
 		<h2>Damn that error: {{ result.error.message }}</h2>
 	{% endif %}
 	
+	{# Welcome the user. #}
 	{% if result.user %}
 		<h1>Hi {{ result.user.name }}</h1>
 		<h2>Your id is: {{ result.user.id }}</h2>
 		<h2>Your email is: {{ result.user.email }}</h2>
 	{% endif %}
 	
+	{# If the user has credentials, we can access his/her protected resources. #}
 	{% if result.user.credentials %}
-	
+		
+		{# Let's get the user's 5 most recent statuses. #}
 		{% if result.provider.name == 'fb' %}
 			Your are logged in with Facebook.<br />
 			
+			{# Insert the user's ID to the URL and access the resource. #}
 			{% set url = 'https://graph.facebook.com/{}?fields=feed.limit(5)'.format(result.user.id) %}
 			{% set response = result.provider.access(url) %}
 			
+			{# Parse the response. #}
 			{% if response.status == 200 %}
 				
 				{% if response.data.error %}
@@ -41,6 +47,7 @@
 			
 		{% endif %}
 		
+		{# Do the same for Twitter. #}
 		{% if result.provider.name == 'tw' %}
 			Your are logged in with Twitter.<br />
 			
