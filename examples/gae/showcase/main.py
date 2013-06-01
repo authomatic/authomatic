@@ -5,17 +5,16 @@ import logging
 
 import jinja2
 import webapp2
-import authomatic
+from authomatic import Authomatic
 from authomatic.adapters import Webapp2Adapter
 
 # import config
 import config_public as config
 
-
-authomatic.setup(config=config.config,
-                 secret=config.SECRET,
-                 report_errors=True,
-                 logging_level=logging.DEBUG)
+authomatic = Authomatic(config=config.config,
+                        secret=config.SECRET,
+                        report_errors=True,
+                        logging_level=logging.DEBUG)
 
 
 def render(handler, result=None, popup_js=''):

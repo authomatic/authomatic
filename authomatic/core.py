@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from xml.etree import ElementTree
-import Cookie
 import collections
 import copy
 import datetime
@@ -10,8 +9,6 @@ import hashlib
 import hmac
 import logging
 import pickle
-import settings
-import sys
 import threading
 import time
 import urllib
@@ -393,7 +390,7 @@ class Session(object):
         """
 
         cookie = self.adapter.cookies.get(self.name)
-        return self._deserialize(cookie) if cookie else {}
+        return self._deserialize(cookie) or {}
 
 
     @property
@@ -1113,11 +1110,6 @@ class UserInfoResponse(Response):
         self.user = user
 
 
-#===============================================================================
-# Public methods
-#===============================================================================
-
-
 class RequestElements(tuple):
     """
     A tuple of ``(url, method, params, headers, body)`` request elements.
@@ -1191,262 +1183,370 @@ class RequestElements(tuple):
                           body=self.body))
 
 
-def setup(config, secret, session_max_age=600, secure_cookie=False,
-             session=None, session_save_method=None, report_errors=True, debug=False,
-             logging_level=logging.INFO, prefix='authomatic'):
-    """
-    Sets up the Authomatic library.
+class Authomatic(object):
+    def __init__(self, config, secret, session_max_age=600, secure_cookie=False,
+                 session=None, session_save_method=None, report_errors=True, debug=False,
+                 logging_level=logging.INFO, prefix='authomatic'):
+        """
+        :param dict config:
+            :doc:`config`
 
-    .. warning::
-
-        You MUST call this function if you want to use this library,
-        otherwise it just won't work!
-
-    :param dict config:
-        :doc:`config`
-
-    :param str secret:
-        A secret string that will be used as the key for signing :class:`.Session` cookie and
-        as a salt by *CSRF* token generation.
-
-    :param session_max_age:
-        Maximum allowed age of :class:`.Session` cookie nonce in seconds.
-
-    :param bool secure_cookie:
-        If ``True`` the :class:`.Session` cookie will be saved wit ``Secure`` attribute.
-
-    :param session:
-        Custom dictionary-like session implementation.
-
-    :param callable session_save_method:
-        A method of the supplied session or any mechanism that saves the session data and cookie.
-
-    :param bool report_errors:
-        If ``True`` exceptions encountered during the **login procedure**
-        will be caught and reported in the :attr:`.LoginResult.error` attribute.
-        Default is ``True``.
-
-    :param bool debug:
-        If ``True`` traceback of exceptions will be written to response.
-        Default is ``False``.
-
-    :param int logging_level:
-        The logging level threshold as specified in the standard Python
-        `logging library <http://docs.python.org/2/library/logging.html>`_.
-        Default is ``logging.INFO``
-
-    :param str prefix:
-        Prefix used as the :class:`.Session` cookie name.
-    """
-
-    settings.config = config
-    settings.secret = secret
-    settings.report_errors = report_errors
-    settings.debug = debug
-    settings.prefix = prefix
-    settings.secure_cookie = secure_cookie
-    settings.session_max_age = session_max_age
-    settings.logging_level = logging_level
-
-    # Set logging level.
-    _logger.setLevel(logging_level)
-
-
-def login(adapter, provider_name, callback=None, session=None, session_saver=None, **kwargs):
-    """
-    If :data:`provider_name` specified, launches the login procedure
-    for corresponding :doc:`provider </reference/providers>` and
-    returns :class:`.LoginResult`.
-
-    If :data:`provider_name` is empty, acts like :func:`.backend`.
-
-    .. warning::
-
-        The function redirects the **user** to the **provider** which in turn redirects
-        **him/her** back to the *request handler* where this function was called.
-
-    :param str provider_name:
-        Name of the provider as specified in the keys of the :doc:`config`.
-
-    :param callable callback:
-        If specified the function will call the callback with :class:`.LoginResult`
-        passed as argument and will return nothing.
-
-    :param bool report_errors:
-
-    .. note::
-
-        Accepts additional keyword arguments that will be passed to :doc:`provider` constructor.
-
-    :returns:
-        :class:`.LoginResult`
-    """
-
-    if provider_name:
-        # retrieve required settings for current provider and raise exceptions if missing
-        provider_settings = settings.config.get(provider_name)
-        if not provider_settings:
-            raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
-
-        if not (session is None or session_saver is None):
-            session = session
-            session_saver = session_saver
+        :param str secret:
+            A secret string that will be used as the key for signing :class:`.Session` cookie and
+            as a salt by *CSRF* token generation.
+    
+        :param session_max_age:
+            Maximum allowed age of :class:`.Session` cookie nonce in seconds.
+    
+        :param bool secure_cookie:
+            If ``True`` the :class:`.Session` cookie will be saved wit ``Secure`` attribute.
+    
+        :param session:
+            Custom dictionary-like session implementation.
+    
+        :param callable session_save_method:
+            A method of the supplied session or any mechanism that saves the session data and cookie.
+    
+        :param bool report_errors:
+            If ``True`` exceptions encountered during the **login procedure**
+            will be caught and reported in the :attr:`.LoginResult.error` attribute.
+            Default is ``True``.
+    
+        :param bool debug:
+            If ``True`` traceback of exceptions will be written to response.
+            Default is ``False``.
+    
+        :param int logging_level:
+            The logging level threshold as specified in the standard Python
+            `logging library <http://docs.python.org/2/library/logging.html>`_.
+            Default is ``logging.INFO``
+    
+        :param str prefix:
+            Prefix used as the :class:`.Session` cookie name.
+        """
+        
+        self.config = config
+        self.secret = secret
+        self.session_max_age = session_max_age
+        self.secure_cookie = secure_cookie
+        self.session = session
+        self.session_save_method = session_save_method
+        self.report_errors = report_errors
+        self.debug = debug
+        self.logging_level = logging_level
+        self.prefix = prefix
+        self._logger = logging.getLogger(str(id(self)))
+        
+        # Set logging level.
+        self._logger.setLevel(logging_level)
+    
+    
+    def login(self, adapter, provider_name, callback=None, session=None, session_saver=None, **kwargs):
+        """
+        If :data:`provider_name` specified, launches the login procedure
+        for corresponding :doc:`provider </reference/providers>` and
+        returns :class:`.LoginResult`.
+    
+        If :data:`provider_name` is empty, acts like :func:`.backend`.
+    
+        .. warning::
+    
+            The function redirects the **user** to the **provider** which in turn redirects
+            **him/her** back to the *request handler* where this function was called.
+    
+        :param str provider_name:
+            Name of the provider as specified in the keys of the :doc:`config`.
+    
+        :param callable callback:
+            If specified the function will call the callback with :class:`.LoginResult`
+            passed as argument and will return nothing.
+    
+        :param bool report_errors:
+    
+        .. note::
+    
+            Accepts additional keyword arguments that will be passed to :doc:`provider` constructor.
+    
+        :returns:
+            :class:`.LoginResult`
+        """
+        
+        if provider_name:
+            # retrieve required settings for current provider and raise exceptions if missing
+            provider_settings = self.config.get(provider_name)
+            if not provider_settings:
+                raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
+    
+            if not (session is None or session_saver is None):
+                session = session
+                session_saver = session_saver
+            else:
+                session = Session(adapter=adapter,
+                                   secret=self.secret,
+                                   max_age=self.session_max_age,
+                                   name=self.prefix,
+                                   secure=self.secure_cookie)
+    
+                session_saver = session.save
+    
+            # Resolve provider class.
+            class_ = provider_settings.get('class_')
+            if not class_:
+                raise exceptions.ConfigError('The "class_" key not specified in the config for provider {}!'.format(provider_name))
+            ProviderClass = resolve_provider_class(class_)
+    
+            # instantiate provider class
+            provider = ProviderClass(self,
+                                     adapter=adapter,
+                                     provider_name=provider_name,
+                                     callback=callback,
+                                     session=session,
+                                     session_saver=session_saver,
+                                     **kwargs)
+    
+            # return login result
+            return provider.login()
+    
         else:
-            session = Session(adapter=adapter,
-                               secret=settings.secret,
-                               max_age=settings.session_max_age,
-                               name=settings.prefix,
-                               secure=settings.secure_cookie)
+            # Act like backend.
+            self.backend(adapter)
 
-            session_saver = session.save
-
+ 
+    def credentials(self, credentials):
+        """
+        Deserializes credentials.
+    
+        :param credentials:
+            Credentials serialized with :meth:`.Credentials.serialize` or :class:`.Credentials` instance.
+    
+        :returns:
+            :class:`.Credentials`
+        """
+    
+        return Credentials.deserialize(self.config, credentials)
+    
+    
+    def access(self, credentials, url, params=None, method='GET', headers=None, body='', max_redirects=5, content_parser=None):
+        """
+        Accesses **protected resource** on behalf of the **user**.
+    
+        :param credentials:
+            The **user's** :class:`.Credentials` (serialized or normal).
+    
+        :param str url:
+            The **protected resource** URL.
+    
+        :param str method:
+            HTTP method of the request.
+    
+        :param dict headers:
+            HTTP headers of the request.
+    
+        :param str body:
+            Body of ``POST``, ``PUT`` and ``PATCH`` requests.
+    
+        :param int max_redirects:
+            Maximum number of HTTP redirects to follow.
+    
+        :param function content_parser:
+            A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
+    
+        :returns:
+            :class:`.Response`
+        """
+    
+        # Deserialize credentials.
+        credentials = Credentials.deserialize(self.config, credentials)
+    
         # Resolve provider class.
-        class_ = provider_settings.get('class_')
-        if not class_:
-            raise exceptions.ConfigError('The "class_" key not specified in the config for provider {}!'.format(provider_name))
-        ProviderClass = resolve_provider_class(class_)
-
-        # instantiate provider class
-        provider = ProviderClass(settings,
-                                 adapter=adapter,
-                                 provider_name=provider_name,
-                                 callback=callback,
-                                 session=session,
-                                 session_saver=session_saver,
-                                 **kwargs)
-
-        # return login result
-        return provider.login()
-
-    else:
-        # Act like backend.
-        backend(adapter)
-
-
-def credentials(credentials):
-    """
-    Deserializes credentials.
-
-    :param credentials:
-        Credentials serialized with :meth:`.Credentials.serialize` or :class:`.Credentials` instance.
-
-    :returns:
-        :class:`.Credentials`
-    """
-
-    return Credentials.deserialize(settings.config, credentials)
-
-
-def access(credentials, url, params=None, method='GET', headers=None, body='', max_redirects=5, content_parser=None):
-    """
-    Accesses **protected resource** on behalf of the **user**.
-
-    :param credentials:
-        The **user's** :class:`.Credentials` (serialized or normal).
-
-    :param str url:
-        The **protected resource** URL.
-
-    :param str method:
-        HTTP method of the request.
-
-    :param dict headers:
-        HTTP headers of the request.
-
-    :param str body:
-        Body of ``POST``, ``PUT`` and ``PATCH`` requests.
-
-    :param int max_redirects:
-        Maximum number of HTTP redirects to follow.
-
-    :param function content_parser:
-        A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
-
-    :returns:
-        :class:`.Response`
-    """
-
-    # Deserialize credentials.
-    credentials = Credentials.deserialize(settings.config, credentials)
-
-    # Resolve provider class.
-    ProviderClass = credentials.provider_class
-    logging.info('ACCESS HEADERS: {}'.format(headers))
-    # Access resource and return response.
-    return ProviderClass.access_with_credentials(credentials=credentials,
-                                                 url=url,
-                                                 params=params,
-                                                 method=method,
-                                                 headers=headers,
-                                                 body=body,
-                                                 max_redirects=max_redirects,
-                                                 content_parser=content_parser)
-
-
-def async_access(*args, **kwargs):
-    """
-    Same as :func:`.access` but runs asynchronously in a separate thread.
-
-    .. warning:: |async|
-
-    :returns:
-        :class:`.Future` instance representing the separate thread.
-    """
-
-    return Future(access, *args, **kwargs)
-
-
-def request_elements(credentials=None, url=None, method='GET', params=None,
-                     headers=None, body='', json_input=None, return_json=False):
-    """
-    Creates request elements for accessing **protected resource of a user**.
-    Required arguments are :data:`credentials` and :data:`url`.
-    You can pass :data:`credentials`, :data:`url`, :data:`method`, and :data:`params`
-    as a JSON object.
-
-    :param credentials:
-        The **user's** credentials (can be serialized).
-
-    :param str url:
-        The url of the protected resource.
-
-    :param str method:
-        The HTTP method of the request.
-
-    :param dict params:
-        Dictionary of request parameters.
-
-    :param dict headers:
-        Dictionary of request headers.
-
-    :param str body:
-        Body of ``POST``, ``PUT`` and ``PATCH`` requests.
-
-    :param str json_input:
-        you can pass :data:`credentials`, :data:`url`, :data:`method`, :data:`params` and :data:`headers`
-        in a JSON object. Values from arguments will be used for missing properties.
-
+        ProviderClass = credentials.provider_class
+        logging.info('ACCESS HEADERS: {}'.format(headers))
+        # Access resource and return response.
+        return ProviderClass.access_with_credentials(credentials=credentials,
+                                                     url=url,
+                                                     params=params,
+                                                     method=method,
+                                                     headers=headers,
+                                                     body=body,
+                                                     max_redirects=max_redirects,
+                                                     content_parser=content_parser)
+    
+    
+    def async_access(self, *args, **kwargs):
+        """
+        Same as :func:`.access` but runs asynchronously in a separate thread.
+    
+        .. warning:: |async|
+    
+        :returns:
+            :class:`.Future` instance representing the separate thread.
+        """
+    
+        return Future(self.access, *args, **kwargs)
+    
+    
+    def request_elements(self, credentials=None, url=None, method='GET', params=None,
+                         headers=None, body='', json_input=None, return_json=False):
+        """
+        Creates request elements for accessing **protected resource of a user**.
+        Required arguments are :data:`credentials` and :data:`url`.
+        You can pass :data:`credentials`, :data:`url`, :data:`method`, and :data:`params`
+        as a JSON object.
+    
+        :param credentials:
+            The **user's** credentials (can be serialized).
+    
+        :param str url:
+            The url of the protected resource.
+    
+        :param str method:
+            The HTTP method of the request.
+    
+        :param dict params:
+            Dictionary of request parameters.
+    
+        :param dict headers:
+            Dictionary of request headers.
+    
+        :param str body:
+            Body of ``POST``, ``PUT`` and ``PATCH`` requests.
+    
+        :param str json_input:
+            you can pass :data:`credentials`, :data:`url`, :data:`method`, :data:`params` and :data:`headers`
+            in a JSON object. Values from arguments will be used for missing properties.
+    
+            ::
+    
+                {
+                    "credentials": "###",
+                    "url": "https://example.com/api",
+                    "method": "POST",
+                    "params": {
+                        "foo": "bar"
+                    },
+                    "headers": {
+                        "baz": "bing",
+                        "Authorization": "Bearer ###"
+                    },
+                    "body": "Foo bar baz bing."
+                }
+    
+        :param bool return_json:
+            if ``True`` the function returns a json object.
+    
+            ::
+    
+                {
+                    "url": "https://example.com/api",
+                    "method": "POST",
+                    "params": {
+                        "access_token": "###",
+                        "foo": "bar"
+                    },
+                    "headers": {
+                        "baz": "bing",
+                        "Authorization": "Bearer ###"
+                    },
+                    "body": "Foo bar baz bing."
+                }
+    
+        :returns:
+            :class:`.RequestElements` or JSON string.
+        """
+    
+        # Parse values from JSON
+        if json_input:
+            parsed_input = json.loads(json_input)
+    
+            credentials = parsed_input.get('credentials', credentials)
+            url = parsed_input.get('url', url)
+            method = parsed_input.get('method', method)
+            params = parsed_input.get('params', params)
+            headers = parsed_input.get('headers', headers)
+            body = parsed_input.get('body', body)
+    
+        if not credentials and url:
+            raise RequestElementsError('To create request elements, you must provide credentials ' +\
+                                        'and URL either as keyword arguments or in the JSON object!')
+    
+        # Get the provider class
+        credentials = Credentials.deserialize(self.config, credentials)
+        ProviderClass = credentials.provider_class
+    
+        # Create request elements
+        request_elements = ProviderClass.create_request_elements(ProviderClass.PROTECTED_RESOURCE_REQUEST_TYPE,
+                                                                 credentials=credentials,
+                                                                 url=url,
+                                                                 method=method,
+                                                                 params=params,
+                                                                 headers=headers,
+                                                                 body=body)
+    
+        if return_json:
+            return request_elements.to_json()
+    
+        else:
+            return request_elements
+    
+    
+    def backend(self, adapter):
+        """
+        Converts a *request handler* to a JSON backend which you can use with :ref:`authomatic.js <js>`.
+    
+        Just call it inside a *request handler* like this:
+    
         ::
-
-            {
-                "credentials": "###",
-                "url": "https://example.com/api",
-                "method": "POST",
-                "params": {
-                    "foo": "bar"
-                },
-                "headers": {
-                    "baz": "bing",
-                    "Authorization": "Bearer ###"
-                },
-                "body": "Foo bar baz bing."
-            }
-
-    :param bool return_json:
-        if ``True`` the function returns a json object.
-
-        ::
-
+    
+            class JSONHandler(webapp2.RequestHandler):
+                def get(self):
+                    authomatic.backend(Webapp2Adapter(self))
+    
+        :param adapter:
+            The only argument is an :doc:`adapter <adapters>`.
+    
+        The *request handler* will now accept these request parameters:
+    
+        :param str type:
+            Type of the request. Either ``auto``, ``fetch`` or ``elements``. Default is ``auto``.
+    
+        :param str credentials:
+            Serialized :class:`.Credentials`.
+    
+        :param str url:
+            URL of the **protected resource** request.
+    
+        :param str method:
+            HTTP method of the **protected resource** request.
+    
+        :param str body:
+            HTTP body of the **protected resource** request.
+    
+        :param JSON params:
+            HTTP params of the **protected resource** request as a JSON object.
+    
+        :param JSON headers:
+            HTTP headers of the **protected resource** request as a JSON object.
+    
+        :param JSON json:
+            You can pass all of the aforementioned params except ``type`` in a JSON object.
+    
+            .. code-block:: javascript
+    
+                {
+                    "credentials": "######",
+                    "url": "https://example.com",
+                    "method": "POST",
+                    "params": {"foo": "bar"},
+                    "headers": {"baz": "bing"},
+                    "body": "the body of the request"
+                }
+    
+        Depending on the ``type`` param, the handler will either write
+        a JSON object with *request elements* to the response,
+        and add an ``Authomatic-Response-To: elements`` response header, ...
+    
+        .. code-block:: javascript
+    
             {
                 "url": "https://example.com/api",
                 "method": "POST",
@@ -1457,200 +1557,203 @@ def request_elements(credentials=None, url=None, method='GET', params=None,
                 "headers": {
                     "baz": "bing",
                     "Authorization": "Bearer ###"
-                },
-                "body": "Foo bar baz bing."
+                }
             }
+    
+        ... or make a fetch to the **protected resource** and forward it's response
+        content, status and headers with an additional ``Authomatic-Response-To: fetch`` header
+        to the response.
+    
+        .. warning::
+    
+            The backend will not work if you write anything to the response in the handler!
+        """
+    
+        AUTHOMATIC_HEADER = 'Authomatic-Response-To'
+    
+        # Collect request params
+        request_type = adapter.params.get('type', 'auto')
+        json_input = adapter.params.get('json')
+        credentials = adapter.params.get('credentials')
+        url = adapter.params.get('url')
+        method = adapter.params.get('method', 'GET')
+        body = adapter.params.get('body', '')
+    
+    
+        params = adapter.params.get('params')
+        params = json.loads(params) if params else {}
+    
+        headers = adapter.params.get('headers')
+        headers = json.loads(headers) if headers else {}
+    
+        ProviderClass = Credentials.deserialize(self.config, credentials).provider_class
+    
+        if request_type == 'auto':
+            # If there is a "callback" param, it's a JSONP request.
+            jsonp = params.get('callback')
+    
+            # JSONP is possible only with GET method.
+            if ProviderClass.supports_jsonp and method is 'GET':
+                request_type = 'elements'
+            else:
+                # Remove the JSONP callback
+                if params.get('callback'):
+                    params.pop('callback')
+                request_type = 'fetch'
+    
+        if request_type == 'fetch':
+            # Access protected resource
+            response = self.access(credentials, url, params, method, headers, body)
+            result = response.content
+    
+            # Forward status
+            adapter.status = str(response.status) + ' ' + str(response.reason)
+    
+            # Forward headers
+            for k, v in response.getheaders():
+                logging.info('    {}: {}'.format(k, v))
+                adapter.set_header(k, v)
+    
+        elif request_type == 'elements':
+            # Create request elements
+            if json_input:
+                result = self.request_elements(json_input=json_input, return_json=True)
+            else:
+                result = self.request_elements(credentials=credentials,
+                                          url=url,
+                                          method=method,
+                                          params=params,
+                                          headers=headers,
+                                          body=body,
+                                          return_json=True)
+    
+            adapter.set_header('Content-Type', 'application/json')
+        else:
+            result = '{"error": "Bad Request!"}'
+    
+    
+        # Add the authomatic header
+        adapter.set_header(AUTHOMATIC_HEADER, request_type)
+    
+        # Write result to response
+        adapter.write(result)
+    
 
-    :returns:
-        :class:`.RequestElements` or JSON string.
+#===============================================================================
+# Deprecated
+#===============================================================================
+
+def setup(*args, **kwargs):
     """
-
-    # Parse values from JSON
-    if json_input:
-        parsed_input = json.loads(json_input)
-
-        credentials = parsed_input.get('credentials', credentials)
-        url = parsed_input.get('url', url)
-        method = parsed_input.get('method', method)
-        params = parsed_input.get('params', params)
-        headers = parsed_input.get('headers', headers)
-        body = parsed_input.get('body', body)
-
-    if not credentials and url:
-        raise RequestElementsError('To create request elements, you must provide credentials ' +\
-                                    'and URL either as keyword arguments or in the JSON object!')
-
-    # Get the provider class
-    credentials = Credentials.deserialize(settings.config, credentials)
-    ProviderClass = credentials.provider_class
-
-    # Create request elements
-    request_elements = ProviderClass.create_request_elements(ProviderClass.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                             credentials=credentials,
-                                                             url=url,
-                                                             method=method,
-                                                             params=params,
-                                                             headers=headers,
-                                                             body=body)
-
-    if return_json:
-        return request_elements.to_json()
-
-    else:
-        return request_elements
-
-
-def backend(adapter):
-    """
-    Converts a *request handler* to a JSON backend which you can use with :ref:`authomatic.js <js>`.
-
-    Just call it inside a *request handler* like this:
-
-    ::
-
-        class JSONHandler(webapp2.RequestHandler):
-            def get(self):
-                authomatic.backend(Webapp2Adapter(self))
-
-    :param adapter:
-        The only argument is an :doc:`adapter <adapters>`.
-
-    The *request handler* will now accept these request parameters:
-
-    :param str type:
-        Type of the request. Either ``auto``, ``fetch`` or ``elements``. Default is ``auto``.
-
-    :param str credentials:
-        Serialized :class:`.Credentials`.
-
-    :param str url:
-        URL of the **protected resource** request.
-
-    :param str method:
-        HTTP method of the **protected resource** request.
-
-    :param str body:
-        HTTP body of the **protected resource** request.
-
-    :param JSON params:
-        HTTP params of the **protected resource** request as a JSON object.
-
-    :param JSON headers:
-        HTTP headers of the **protected resource** request as a JSON object.
-
-    :param JSON json:
-        You can pass all of the aforementioned params except ``type`` in a JSON object.
-
-        .. code-block:: javascript
-
-            {
-                "credentials": "######",
-                "url": "https://example.com",
-                "method": "POST",
-                "params": {"foo": "bar"},
-                "headers": {"baz": "bing"},
-                "body": "the body of the request"
-            }
-
-    Depending on the ``type`` param, the handler will either write
-    a JSON object with *request elements* to the response,
-    and add an ``Authomatic-Response-To: elements`` response header, ...
-
-    .. code-block:: javascript
-
-        {
-            "url": "https://example.com/api",
-            "method": "POST",
-            "params": {
-                "access_token": "###",
-                "foo": "bar"
-            },
-            "headers": {
-                "baz": "bing",
-                "Authorization": "Bearer ###"
-            }
-        }
-
-    ... or make a fetch to the **protected resource** and forward it's response
-    content, status and headers with an additional ``Authomatic-Response-To: fetch`` header
-    to the response.
-
+     
     .. warning::
-
-        The backend will not work if you write anything to the response in the handler!
+         
+        This function is **deprecated** and will be removed in version 0.1.0!
+        Use instance of :class:`.Authomatic` class instead.
+         
     """
-
-    AUTHOMATIC_HEADER = 'Authomatic-Response-To'
-
-    # Collect request params
-    request_type = adapter.params.get('type', 'auto')
-    json_input = adapter.params.get('json')
-    credentials = adapter.params.get('credentials')
-    url = adapter.params.get('url')
-    method = adapter.params.get('method', 'GET')
-    body = adapter.params.get('body', '')
-
-
-    params = adapter.params.get('params')
-    params = json.loads(params) if params else {}
-
-    headers = adapter.params.get('headers')
-    headers = json.loads(headers) if headers else {}
-
-    ProviderClass = Credentials.deserialize(settings.config, credentials).provider_class
-
-    if request_type == 'auto':
-        # If there is a "callback" param, it's a JSONP request.
-        jsonp = params.get('callback')
-
-        # JSONP is possible only with GET method.
-        if ProviderClass.supports_jsonp and method is 'GET':
-            request_type = 'elements'
-        else:
-            # Remove the JSONP callback
-            if params.get('callback'):
-                params.pop('callback')
-            request_type = 'fetch'
-
-    if request_type == 'fetch':
-        # Access protected resource
-        response = access(credentials, url, params, method, headers, body)
-        result = response.content
-
-        # Forward status
-        adapter.status = str(response.status) + ' ' + str(response.reason)
-
-        # Forward headers
-        for k, v in response.getheaders():
-            logging.info('    {}: {}'.format(k, v))
-            adapter.set_header(k, v)
-
-    elif request_type == 'elements':
-        # Create request elements
-        if json_input:
-            result = request_elements(json_input=json_input, return_json=True)
-        else:
-            result = request_elements(credentials=credentials,
-                                      url=url,
-                                      method=method,
-                                      params=params,
-                                      headers=headers,
-                                      body=body,
-                                      return_json=True)
-
-        adapter.set_header('Content-Type', 'application/json')
-    else:
-        result = '{"error": "Bad Request!"}'
-
-
-    # Add the authomatic header
-    adapter.set_header(AUTHOMATIC_HEADER, request_type)
-
-    # Write result to response
-    adapter.write(result)
-
-
-
+     
+    logging.warn('The authomatic.setup function is deprecated and will be removed in version 0.1.0! ' + \
+                 'Use an instance of the Authomatic class instead.')
+     
+    global global_authomatic_instance
+    global_authomatic_instance = Authomatic(*args, **kwargs)
+ 
+ 
+def login(*args, **kwargs):
+    """
+     
+    .. warning::
+         
+        This function is **deprecated** and will be removed in version 0.1.0!
+        Use the :meth:`.Authomatic.login` method instead.
+         
+    """
+     
+    logging.warn('The authomatic.login function is deprecated and will be removed in version 0.1.0! ' + \
+                 'Use the "login" method of the "Authomatic" class instead.')
+     
+    return global_authomatic_instance.login(*args, **kwargs)
+ 
+ 
+def credentials(*args, **kwargs):
+    """
+     
+    .. warning::
+         
+        This function is **deprecated** and will be removed in version 0.1.0!
+        Use the :meth:`.Authomatic.credentials` method instead.
+         
+    """
+     
+    logging.warn('The authomatic.credentials function is deprecated and will be removed in version 0.1.0! ' + \
+                 'Use the "credentials" method of the "Authomatic" class instead.')
+     
+    return global_authomatic_instance.credentials(*args, **kwargs)
+ 
+ 
+def access(*args, **kwargs):
+    """
+     
+    .. warning::
+         
+        This function is **deprecated** and will be removed in version 0.1.0!
+        Use the :meth:`.Authomatic.access` method instead.
+         
+    """
+     
+    logging.warn('The authomatic.access function is deprecated and will be removed in version 0.1.0! ' + \
+                 'Use the "access" method of the "Authomatic" class instead.')
+     
+    return global_authomatic_instance.access(*args, **kwargs)
+ 
+ 
+def async_access(*args, **kwargs):
+    """
+     
+    .. warning::
+         
+        This function is **deprecated** and will be removed in version 0.1.0!
+        Use the :meth:`.Authomatic.async_access` method instead.
+         
+    """
+     
+    logging.warn('The authomatic.async_access function is deprecated and will be removed in version 0.1.0! ' + \
+                 'Use the "async_access" method of the "Authomatic" class instead.')
+     
+    return global_authomatic_instance.async_access(*args, **kwargs)
+ 
+ 
+def request_elements(*args, **kwargs):
+    """
+     
+    .. warning::
+         
+        This function is **deprecated** and will be removed in version 0.1.0!
+        Use the :meth:`.Authomatic.request_elements` method instead.
+         
+    """
+     
+    logging.warn('The authomatic.request_elements function is deprecated and will be removed in version 0.1.0! ' + \
+                 'Use the "request_elements" method of the "Authomatic" class instead.')
+     
+    return global_authomatic_instance.request_elements(*args, **kwargs)
+ 
+ 
+def backend(*args, **kwargs):
+    """
+     
+    .. warning::
+         
+        This function is **deprecated** and will be removed in version 0.1.0!
+        Use the :meth:`.Authomatic.backend` method instead.
+         
+    """
+     
+    logging.warn('The authomatic.backend function is deprecated and will be removed in version 0.1.0! ' + \
+                 'Use the "backend" method of the "Authomatic" class instead.')
+     
+    return global_authomatic_instance.backend(*args, **kwargs)
 
 
 

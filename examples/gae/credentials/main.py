@@ -3,13 +3,13 @@
 import urllib
 
 import webapp2
-import authomatic
+from authomatic import Authomatic
 from authomatic.adapters import Webapp2Adapter
 
 from config import CONFIG
 
 # Setup Authomatic.
-authomatic.setup(config=CONFIG, secret='a-long-secret-string')
+authomatic = Authomatic(config=CONFIG, secret='a-long-secret-string')
 
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):

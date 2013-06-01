@@ -18,5 +18,4 @@ and access **his/her protected resources**.
 
 """
 
-from core import setup, login, provider_id, access, async_access, credentials, request_elements, backend
-import settings
+from core import Authomatic, setup, login, provider_id, access, async_access, credentials, request_elements, backend

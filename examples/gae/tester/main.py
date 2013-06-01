@@ -3,10 +3,16 @@ import cgi
 import logging
 
 import webapp2
-import authomatic
+from authomatic import Authomatic
 from authomatic.adapters import Webapp2Adapter
 
 from config import CONFIG
+
+
+authomatic = Authomatic(config=CONFIG, # Here goes the config.
+                        secret='dsgdfgdgj5fd5g4fmjnfggf6gnkfgn5fngh4n564d3vr54er5',
+                        report_errors=True,
+                        logging_level=logging.DEBUG)
 
 def links(handler):
     for p in CONFIG.keys():
@@ -129,11 +135,6 @@ class Home(webapp2.RequestHandler):
 
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/', Home)]
-
-authomatic.setup(config=CONFIG, # Here goes the config.
-                 secret='dsgdfgdgj5fd5g4fmjnfggf6gnkfgn5fngh4n564d3vr54er5',
-                 report_errors=True,
-                 logging_level=logging.DEBUG)
 
 app = webapp2.WSGIApplication(ROUTES, debug=True)
 

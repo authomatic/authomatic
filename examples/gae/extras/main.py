@@ -1,14 +1,14 @@
 # main.py
 
 import webapp2
-import authomatic
+from authomatic import Authomatic
 from authomatic.adapters import Webapp2Adapter
 from authomatic.extras import gae
-from config import CONFIG
 
-authomatic.setup(config=gae.ndb_config(), # Here goes the config.
-                 secret='some random secret string',
-                 report_errors=False)
+
+authomatic = Authomatic(config=gae.ndb_config(), # Here goes the config.
+                        secret='some random secret string',
+                        report_errors=False)
 
 # Create a simple request handler for the login procedure.
 class Login(webapp2.RequestHandler):

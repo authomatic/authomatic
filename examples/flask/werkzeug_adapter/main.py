@@ -5,14 +5,15 @@ This is a simple Flask app that uses Authomatic to log users in with Facebook Tw
 
 from flask import Flask, render_template, request, make_response
 from authomatic.adapters import WerkzeugAdapter
-import authomatic
+from authomatic import Authomatic
 
 from config import CONFIG
 
 app = Flask(__name__)
 
-# Authomatic needs to be set up first
-authomatic.setup(CONFIG, '123')
+# Instantiate Authomatic.
+authomatic = Authomatic(CONFIG, 'your secret string', report_errors=False)
+
 
 @app.route('/')
 def index():
@@ -21,6 +22,7 @@ def index():
     """
     
     return render_template('index.html')
+
 
 @app.route('/login/<provider_name>/', methods=['GET', 'POST'])
 def login(provider_name):
@@ -45,6 +47,7 @@ def login(provider_name):
     
     # Don't forget to return the response.
     return response
+
 
 # Run the app.
 if __name__ == '__main__':

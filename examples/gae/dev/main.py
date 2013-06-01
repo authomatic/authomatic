@@ -3,10 +3,15 @@ import sys
 
 import webapp2
 from authomatic.adapters import Webapp2Adapter
-import authomatic
+from authomatic import Authomatic
 
 import config
 
+
+authomatic = Authomatic(secret='YAhe[#{^VlX-cK/$ki:$</vu!B5rTW9xi:fbN/%i pIx@AH}0c/ke4M%|c9*H4#>',
+                        config=config.PROVIDERS,
+                        report_errors=False,
+                        debug=True)
 
 def headers(handler):
         
@@ -132,11 +137,6 @@ class Test(webapp2.RequestHandler):
 ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth', handler_method='login'),
           webapp2.Route(r'/test', Test, handler_method='any'),
           webapp2.Route(r'/', Home, handler_method='any'),]
-
-authomatic.setup(secret='YAhe[#{^VlX-cK/$ki:$</vu!B5rTW9xi:fbN/%i pIx@AH}0c/ke4M%|c9*H4#>',
-                 config=config.PROVIDERS,
-                 report_errors=False,
-                 debug=True)
 
 app = webapp2.WSGIApplication(ROUTES, debug=True)
 
