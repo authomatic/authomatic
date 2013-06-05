@@ -33,7 +33,7 @@ def login(provider_name):
     # We need response object for the WerkzeugAdapter.
     response = make_response()
     
-    # Log the user in, pass it the WerkzeugAdapter and the provider name.
+    # Log the user in, pass it the adapter and the provider name.
     result = authomatic.login(WerkzeugAdapter(request, response), provider_name)
     
     # If there is no LoginResult object, the login procedure is still pending.

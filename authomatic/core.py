@@ -1188,6 +1188,8 @@ class Authomatic(object):
                  session=None, session_save_method=None, report_errors=True, debug=False,
                  logging_level=logging.INFO, prefix='authomatic'):
         """
+        Encapsulates all the functionality of this package.
+        
         :param dict config:
             :doc:`config`
 
@@ -1247,18 +1249,18 @@ class Authomatic(object):
         for corresponding :doc:`provider </reference/providers>` and
         returns :class:`.LoginResult`.
     
-        If :data:`provider_name` is empty, acts like :func:`.backend`.
+        If :data:`provider_name` is empty, acts like :meth:`.Authomatic.backend`.
     
         .. warning::
     
-            The function redirects the **user** to the **provider** which in turn redirects
-            **him/her** back to the *request handler* where this function was called.
+            The method redirects the **user** to the **provider** which in turn redirects
+            **him/her** back to the *request handler* where it has been called.
     
         :param str provider_name:
             Name of the provider as specified in the keys of the :doc:`config`.
     
         :param callable callback:
-            If specified the function will call the callback with :class:`.LoginResult`
+            If specified the method will call the callback with :class:`.LoginResult`
             passed as argument and will return nothing.
     
         :param bool report_errors:
@@ -1374,7 +1376,7 @@ class Authomatic(object):
     
     def async_access(self, *args, **kwargs):
         """
-        Same as :func:`.access` but runs asynchronously in a separate thread.
+        Same as :meth:`.Authomatic.access` but runs asynchronously in a separate thread.
     
         .. warning:: |async|
     

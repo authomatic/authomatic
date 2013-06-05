@@ -1,5 +1,5 @@
-Credentials
------------
+Advanced |webapp2| |gae| Example
+--------------------------------
 
 In this tutorial we will create a |gae|_ |webapp2|_ application
 that will be able to log the **user** in with Facebook, Twitter and |openid|_
@@ -17,16 +17,17 @@ Create the ``main.py`` module and import what's needed.
    :language: python
    :lines: 1-9
 
-Pass the :doc:`/reference/config` to :func:`authomatic.setup` together with
-a random secret string used for session and CSRF token generation.
+Make an instance of the :class:`.Authomatic` class and pass
+the :doc:`/reference/config` together with a random secret string
+used for session and CSRF token generation to it's constructor.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
    :lines: 12
 
-Add a simple request handler which accepts ``GET`` and ``POST`` HTTP methods and
+Create a simple request handler which accepts ``GET`` and ``POST`` HTTP methods and
 receives the ``provider_name`` URL variable.
-Log the **user** in by calling the :func:`.authomatic.login` function.
+Log the **user** in by calling the :meth:`.Authomatic.login` method.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python
@@ -155,7 +156,7 @@ Their expiration date.
 
 We can refresh the :class:`.Credentials` without the **user** while they are valid.
 If they are expired we only can get new :class:`.Credentials` by repeating the *login procedure*
-with :func:`authomatic.login`.
+with :meth:`.Authomatic.login`.
 
 Inform the **user** about **his/her** :class:`.Credentials` and create links to
 *Refresh*, *Action* and *Logout* handlers, which we are going to create next.
@@ -213,11 +214,11 @@ Prepare the URL.
    :language: python
    :lines: 158, 160
 
-Access the **protected resource** of the **user** by calling the :func:`authomatic.access` function.
+Access the **protected resource** of the **user** by calling the :meth:`.Authomatic.access` method.
 You must pass it the :class:`.Credentials` (normal or serialized) and the URL.
 The URL can contain query string parameters, but
-you can also pass them to the function as a dictionary.
-The function returns a :class:`.Response` object.
+you can also pass them to the method as a dictionary.
+The method returns a :class:`.Response` object.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python

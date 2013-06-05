@@ -41,6 +41,12 @@ rst_prolog = """
 .. |webob| replace:: WebOb
 .. _webob: http://webob.org/
 
+.. |werkzeug| replace:: Werkzeug
+.. _werkzeug: http://werkzeug.pocoo.org/
+
+.. |flask| replace:: Flask
+.. _flask: http://flask.pocoo.org/
+
 .. |gae| replace:: Google App Engine
 .. _gae: https://developers.google.com/appengine/
 
@@ -87,7 +93,7 @@ rst_prolog = """
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.coverage',
               'sphinx.ext.ifconfig', 'sphinx.ext.viewcode', 'sphinx.ext.autosummary',
-              'foundation']
+              'sphinx.ext.intersphinx', 'foundation']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -185,8 +191,14 @@ html_theme_options = {
     'author_link': 'http://peterhudec.com',
     'copyright_year': '2012',
     'google_plus_id': '117034840853387702598',
-    'github_id': 'peterhudec/authomatic',
+    'github_user': 'peterhudec',
+    'github_repo': 'authomatic',
     'github_ribbon_image': 'img/github-ribbon-right.png',
+    'flattr_id': 'peterhudec',
+}
+
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/2.7', None),
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

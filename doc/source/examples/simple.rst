@@ -1,5 +1,5 @@
-Simple Example
---------------
+Simple |webapp2| |gae| Example 
+------------------------------
 
 In this tutorial we will create a simple |gae|_ |webapp2|_ application
 that will be able to log the **user** in with Facebook, Twitter and |openid|_
@@ -15,39 +15,40 @@ Create ``main.py`` file and import what's needed. We don't need much.
    :language: python
    :lines: 1-7
 
-Pass the :doc:`/reference/config` to :func:`authomatic.setup` together with
-a random secret string used for session and CSRF token generation.
+Make an instance of the :class:`.Authomatic` class and pass
+the :doc:`/reference/config` together with a random secret string
+used for session and CSRF token generation to it's constructor.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
    :lines: 10
 
-Add a simple request handler which accepts ``GET`` and ``POST`` HTTP methods and
+Create a simple request handler which accepts ``GET`` and ``POST`` HTTP methods and
 receives the ``provider_name`` URL variable.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
    :lines: 13, 17
    
-Log the **user** in by calling the :func:`.authomatic.login` function inside the handler.
+Log the **user** in by calling the :meth:`.Authomatic.login` method inside the handler.
 You must pass it an :doc:`adapter for your framework </reference/adapters>`,
 in our case the :class:`.Webapp2Adapter`
 and one of the *provider names* that you defined in the :doc:`/reference/config`,
 which we get from the URL path of the request.
 
-The function will redirect the **user** to the specified **provider**
+The method will redirect the **user** to the specified **provider**
 to prompt **him/her** for consent and redirect **him/her** back to this handler.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
    :lines: 20
 
-The *login procedure* is over when :func:`.authomatic.login` returns a :class:`.LoginResult`.
+The *login procedure* is over when :meth:`.Authomatic.login` returns a :class:`.LoginResult`.
 
 .. warning::
    
    Do not write anything to the response unless the *login procedure* is over!
-   The :func:`authomatic.login` either returns ``None``,
+   The :meth:`.Authomatic.login` either returns ``None``,
    which means that the *login procedure* si still pending,
    or a :class:`.LoginResult` which means that the *login procedure* is over.
 

@@ -17,11 +17,14 @@ Available Adapters
 ^^^^^^^^^^^^^^^^^^
 
 If you are missing an adapter for the framework of your choice, which is very likely, since
-currently there is only the :class:`.Webapp2Adapter` available,
-please consider a contribution to this package by :ref:`implementing <implement_adapters>` one.
+currently there are only the :class:`.Webapp2Adapter` and :class:`.WerkzeugAdapter` available,
+please consider a contribution to this module by :ref:`implementing <implement_adapters>` one.
 Its very easy and shouldn't take you more than a few minutes.
 
 .. autoclass:: Webapp2Adapter
+    :members:
+
+.. autoclass:: WerkzeugAdapter
     :members:
 
 .. _implement_adapters:
@@ -43,6 +46,7 @@ override the constructor.
 
 .. autoclass:: WebObBaseAdapter
     :members:
+
 """
 
 import abc
@@ -58,23 +62,10 @@ class BaseAdapter(object):
     __metaclass__ = abc.ABCMeta
 
 
-    @abc.abstractmethod
-    def write(self, value):
-        """
-        Must write specified value to response.
-
-        :param str value:
-            String to be written to response.
-
-        :returns:
-            :class:`dict`
-        """
-
-
     @abc.abstractproperty
     def params(self):
         """
-        Must return a dictionary of all request parameters of any HTTP method.
+        Must return a :class:`dict` of all request parameters of any HTTP method.
 
         :returns:
             :class:`dict`
@@ -91,6 +82,36 @@ class BaseAdapter(object):
         """
 
 
+    @abc.abstractproperty
+    def headers(self):
+        """
+        Must return the request headers as a :class:`dict`.
+
+        :returns:
+            :class:`dict`
+        """
+
+
+    @abc.abstractproperty
+    def cookies(self):
+        """
+        Must return cookies as a :class:`dict`.
+
+        :returns:
+            :class:`dict`
+        """
+
+
+    @abc.abstractmethod
+    def write(self, value):
+        """
+        Must write specified value to response.
+
+        :param str value:
+            String to be written to response.
+        """
+
+
     @abc.abstractmethod
     def set_header(self, key, value):
         """
@@ -104,24 +125,13 @@ class BaseAdapter(object):
         """
 
 
-    @abc.abstractproperty
-    def headers(self):
-        """
-        We need it to retrieve the session cookie.
-        """
-
-
-    @abc.abstractproperty
-    def cookies(self):
-        """
-        We need it to retrieve the session cookie.
-        """
-
-
     @abc.abstractmethod
-    def set_status(self):
+    def set_status(self, status):
         """
-        To set the status in JSON endpoint.
+        Must set the response status e.g. ``'302 Found'``.
+
+        :param str key:
+            The HTTP response status.
         """
 
 
@@ -209,7 +219,9 @@ class Webapp2Adapter(WebObBaseAdapter):
 
 class WerkzeugAdapter(BaseAdapter):
     """
-    Adapter for |Werkzeug|_ based frameworks.
+    Adapter for |flask|_ and other |werkzeug|_ based frameworks.
+    
+    Thanks to `Mark Steve Samson <http://marksteve.com>`_.
     """
 
     @property
@@ -229,6 +241,14 @@ class WerkzeugAdapter(BaseAdapter):
         return self.request.cookies
 
     def __init__(self, request, response):
+        """
+        :param request:
+            Instance of the |werkzeug|_ `Request <http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Request>`_ class.
+            
+        :param response:
+            Instance of the |werkzeug|_ `Response <http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Response>`_ class.
+        """
+        
         self.request = request
         self.response = response
 

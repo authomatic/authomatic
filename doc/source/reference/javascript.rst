@@ -152,7 +152,7 @@ Yo can use it to:
       .. js:attribute:: options.backend
          
          :js:data:`string` URL of your *login handler*, or the handler where you call the
-         :func:`authomatic.json_endpoint` function.
+         :meth:`.Authomatic.backend` function.
          
          .. warning::
             

@@ -4,7 +4,8 @@ Extras
 .. contents::
    :backlinks: none
 
-Currently the only extra stuff available is for |gae|_.
+.. automodule:: authomatic.extras.flask
+   :members:
 
 .. automodule:: authomatic.extras.gae
    :members:

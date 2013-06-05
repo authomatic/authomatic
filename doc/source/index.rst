@@ -14,7 +14,7 @@ Features
 
 .. include:: ../../README.rst
    :start-line: 33
-   :end-line: 72
+   :end-line: 80
 
 .. contents::
    :backlinks: none
@@ -42,22 +42,38 @@ or clone it from `GitHub <http://github.com/peterhudec/authomatic>`_.
 
 Now it's dead simple (hence the *Deadsimpleauth*). Just go through these two steps:
 
-#. Set up the library with :func:`.authomatic.setup`.
-#. Log the **user** in by calling :func:`.authomatic.login` inside a *request handler*.
+#. Make an instance of the :class:`.Authomatic`.
+#. Log the **user** in by calling the :meth:`.Authomatic.login` method inside a *request handler*.
+
+.. note::
+   
+   The interface of the library has recently been changed from:
+
+   .. code-block:: python
+
+      import authomatic
+      authomatic.setup(CONFIG, 'secret')
+
+   to more flexible:
+
+   .. code-block:: python
+
+      from authomatic import Authomatic
+      authomatic = Authomatic(CONFIG, 'secret')
+
+   The old interface will be availabe up to version **0.1.0**,
+   but you will recieve deprecation warnings in the log.
 
 If everything goes good, you will get a :class:`.User` object with information like
 :attr:`.User.name`, :attr:`.User.id` or :attr:`.User.email`.
 Moreover, if the **user** has logged in with an |oauth2|_ or |oauth1|_ provider,
 you will be able to access **his/her protected resources**.
 
-Setup the Library
------------------
+Instantiate Authomatic
+----------------------
 
-The Authomatic library must be set up before you can use it
-by calling the :func:`.authomatic.setup` function.
-
-You must pass it a :doc:`reference/config` dictionary and
-a random secret string used for session signing and CSRF token generation.
+You need to pass a :doc:`reference/config` dictionary and a random secret string
+used for session signing and CSRF token generation to the constructor of the :class:`.Authomatic` class.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
    :lines: 1-8, 10

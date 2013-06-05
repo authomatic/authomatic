@@ -354,7 +354,7 @@ select {
     float: none !important;
   }
 }
-/* Styles for screens that are at least 768px; */
+/* Styles for screens that are atleast 768px; */
 @media only screen and (min-width: 48em) {
   /* line 146, ../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_grid.scss */
   .row .large-1 {
@@ -4242,7 +4242,7 @@ form.custom .custom.disabled {
   cursor: pointer;
 }
 
-/* Styles for screens that are at least 768px; */
+/* Styles for screens that are atleast 768px; */
 @media only screen and (min-width: 48em) {
   /* line 163, ../../../../../../../../../var/lib/gems/1.8/gems/zurb-foundation-4.0.9/scss/foundation/components/_joyride.scss */
   .joyride-tip-guide {
@@ -5701,9 +5701,9 @@ div.social-buttons > ul > li {
   display: inline-block;
   list-style-type: none;
   height: 20px;
-  width: 100px;
+  width: 120px;
   line-height: 20px;
-  padding: 0em;
+  padding: 0em 0em 1em 0em;
   text-align: left;
 }
 
@@ -5717,79 +5717,77 @@ div.social-buttons > ul > li {
 }
 /* line 131, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content table td, #content table th {
-  padding-top: 0.75em !important;
-  padding-bottom: 0.75em !important;
   word-break: break-all;
 }
-/* line 137, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 135, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content table.field-list th {
   width: 8em;
 }
-/* line 140, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 138, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .section {
   margin-bottom: 2.5em;
 }
-/* line 143, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 141, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content pre, #content .highlight {
   background-color: #444444;
   color: #dddddd;
   letter-spacing: -0.1em;
   white-space: pre;
 }
-/* line 149, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 147, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .returns > th {
   width: 6.25em;
 }
-/* line 152, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 150, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .literal:not(.xref) {
   background-color: #e9e9e9;
 }
-/* line 155, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 153, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .docutils.citation {
   margin: 0em;
 }
-/* line 157, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 155, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .docutils.citation td, #content .docutils.citation th {
   display: table-cell;
 }
-/* line 160, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 158, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .admonition {
   background-color: #f2f2f2;
   border: solid 1em #e6e6e6;
   margin-bottom: 1.25em;
 }
-/* line 164, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 162, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .admonition .last {
   padding: 0em;
   margin-bottom: 0em;
 }
-/* line 168, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 166, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .admonition.note, #content .admonition.hint {
   background-color: #fff6cc;
   border: solid 1px #ffe566;
 }
-/* line 172, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 170, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .admonition.tip, #content .admonition.seealso {
   background-color: #d7fad1;
   border: solid 1px #9bf48b;
 }
-/* line 176, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 174, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #content .admonition.important, #content .admonition.attention, #content .admonition.danger, #content .admonition.error, #content .admonition.warning {
   background-color: #ffe5e9;
   border: solid 1px #ffccd3;
 }
 
-/* line 180, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 178, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #root {
   padding-bottom: 5em;
 }
 
-/* line 183, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 181, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 #footer {
   margin: 0em;
 }
 
-/* line 187, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+/* line 185, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
 .google-plus-badge img {
   vertical-align: -3px;
   border: 0px;
@@ -5798,14 +5796,16 @@ div.social-buttons > ul > li {
 }
 
 @media only screen and (min-width: 768px) {
-  /* line 194, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+  /* line 192, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
   dt, li {
     word-break: normal;
   }
 
-  /* line 197, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
+  /* line 195, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
   #github-ribbon {
     display: block;
+    position: fixed;
+    top: 0px;
   }
 
   /* line 200, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */
@@ -5840,70 +5840,70 @@ div.social-buttons > ul > li {
   background: #333333;
 }
 
-/* line 369, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 376, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 a {
   color: #5fb9f5;
 }
-/* line 371, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 378, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 a:hover {
   color: #2fa4f2;
 }
-/* line 373, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 380, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 a.headerlink {
   margin-left: 0.2em;
 }
 
-/* line 377, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 384, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 body {
   color: #4a404e;
   background-color: white;
 }
 
-/* line 382, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 389, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 h1, h2, h3, h4, h5, h6 {
   color: #4a404e;
 }
 
-/* line 386, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 393, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 table, table tr, table tr:nth-of-type(even) {
   border: none;
   background-color: transparent;
   background: none;
 }
 
-/* line 392, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 399, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #header {
   background-color: #6f6573;
   color: #faf7f4;
 }
-/* line 395, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 402, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #header h1 {
   color: #faf7f4;
 }
 
-/* line 398, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 405, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 div.social-buttons {
   background-color: #f4f0e4;
 }
 
-/* line 402, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 409, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #footer-notice {
   background-color: #4a404e;
   color: #f4f0e4;
 }
 
-/* line 406, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 413, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #navigation > ul {
   padding: 20px;
 }
 
-/* line 410, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 417, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs {
   background-color: transparent;
   padding: 0em;
   border: none;
 }
-/* line 289, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 296, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li {
   background-color: #faf7f4;
   position: relative;
@@ -5914,15 +5914,15 @@ ul.breadcrumbs li {
   color: #4a404e;
   margin-bottom: 20px;
 }
-/* line 299, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 306, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li a {
   padding: 0em;
 }
-/* line 302, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 309, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li.current a {
   color: #4a404e;
 }
-/* line 305, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 312, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:after {
   pointer-events: none;
   content: "";
@@ -5936,7 +5936,7 @@ ul.breadcrumbs li:after {
   right: 0px;
   bottom: 50%;
 }
-/* line 310, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 317, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:before {
   pointer-events: none;
   content: "";
@@ -5950,11 +5950,11 @@ ul.breadcrumbs li:before {
   right: 0px;
   top: 50%;
 }
-/* line 270, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 277, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(even) {
   background-color: #faf7f4;
 }
-/* line 272, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 279, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(even):after {
   border-color: transparent #f2eae2 transparent transparent;
   _border-left-color: lime;
@@ -5962,7 +5962,7 @@ ul.breadcrumbs li:nth-child(even):after {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 274, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 281, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(even):before {
   border-color: transparent #f2eae2 transparent transparent;
   _border-left-color: lime;
@@ -5970,11 +5970,11 @@ ul.breadcrumbs li:nth-child(even):before {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 277, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 284, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(odd) {
   background-color: #f2eae2;
 }
-/* line 279, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 286, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(odd):after {
   border-color: transparent #faf7f4 transparent transparent;
   _border-left-color: lime;
@@ -5982,7 +5982,7 @@ ul.breadcrumbs li:nth-child(odd):after {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 281, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 288, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(odd):before {
   border-color: transparent #faf7f4 transparent transparent;
   _border-left-color: lime;
@@ -5990,14 +5990,14 @@ ul.breadcrumbs li:nth-child(odd):before {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 317, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 324, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:first-child {
   background-color: #4a404e;
   border-top-left-radius: 16px;
   border-bottom-left-radius: 16px;
   padding-left: 20px;
 }
-/* line 322, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 329, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:first-child:after {
   border-color: transparent #faf7f4 transparent transparent;
   _border-left-color: lime;
@@ -6005,7 +6005,7 @@ ul.breadcrumbs li:first-child:after {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 325, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 332, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:first-child:before {
   border-color: transparent #faf7f4 transparent transparent;
   _border-left-color: lime;
@@ -6013,42 +6013,42 @@ ul.breadcrumbs li:first-child:before {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 329, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 336, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:last-child {
   border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
 }
-/* line 332, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 339, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:last-child:after {
   border: none;
 }
-/* line 334, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 341, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:last-child:before {
   border: none;
 }
-/* line 412, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 419, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li a {
   color: #5fb9f5;
 }
-/* line 414, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 421, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li a:hover {
   color: #2fa4f2;
 }
 
-/* line 420, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 427, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .highlight {
   background-color: #4a404e;
   padding: 20px;
   border-radius: 16px;
   line-height: 1em;
 }
-/* line 425, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 432, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .highlight > pre {
   padding: 0em;
   padding-bottom: 0.2em;
   background-color: transparent;
 }
-/* line 429, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 436, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .highlight .hll {
   display: block;
   border-radius: 8px;
@@ -6058,7 +6058,7 @@ ul.breadcrumbs li a:hover {
   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3);
   background-color: #574b5c;
 }
-/* line 437, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 444, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content tt.docutils.literal:not(.xref) {
   padding: 0.2em 0.5em;
   border-radius: 0.4em;
@@ -6141,6 +6141,7 @@ ul.breadcrumbs li a:hover {
   background-color: #6f6573;
   color: #f4f0e4;
   vertical-align: middle;
+  padding: 20px;
 }
 /* line 174, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .class .method > dt, #content .class .classmethod > dt, #content .class .staticmethod > dt {
@@ -6216,12 +6217,13 @@ ul.breadcrumbs li a:hover {
   background-color: #6f6573;
   color: #f4f0e4;
   vertical-align: middle;
+  padding: 20px;
 }
-/* line 453, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 460, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .class .method:last-child, #content .class .classmethod:last-child, #content .class .staticmethod:last-child {
   margin-bottom: 0em;
 }
-/* line 457, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 464, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .class .method > dt, #content .class .method > dd, #content .class .classmethod > dt, #content .class .classmethod > dd, #content .class .staticmethod > dt, #content .class .staticmethod > dd {
   background-color: transparent;
   color: #4a404e;
@@ -6229,13 +6231,13 @@ ul.breadcrumbs li a:hover {
   border-width: 2px;
   border-color: #e2d1bf;
 }
-/* line 464, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 471, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .class .method > dd, #content .class .classmethod > dd, #content .class .staticmethod > dd {
   background-color: transparent;
   border-top: none;
   margin-bottom: 0em;
 }
-/* line 469, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 476, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .class .method > dd > *:last-child, #content .class .classmethod > dd > *:last-child, #content .class .staticmethod > dd > *:last-child {
   margin-bottom: 0em;
 }
@@ -6313,16 +6315,17 @@ ul.breadcrumbs li a:hover {
   background-color: #6f6573;
   color: #f4f0e4;
   vertical-align: middle;
+  padding: 20px;
 }
-/* line 476, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 483, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content dl > dd > table.docutils.field-list {
   margin-bottom: 20px;
 }
-/* line 478, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 485, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content dl > dd > table.docutils.field-list:last-child {
   margin-bottom: 0em;
 }
-/* line 482, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 489, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic, #content .hlist, #content .genindex-jumpbox, #content .indextable {
   padding: 20px;
   border-radius: 16px;
@@ -6330,12 +6333,12 @@ ul.breadcrumbs li a:hover {
   background-color: #faf7f4;
   color: #4a404e;
 }
-/* line 484, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 491, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic td, #content .hlist td, #content .genindex-jumpbox td, #content .indextable td {
   padding-left: 20px !important;
   padding-right: 20px !important;
 }
-/* line 493, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 500, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic {
   background-color: #faf7f4;
   color: #4a404e;
@@ -6354,12 +6357,12 @@ ul.breadcrumbs li a:hover {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
 }
-/* line 500, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 507, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic > * {
   margin-left: 20px;
   margin-right: 20px;
 }
-/* line 505, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 512, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic .first {
   background-color: #4a404e;
   color: #f4f0e4;
@@ -6370,56 +6373,56 @@ ul.breadcrumbs li a:hover {
   margin: 0em;
   margin-bottom: 20px;
 }
-/* line 511, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 518, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) {
   background-color: transparent;
 }
-/* line 513, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 520, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) td, #content table.docutils:not(.citation) th {
   background-color: #faf7f4;
   color: #4a404e;
   padding: 20px;
   border: none;
 }
-/* line 519, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 526, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) tr.row-odd td {
   background-color: #f2eae2;
   color: #4a404e;
 }
-/* line 523, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 530, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) thead th {
   background-color: #4a404e;
   color: #f4f0e4;
 }
-/* line 339, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 346, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) thead th:first-child {
   border-top-left-radius: 16px;
 }
-/* line 341, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 348, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) thead th:last-child {
   border-top-right-radius: 16px;
 }
-/* line 347, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 354, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) tr:last-child td:first-child {
   border-bottom-left-radius: 16px;
 }
-/* line 349, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 356, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) tr:last-child td:last-child {
   border-bottom-right-radius: 16px;
 }
-/* line 532, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 539, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.longtable.docutils tr:first-child td:first-child {
   border-top-left-radius: 16px;
 }
-/* line 534, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 541, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.longtable.docutils tr:first-child td:last-child {
   border-top-right-radius: 16px;
 }
-/* line 538, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 545, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content div.modindex-jumpbox {
   border: none;
 }
-/* line 541, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 548, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable {
   background-color: #faf7f4;
   padding: 0em;
@@ -6428,19 +6431,19 @@ ul.breadcrumbs li a:hover {
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
 }
-/* line 360, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 367, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:last-child td:first-child {
   border-bottom-left-radius: 16px;
 }
-/* line 362, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 369, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:last-child td:last-child {
   border-bottom-right-radius: 16px;
 }
-/* line 270, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 277, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(even) {
   background-color: #f2eae2;
 }
-/* line 272, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 279, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(even):after {
   border-color: transparent transparent transparent transparent;
   _border-left-color: lime;
@@ -6448,7 +6451,7 @@ ul.breadcrumbs li a:hover {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 274, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 281, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(even):before {
   border-color: transparent transparent transparent transparent;
   _border-left-color: lime;
@@ -6456,11 +6459,11 @@ ul.breadcrumbs li a:hover {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 277, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 284, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(odd) {
   background-color: transparent;
 }
-/* line 279, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 286, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(odd):after {
   border-color: transparent #f2eae2 transparent transparent;
   _border-left-color: lime;
@@ -6468,7 +6471,7 @@ ul.breadcrumbs li a:hover {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 281, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 288, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(odd):before {
   border-color: transparent #f2eae2 transparent transparent;
   _border-left-color: lime;
@@ -6476,30 +6479,30 @@ ul.breadcrumbs li a:hover {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 551, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 558, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr.cap td {
   background-color: #4a404e;
   color: #f4f0e4;
   padding: 20px;
 }
-/* line 339, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 346, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr.cap td:first-child {
   border-top-left-radius: 16px;
 }
-/* line 341, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 348, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr.cap td:last-child {
   border-top-right-radius: 16px;
 }
-/* line 555, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 562, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr.pcap {
   display: none;
 }
-/* line 558, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 565, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.genindextable {
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
 }
-/* line 563, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 570, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content blockquote, #content .epigraph {
   background-color: transparent;
   color: inherit;
@@ -6509,50 +6512,59 @@ ul.breadcrumbs li a:hover {
   border-color: #e2d1bf;
   border-radius: 16px;
 }
-/* line 574, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 581, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation {
   border: none;
 }
-/* line 576, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 583, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation td {
   border-radius: 0px;
   padding: 20px;
   background-color: #faf7f4;
   color: #4a404e;
 }
-/* line 582, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 589, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation td.label {
   background-color: #4a404e;
   color: #f4f0e4;
   text-align: left;
 }
-/* line 588, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 595, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation:first-of-type td {
   border-top-right-radius: 16px;
 }
-/* line 590, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 597, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation:first-of-type td.label {
   border-radius: 0em;
   border-top-left-radius: 16px;
 }
-/* line 595, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 602, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation:last-of-type td {
   border-bottom-right-radius: 16px;
 }
-/* line 597, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 604, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation:last-of-type td.label {
   border-radius: 0em;
   border-bottom-left-radius: 16px;
 }
-/* line 602, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition, #content .sidebar {
+/* line 610, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.note, #content .admonition.hint {
   background-color: transparent;
   border: none;
-  padding: 0em !important;
+  padding: 0em 0em 20px 0em !important;
   border: 0em;
+  background-color: #ffef73;
+  color: #4a404e;
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  padding: 8px 16px;
+  margin: 0em;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  margin-bottom: 1.25em;
 }
-/* line 238, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition .first, #content .sidebar .first {
+/* line 244, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.note .first, #content .admonition.hint .first {
   background-color: transparent;
   color: #4a404e;
   padding: 20px;
@@ -6563,139 +6575,136 @@ ul.breadcrumbs li a:hover {
   background-color: #f2cb05;
   color: #4a404e;
 }
-/* line 245, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition .last, #content .sidebar .last {
+/* line 251, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.note > *:not(:first-child), #content .admonition.hint > *:not(:first-child) {
   background-color: transparent;
   color: #4a404e;
   padding: 20px;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  padding-top: 20px;
+  padding-bottom: 0em;
+}
+/* line 613, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.tip, #content .admonition.seealso {
+  background-color: transparent;
+  border: none;
+  padding: 0em 0em 20px 0em !important;
+  border: 0em;
+  background-color: #deffd4;
+  color: #4a404e;
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  padding: 8px 16px;
+  margin: 0em;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
-  background-color: #ffef73;
+  margin-bottom: 1.25em;
+}
+/* line 244, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.tip .first, #content .admonition.seealso .first {
+  background-color: transparent;
+  color: #4a404e;
+  padding: 20px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 8px 16px;
+  margin: 0em;
+  background-color: #72c257;
   color: #4a404e;
 }
-/* line 606, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.sidebar .first, #content .sidebar.sidebar .first {
+/* line 251, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.tip > *:not(:first-child), #content .admonition.seealso > *:not(:first-child) {
+  background-color: transparent;
+  color: #4a404e;
+  padding: 20px;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  padding-top: 20px;
+  padding-bottom: 0em;
+}
+/* line 616, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.attention, #content .admonition.danger, #content .admonition.error, #content .admonition.warning, #content .admonition.important {
+  background-color: transparent;
+  border: none;
+  padding: 0em 0em 20px 0em !important;
+  border: 0em;
+  background-color: #fc9dc3;
+  color: #4a404e;
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  padding: 8px 16px;
+  margin: 0em;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  margin-bottom: 1.25em;
+}
+/* line 244, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.attention .first, #content .admonition.danger .first, #content .admonition.error .first, #content .admonition.warning .first, #content .admonition.important .first {
+  background-color: transparent;
+  color: #4a404e;
+  padding: 20px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 8px 16px;
+  margin: 0em;
+  background-color: #e01b6a;
+  color: #4a404e;
+}
+/* line 251, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.attention > *:not(:first-child), #content .admonition.danger > *:not(:first-child), #content .admonition.error > *:not(:first-child), #content .admonition.warning > *:not(:first-child), #content .admonition.important > *:not(:first-child) {
+  background-color: transparent;
+  color: #4a404e;
+  padding: 20px;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  padding-top: 20px;
+  padding-bottom: 0em;
+}
+/* line 619, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .sidebar {
+  background-color: transparent;
+  border: none;
+  padding: 0em 0em 20px 0em !important;
+  border: 0em;
+  background-color: #faf7f4;
+  color: #4a404e;
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  padding: 8px 16px;
+  margin: 0em;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  margin-bottom: 1.25em;
+}
+/* line 244, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .sidebar .first {
+  background-color: transparent;
+  color: #4a404e;
+  padding: 20px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 8px 16px;
+  margin: 0em;
   background-color: #4a404e;
   color: #f4f0e4;
 }
-/* line 609, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.sidebar .sidebar-subtitle, #content .sidebar.sidebar .sidebar-subtitle {
+/* line 251, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .sidebar > *:not(:first-child) {
+  background-color: transparent;
+  color: #4a404e;
+  padding: 20px;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  padding-top: 20px;
+  padding-bottom: 0em;
+}
+/* line 621, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .sidebar .sidebar-subtitle {
   padding: 8px 16px;
   margin: 0em;
   background-color: #7f6e86;
   color: #f4f0e4;
-}
-/* line 614, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.sidebar .last, #content .sidebar.sidebar .last {
-  background-color: #faf7f4;
-  color: #4a404e;
-}
-/* line 618, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.note, #content .admonition.hint, #content .sidebar.note, #content .sidebar.hint {
-  background-color: transparent;
-  border: none;
-  padding: 0em !important;
-  border: 0em;
-}
-/* line 238, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.note .first, #content .admonition.hint .first, #content .sidebar.note .first, #content .sidebar.hint .first {
-  background-color: transparent;
-  color: #4a404e;
-  padding: 20px;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  padding: 8px 16px;
-  margin: 0em;
-  background-color: #f2cb05;
-  color: #4a404e;
-}
-/* line 245, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.note .last, #content .admonition.hint .last, #content .sidebar.note .last, #content .sidebar.hint .last {
-  background-color: transparent;
-  color: #4a404e;
-  padding: 20px;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
-  background-color: #ffef73;
-  color: #4a404e;
-}
-/* line 621, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.tip, #content .admonition.seealso, #content .sidebar.tip, #content .sidebar.seealso {
-  background-color: transparent;
-  border: none;
-  padding: 0em !important;
-  border: 0em;
-}
-/* line 238, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.tip .first, #content .admonition.seealso .first, #content .sidebar.tip .first, #content .sidebar.seealso .first {
-  background-color: transparent;
-  color: #4a404e;
-  padding: 20px;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  padding: 8px 16px;
-  margin: 0em;
-  background-color: #f2cb05;
-  color: #4a404e;
-}
-/* line 245, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.tip .last, #content .admonition.seealso .last, #content .sidebar.tip .last, #content .sidebar.seealso .last {
-  background-color: transparent;
-  color: #4a404e;
-  padding: 20px;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
-  background-color: #ffef73;
-  color: #4a404e;
-}
-/* line 623, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.tip .first, #content .admonition.seealso .first, #content .sidebar.tip .first, #content .sidebar.seealso .first {
-  background-color: #72c257;
-  color: #4a404e;
-}
-/* line 626, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.tip .last, #content .admonition.seealso .last, #content .sidebar.tip .last, #content .sidebar.seealso .last {
-  background-color: #deffd4;
-  color: #4a404e;
-}
-/* line 630, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.attention, #content .admonition.danger, #content .admonition.error, #content .admonition.warning, #content .admonition.important, #content .sidebar.attention, #content .sidebar.danger, #content .sidebar.error, #content .sidebar.warning, #content .sidebar.important {
-  background-color: transparent;
-  border: none;
-  padding: 0em !important;
-  border: 0em;
-}
-/* line 238, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.attention .first, #content .admonition.danger .first, #content .admonition.error .first, #content .admonition.warning .first, #content .admonition.important .first, #content .sidebar.attention .first, #content .sidebar.danger .first, #content .sidebar.error .first, #content .sidebar.warning .first, #content .sidebar.important .first {
-  background-color: transparent;
-  color: #4a404e;
-  padding: 20px;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  padding: 8px 16px;
-  margin: 0em;
-  background-color: #f2cb05;
-  color: #4a404e;
-}
-/* line 245, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.attention .last, #content .admonition.danger .last, #content .admonition.error .last, #content .admonition.warning .last, #content .admonition.important .last, #content .sidebar.attention .last, #content .sidebar.danger .last, #content .sidebar.error .last, #content .sidebar.warning .last, #content .sidebar.important .last {
-  background-color: transparent;
-  color: #4a404e;
-  padding: 20px;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
-  background-color: #ffef73;
-  color: #4a404e;
-}
-/* line 632, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.attention .first, #content .admonition.danger .first, #content .admonition.error .first, #content .admonition.warning .first, #content .admonition.important .first, #content .sidebar.attention .first, #content .sidebar.danger .first, #content .sidebar.error .first, #content .sidebar.warning .first, #content .sidebar.important .first {
-  background-color: #e01b6a;
-  color: #4a404e;
-}
-/* line 635, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
-#content .admonition.attention .last, #content .admonition.danger .last, #content .admonition.error .last, #content .admonition.warning .last, #content .admonition.important .last, #content .sidebar.attention .last, #content .sidebar.danger .last, #content .sidebar.error .last, #content .sidebar.warning .last, #content .sidebar.important .last {
-  background-color: #fc9dc3;
-  color: #4a404e;
 }
 
 /* line 54, ../sass/authomatic.sass */

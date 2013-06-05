@@ -6,3 +6,4 @@ Tutorials / Examples
    
    simple
    credentials
+   flask-simple

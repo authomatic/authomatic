@@ -2,4 +2,4 @@ Functions
 ---------
 
 .. automodule:: authomatic
-   :members: setup, login, provider_id, access, async_access, credentials, request_elements, backend
+   :members: provider_id, setup, login, access, async_access, credentials, request_elements, backend
