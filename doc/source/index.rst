@@ -42,7 +42,7 @@ or clone it from `GitHub <http://github.com/peterhudec/authomatic>`_.
 
 Now it's dead simple (hence the *Deadsimpleauth*). Just go through these two steps:
 
-#. Make an instance of the :class:`.Authomatic`.
+#. Make an instance of the :class:`.Authomatic` class.
 #. Log the **user** in by calling the :meth:`.Authomatic.login` method inside a *request handler*.
 
 .. note::
