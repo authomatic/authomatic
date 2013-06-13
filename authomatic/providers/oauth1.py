@@ -602,7 +602,7 @@ class Twitter(OAuth1):
     request_token_url = 'https://api.twitter.com/oauth/request_token'
     user_authorization_url = 'https://api.twitter.com/oauth/authorize'
     access_token_url = 'https://api.twitter.com/oauth/access_token'
-    user_info_url = 'https://api.twitter.com/1/account/verify_credentials.json'
+    user_info_url = 'https://api.twitter.com/1.1/account/verify_credentials.json'
     
     supports_jsonp = True
      
@@ -610,7 +610,7 @@ class Twitter(OAuth1):
     def _x_user_parser(user, data):
         user.username = data.get('screen_name')
         user.id = data.get('id') or data.get('user_id')
-        user.picture = 'http://api.twitter.com/1/users/profile_image?screen_name={}&size=original'.format(data.get('screen_name'))
+        user.picture = data.get('profile_image_url')
         user.locale = data.get('lang')
         user.link = data.get('url')
         return user
