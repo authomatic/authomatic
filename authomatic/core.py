@@ -390,7 +390,7 @@ class Session(object):
         """
 
         cookie = self.adapter.cookies.get(self.name)
-        return self._deserialize(cookie) or {}
+        return self._deserialize(cookie) if cookie else {}
 
 
     @property
