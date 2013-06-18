@@ -50,6 +50,7 @@ override the constructor.
 """
 
 import abc
+from authomatic.core import Response
 
 
 class BaseAdapter(object):
@@ -81,7 +82,8 @@ class BaseAdapter(object):
             :class:`str`
         """
 
-
+    
+    # TODO: Remove. Not used anywhere!
     @abc.abstractproperty
     def headers(self):
         """
@@ -133,6 +135,48 @@ class BaseAdapter(object):
         :param str key:
             The HTTP response status.
         """
+
+
+class DjangoAdapter(BaseAdapter):
+    """
+    Adapter for the |django|_ framework.
+    """
+    
+    def __init__(self, request, response):
+        """                
+        :param request:
+            An instance of the :class:`django.http.HttpRequest` class.
+            
+        :param response:
+            An instance of the :class:`django.http.HttpResponse` class.
+        """
+        self.request = request
+        self.response = response
+    
+    @property
+    def params(self):
+        return dict(self.request.REQUEST)
+    
+    @property
+    def url(self):
+        return self.request.build_absolute_uri(self.request.path)
+    
+    @property
+    def cookies(self):
+        return dict(self.request.COOKIES)
+    
+    def write(self, value):
+        self.response.write(value)
+    
+    def set_header(self, key, value):
+        self.response[key] = value
+        
+    def set_status(self, status):
+        self.response.status_code = status
+    
+    @property
+    def headers(self):
+        pass
 
 
 class WebObBaseAdapter(BaseAdapter):
