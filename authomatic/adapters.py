@@ -16,10 +16,13 @@ the Authomatic library uses **adapters** to unify these differences into a singl
 Available Adapters
 ^^^^^^^^^^^^^^^^^^
 
-If you are missing an adapter for the framework of your choice, which is very likely, since
-currently there are only the :class:`.Webapp2Adapter` and :class:`.WerkzeugAdapter` available,
-please consider a contribution to this module by :ref:`implementing <implement_adapters>` one.
+If you are missing an adapter for the framework of your choice,
+please open an `enhancement issue <https://github.com/peterhudec/authomatic/issues>`_
+or consider a contribution to this module by :ref:`implementing <implement_adapters>` one by yourself.
 Its very easy and shouldn't take you more than a few minutes.
+
+.. autoclass:: DjangoAdapter
+    :members:
 
 .. autoclass:: Webapp2Adapter
     :members:
