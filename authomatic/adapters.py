@@ -7,7 +7,7 @@ Adapters
    :backlinks: none
 
 The :func:`authomatic.login` function needs access to functionality like
-getting the **URL** of the handler where it is being called, getting the **request params**, **headers** and **cookies** and
+getting the **URL** of the handler where it is being called, getting the **request params** and **cookies** and
 **writing the body**, **headers** and **status** to the response.
 
 Since implementation of these features varies across Python web frameworks,
@@ -38,11 +38,10 @@ Implementing an Adapter
 Implementing an adapter for a Python web framework is pretty easy.
 
 Do it by subclassing the :class:`.BaseAdapter` abstract class.
-There are only **seven** members that you need to implement.
+There are only **six** members that you need to implement.
 
-Moreover if your framework is based on the |webob|_ library
-you can subclass the :class:`.WebObBaseAdapter` and you only need to
-override the constructor.
+Moreover if your framework is based on the |webob|_ or |werkzeug|_ package
+you can subclass the :class:`.WebObBaseAdapter` or :class:`.WerkzeugAdapter` respectively.
 
 .. autoclass:: BaseAdapter
     :members:
@@ -83,17 +82,6 @@ class BaseAdapter(object):
 
         :returns:
             :class:`str`
-        """
-
-    
-    # TODO: Remove. Not used anywhere!
-    @abc.abstractproperty
-    def headers(self):
-        """
-        Must return the request headers as a :class:`dict`.
-
-        :returns:
-            :class:`dict`
         """
 
 
@@ -176,10 +164,6 @@ class DjangoAdapter(BaseAdapter):
         
     def set_status(self, status):
         self.response.status_code = status
-    
-    @property
-    def headers(self):
-        pass
 
 
 class WebObBaseAdapter(BaseAdapter):
@@ -217,11 +201,6 @@ class WebObBaseAdapter(BaseAdapter):
     @property
     def params(self):
         return dict(self.request.params)
-
-
-    @property
-    def headers(self):
-        return dict(self.request.headers)
 
 
     @property
@@ -278,10 +257,6 @@ class WerkzeugAdapter(BaseAdapter):
     @property
     def url(self):
         return self.request.base_url
-
-    @property
-    def headers(self):
-        return self.request.headers
 
     @property
     def cookies(self):
