@@ -38,6 +38,9 @@ print os.path.abspath('_themes/foundation-sphinx-theme')
 
 rst_prolog = """
 
+.. |django| replace:: Django
+.. _django: http://djangoproject.org/
+
 .. |webob| replace:: WebOb
 .. _webob: http://webob.org/
 
@@ -199,6 +202,9 @@ html_theme_options = {
 
 intersphinx_mapping = {
     'python': ('http://docs.python.org/2.7', None),
+    'django': ('http://docs.djangoproject.com/en/dev/', 'http://docs.djangoproject.com/en/dev/_objects/'),
+    'webapp2': ('http://webapp-improved.appspot.com/', None),
+    'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

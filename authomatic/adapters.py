@@ -27,6 +27,9 @@ Its very easy and shouldn't take you more than a few minutes.
 .. autoclass:: Webapp2Adapter
     :members:
 
+.. autoclass:: WebObAdapter
+    :members:
+
 .. autoclass:: WerkzeugAdapter
     :members:
 
@@ -41,12 +44,9 @@ Do it by subclassing the :class:`.BaseAdapter` abstract class.
 There are only **six** members that you need to implement.
 
 Moreover if your framework is based on the |webob|_ or |werkzeug|_ package
-you can subclass the :class:`.WebObBaseAdapter` or :class:`.WerkzeugAdapter` respectively.
+you can subclass the :class:`.WebObAdapter` or :class:`.WerkzeugAdapter` respectively.
 
 .. autoclass:: BaseAdapter
-    :members:
-
-.. autoclass:: WebObBaseAdapter
     :members:
 
 """
@@ -123,7 +123,7 @@ class BaseAdapter(object):
         """
         Must set the response status e.g. ``'302 Found'``.
 
-        :param str key:
+        :param str status:
             The HTTP response status.
         """
 
@@ -219,12 +219,14 @@ class WebObAdapter(BaseAdapter):
 class Webapp2Adapter(WebObAdapter):
     """
     Adapter for the |webapp2|_ framework.
+    
+    Inherits from the :class:`.WebObAdapter`.
     """
 
     def __init__(self, handler):
         """
         :param handler:
-            A |webapp2|_ :class:`RequestHandler` instance.
+            A :class:`webapp2.RequestHandler` instance.
         """
         self.request = handler.request
         self.response = handler.response
@@ -252,10 +254,10 @@ class WerkzeugAdapter(BaseAdapter):
     def __init__(self, request, response):
         """
         :param request:
-            Instance of the |werkzeug|_ `Request <http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Request>`_ class.
+            Instance of the :class:`werkzeug.wrappers.Request` class.
             
         :param response:
-            Instance of the |werkzeug|_ `Response <http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Response>`_ class.
+            Instance of the :class:`werkzeug.wrappers.Response` class.
         """
         
         self.request = request
