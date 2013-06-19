@@ -166,28 +166,20 @@ class DjangoAdapter(BaseAdapter):
         self.response.status_code = status
 
 
-class WebObBaseAdapter(BaseAdapter):
-    """
-    Abstract base class for adapters for |webob|_ based frameworks.
-
-    If you use this base class you only need to set the
-    :attr:`.BaseAdapter.request` to the |webob|_ :class:`Request` and
-    :attr:`.BaseAdapter.response` to the |webob|_ :class:`Response`
-    in the constructor.
-    """
-
-    @abc.abstractproperty
-    def request(self):
+class WebObAdapter(BaseAdapter):
+    """Adapter for the |webob|_ package."""
+    
+    def __init__(self, request, response):
         """
-        Must be a |webob|_ :class:`Request`.
+        :param request:
+            A |webob|_ :class:`Request` instance.
+            
+        :param response:
+            A |webob|_ :class:`Response` instance.
         """
-
-
-    @abc.abstractproperty
-    def response(self):
-        """
-       Must be a |webob|_ :class:`Response`.
-        """
+        self.request = request
+        self.response = response
+        
 
     #===========================================================================
     # Request
@@ -224,21 +216,16 @@ class WebObBaseAdapter(BaseAdapter):
         self.response.status = status
 
 
-class Webapp2Adapter(WebObBaseAdapter):
+class Webapp2Adapter(WebObAdapter):
     """
     Adapter for the |webapp2|_ framework.
     """
 
-    request = None
-    response = None
-
     def __init__(self, handler):
         """
         :param handler:
-
             A |webapp2|_ :class:`RequestHandler` instance.
         """
-
         self.request = handler.request
         self.response = handler.response
 
