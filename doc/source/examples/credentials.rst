@@ -7,11 +7,24 @@ Advanced |webapp2| |gae| Example
    where users can log in with Facebook, Twitter and OpenID and post statuses.
 
 In this tutorial we will create a |gae|_ |webapp2|_ application
-that will be able to log the **user** in with Facebook, Twitter and |openid|_
-and we will use the **user's** :class:`.Credentials` to
+that will be able to log **users** in with Facebook, Twitter and |openid|_
+and we will use the :class:`.Credentials` of an **authenticated user** to
 post tweets and Facebook statuses on the **user's** behalf.
 
-First create the :doc:`/reference/config` dictionary.
+You can download all the source files we are about to create
+`here <https://github.com/peterhudec/authomatic/tree/master/examples/gae/credentials>`_.
+
+First create the :doc:`/reference/config` dictionary where you set up all the providers you want to use.
+Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
+`here <https://developers.facebook.com/apps>`_ for Facebook and
+`here <https://dev.twitter.com/apps>`_ for Twitter.
+
+.. note::
+   
+   Facebook and other |oauth2| providers require a **redirect URI**
+   which should be the URL of the *login request handler*
+   which we will create in this tutorial and whose walue in our case will be
+   ``http://[hostname]:[port]/login/fb`` for Facebook.
 
 .. literalinclude:: ../../../examples/gae/credentials/config-template.py
    :language: python
@@ -277,7 +290,14 @@ Don't forget to create the ``app.yaml`` file.
 .. literalinclude:: ../../../examples/gae/credentials/app.yaml
    :language: yaml
 
-And here is the complete app:
+That's it. Now just run the application.
+
+.. code-block:: bash
+   
+   $ python dev_appserver.py [path to the root folder of this app]
+
+And here is the complete app. Remember that you can download all the files we just created from
+`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/gae/credentials>`_.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python

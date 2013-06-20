@@ -10,7 +10,8 @@ In this tutorial we will create a simple |django|_ application
 that will be able to log **users** in with Facebook, Twitter and |openid|_
 and retrieve their 5 most recent tweets/statuses.
 
-You can download all the source files we are about to create from `GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/django>`_.
+You can download all the source files we are about to create
+`here <https://github.com/peterhudec/authomatic/tree/master/examples/django>`_.
 
 First create a new |django|_ project named *example*.
 
@@ -26,8 +27,8 @@ Inside the newly created *example* project create a new application named *simpl
    $ python manage.py startapp simple
    $ cd simple
 
-Open the the ``example/simple/urls.py`` module and map the ``/`` root url to the ``home`` view
-and the ``/login/[provider_name]`` to the ``login`` view.
+Open the the ``example/simple/urls.py`` module and map the ``/`` root URL to the ``home`` view
+and the ``/login/[provider_name]`` URL to the ``login`` view.
 We will create the views later.
 
 .. literalinclude:: ../../../examples/django/example/simple/urls.py
@@ -58,7 +59,7 @@ Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
 .. note::
    
    Facebook and other |oauth2| providers require a **redirect URI**
-   which should be the URL of the *login request handler*
+   which should be the URL of the *login view*
    which we will create in this tutorial and whose walue in our case will be
    ``http://[hostname]/simple/login/fb`` for Facebook.
 
@@ -79,27 +80,27 @@ used for session and CSRF token generation to it's constructor.
    :language: python
    :lines: 9
 
-Create the *home* request handler with an OpenID form and links to the *login handler*
+Create the *home* view with an OpenID form and links to the *login* view
 which we are going to create next.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
    :language: python
    :lines: 11, 13-20
 
-Create the *login handler* which should recieve the ``provider_name`` URL variable.
-Inside the handler instantiate the :class:`django.http.HttpResponse` class.
+Create the *login* view which should recieve the ``provider_name`` URL variable.
+Inside the view instantiate the :class:`django.http.HttpResponse` class.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
    :language: python
    :lines: 22, 24
    
-Now just Log the **user** in by calling the :meth:`.Authomatic.login` method inside the *login* handler.
+Now just Log the **user** in by calling the :meth:`.Authomatic.login` method inside the *login* view.
 You must pass it the :class:`.DjangoAdapter`
 and the ``provider_name`` URL variable.
 The :class:`.DjangoAdapter` needs instances of :class:`django.http.HttpRequest`
 and :class:`django.http.HttpResponse`.
 The method will redirect the **user** to the specified **provider**
-to prompt **him/her** for consent and redirect **him/her** back to this handler.
+to prompt **him/her** for consent and redirect **him/her** back to this view.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
    :language: python
@@ -187,7 +188,7 @@ Run the app and navigate to ``http://[hostname]/simple`` in your browser.
    $ python manage.py runserver
 
 And here is the complete ``example/simple/views.py`` module.
-Remember that you can download all the files from
+Remember that you can download all the files we just created from
 `GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/django>`_.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py

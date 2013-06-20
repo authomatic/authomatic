@@ -7,14 +7,27 @@ Simple |webapp2| |gae| Example
    in with Facebook, Twitter and OpenID and read their recent statuses.
 
 In this tutorial we will create a simple |gae|_ |webapp2|_ application
-that will be able to log the **user** in with Facebook, Twitter and |openid|_
-and retrieve the **user's** 5 most recent tweets/statuses.
+that will be able to log **users** in with Facebook, Twitter and |openid|_
+and retrieve their 5 most recent tweets/statuses.
 
-First create the :doc:`/reference/config` dictionary:
+You can download all the source files we are about to create
+`here <https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple>`_.
+
+First create the :doc:`/reference/config` dictionary where you set up all the providers you want to use.
+Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
+`here <https://developers.facebook.com/apps>`_ for Facebook and
+`here <https://dev.twitter.com/apps>`_ for Twitter.
+
+.. note::
+   
+   Facebook and other |oauth2| providers require a **redirect URI**
+   which should be the URL of the *login request handler*
+   which we will create in this tutorial and whose walue in our case will be
+   ``http://[hostname]:[port]/login/fb`` for Facebook.
 
 .. literalinclude:: ../../../examples/gae/simple/config-template.py
 
-Create ``main.py`` file and import what's needed. We don't need much.
+Create ``main.py`` file and import what's needed.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
@@ -157,6 +170,13 @@ Don't forget to set up the ``app.yaml`` file.
 .. literalinclude:: ../../../examples/gae/simple/app.yaml
    :language: yaml
 
-And here is the complete app:
+That's it. Now just run the application.
+
+.. code-block:: bash
+   
+   $ python dev_appserver.py [path to the root folder of this app]
+
+And here is the complete app. Remember that you can download all the files we just created from
+`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple>`_.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
