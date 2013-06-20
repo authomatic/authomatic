@@ -1,3 +1,4 @@
+# example/example/settings.py
 # Django settings for example project.
 
 DEBUG = True

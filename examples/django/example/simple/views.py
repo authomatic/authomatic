@@ -1,12 +1,14 @@
+# example/simple/views.py
+
 from django.http import HttpResponse
 from authomatic import Authomatic
 from authomatic.adapters import DjangoAdapter
 
 from config import CONFIG
 
-authomatic = Authomatic(CONFIG, 'abcdef', report_errors=None)
+authomatic = Authomatic(CONFIG, 'a super secret random string')
 
-def index(request):
+def home(request):
     # Create links and OpenID form to the Login handler.
     return HttpResponse('''
         Login with <a href="login/fb">Facebook</a>.<br />
@@ -24,7 +26,7 @@ def login(request, provider_name):
     # Start the login procedure.
     result = authomatic.login(DjangoAdapter(request, response), provider_name)
      
-    # If there is no result, the login procedure is still pendin.
+    # If there is no result, the login procedure is still pending.
     # Don't write anything to the response if there is no result!
     if result:
         # If there is result, the login procedure is over and we can write to response.
