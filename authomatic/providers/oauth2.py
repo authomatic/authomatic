@@ -687,7 +687,7 @@ class Google(OAuth2):
     
     user_authorization_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
-    user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
+    user_info_url = 'https://www.googleapis.com/oauth2/v3/userinfo'
     
     user_info_scope = ['https://www.googleapis.com/auth/userinfo.profile',
                        'https://www.googleapis.com/auth/userinfo.email']
@@ -707,9 +707,15 @@ class Google(OAuth2):
     
     @staticmethod
     def _x_user_parser(user, data):
+        user.id = data.get('sub') or data.get('id')
         user.name = data.get('name')
         user.first_name = data.get('given_name')
         user.last_name = data.get('family_name')
+        user.link = data.get('profile')
+        try:
+            user.birth_date = datetime.datetime.strptime(data.get('birthdate'), "%Y-%m-%d")
+        except:
+            user.birth_date = data.get('birthdate')
         return user
     
     
