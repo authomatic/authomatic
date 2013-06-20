@@ -38,6 +38,7 @@ Features
 *	The |pyopenid|_ library is the only **optional** dependency.
 *	CSRF protection.
 *	**Framework agnostic** thanks to adapters.
+	Out of the box support for **Django**, **Flask** and **Webapp2**. 
 *	Ready to accommodate future **authorization/authentication** protocols.
 *	Makes calls to provider APIs a breeze.
 *	Supports asynchronous requests.

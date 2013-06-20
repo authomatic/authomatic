@@ -1,6 +1,11 @@
 Advanced |webapp2| |gae| Example
 --------------------------------
 
+.. seo-description::
+   
+   An advanced tutorial where we create a Google App Engine app
+   where users can log in with Facebook, Twitter and OpenID and post statuses.
+
 In this tutorial we will create a |gae|_ |webapp2|_ application
 that will be able to log the **user** in with Facebook, Twitter and |openid|_
 and we will use the **user's** :class:`.Credentials` to

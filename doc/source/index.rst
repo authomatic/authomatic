@@ -13,7 +13,7 @@ Features
 ========
 
 .. include:: ../../README.rst
-   :start-line: 33
+   :start-line: 35
    :end-line: 80
 
 .. contents::

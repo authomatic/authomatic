@@ -1,6 +1,10 @@
 Classes
 -------
 
+.. seo-description::
+
+	Reference of available classes.
+
 .. autosummary::
 	:nosignatures:
 	

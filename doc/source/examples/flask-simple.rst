@@ -1,6 +1,11 @@
 Simple |flask| Example 
 ----------------------
 
+.. seo-description::
+   
+   A simple tutorial where we create a Flask app which can can log users
+   in with Facebook, Twitter and OpenID and read their recent statuses.
+
 In this tutorial we will create a simple |flask|_ application
 which will use **Authomatic** with :class:`.WerkzeugAdapter`
 to log **users** in with Facebook, Twitter and |openid|_
@@ -33,7 +38,8 @@ provider which we have configured in the :doc:`/reference/config`.
 Now just Log the **user** in by calling the :meth:`.Authomatic.login` method inside the *login* handler.
 You must pass it the :class:`.WerkzeugAdapter`
 and the ``provider_name`` URL variable.
-The :class:`.WerkzeugAdapter` needs |flask|_ ``request`` and ``response`` objects.
+The :class:`.WerkzeugAdapter` needs instances of :class:`werkzeug.wrappers.Request`
+and :class:`werkzeug.wrappers.Response` classes.
 The handler must return the ``response`` so we assign it to a variable.
 
 .. literalinclude:: ../../../examples/flask/werkzeug_adapter/main.py

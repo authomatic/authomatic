@@ -1,6 +1,12 @@
 Providers
 ---------
 
+.. seo-description::
+  
+  There are 10 OAuth 1.0a providers and 16 OAuth 2.0 providers available out of the box.
+  You can also use the OpenID and GAEOpenID providers.
+
+
 .. contents::
    :backlinks: none
 
