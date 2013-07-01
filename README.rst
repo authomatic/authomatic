@@ -73,6 +73,10 @@ http://authomatic-example.appspot.com which makes use of most of the features.
 Contribute
 ==========
 
+.. image:: http://badge.waffle.io/peterhudec/authomatic.png
+   :target: http://waffle.io/peterhudec/authomatic
+   :alt: Stories in Ready
+
 Contributions of any kind are very welcome.
 The project is hosted on `GitHub <https://github.com/peterhudec/authomatic>`_.
 If you find this library useful and are using it in your projects,
