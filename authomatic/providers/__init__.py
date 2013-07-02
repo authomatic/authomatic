@@ -154,10 +154,6 @@ class BaseProvider(object):
         self.popup = self._kwarg(kwargs, 'popup')
     
     
-    ###############################################
-    # From Middleware
-    ###############################################
-    
     @property
     def url(self):
         return self.adapter.url
