@@ -755,7 +755,7 @@ class Yahoo(OAuth1):
     request_token_url = 'https://api.login.yahoo.com/oauth/v2/get_request_token'
     user_authorization_url = 'https://api.login.yahoo.com/oauth/v2/request_auth'
     access_token_url = 'https://api.login.yahoo.com/oauth/v2/get_token'
-    user_info_url = 'http://query.yahooapis.com/v1/yql?q=select%20*%20from%20social.profile%20where%20guid%3Dme&format=json'
+    user_info_url = 'http://query.yahooapis.com/v1/yql?q=select%20*%20from%20social.profile%20where%20guid%3Dme%3B&format=json'
     
     same_origin = False
     supports_jsonp = True
@@ -769,6 +769,8 @@ class Yahoo(OAuth1):
         user.gender = _user.get('gender')
         user.nickname = _user.get('nickname')
         user.link = _user.get('profileUrl')
+        
+        user.email = _user.get('emails', {}).get('handle')
         
         user.picture = _user.get('image', {}).get('imageUrl')
         
