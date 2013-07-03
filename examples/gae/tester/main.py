@@ -126,9 +126,7 @@ class Login(webapp2.RequestHandler):
 
 class Home(webapp2.RequestHandler):
     def get(self):
-        
         self.response.write('<h2>Number of providers: {}</h2>'.format(len(CONFIG)))
-        
         links(self)
         
 
