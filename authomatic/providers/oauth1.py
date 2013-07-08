@@ -770,7 +770,13 @@ class Yahoo(OAuth1):
         user.nickname = _user.get('nickname')
         user.link = _user.get('profileUrl')
         
-        user.email = _user.get('emails', {}).get('handle')
+        emails = _user.get('emails')
+        if isinstance(emails, list):
+            for email in emails:
+                if 'primary' in email.keys():
+                    user.email = email.get('handle')
+        elif isinstance(emails, dict):
+            user.email = emails.get('handle')
         
         user.picture = _user.get('image', {}).get('imageUrl')
         
