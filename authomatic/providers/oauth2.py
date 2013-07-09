@@ -652,6 +652,27 @@ class GitHub(OAuth2):
     * Dashboard: https://github.com/settings/applications/
     * Docs: http://developer.github.com/v3/#authentication
     * API reference: http://developer.github.com/v3/
+    
+    .. note::
+        
+        GitHub API `documentation <http://developer.github.com/v3/#user-agent-required>`_ sais:
+        
+            all API requests MUST include a valid ``User-Agent`` header.
+        
+        You can apply a default ``User-Agent`` header for all API calls in the config like this:
+        
+        .. code-block:: python
+            :emphasize-lines: 6
+        
+            CONFIG = {
+                'github': {
+                    'class_': oauth2.GitHub,
+                    'consumer_key': '#####',
+                    'consumer_secret': '#####',
+                    'access_headers': {'User-Agent': 'Awesome-Octocat-App'},
+                }
+            }
+    
     """
     
     user_authorization_url = 'https://github.com/login/oauth/authorize'

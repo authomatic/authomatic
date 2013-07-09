@@ -1364,14 +1364,18 @@ class Authomatic(object):
         ProviderClass = credentials.provider_class
         logging.info('ACCESS HEADERS: {}'.format(headers))
         # Access resource and return response.
-        return ProviderClass.access_with_credentials(credentials=credentials,
-                                                     url=url,
-                                                     params=params,
-                                                     method=method,
-                                                     headers=headers,
-                                                     body=body,
-                                                     max_redirects=max_redirects,
-                                                     content_parser=content_parser)
+        
+        provider_settings = self.config.get(credentials.provider_name)
+        provider = ProviderClass(provider_settings)
+        provider.credentials = credentials
+        
+        return provider.access(url=url,
+                               params=params,
+                               method=method,
+                               headers=headers,
+                               body=body,
+                               max_redirects=max_redirects,
+                               content_parser=content_parser)
     
     
     def async_access(self, *args, **kwargs):
