@@ -686,7 +686,14 @@ class GitHub(OAuth2):
         user.username = data.get('login')
         user.picture = data.get('avatar_url')
         user.link = data.get('html_url')
-        user.city, user.country = data.get('location', ', ').split(', ')
+        
+        user.city = data.get('location', '')
+        if ',' in user.city:
+            location = user.city.split(',')
+            user.city = location[0].strip()
+            if len(location) > 1:
+                user.country = location[1].strip()
+            
         return user
     
     @classmethod
