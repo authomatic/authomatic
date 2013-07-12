@@ -101,11 +101,11 @@ The **config** must have following structure:
        'gaeoi': {
             'class_': gaeopenid.GAEOpenID, # Google App Engine based OpenID provider.
        },             
-       'google_oi': {
+       'yahoo_oi': {
             'class_': openid.Yahoo, # OpenID provider with predefined identifier 'https://me.yahoo.com'.
             'sreg': ['email'] # This overrides the "sreg" defined in "__defaults__".
        },             
-       'yahoo_oi': {
+       'google_oi': {
             'class_': openid.Google, # OpenID provider with predefined identifier 'https://www.google.com/accounts/o8/id'.
        }
    }
