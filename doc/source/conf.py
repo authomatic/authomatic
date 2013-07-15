@@ -41,6 +41,9 @@ rst_prolog = """
 .. |django| replace:: Django
 .. _django: http://djangoproject.org/
 
+.. |pyramid| replace:: Pyramid
+.. _pyramid: http://www.pylonsproject.org/
+
 .. |webob| replace:: WebOb
 .. _webob: http://webob.org/
 
@@ -205,6 +208,7 @@ intersphinx_mapping = {
     'django': ('http://docs.djangoproject.com/en/dev/', 'http://docs.djangoproject.com/en/dev/_objects/'),
     'webapp2': ('http://webapp-improved.appspot.com/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
+    'pyramid': ('http://docs.pylonsproject.org/en/latest/', None),
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

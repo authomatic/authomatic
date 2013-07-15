@@ -187,6 +187,8 @@ Run the app and navigate to ``http://[hostname]/simple`` in your browser.
    
    $ python manage.py runserver
 
+.. include:: twitter-localhost.rst
+
 And here is the complete ``example/simple/views.py`` module.
 Remember that you can download all the files we just created from
 `GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/django>`_.

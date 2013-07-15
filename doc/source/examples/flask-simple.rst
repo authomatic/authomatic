@@ -184,6 +184,8 @@ That's it. Now just run the application.
    
    $ python main.py
 
+.. include:: twitter-localhost.rst
+
 Here is the complete ``login.html`` template.
 Remember that you can download all the files we just created from
 `GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/flask/werkzeug_adapter>`_.

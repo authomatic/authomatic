@@ -12,23 +12,15 @@ from config import CONFIG
 authomatic = Authomatic(config=CONFIG, secret='some random secret string')
 
 
-def home(request):
-    return Response('''
-        Login with <a href="login/fb">Facebook</a>.<br />
-        Login with <a href="login/tw">Twitter</a>.<br />
-        <form action="login/oi">
-            <input type="text" name="id" value="me.yahoo.com" />
-            <input type="submit" value="Authenticate With OpenID">
-        </form>
-    ''')
-
-
 def login(request):
     
+    # We will need the response to pass it to the WebObAdapter.
     response = Response()
+    
+    # Get the internal provider name URL variable.
     provider_name = request.matchdict.get('provider_name')
     
-    # It all begins with login.
+    # Start the login procedure.
     result = authomatic.login(WebObAdapter(request, response), provider_name)
     
     # Do not write anything to the response if there is no result!
@@ -38,7 +30,7 @@ def login(request):
         
         if result.error:
             # Login procedure finished with an error.
-            response.write('<h2>Damn that error: {}</h2>'.format(result.error.message))
+            response.write(u'<h2>Damn that error: {}</h2>'.format(result.error.message))
         
         elif result.user:
             # Hooray, we have the user!
@@ -49,9 +41,9 @@ def login(request):
                 result.user.update()
             
             # Welcome the user.
-            response.write('<h1>Hi {}</h1>'.format(result.user.name))
-            response.write('<h2>Your id is: {}</h2>'.format(result.user.id))
-            response.write('<h2>Your email is: {}</h2>'.format(result.user.email))
+            response.write(u'<h1>Hi {}</h1>'.format(result.user.name))
+            response.write(u'<h2>Your id is: {}</h2>'.format(result.user.id))
+            response.write(u'<h2>Your email is: {}</h2>'.format(result.user.email))
             
             # Seems like we're done, but there's more we can do...
             
@@ -76,7 +68,7 @@ def login(request):
                         error = access_response.data.get('error')
                         
                         if error:
-                            response.write('Damn that error: {}!'.format(error))
+                            response.write(u'Damn that error: {}!'.format(error))
                         elif statuses:
                             response.write('Your 5 most recent statuses:<br />')
                             for message in statuses:
@@ -84,11 +76,11 @@ def login(request):
                                 text = message.get('message')
                                 date = message.get('created_time')
                                 
-                                response.write('<h3>{}</h3>'.format(text))
-                                response.write('Posted on: {}'.format(date))
+                                response.write(u'<h3>{}</h3>'.format(text))
+                                response.write(u'Posted on: {}'.format(date))
                     else:
                         response.write('Damn that unknown error!<br />')
-                        response.write('Status: {}'.format(response.status))
+                        response.write(u'Status: {}'.format(response.status))
                     
                 if result.provider.name == 'tw':
                     response.write('Your are logged in with Twitter.<br />')
@@ -108,17 +100,29 @@ def login(request):
                                 text = tweet.get('text')
                                 date = tweet.get('created_at')
                                 
-                                response.write('<h3>{}</h3>'.format(text.replace(u'\u2026', '...')))
-                                response.write('Tweeted on: {}'.format(date))
+                                response.write(u'<h3>{}</h3>'.format(text.replace(u'\u2026', '...')))
+                                response.write(u'Tweeted on: {}'.format(date))
                                 
                         elif access_response.data.get('errors'):
-                            response.write('Damn that error: {}!'.\
+                            response.write(u'Damn that error: {}!'.\
                                                 format(response.data.get('errors')))
                     else:
                         response.write('Damn that unknown error!<br />')
-                        response.write('Status: {}'.format(response.status))
-
+                        response.write(u'Status: {}'.format(response.status))
+    
+    # It won't work if you don't return the response
     return response
+
+
+def home(request):
+    return Response('''
+        Login with <a href="login/fb">Facebook</a>.<br />
+        Login with <a href="login/tw">Twitter</a>.<br />
+        <form action="login/oi">
+            <input type="text" name="id" value="me.yahoo.com" />
+            <input type="submit" value="Authenticate With OpenID">
+        </form>
+    ''')
 
 
 if __name__ == '__main__':

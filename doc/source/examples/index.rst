@@ -6,5 +6,6 @@ Tutorials / Examples
    
    django-simple
    flask-simple
+   pyramid-simple
    simple
    credentials

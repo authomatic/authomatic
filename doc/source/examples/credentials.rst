@@ -296,6 +296,8 @@ That's it. Now just run the application.
    
    $ python dev_appserver.py [path to the root folder of this app]
 
+.. include:: twitter-localhost.rst
+
 And here is the complete app. Remember that you can download all the files we just created from
 `GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/gae/credentials>`_.
 

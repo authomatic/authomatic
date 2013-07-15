@@ -5840,70 +5840,70 @@ div.social-buttons > ul > li {
   background: #333333;
 }
 
-/* line 376, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 383, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 a {
   color: #5fb9f5;
 }
-/* line 378, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 385, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 a:hover {
   color: #2fa4f2;
 }
-/* line 380, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 387, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 a.headerlink {
   margin-left: 0.2em;
 }
 
-/* line 384, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 391, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 body {
   color: #4a404e;
   background-color: white;
 }
 
-/* line 389, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 396, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 h1, h2, h3, h4, h5, h6 {
   color: #4a404e;
 }
 
-/* line 393, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 400, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 table, table tr, table tr:nth-of-type(even) {
   border: none;
   background-color: transparent;
   background: none;
 }
 
-/* line 399, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 406, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #header {
   background-color: #6f6573;
   color: #faf7f4;
 }
-/* line 402, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 409, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #header h1 {
   color: #faf7f4;
 }
 
-/* line 405, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 412, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 div.social-buttons {
   background-color: #f4f0e4;
 }
 
-/* line 409, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 416, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #footer-notice {
   background-color: #4a404e;
   color: #f4f0e4;
 }
 
-/* line 413, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 420, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #navigation > ul {
   padding: 20px;
 }
 
-/* line 417, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 424, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs {
   background-color: transparent;
   padding: 0em;
   border: none;
 }
-/* line 296, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 303, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li {
   background-color: #faf7f4;
   position: relative;
@@ -5914,15 +5914,15 @@ ul.breadcrumbs li {
   color: #4a404e;
   margin-bottom: 20px;
 }
-/* line 306, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 313, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li a {
   padding: 0em;
 }
-/* line 309, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 316, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li.current a {
   color: #4a404e;
 }
-/* line 312, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 319, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:after {
   pointer-events: none;
   content: "";
@@ -5936,7 +5936,7 @@ ul.breadcrumbs li:after {
   right: 0px;
   bottom: 50%;
 }
-/* line 317, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 324, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:before {
   pointer-events: none;
   content: "";
@@ -5950,11 +5950,11 @@ ul.breadcrumbs li:before {
   right: 0px;
   top: 50%;
 }
-/* line 277, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 284, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(even) {
   background-color: #faf7f4;
 }
-/* line 279, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 286, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(even):after {
   border-color: transparent #f2eae2 transparent transparent;
   _border-left-color: lime;
@@ -5962,7 +5962,7 @@ ul.breadcrumbs li:nth-child(even):after {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 281, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 288, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(even):before {
   border-color: transparent #f2eae2 transparent transparent;
   _border-left-color: lime;
@@ -5970,11 +5970,11 @@ ul.breadcrumbs li:nth-child(even):before {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 284, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 291, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(odd) {
   background-color: #f2eae2;
 }
-/* line 286, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 293, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(odd):after {
   border-color: transparent #faf7f4 transparent transparent;
   _border-left-color: lime;
@@ -5982,7 +5982,7 @@ ul.breadcrumbs li:nth-child(odd):after {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 288, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 295, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:nth-child(odd):before {
   border-color: transparent #faf7f4 transparent transparent;
   _border-left-color: lime;
@@ -5990,14 +5990,14 @@ ul.breadcrumbs li:nth-child(odd):before {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 324, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 331, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:first-child {
   background-color: #4a404e;
   border-top-left-radius: 16px;
   border-bottom-left-radius: 16px;
   padding-left: 20px;
 }
-/* line 329, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 336, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:first-child:after {
   border-color: transparent #faf7f4 transparent transparent;
   _border-left-color: lime;
@@ -6005,7 +6005,7 @@ ul.breadcrumbs li:first-child:after {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 332, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 339, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:first-child:before {
   border-color: transparent #faf7f4 transparent transparent;
   _border-left-color: lime;
@@ -6013,42 +6013,42 @@ ul.breadcrumbs li:first-child:before {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 336, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 343, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:last-child {
   border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
 }
-/* line 339, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 346, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:last-child:after {
   border: none;
 }
-/* line 341, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 348, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li:last-child:before {
   border: none;
 }
-/* line 419, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 426, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li a {
   color: #5fb9f5;
 }
-/* line 421, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 428, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 ul.breadcrumbs li a:hover {
   color: #2fa4f2;
 }
 
-/* line 427, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 434, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .highlight {
   background-color: #4a404e;
   padding: 20px;
   border-radius: 16px;
   line-height: 1em;
 }
-/* line 432, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 439, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .highlight > pre {
   padding: 0em;
   padding-bottom: 0.2em;
   background-color: transparent;
 }
-/* line 436, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 443, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .highlight .hll {
   display: block;
   border-radius: 8px;
@@ -6058,7 +6058,7 @@ ul.breadcrumbs li a:hover {
   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3);
   background-color: #574b5c;
 }
-/* line 444, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 451, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content tt.docutils.literal:not(.xref) {
   padding: 0.2em 0.5em;
   border-radius: 0.4em;
@@ -6219,11 +6219,11 @@ ul.breadcrumbs li a:hover {
   vertical-align: middle;
   padding: 20px;
 }
-/* line 460, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 467, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .class .method:last-child, #content .class .classmethod:last-child, #content .class .staticmethod:last-child {
   margin-bottom: 0em;
 }
-/* line 464, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 471, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .class .method > dt, #content .class .method > dd, #content .class .classmethod > dt, #content .class .classmethod > dd, #content .class .staticmethod > dt, #content .class .staticmethod > dd {
   background-color: transparent;
   color: #4a404e;
@@ -6231,13 +6231,13 @@ ul.breadcrumbs li a:hover {
   border-width: 2px;
   border-color: #e2d1bf;
 }
-/* line 471, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 478, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .class .method > dd, #content .class .classmethod > dd, #content .class .staticmethod > dd {
   background-color: transparent;
   border-top: none;
   margin-bottom: 0em;
 }
-/* line 476, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 483, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .class .method > dd > *:last-child, #content .class .classmethod > dd > *:last-child, #content .class .staticmethod > dd > *:last-child {
   margin-bottom: 0em;
 }
@@ -6317,15 +6317,15 @@ ul.breadcrumbs li a:hover {
   vertical-align: middle;
   padding: 20px;
 }
-/* line 483, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 490, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content dl > dd > table.docutils.field-list {
   margin-bottom: 20px;
 }
-/* line 485, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 492, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content dl > dd > table.docutils.field-list:last-child {
   margin-bottom: 0em;
 }
-/* line 489, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 496, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic, #content .hlist, #content .genindex-jumpbox, #content .indextable {
   padding: 20px;
   border-radius: 16px;
@@ -6333,12 +6333,12 @@ ul.breadcrumbs li a:hover {
   background-color: #faf7f4;
   color: #4a404e;
 }
-/* line 491, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 498, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic td, #content .hlist td, #content .genindex-jumpbox td, #content .indextable td {
   padding-left: 20px !important;
   padding-right: 20px !important;
 }
-/* line 500, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 507, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic {
   background-color: #faf7f4;
   color: #4a404e;
@@ -6357,12 +6357,12 @@ ul.breadcrumbs li a:hover {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
 }
-/* line 507, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 514, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic > * {
   margin-left: 20px;
   margin-right: 20px;
 }
-/* line 512, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 519, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .topic .first {
   background-color: #4a404e;
   color: #f4f0e4;
@@ -6373,56 +6373,56 @@ ul.breadcrumbs li a:hover {
   margin: 0em;
   margin-bottom: 20px;
 }
-/* line 518, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 525, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) {
   background-color: transparent;
 }
-/* line 520, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 527, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) td, #content table.docutils:not(.citation) th {
   background-color: #faf7f4;
   color: #4a404e;
   padding: 20px;
   border: none;
 }
-/* line 526, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 533, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) tr.row-odd td {
   background-color: #f2eae2;
   color: #4a404e;
 }
-/* line 530, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 537, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) thead th {
   background-color: #4a404e;
   color: #f4f0e4;
 }
-/* line 346, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 353, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) thead th:first-child {
   border-top-left-radius: 16px;
 }
-/* line 348, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 355, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) thead th:last-child {
   border-top-right-radius: 16px;
 }
-/* line 354, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 361, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) tr:last-child td:first-child {
   border-bottom-left-radius: 16px;
 }
-/* line 356, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 363, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils:not(.citation) tr:last-child td:last-child {
   border-bottom-right-radius: 16px;
 }
-/* line 539, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 546, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.longtable.docutils tr:first-child td:first-child {
   border-top-left-radius: 16px;
 }
-/* line 541, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 548, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.longtable.docutils tr:first-child td:last-child {
   border-top-right-radius: 16px;
 }
-/* line 545, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 552, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content div.modindex-jumpbox {
   border: none;
 }
-/* line 548, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 555, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable {
   background-color: #faf7f4;
   padding: 0em;
@@ -6431,19 +6431,19 @@ ul.breadcrumbs li a:hover {
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
 }
-/* line 367, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 374, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:last-child td:first-child {
   border-bottom-left-radius: 16px;
 }
-/* line 369, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 376, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:last-child td:last-child {
   border-bottom-right-radius: 16px;
 }
-/* line 277, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 284, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(even) {
   background-color: #f2eae2;
 }
-/* line 279, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 286, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(even):after {
   border-color: transparent transparent transparent transparent;
   _border-left-color: lime;
@@ -6451,7 +6451,7 @@ ul.breadcrumbs li a:hover {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 281, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 288, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(even):before {
   border-color: transparent transparent transparent transparent;
   _border-left-color: lime;
@@ -6459,11 +6459,11 @@ ul.breadcrumbs li a:hover {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 284, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 291, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(odd) {
   background-color: transparent;
 }
-/* line 286, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 293, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(odd):after {
   border-color: transparent #f2eae2 transparent transparent;
   _border-left-color: lime;
@@ -6471,7 +6471,7 @@ ul.breadcrumbs li a:hover {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 288, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 295, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr:nth-child(odd):before {
   border-color: transparent #f2eae2 transparent transparent;
   _border-left-color: lime;
@@ -6479,30 +6479,30 @@ ul.breadcrumbs li a:hover {
   _border-left-color: lime;
   _filter: chroma(color=lime);
 }
-/* line 558, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 565, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr.cap td {
   background-color: #4a404e;
   color: #f4f0e4;
   padding: 20px;
 }
-/* line 346, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 353, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr.cap td:first-child {
   border-top-left-radius: 16px;
 }
-/* line 348, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 355, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr.cap td:last-child {
   border-top-right-radius: 16px;
 }
-/* line 562, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 569, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.indextable tr.pcap {
   display: none;
 }
-/* line 565, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 572, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.genindextable {
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
 }
-/* line 570, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 577, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content blockquote, #content .epigraph {
   background-color: transparent;
   color: inherit;
@@ -6512,42 +6512,42 @@ ul.breadcrumbs li a:hover {
   border-color: #e2d1bf;
   border-radius: 16px;
 }
-/* line 581, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 588, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation {
   border: none;
 }
-/* line 583, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 590, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation td {
   border-radius: 0px;
   padding: 20px;
   background-color: #faf7f4;
   color: #4a404e;
 }
-/* line 589, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 596, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation td.label {
   background-color: #4a404e;
   color: #f4f0e4;
   text-align: left;
 }
-/* line 595, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 602, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation:first-of-type td {
   border-top-right-radius: 16px;
 }
-/* line 597, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 604, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation:first-of-type td.label {
   border-radius: 0em;
   border-top-left-radius: 16px;
 }
-/* line 602, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 609, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation:last-of-type td {
   border-bottom-right-radius: 16px;
 }
-/* line 604, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 611, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content table.docutils.citation:last-of-type td.label {
   border-radius: 0em;
   border-bottom-left-radius: 16px;
 }
-/* line 610, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 617, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .admonition.note, #content .admonition.hint {
   background-color: transparent;
   border: none;
@@ -6585,7 +6585,14 @@ ul.breadcrumbs li a:hover {
   padding-top: 20px;
   padding-bottom: 0em;
 }
-/* line 613, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 259, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.note > blockquote, #content .admonition.hint > blockquote {
+  margin-top: 1.25em !important;
+  margin: 1.25em;
+  margin-bottom: 0em;
+  padding: 20px !important;
+}
+/* line 620, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .admonition.tip, #content .admonition.seealso {
   background-color: transparent;
   border: none;
@@ -6623,7 +6630,14 @@ ul.breadcrumbs li a:hover {
   padding-top: 20px;
   padding-bottom: 0em;
 }
-/* line 616, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 259, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.tip > blockquote, #content .admonition.seealso > blockquote {
+  margin-top: 1.25em !important;
+  margin: 1.25em;
+  margin-bottom: 0em;
+  padding: 20px !important;
+}
+/* line 623, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .admonition.attention, #content .admonition.danger, #content .admonition.error, #content .admonition.warning, #content .admonition.important {
   background-color: transparent;
   border: none;
@@ -6661,7 +6675,14 @@ ul.breadcrumbs li a:hover {
   padding-top: 20px;
   padding-bottom: 0em;
 }
-/* line 619, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 259, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .admonition.attention > blockquote, #content .admonition.danger > blockquote, #content .admonition.error > blockquote, #content .admonition.warning > blockquote, #content .admonition.important > blockquote {
+  margin-top: 1.25em !important;
+  margin: 1.25em;
+  margin-bottom: 0em;
+  padding: 20px !important;
+}
+/* line 626, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .sidebar {
   background-color: transparent;
   border: none;
@@ -6699,7 +6720,14 @@ ul.breadcrumbs li a:hover {
   padding-top: 20px;
   padding-bottom: 0em;
 }
-/* line 621, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+/* line 259, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
+#content .sidebar > blockquote {
+  margin-top: 1.25em !important;
+  margin: 1.25em;
+  margin-bottom: 0em;
+  padding: 20px !important;
+}
+/* line 628, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/cards.sass */
 #content .sidebar .sidebar-subtitle {
   padding: 8px 16px;
   margin: 0em;
