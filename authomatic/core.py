@@ -771,7 +771,8 @@ class Credentials(ReprMixin):
 
         if hasattr(self.provider_class, 'refresh_credentials'):
             if force or self.expire_soon(soon):
-                return self.provider_class.refresh_credentials(self)
+                logging.info('PROVIDER NAME: {}'.format(self.provider_name))
+                return self.provider_class(self, None, self.provider_name).refresh_credentials(self)
 
 
     def async_refresh(self, *args, **kwargs):

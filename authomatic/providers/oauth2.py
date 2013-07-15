@@ -217,8 +217,7 @@ class OAuth2(providers.AuthorizationProvider):
         return credentials
     
     
-    @classmethod
-    def refresh_credentials(cls, credentials):
+    def refresh_credentials(self, credentials):
         """
         Refreshes :class:`.Credentials` if it gives sense.
         
@@ -229,7 +228,7 @@ class OAuth2(providers.AuthorizationProvider):
             :class:`.Response`.
         """
         
-        if not cls._x_refresh_credentials_if(credentials):
+        if not self._x_refresh_credentials_if(credentials):
             return
         
         # We need consumer key and secret to make this kind of request.
@@ -237,13 +236,13 @@ class OAuth2(providers.AuthorizationProvider):
         credentials.consumer_key = cfg.get('consumer_key')
         credentials.consumer_secret = cfg.get('consumer_secret')
         
-        request_elements = cls.create_request_elements(request_type=cls.REFRESH_TOKEN_REQUEST_TYPE,
+        request_elements = self.create_request_elements(request_type=self.REFRESH_TOKEN_REQUEST_TYPE,
                                                         credentials=credentials,
-                                                        url=cls.access_token_url,
+                                                        url=self.access_token_url,
                                                         method='POST')
         
-        cls._log(logging.INFO, 'Refreshing credentials.')
-        response = cls._fetch(*request_elements)
+        self._log(logging.INFO, 'Refreshing credentials.')
+        response = self._fetch(*request_elements)
         
         # We no longer need consumer info.
         credentials.consumer_key = None
@@ -263,7 +262,7 @@ class OAuth2(providers.AuthorizationProvider):
                 credentials.refresh_token = refresh_token
             
             # Handle different naming conventions across providers.
-            credentials = cls._x_credentials_parser(credentials, response.data)
+            credentials = self._x_credentials_parser(credentials, response.data)
         
         return response
     
