@@ -19,7 +19,10 @@ Abstract base classes for implementation of protocol specific providers.
 
 """
 
+from authomatic.core import Session
+from authomatic.exceptions import ConfigError, AuthenticationError, FetchError, CredentialsError
 import abc
+import authomatic.core
 import base64
 import copy
 import datetime
@@ -34,9 +37,6 @@ import urllib
 import urlparse
 import uuid
 
-import authomatic.core
-from authomatic.core import Session
-from authomatic.exceptions import ConfigError, AuthenticationError, FetchError
 
 
 __all__ = ['BaseProvider', 'AuthorizationProvider', 'AuthenticationProvider', 'login_decorator']
@@ -687,11 +687,10 @@ class AuthorizationProvider(BaseProvider):
         return str(self.PROVIDER_TYPE_ID) + '-' + str(mod.PROVIDER_ID_MAP.index(cls))
     
     
-    def access_with_credentials(self, credentials, url, params=None, method='GET',
-                                headers=None, body='', max_redirects=5, content_parser=None):
+    def access(self, url, params=None, method='GET', headers=None,
+               body='', max_redirects=5, content_parser=None):
         """
-        Fetches the **protected resource** of the **user** to whom belong
-        the supplied :data:`.credentials`.
+        Fetches the **protected resource** of an authenticated **user**.
         
         :param credentials:
         The **user's** :class:`.Credentials` (serialized or normal).
@@ -718,12 +717,17 @@ class AuthorizationProvider(BaseProvider):
             :class:`.Response`
         """
         
+        if not self.user:
+            raise CredentialsError('There is no authenticated user!')
+        if not self.credentials:
+            raise CredentialsError('The user has no credentials!')
+        
         headers = headers or {}
         
         self._log(logging.INFO, 'Accessing protected resource {}.'.format(url))
         
         request_elements = self.create_request_elements(request_type=self.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                        credentials=credentials,
+                                                        credentials=self.credentials,
                                                         url=url,
                                                         body=body,
                                                         params=params,
@@ -736,38 +740,6 @@ class AuthorizationProvider(BaseProvider):
         
         self._log(logging.INFO, 'Got response. HTTP status = {}.'.format(response.status))
         return response
-    
-    
-    def access(self, url, params=None, method='GET', headers={}, max_redirects=5, content_parser=None):
-        """
-        Fetches the **protected resource** of the logged in **user**.
-        
-        :param credentials:
-            The **user's** :class:`.Credentials` (serialized or normal).
-            
-        :param str method:
-            HTTP method of the request.
-            
-        :param dict headers:
-            HTTP headers of the request.
-            
-        :param int max_redirects:
-            Maximum number of HTTP redirects to follow.
-            
-        :param function content_parser:
-            A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
-        
-        :returns:
-            :class:`.Response`
-        """
-
-        return self.access_with_credentials(credentials=self.credentials,
-                                            url=url,
-                                            params=params,
-                                            method=method,
-                                            headers=headers,
-                                            max_redirects=max_redirects,
-                                            content_parser=content_parser)
 
 
     def async_access(self, *args, **kwargs):
@@ -897,7 +869,7 @@ class AuthorizationProvider(BaseProvider):
         
         url = self.user_info_url.format(**self.user.__dict__)
         
-        response = self.access_with_credentials(self.credentials, url)
+        response = self.access(url)
         
         # Create user.
         self.user = self._update_or_create_user(response.data, content=response.content)
