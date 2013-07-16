@@ -2,7 +2,7 @@ from setuptools import setup,find_packages
 
 setup(
     name='Authomatic',
-    version='0.0.7',
+    version='0.0.8', # TODO: Put version in one place.
     packages=find_packages(),
     package_data={'': ['*.txt', '*.rst']},
     author='Peter Hudec',
