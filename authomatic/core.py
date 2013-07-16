@@ -352,12 +352,17 @@ class Session(object):
             Expires value will be ``Thu, 01-Jan-1970 00:00:01 GMT``.
         """
 
-        template = '{name}={value}; Domain={domain}; Path={path}; HttpOnly{secure}{expires}'
-
         value = 'deleted' if delete else self._serialize(self.data)
 
         split_url = urlparse.urlsplit(self.adapter.url)
         domain = split_url.netloc.split(':')[0]
+
+        # Work-around for issue #11, failure of WebKit-based browsers to accept
+        # cookies set as part of a redirect response in some circumstances.
+        if not '.' in domain:
+            template = '{name}={value}; Path={path}; HttpOnly{secure}{expires}'
+        else:
+            template = '{name}={value}; Domain={domain}; Path={path}; HttpOnly{secure}{expires}'
 
         return template.format(name=self.name,
                                value=value,
