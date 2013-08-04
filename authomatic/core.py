@@ -1371,8 +1371,7 @@ class Authomatic(object):
         logging.info('ACCESS HEADERS: {}'.format(headers))
         # Access resource and return response.
         
-        provider_settings = self.config.get(credentials.provider_name)
-        provider = ProviderClass(provider_settings)
+        provider = ProviderClass(self, adapter=None, provider_name=credentials.provider_name)
         provider.credentials = credentials
         
         return provider.access(url=url,
