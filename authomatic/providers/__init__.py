@@ -717,10 +717,8 @@ class AuthorizationProvider(BaseProvider):
             :class:`.Response`
         """
         
-        if not self.user:
+        if not self.user and not self.credentials:
             raise CredentialsError('There is no authenticated user!')
-        if not self.credentials:
-            raise CredentialsError('The user has no credentials!')
         
         headers = headers or {}
         
