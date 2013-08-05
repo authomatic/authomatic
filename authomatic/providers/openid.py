@@ -363,7 +363,7 @@ class OpenID(providers.AuthenticationProvider):
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
             
-        elif self.params.get(self.identifier_param):
+        elif self.identifier:  # As set in AuthenticationProvider.__init__
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
