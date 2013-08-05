@@ -406,6 +406,9 @@ class Session(object):
 
         if not self._data:
             self._data = self._get_data()
+        # Always return a dict, even if deserialization returned nothing
+        if self._data is None:
+            self._data = {}
         return self._data
 
 
