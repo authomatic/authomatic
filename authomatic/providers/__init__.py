@@ -890,11 +890,15 @@ class AuthenticationProvider(BaseProvider):
     def __init__(self, *args, **kwargs):   
         super(AuthenticationProvider, self).__init__(*args, **kwargs)
         
+        # Lookup default identifier, if available in provider
+        default_identifier = getattr(self, 'identifier', None)
+
         # Allow for custom name for the "id" querystring parameter.
         self.identifier_param = kwargs.get('identifier_param', 'id')
         
-        # Get the identifier from request params.
-        self.identifier = self.params.get(self.identifier_param)
+        # Get the identifier from request params, or use default as fallback.
+        self.identifier = self.params.get(
+            self.identifier_param, default_identifier)
         
 
 PROVIDER_ID_MAP = [BaseProvider, AuthorizationProvider, AuthenticationProvider]
