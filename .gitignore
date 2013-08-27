@@ -14,3 +14,15 @@ Authomatic.egg-info/
 dist/
 venv/
 virtualenv/
+examples/gae/showcase/authomatic
+examples/gae/showcase/openid
+examples/gae/dev/authomatic
+examples/gae/dev/openid
+examples/gae/extras/authomatic
+examples/gae/extras/openid
+examples/gae/credentials/authomatic
+examples/gae/credentials/openid
+examples/gae/simple/authomatic
+examples/gae/simple/openid
+examples/gae/tester/authomatic
+examples/gae/tester/openid
