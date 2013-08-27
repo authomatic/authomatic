@@ -1,6 +1,7 @@
 *.class
 *.pyc
 *.pyo
+*~
 doc/build
 build/
 _themes/
