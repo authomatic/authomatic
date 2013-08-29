@@ -1,3 +1,4 @@
+#!/bin/sh
 
 # Fancy colors
 BLACK=$(tput setaf 0)
@@ -9,13 +10,26 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 NORMAL=$(tput sgr0)
 
+QUIET='-q'
 
-exit
-
+# If venv folder already exists ask whether to overwrite it.
+if [ -d 'venv' ]; then
+    echo "${CYAN}Virtual environment ${NORMAL}venv${CYAN} already exists!${NORMAL}"
+    while true; do
+        read -p "${CYAN}Do you want to replace it? [y/n]${NORMAL}" yn
+        case $yn in
+            [Yy]* ) break;;
+            [Nn]* ) exit;;
+            * ) echo "${YELLOW}Please enter y/Y or n/N.${NORMAL}";;
+        esac
+    done
+    echo "${RED}Removing virtual environment:${NORMAL} venv"
+    rm -R venv
+fi
 
 # Create venv
 echo "${GREEN}Creating virtual environment:${NORMAL} venv"
-virtualenv venv
+virtualenv $QUIET venv
 
 echo "${YELLOW}Activating virtual environment:${NORMAL} venv"
 # Activate venv
@@ -28,7 +42,7 @@ pwd -LP > $PTH
 
 echo "${GREEN}Installing requirements.${NORMAL}"
 # Install requirements
-pip install --requirement requirements.txt
+pip install $QUIET --requirement requirements.txt
 
 
 ##########################
@@ -40,12 +54,12 @@ echo "${YELLOW}Downloading Chrome Driver.${NORMAL}"
 # Download and extract Chromedriver according to OS architecture
 if [ `getconf LONG_BIT` = "64" ]
 then
-	wget https://chromedriver.googlecode.com/files/chromedriver_linux64_2.2.zip
-	unzip chromedriver_linux64_2.2.zip
+	wget $QUIET https://chromedriver.googlecode.com/files/chromedriver_linux64_2.2.zip
+	unzip $QUIET chromedriver_linux64_2.2.zip
 	rm chromedriver_linux64_2.2.zip
 else
-    wget https://chromedriver.googlecode.com/files/chromedriver_linux32_2.2.zip
-	unzip chromedriver_linux32_2.2.zip
+    wget $QUIET https://chromedriver.googlecode.com/files/chromedriver_linux32_2.2.zip
+	unzip $QUIET chromedriver_linux32_2.2.zip
 	rm chromedriver_linux32_2.2.zip
 fi
 
@@ -61,8 +75,8 @@ chmod 777 venv/bin/chromedriver
 
 echo "${YELLOW}Downloading Google App Engine SDK.${NORMAL}"
 
-wget http://googleappengine.googlecode.com/files/google_appengine_1.8.3.zip
-unzip google_appengine_1.8.3.zip
+wget $QUIET http://googleappengine.googlecode.com/files/google_appengine_1.8.3.zip
+unzip $QUIET google_appengine_1.8.3.zip
 rm google_appengine_1.8.3.zip
 
 echo "${GREEN}Installing Google App Engine SDK to:${NORMAL} venv/bin/google_appengine"
