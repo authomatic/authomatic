@@ -26,7 +26,7 @@ class Login(webapp2.RequestHandler):
             
             if result.error:
                 # Login procedure finished with an error.
-                self.response.write('<h2>Damn that error: {}</h2>'.format(result.error.message))
+                self.response.write(u'<h2>Damn that error: {}</h2>'.format(result.error.message))
             
             elif result.user:
                 # Hooray, we have the user!
@@ -37,9 +37,9 @@ class Login(webapp2.RequestHandler):
                     result.user.update()
                 
                 # Welcome the user.
-                self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
-                self.response.write('<h2>Your id is: {}</h2>'.format(result.user.id))
-                self.response.write('<h2>Your email is: {}</h2>'.format(result.user.email))
+                self.response.write(u'<h1>Hi {}</h1>'.format(result.user.name))
+                self.response.write(u'<h2>Your id is: {}</h2>'.format(result.user.id))
+                self.response.write(u'<h2>Your email is: {}</h2>'.format(result.user.email))
                 
                 # Seems like we're done, but there's more we can do...
                 
@@ -64,7 +64,7 @@ class Login(webapp2.RequestHandler):
                             error = response.data.get('error')
                             
                             if error:
-                                self.response.write('Damn that error: {}!'.format(error))
+                                self.response.write(u'Damn that error: {}!'.format(error))
                             elif statuses:
                                 self.response.write('Your 5 most recent statuses:<br />')
                                 for message in statuses:
@@ -72,11 +72,11 @@ class Login(webapp2.RequestHandler):
                                     text = message.get('message')
                                     date = message.get('created_time')
                                     
-                                    self.response.write('<h3>{}</h3>'.format(text))
-                                    self.response.write('Posted on: {}'.format(date))
+                                    self.response.write(u'<h3>{}</h3>'.format(text))
+                                    self.response.write(u'Posted on: {}'.format(date))
                         else:
                             self.response.write('Damn that unknown error!<br />')
-                            self.response.write('Status: {}'.format(response.status))
+                            self.response.write(u'Status: {}'.format(response.status))
                         
                     if result.provider.name == 'tw':
                         self.response.write('Your are logged in with Twitter.<br />')
@@ -96,15 +96,15 @@ class Login(webapp2.RequestHandler):
                                     text = tweet.get('text')
                                     date = tweet.get('created_at')
                                     
-                                    self.response.write('<h3>{}</h3>'.format(text))
-                                    self.response.write('Tweeted on: {}'.format(date))
+                                    self.response.write(u'<h3>{}</h3>'.format(text.replace(u'\u2013', '[???]')))
+                                    self.response.write(u'Tweeted on: {}'.format(date))
                                     
                             elif response.data.get('errors'):
-                                self.response.write('Damn that error: {}!'.\
+                                self.response.write(u'Damn that error: {}!'.\
                                                     format(response.data.get('errors')))
                         else:
                             self.response.write('Damn that unknown error!<br />')
-                            self.response.write('Status: {}'.format(response.status))
+                            self.response.write(u'Status: {}'.format(response.status))
 
 
 # Create a home request handler just that you don't have to enter the urls manually.
