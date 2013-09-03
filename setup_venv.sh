@@ -16,7 +16,7 @@ QUIET='-q'
 if [ -d 'venv' ]; then
     echo "${CYAN}Virtual environment ${NORMAL}venv${CYAN} already exists!${NORMAL}"
     while true; do
-        read -p "${CYAN}Do you want to replace it? [y/n]${NORMAL}" yn
+        read -p "${CYAN}Do you want to replace it? [y/n] ${NORMAL}" yn
         case $yn in
             [Yy]* ) break;;
             [Nn]* ) exit;;
@@ -40,7 +40,7 @@ PTH=venv/lib/python2.7/site-packages/authomatic.pth
 echo "${GREEN}Adding pth file:${NORMAL} $PTH"
 pwd -LP > $PTH
 
-echo "${GREEN}Installing requirements.${NORMAL}"
+echo "${GREEN}Installing requirements (this can take a while...).${NORMAL}"
 # Install requirements
 pip install $QUIET --requirement requirements.txt
 
@@ -111,8 +111,6 @@ do
     echo "${GREEN}Creating symbolic link:${NORMAL} $OPENID_LINK."
     ln -rs "`pwd`/venv/lib/python2.7/site-packages/openid" "examples/gae/$EXAMPLE"
 done
-
-# TODO: Create configs from template
 
 # Deactivate venv (redundant?)
 echo "${YELLOW}Deactivating virtual environment:${NORMAL} venv"
