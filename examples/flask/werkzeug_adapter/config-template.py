@@ -1,6 +1,6 @@
 # config.py
 
-from authomatic.providers import oauth2, oauth1, openid, gaeopenid
+from authomatic.providers import oauth2, oauth1, openid
 
 CONFIG = {
     
