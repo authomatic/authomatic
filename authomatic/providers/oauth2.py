@@ -255,7 +255,7 @@ class OAuth2(providers.AuthorizationProvider):
         # Update credentials only if there is access token.
         if access_token:
             credentials.token = access_token
-            credentials.expire_in = response.data.get('expire_in')
+            credentials.expire_in = response.data.get('expires_in')
             
             # Update refresh token only if there is a new one.
             if refresh_token:
@@ -340,7 +340,7 @@ class OAuth2(providers.AuthorizationProvider):
             # OAuth 2.0 credentials need access_token, refresh_token, token_type and expire_in.
             self.credentials.token = access_token
             self.credentials.refresh_token = refresh_token
-            self.credentials.expire_in = response.data.get('expire_in')
+            self.credentials.expire_in = response.data.get('expires_in')
             self.credentials.token_type = response.data.get('token_type', '')
             # sWe don't need these two guys anymore.
             self.credentials.consumer_key = ''
@@ -583,7 +583,7 @@ class Facebook(OAuth2):
         We need to override this method to fix Facebooks naming deviation.
         """
         
-        # Facebook returns "expires" instead of "expire_in".
+        # Facebook returns "expires" instead of "expires_in".
         credentials.expire_in = data.get('expires')
         
         return credentials
