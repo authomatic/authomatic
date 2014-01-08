@@ -54,6 +54,8 @@ class OAuth2(providers.AuthorizationProvider):
     #: :class:`bool` If ``False``, the provider doesn't support CSRF protection.
     supports_csrf_protection = True
     
+    token_request_method = 'POST'  # method for requesting an access token
+    
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
@@ -255,7 +257,7 @@ class OAuth2(providers.AuthorizationProvider):
         # Update credentials only if there is access token.
         if access_token:
             credentials.token = access_token
-            credentials.expire_in = response.data.get('expire_in')
+            credentials.expire_in = response.data.get('expires_in')
             
             # Update refresh token only if there is a new one.
             if refresh_token:
@@ -315,7 +317,7 @@ class OAuth2(providers.AuthorizationProvider):
             request_elements = self.create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
                                                              credentials=self.credentials,
                                                              url=self.access_token_url,
-                                                             method='POST',
+                                                             method=self.token_request_method,
                                                              redirect_uri=self.url,
                                                              params=self.access_token_params,
                                                              headers=self.access_token_headers)
@@ -340,7 +342,7 @@ class OAuth2(providers.AuthorizationProvider):
             # OAuth 2.0 credentials need access_token, refresh_token, token_type and expire_in.
             self.credentials.token = access_token
             self.credentials.refresh_token = refresh_token
-            self.credentials.expire_in = response.data.get('expire_in')
+            self.credentials.expire_in = response.data.get('expires_in')
             self.credentials.token_type = response.data.get('token_type', '')
             # sWe don't need these two guys anymore.
             self.credentials.consumer_key = ''
@@ -583,7 +585,7 @@ class Facebook(OAuth2):
         We need to override this method to fix Facebooks naming deviation.
         """
         
-        # Facebook returns "expires" instead of "expire_in".
+        # Facebook returns "expires" instead of "expires_in".
         credentials.expire_in = data.get('expires')
         
         return credentials
@@ -772,6 +774,9 @@ class LinkedIn(OAuth2):
                     '(id,first-name,last-name,formatted-name,location,picture-url,public-profile-url,email-address,date-of-birth,phone-numbers)?format=json'
     
     user_info_scope = ['r_fullprofile', 'r_emailaddress', 'r_contactinfo']
+    
+    token_request_method = 'GET'  # To avoid a bug with OAuth2.0 on Linkedin
+    # http://developer.linkedin.com/forum/unauthorized-invalid-or-expired-token-immediately-after-receiving-oauth2-token
     
     @classmethod
     def _x_request_elements_filter(cls, request_type, request_elements, credentials):
