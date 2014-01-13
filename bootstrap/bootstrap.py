@@ -1814,16 +1814,23 @@ import os
 import urllib
 import zipfile
 import platform
-import subprocess
 
+
+CHROMEDRIVER_VERSION = '2.8'
+GAE_SDK_VERSION = '1.8.3'
+CHROMEDRIVER_PATH_BASE = 'http://chromedriver.storage.googleapis.com/{}/'\
+    .format(CHROMEDRIVER_VERSION)
+
+ARCHITECTURE = platform.architecture()[0][:-3]
+PLATFORM = platform.platform()
+
+
+BOOTSTRAP_ROOT = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(BOOTSTRAP_ROOT, '..'))
+AUTHOMATIC_PATH = os.path.join(PROJECT_ROOT, 'authomatic')
+GAE_EXAMPLES_PATH = os.path.join(PROJECT_ROOT, 'examples/gae')
 
 def after_install(options, home_dir):
-
-    home_dir = os.path.abspath(home_dir)
-    bootstrap_root = os.path.abspath(os.path.dirname(__file__))
-    project_root = os.path.abspath(os.path.join(bootstrap_root, '..'))
-    authomatic_path = os.path.join(project_root, 'authomatic')
-    gae_examples_path = os.path.join(project_root, 'examples/gae')
     openid_path = os.path.join(home_dir, 'lib/python2.7/site-packages/openid')
 
     def _download_and_extract(url, extract_path):
@@ -1852,28 +1859,38 @@ def after_install(options, home_dir):
             print('creating symlink: {} -> {}'.format(name, target))
             os.symlink(target, name)
 
-    architecture = platform.architecture()[0][:-3]
+    if PLATFORM.lower().startswith('darwin'):
+        chromedriver_path = CHROMEDRIVER_PATH_BASE + 'chromedriver_mac32.zip'
+    elif PLATFORM.lower().startswith('linux'):
+        chromedriver_path = CHROMEDRIVER_PATH_BASE + \
+            'chromedriver_linux{}.zip'.format(ARCHITECTURE)
+    elif PLATFORM.lower().startswith('win'):
+        chromedriver_path = CHROMEDRIVER_PATH_BASE + 'chromedriver_win32.zip'
+    else:
+        chromedriver_path = None
 
-    _download_and_extract('https://chromedriver.googlecode.com/files/' +
-                          'chromedriver_linux{}_2.2.zip'.format(architecture),
-                          'bin')
+    if chromedriver_path:
+        _download_and_extract(chromedriver_path, 'bin')
+        chromedriver_executable = os.path.join(home_dir, 'bin/chromedriver')
+        print('Setting permissions of {} to 755'
+              .format(chromedriver_executable))
+        os.chmod(chromedriver_executable, 755)
 
     _download_and_extract('http://googleappengine.googlecode.com/files/' +
-                          'google_appengine_1.8.3.zip',
+                          'google_appengine_{}.zip'.format(GAE_SDK_VERSION),
                           'bin')
 
-    _add_pth('authomatic', project_root)
+    _add_pth('authomatic', PROJECT_ROOT)
     _add_pth('gae', '\n'.join([
             os.path.abspath(os.path.join(home_dir, 'bin/google_appengine/')),
             'import dev_appserver',
             'dev_appserver.fix_sys_path()',
         ]))
 
-    for example in os.listdir(gae_examples_path):
-        example_path = os.path.join(gae_examples_path, example)
-        _link(authomatic_path, os.path.join(example_path, 'authomatic'))
+    for example in os.listdir(GAE_EXAMPLES_PATH):
+        example_path = os.path.join(GAE_EXAMPLES_PATH, example)
+        _link(AUTHOMATIC_PATH, os.path.join(example_path, 'authomatic'))
         _link(openid_path, os.path.join(example_path, 'openid'))
-
 
 def convert(s):
     b = base64.b64decode(s.encode('ascii'))
