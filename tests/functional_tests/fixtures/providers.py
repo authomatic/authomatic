@@ -4,16 +4,28 @@ import abc
 from selenium.webdriver.common.keys import Keys
 
 
-class ProviderFixture(object):
+class BaseProviderFixture(object):
 
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, login_xpath, password_xpath, consent_xpath):
-        self.login_xpath = login_xpath
-        self.password_xpath = password_xpath
-        self.consent_xpath = consent_xpath
+    def __init__(self, login, password):
+        self.login = login
+        self.password = password
 
-    def login(self, login, password):
+    @abc.abstractproperty
+    def LOGIN_XPATH(self):
+        pass
+
+    @abc.abstractproperty
+    def PASSWORD_XPATH(self):
+        pass
+
+    @abc.abstractproperty
+    def CONSENT_XPATH(self):
+        pass
+
+    @property
+    def login_function(self):
         """
         Fills out and submits provider a login form.
 
@@ -32,16 +44,17 @@ class ProviderFixture(object):
 
         def f(browser):
             print('logging the user in.')
-            browser.find_element_by_xpath(self.login_xpath)\
-                .send_keys(login)
+            browser.find_element_by_xpath(self.LOGIN_XPATH)\
+                .send_keys(self.login)
             password_element = browser.\
-                find_element_by_xpath(self.password_xpath)
-            password_element.send_keys(password)
+                find_element_by_xpath(self.PASSWORD_XPATH)
+            print 'PASSWORD = {}'.format(self.password)
+            password_element.send_keys(self.password)
             password_element.send_keys(Keys.ENTER)
         return f
 
     @property
-    def consent(self):
+    def consent_function(self):
         """
         Clicks a consent button specified by the XPath if it exists recursively.
 
@@ -51,7 +64,7 @@ class ProviderFixture(object):
 
         def f(browser):
             try:
-                button = browser.find_element_by_xpath(self.consent_xpath)
+                button = browser.find_element_by_xpath(self.CONSENT_XPATH)
                 print('Hitting consent button.')
                 button.click()
                 f(browser)
@@ -61,7 +74,8 @@ class ProviderFixture(object):
         return f
 
 
-FACEBOOK = ProviderFixture(login_xpath='//*[@id="email"]',
-                           password_xpath='//*[@id="pass"]',
-                           consent_xpath='//*[@id="platformDialogForm"]/div[2]'
-                           '/div/table/tbody/tr/td[2]/button[1]')
+class FacebookFixture(BaseProviderFixture):
+    LOGIN_XPATH = '//*[@id="email"]'
+    PASSWORD_XPATH = '//*[@id="pass"]'
+    CONSENT_XPATH = '//*[@id="platformDialogForm"]/div[2]' \
+                    '/div/table/tbody/tr/td[2]/button[1]'

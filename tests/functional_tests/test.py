@@ -10,96 +10,83 @@ import liveandletdie
 from tests.functional_tests.config import CONFIG
 
 
-HOST = '127.0.0.1:8080'
-HOME = 'authomatic-functional-test.com:8080'
-PROJECT_DIR = path.abspath(path.join(path.dirname(__file__), '../..', pth))
-EXAMPLES_PATH = testliveserver.abspath(__file__, '../../examples')
-LIVESERVER_PATH = testliveserver.abspath(__file__, '../../examples/flask/functional_test/main.py')
+HOST = '127.0.0.1'
+PORT = 8080
+HOME = 'http://authomatic.com:{}/'.format(PORT)
 
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
 
 
 APPS = {
-    'Flask': liveandletdie.Flask(abspath('sample_apps/flask/main.py'),
+    'Flask': liveandletdie.Flask(os.path.join(EXAMPLES_DIR,
+                                              'flask/functional_test/main.py'),
+                                 suppress_output=False,
+                                 host=HOST,
                                  port=PORT),
 }
 
 
-@pytest.fixture(scope='module', params=CONFIG)
-def provider(request):
-    '''Runs for each provider.'''
+@pytest.fixture('module')
+def browser(request):
+    """Starts and stops the server for each app in APPS"""
 
-    provider = CONFIG[request.param]
-    provider['name'] = request.param
-    return provider
-
-
-@pytest.fixture(scope='module', params=APPS)
-def app(request):
-    '''Runs for each app.'''
-
-    process = None
-    app_path = os.path.join(EXAMPLES_PATH, request.param)
-    try:
-        # Run the live server.
-        process = testliveserver.start(app_path, HOST)
-    except Exception as e:
-        # Stop all tests if not started.
-        pytest.exit(format(e.message))
-
-    # Start the browser.
     browser = webdriver.Chrome()
     browser.implicitly_wait(3)
-
-    def fin():
-        if hasattr(process, 'terminate'):
-            process.terminate()
-
-        # Stop the browser.
-        if hasattr(browser, 'quit'):
-            pass
-            browser.quit()
-
-    request.addfinalizer(fin)
-
-    result = lambda: None
-    result.browser = browser
-
-    return result
+    request.addfinalizer(lambda: browser.quit())
+    return browser
 
 
-@pytest.fixture(scope='module')
-def world(app, provider):
-    '''Redirects the user to a login handler, logs him in by the provider and clicks all consent buttons.'''
-    
+@pytest.fixture('module', APPS)
+def app(request):
+    """Starts and stops the server for each app in APPS"""
+
+    _app = APPS[request.param]
+    _app.name = request.param
+
+    try:
+        # Run the live server.
+        _app.live(kill=True)
+    except Exception as e:
+        # Skip test if not started.
+        pytest.fail(e.message)
+
+    request.addfinalizer(lambda: _app.die())
+    return _app
+
+
+@pytest.fixture(scope='module', params=CONFIG)
+def provider(request, browser):
+    """Runs for each provider."""
+
+    print 'PROVIDER {}'.format(request.param)
+
+    _provider = CONFIG[request.param]
+    _provider['name'] = request.param
+    provider_fixture = _provider['fixture']
+
     # Andy types the login handler url to the address bar.
-    app.browser.get(HOME + '/login/' + provider.get('name'))
-    
+    browser.get(HOME + 'login/' + _provider['name'])
+
     # Andy authenticates by the provider.
-    provider.get('login_funct')(app.browser)
-    
+    provider_fixture.login_function(browser)
+
     # Andy authorizes this app to access his protected resources.
-    provider.get('consent_funct')(app.browser)
-    
-    app.user = provider.get('user')    
-    return app
+    provider_fixture.consent_function(browser)
+
+    return _provider
 
 
-def test_user_name(world):
-    """User sees his name."""
-    
-    value = world.browser.find_element_by_id('name').text
-    assert value == world.user.get('name')
+class TestUser(object):
+    @pytest.fixture()
+    def user_property(self, app, provider, browser):
+        def f(property_name):
+            value = browser.find_element_by_id(property_name).text
+            assert value == provider['user'][property_name]
+        return f
 
+    def test_name(self, user_property):
+        user_property('name')
 
-def test_user_id(world):
-    """User sees his name."""
-
-    value = world.browser.find_element_by_id('id').text
-    assert value == world.user.get('id')
-    
-    
-
-
-
-
-
+    def test_id(self, user_property):
+        user_property('id')
