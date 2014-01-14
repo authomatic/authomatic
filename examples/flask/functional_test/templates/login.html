@@ -1,11 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
 {% block body %}
-<div>
-	<div>
-		<strong>Name:</strong>
-		<span id="name">{{ result.user.name }}</span>
-		<span id="id">{{ result.user.id }}</span>
-	</div>
-</div>
+<h1>User</h1>
+<table>
+    {% for property in user_properties %}
+    <tr>
+        <td><strong>{{ property }}:&nbsp;</strong></td>
+        <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}

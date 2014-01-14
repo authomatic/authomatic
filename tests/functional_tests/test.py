@@ -7,12 +7,10 @@ from selenium.webdriver.common.keys import Keys
 import pytest
 import liveandletdie
 
-from tests.functional_tests.config import CONFIG
+from tests.functional_tests import config
 
 
-HOST = '127.0.0.1'
-PORT = 8080
-HOME = 'http://authomatic.com:{}/'.format(PORT)
+HOME = 'http://{}:{}/'.format(config.HOST_ALIAS, config.PORT)
 
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
@@ -22,8 +20,8 @@ APPS = {
     'Flask': liveandletdie.Flask(os.path.join(EXAMPLES_DIR,
                                               'flask/functional_test/main.py'),
                                  suppress_output=False,
-                                 host=HOST,
-                                 port=PORT),
+                                 host=config.HOST,
+                                 port=config.PORT),
 }
 
 
@@ -55,13 +53,13 @@ def app(request):
     return _app
 
 
-@pytest.fixture(scope='module', params=CONFIG)
+@pytest.fixture(scope='module', params=config.PROVIDERS)
 def provider(request, browser):
     """Runs for each provider."""
 
     print 'PROVIDER {}'.format(request.param)
 
-    _provider = CONFIG[request.param]
+    _provider = config.PROVIDERS[request.param]
     _provider['name'] = request.param
     provider_fixture = _provider['fixture']
 
@@ -81,12 +79,58 @@ class TestUser(object):
     @pytest.fixture()
     def user_property(self, app, provider, browser):
         def f(property_name):
-            value = browser.find_element_by_id(property_name).text
+            value = browser.find_element_by_id(property_name).text or None
             assert value == provider['user'][property_name]
         return f
-
-    def test_name(self, user_property):
         user_property('name')
 
     def test_id(self, user_property):
         user_property('id')
+
+    def test_email(self, user_property):
+        user_property('email')
+
+    def test_username(self, user_property):
+        user_property('username')
+
+    def test_name(self, user_property):
+        user_property('name')
+
+    def test_first_name(self, user_property):
+        user_property('first_name')
+
+    def test_flast_name(self, user_property):
+        user_property('first_name')
+
+    def test_nickname(self, user_property):
+        user_property('nickname')
+
+    def test_birth_date(self, user_property):
+        user_property('birth_date')
+
+    def test_city(self, user_property):
+        user_property('city')
+
+    def test_country(self, user_property):
+        user_property('country')
+
+    def test_gender(self, user_property):
+        user_property('gender')
+
+    def test_link(self, user_property):
+        user_property('link')
+
+    def test_locale(self, user_property):
+        user_property('locale')
+
+    def test_phone(self, user_property):
+        user_property('phone')
+
+    def test_picture(self, user_property):
+        user_property('picture')
+
+    def test_postal_code(self, user_property):
+        user_property('postal_code')
+
+    def test_timezone(self, user_property):
+        user_property('timezone')

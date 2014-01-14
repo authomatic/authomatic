@@ -1,14 +1,21 @@
-{% extends 'base.html' %}
-
-{% block body %}
-<ul>
-	{% for provider in config.keys() %}
-	<li>
-		<a	id="{{ provider }}"
-			href="{{ url_for('login', provider_name=provider) }}">
-			{{ provider }}
-		</a>
-	</li>
-	{% endfor %}
-</ul>
-{% endblock %}
+{# base.html #}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Authomatic Functional Test</title>
+    </head>
+    <body>
+        <h1>Providers</h1>
+        <ul>
+            {% for provider in providers %}
+            <li>
+                <a	id="{{ provider }}"
+                    href="{{ url_for('login', provider_name=provider) }}">
+                    {{ provider }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% block body %}{% endblock %}
+    </body>
+</html>

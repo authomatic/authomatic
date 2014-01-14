@@ -2,12 +2,20 @@
 from authomatic.providers import oauth2, oauth1
 from fixtures import providers
 
+# Host and port where the application shoul listen to
+HOST = '127.0.0.1'
+PORT = 8080
+
+# You need to alias the host in the /etc/hosts file
+# to be able to test some services like Facebook localy
+HOST_ALIAS = 'authomatic.com'
+
 LOGIN = 'andypipkin'
-EMAIL = 'andypipkin@littlebritain.co.uk'
+EMAIL = 'andy.pipkin@littlebritain.co.uk'
 PASSWORD = '##########'
 
-
-CONFIG = {
+# None values mean that the provider doesn't support the particular property
+PROVIDERS = {
     'facebook': {
         'class_': oauth2.Facebook,
         'consumer_key': '##########',
@@ -15,8 +23,23 @@ CONFIG = {
         'scope': ['user_about_me', 'email', 'publish_stream'],
         'fixture': providers.FacebookFixture(EMAIL, PASSWORD),
         'user': {
-            'name': 'Andy Pipkin',
             'id': '##########',
+            'email': EMAIL,
+            'username': 'andypipkin',
+            'name': 'Andy Pipkin',
+            'first_name': 'Andy',
+            'last_name': 'Pipkin',
+            'nickname': None,
+            'birth_date': None,
+            'city': None,
+            'country': None,
+            'gender': 'male',
+            'link': 'https://www.facebook.com/andypipkin',
+            'locale': 'en_US',
+            'phone': None,
+            'picture': 'http://graph.facebook.com/andypipkin/picture?type=large',
+            'postal_code': None,
+            'timezone': '1',
         }
     },
 }

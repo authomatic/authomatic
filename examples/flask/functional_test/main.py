@@ -5,7 +5,7 @@ from flask.templating import render_template
 
 import authomatic
 from authomatic.adapters import WerkzeugAdapter
-from tests.functional_tests.config import CONFIG
+from tests.functional_tests import config
 
 
 DEBUG = True
@@ -16,11 +16,12 @@ PASSWORD = 'default'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-authomatic = authomatic.Authomatic(CONFIG, '123')
+authomatic = authomatic.Authomatic(config.PROVIDERS, '123')
 
 @app.route('/')
 def home():
-    return render_template('index.html', config=CONFIG)
+    return render_template('index.html', providers=config.PROVIDERS.keys())
+
 
 @app.route('/login/<provider_name>/', methods=['GET', 'POST'])
 def login(provider_name):
@@ -29,7 +30,10 @@ def login(provider_name):
     if result:
         if result.user:
             result.user.update()
-        return render_template('login.html', result=result)
+        user_properties = config.PROVIDERS.values()[0]['user'].keys()
+        return render_template('login.html', result=result,
+                               providers=config.PROVIDERS.keys(),
+                               user_properties=user_properties)
     
     # Don't forget to return the response.
     return response
