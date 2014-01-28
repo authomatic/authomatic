@@ -11,7 +11,7 @@
             {% for provider in providers %}
             <li>
                 <a	id="{{ provider }}"
-                    href="{{ url_for('login', provider_name=provider) }}">
+                    href="login/{{ provider }}">
                     {{ provider }}
                 </a>
             </li>
