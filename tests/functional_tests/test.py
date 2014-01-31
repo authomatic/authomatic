@@ -82,7 +82,6 @@ class TestUser(object):
             value = browser.find_element_by_id(property_name).text or None
             assert value == provider['user'][property_name]
         return f
-        user_property('name')
 
     def test_id(self, user_property):
         user_property('id')
@@ -134,3 +133,13 @@ class TestUser(object):
 
     def test_timezone(self, user_property):
         user_property('timezone')
+
+    def test_content_should_contain(self, app, provider, browser):
+        content = browser.find_element_by_id('content').text
+        for item in provider['content_should_contain']:
+            assert item in content
+
+    def test_content_should_not_contain(self, app, provider, browser):
+        content = browser.find_element_by_id('content').text.lower()
+        for item in provider['content_should_not_contain']:
+            assert item.lower() not in content

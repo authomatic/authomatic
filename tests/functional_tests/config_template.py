@@ -40,6 +40,19 @@ PROVIDERS = {
             'picture': 'http://graph.facebook.com/andypipkin/picture?type=large',
             'postal_code': None,
             'timezone': '1',
-        }
+        },
+        'content_should_contain': [
+            '##########', # ID
+            'andy.pipkin\u0040littlebritain.co.uk',
+            'Andy Pipkin',
+        ],
+        # Case insensitive
+        # TODO: Convert to regular expressions?
+        'content_should_not_contain': [
+            '##########', # Phone Number
+            '1901', # Part of birth_date
+            'London', # Test will fail and reveal that Facebook now supports City
+            'Great Britain', # Test will fail and reveal that Facebook now supports Country
+        ],
     },
 }

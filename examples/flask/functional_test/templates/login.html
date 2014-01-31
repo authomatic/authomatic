@@ -10,4 +10,14 @@
     </tr>
     {% endfor %}
 </table>
+<h2>Human Readable Content</h2>
+<pre id="human-readable-user-content" class="prettyprint"></pre>
+<script type="text/javascript">
+    ui = document.getElementById('human-readable-user-content');
+    try {
+        ui.innerHTML = JSON.stringify({{ result.user.content|safe }}, undefined, 4);
+    } catch(e) {
+        console.log('XML');
+    }
+</script>
 {% endblock %}
