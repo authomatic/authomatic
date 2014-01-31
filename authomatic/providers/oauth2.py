@@ -687,13 +687,13 @@ class GitHub(OAuth2):
         user.username = data.get('login')
         user.picture = data.get('avatar_url')
         user.link = data.get('html_url')
-        
-        user.city = data.get('location', '')
-        if ',' in user.city:
-            location = user.city.split(',')
-            user.city = location[0].strip()
-            if len(location) > 1:
-                user.country = location[1].strip()
+
+        location = data.get('location', '')
+        if location:
+            split_location = location.split(',')
+            user.city = split_location[0].strip()
+            if len(split_location) > 1:
+                user.country = split_location[1].strip()
             
         return user
     
