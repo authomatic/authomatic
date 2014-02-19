@@ -622,6 +622,32 @@ class User(ReprMixin):
         return d
 
 
+class SupportedUserAttributes(collections.namedtuple('SupportedUserAttributes',
+                                         [
+                                             'id',
+                                             'username',
+                                             'name',
+                                             'first_name',
+                                             'last_name',
+                                             'nickname',
+                                             'link',
+                                             'gender',
+                                             'timezone',
+                                             'locale',
+                                             'email',
+                                             'phone',
+                                             'picture',
+                                             'birth_date',
+                                             'country',
+                                             'city',
+                                             'postal_code',
+                                         ])):
+    def __new__(cls, **kwargs):
+        defaults = dict((i, False) for i in SupportedUserAttributes._fields)
+        defaults.update(**kwargs)
+        return super(SupportedUserAttributes, cls).__new__(cls, **defaults)
+
+
 class Credentials(ReprMixin):
     """Contains all necessary information to fetch **user's protected resources**."""
 

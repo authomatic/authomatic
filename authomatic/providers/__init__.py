@@ -125,6 +125,8 @@ class BaseProvider(object):
     _repr_ignore = ('user',)
     
     __metaclass__ = abc.ABCMeta
+
+    supported_user_attributes = authomatic.core.SupportedUserAttributes()
     
     def __init__(self, settings, adapter, provider_name, session=None, session_saver=None, callback=None, js_callback=None,
                  prefix='authomatic', **kwargs):
