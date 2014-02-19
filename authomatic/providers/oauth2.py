@@ -450,7 +450,39 @@ class Bitly(OAuth2):
     * Dashboard: https://bitly.com/a/oauth_apps
     * Docs: http://dev.bitly.com/authentication.html
     * API reference: http://dev.bitly.com/api.html
+
+    Supported :class:`.User` properties:
+
+    * id
+    * link
+    * name
+    * picture
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * first_name
+    * gender
+    * last_name
+    * locale
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        link=True,
+        name=True,
+        picture=True,
+        username=True
+    )
     
     supports_csrf_protection = False
     _x_use_authorization_header = False
@@ -509,11 +541,41 @@ class DeviantART(OAuth2):
     * Dashboard: https://www.deviantart.com/settings/myapps
     * Docs: http://www.deviantart.com/developers/oauth2
     * API reference: http://www.deviantart.com/developers/oauth2
+
+    Supported :class:`.User` properties:
+
+    * name
+    * picture
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * first_name
+    * gender
+    * id
+    * last_name
+    * link
+    * locale
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+
     """
     
     user_authorization_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
     access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
     user_info_url = 'https://www.deviantart.com/api/oauth2/user/whoami'
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        name=True,
+        picture=True,
+        username=True
+    )
     
     def __init__(self, *args, **kwargs):
         super(DeviantART, self).__init__(*args, **kwargs)
@@ -537,15 +599,53 @@ class Facebook(OAuth2):
     * Docs: http://developers.facebook.com/docs/howtos/login/server-side-login/
     * API reference: http://developers.facebook.com/docs/reference/api/
     * API explorer: http://developers.facebook.com/tools/explorer
+
+    Supported :class:`.User` properties:
+
+    * city
+    * country
+    * email
+    * first_name
+    * gender
+    * id
+    * last_name
+    * link
+    * locale
+    * name
+    * picture
+    * timezone
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * nickname
+    * phone
+    * postal_code
+
     """
     
     user_authorization_url = 'https://www.facebook.com/dialog/oauth'
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
     user_info_url = 'https://graph.facebook.com/me'
-    
     user_info_scope = ['user_about_me', 'email']
-    
     same_origin = False
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        email=True,
+        username=True,
+        name=True,
+        first_name=True,
+        last_name=True,
+        city=True,
+        country=True,
+        gender=True,
+        link=True,
+        locale=True,
+        picture=True,
+        timezone=True
+    )
     
     @classmethod
     def _x_request_elements_filter(cls, request_type, request_elements, credentials):
