@@ -539,7 +539,7 @@ class DeviantART(OAuth2):
     DeviantART |oauth2| provider.
     
     * Dashboard: https://www.deviantart.com/settings/myapps
-    * Docs: http://www.deviantart.com/developers/oauth2
+    * Docs: https://www.deviantart.com/developers/authentication
     * API reference: http://www.deviantart.com/developers/oauth2
 
     Supported :class:`.User` properties:
@@ -570,6 +570,8 @@ class DeviantART(OAuth2):
     user_authorization_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
     access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
     user_info_url = 'https://www.deviantart.com/api/oauth2/user/whoami'
+
+    user_info_scope = ['basic']
 
     supported_user_attributes = core.SupportedUserAttributes(
         name=True,

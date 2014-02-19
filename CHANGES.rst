@@ -4,6 +4,7 @@ Version 0.0.8
 * Added the ``supported_user_attributes`` to all provider classes.
 * The :class:`.oauthh2.Facebook` provider now populates the ``user.city``
   and ``user.country`` properties.
+* Added missing :attr:`.oauthh2.DeviantART.user_info_scope`
 
 
 Version 0.0.7
