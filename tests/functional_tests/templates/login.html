@@ -1,23 +1,61 @@
 {% extends 'index.html' %}
 
 {% block body %}
-<h1>User</h1>
-<table>
+
+{% if error %}
+  <div style="color: red">
+    <h1>Error</h1>
+    <pre>{{ error.message }}</pre>
+  </div>
+{% else %}
+
+  {% set safe_content = result.user.content|default('', None)|safe or '""' %}
+  {% set safe_cred_response = credentials_response.content|default('', None)|safe or '""' %}
+
+  <h1>User</h1>
+  <table>
     {% for property in user_properties %}
-    <tr>
-        <td><strong>{{ property }}:&nbsp;</strong></td>
-        <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
+    <tr {% if property == 'content' %}style="display: none"{% endif %}>
+      <td><strong>{{ property }}:&nbsp;</strong></td>
+      <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
     </tr>
     {% endfor %}
-</table>
-<h2>Human Readable Content</h2>
-<pre id="human-readable-user-content" class="prettyprint"></pre>
-<script type="text/javascript">
-    ui = document.getElementById('human-readable-user-content');
+  </table>
+
+  {% if result.user.credentials %}
+    <h1>Credentials</h1>
+    <table>
+      {% for k, v in result.user.credentials.__dict__.items() %}
+      <tr {% if k == 'config' %}style="display: none"{% endif %}>
+        <td><strong>{{ k }}:&nbsp;</strong></td>
+        <td id="credentials-{{ k }}">{{ v|default('', true) }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <h2>Credentials Refresh</h2>
+    <h4>Refresh Response Status: {{ credentials_response.status }}</h4>
+    <pre id="credentials-response" class="prettyprint"></pre>
+  {% endif %}
+
+  <h2>Human Readable Content</h2>
+  <pre id="human-readable-user-content" class="prettyprint"></pre>
+
+  <script type="text/javascript">
+
+    el = document.getElementById('human-readable-user-content');
     try {
-        ui.innerHTML = JSON.stringify({{ result.user.content|safe }}, undefined, 4);
+        el.innerHTML = JSON.stringify({{ safe_content }}, undefined, 4);
     } catch(e) {
-        console.log('XML');
+         el.innerHTML = '{{ safe_content }}';
     }
-</script>
+
+    el = document.getElementById('credentials-response');
+    try {
+        el.innerHTML = JSON.stringify({{ safe_cred_response }}, undefined, 4);
+    } catch(e) {
+        el.innerHTML = '{{ safe_cred_response }}';
+    }
+  </script>
+{% endif %}
 {% endblock %}

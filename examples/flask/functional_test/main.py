@@ -16,7 +16,8 @@ PASSWORD = 'default'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-authomatic = authomatic.Authomatic(config.PROVIDERS, '123')
+authomatic = authomatic.Authomatic(config.PROVIDERS, '123',
+                                   report_errors=False)
 
 @app.route('/')
 def home():

@@ -25,6 +25,9 @@ APPS = {
 }
 
 
+PROVIDERS = {k: v for k, v in config.PROVIDERS.items() if
+             k in config.INCLUDE_PROVIDERS}
+
 @pytest.fixture('module')
 def browser(request):
     """Starts and stops the server for each app in APPS"""
@@ -53,7 +56,7 @@ def app(request):
     return _app
 
 
-@pytest.fixture(scope='module', params=config.PROVIDERS)
+@pytest.fixture(scope='module', params=PROVIDERS)
 def provider(request, browser):
     """Runs for each provider."""
 
@@ -143,3 +146,10 @@ class TestUser(object):
         content = browser.find_element_by_id('content').text.lower()
         for item in provider['content_should_not_contain']:
             assert item.lower() not in content
+
+    def test_provider_support(self, app, provider):
+        sua = provider['class_'].supported_user_attributes
+        tested = {k: getattr(sua, k) for k in sua._fields}
+        expected = {k: bool(v) for k, v in provider['user'].items()
+                    if k is not 'content'}
+        assert tested == expected

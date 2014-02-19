@@ -12,6 +12,8 @@ class BaseProviderFixture(object):
         self.login = login
         self.password = password
 
+    PRE_LOGIN_CLICKS_XPATH = []
+
     @abc.abstractproperty
     def LOGIN_XPATH(self):
         pass
@@ -21,7 +23,7 @@ class BaseProviderFixture(object):
         pass
 
     @abc.abstractproperty
-    def CONSENT_XPATH(self):
+    def CONSENT_XPATHS(self):
         pass
 
     @property
@@ -43,6 +45,10 @@ class BaseProviderFixture(object):
         """
 
         def f(browser):
+            for xpath in self.PRE_LOGIN_CLICKS_XPATH:
+                print('clicking on {}'.format(xpath))
+                browser.find_element_by_xpath(xpath).click()
+
             print('logging the user in.')
             browser.find_element_by_xpath(self.LOGIN_XPATH)\
                 .send_keys(self.login)
@@ -63,19 +69,38 @@ class BaseProviderFixture(object):
         """
 
         def f(browser):
-            try:
-                button = browser.find_element_by_xpath(self.CONSENT_XPATH)
-                print('Hitting consent button.')
-                button.click()
-                f(browser)
-            except Exception as e:
-                print('No consent needed.')
-                pass
+            for path in self.CONSENT_XPATHS:
+                try:
+                    button = browser.find_element_by_xpath(path)
+                    print('Hitting consent button.')
+                    button.click()
+                    f(browser)
+                except Exception as e:
+                    print('No consent needed.')
+                    pass
         return f
 
 
 class FacebookFixture(BaseProviderFixture):
     LOGIN_XPATH = '//*[@id="email"]'
     PASSWORD_XPATH = '//*[@id="pass"]'
-    CONSENT_XPATH = '//*[@id="platformDialogForm"]/div[2]' \
-                    '/div/table/tbody/tr/td[2]/button[1]'
+    CONSENT_XPATHS = [
+        '//*[@id="platformDialogForm"]/div[2]/div/table/tbody/tr/td[2]/'
+            'button[1]',
+    ]
+
+
+class BitlyFixture(BaseProviderFixture):
+    PRE_LOGIN_CLICKS_XPATH = ['//*[@id="oauth_access"]/form/div/div[1]/a']
+    LOGIN_XPATH = '//*[@id="username"]'
+    PASSWORD_XPATH = '//*[@id="password"]'
+    CONSENT_XPATHS = ['//*[@id="oauth_access"]/form/button[1]']
+
+
+class DeviantART(BaseProviderFixture):
+    LOGIN_XPATH = '//*[@id="username"]'
+    PASSWORD_XPATH = '//*[@id="password"]'
+    CONSENT_XPATHS = [
+        '//*[@id="terms_agree"]',
+        '//*[@id="authorize_form"]/fieldset/div[2]/div[2]/a[1]',
+    ]

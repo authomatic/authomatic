@@ -13,13 +13,20 @@ def render_home(config):
 
 
 def render_login_result(result, config):
+    response = None
     if result:
+        response_message = ''
         if result.user:
             result.user.update()
+            if result.user.credentials:
+                response = result.user.credentials.refresh(force=True)
+
         user_properties = config.PROVIDERS.values()[0]['user'].keys()
 
         template = env.get_template('login.html')
 
         return template.render(result=result,
                                providers=config.PROVIDERS.keys(),
-                               user_properties=user_properties)
+                               user_properties=user_properties,
+                               error=result.error,
+                               credentials_response=response)
