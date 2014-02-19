@@ -513,7 +513,7 @@ class DeviantART(OAuth2):
     
     user_authorization_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
     access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
-    user_info_url = 'https://www.deviantart.com/api/draft15/user/whoami'
+    user_info_url = 'https://www.deviantart.com/api/oauth2/user/whoami'
     
     def __init__(self, *args, **kwargs):
         super(DeviantART, self).__init__(*args, **kwargs)
