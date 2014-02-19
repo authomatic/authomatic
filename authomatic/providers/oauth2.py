@@ -576,6 +576,14 @@ class Facebook(OAuth2):
     @staticmethod
     def _x_user_parser(user, data):
         user.picture = 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))
+
+        location = data.get('location', {}).get('name')
+        if location and location.split:
+            split_location = location.split(', ')
+            user.city = split_location[0].strip()
+            if len(split_location) > 1:
+                user.country = split_location[1].strip()
+
         return user
     
     
