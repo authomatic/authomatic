@@ -3,39 +3,36 @@
 import os
 
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 import pytest
 import liveandletdie
 
 from tests.functional_tests import config
+from tests.functional_tests import fixtures
 
 
 HOME = 'http://{}:{}/'.format(config.HOST_ALIAS, config.PORT)
-
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
-
-
+PROVIDERS = {k: v for k, v in fixtures.ASSEMBLED_CONFIG.items() if
+             k in config.INCLUDE_PROVIDERS}
 APPS = {
-    'Flask': liveandletdie.Flask(os.path.join(EXAMPLES_DIR,
-                                              'flask/functional_test/main.py'),
-                                 suppress_output=False,
-                                 host=config.HOST,
-                                 port=config.PORT),
+    'Flask': liveandletdie.Flask(
+        os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
+        suppress_output=False,
+        host=config.HOST,
+        port=config.PORT
+    ),
 }
 
-
-PROVIDERS = {k: v for k, v in config.PROVIDERS.items() if
-             k in config.INCLUDE_PROVIDERS}
 
 @pytest.fixture('module')
 def browser(request):
     """Starts and stops the server for each app in APPS"""
 
-    browser = webdriver.Chrome()
-    browser.implicitly_wait(3)
-    request.addfinalizer(lambda: browser.quit())
-    return browser
+    _browser = webdriver.Chrome()
+    _browser.implicitly_wait(3)
+    request.addfinalizer(lambda: _browser.quit())
+    return _browser
 
 
 @pytest.fixture('module', APPS)
@@ -60,9 +57,7 @@ def app(request):
 def provider(request, browser):
     """Runs for each provider."""
 
-    print 'PROVIDER {}'.format(request.param)
-
-    _provider = config.PROVIDERS[request.param]
+    _provider = fixtures.ASSEMBLED_CONFIG[request.param]
     _provider['name'] = request.param
     provider_fixture = _provider['fixture']
 
@@ -145,7 +140,8 @@ class TestUser(object):
     def test_content_should_not_contain(self, app, provider, browser):
         content = browser.find_element_by_id('content').text.lower()
         for item in provider['content_should_not_contain']:
-            assert item.lower() not in content
+            if item:
+                assert item.lower() not in content
 
     def test_provider_support(self, app, provider):
         sua = provider['class_'].supported_user_attributes

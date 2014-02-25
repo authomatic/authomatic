@@ -5,10 +5,26 @@ from selenium.webdriver.common.keys import Keys
 
 
 class BaseProviderFixture(object):
+    """
+    Base class for provider fixtures.
+
+    Provides mechanisms of logging the user in by a provider and consenting
+    to grant access to the tested application.
+    """
 
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, login, password):
+        """
+
+        :param str login:
+            User login
+
+        :param str password:
+            User password
+
+        """
+
         self.login = login
         self.password = password
 

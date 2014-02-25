@@ -15,18 +15,22 @@
   <h1>User</h1>
   <table>
     {% for property in user_properties %}
-    <tr {% if property == 'content' %}style="display: none"{% endif %}>
-      <td><strong>{{ property }}:&nbsp;</strong></td>
-      <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
-    </tr>
+      <tr">
+        <td><strong>{{ property }}:&nbsp;</strong></td>
+        <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
+      </tr>
     {% endfor %}
+    <tr class="hidden">
+      <td><strong>content:&nbsp;</strong></td>
+      <td id="content">{{ result.user.content }}</td>
+    </tr>
   </table>
 
   {% if result.user.credentials %}
     <h1>Credentials</h1>
     <table>
       {% for k, v in result.user.credentials.__dict__.items() %}
-      <tr {% if k == 'config' %}style="display: none"{% endif %}>
+      <tr class="{% if k == 'config' %}hidden{% endif %}"}>
         <td><strong>{{ k }}:&nbsp;</strong></td>
         <td id="credentials-{{ k }}">{{ v|default('', true) }}</td>
       </tr>

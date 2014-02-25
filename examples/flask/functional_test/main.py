@@ -5,7 +5,7 @@ from flask.templating import render_template
 
 import authomatic
 from authomatic.adapters import WerkzeugAdapter
-from tests.functional_tests import config, fixtures
+from tests.functional_tests import fixtures
 
 
 DEBUG = True
@@ -16,12 +16,12 @@ PASSWORD = 'default'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-authomatic = authomatic.Authomatic(config.PROVIDERS, '123',
+authomatic = authomatic.Authomatic(fixtures.ASSEMBLED_CONFIG, '123',
                                    report_errors=False)
 
 @app.route('/')
 def home():
-    return fixtures.render_home(config)
+    return fixtures.render_home()
 
 
 @app.route('/login/<provider_name>/', methods=['GET', 'POST'])
@@ -31,7 +31,7 @@ def login(provider_name):
                               provider_name)
 
     if result:
-        response.data += fixtures.render_login_result(result, config)
+        response.data += fixtures.render_login_result(result)
 
     return response
 
