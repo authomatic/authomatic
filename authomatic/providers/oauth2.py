@@ -826,10 +826,10 @@ class Google(OAuth2):
     
     user_authorization_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
-    user_info_url = 'https://www.googleapis.com/oauth2/v3/userinfo'
+    user_info_url = 'https://www.googleapis.com/plus/v1/people/me'
     
-    user_info_scope = ['https://www.googleapis.com/auth/userinfo.profile',
-                       'https://www.googleapis.com/auth/userinfo.email']
+    user_info_scope = ['profile',
+                       'email']
     
     def __init__(self, *args, **kwargs):
         super(Google, self).__init__(*args, **kwargs)
@@ -846,11 +846,13 @@ class Google(OAuth2):
     
     @staticmethod
     def _x_user_parser(user, data):
+
         user.id = data.get('sub') or data.get('id')
-        user.name = data.get('name')
-        user.first_name = data.get('given_name')
-        user.last_name = data.get('family_name')
-        user.link = data.get('profile')
+        user.name = data.get('displayName')
+        user.first_name = data.get('name',{}).get('given_name')
+        user.last_name = data.get('name',{}).get('family_name')
+        user.link = data.get('url')
+        user.picture = data.get('image',{}).get('url')
         try:
             user.birth_date = datetime.datetime.strptime(data.get('birthdate'), "%Y-%m-%d")
         except:
