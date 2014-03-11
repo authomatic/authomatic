@@ -73,64 +73,175 @@ def provider(request, browser):
     return _provider
 
 
+class TestCredentials(object):
+
+    @pytest.fixture()
+    def fixture(self, app, provider, browser):
+        def f(property_name):
+            id_ = 'original-credentials-{}'.format(property_name)
+            value = browser.find_element_by_id(id_).text or None
+
+            expected = provider['credentials'][property_name]
+            if expected is True:
+                assert value
+            else:
+                assert value == expected
+        return f
+
+    def test_refresh_response(self, fixture):
+        # status = browser.find_element_by_id('refresh-status').text
+        # assert status == '200'
+        fixture('refresh_status')
+
+    def test_token_type(self, fixture):
+        fixture('token_type')
+
+    def test_provider_type_id(self, fixture):
+        fixture('provider_type_id')
+
+    def test__expiration_time(self, fixture):
+        fixture('_expiration_time')
+
+    def test_consumer_key(self, fixture):
+        fixture('consumer_key')
+
+    def test_provider_id(self, fixture):
+        fixture('provider_id')
+
+    def test_consumer_secret(self, fixture):
+        fixture('consumer_secret')
+
+    def test_token(self, fixture):
+        fixture('token')
+
+    def test_token_secret(self, fixture):
+        fixture('token_secret')
+
+    def test__expire_in(self, fixture):
+        fixture('_expire_in')
+
+    def test_provider_name(self, fixture):
+        fixture('provider_name')
+
+    def test_refresh_token(self, fixture):
+        fixture('refresh_token')
+
+    def test_provider_type(self, fixture):
+        fixture('provider_type')
+
+
+class TestCredentialsChange(object):
+    @pytest.fixture()
+    def fixture(self, app, provider, browser):
+        def f(property_name):
+            original_id = 'original-credentials-{}'.format(property_name)
+            changed_id = 'refreshed-credentials-{}'.format(property_name)
+
+            original_val = browser.find_element_by_id(original_id).text or None
+            changed_val = browser.find_element_by_id(changed_id).text or None
+
+            expected = provider['credentials_refresh_change'][property_name]
+
+            if expected is not None:
+                assert (original_val == changed_val) is expected
+
+        return f
+
+    def test_token_type(self, fixture):
+        fixture('token_type')
+
+    def test_provider_type_id(self, fixture):
+        fixture('provider_type_id')
+
+    def test__expiration_time(self, fixture):
+        fixture('_expiration_time')
+
+    def test_consumer_key(self, fixture):
+        fixture('consumer_key')
+
+    def test_provider_id(self, fixture):
+        fixture('provider_id')
+
+    def test_consumer_secret(self, fixture):
+        fixture('consumer_secret')
+
+    def test_token(self, fixture):
+        fixture('token')
+
+    def test_token_secret(self, fixture):
+        fixture('token_secret')
+
+    def test__expire_in(self, fixture):
+        fixture('_expire_in')
+
+    def test_provider_name(self, fixture):
+        fixture('provider_name')
+
+    def test_refresh_token(self, fixture):
+        fixture('refresh_token')
+
+    def test_provider_type(self, fixture):
+        fixture('provider_type')
+
+
 class TestUser(object):
     @pytest.fixture()
-    def user_property(self, app, provider, browser):
+    def fixture(self, app, provider, browser):
         def f(property_name):
             value = browser.find_element_by_id(property_name).text or None
             assert value == provider['user'][property_name]
         return f
 
-    def test_id(self, user_property):
-        user_property('id')
+    def test_id(self, fixture):
+        fixture('id')
 
-    def test_email(self, user_property):
-        user_property('email')
+    def test_email(self, fixture):
+        fixture('email')
 
-    def test_username(self, user_property):
-        user_property('username')
+    def test_username(self, fixture):
+        fixture('username')
 
-    def test_name(self, user_property):
-        user_property('name')
+    def test_name(self, fixture):
+        fixture('name')
 
-    def test_first_name(self, user_property):
-        user_property('first_name')
+    def test_first_name(self, fixture):
+        fixture('first_name')
 
-    def test_flast_name(self, user_property):
-        user_property('first_name')
+    def test_flast_name(self, fixture):
+        fixture('first_name')
 
-    def test_nickname(self, user_property):
-        user_property('nickname')
+    def test_nickname(self, fixture):
+        fixture('nickname')
 
-    def test_birth_date(self, user_property):
-        user_property('birth_date')
+    def test_birth_date(self, fixture):
+        fixture('birth_date')
 
-    def test_city(self, user_property):
-        user_property('city')
+    def test_city(self, fixture):
+        fixture('city')
 
-    def test_country(self, user_property):
-        user_property('country')
+    def test_country(self, fixture):
+        fixture('country')
 
-    def test_gender(self, user_property):
-        user_property('gender')
+    def test_gender(self, fixture):
+        fixture('gender')
 
-    def test_link(self, user_property):
-        user_property('link')
+    def test_link(self, fixture):
+        fixture('link')
 
-    def test_locale(self, user_property):
-        user_property('locale')
+    def test_locale(self, fixture):
+        fixture('locale')
 
-    def test_phone(self, user_property):
-        user_property('phone')
+    def test_phone(self, fixture):
+        fixture('phone')
 
-    def test_picture(self, user_property):
-        user_property('picture')
+    def test_picture(self, fixture):
+        fixture('picture')
 
-    def test_postal_code(self, user_property):
-        user_property('postal_code')
+    def test_postal_code(self, fixture):
+        fixture('postal_code')
 
-    def test_timezone(self, user_property):
-        user_property('timezone')
+    def test_timezone(self, fixture):
+        fixture('timezone')
 
     def test_content_should_contain(self, app, provider, browser):
         content = browser.find_element_by_id('content').text

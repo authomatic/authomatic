@@ -26,20 +26,30 @@
     </tr>
   </table>
 
-  {% if result.user.credentials %}
-    <h1>Credentials</h1>
+  {% if original_credentials %}
+    <h1>Original Credentials</h1>
     <table>
-      {% for k, v in result.user.credentials.__dict__.items() %}
+      {% for k, v in original_credentials.items() %}
       <tr class="{% if k == 'config' %}hidden{% endif %}"}>
         <td><strong>{{ k }}:&nbsp;</strong></td>
-        <td id="credentials-{{ k }}">{{ v|default('', true) }}</td>
+        <td id="original-credentials-{{ k }}">{{ v|default('', true) }}</td>
       </tr>
       {% endfor %}
     </table>
 
     <h2>Credentials Refresh</h2>
-    <h4>Refresh Response Status: {{ credentials_response.status }}</h4>
+    <h4>Refresh Response Status: <span id="original-credentials-refresh_status">{{ credentials_response.status|default('REFRESH NOT SUPPORTED') }}</span></h4>
     <pre id="credentials-response" class="prettyprint"></pre>
+
+    <h1>Refreshed Credentials</h1>
+    <table>
+      {% for k, v in refreshed_credentials.items() %}
+      <tr class="{% if k == 'config' %}hidden{% endif %}"}>
+        <td><strong>{{ k }}:&nbsp;</strong></td>
+        <td id="refreshed-credentials-{{ k }}">{{ v|default('', true) }}</td>
+      </tr>
+      {% endfor %}
+    </table>
   {% endif %}
 
   <h2>Human Readable Content</h2>

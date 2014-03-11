@@ -1,4 +1,5 @@
 import fixtures
+import constants
 from authomatic.providers import oauth2
 
 
@@ -39,4 +40,38 @@ CONFIG = {
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date,
+    # True means that any thruthy value is expected
+    'credentials': {
+        'token_type': None,
+        'provider_type_id': '2-5',
+        '_expiration_time': True,
+        'consumer_key': None,
+        'provider_id': None,
+        'consumer_secret': None,
+        'token': True,
+        'token_secret': None,
+        '_expire_in': True,
+        'provider_name': 'facebook',
+        'refresh_token': None,
+        'provider_type': 'authomatic.providers.oauth2.OAuth2',
+        'refresh_status': constants.CREDENTIALS_REFRESH_OK,
+    },
+    # Testing changes after credentials refresh
+    # same: True
+    # not same: False
+    # don't test: None
+    'credentials_refresh_change': {
+        'token_type': True,
+        'provider_type_id': True,
+        '_expiration_time': None,
+        'consumer_key': True,
+        'provider_id': True,
+        'consumer_secret': True,
+        'token': False,
+        'token_secret': True,
+        '_expire_in': None,
+        'provider_name': True,
+        'refresh_token': True,
+        'provider_type': True,
+    },
 }

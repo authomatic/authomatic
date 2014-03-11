@@ -40,12 +40,16 @@ def render_login_result(result):
     """
 
     response = None
+    original_credentials = {}
+    refreshed_credentials = {}
     if result:
         response_message = ''
         if result.user:
             result.user.update()
             if result.user.credentials:
+                original_credentials.update(result.user.credentials.__dict__)
                 response = result.user.credentials.refresh(force=True)
+                refreshed_credentials.update(result.user.credentials.__dict__)
 
         user_properties = ASSEMBLED_CONFIG.values()[0]['user'].keys()
         template = env.get_template('login.html')
@@ -53,7 +57,9 @@ def render_login_result(result):
                                providers=ASSEMBLED_CONFIG.keys(),
                                user_properties=user_properties,
                                error=result.error,
-                               credentials_response=response)
+                               credentials_response=response,
+                               original_credentials=original_credentials,
+                               refreshed_credentials=refreshed_credentials)
 
 
 def get_configuration(provider):

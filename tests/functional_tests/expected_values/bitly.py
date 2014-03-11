@@ -1,4 +1,5 @@
 import fixtures
+import constants
 from authomatic.providers import oauth2
 
 
@@ -41,4 +42,38 @@ CONFIG = {
                                   conf.no_email + conf.no_location +
                                   conf.no_gender + conf.no_locale +
                                   conf.no_first_name + conf.no_last_name,
+    # True means that any thruthy value is expected
+    'credentials': {
+        'token_type': None,
+        'provider_type_id': '2-2',
+        '_expiration_time': None,
+        'consumer_key': None,
+        'provider_id': None,
+        'consumer_secret': None,
+        'token': True,
+        'token_secret': None,
+        '_expire_in': True,
+        'provider_name': 'bitly',
+        'refresh_token': None,
+        'provider_type': 'authomatic.providers.oauth2.OAuth2',
+        'refresh_status': constants.CREDENTIALS_REFRESH_NOT_SUPPORTED,
+    },
+    # Testing changes after credentials refresh
+    # same: True
+    # not same: False
+    # don't test: None
+    'credentials_refresh_change': {
+        'token_type': True,
+        'provider_type_id': True,
+        '_expiration_time': True,
+        'consumer_key': True,
+        'provider_id': True,
+        'consumer_secret': True,
+        'token': True,
+        'token_secret': True,
+        '_expire_in': True,
+        'provider_name': True,
+        'refresh_token': True,
+        'provider_type': True,
+    },
 }
