@@ -34,6 +34,9 @@ CONFIG = {
     },
     'content_should_contain': [
         conf.user_username,
+
+        # User info JSON keys
+        'username', 'symbol', 'usericonurl',
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date +

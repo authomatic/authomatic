@@ -97,15 +97,6 @@ class BaseProviderFixture(object):
         return f
 
 
-class FacebookFixture(BaseProviderFixture):
-    LOGIN_XPATH = '//*[@id="email"]'
-    PASSWORD_XPATH = '//*[@id="pass"]'
-    CONSENT_XPATHS = [
-        '//*[@id="platformDialogForm"]/div[2]/div/table/tbody/tr/td[2]/'
-            'button[1]',
-    ]
-
-
 class BitlyFixture(BaseProviderFixture):
     PRE_LOGIN_CLICKS_XPATH = ['//*[@id="oauth_access"]/form/div/div[1]/a']
     LOGIN_XPATH = '//*[@id="username"]'
@@ -119,4 +110,21 @@ class DeviantART(BaseProviderFixture):
     CONSENT_XPATHS = [
         '//*[@id="terms_agree"]',
         '//*[@id="authorize_form"]/fieldset/div[2]/div[2]/a[1]',
+    ]
+
+
+class FacebookFixture(BaseProviderFixture):
+    LOGIN_XPATH = '//*[@id="email"]'
+    PASSWORD_XPATH = '//*[@id="pass"]'
+    CONSENT_XPATHS = [
+        '//*[@id="platformDialogForm"]/div[2]/div/table/tbody/tr/td[2]/'
+            'button[1]',
+    ]
+
+
+class GoogleFixture(BaseProviderFixture):
+    LOGIN_XPATH = '//*[@id="Email"]'
+    PASSWORD_XPATH = '//*[@id="Passwd"]'
+    CONSENT_XPATHS = [
+        '//*[@id="submit_approve_access"]',
     ]

@@ -36,7 +36,20 @@ CONFIG = {
     'content_should_contain': [
         conf.user_id,
         conf.user_username_reverse,
-        conf.user_name,
+        conf.user_name, conf.user_first_name, conf.user_last_name,
+        conf.user_city, conf.user_country,
+        conf.user_gender,
+        LINK.replace('/', '\/'),
+        conf.user_locale,
+        conf.user_timezone,
+
+        # User info JSON keys
+        'id', 'name', 'first_name', 'last_name', 'link', 'hometown',
+        'location', 'bio', 'quotes', 'work', 'employer', 'position',
+        'description', 'start_date', 'sports', 'with', 'favorite_teams',
+        'favorite_athletes', 'inspirational_people', 'education', 'school',
+        'year', 'type', 'classes', 'gender', 'email', 'timezone', 'locale',
+        'languages', 'verified', 'updated_time', 'username'
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date,

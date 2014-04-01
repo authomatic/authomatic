@@ -36,6 +36,15 @@ CONFIG = {
         conf.user_id,
         conf.user_username_reverse,
         conf.user_name,
+
+        # User info JSON keys
+        'status_code', 'data', 'apiKey', 'domain_options', 'member_since',
+        'enterprise_permissions', 'has_master', 'profile_image',
+        'share_accounts', 'numeric_id', 'account_login', 'account_type',
+        'account_id', 'primary', 'visible', 'is_delegated', 'auto_import_links',
+        'full_name', 'account_name', 'is_enterprise', 'tracking_domains',
+        'default_link_privacy', 'display_name', 'custom_short_domain', 'login',
+        'is_verified', 'profile_url', 'status_txt',
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date +
