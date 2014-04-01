@@ -818,10 +818,34 @@ class Google(OAuth2):
     """
     Google |oauth2| provider.
     
-    * Dashboard: https://code.google.com/apis/console/
+    * Dashboard: https://console.developers.google.com/project
     * Docs: https://developers.google.com/accounts/docs/OAuth2
     * API reference: https://developers.google.com/gdata/docs/directory
     * API explorer: https://developers.google.com/oauthplayground/
+
+    Supported :class:`.User` properties:
+
+    * email
+    * first_name
+    * gender
+    * id
+    * last_name
+    * link
+    * locale
+    * name
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+    * username
+
     """
     
     user_authorization_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -830,6 +854,18 @@ class Google(OAuth2):
     
     user_info_scope = ['https://www.googleapis.com/auth/userinfo.profile',
                        'https://www.googleapis.com/auth/userinfo.email']
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        email=True,
+        name=True,
+        first_name=True,
+        last_name=True,
+        gender=True,
+        locale=True,
+        link=True,
+        picture=True
+    )
     
     def __init__(self, *args, **kwargs):
         super(Google, self).__init__(*args, **kwargs)
