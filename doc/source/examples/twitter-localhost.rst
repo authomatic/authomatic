@@ -12,7 +12,7 @@
 		127.0.0.1    localhost
 		127.0.0.1    yourlocalhostalias.com
 
-	You can do this on Windows systems by adding an alias in the ``C:\Windows\system32\drivers\etc\hosts` file.
+	You can do this on Windows systems by adding an alias in the ``C:\Windows\system32\drivers\etc\hosts`` file.
 	
 	.. code-block:: none
 	    :emphasize-lines: 1
