@@ -818,18 +818,54 @@ class Google(OAuth2):
     """
     Google |oauth2| provider.
     
-    * Dashboard: https://code.google.com/apis/console/
+    * Dashboard: https://console.developers.google.com/project
     * Docs: https://developers.google.com/accounts/docs/OAuth2
     * API reference: https://developers.google.com/gdata/docs/directory
     * API explorer: https://developers.google.com/oauthplayground/
+
+    Supported :class:`.User` properties:
+
+    * email
+    * first_name
+    * gender
+    * id
+    * last_name
+    * link
+    * locale
+    * name
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+    * username
+
     """
     
     user_authorization_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
     user_info_url = 'https://www.googleapis.com/plus/v1/people/me'
-    
+
     user_info_scope = ['profile',
                        'email']
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        email=True,
+        name=True,
+        first_name=True,
+        last_name=True,
+        gender=True,
+        locale=True,
+        link=True,
+        picture=True
+    )
     
     def __init__(self, *args, **kwargs):
         super(Google, self).__init__(*args, **kwargs)
@@ -843,14 +879,21 @@ class Google(OAuth2):
                 # And also approval_prompt=force.
                 self.user_authorization_params['approval_prompt'] = 'force'
     
-    
     @staticmethod
     def _x_user_parser(user, data):
+        emails = data.get('emails', [])
+        if emails:
+            user.email = emails[0].get('value')
+            for email in emails:
+                if email.get('type') == 'account':
+                    user.email = email.get('value')
+                    break
 
         user.id = data.get('sub') or data.get('id')
         user.name = data.get('displayName')
-        user.first_name = data.get('name',{}).get('given_name')
-        user.last_name = data.get('name',{}).get('family_name')
+        user.first_name = data.get('name',{}).get('givenName')
+        user.last_name = data.get('name',{}).get('familyName')
+        user.locale = data.get('language')
         user.link = data.get('url')
         user.picture = data.get('image',{}).get('url')
         try:
@@ -858,7 +901,6 @@ class Google(OAuth2):
         except:
             user.birth_date = data.get('birthdate')
         return user
-    
     
     def _x_scope_parser(self, scope):
         """

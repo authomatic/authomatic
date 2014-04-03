@@ -4,6 +4,10 @@ Version 0.0.8
 * Added the ``supported_user_attributes`` to all provider classes.
 * The :class:`.oauthh2.Facebook` provider now populates the ``user.city``
   and ``user.country`` properties.
+* The :class:`.oauthh2.Google` prowider now uses
+  `https://www.googleapis.com/plus/v1/people/me` as the `user_info_url` instead of
+  the deprecated `https://www.googleapis.com/oauth2/v3/userinfo`. Also the
+  `user_info_scope` reflects these changes.
 * Added missing :attr:`.oauthh2.DeviantART.user_info_scope`
 
 

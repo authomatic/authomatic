@@ -3,60 +3,59 @@ import constants
 from authomatic.providers import oauth2
 
 
-conf = fixtures.get_configuration('facebook')
+conf = fixtures.get_configuration('google')
 
-LINK = 'https://www.facebook.com/' + conf.user_username_reverse
-PICTURE = 'http://graph.facebook.com/{}/picture?type=large'\
-    .format(conf.user_username_reverse)
+LINK = 'https://plus.google.com/' + conf.user_id
 
 CONFIG = {
-    'class_': oauth2.Facebook,
-    'scope': oauth2.Facebook.user_info_scope,
-    'fixture': fixtures.providers.FacebookFixture(conf.user_login,
-                                                  conf.user_password),
+    'class_': oauth2.Google,
+    'scope': oauth2.Google.user_info_scope,
+    'fixture': fixtures.providers.GoogleFixture(conf.user_login,
+                                                conf.user_password),
+    'offline': True,
     'user': {
         'id': conf.user_id,
         'email': conf.user_email,
-        'username': conf.user_username_reverse,
+        'username': None,
         'name': conf.user_name,
         'first_name': conf.user_first_name,
         'last_name': conf.user_last_name,
         'nickname': None,
         'birth_date': None,
-        'city': conf.user_city,
-        'country': conf.user_country,
+        'city': None,
+        'country': None,
         'gender': conf.user_gender,
         'link': LINK,
         'locale': conf.user_locale,
         'phone': None,
-        'picture': PICTURE,
+        'picture': conf.user_picture,
         'postal_code': None,
-        'timezone': conf.user_timezone,
+        'timezone': None,
     },
     'content_should_contain': [
         conf.user_id,
-        conf.user_username_reverse,
+        conf.user_email,
         conf.user_name, conf.user_first_name, conf.user_last_name,
-        conf.user_city, conf.user_country,
         conf.user_gender,
-        LINK.replace('/', '\/'),
+        LINK,
         conf.user_locale,
-        conf.user_timezone,
+        conf.user_picture,
 
         # User info JSON keys
-        'id', 'name', 'first_name', 'last_name', 'link', 'hometown',
-        'location', 'bio', 'quotes', 'work', 'employer', 'position',
-        'description', 'start_date', 'sports', 'with', 'favorite_teams',
-        'favorite_athletes', 'inspirational_people', 'education', 'school',
-        'year', 'type', 'classes', 'gender', 'email', 'timezone', 'locale',
-        'languages', 'verified', 'updated_time', 'username'
+        'kind', 'etag', 'occupation', 'gender', 'emails', 'value', 'type',
+        'urls', 'label', 'objectType', 'id', 'displayName', 'name',
+        'familyName', 'givenName', 'aboutMe', 'url', 'image', 'organizations',
+        'title', 'startDate', 'endDate', 'primary', 'placesLived', 'isPlusUser',
+        'language', 'circledByCount', 'verified'
     ],
     # Case insensitive
-    'content_should_not_contain': conf.no_phone + conf.no_birth_date,
+    'content_should_not_contain': [conf.user_postal_code]
+                                  + conf.no_phone + conf.no_birth_date,
+
     # True means that any thruthy value is expected
     'credentials': {
-        'token_type': None,
-        'provider_type_id': '2-5',
+        'token_type': 'Bearer',
+        'provider_type_id': '2-8',
         '_expiration_time': True,
         'consumer_key': None,
         'provider_id': None,
@@ -64,8 +63,8 @@ CONFIG = {
         'token': True,
         'token_secret': None,
         '_expire_in': True,
-        'provider_name': 'facebook',
-        'refresh_token': None,
+        'provider_name': 'google',
+        'refresh_token': True,
         'provider_type': 'authomatic.providers.oauth2.OAuth2',
         'refresh_status': constants.CREDENTIALS_REFRESH_OK,
     },
@@ -76,13 +75,13 @@ CONFIG = {
     'credentials_refresh_change': {
         'token_type': True,
         'provider_type_id': True,
-        '_expiration_time': None,
+        '_expiration_time': False,
         'consumer_key': True,
         'provider_id': True,
         'consumer_secret': True,
         'token': False,
         'token_secret': True,
-        '_expire_in': None,
+        '_expire_in': True,
         'provider_name': True,
         'refresh_token': True,
         'provider_type': True,

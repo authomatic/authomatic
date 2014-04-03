@@ -14,9 +14,10 @@ HOST_ALIAS = 'authomatic.com'
 # This is a convenience to easily exclude providers from tests by commenting
 # them out.
 INCLUDE_PROVIDERS = [
-    'facebook',
     'bitly',
     'deviantart',
+    'facebook',
+    'google',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -40,6 +41,7 @@ LOCALE = 'en_UK'
 COMMON = {
     # Could be same if the user sets it so
     'user_login': EMAIL,
+    'user_password': PASSWORD,
     'user_email': EMAIL,
     'user_first_name': FIRST_NAME,
     'user_last_name': LAST_NAME,
@@ -55,40 +57,47 @@ COMMON = {
     'user_postal_code': POSTAL_CODE,
     'user_locale': LOCALE,
 
-    ## It is safer when you have different password by each prowider.
-    # 'user_password': PASSWORD,
-
-    ## Provider and user specific values. Set this in the PROVIDERS dict.
+    # Provider and user specific value
     # 'user_id': '',
+    # 'user_locale': None,
     # 'user_timezone': None,
-    # 'consumer_key': '',
-    # 'consumer_secret': '',
 
-    ## Provider specific format. This is set in the expected_values.* modules.
+    # Provider specific format
     # 'user_picture': '',
     # 'user_link': '',
+
+    # Provider specific value
+    # 'consumer_key': '',
+    # 'consumer_secret': '',
 }
 
-# Values from COMMON will be overriden by values from PROVIDERS if set.
-# If you have different login or other user settings by some providers,
-# set it here.
+# Values from COMMON will be overriden by values from PROVIDERS[provider_name]
+# if set.
 PROVIDERS = {
     'bitly': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_id': '##########',
-        'user_password': '##########',
     },
     'deviantart': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
-        'user_password': '##########',
     },
     'facebook': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_id': '##########',
         'user_password': '##########',
-        'user_timezone': '1',
+        # This changes when switching from and to Daylight Saving Time
+        'user_timezone': '??????????',
+    },
+    'google': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_id': '##########',
+        'user_password': '##########',
+        'user_email': '##########',
+        'user_locale': '##########',
+        'user_picture': ('??????????'),
     },
 }

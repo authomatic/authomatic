@@ -26,39 +26,66 @@
     </tr>
   </table>
 
-  {% if result.user.credentials %}
-    <h1>Credentials</h1>
+  {% if original_credentials %}
+    <h1>Original Credentials</h1>
     <table>
-      {% for k, v in result.user.credentials.__dict__.items() %}
+      {% for k, v in original_credentials.items() %}
       <tr class="{% if k == 'config' %}hidden{% endif %}"}>
         <td><strong>{{ k }}:&nbsp;</strong></td>
-        <td id="credentials-{{ k }}">{{ v|default('', true) }}</td>
+        <td id="original-credentials-{{ k }}">{{ v|default('', true) }}</td>
       </tr>
       {% endfor %}
     </table>
 
     <h2>Credentials Refresh</h2>
-    <h4>Refresh Response Status: {{ credentials_response.status }}</h4>
+    <h4>Refresh Response Status: <span id="original-credentials-refresh_status">{{ credentials_response.status|default('REFRESH NOT SUPPORTED') }}</span></h4>
     <pre id="credentials-response" class="prettyprint"></pre>
+
+    <h1>Refreshed Credentials</h1>
+    <table>
+      {% for k, v in refreshed_credentials.items() %}
+      <tr class="{% if k == 'config' %}hidden{% endif %}"}>
+        <td><strong>{{ k }}:&nbsp;</strong></td>
+        <td id="refreshed-credentials-{{ k }}">{{ v|default('', true) }}</td>
+      </tr>
+      {% endfor %}
+    </table>
   {% endif %}
 
   <h2>Human Readable Content</h2>
   <pre id="human-readable-user-content" class="prettyprint"></pre>
+  <h2>User content should contain these strings:</h2>
+  <pre id="user-content-json-keys" class="prettyprint"></pre>
 
   <script type="text/javascript">
 
-    el = document.getElementById('human-readable-user-content');
+    // Display syntax-highlighted user-info response content
+    var userContent = document.getElementById('human-readable-user-content');
     try {
-        el.innerHTML = JSON.stringify({{ safe_content }}, undefined, 4);
+        userContent.innerHTML = JSON.stringify({{ safe_content }}, undefined, 4);
     } catch(e) {
-         el.innerHTML = '{{ safe_content }}';
+         userContent.innerHTML = '{{ safe_content|replace('\n', ' ') }}';
     }
 
-    el = document.getElementById('credentials-response');
+    // Display syntax-highlighted strings user-info response should contain
+    var pattern = /"([^"]+)":/g;
+    var matches
+    var output = [];
+    while (matches = pattern.exec(userContent.innerHTML)) {
+        var res = "'" + matches[1] + "'";
+        if(output.indexOf(res) === -1){
+            output.push(res);
+        }
+    }
+    var userContentJSONKeys = document.getElementById('user-content-json-keys');
+    userContentJSONKeys.innerHTML = "[" + output.join(', ') + "]";
+
+    // Display syntax-highlighted credentials refresh response content
+    var credentialsResponse = document.getElementById('credentials-response');
     try {
-        el.innerHTML = JSON.stringify({{ safe_cred_response }}, undefined, 4);
+        credentialsResponse.innerHTML = JSON.stringify({{ safe_cred_response }}, undefined, 4);
     } catch(e) {
-        el.innerHTML = '{{ safe_cred_response }}';
+        credentialsResponse.innerHTML = '{{ safe_cred_response|replace('\n', ' ') }}';
     }
   </script>
 {% endif %}
