@@ -1,14 +1,16 @@
+# encoding: utf-8
+
 from os import path
 from collections import namedtuple
 import pkgutil
 import sys
+import time
 
 from jinja2 import Environment, FileSystemLoader
 
 # Add path of the functional_tests_path package to PYTHONPATH.
 # Tis is necessary for the following imports to work when this module is
 # imported from the expected_values.* modules.
-import time
 
 FUNCTIONAL_TESTS_PATH = path.join(path.dirname(__file__), '..')
 sys.path.append(FUNCTIONAL_TESTS_PATH)
@@ -40,6 +42,9 @@ def render_login_result(result):
         :meth:`.authomatic.Authomatic.login` method.
 
     """
+
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
     response = None
     original_credentials = {}
