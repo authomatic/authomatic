@@ -8,6 +8,7 @@ import exceptions
 import hashlib
 import hmac
 import logging
+import json
 import pickle
 import threading
 import time
@@ -16,16 +17,6 @@ import urlparse
 
 from authomatic.exceptions import SessionError, CredentialsError, RequestElementsError
 
-# Taken from anyjson.py
-try:
-    import simplejson as json
-except ImportError:
-    try:
-        # Try to import from django, should work on Google App Engine.
-        from django.utils import simplejson as json
-    except ImportError:
-        # Should work for Python2.6 and higher.
-        import json
 
 #===============================================================================
 # Global variables !!!
