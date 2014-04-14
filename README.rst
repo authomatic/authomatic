@@ -46,7 +46,7 @@ Features
 *	Out of the box support for:
 
 	*	|oauth1|_ providers: **Bitbucket**, **Flickr**, **Meetup**, **Plurk**, **Twitter**,
-		**Tumblr**, **UbuntuOne**, **Vimeo**, **Xero** and **Yahoo**.
+		**Tumblr**, **UbuntuOne**, **Vimeo**, **Xero**, **Xing** and **Yahoo**.
 	*	|oauth2|_ providers: **Behance**, **Bitly**, **Cosm**, **DeviantART**, **Facebook**,
 		**Foursquare**, **GitHub**, **Google**, **LinkedIn**, **PayPal**, **Reddit**, **Viadeo**,
 		**VK**, **WindowsLive**, **Yammer** and **Yandex**.

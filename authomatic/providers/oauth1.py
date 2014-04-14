@@ -797,9 +797,101 @@ class Yahoo(OAuth1):
         return user
 
 
+class Xing(OAuth1):
+    """
+    Xing |oauth1| provider.
+
+    * Dashboard: https://dev.xing.com/applications
+    * Docs: https://dev.xing.com/docs/authentication
+    * API reference: https://dev.xing.com/docs/resources
+
+    Supported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * first_name
+    * gender
+    * id
+    * last_name
+    * link
+    * locale
+    * name
+    * picture
+    * postal_code
+    * timezone
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * nickname
+    * phone
+
+    """
+
+    request_token_url = 'https://api.xing.com/v1/request_token'
+    user_authorization_url = 'https://api.xing.com/v1/authorize'
+    access_token_url = 'https://api.xing.com/v1/access_token'
+    user_info_url = 'https://api.xing.com/v1/users/me'
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
+        city=True,
+        country=True,
+        email=True,
+        first_name=True,
+        gender=True,
+        id=True,
+        last_name=True,
+        link=True,
+        locale=True,
+        name=True,
+        picture=True,
+        postal_code=True,
+        timezone=True,
+        username=True,
+    )
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        _users = data.get('users', [])
+        if _users and _users[0]:
+            _user = _users[0]
+            user.id = _user.get('id')
+            user.name = _user.get('display_name')
+            user.first_name = _user.get('first_name')
+            user.last_name = _user.get('last_name')
+            user.gender = _user.get('gender')
+            user.timezone = _user.get('time_zone', {}).get('name')
+            user.email = _user.get('active_email')
+            user.link = _user.get('permalink')
+            user.username = _user.get('page_name')
+            user.picture = _user.get('photo_urls', {}).get('large')
+
+            _address = _user.get('business_address', {})
+            if _address:
+                user.city = _address.get('city')
+                user.country = _address.get('country')
+                user.postal_code = _address.get('zip_code')
+
+            _languages = _user.get('languages', {}).keys()
+            if _languages and _languages[0]:
+                user.locale = _languages[0]
+
+            _birth_date = _user.get('birth_date', {})
+            _year = _birth_date.get('year')
+            _month = _birth_date.get('month')
+            _day = _birth_date.get('day')
+            if _year and _month and _day:
+                user.birth_date = datetime.datetime(_year, _month, _day)
+
+        return user
+
+
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers don't change!
-PROVIDER_ID_MAP = [OAuth1, Bitbucket, Flickr, Meetup, Plurk, Twitter, Tumblr, UbuntuOne, Vimeo, Xero, Yahoo]
+PROVIDER_ID_MAP = [OAuth1, Bitbucket, Flickr, Meetup, Plurk, Twitter, Tumblr, UbuntuOne, Vimeo, Xero, Yahoo, Xing]
 
 
 

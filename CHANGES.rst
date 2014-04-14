@@ -12,6 +12,7 @@ Version 0.0.8
 * Changed the :attr:`.oauth1.Twitter.user_authorization_url` from
   `https://api.twitter.com/oauth/authorize` to
   `https://api.twitter.com/oauth/authenticate`.
+* Added the :class:`oauth1.Xing` provider.
 
 
 Version 0.0.7
