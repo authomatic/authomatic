@@ -487,6 +487,16 @@ class BaseProvider(object):
         return user
 
 
+    @staticmethod
+    def _http_status_in_category(status, category):
+        """Checks whether a HTTP status code is in the category denoted
+        by the hundreds digit"""
+
+        assert category < 10, 'HTTP status category must be a one-digit int!'
+        cat = category * 100
+        return status >= cat and status < cat + 100
+
+
 class AuthorizationProvider(BaseProvider):
     """
     Base provider for *authorization protocols* i.e. protocols which allow a **provider**

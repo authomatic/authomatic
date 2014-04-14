@@ -382,7 +382,7 @@ class OAuth1(providers.AuthorizationProvider):
             
             response = self._fetch(*request_elements)
             
-            if response.status != 200:
+            if not self._http_status_in_category(response.status, 2):
                 raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
                                    .format(self.access_token_url, response.status),
                                    original_message=response.content,
@@ -423,7 +423,7 @@ class OAuth1(providers.AuthorizationProvider):
             response = self._fetch(*request_elements)
             
             # check if response status is OK
-            if response.status != 200:
+            if not self._http_status_in_category(response.status, 2):
                 raise FailureError('Failed to obtain request token from {}! HTTP status code: {} content: {}'\
                                   .format(self.request_token_url, response.status, response.content),
                                   original_message=response.content,
