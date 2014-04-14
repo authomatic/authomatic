@@ -9,6 +9,9 @@ Version 0.0.8
   the deprecated `https://www.googleapis.com/oauth2/v3/userinfo`. Also the
   `user_info_scope` reflects these changes.
 * Added missing :attr:`.oauthh2.DeviantART.user_info_scope`
+* Changed the :attr:`.oauth1.Twitter.user_authorization_url` from
+  `https://api.twitter.com/oauth/authorize` to
+  `https://api.twitter.com/oauth/authenticate`.
 
 
 Version 0.0.7
