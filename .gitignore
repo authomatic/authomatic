@@ -30,3 +30,4 @@ examples/gae/tester/openid
 .idea/
 bootstrap/bootstrap.py
 venv26
+bower_components/
