@@ -483,7 +483,7 @@ class Session(object):
         # 1. Unpickle non json serializable objects.
         for key in self.NOT_JSON_SERIALIZABLE:
             if key in deserialized.keys():
-                deserialized[key] = pickle.loads(deserialized[key])
+                deserialized[key] = pickle.loads(str(deserialized[key]))
 
         return deserialized
 
