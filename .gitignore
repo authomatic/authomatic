@@ -31,3 +31,4 @@ examples/gae/tester/openid
 bootstrap/bootstrap.py
 venv26
 bower_components/
+.DS_Store
