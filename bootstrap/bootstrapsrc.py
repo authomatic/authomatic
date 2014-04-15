@@ -2,6 +2,7 @@ import os
 import urllib
 import zipfile
 import platform
+import sys
 
 
 CHROMEDRIVER_VERSION = '2.8'
@@ -20,38 +21,41 @@ GAE_EXAMPLES_PATH = os.path.join(PROJECT_ROOT, 'examples/gae')
 
 def after_install(options, home_dir):
     openid_path = os.path.join(home_dir, 'lib/python2.7/site-packages/openid')
+    openid_path = os.path.abspath(openid_path)
 
     def _download_and_extract(url, extract_path):
-        print('Downloading {}'.format(url))
+        print('Downloading {0}'.format(url))
         tmp_zip_path = urllib.urlretrieve(url)[0]
         zf = zipfile.ZipFile(tmp_zip_path)
 
         extract_path = os.path.join(home_dir, extract_path)
         extract_path = os.path.abspath(extract_path)
-        print('Extracting {} to {}'.format(tmp_zip_path, extract_path))
+        print('Extracting {0} to {1}'.format(tmp_zip_path, extract_path))
         zf.extractall(os.path.join(home_dir, extract_path))
 
     def _add_pth(name, content):
-        pth_path = 'lib/python2.7/site-packages/{}.pth'.format(name)
+        python_version = '{0}.{1}'.format(*sys.version_info)
+        pth_path = 'lib/python{0}/site-packages/{1}.pth'\
+            .format(python_version, name)
         with open(os.path.join(home_dir, pth_path), 'w') as pth:
-            print('Creating PTH file: {}'.format(os.path.abspath(pth_path)))
+            print('Creating PTH file: {0}'.format(os.path.abspath(pth_path)))
             pth.writelines(content)
 
     def _link(target, name):
         try:
-            print('creating symlink: {} -> {}'.format(name, target))
+            print('creating symlink: {0} -> {1}'.format(name, target))
             os.symlink(target, name)
         except OSError:
-            print('removing previous symlink: {}'.format(name))
+            print('removing previous symlink: {0}'.format(name))
             os.remove(name)
-            print('creating symlink: {} -> {}'.format(name, target))
+            print('creating symlink: {0} -> {1}'.format(name, target))
             os.symlink(target, name)
 
     if PLATFORM.lower().startswith('darwin'):
         chromedriver_path = CHROMEDRIVER_PATH_BASE + 'chromedriver_mac32.zip'
     elif PLATFORM.lower().startswith('linux'):
         chromedriver_path = CHROMEDRIVER_PATH_BASE + \
-            'chromedriver_linux{}.zip'.format(ARCHITECTURE)
+            'chromedriver_linux{0}.zip'.format(ARCHITECTURE)
     elif PLATFORM.lower().startswith('win'):
         chromedriver_path = CHROMEDRIVER_PATH_BASE + 'chromedriver_win32.zip'
     else:
@@ -60,12 +64,12 @@ def after_install(options, home_dir):
     if chromedriver_path:
         _download_and_extract(chromedriver_path, 'bin')
         chromedriver_executable = os.path.join(home_dir, 'bin/chromedriver')
-        print('Setting permissions of {} to 755'
+        print('Setting permissions of {0} to 755'
               .format(chromedriver_executable))
         os.chmod(chromedriver_executable, 755)
 
     _download_and_extract('http://googleappengine.googlecode.com/files/' +
-                          'google_appengine_{}.zip'.format(GAE_SDK_VERSION),
+                          'google_appengine_{0}.zip'.format(GAE_SDK_VERSION),
                           'bin')
 
     _add_pth('authomatic', PROJECT_ROOT)
