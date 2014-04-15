@@ -114,6 +114,18 @@ OAUTH1 = {
         'consumer_secret': '##########',
         'id': authomatic.provider_id(),
     },
+
+    'xing': {
+        'class_': oauth1.Xing,
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'id': authomatic.provider_id(),
+        '_icon': 'https://www.xing.com/favicon.ico',
+        '_apis': {
+            'Get job recommendations': ('GET', "https://api.xing.com/v1/users/{user.id}/jobs/recommendations"),
+            'Get activity stream': ('GET', "https://api.xing.com/v1/users/{user.id}/feed"),
+        },
+    },
     
     'yahoo': {
         'class_': oauth1.Yahoo,
