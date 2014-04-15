@@ -5,9 +5,10 @@ import platform
 import sys
 
 
+PYTHON_VERSION = '{0}.{1}'.format(*sys.version_info)
 CHROMEDRIVER_VERSION = '2.8'
 GAE_SDK_VERSION = '1.8.3'
-CHROMEDRIVER_PATH_BASE = 'http://chromedriver.storage.googleapis.com/{}/'\
+CHROMEDRIVER_PATH_BASE = 'http://chromedriver.storage.googleapis.com/{0}/'\
     .format(CHROMEDRIVER_VERSION)
 
 ARCHITECTURE = platform.architecture()[0][:-3]
@@ -20,7 +21,8 @@ AUTHOMATIC_PATH = os.path.join(PROJECT_ROOT, 'authomatic')
 GAE_EXAMPLES_PATH = os.path.join(PROJECT_ROOT, 'examples/gae')
 
 def after_install(options, home_dir):
-    openid_path = os.path.join(home_dir, 'lib/python2.7/site-packages/openid')
+    openid_path = os.path.join(home_dir, 'lib/python{0}/site-packages/openid'
+                               .format(PYTHON_VERSION))
     openid_path = os.path.abspath(openid_path)
 
     def _download_and_extract(url, extract_path):
@@ -34,9 +36,8 @@ def after_install(options, home_dir):
         zf.extractall(os.path.join(home_dir, extract_path))
 
     def _add_pth(name, content):
-        python_version = '{0}.{1}'.format(*sys.version_info)
         pth_path = 'lib/python{0}/site-packages/{1}.pth'\
-            .format(python_version, name)
+            .format(PYTHON_VERSION, name)
         with open(os.path.join(home_dir, pth_path), 'w') as pth:
             print('Creating PTH file: {0}'.format(os.path.abspath(pth_path)))
             pth.writelines(content)
@@ -68,18 +69,19 @@ def after_install(options, home_dir):
               .format(chromedriver_executable))
         os.chmod(chromedriver_executable, 755)
 
-    _download_and_extract('http://googleappengine.googlecode.com/files/' +
-                          'google_appengine_{0}.zip'.format(GAE_SDK_VERSION),
-                          'bin')
-
     _add_pth('authomatic', PROJECT_ROOT)
-    _add_pth('gae', '\n'.join([
-            os.path.abspath(os.path.join(home_dir, 'bin/google_appengine/')),
-            'import dev_appserver',
-            'dev_appserver.fix_sys_path()',
-        ]))
 
-    for example in os.listdir(GAE_EXAMPLES_PATH):
-        example_path = os.path.join(GAE_EXAMPLES_PATH, example)
-        _link(AUTHOMATIC_PATH, os.path.join(example_path, 'authomatic'))
-        _link(openid_path, os.path.join(example_path, 'openid'))
+    if PYTHON_VERSION == '2.7':
+        _download_and_extract('http://googleappengine.googlecode.com/files/' +
+                              'google_appengine_{0}.zip'.format(GAE_SDK_VERSION),
+                              'bin')
+        _add_pth('gae', '\n'.join([
+                os.path.abspath(os.path.join(home_dir, 'bin/google_appengine/')),
+                'import dev_appserver',
+                # 'dev_appserver.fix_sys_path()',
+            ]))
+
+        for example in os.listdir(GAE_EXAMPLES_PATH):
+            example_path = os.path.join(GAE_EXAMPLES_PATH, example)
+            _link(AUTHOMATIC_PATH, os.path.join(example_path, 'authomatic'))
+            _link(openid_path, os.path.join(example_path, 'openid'))

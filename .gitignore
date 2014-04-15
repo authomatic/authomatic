@@ -28,3 +28,4 @@ examples/gae/simple/openid
 examples/gae/tester/authomatic
 examples/gae/tester/openid
 .idea/
+bootstrap/bootstrap.py
