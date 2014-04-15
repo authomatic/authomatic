@@ -10,11 +10,11 @@ from tests.functional_tests import config
 from tests.functional_tests import fixtures
 
 
-HOME = 'http://{}:{}/'.format(config.HOST_ALIAS, config.PORT)
+HOME = 'http://{0}:{1}/'.format(config.HOST_ALIAS, config.PORT)
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
-PROVIDERS = {k: v for k, v in fixtures.ASSEMBLED_CONFIG.items() if
-             k in config.INCLUDE_PROVIDERS}
+PROVIDERS = dict((k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items() if
+                 k in config.INCLUDE_PROVIDERS)
 APPS = {
     'Flask': liveandletdie.Flask(
         os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
@@ -78,7 +78,7 @@ class TestCredentials(object):
     @pytest.fixture()
     def fixture(self, app, provider, browser):
         def f(property_name):
-            id_ = 'original-credentials-{}'.format(property_name)
+            id_ = 'original-credentials-{0}'.format(property_name)
             value = browser.find_element_by_id(id_).text or None
 
             expected = provider['credentials'][property_name]
@@ -134,8 +134,8 @@ class TestCredentialsChange(object):
     @pytest.fixture()
     def fixture(self, app, provider, browser):
         def f(property_name):
-            original_id = 'original-credentials-{}'.format(property_name)
-            changed_id = 'refreshed-credentials-{}'.format(property_name)
+            original_id = 'original-credentials-{0}'.format(property_name)
+            changed_id = 'refreshed-credentials-{0}'.format(property_name)
 
             original_val = browser.find_element_by_id(original_id).text or None
             changed_val = browser.find_element_by_id(changed_id).text or None
@@ -256,7 +256,7 @@ class TestUser(object):
 
     def test_provider_support(self, app, provider):
         sua = provider['class_'].supported_user_attributes
-        tested = {k: getattr(sua, k) for k in sua._fields}
-        expected = {k: bool(v) for k, v in provider['user'].items()
-                    if k is not 'content'}
+        tested = dict((k, getattr(sua, k)) for k in sua._fields)
+        expected = dict((k, bool(v)) for k, v in provider['user'].items() if
+                        k is not 'content')
         assert tested == expected

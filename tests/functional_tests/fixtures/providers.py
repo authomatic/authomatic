@@ -62,7 +62,7 @@ class BaseProviderFixture(object):
 
         def f(browser):
             for xpath in self.PRE_LOGIN_CLICKS_XPATH:
-                print('clicking on {}'.format(xpath))
+                print('clicking on {0}'.format(xpath))
                 browser.find_element_by_xpath(xpath).click()
 
             print('logging the user in.')
@@ -70,7 +70,7 @@ class BaseProviderFixture(object):
                 .send_keys(self.login)
             password_element = browser.\
                 find_element_by_xpath(self.PASSWORD_XPATH)
-            print 'PASSWORD = {}'.format(self.password)
+            print 'PASSWORD = {0}'.format(self.password)
             password_element.send_keys(self.password)
             password_element.send_keys(Keys.ENTER)
         return f

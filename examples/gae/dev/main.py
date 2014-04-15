@@ -60,13 +60,13 @@ class Login(webapp2.RequestHandler):
             if result.user:
                 user_response = result.user.update()
                 if user_response:
-                    self.response.write('<br /><br />status = {}<br />'.format(user_response.status))
+                    self.response.write('<br /><br />status = {0}<br />'.format(user_response.status))
                 
-                self.response.write('<br /><br />Hi {}<br />'.format(result.user.name))
-                self.response.write('your ID is {}<br />'.format(result.user.id))
-                self.response.write('your email is {}<br />'.format(result.user.email))
+                self.response.write('<br /><br />Hi {0}<br />'.format(result.user.name))
+                self.response.write('your ID is {0}<br />'.format(result.user.id))
+                self.response.write('your email is {0}<br />'.format(result.user.email))
             elif result.error:
-                self.response.write('ERROR {}<br />'.format(result.error.message))
+                self.response.write('ERROR {0}<br />'.format(result.error.message))
         
     
     def callback(self, event):
@@ -77,15 +77,15 @@ class Login(webapp2.RequestHandler):
             self.response.write('ERROR:')
             self.response.write('<br /><br />')
             
-            self.response.write('message: {}<br />'.format(event.error.message))
+            self.response.write('message: {0}<br />'.format(event.error.message))
             for k, v in event.error.__dict__.iteritems():
                 if not k == 'message':
-                    self.response.write('{}: {}<br />'.format(k, v))
+                    self.response.write('{0}: {1}<br />'.format(k, v))
         
         elif event.user:
                 
             self.response.write('<br /><br />')
-            self.response.write('user = {}<br /><br />'.format(event.user))
+            self.response.write('user = {0}<br /><br />'.format(event.user))
             
             if event.user.credentials:
                 
@@ -93,19 +93,19 @@ class Login(webapp2.RequestHandler):
                 self.response.write('Credentials:<br /><br />')
                 
                 for k, v in event.user.credentials.__dict__.items():
-                    self.response.write('{}: {}<br />'.format(k, v))        
+                    self.response.write('{0}: {1}<br />'.format(k, v))
                 
                 serialized = event.user.credentials.serialize()
                 
                 deserialized = authomatic.credentials(serialized)
                 
                 self.response.write('<br /><br />')
-                self.response.write('Serialized:<br />{}<br /><br />'.format(serialized)) 
-                self.response.write('Serialized size:<br />{} B<br /><br />'.format(sys.getsizeof(serialized)))        
+                self.response.write('Serialized:<br />{0}<br /><br />'.format(serialized))
+                self.response.write('Serialized size:<br />{0} B<br /><br />'.format(sys.getsizeof(serialized)))
                 
                 # deserialized credentials
                 for k, v in deserialized.__dict__.items():
-                    self.response.write('{}: {}<br />'.format(k, v))
+                    self.response.write('{0}: {1}<br />'.format(k, v))
                 
                 self.response.write('<br /><br />')
                 self.response.write('User Info:<br /><br />')
@@ -115,10 +115,10 @@ class Login(webapp2.RequestHandler):
                 
             for k, v in event.user.__dict__.iteritems():
                 if k != 'data':
-                    self.response.write('{}: {}<br />'.format(k, v))
+                    self.response.write('{0}: {1}<br />'.format(k, v))
                     if k == 'gae_user' and v:
                         for kk, vv in v.__dict__.iteritems():
-                            self.response.write('&nbsp;&nbsp;&nbsp;{}: {}<br />'.format(kk, vv))
+                            self.response.write('&nbsp;&nbsp;&nbsp;{0}: {1}<br />'.format(kk, vv))
                     
             
             self.response.write('<br /><br />')
@@ -129,9 +129,9 @@ class Login(webapp2.RequestHandler):
 class Test(webapp2.RequestHandler):
     def any(self):
         self.response.write('TEST:\n')
-        self.response.write('headers = {}\n'.format(self.request.headers))
-        self.response.write('params = {}\n'.format(self.request.params))
-        self.response.write('body = {}\n'.format(self.request.body))
+        self.response.write('headers = {0}\n'.format(self.request.headers))
+        self.response.write('params = {0}\n'.format(self.request.params))
+        self.response.write('body = {0}\n'.format(self.request.body))
 
 
 ROUTES = [webapp2.Route(r'/auth/<:.*>', Login, 'auth', handler_method='login'),

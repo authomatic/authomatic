@@ -91,7 +91,7 @@ def get_configuration(provider):
     conf.update(config.COMMON)
     conf.update(config.PROVIDERS[provider])
 
-    class_name = '{}Configuration'.format(provider.capitalize())
+    class_name = '{0}Configuration'.format(provider.capitalize())
     Res = namedtuple(class_name, sorted(conf.keys()))
 
     # Add additional class attributes which not allowed to be passed
@@ -102,8 +102,8 @@ def get_configuration(provider):
     Res.no_birth_date = [conf['user_birth_year'], 'birth']
     Res.no_gender = [conf['user_gender'], 'gender']
     Res.no_locale = [conf['user_locale'], 'language', 'locale']
-    Res.no_first_name = ['"{}"'.format(conf['user_first_name']), 'first']
-    Res.no_last_name = ['"{}"'.format(conf['user_last_name']), 'last']
+    Res.no_first_name = ['"{0}"'.format(conf['user_first_name']), 'first']
+    Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last']
     Res.no_timezone = ['timezone']
     Res.no_location = [conf['user_city'], conf['user_country'], 'city',
         'country', 'location', 'postal', 'zip']

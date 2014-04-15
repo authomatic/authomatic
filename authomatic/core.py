@@ -36,7 +36,9 @@ def normalize_dict(dict_):
     :returns:
         Normalized dictionary.
     """
-    return {k: v[0] if not type(v) is str and len(v) == 1 else v for k, v in dict_.items()}
+
+    return dict([(k, v[0] if not type(v) is str and len(v) == 1 else v)
+                 for k, v in dict_.items()])
 
 
 def items_to_dict(items):
@@ -161,7 +163,7 @@ def import_string(import_name, silent=False):
             return __import__(import_name)
     except (ImportError, AttributeError), e:
         if not silent:
-            raise exceptions.ImportStringError('Import from string failed for path {}'.format(import_name),
+            raise exceptions.ImportStringError('Import from string failed for path {0}'.format(import_name),
                                                str(e))
 
 
@@ -198,7 +200,7 @@ def id_to_name(config, short_name):
             return k
             break
     else:
-        raise Exception('No provider with id={} found in the config!'.format(short_name))
+        raise Exception('No provider with id={0} found in the config!'.format(short_name))
 
 
 class ReprMixin(object):
@@ -243,15 +245,15 @@ class ReprMixin(object):
                 # if repr is too long
                 if len(repr(v)) > self._repr_length_limit:
                     # Truncate to ClassName(...)
-                    v = '{}(...)'.format(v.__class__.__name__)
+                    v = '{0}(...)'.format(v.__class__.__name__)
                 else:
                     v = repr(v)
 
-                args.append('{}={}'.format(k, v))
+                args.append('{0}={1}'.format(k, v))
 
         args = ', '.join(args)
 
-        return '{}({})'.format(name, args)
+        return '{0}({1})'.format(name, args)
 
 
 class Future(threading.Thread):
@@ -468,7 +470,7 @@ class Session(object):
 
         # Verify signature
         if not signature == self._signature(self.name, encoded, timestamp):
-            raise SessionError('Invalid signature "{}"!'.format(signature))
+            raise SessionError('Invalid signature "{0}"!'.format(signature))
 
         # Verify timestamp
         if int(timestamp) < int(time.time()) - self.max_age:
@@ -796,7 +798,7 @@ class Credentials(ReprMixin):
 
         if hasattr(self.provider_class, 'refresh_credentials'):
             if force or self.expire_soon(soon):
-                logging.info('PROVIDER NAME: {}'.format(self.provider_name))
+                logging.info('PROVIDER NAME: {0}'.format(self.provider_name))
                 return self.provider_class(self, None, self.provider_name).refresh_credentials(self)
 
 
@@ -972,7 +974,7 @@ class LoginResult(ReprMixin):
                    stay_open='// ' if stay_open else '')
 
 
-    def popup_html(self, callback_name=None, indent=None, title='Login | {}', custom=None, stay_open=False):
+    def popup_html(self, callback_name=None, indent=None, title='Login | {0}', custom=None, stay_open=False):
         """
         Returns a HTML with JavaScript that:
 
@@ -993,7 +995,7 @@ class LoginResult(ReprMixin):
             If ``None``, no newlines are added.
 
         :param str title:
-            The text of the HTML title. You can use ``{}`` tag inside,
+            The text of the HTML title. You can use ``{0}`` tag inside,
             which will be replaced by the provider name.
 
         :param custom:
@@ -1303,7 +1305,7 @@ class Authomatic(object):
             # retrieve required settings for current provider and raise exceptions if missing
             provider_settings = self.config.get(provider_name)
             if not provider_settings:
-                raise exceptions.ConfigError('Provider name "{}" not specified!'.format(provider_name))
+                raise exceptions.ConfigError('Provider name "{0}" not specified!'.format(provider_name))
     
             if not (session is None or session_saver is None):
                 session = session
@@ -1320,7 +1322,7 @@ class Authomatic(object):
             # Resolve provider class.
             class_ = provider_settings.get('class_')
             if not class_:
-                raise exceptions.ConfigError('The "class_" key not specified in the config for provider {}!'.format(provider_name))
+                raise exceptions.ConfigError('The "class_" key not specified in the config for provider {0}!'.format(provider_name))
             ProviderClass = resolve_provider_class(class_)
     
             # instantiate provider class
@@ -1388,7 +1390,7 @@ class Authomatic(object):
     
         # Resolve provider class.
         ProviderClass = credentials.provider_class
-        logging.info('ACCESS HEADERS: {}'.format(headers))
+        logging.info('ACCESS HEADERS: {0}'.format(headers))
         # Access resource and return response.
         
         provider = ProviderClass(self, adapter=None, provider_name=credentials.provider_name)
@@ -1642,7 +1644,7 @@ class Authomatic(object):
     
             # Forward headers
             for k, v in response.getheaders():
-                logging.info('    {}: {}'.format(k, v))
+                logging.info('    {0}: {1}'.format(k, v))
                 adapter.set_header(k, v)
     
         elif request_type == 'elements':

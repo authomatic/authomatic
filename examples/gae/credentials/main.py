@@ -20,7 +20,7 @@ class Login(webapp2.RequestHandler):
         if result:
             if result.user:
                 result.user.update()
-                self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
+                self.response.write('<h1>Hi {0}</h1>'.format(result.user.name))
                 
                 # Save the user name and ID to cookies that we can use it in other handlers.
                 self.response.set_cookie('user_id', result.user.id)
@@ -50,9 +50,9 @@ class Home(webapp2.RequestHandler):
         error = urllib.unquote(self.request.cookies.get('error', ''))
         
         if error:
-            self.response.write('<p>Damn that error: {}</p>'.format(error))
+            self.response.write('<p>Damn that error: {0}</p>'.format(error))
         elif user_id:
-            self.response.write('<h1>Hi {}</h1>'.format(user_name))
+            self.response.write('<h1>Hi {0}</h1>'.format(user_name))
             
             if serialized_credentials:
                 # Deserialize credentials.
@@ -60,7 +60,7 @@ class Home(webapp2.RequestHandler):
                 
                 self.response.write("""
                 <p>
-                    You are logged in with <b>{}</b> and we have your credentials.
+                    You are logged in with <b>{0}</b> and we have your credentials.
                 </p>
                 """.format(dict(fb='Facebook', tw='Twitter')[credentials.provider_name]))
                 
@@ -71,10 +71,10 @@ class Home(webapp2.RequestHandler):
                 
                 self.response.write("""
                 <p>
-                    They are <b>{}</b> valid and
-                    will expire in <b>{}</b> than one day
-                    (in <b>{}</b> seconds to be precise).
-                    It will be on <b>{}</b>.
+                    They are <b>{0}</b> valid and
+                    will expire in <b>{0}</b> than one day
+                    (in <b>{0}</b> seconds to be precise).
+                    It will be on <b>{0}</b>.
                 </p>
                 """.format(valid, expire_soon, remaining, expire_on))
                 
@@ -83,14 +83,14 @@ class Home(webapp2.RequestHandler):
                     <p>We can refresh them while they are valid.</p>
                     <a href="refresh">OK, refresh them!</a>
                     <p>Moreover, we can do powerful stuff with them.</p>
-                    <a href="action/{}">Show me what you can do!</a>
+                    <a href="action/{0}">Show me what you can do!</a>
                     """.format(credentials.provider_name))
                 else:
                     self.response.write("""
                     <p>
                         Repeat the <b>login procedure</b>to get new credentials.
                     </p>
-                    <a href="login/{}">Refresh</a>
+                    <a href="login/{0}">Refresh</a>
                     """.format(credentials.provider_name))
             
             self.response.write('<p>We can also log you out.</p>')
@@ -115,15 +115,15 @@ class Refresh(webapp2.RequestHandler):
                 <p>
                     Credentials were refresshed successfully.
                     Their expiration date was extended from
-                    <b>{}</b> to <b>{}</b>.
+                    <b>{0}</b> to <b>{0}</b>.
                 </p>
                 """.format(old_expiration, new_expiration))
             else:
                 self.response.write("""
                 <p>Refreshment failed!</p>
-                <p>Status code: {}</p>
+                <p>Status code: {0}</p>
                 <p>Error message:</p>
-                <pre>{}</pre>
+                <pre>{0}</pre>
                 """.format(response.status, response.content))
         else:
             self.response.write('<p>Your credentials don\'t support refreshment!</p>')
@@ -140,7 +140,7 @@ class Action(webapp2.RequestHandler):
         
         self.response.write("""
         <a href="..">Home</a>
-        <p>We can {} on your behalf.</p>
+        <p>We can {0} on your behalf.</p>
         <form method="post">
             <input type="text" name="message" value="Have you got a bandage?" />
             <input type="submit" value="Do it!">
@@ -157,7 +157,7 @@ class Action(webapp2.RequestHandler):
         
         if provider_name == 'fb':
             # Prepare the URL for Facebook Graph API.
-            url = 'https://graph.facebook.com/{}/feed'.format(user_id)
+            url = 'https://graph.facebook.com/{0}/feed'.format(user_id)
             
             # Access user's protected resource.
             response = authomatic.access(serialized_credentials, url,
@@ -169,12 +169,12 @@ class Action(webapp2.RequestHandler):
             error = response.data.get('error')
             
             if error:
-                self.response.write('<p>Damn that error: {}!</p>'.format(error))
+                self.response.write('<p>Damn that error: {0}!</p>'.format(error))
             elif post_id:
                 self.response.write('<p>You just posted a status with id ' + \
-                                    '{} to your Facebook timeline.<p/>'.format(post_id))
+                                    '{0} to your Facebook timeline.<p/>'.format(post_id))
             else:
-                self.response.write('<p>Damn that unknown error! Status code: {}</p>'\
+                self.response.write('<p>Damn that unknown error! Status code: {0}</p>'\
                                     .format(response.status))
         
         elif provider_name == 'tw':
@@ -188,17 +188,17 @@ class Action(webapp2.RequestHandler):
             tweet_id = response.data.get('id')
             
             if error:
-                self.response.write('<p>Damn that error: {}!</p>'.format(error))
+                self.response.write('<p>Damn that error: {0}!</p>'.format(error))
             elif tweet_id:
                 self.response.write("""
                 <p>
-                    You just tweeted a tweet with id {}.
+                    You just tweeted a tweet with id {0}.
                 </p>
                 """.format(tweet_id))
             else:
                 self.response.write("""
                 <p>
-                    Damn that unknown error! Status code: {}
+                    Damn that unknown error! Status code: {0}
                 </p>
                 """.format(response.status))
         

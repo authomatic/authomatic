@@ -86,7 +86,7 @@ def login_decorator(func):
         except Exception as e:
             if provider.settings.report_errors:
                 error = e
-                provider._log(logging.ERROR, 'Reported suppressed exception: {}!'.format(repr(error)))
+                provider._log(logging.ERROR, 'Reported suppressed exception: {0}!'.format(repr(error)))
             else:
                 if provider.settings.debug:
                     # TODO: Check whether it actually works without middleware
@@ -279,7 +279,7 @@ class BaseProvider(object):
             e.g. ``"authomatic:facebook:key"``
         """
         
-        return '{}:{}:{}'.format(self.settings.prefix, self.name, key)
+        return '{0}:{1}:{2}'.format(self.settings.prefix, self.name, key)
     
     
     def _session_set(self, key, value):
@@ -375,12 +375,12 @@ class BaseProvider(object):
         
         request_path = urlparse.urlunsplit((None, None, path, query, None))
         
-        self._log(logging.DEBUG, u' \u251C\u2500 host: {}'.format(host))
-        self._log(logging.DEBUG, u' \u251C\u2500 path: {}'.format(request_path))
-        self._log(logging.DEBUG, u' \u251C\u2500 method: {}'.format(method))
-        self._log(logging.DEBUG, u' \u251C\u2500 body: {}'.format(body))
-        self._log(logging.DEBUG, u' \u251C\u2500 params: {}'.format(params))
-        self._log(logging.DEBUG, u' \u2514\u2500 headers: {}'.format(headers))
+        self._log(logging.DEBUG, u' \u251C\u2500 host: {0}'.format(host))
+        self._log(logging.DEBUG, u' \u251C\u2500 path: {0}'.format(request_path))
+        self._log(logging.DEBUG, u' \u251C\u2500 method: {0}'.format(method))
+        self._log(logging.DEBUG, u' \u251C\u2500 body: {0}'.format(body))
+        self._log(logging.DEBUG, u' \u251C\u2500 params: {0}'.format(params))
+        self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(headers))
         
         # Connect
         if scheme.lower() == 'https':
@@ -407,7 +407,7 @@ class BaseProvider(object):
             elif max_redirects > 0:
                 remaining_redirects = max_redirects - 1
                 
-                self._log(logging.DEBUG, 'Redirecting to {}'.format(url))
+                self._log(logging.DEBUG, 'Redirecting to {0}'.format(url))
                 self._log(logging.DEBUG, 'Remaining redirects: '.format(remaining_redirects))
                 
                 # Call this method again.
@@ -423,9 +423,9 @@ class BaseProvider(object):
                                  status=response.status)
         else:
             self._log(logging.DEBUG, u'Got response:')
-            self._log(logging.DEBUG, u' \u251C\u2500 url: {}'.format(url))
-            self._log(logging.DEBUG, u' \u251C\u2500 status: {}'.format(response.status))
-            self._log(logging.DEBUG, u' \u2514\u2500 headers: {}'.format(response.getheaders()))
+            self._log(logging.DEBUG, u' \u251C\u2500 url: {0}'.format(url))
+            self._log(logging.DEBUG, u' \u251C\u2500 status: {0}'.format(response.status))
+            self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(response.getheaders()))
                 
         return authomatic.core.Response(response, content_parser)
     
@@ -734,7 +734,7 @@ class AuthorizationProvider(BaseProvider):
         
         headers = headers or {}
         
-        self._log(logging.INFO, 'Accessing protected resource {}.'.format(url))
+        self._log(logging.INFO, 'Accessing protected resource {0}.'.format(url))
         
         request_elements = self.create_request_elements(request_type=self.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                         credentials=self.credentials,
@@ -748,7 +748,7 @@ class AuthorizationProvider(BaseProvider):
                               max_redirects=max_redirects,
                               content_parser=content_parser)
         
-        self._log(logging.INFO, 'Got response. HTTP status = {}.'.format(response.status))
+        self._log(logging.INFO, 'Got response. HTTP status = {0}.'.format(response.status))
         return response
 
 
@@ -801,7 +801,7 @@ class AuthorizationProvider(BaseProvider):
         if cls._x_use_authorization_header:
             res = ':'.join((credentials.consumer_key, credentials.consumer_secret))
             res = base64.b64encode(res)
-            return {'Authorization': 'Basic {}'.format(res)}
+            return {'Authorization': 'Basic {0}'.format(res)}
         else:
             return {}
     
@@ -812,10 +812,10 @@ class AuthorizationProvider(BaseProvider):
         """
         
         if not self.consumer.key:
-            raise ConfigError('Consumer key not specified for provider {}!'.format(self.name))
+            raise ConfigError('Consumer key not specified for provider {0}!'.format(self.name))
         
         if not self.consumer.secret:
-            raise ConfigError('Consumer secret not specified for provider {}!'.format(self.name))
+            raise ConfigError('Consumer secret not specified for provider {0}!'.format(self.name))
     
     
     @staticmethod

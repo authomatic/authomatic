@@ -11,7 +11,7 @@ from config import CONFIG
 
 authomatic = Authomatic(config=CONFIG, # Here goes the config.
                         secret='dsgdfgdgj5fd5g4fmjnfggf6gnkfgn5fngh4n564d3vr54er5',
-                        report_errors=True,
+                        report_errors=False,
                         logging_level=logging.DEBUG)
 
 def links(handler):

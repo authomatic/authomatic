@@ -13,6 +13,7 @@ Version 0.0.8
   `https://api.twitter.com/oauth/authorize` to
   `https://api.twitter.com/oauth/authenticate`.
 * Added the :class:`oauth1.Xing` provider.
+* Made compatible with **Python 2.6**.
 
 
 Version 0.0.7

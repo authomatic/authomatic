@@ -162,7 +162,7 @@ class OAuth2(providers.AuthorizationProvider):
             # Add Authorization header. See: http://tools.ietf.org/html/rfc6749#section-7.1
             if credentials.token_type == cls.BEARER:
                 # http://tools.ietf.org/html/rfc6750#section-2.1
-                headers.update({'Authorization': 'Bearer {}'.format(credentials.token)})
+                headers.update({'Authorization': 'Bearer {0}'.format(credentials.token)})
                 
             elif token:
                 params['access_token'] = token
@@ -295,7 +295,7 @@ class OAuth2(providers.AuthorizationProvider):
                     if not stored_state:
                         raise FailureError('Unable to retrieve stored state!')
                     elif not stored_state == state:
-                        raise FailureError('The returned state "{}" doesn\'t match with the stored state!'.format(state),
+                        raise FailureError('The returned state "{0}" doesn\'t match with the stored state!'.format(state),
                                            url=self.user_authorization_url)
                     self._log(logging.INFO, 'Request is valid.')
                 else:
@@ -310,7 +310,7 @@ class OAuth2(providers.AuthorizationProvider):
                                         'user authorization redirect.')
             
             # exchange authorization code for access token by the provider
-            self._log(logging.INFO, 'Fetching access token from {}.'.format(self.access_token_url))
+            self._log(logging.INFO, 'Fetching access token from {0}.'.format(self.access_token_url))
             
             self.credentials.token = authorization_code
             
@@ -328,7 +328,7 @@ class OAuth2(providers.AuthorizationProvider):
             refresh_token = response.data.get('refresh_token', '')
             
             if response.status != 200 or not access_token:
-                raise FailureError('Failed to obtain OAuth 2.0 access token from {}! HTTP status: {}, message: {}.'\
+                raise FailureError('Failed to obtain OAuth 2.0 access token from {0}! HTTP status: {1}, message: {2}.'\
                                   .format(self.access_token_url, response.status, response.content),
                                   original_message=response.content,
                                   status=response.status,
@@ -395,7 +395,7 @@ class OAuth2(providers.AuthorizationProvider):
                                                             csrf=csrf,
                                                             params=self.user_authorization_params)
             
-            self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements.full_url))
+            self._log(logging.INFO, 'Redirecting user to {0}.'.format(request_elements.full_url))
             
             self.redirect(request_elements.full_url)
 
@@ -677,7 +677,7 @@ class Facebook(OAuth2):
     
     @staticmethod
     def _x_user_parser(user, data):
-        user.picture = 'http://graph.facebook.com/{}/picture?type=large'.format(data.get('username'))
+        user.picture = 'http://graph.facebook.com/{0}/picture?type=large'.format(data.get('username'))
 
         location = data.get('location', {}).get('name')
         if location and location.split:
@@ -1165,7 +1165,7 @@ class WindowsLive(OAuth2):
     @staticmethod
     def _x_user_parser(user, data):
         user.email = data.get('emails', {}).get('preferred')
-        user.picture = 'https://apis.live.net/v5.0/{}/picture'.format(data.get('id'))
+        user.picture = 'https://apis.live.net/v5.0/{0}/picture'.format(data.get('id'))
         return user
 
 
@@ -1269,12 +1269,3 @@ class Yandex(OAuth2):
 # Always append new providers at the end so that ids of existing providers don't change!
 PROVIDER_ID_MAP = [OAuth2, Behance, Bitly, Cosm, DeviantART, Facebook, Foursquare, GitHub, Google, LinkedIn,
           PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex]
-
-
-
-
-
-
-
-
-

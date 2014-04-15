@@ -25,7 +25,7 @@
             Your are logged in with Facebook.<br />
             
             {# Insert the user's ID to the URL and access the resource. #}
-            {% set url = 'https://graph.facebook.com/{}?fields=feed.limit(5)'.format(result.user.id) %}
+            {% set url = 'https://graph.facebook.com/{0}?fields=feed.limit(5)'.format(result.user.id) %}
             {% set response = result.provider.access(url) %}
             
             {# Parse the response. #}

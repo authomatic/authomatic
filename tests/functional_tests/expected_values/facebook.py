@@ -6,7 +6,7 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('facebook')
 
 LINK = 'https://www.facebook.com/' + conf.user_username_reverse
-PICTURE = 'http://graph.facebook.com/{}/picture?type=large'\
+PICTURE = 'http://graph.facebook.com/{0}/picture?type=large'\
     .format(conf.user_username_reverse)
 
 CONFIG = {

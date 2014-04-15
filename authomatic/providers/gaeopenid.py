@@ -55,7 +55,7 @@ class GAEOpenID(providers.AuthenticationProvider):
             
             url = users.create_login_url(dest_url=self.url, federated_identity=self.identifier)
             
-            self._log(logging.INFO, 'Redirecting user to {}.'.format(url))
+            self._log(logging.INFO, 'Redirecting user to {0}.'.format(url))
             
             self.redirect(url)
         else:
@@ -79,7 +79,7 @@ class GAEOpenID(providers.AuthenticationProvider):
                 # We're done
                 #===============================================================
             else:
-                raise FailureError('Unable to authenticate identifier "{}"!'.format(self.identifier))
+                raise FailureError('Unable to authenticate identifier "{0}"!'.format(self.identifier))
 
 
 class Yahoo(GAEOpenID):

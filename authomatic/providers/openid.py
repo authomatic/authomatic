@@ -358,7 +358,7 @@ class OpenID(providers.AuthenticationProvider):
                 #===============================================================
             
             elif response.status == consumer.CANCEL:
-                raise CancellationError('User cancelled the verification of ID "{}"!'.format(response.getDisplayIdentifier()))
+                raise CancellationError('User cancelled the verification of ID "{0}"!'.format(response.getDisplayIdentifier()))
             
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
@@ -374,11 +374,11 @@ class OpenID(providers.AuthenticationProvider):
             try:
                 auth_request = oi_consumer.begin(self.identifier)
             except consumer.DiscoveryFailure as e:
-                raise FailureError('Discovery failed for identifier {}!'.format(self.identifier),
+                raise FailureError('Discovery failed for identifier {0}!'.format(self.identifier),
                                    url=self.identifier,
                                    original_message=e.message)
             
-            self._log(logging.INFO, 'Service discovery for identifier {} successful.'.format(self.identifier))
+            self._log(logging.INFO, 'Service discovery for identifier {0} successful.'.format(self.identifier))
             
             # add SREG extension
             # we need to remove required fields from optional fields because addExtension then raises an error
@@ -408,7 +408,7 @@ class OpenID(providers.AuthenticationProvider):
             if auth_request.shouldSendRedirect():
                 # can be redirected
                 url = auth_request.redirectURL(realm, return_to)
-                self._log(logging.INFO, 'Redirecting user to {}.'.format(url))
+                self._log(logging.INFO, 'Redirecting user to {0}.'.format(url))
                 self.redirect(url)
             else:
                 # must be sent as POST

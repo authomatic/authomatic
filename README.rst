@@ -62,7 +62,7 @@ License and Requirements
 ========================
 
 The package is licensed under `MIT license <http://en.wikipedia.org/wiki/MIT_License>`_ 
-and requires Python 2.7.
+and requires **Python 2.6**.
 
 Live Demo
 =========

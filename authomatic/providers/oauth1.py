@@ -369,7 +369,7 @@ class OAuth1(providers.AuthorizationProvider):
                 raise FailureError('Unable to retrieve token secret from storage!')
             
             # Get Access Token          
-            self._log(logging.INFO, 'Fetching for access token from {}.'.format(self.access_token_url))
+            self._log(logging.INFO, 'Fetching for access token from {0}.'.format(self.access_token_url))
             
             self.credentials.token = request_token
             self.credentials.token_secret = token_secret
@@ -383,7 +383,7 @@ class OAuth1(providers.AuthorizationProvider):
             response = self._fetch(*request_elements)
             
             if not self._http_status_in_category(response.status, 2):
-                raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {}! HTTP status code: {}.'\
+                raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {0}! HTTP status code: {1}.'\
                                    .format(self.access_token_url, response.status),
                                    original_message=response.content,
                                    status=response.status,
@@ -404,7 +404,7 @@ class OAuth1(providers.AuthorizationProvider):
             
         elif denied:
             # Phase 2 after redirect denied
-            raise CancellationError('User denied the request token {} during a redirect to {}!'.\
+            raise CancellationError('User denied the request token {0} during a redirect to {1}!'.\
                                   format(denied, self.user_authorization_url),
                                   original_message=denied,
                                   url=self.user_authorization_url)
@@ -424,7 +424,7 @@ class OAuth1(providers.AuthorizationProvider):
             
             # check if response status is OK
             if not self._http_status_in_category(response.status, 2):
-                raise FailureError('Failed to obtain request token from {}! HTTP status code: {} content: {}'\
+                raise FailureError('Failed to obtain request token from {0}! HTTP status code: {1} content: {2}'\
                                   .format(self.request_token_url, response.status, response.content),
                                   original_message=response.content,
                                   status=response.status,
@@ -433,7 +433,7 @@ class OAuth1(providers.AuthorizationProvider):
             # extract request token
             request_token = response.data.get('oauth_token')
             if not request_token:
-                raise FailureError('Response from {} doesn\'t contain oauth_token parameter!'.format(self.request_token_url),
+                raise FailureError('Response from {0} doesn\'t contain oauth_token parameter!'.format(self.request_token_url),
                                   original_message=response.content,
                                   url=self.request_token_url)
             
@@ -446,7 +446,7 @@ class OAuth1(providers.AuthorizationProvider):
                 # we need token secret after user authorization redirect to get access token
                 self._session_set('token_secret', token_secret)
             else:
-                raise FailureError('Failed to obtain token secret from {}!'.format(self.request_token_url),
+                raise FailureError('Failed to obtain token secret from {0}!'.format(self.request_token_url),
                                   original_message=response.content,
                                   url=self.request_token_url)
             
@@ -459,7 +459,7 @@ class OAuth1(providers.AuthorizationProvider):
                                                              url=self.user_authorization_url,
                                                              params=self.user_authorization_params)
             
-            self._log(logging.INFO, 'Redirecting user to {}.'.format(request_elements.full_url))
+            self._log(logging.INFO, 'Redirecting user to {0}.'.format(request_elements.full_url))
             
             self.redirect(request_elements.full_url)
 
@@ -576,7 +576,7 @@ class Plurk(OAuth1):
         user.name = _user.get('full_name')
         user.gender = _user.get('gender')
         user.timezone = _user.get('timezone')
-        user.picture = 'http://avatars.plurk.com/{}-big2.jpg'.format(user.id)
+        user.picture = 'http://avatars.plurk.com/{0}-big2.jpg'.format(user.id)
         
         user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
@@ -641,7 +641,7 @@ class Tumblr(OAuth1):
         
         if user.link:
             _host = urlparse.urlsplit(user.link).netloc
-            user.picture = 'http://api.tumblr.com/v2/blog/{}/avatar/512'.format(_host)
+            user.picture = 'http://api.tumblr.com/v2/blog/{0}/avatar/512'.format(_host)
         
         return user
 
@@ -696,7 +696,7 @@ class Vimeo(OAuth1):
         
         # Vimeo needs user ID to get rich info so we need to make one more fetch.
         if user.id:
-            response = user.provider.access('http://vimeo.com/api/v2/{}/info.json'.format(user.username))
+            response = user.provider.access('http://vimeo.com/api/v2/{0}/info.json'.format(user.username))
             if response and response.status == 200:
                 user.name = response.data.get('display_name')
                 user.city, user.country = response.data.get('location', ',').split(',')

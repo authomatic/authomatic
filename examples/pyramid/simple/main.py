@@ -30,7 +30,7 @@ def login(request):
         
         if result.error:
             # Login procedure finished with an error.
-            response.write(u'<h2>Damn that error: {}</h2>'.format(result.error.message))
+            response.write(u'<h2>Damn that error: {0}</h2>'.format(result.error.message))
         
         elif result.user:
             # Hooray, we have the user!
@@ -41,9 +41,9 @@ def login(request):
                 result.user.update()
             
             # Welcome the user.
-            response.write(u'<h1>Hi {}</h1>'.format(result.user.name))
-            response.write(u'<h2>Your id is: {}</h2>'.format(result.user.id))
-            response.write(u'<h2>Your email is: {}</h2>'.format(result.user.email))
+            response.write(u'<h1>Hi {0}</h1>'.format(result.user.name))
+            response.write(u'<h2>Your id is: {0}</h2>'.format(result.user.id))
+            response.write(u'<h2>Your email is: {0}</h2>'.format(result.user.email))
             
             # Seems like we're done, but there's more we can do...
             
@@ -56,7 +56,7 @@ def login(request):
                     response.write('Your are logged in with Facebook.<br />')
                     
                     # We will access the user's 5 most recent statuses.
-                    url = 'https://graph.facebook.com/{}?fields=feed.limit(5)'
+                    url = 'https://graph.facebook.com/{0}?fields=feed.limit(5)'
                     url = url.format(result.user.id)
                     
                     # Access user's protected resource.
@@ -68,7 +68,7 @@ def login(request):
                         error = access_response.data.get('error')
                         
                         if error:
-                            response.write(u'Damn that error: {}!'.format(error))
+                            response.write(u'Damn that error: {0}!'.format(error))
                         elif statuses:
                             response.write('Your 5 most recent statuses:<br />')
                             for message in statuses:
@@ -76,11 +76,11 @@ def login(request):
                                 text = message.get('message')
                                 date = message.get('created_time')
                                 
-                                response.write(u'<h3>{}</h3>'.format(text))
-                                response.write(u'Posted on: {}'.format(date))
+                                response.write(u'<h3>{0}</h3>'.format(text))
+                                response.write(u'Posted on: {0}'.format(date))
                     else:
                         response.write('Damn that unknown error!<br />')
-                        response.write(u'Status: {}'.format(response.status))
+                        response.write(u'Status: {0}'.format(response.status))
                     
                 if result.provider.name == 'tw':
                     response.write('Your are logged in with Twitter.<br />')
@@ -100,15 +100,15 @@ def login(request):
                                 text = tweet.get('text')
                                 date = tweet.get('created_at')
                                 
-                                response.write(u'<h3>{}</h3>'.format(text.replace(u'\u2026', '...')))
-                                response.write(u'Tweeted on: {}'.format(date))
+                                response.write(u'<h3>{0}</h3>'.format(text.replace(u'\u2026', '...')))
+                                response.write(u'Tweeted on: {0}'.format(date))
                                 
                         elif access_response.data.get('errors'):
-                            response.write(u'Damn that error: {}!'.\
+                            response.write(u'Damn that error: {0}!'.\
                                                 format(response.data.get('errors')))
                     else:
                         response.write('Damn that unknown error!<br />')
-                        response.write(u'Status: {}'.format(response.status))
+                        response.write(u'Status: {0}'.format(response.status))
     
     # It won't work if you don't return the response
     return response

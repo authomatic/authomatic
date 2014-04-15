@@ -5,8 +5,8 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('bitly')
 
-LINK = 'http://bitly.com/u/{}'.format(conf.user_id)
-PICTURE = 'http://bitly.com/u/{}.png'.format(conf.user_id)
+LINK = 'http://bitly.com/u/{0}'.format(conf.user_id)
+PICTURE = 'http://bitly.com/u/{0}.png'.format(conf.user_id)
 
 CONFIG = {
     'class_': oauth2.Bitly,
