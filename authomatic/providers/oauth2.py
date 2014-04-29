@@ -727,9 +727,13 @@ class Foursquare(OAuth2):
     def _x_request_elements_filter(cls, request_type, request_elements, credentials):
         
         if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
-            # Foursquare uses OAuth 1.0 "oauth_token" for what should be "access_token" in OAuth 2.0!
+            # Foursquare uses OAuth 1.0 "oauth_token" for what should be
+            # "access_token" in OAuth 2.0!
             url, method, params, headers, body = request_elements
             params['oauth_token'] = params.pop('access_token')
+            # Foursquare needs the version "v" parameter in every request.
+            # https://developer.foursquare.com/overview/versioning
+            params['v'] = '20140429'
             request_elements = core.RequestElements(url, method, params, headers, body)
         
         return request_elements
