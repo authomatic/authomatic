@@ -843,6 +843,27 @@ class GitHub(OAuth2):
                     'access_headers': {'User-Agent': 'Awesome-Octocat-App'},
                 }
             }
+
+    * city
+    * country
+    * email
+    * id
+    * link
+    * name
+    * picture
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * first_name
+    * gender
+    * last_name
+    * locale
+    * nickname
+    * phone
+    * postal_code
+    * timezone
     
     """
     
@@ -851,6 +872,17 @@ class GitHub(OAuth2):
     user_info_url = 'https://api.github.com/user'
     
     same_origin = False
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        city=True,
+        country=True,
+        email=True,
+        id=True,
+        link=True,
+        name=True,
+        picture=True,
+        username=True
+    )
     
     @staticmethod
     def _x_user_parser(user, data):

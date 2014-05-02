@@ -136,3 +136,12 @@ class GoogleFixture(BaseProviderFixture):
     CONSENT_XPATHS = [
         '//*[@id="submit_approve_access"]',
     ]
+
+
+class GitHubFixture(BaseProviderFixture):
+    LOGIN_XPATH = '//*[@id="login_field"]'
+    PASSWORD_XPATH = '//*[@id="password"]'
+    CONSENT_XPATHS = [
+        '//*[@id="login"]/form/div[3]/input[4]',
+        '//*[@id="site-container"]/div/div[2]/form/p/button',
+    ]

@@ -106,6 +106,13 @@ PROVIDERS = {
         'user_password': '##########',
         'user_email': '##########',
         'user_locale': '##########',
-        'user_picture': ('??????????'),
+        'user_picture': '??????????',
+    },
+    'github': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_id': '??????????',
+        'access_headers': {'User-Agent': ('Authomatic.py Automated Functional '
+                                          'Tests')},
     },
 }
