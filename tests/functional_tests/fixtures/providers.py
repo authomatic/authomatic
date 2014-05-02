@@ -118,7 +118,15 @@ class FacebookFixture(BaseProviderFixture):
     PASSWORD_XPATH = '//*[@id="pass"]'
     CONSENT_XPATHS = [
         '//*[@id="platformDialogForm"]/div[2]/div/table/tbody/tr/td[2]/'
-            'button[1]',
+        'button[1]',
+    ]
+
+
+class FoursquareFixture(BaseProviderFixture):
+    LOGIN_XPATH = '//*[@id="username"]'
+    PASSWORD_XPATH = '//*[@id="password"]'
+    CONSENT_XPATHS = [
+        '//*[@id="loginFormButton"]',
     ]
 
 

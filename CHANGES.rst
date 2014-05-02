@@ -1,3 +1,10 @@
+Version 0.0.9
+-------------
+
+* Added the ``v=20140501`` parameter to each
+  :class:`.oauth2.Foursquare` request.
+
+
 Version 0.0.8
 -------------
 

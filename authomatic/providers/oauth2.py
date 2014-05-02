@@ -714,6 +714,37 @@ class Foursquare(OAuth2):
     * Dashboard: https://foursquare.com/developers/apps
     * Docs: https://developer.foursquare.com/overview/auth.html
     * API reference: https://developer.foursquare.com/docs/
+
+    .. note::
+
+        Foursquare requires a *version* parameter in each request.
+        The default value is ``v=20140501``. You can override the version in
+        the ``params`` parameter of the :meth:`.Authomatic.access` method.
+        See https://developer.foursquare.com/overview/versioning
+
+    Supported :class:`.User` properties:
+
+    * city
+    * country
+    * email
+    * first_name
+    * gender
+    * id
+    * last_name
+    * name
+    * phone
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * link
+    * locale
+    * nickname
+    * postal_code
+    * timezone
+    * username
+
     """
     
     user_authorization_url = 'https://foursquare.com/oauth2/authenticate'
@@ -721,20 +752,37 @@ class Foursquare(OAuth2):
     user_info_url = 'https://api.foursquare.com/v2/users/self'
     
     same_origin = False
-    
-    
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        city=True,
+        country=True,
+        email=True,
+        first_name=True,
+        gender=True,
+        id=True,
+        last_name=True,
+        name=True,
+        phone=True,
+        picture=True
+    )
+
     @classmethod
-    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
-        
+    def _x_request_elements_filter(cls, request_type, request_elements,
+                                   credentials):
+
         if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             # Foursquare uses OAuth 1.0 "oauth_token" for what should be
             # "access_token" in OAuth 2.0!
             url, method, params, headers, body = request_elements
             params['oauth_token'] = params.pop('access_token')
+
             # Foursquare needs the version "v" parameter in every request.
             # https://developer.foursquare.com/overview/versioning
-            params['v'] = '20140429'
-            request_elements = core.RequestElements(url, method, params, headers, body)
+            if not params.get('v'):
+                params['v'] = '20140501'
+
+            request_elements = core.RequestElements(url, method, params,
+                                                    headers, body)
         
         return request_elements
     
@@ -749,7 +797,15 @@ class Foursquare(OAuth2):
         user.first_name = _user.get('firstName')
         user.last_name = _user.get('lastName')
         user.gender = _user.get('gender')
-        user.picture = _user.get('photo')
+
+        _photo = _user.get('photo', {})
+        if isinstance(_photo, dict):
+            _photo_prefix = _photo.get('prefix', '').strip('/')
+            _photo_suffix = _photo.get('suffix', '').strip('/')
+            user.picture = '/'.join([_photo_prefix, _photo_suffix])
+
+        if isinstance(_photo, basestring):
+            user.picture = _photo
         
         user.city, user.country = _user.get('homeCity', ', ').split(', ')
         
