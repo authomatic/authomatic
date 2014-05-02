@@ -105,8 +105,9 @@ def get_configuration(provider):
     Res.no_first_name = ['"{0}"'.format(conf['user_first_name']), 'first']
     Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last']
     Res.no_timezone = ['timezone']
+    Res.no_postal_code = [conf['user_postal_code'], 'postal', 'zip']
     Res.no_location = [conf['user_city'], conf['user_country'], 'city',
-        'country', 'location', 'postal', 'zip']
+        'country', 'location'] + Res.no_postal_code
 
     # Populate the namedtuple with provider settings.
     return Res(**conf)
@@ -121,10 +122,7 @@ for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):
     mod = importer.find_module(name).load_module(name)
 
     # Assemble result
-    conf = config.PROVIDERS[name]
-    result = {
-        'consumer_key': conf['consumer_key'],
-        'consumer_secret': conf['consumer_secret'],
-    }
+    result = {}
+    result.update(config.PROVIDERS[name])
     result.update(mod.CONFIG)
     ASSEMBLED_CONFIG[name] = result
