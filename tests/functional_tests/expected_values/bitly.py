@@ -67,22 +67,4 @@ CONFIG = {
         'provider_type': 'authomatic.providers.oauth2.OAuth2',
         'refresh_status': constants.CREDENTIALS_REFRESH_NOT_SUPPORTED,
     },
-    # Testing changes after credentials refresh
-    # same: True
-    # not same: False
-    # don't test: None
-    'credentials_refresh_change': {
-        'token_type': True,
-        'provider_type_id': True,
-        '_expiration_time': True,
-        'consumer_key': True,
-        'provider_id': True,
-        'consumer_secret': True,
-        'token': True,
-        'token_secret': True,
-        '_expire_in': True,
-        'provider_name': True,
-        'refresh_token': True,
-        'provider_type': True,
-    },
 }

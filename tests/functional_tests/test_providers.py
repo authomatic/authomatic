@@ -8,6 +8,7 @@ import liveandletdie
 
 from tests.functional_tests import config
 from tests.functional_tests import fixtures
+import constants
 
 
 HOME = 'http://{0}:{1}/'.format(config.HOST_ALIAS, config.PORT)
@@ -133,17 +134,31 @@ class TestCredentials(object):
 class TestCredentialsChange(object):
     @pytest.fixture()
     def fixture(self, app, provider, browser):
+        refresh_status = browser.find_element_by_id('original-credentials-'
+                                                      'refresh_status').text
+
+        supports_refresh = refresh_status != \
+                           constants.CREDENTIALS_REFRESH_NOT_SUPPORTED
+
         def f(property_name):
-            original_id = 'original-credentials-{0}'.format(property_name)
-            changed_id = 'refreshed-credentials-{0}'.format(property_name)
+            if not supports_refresh:
+                pytest.skip("Doesn't support credentials refresh.")
 
-            original_val = browser.find_element_by_id(original_id).text or None
-            changed_val = browser.find_element_by_id(changed_id).text or None
+            changed_values = provider.get('credentials_refresh_change')
+            if not changed_values:
+                pytest.skip("Credentials refresh values not specified.")
+            else:
+                original_id = 'original-credentials-{0}'.format(property_name)
+                changed_id = 'refreshed-credentials-{0}'.format(property_name)
 
-            expected = provider['credentials_refresh_change'][property_name]
+                original_val = browser.find_element_by_id(original_id).text or \
+                               None
+                changed_val = browser.find_element_by_id(changed_id).text or \
+                              None
 
-            if expected is not None:
-                assert (original_val == changed_val) is expected
+                expected = changed_values[property_name]
+                if expected is not None:
+                    assert (original_val == changed_val) is expected
 
         return f
 
