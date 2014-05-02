@@ -17,6 +17,7 @@ INCLUDE_PROVIDERS = [
     'bitly',
     'deviantart',
     'facebook',
+    'foursquare',
     'google',
 ]
 
@@ -90,6 +91,13 @@ PROVIDERS = {
         'user_password': '##########',
         # This changes when switching from and to Daylight Saving Time
         'user_timezone': '??????????',
+    },
+    'foursquare': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_id': '??????????',
+        'user_country': '??????????',
+        'user_picture': '??????????',
     },
     'google': {
         'consumer_key': '##########',
