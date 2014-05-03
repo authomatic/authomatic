@@ -5,3 +5,5 @@ python-openid
 liveandletdie
 pytest
 selenium
+ez_install
+google-appengine
