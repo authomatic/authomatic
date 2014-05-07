@@ -106,8 +106,9 @@ def get_configuration(provider):
     Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last']
     Res.no_timezone = ['timezone']
     Res.no_postal_code = [conf['user_postal_code'], 'postal', 'zip']
-    Res.no_location = [conf['user_city'], conf['user_country'], 'city',
-        'country', 'location'] + Res.no_postal_code
+    Res.no_city = [conf['user_city'], 'city']
+    Res.no_location = [conf['user_country'], 'city',
+        'country', 'location'] + Res.no_postal_code + Res.no_city
 
     # Populate the namedtuple with provider settings.
     return Res(**conf)

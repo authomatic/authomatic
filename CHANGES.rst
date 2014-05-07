@@ -3,6 +3,8 @@ Version 0.0.9
 
 * Added the ``v=20140501`` parameter to each
   :class:`.oauth2.Foursquare` request.
+* The :class:`.oauth2.LinkedIn` provider now supports the
+  :attr:`.User.birth_date` attribute.
 
 
 Version 0.0.8

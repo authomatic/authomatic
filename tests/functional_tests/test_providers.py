@@ -222,8 +222,8 @@ class TestUser(object):
     def test_first_name(self, fixture):
         fixture('first_name')
 
-    def test_flast_name(self, fixture):
-        fixture('first_name')
+    def test_last_name(self, fixture):
+        fixture('last_name')
 
     def test_nickname(self, fixture):
         fixture('nickname')

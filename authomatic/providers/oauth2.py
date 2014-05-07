@@ -1012,6 +1012,29 @@ class LinkedIn(OAuth2):
     * Dashboard: https://www.linkedin.com/secure/developer
     * Docs: http://developer.linkedin.com/documents/authentication
     * API reference: http://developer.linkedin.com/rest
+
+    Supported :class:`.User` properties:
+
+    * birth_date
+    * country
+    * email
+    * first_name
+    * id
+    * last_name
+    * link
+    * name
+    * phone
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * city
+    * gender
+    * locale
+    * nickname
+    * postal_code
+    * timezone
+    * username
     """
     
     user_authorization_url = 'https://www.linkedin.com/uas/oauth2/authorization'
@@ -1023,7 +1046,20 @@ class LinkedIn(OAuth2):
     
     token_request_method = 'GET'  # To avoid a bug with OAuth2.0 on Linkedin
     # http://developer.linkedin.com/forum/unauthorized-invalid-or-expired-token-immediately-after-receiving-oauth2-token
-    
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
+        country=True,
+        email=True,
+        first_name=True,
+        id=True,
+        last_name=True,
+        link=True,
+        name=True,
+        phone=True,
+        picture=True
+    )
+
     @classmethod
     def _x_request_elements_filter(cls, request_type, request_elements, credentials):
         
@@ -1047,6 +1083,14 @@ class LinkedIn(OAuth2):
         user.phone = data.get('phoneNumbers', {}).get('values', [{}])[0].get('phoneNumber')
         user.picture = data.get('pictureUrl')
         user.link = data.get('publicProfileUrl')
+
+        _birthdate = data.get('dateOfBirth', {})
+        if _birthdate:
+            _day = _birthdate.get('day')
+            _month = _birthdate.get('month')
+            _year = _birthdate.get('year')
+            if _day and _month and _year:
+                user.birth_date = datetime.datetime(_year, _month, _day)
         
         return user
 
