@@ -33,7 +33,7 @@ class Webapp2Session(interfaces.BaseSession):
     If you don't provide a session it creates a new one but you must provide the :data:`.secret`. 
     
     For more about |webapp2| sessions see:
-    `http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html`_.
+    http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html.
     """
     
     def __init__(self, handler, session=None, secret=None, cookie_name='webapp2authomatic',

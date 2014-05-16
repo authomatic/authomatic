@@ -180,7 +180,9 @@ class OAuth2(providers.AuthorizationProvider):
         """
         Override this to specify conditions when it gives sense to refresh credentials.
         
-        .. warning:: |classmethod|
+        .. warning::
+
+            |classmethod|
         
         :param credentials:
             :class:`.Credentials`
@@ -444,9 +446,9 @@ class Bitly(OAuth2):
     Bitly |oauth2| provider.
     
     .. warning::
-        
+
         |no-csrf|
-    
+
     * Dashboard: https://bitly.com/a/oauth_apps
     * Docs: http://dev.bitly.com/authentication.html
     * API reference: http://dev.bitly.com/api.html
@@ -1100,10 +1102,10 @@ class PayPal(OAuth2):
     PayPal |oauth2| provider.
     
     .. warning::
-        
+
         Paypal doesn't redirect the **user** to authorize your app!
         It grants you an **access token** based on your **app's** key and secret instead.
-    
+
     * Dashboard: https://developer.paypal.com/webapps/developer/applications
     * Docs: https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/
     * API reference: https://developer.paypal.com/webapps/developer/docs/api/
@@ -1312,7 +1314,7 @@ class Yammer(OAuth2):
     .. warning::
         
         |no-csrf|
-    
+
     * Dashboard: https://www.yammer.com/client_applications
     * Docs: https://developer.yammer.com/authentication/
     * API reference: https://developer.yammer.com/restapi/

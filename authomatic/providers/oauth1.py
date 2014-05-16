@@ -101,7 +101,7 @@ class BaseSignatureGenerator(object):
         .. warning::
             
             |classmethod|
-        
+
         :param str method:
             HTTP method of the request to be signed.
             
@@ -651,9 +651,9 @@ class UbuntuOne(OAuth1):
     Ubuntu One |oauth1| provider.
     
     .. warning::
-        
+
         Uses the `PLAINTEXT <http://oauth.net/core/1.0a/#anchor21>`_ Signature method!
-    
+
     * Dashboard: https://one.ubuntu.com/developer/account_admin/auth/web
     * Docs: https://one.ubuntu.com/developer/account_admin/auth/web
     * API reference: https://one.ubuntu.com/developer/contents
@@ -672,9 +672,9 @@ class Vimeo(OAuth1):
     Vimeo |oauth1| provider.
     
     .. warning::
-        
+
         Vimeo needs one more fetch to get rich user info!
-    
+
     * Dashboard: https://developer.vimeo.com/apps
     * Docs: https://developer.vimeo.com/apis/advanced#oauth-endpoints
     * API reference: https://developer.vimeo.com/apis

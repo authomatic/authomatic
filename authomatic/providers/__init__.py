@@ -612,9 +612,9 @@ class AuthorizationProvider(BaseProvider):
         Must convert :data:`credentials` to a :class:`tuple` to be used by :meth:`.Credentials.serialize`.
         
         .. warning::
-        
+
             |classmethod|
-        
+
         :param credentials:
             :class:`.Credentials`
             
@@ -629,9 +629,9 @@ class AuthorizationProvider(BaseProvider):
         Must convert the :data:`deserialized_tuple` back to :class:`.Credentials`.
         
         .. warning::
-        
+
             |classmethod|
-        
+
         :param tuple deserialized_tuple:
             A tuple whose first index is the :attr:`.id` and the rest
             are all the items of the :class:`tuple` created by :meth:`.to_tuple`.
@@ -650,9 +650,9 @@ class AuthorizationProvider(BaseProvider):
         Must return :class:`.RequestElements`.
         
         .. warning::
-        
+
             |classmethod|
-        
+
         :param int request_type:
             Type of the request specified by one of the class's constants.
             
@@ -705,7 +705,7 @@ class AuthorizationProvider(BaseProvider):
         Fetches the **protected resource** of an authenticated **user**.
         
         :param credentials:
-        The **user's** :class:`.Credentials` (serialized or normal).
+            The **user's** :class:`.Credentials` (serialized or normal).
             
         :param str url:
             The URL of the **protected resource**.
@@ -756,8 +756,10 @@ class AuthorizationProvider(BaseProvider):
         """
         Same as :meth:`.access` but runs asynchronously in a separate thread.
         
-        .. warning:: |async|
-        
+        .. warning::
+
+            |async|
+
         :returns:
             :class:`.Future` instance representing the separate thread.
         """
@@ -770,9 +772,9 @@ class AuthorizationProvider(BaseProvider):
         Updates the :attr:`.BaseProvider.user`.
         
         .. warning::
-        
+
             Fetches the :attr:`.user_info_url`!
-        
+
         :returns:
             :class:`.UserInfoResponse`
         """
@@ -834,7 +836,9 @@ class AuthorizationProvider(BaseProvider):
         """
         Override this to handle special request requirements of zealous providers.
         
-        .. warning:: |classmethod|
+        .. warning::
+
+            |classmethod|
         
         :param int request_type:
             Type of request.

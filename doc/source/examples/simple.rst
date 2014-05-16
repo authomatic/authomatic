@@ -11,12 +11,12 @@ that will be able to log **users** in with Facebook, Twitter and |openid|_
 and retrieve their 5 most recent tweets/statuses.
 
 You can download all the source files we are about to create
-`here <https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple>`_.
+`here <https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple>`__.
 
 First create the :doc:`/reference/config` dictionary where you set up all the providers you want to use.
 Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
-`here <https://developers.facebook.com/apps>`_ for Facebook and
-`here <https://dev.twitter.com/apps>`_ for Twitter.
+`here <https://developers.facebook.com/apps>`__ for Facebook and
+`here <https://dev.twitter.com/apps>`__ for Twitter.
 
 .. note::
    
@@ -105,7 +105,7 @@ Let's first get the **user's** five most recent **Facebook** statuses.
    :language: python
    :lines: 51-52
 
-Prepare the `Facebook Graph API <http://developers.facebook.com/docs/reference/api/>`_ URL.
+Prepare the `Facebook Graph API <http://developers.facebook.com/docs/reference/api/>`__ URL.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
@@ -163,7 +163,7 @@ Finally instantiate the WSGI application.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
-   :lines: 144
+   :lines: 141
 
 Don't forget to set up the ``app.yaml`` file.
 
@@ -179,6 +179,6 @@ That's it. Now just run the application.
 .. include:: twitter-localhost.rst
 
 And here is the complete app. Remember that you can download all the files we just created from
-`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple>`_.
+`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple>`__.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py

@@ -4,7 +4,6 @@
 *~
 doc/build
 build/
-_themes/
 config.py
 config_public.py
 .pydevproject

@@ -11,7 +11,7 @@ that will be able to log **users** in with Facebook, Twitter and |openid|_
 and retrieve their 5 most recent tweets/statuses.
 
 You can download all the source files we are about to create
-`here <https://github.com/peterhudec/authomatic/tree/master/examples/django>`_.
+`here <https://github.com/peterhudec/authomatic/tree/master/examples/django>`__.
 
 First create a new |django|_ project named *example*.
 
@@ -53,8 +53,8 @@ And create a route to the app in the ``example/example/urls.py`` module.
 Now in the ``example/simple`` directory create the ``config.py`` module
 with the :doc:`/reference/config` dictionary where you set up all the providers you want to use.
 Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
-`here <https://developers.facebook.com/apps>`_ for Facebook and
-`here <https://dev.twitter.com/apps>`_ for Twitter.
+`here <https://developers.facebook.com/apps>`__ for Facebook and
+`here <https://dev.twitter.com/apps>`__ for Twitter.
 
 .. note::
    

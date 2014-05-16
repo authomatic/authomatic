@@ -1,4 +1,4 @@
 [submodule "doc/source/_themes/foundation-sphinx-theme"]
 	path = doc/source/_themes/foundation-sphinx-theme
-	url = git://github.com/peterhudec/foundation-sphinx-theme
+	url = https://github.com/peterhudec/foundation-sphinx-theme.git
 	ignore = dirty

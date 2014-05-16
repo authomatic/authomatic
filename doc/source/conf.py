@@ -17,24 +17,24 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-pymodules = sys.path.index('/usr/lib/pymodules/python2.7')
+# pymodules = sys.path.index('/usr/lib/pymodules/python2.7')
+#
+# sys.path.pop(pymodules)
 
-sys.path.pop(pymodules)
+import google
 
-gae_path = '/usr/lib/google-app-engine'
+
+GOOGLE_PATH = os.path.split(google.__file__)[0]
+GAE_SDK_PATH = os.path.join(GOOGLE_PATH, '..')
+GAE_SDK_LIB_PATH = os.path.join(GAE_SDK_PATH, 'lib')
 
 sys.path[0:0] = [
-    gae_path,
-    os.path.join(gae_path, 'lib', 'yaml', 'lib'),
-    os.path.join(gae_path, 'google', 'appengine', 'ext', 'gql'),
-    os.path.abspath('../../'),
     os.path.abspath('.'),
-    os.path.abspath('_themes/'),
+    os.path.abspath('../../'),
     os.path.abspath('_themes/foundation-sphinx-theme'),
-    os.path.abspath('_themes/foundation-sphinx-theme/foundation'),
+    os.path.join(GAE_SDK_LIB_PATH, 'webapp2-2.5.2'),
+    os.path.join(GAE_SDK_LIB_PATH, 'yaml-3.10'),
 ]
-
-print os.path.abspath('_themes/foundation-sphinx-theme')
 
 rst_prolog = """
 
@@ -140,7 +140,11 @@ release = version
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = []
+exclude_patterns = [
+    '_themes/**/*',
+    'examples/twitter-localhost.rst',
+    'examples/**/authomatic/**/*',
+]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None

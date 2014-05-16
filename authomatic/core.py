@@ -261,7 +261,9 @@ class Future(threading.Thread):
     Represents an activity run in a separate thread.
     Subclasses the standard library :class:`threading.Thread` and adds :attr:`.get_result` method.
 
-    .. warning:: |async|
+    .. warning::
+
+        |async|
 
     """
 
@@ -582,7 +584,9 @@ class User(ReprMixin):
         """
         Same as :meth:`.update` but runs asynchronously in a separate thread.
 
-        .. warning:: |async|
+        .. warning::
+
+            |async|
 
         :returns:
             :class:`.Future` instance representing the separate thread.
@@ -648,7 +652,7 @@ class Credentials(ReprMixin):
 
     def __init__(self, config, **kwargs):
         
-        #: :class:`dict` :ref:`Config`.
+        #: :class:`dict` :doc:`config`.
         self.config = config
 
         #: :class:`str` User **access token**.
@@ -806,7 +810,9 @@ class Credentials(ReprMixin):
         """
         Same as :meth:`.refresh` but runs asynchronously in a separate thread.
 
-        .. warning:: |async|
+        .. warning::
+
+            |async|
 
         :returns:
             :class:`.Future` instance representing the separate thread.
@@ -1128,7 +1134,7 @@ class Response(ReprMixin):
 
 class UserInfoResponse(Response):
     """
-    Inherits from :class:`.Response`, adds  :attr:`.user` attribute.
+    Inherits from :class:`.Response`, adds  :attr:`~UserInfoResponse.user` attribute.
     """
 
     def __init__(self, user, *args, **kwargs):
@@ -1280,7 +1286,7 @@ class Authomatic(object):
         If :data:`provider_name` is empty, acts like :meth:`.Authomatic.backend`.
     
         .. warning::
-    
+
             The method redirects the **user** to the **provider** which in turn redirects
             **him/her** back to the *request handler* where it has been called.
     
@@ -1295,7 +1301,7 @@ class Authomatic(object):
     
         .. note::
     
-            Accepts additional keyword arguments that will be passed to :doc:`provider` constructor.
+            Accepts additional keyword arguments that will be passed to :doc:`provider <providers>` constructor.
     
         :returns:
             :class:`.LoginResult`
@@ -1409,7 +1415,9 @@ class Authomatic(object):
         """
         Same as :meth:`.Authomatic.access` but runs asynchronously in a separate thread.
     
-        .. warning:: |async|
+        .. warning::
+
+            |async|
     
         :returns:
             :class:`.Future` instance representing the separate thread.
@@ -1598,8 +1606,9 @@ class Authomatic(object):
         to the response.
     
         .. warning::
-    
+
             The backend will not work if you write anything to the response in the handler!
+
         """
     
         AUTHOMATIC_HEADER = 'Authomatic-Response-To'
@@ -1680,10 +1689,10 @@ def setup(*args, **kwargs):
     """
      
     .. warning::
-         
+
         This function is **deprecated** and will be removed in version 0.1.0!
         Use instance of :class:`.Authomatic` class instead.
-         
+
     """
      
     logging.warn('The authomatic.setup function is deprecated and will be removed in version 0.1.0! ' + \
@@ -1697,10 +1706,10 @@ def login(*args, **kwargs):
     """
      
     .. warning::
-         
+
         This function is **deprecated** and will be removed in version 0.1.0!
         Use the :meth:`.Authomatic.login` method instead.
-         
+
     """
      
     logging.warn('The authomatic.login function is deprecated and will be removed in version 0.1.0! ' + \
@@ -1713,10 +1722,10 @@ def credentials(*args, **kwargs):
     """
      
     .. warning::
-         
+
         This function is **deprecated** and will be removed in version 0.1.0!
         Use the :meth:`.Authomatic.credentials` method instead.
-         
+
     """
      
     logging.warn('The authomatic.credentials function is deprecated and will be removed in version 0.1.0! ' + \
@@ -1729,10 +1738,10 @@ def access(*args, **kwargs):
     """
      
     .. warning::
-         
+
         This function is **deprecated** and will be removed in version 0.1.0!
         Use the :meth:`.Authomatic.access` method instead.
-         
+
     """
      
     logging.warn('The authomatic.access function is deprecated and will be removed in version 0.1.0! ' + \
@@ -1745,10 +1754,10 @@ def async_access(*args, **kwargs):
     """
      
     .. warning::
-         
+
         This function is **deprecated** and will be removed in version 0.1.0!
         Use the :meth:`.Authomatic.async_access` method instead.
-         
+
     """
      
     logging.warn('The authomatic.async_access function is deprecated and will be removed in version 0.1.0! ' + \
@@ -1761,10 +1770,10 @@ def request_elements(*args, **kwargs):
     """
      
     .. warning::
-         
+
         This function is **deprecated** and will be removed in version 0.1.0!
         Use the :meth:`.Authomatic.request_elements` method instead.
-         
+
     """
      
     logging.warn('The authomatic.request_elements function is deprecated and will be removed in version 0.1.0! ' + \
@@ -1777,10 +1786,10 @@ def backend(*args, **kwargs):
     """
      
     .. warning::
-         
+
         This function is **deprecated** and will be removed in version 0.1.0!
         Use the :meth:`.Authomatic.backend` method instead.
-         
+
     """
      
     logging.warn('The authomatic.backend function is deprecated and will be removed in version 0.1.0! ' + \

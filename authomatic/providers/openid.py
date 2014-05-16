@@ -7,7 +7,7 @@ Providers which implement the |openid|_ protocol based on the
 `python-openid`_ library.
 
 .. warning::
-    
+
     This providers are dependent on the |pyopenid|_ package.
     
 .. autosummary::
@@ -77,7 +77,7 @@ class SessionOpenIDStore(object):
     .. warning::
         
         Nonces get verified only by their timeout. Use on your own risk!
-    
+
     """
     
     _log = lambda level, message: None
