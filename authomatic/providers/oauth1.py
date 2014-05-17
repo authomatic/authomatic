@@ -17,6 +17,7 @@ Providers which implement the |oauth1|_ protocol.
     UbuntuOne
     Vimeo
     Xero
+    Xing
     Yahoo
     
 """
@@ -38,7 +39,7 @@ import uuid
 
 
 __all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Meetup', 'Plurk', 'Twitter', 'Tumblr', 'UbuntuOne',
-           'Vimeo', 'Xero', 'Yahoo']
+           'Vimeo', 'Xero', 'Xing', 'Yahoo']
 
 
 def _normalize_params(params):

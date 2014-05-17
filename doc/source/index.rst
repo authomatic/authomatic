@@ -8,6 +8,7 @@
    
    reference/index
    examples/index
+   changelog
 
 Features
 ========
