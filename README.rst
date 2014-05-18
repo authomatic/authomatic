@@ -61,7 +61,8 @@ Features
 License and Requirements
 ========================
 
-The package is licensed under `MIT license <http://en.wikipedia.org/wiki/MIT_License>`_ 
+The package is licensed under
+`MIT license <http://en.wikipedia.org/wiki/MIT_License>`__
 and requires **Python 2.6**.
 
 Live Demo
@@ -78,7 +79,11 @@ Contribute
    :alt: Stories in Ready
 
 Contributions of any kind are very welcome.
-The project is hosted on `GitHub <https://github.com/peterhudec/authomatic>`_.
+If you want to contribute, please read the
+`Development Guide <http://peterhudec.github.io/authomatic/development.html>`__
+first. The project is hosted on
+`GitHub <https://github.com/peterhudec/authomatic>`__.
+
 If you find this library useful and are using it in your projects,
 please don't be shy and leave a comment about your use case on the
 `Authomatic use cases <https://github.com/peterhudec/authomatic/issues/1>`_ issue.
