@@ -1,8 +1,10 @@
 # encoding: utf-8
 
 import os
+import time
 
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import pytest
 import liveandletdie
 
@@ -54,22 +56,58 @@ def app(request):
     return _app
 
 
+def user_consent(browser, xpath):
+    try:
+        button = browser.find_element_by_xpath(xpath)
+        print('Hitting consent button.')
+        button.click()
+    except Exception as e:
+        print('No consent needed.')
+        pass
+
+
 @pytest.fixture(scope='module', params=PROVIDERS)
 def provider(request, browser):
     """Runs for each provider."""
 
     _provider = fixtures.ASSEMBLED_CONFIG[request.param]
     _provider['name'] = request.param
-    provider_fixture = _provider['fixture']
+    conf = fixtures.get_configuration(request.param)
 
     # Andy types the login handler url to the address bar.
     browser.get(HOME + 'login/' + _provider['name'])
 
     # Andy authenticates by the provider.
-    provider_fixture.login_function(browser)
+    login_xpath = _provider.get('login_xpath')
+    password_xpath = _provider.get('password_xpath')
+    pre_login_xpaths = _provider.get('pre_login_xpaths')
+    if login_xpath:
+        if pre_login_xpaths:
+            for xpath in pre_login_xpaths:
+                print('clicking on {0}'.format(xpath))
+                browser.find_element_by_xpath(xpath).click()
+
+        print('logging the user in.')
+        browser.find_element_by_xpath(login_xpath)\
+            .send_keys(conf.user_login)
+        password_element = browser.\
+            find_element_by_xpath(password_xpath)
+        password_element.send_keys(conf.user_password)
+        password_element.send_keys(Keys.ENTER)
 
     # Andy authorizes this app to access his protected resources.
-    provider_fixture.consent_function(browser)
+    consent_xpaths = _provider.get('consent_xpaths')
+    consent_wait_seconds = _provider.get('consent_wait_seconds', 0)
+    if consent_xpaths:
+        for xpath in consent_xpaths:
+            try:
+                time.sleep(consent_wait_seconds)
+                button = browser.find_element_by_xpath(xpath)
+                print('Hitting consent button.')
+                button.click()
+            except Exception as e:
+                print('No consent needed.')
+                pass
 
     return _provider
 

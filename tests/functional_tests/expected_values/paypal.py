@@ -1,22 +1,13 @@
 import fixtures
-from fixtures.providers import BaseProviderFixture
 import constants
 from authomatic.providers import oauth2
 
 
-class LoginFixture(BaseProviderFixture):
-    LOGIN_XPATH = None
-    PASSWORD_XPATH = None
-    CONSENT_XPATHS = None
-
-
 conf = fixtures.get_configuration('paypal')
-
 
 CONFIG = {
     'class_': oauth2.PayPal,
     'scope': oauth2.PayPal.user_info_scope,
-    'fixture': LoginFixture(conf.user_login, conf.user_password),
     'user': {
         'birth_date': None,
         'city': None,

@@ -9,10 +9,14 @@ PICTURE = 'https://a.deviantart.net/avatars/p/e/{0}.jpg?1'\
     .format(conf.user_username)
 
 CONFIG = {
+    'login_xpath': '//*[@id="username"]',
+    'password_xpath': '//*[@id="password"]',
+    'consent_xpaths': [
+        '//*[@id="terms_agree"]',
+        '//*[@id="authorize_form"]/fieldset/div[2]/div[2]/a[1]',
+    ],
     'class_': oauth2.DeviantART,
     'scope': oauth2.DeviantART.user_info_scope,
-    'fixture': fixtures.providers.DeviantART(conf.user_login,
-                                             conf.user_password),
     'user': {
         'id': None,
         'email': None,

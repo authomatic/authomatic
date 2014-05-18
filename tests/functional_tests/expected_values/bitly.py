@@ -9,10 +9,16 @@ LINK = 'http://bitly.com/u/{0}'.format(conf.user_id)
 PICTURE = 'http://bitly.com/u/{0}.png'.format(conf.user_id)
 
 CONFIG = {
+    'pre_login_xpaths': [
+        '//*[@id="oauth_access"]/form/div/div[1]/a',
+    ],
+    'login_xpath': '//*[@id="username"]',
+    'password_xpath': '//*[@id="password"]',
+    'consent_xpaths': [
+        '//*[@id="oauth_access"]/form/button[1]',
+    ],
     'class_': oauth2.Bitly,
     'scope': oauth2.Bitly.user_info_scope,
-    'fixture': fixtures.providers.BitlyFixture(conf.user_login,
-                                               conf.user_password),
     'user': {
         'id': conf.user_id,
         'email': None,

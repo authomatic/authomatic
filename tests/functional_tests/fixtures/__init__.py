@@ -17,7 +17,6 @@ sys.path.append(FUNCTIONAL_TESTS_PATH)
 
 from tests.functional_tests import config
 from tests.functional_tests import expected_values
-from tests.functional_tests.fixtures import providers
 
 
 # Create template environment to load templates.
@@ -94,7 +93,7 @@ def get_configuration(provider):
     class_name = '{0}Configuration'.format(provider.capitalize())
     Res = namedtuple(class_name, sorted(conf.keys()))
 
-    # Add additional class attributes which not allowed to be passed
+    # Add additional class attributes which are not allowed to be passed
     # to the namedtuple
     Res.email_escaped = conf['user_email'].replace('@', '\u0040')
     Res.no_email = [conf['user_email'], Res.email_escaped, 'email', 'e-mail']

@@ -9,10 +9,14 @@ LINK = 'https://github.com/{0}'.format(conf.user_username)
 PICTURE = 'https://avatars.githubusercontent.com/u/{0}?'.format(conf.user_id)
 
 CONFIG = {
+    'login_xpath': '//*[@id="login_field"]',
+    'password_xpath': '//*[@id="password"]',
+    'consent_xpaths': [
+        '//*[@id="login"]/form/div[3]/input[4]',
+        '//*[@id="site-container"]/div/div[2]/form/p/button',
+    ],
     'class_': oauth2.GitHub,
     'scope': oauth2.GitHub.user_info_scope,
-    'fixture': fixtures.providers.GitHubFixture(conf.user_login,
-                                                conf.user_password),
     'user': {
         'birth_date': None,
         'city': conf.user_city,

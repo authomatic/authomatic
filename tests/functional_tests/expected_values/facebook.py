@@ -2,7 +2,6 @@ import fixtures
 import constants
 from authomatic.providers import oauth2
 
-
 conf = fixtures.get_configuration('facebook')
 
 LINK = 'https://www.facebook.com/' + conf.user_username_reverse
@@ -10,10 +9,13 @@ PICTURE = 'http://graph.facebook.com/{0}/picture?type=large'\
     .format(conf.user_username_reverse)
 
 CONFIG = {
+    'login_xpath': '//*[@id="email"]',
+    'password_xpath': '//*[@id="pass"]',
+    'consent_xpaths': [
+        '//*[@id="platformDialogForm"]/div[2]/div/table/tbody/tr/td[2]/button[2]'
+    ],
     'class_': oauth2.Facebook,
     'scope': oauth2.Facebook.user_info_scope,
-    'fixture': fixtures.providers.FacebookFixture(conf.user_login,
-                                                  conf.user_password),
     'user': {
         'id': conf.user_id,
         'email': conf.user_email,

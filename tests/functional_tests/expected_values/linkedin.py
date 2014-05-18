@@ -1,24 +1,19 @@
 import fixtures
-from fixtures.providers import BaseProviderFixture
 import constants
 from authomatic.providers import oauth2
-
-
-class LoginFixture(BaseProviderFixture):
-    LOGIN_XPATH = '//*[@id="session_key-oauth2SAuthorizeForm"]'
-    PASSWORD_XPATH = '//*[@id="session_password-oauth2SAuthorizeForm"]'
-    CONSENT_XPATHS = [
-        '//*[@id="body"]/div/form/div[2]/ul/li[1]/input',
-    ]
 
 
 conf = fixtures.get_configuration('linkedin')
 
 
 CONFIG = {
+    'login_xpath': '//*[@id="session_key-oauth2SAuthorizeForm"]',
+    'password_xpath': '//*[@id="session_password-oauth2SAuthorizeForm"]',
+    'consent_xpaths': [
+        '//*[@id="body"]/div/form/div[2]/ul/li[1]/input',
+    ],
     'class_': oauth2.LinkedIn,
     'scope': oauth2.LinkedIn.user_info_scope,
-    'fixture': LoginFixture(conf.user_login, conf.user_password),
     'user': {
         'birth_date': conf.user_birth_date,
         'city': None,

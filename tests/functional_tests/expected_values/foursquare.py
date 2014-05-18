@@ -6,10 +6,13 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('foursquare')
 
 CONFIG = {
+    'login_xpath': '//*[@id="username"]',
+    'password_xpath': '//*[@id="password"]',
+    'consent_xpaths': [
+        '//*[@id="loginFormButton"]',
+    ],
     'class_': oauth2.Foursquare,
     'scope': oauth2.Foursquare.user_info_scope,
-    'fixture': fixtures.providers.FoursquareFixture(conf.user_login,
-                                                  conf.user_password),
     'user': {
         'id': conf.user_id,
         'email': conf.user_email,

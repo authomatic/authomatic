@@ -8,10 +8,14 @@ conf = fixtures.get_configuration('google')
 LINK = 'https://plus.google.com/' + conf.user_id
 
 CONFIG = {
+    'login_xpath': '//*[@id="Email"]',
+    'password_xpath': '//*[@id="Passwd"]',
+    'consent_xpaths': [
+        '//*[@id="submit_approve_access"]',
+    ],
+    'consent_wait_seconds': 2,
     'class_': oauth2.Google,
     'scope': oauth2.Google.user_info_scope,
-    'fixture': fixtures.providers.GoogleFixture(conf.user_login,
-                                                conf.user_password),
     'offline': True,
     'user': {
         'id': conf.user_id,
