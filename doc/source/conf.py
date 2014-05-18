@@ -98,8 +98,8 @@ rst_prolog = """
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.coverage',
-              'sphinx.ext.ifconfig', 'sphinx.ext.viewcode', 'sphinx.ext.autosummary',
-              'sphinx.ext.intersphinx', 'foundation']
+              'sphinx.ext.ifconfig', 'sphinx.ext.viewcode',
+              'sphinx.ext.autosummary', 'sphinx.ext.intersphinx', 'foundation']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -192,7 +192,8 @@ html_theme_options = {
     'stylesheet': 'css/authomatic.css',
     'favicon': 'img/favicon.ico',
     'motto': MOTTO,
-    'seo_description': 'Simple yet powerful authorization / authentication client library for Python WEB applications.',
+    'seo_description': ('Simple yet powerful authorization / authentication '
+                        'client library for Python WEB applications.'),
     'base_url': 'http://peterhudec.github.io/authomatic',
     'opengraph_image': 'img/authomatic-seo.gif',
     'google_analytics_id': 'UA-40554445-4',
@@ -201,7 +202,7 @@ html_theme_options = {
     'twitter_id': 'AuthomaticPy',
     'author': 'Peter Hudec',
     'author_link': 'http://peterhudec.com',
-    'copyright_year': '2012',
+    'copyright_year': '2014',
     'google_plus_id': '117034840853387702598',
     'github_user': 'peterhudec',
     'github_repo': 'authomatic',
@@ -211,7 +212,8 @@ html_theme_options = {
 
 intersphinx_mapping = {
     'python': ('http://docs.python.org/2.7', None),
-    'django': ('http://docs.djangoproject.com/en/dev/', 'http://docs.djangoproject.com/en/dev/_objects/'),
+    'django': ('http://docs.djangoproject.com/en/dev/',
+               'http://docs.djangoproject.com/en/dev/_objects/'),
     'webapp2': ('http://webapp-improved.appspot.com/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
     'pyramid': ('http://docs.pylonsproject.org/en/latest/', None),
