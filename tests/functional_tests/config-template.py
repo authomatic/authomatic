@@ -25,6 +25,7 @@ INCLUDE_PROVIDERS = [
     'google',
     'github',
     'linkedin',
+    'paypal',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -146,5 +147,9 @@ PROVIDERS = {
         # GitHub requires the User-Agent header in every request.
         'user_picture': '??????????',
         'user_phone': PHONE_INTERNATIONAL,
+    },
+    'paypal': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
     },
 }

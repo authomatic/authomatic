@@ -1100,18 +1100,22 @@ class LinkedIn(OAuth2):
 class PayPal(OAuth2):
     """
     PayPal |oauth2| provider.
-    
-    .. warning::
-
-        Paypal doesn't redirect the **user** to authorize your app!
-        It grants you an **access token** based on your **app's** key and secret instead.
 
     * Dashboard: https://developer.paypal.com/webapps/developer/applications
     * Docs: https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/
     * API reference: https://developer.paypal.com/webapps/developer/docs/api/
+
+    .. note::
+
+        Paypal doesn't redirect the **user** to authorize your app!
+        It grants you an **access token** based on your **app's** key and
+        secret instead.
+
     """
     
     _x_use_authorization_header = True
+
+    supported_user_attributes = core.SupportedUserAttributes()
     
     @classmethod
     def _x_request_elements_filter(cls, request_type, request_elements, credentials):

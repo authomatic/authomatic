@@ -61,18 +61,19 @@ class BaseProviderFixture(object):
         """
 
         def f(browser):
-            for xpath in self.PRE_LOGIN_CLICKS_XPATH:
-                print('clicking on {0}'.format(xpath))
-                browser.find_element_by_xpath(xpath).click()
+            if self.LOGIN_XPATH:
+                for xpath in self.PRE_LOGIN_CLICKS_XPATH:
+                    print('clicking on {0}'.format(xpath))
+                    browser.find_element_by_xpath(xpath).click()
 
-            print('logging the user in.')
-            browser.find_element_by_xpath(self.LOGIN_XPATH)\
-                .send_keys(self.login)
-            password_element = browser.\
-                find_element_by_xpath(self.PASSWORD_XPATH)
-            print 'PASSWORD = {0}'.format(self.password)
-            password_element.send_keys(self.password)
-            password_element.send_keys(Keys.ENTER)
+                print('logging the user in.')
+                browser.find_element_by_xpath(self.LOGIN_XPATH)\
+                    .send_keys(self.login)
+                password_element = browser.\
+                    find_element_by_xpath(self.PASSWORD_XPATH)
+                print 'PASSWORD = {0}'.format(self.password)
+                password_element.send_keys(self.password)
+                password_element.send_keys(Keys.ENTER)
         return f
 
     @property
@@ -85,15 +86,16 @@ class BaseProviderFixture(object):
         """
 
         def f(browser):
-            for path in self.CONSENT_XPATHS:
-                try:
-                    button = browser.find_element_by_xpath(path)
-                    print('Hitting consent button.')
-                    button.click()
-                    f(browser)
-                except Exception as e:
-                    print('No consent needed.')
-                    pass
+            if self.CONSENT_XPATHS:
+                for path in self.CONSENT_XPATHS:
+                    try:
+                        button = browser.find_element_by_xpath(path)
+                        print('Hitting consent button.')
+                        button.click()
+                        f(browser)
+                    except Exception as e:
+                        print('No consent needed.')
+                        pass
         return f
 
 
