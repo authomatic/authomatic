@@ -10,6 +10,8 @@ Version 0.0.9 (development)
   :class:`.oauth2.Foursquare` provider.
 * The :class:`.oauth2.LinkedIn` provider now supports the
   :attr:`.User.birth_date` attribute.
+* The :class:`.oauth2.Reddit` provider now supports the
+  :attr:`.User.username` attribute.
 
 
 Version 0.0.8

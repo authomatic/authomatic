@@ -26,6 +26,7 @@ INCLUDE_PROVIDERS = [
     'github',
     'linkedin',
     'paypal',
+    'reddit',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -151,5 +152,11 @@ PROVIDERS = {
     'paypal': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
+    },
+    'reddit': {
+        'consumer_key': '##########-QHA',
+        'consumer_secret': '##########',
+        'user_login': USERNAME,
+        'user_id': '??????????',
     },
 }

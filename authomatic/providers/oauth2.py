@@ -1144,6 +1144,30 @@ class Reddit(OAuth2):
     * Dashboard: https://ssl.reddit.com/prefs/apps
     * Docs: https://github.com/reddit/reddit/wiki/OAuth2
     * API reference: http://www.reddit.com/dev/api
+
+    Supported :class:`.User` properties:
+
+    * id
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * country
+    * city
+    * email
+    * first_name
+    * gender
+    * last_name
+    * link
+    * locale
+    * name
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+
     """
     
     user_authorization_url = 'https://ssl.reddit.com/api/v1/authorize'
@@ -1151,6 +1175,12 @@ class Reddit(OAuth2):
     user_info_url = 'https://oauth.reddit.com/api/v1/me.json'
     
     user_info_scope = ['identity']
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        name=True,
+        username=True
+    )
     
     def __init__(self, *args, **kwargs):
         super(Reddit, self).__init__(*args, **kwargs)
@@ -1159,13 +1189,18 @@ class Reddit(OAuth2):
             if not 'duration' in self.user_authorization_params:
                 # http://www.reddit.com/r/changelog/comments/11jab9/reddit_change_permanent_oauth_grants_using/
                 self.user_authorization_params['duration'] = 'permanent'
-    
-    
+
+
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
         if data.get('token_type') == 'bearer':
             credentials.token_type = cls.BEARER
         return credentials
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.username = data.get('name')
+        return user
 
 
 class Viadeo(OAuth2):
