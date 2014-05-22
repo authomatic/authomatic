@@ -103,6 +103,8 @@ def get_configuration(provider):
     Res.no_locale = [conf['user_locale'], 'language', 'locale']
     Res.no_first_name = ['"{0}"'.format(conf['user_first_name']), 'first']
     Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last']
+    Res.no_nickname = ['nickname', conf['user_nickname']]
+    Res.no_username = ['username', conf['user_username']]
     Res.no_timezone = ['timezone']
     Res.no_postal_code = [conf['user_postal_code'], 'postal', 'zip']
     Res.no_city = [conf['user_city'], 'city']

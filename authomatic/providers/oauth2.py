@@ -1285,14 +1285,49 @@ class VK(OAuth2):
                 'scope': ['1024'] # Always a single item.
             }
         }
-    
+
+    Supported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * first_name
+    * gender
+    * id
+    * last_name
+    * name
+    * picture
+    * timezone
+
+    Unsupported :class:`.User` properties:
+
+    * email
+    * link
+    * locale
+    * nickname
+    * phone
+    * postal_code
+    * username
+
     """
     
     user_authorization_url = 'http://api.vkontakte.ru/oauth/authorize'
     access_token_url = 'https://api.vkontakte.ru/oauth/access_token'
     user_info_url = 'https://api.vk.com/method/getProfiles?' + \
                     'fields=uid,first_name,last_name,nickname,sex,bdate,city,country,timezone,photo_big'
-    
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
+        city=True,
+        country=True,
+        first_name=True,
+        gender=True,
+        id=True,
+        last_name=True,
+        name=True,
+        picture=True,
+        timezone=True,
+    )
     
     def __init__(self, *args, **kwargs):
         super(VK, self).__init__(*args, **kwargs)
@@ -1305,9 +1340,13 @@ class VK(OAuth2):
     @staticmethod
     def _x_user_parser(user, data):
         _resp = data.get('response', [{}])[0]
-        
+
+        _birth_date = _resp.get('bdate')
+        if _birth_date:
+            user.birth_date = datetime.datetime.strptime(_birth_date, '%d.%m.%Y')
         user.id = _resp.get('uid')
         user.first_name = _resp.get('first_name')
+        user.gender = _resp.get('sex')
         user.last_name = _resp.get('last_name')
         user.nickname = _resp.get('nickname')
         user.city = _resp.get('city')

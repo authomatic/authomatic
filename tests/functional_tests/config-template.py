@@ -27,6 +27,7 @@ INCLUDE_PROVIDERS = [
     'linkedin',
     'paypal',
     'reddit',
+    'vk',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -154,7 +155,7 @@ PROVIDERS = {
         'consumer_secret': '##########',
     },
     'reddit': {
-        'consumer_key': '##########-QHA',
+        'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_login': USERNAME,
         'user_id': '??????????',
@@ -165,4 +166,16 @@ PROVIDERS = {
     #     'consumer_key': '##########',
     #     'consumer_secret': '##########',
     # },
+    'vk': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_id': '??????????',
+        # City and country are numeric IDs
+        'user_city': '??????????',
+        'user_country': '??????????',
+        'user_gender': '2',
+        # The picture URL is a random CDN URL
+        'user_picture': '??????????',
+        'user_timezone': '1',
+    },
 }
