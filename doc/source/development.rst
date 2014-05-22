@@ -100,7 +100,7 @@ The tests are written for the `pytest <http://pytest.org/latest/>`__ framework.
 
 To run *functional* tests, you first need to create the
 ``./tests/functional_tests/config.py`` module by copying and filling out the
-``./tests/functional_tests/config-template.py` template.
+``./tests/functional_tests/config-template.py`` template.
 
 .. code-block:: bash
 
