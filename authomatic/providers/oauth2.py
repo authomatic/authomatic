@@ -1206,6 +1206,14 @@ class Reddit(OAuth2):
 class Viadeo(OAuth2):
     """
     Viadeo |oauth2| provider.
+
+    .. note::
+
+        As stated in the `Viadeo documentation
+        <http://dev.viadeo.com/documentation/authentication/request-an-api-key/>`__:
+
+            Viadeo restrains access to its API.
+            They are now exclusively reserved for its strategic partners.
     
     * Dashboard: http://dev.viadeo.com/dashboard/
     * Docs: http://dev.viadeo.com/documentation/authentication/oauth-authentication/

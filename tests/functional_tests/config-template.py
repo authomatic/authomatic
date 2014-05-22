@@ -159,4 +159,10 @@ PROVIDERS = {
         'user_login': USERNAME,
         'user_id': '??????????',
     },
+    # Viadeo doesn't support access to its API
+    # http://dev.viadeo.com/documentation/authentication/request-an-api-key/
+    # 'viadeo': {
+    #     'consumer_key': '##########',
+    #     'consumer_secret': '##########',
+    # },
 }
