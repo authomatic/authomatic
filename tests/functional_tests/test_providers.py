@@ -56,16 +56,6 @@ def app(request):
     return _app
 
 
-def user_consent(browser, xpath):
-    try:
-        button = browser.find_element_by_xpath(xpath)
-        print('Hitting consent button.')
-        button.click()
-    except Exception as e:
-        print('No consent needed.')
-        pass
-
-
 @pytest.fixture(scope='module', params=PROVIDERS)
 def provider(request, browser):
     """Runs for each provider."""
