@@ -10,13 +10,15 @@ PICTURE = 'http://bitly.com/u/{0}.png'.format(conf.user_id)
 
 CONFIG = {
     'pre_login_xpaths': [
-        '//*[@id="oauth_access"]/form/div/div[1]/a',
+        '//*[@id="sign-in"]/div[3]/fieldset/label/a',
     ],
-    'login_xpath': '//*[@id="username"]',
-    'password_xpath': '//*[@id="password"]',
+    'login_xpath': '//*[@id="sign-in"]/div[2]/fieldset/label[1]/input',
+    'password_xpath': '//*[@id="sign-in"]/div[2]/fieldset/label[2]/input',
     'consent_xpaths': [
+        '//*[@id="sign-in"]/div[2]/fieldset/input[2]',
         '//*[@id="oauth_access"]/form/button[1]',
     ],
+    'consent_wait_seconds': 1,
     'class_': oauth2.Bitly,
     'scope': oauth2.Bitly.user_info_scope,
     'user': {
