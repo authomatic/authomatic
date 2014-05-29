@@ -1,6 +1,10 @@
 *.class
 *.pyc
 *.pyo
+
+#notepad++
+*.bak
+
 *~
 doc/build
 build/
