@@ -970,7 +970,13 @@ class LoginResult(ReprMixin):
 
             {custom_callback}
 
-            try {{ window.opener.authomatic.loginComplete(result, closer); }} catch(e) {{}}
+            try {{ window.opener.authomatic.loginComplete(result, closer); }} catch(e) {{
+                if (localStorage) {{
+                    localStorage.setItem('authomaticloginresult', JSON.stringify(result));
+                }}
+
+                closer();
+            }}
 
         }})();
 
