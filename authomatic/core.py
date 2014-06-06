@@ -975,7 +975,7 @@ class LoginResult(ReprMixin):
                     localStorage.setItem('authomaticloginresult', JSON.stringify(result));
                 }}
 
-                closer();
+                setTimeout(closer, 300);
             }}
 
         }})();
