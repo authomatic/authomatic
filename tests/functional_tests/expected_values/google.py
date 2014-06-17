@@ -13,7 +13,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="submit_approve_access"]',
     ],
-    'consent_wait_seconds': 2,
+    'consent_wait_seconds': 3,
     'class_': oauth2.Google,
     'scope': oauth2.Google.user_info_scope,
     'offline': True,
