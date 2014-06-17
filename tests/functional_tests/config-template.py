@@ -3,6 +3,12 @@ import datetime
 
 import constants
 
+
+# Choose and configure the browser of your choice
+def get_browser():
+    return webdriver.Chrome()
+
+
 # The host and port where the tested ap shoud listen.
 HOST = '127.0.0.1'
 PORT = 8080

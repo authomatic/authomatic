@@ -3,7 +3,6 @@
 import os
 import time
 
-from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import pytest
 import liveandletdie
@@ -32,7 +31,7 @@ APPS = {
 def browser(request):
     """Starts and stops the server for each app in APPS"""
 
-    _browser = webdriver.Chrome()
+    _browser = config.get_browser()
     _browser.implicitly_wait(3)
     request.addfinalizer(lambda: _browser.quit())
     return _browser
