@@ -2,11 +2,16 @@
 
 import os
 import logging
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 import jinja2
 import webapp2
 from authomatic import Authomatic
 from authomatic.adapters import Webapp2Adapter
+
+
 
 # import config
 import config_public as config
