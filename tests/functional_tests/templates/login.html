@@ -64,7 +64,7 @@
     try {
         userContent.innerHTML = JSON.stringify({{ safe_content }}, undefined, 4);
     } catch(e) {
-         userContent.innerHTML = '{{ safe_content|replace('\n', ' ') }}';
+         userContent.innerHTML = '{{ safe_content|replace('\n', ' ')|replace('\r', ' ') }}';
     }
 
     // Display syntax-highlighted strings user-info response should contain
@@ -85,7 +85,7 @@
     try {
         credentialsResponse.innerHTML = JSON.stringify({{ safe_cred_response }}, undefined, 4);
     } catch(e) {
-        credentialsResponse.innerHTML = '{{ safe_cred_response|replace('\n', ' ') }}';
+        credentialsResponse.innerHTML = '{{ safe_cred_response|replace('\n', ' ')|replace('\r', ' ') }}';
     }
   </script>
 {% endif %}
