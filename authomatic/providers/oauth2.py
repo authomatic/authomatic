@@ -1364,6 +1364,30 @@ class WindowsLive(OAuth2):
     * Dashboard: https://manage.dev.live.com/Applications/Index
     * Docs: http://msdn.microsoft.com/en-us/library/live/hh826528.aspx
     * API explorer: http://isdk.dev.live.com/?mkt=en-us
+
+    Supported :class:`.User` properties:
+
+    * email
+    * first_name
+    * id
+    * last_name
+    * link
+    * locale
+    * name
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * gender
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+    * username
+
     """
     
     user_authorization_url = 'https://oauth.live.com/authorize'
@@ -1371,6 +1395,17 @@ class WindowsLive(OAuth2):
     user_info_url = 'https://apis.live.net/v5.0/me'
     
     user_info_scope = ['wl.basic', 'wl.emails', 'wl.photos']
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        email=True,
+        first_name=True,
+        id=True,
+        last_name=True,
+        link=True,
+        locale=True,
+        name=True,
+        picture=True
+    )
     
     def __init__(self, *args, **kwargs):
         super(WindowsLive, self).__init__(*args, **kwargs)

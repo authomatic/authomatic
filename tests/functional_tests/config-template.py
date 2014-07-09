@@ -34,6 +34,7 @@ INCLUDE_PROVIDERS = [
     'paypal',
     'reddit',
     'vk',
+    'windowslive',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -175,6 +176,7 @@ PROVIDERS = {
     'vk': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
+        'user_password': '##########',
         'user_id': '??????????',
         # City and country are numeric IDs
         'user_city': '??????????',
@@ -183,5 +185,11 @@ PROVIDERS = {
         # The picture URL is a random CDN URL
         'user_picture': '??????????',
         'user_timezone': '1',
+    },
+    'windowslive': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': '??????????',
     },
 }
