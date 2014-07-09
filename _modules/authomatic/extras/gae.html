@@ -1,0 +1,617 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>authomatic.extras.gae | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="../../../_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="authomatic.extras.gae | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://peterhudec.github.io/authomatic/_modules/authomatic/extras/gae.html" />
+	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="../../../_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="../../../_static/jquery.js"></script>
+    	<script type="text/javascript" src="../../../_static/underscore.js"></script>
+    	<script type="text/javascript" src="../../../_static/doctools.js"></script>
+    	<script type="text/javascript" src="../../../_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="../../../index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						<ul class="">
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../reference/index.html">Reference</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/config.html">Config</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../../../reference/adapters.html">Adapters</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/classes.html">Classes</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../../../reference/providers.html">Providers</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../../../reference/extras.html">Extras</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../examples/index.html">Tutorials / Examples</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../development.html">Development</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		
+			<li><a href="../../../genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="../../../py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="../../../index.html">
+		
+	    	
+	    		<img id="logo" src="../../../_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						<span>Authomatic</span><br />
+is an <em>authorization</em> / <em>authentication</em><br />
+client library for Python web applications<br />
+inspired by Alex Vagin’s
+<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
+In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
+but that name would be too long<br />
+for a succinct library.
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="http://peterhudec.github.io/authomatic/_modules/authomatic/extras/gae.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="http://peterhudec.github.io/authomatic/_modules/authomatic/extras/gae.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=peterhudec&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="authomatic.extras.gae | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <h1>Source code for authomatic.extras.gae</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">|gae| Extras</span>
+<span class="sd">------------</span>
+
+<span class="sd">Utilities you can use when using this library on |gae|_.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">ndb</span>
+<span class="kn">from</span> <span class="nn">webapp2_extras</span> <span class="kn">import</span> <span class="n">sessions</span>
+
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">authomatic.core</span> <span class="kn">import</span> <span class="n">resolve_provider_class</span>
+<span class="kn">from</span> <span class="nn">authomatic.extras</span> <span class="kn">import</span> <span class="n">interfaces</span>
+<span class="kn">from</span> <span class="nn">authomatic.providers</span> <span class="kn">import</span> <span class="n">openid</span>
+<span class="kn">from</span> <span class="nn">authomatic.extras.gae.openid</span> <span class="kn">import</span> <span class="n">NDBOpenIDStore</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;ndb_config&#39;</span><span class="p">,</span> <span class="s">&#39;Webapp2Session&#39;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">GAEError</span><span class="p">(</span><span class="n">exceptions</span><span class="o">.</span><span class="n">BaseError</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Webapp2Session"><a class="viewcode-back" href="../../../reference/extras.html#authomatic.extras.gae.Webapp2Session">[docs]</a><span class="k">class</span> <span class="nc">Webapp2Session</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">BaseSession</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A simple wrapper for |webapp2|_ sessions. If you provide a session</span>
+<span class="sd">    it wraps it and adds the :meth:`.save` method.</span>
+<span class="sd">    </span>
+<span class="sd">    If you don&#39;t provide a session it creates a new one but you must provide the :data:`.secret`. </span>
+<span class="sd">    </span>
+<span class="sd">    For more about |webapp2| sessions see:</span>
+<span class="sd">    http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cookie_name</span><span class="o">=</span><span class="s">&#39;webapp2authomatic&#39;</span><span class="p">,</span>
+                 <span class="n">backend</span><span class="o">=</span><span class="s">&#39;memcache&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning::</span>
+<span class="sd">            </span>
+<span class="sd">            Do not use the ``&#39;securecookie&#39;`` backend with :class:`.providers.OpenID`</span>
+<span class="sd">            provider. The `python-openid`_ library saves **non json serializable** objects to session</span>
+<span class="sd">            which the ``&#39;securecookie&#39;`` backend cannot cope with.</span>
+<span class="sd">            </span>
+<span class="sd">        :param handler:</span>
+<span class="sd">            A :class:`webapp2.RequestHandler` instance.</span>
+<span class="sd">        </span>
+<span class="sd">        :param session:</span>
+<span class="sd">            A :class:`webapp2_extras.session.SessionDict` instance.</span>
+<span class="sd">        </span>
+<span class="sd">        :param str secret:</span>
+<span class="sd">            The session secret.</span>
+<span class="sd">        </span>
+<span class="sd">        :param str cookie_name:</span>
+<span class="sd">            The name of the session cookie.</span>
+<span class="sd">        </span>
+<span class="sd">        :param backend:</span>
+<span class="sd">            The session backend. One of ``&#39;memcache&#39;`` or ``&#39;datastore&#39;``.</span>
+<span class="sd">            </span>
+<span class="sd">        :param config:</span>
+<span class="sd">            The session config.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span>
+        
+        <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">secret</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">GAEError</span><span class="p">(</span><span class="s">&#39;Either session or secret must be specified!&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># Create new session.</span>
+                <span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">(</span><span class="n">secret_key</span><span class="o">=</span><span class="n">secret</span><span class="p">,</span> <span class="n">cookie_name</span><span class="o">=</span><span class="n">cookie_name</span><span class="p">)</span>
+                <span class="n">session_store</span> <span class="o">=</span> <span class="n">sessions</span><span class="o">.</span><span class="n">SessionStore</span><span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session_dict</span> <span class="o">=</span> <span class="n">session_store</span><span class="o">.</span><span class="n">get_session</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># Use supplied session.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session_dict</span> <span class="o">=</span> <span class="n">session</span>
+        
+        
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_dict</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">save_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_dict</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_dict</span><span class="o">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_dict</span><span class="o">.</span><span class="n">__delitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        
+</div>
+<span class="k">class</span> <span class="nc">NDBConfig</span><span class="p">(</span><span class="n">ndb</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    |gae| `NDB &lt;https://developers.google.com/appengine/docs/python/ndb/&gt;`_</span>
+<span class="sd">    based :doc:`config`.</span>
+<span class="sd">    </span>
+<span class="sd">    .. note::</span>
+<span class="sd">        </span>
+<span class="sd">        By :class:`.OpenID` provider uses :class:`.NDBOpenIDStore` as default :attr:`.OpenID.store`.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c"># General properties</span>
+    <span class="n">provider_name</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">(</span> <span class="p">)</span>
+    <span class="n">class_</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    
+    <span class="c"># AuthorizationProvider properties</span>
+    <span class="n">provider_id</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+    <span class="n">consumer_key</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    
+    <span class="c"># OAuth2 properties</span>
+    <span class="n">scope</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">offline</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">BooleanProperty</span><span class="p">()</span>
+    
+    <span class="c"># AuthenticationProvider properties</span>
+    <span class="n">identifier_param</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+    
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resembles the :meth:`dict.get` method.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            A configuration dictionary for specified provider.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c"># Query datastore.</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">==</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">result_dict</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            
+            <span class="c"># Use NDBOpenIDStore by default</span>
+            <span class="n">result_dict</span><span class="p">[</span><span class="s">&#39;store&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NDBOpenIDStore</span>
+            
+            <span class="c"># Convert coma-separated values to list. Currently only scope is csv.</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;scope&#39;</span><span class="p">,</span> <span class="p">):</span>
+                <span class="n">prop</span> <span class="o">=</span> <span class="n">result_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">prop</span><span class="p">:</span>
+                    <span class="n">result_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">prop</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+
+            <span class="k">return</span> <span class="n">result_dict</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">default</span>
+    
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resembles the :meth:`dict.values` method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c"># get all items</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
+        <span class="c"># return list of dictionaries</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+    
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates an **&quot;Example&quot;** entity of kind **&quot;NDBConfig&quot;** in the datastore</span>
+<span class="sd">        if the model is empty and raises and error to inform you that you should populate the model with data.</span>
+<span class="sd">        </span>
+<span class="sd">        .. note::</span>
+<span class="sd">        </span>
+<span class="sd">            The *Datastore Viewer* in the ``_ah/admin/`` won&#39;t let you add properties to a model</span>
+<span class="sd">            if there is not an entity with that property already.</span>
+<span class="sd">            Therefore it is a good idea to keep the **&quot;Example&quot;** entity (which has all</span>
+<span class="sd">            possible properties set) in the datastore.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">fetch</span><span class="p">()):</span>
+            
+            <span class="n">example</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_or_insert</span><span class="p">(</span><span class="s">&#39;Example&#39;</span><span class="p">)</span>
+            
+            <span class="n">example</span><span class="o">.</span><span class="n">class_</span> <span class="o">=</span> <span class="s">&#39;Provider class e.g. &quot;authomatic.providers.oauth2.Facebook&quot;.&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">=</span> <span class="s">&#39;Your custom provider name e.g. &quot;fb&quot;.&#39;</span>
+            
+            <span class="c"># AuthorizationProvider</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">consumer_key</span> <span class="o">=</span> <span class="s">&#39;Consumer key.&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="o">=</span> <span class="s">&#39;Consumer secret&#39;</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">provider_id</span> <span class="o">=</span> <span class="mi">1</span>
+            
+            <span class="c"># OAuth2</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="s">&#39;coma, separated, list, of, scopes&#39;</span>
+            
+            <span class="c"># AuthenticationProvider</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">identifier_param</span> <span class="o">=</span> <span class="s">&#39;Querystring parameter for claimed id. default is &quot;id&quot;&#39;</span>
+            
+            <span class="c"># Save the example</span>
+            <span class="n">example</span><span class="o">.</span><span class="n">put</span><span class="p">()</span>
+            
+            <span class="c"># Raise an information error.</span>
+            <span class="k">raise</span> <span class="n">GAEError</span><span class="p">(</span><span class="s">&#39;A NDBConfig data model was created! Go to Datastore Viewer &#39;</span> <span class="o">+</span> \
+                           <span class="s">&#39;in your dashboard and populate it with data!&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ndb_config"><a class="viewcode-back" href="../../../reference/extras.html#authomatic.extras.gae.ndb_config">[docs]</a><span class="k">def</span> <span class="nf">ndb_config</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Allows you to have a **datastore** :doc:`config` instead of a hardcoded one.</span>
+<span class="sd">    </span>
+<span class="sd">    This function creates an **&quot;Example&quot;** entity of kind **&quot;NDBConfig&quot;** in the datastore</span>
+<span class="sd">    if the model is empty and raises and error to inform you that you should populate the model with data.</span>
+<span class="sd">        </span>
+<span class="sd">    .. note::</span>
+<span class="sd">    </span>
+<span class="sd">        The *Datastore Viewer* of the |gae|_ admin won&#39;t let you add properties to a model</span>
+<span class="sd">        if there is not an entity with that property already.</span>
+<span class="sd">        Therefore it is a good idea to keep the **&quot;Example&quot;** entity (which has all</span>
+<span class="sd">        properties set) in the datastore.</span>
+<span class="sd">    </span>
+<span class="sd">    :raises:</span>
+<span class="sd">        :exc:`.GAEError`</span>
+<span class="sd">    </span>
+<span class="sd">    :returns:</span>
+<span class="sd">        :class:`.NDBConfig`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">NDBConfig</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">NDBConfig</span>
+</pre></div></div>
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/adapters.html">Adapters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/providers.html">Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/extras.html">Extras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Tutorials / Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="../../../genindex.html"  title="General Index">index</a></span>
+				<span><a href="../../../py-modindex.html"  title="Python Module Index">modules</a></span>
+				</div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="http://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '../../../_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="../../../_static/foundation/js/foundation.min.js"></script>
+	<script src="../../../_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/peterhudec/authomatic">
+			<img
+				 src="../../../_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>

@@ -1,0 +1,632 @@
+/**
+ *   Cards style for Foundation Sphinx Theme.
+ */
+
+@import compass/css3/box-shadow
+@import basic
+
+// Top-bar bright color hover fix
+.top-bar-section li a:not(.button):hover
+  background: $topbar-dropdown-bg
+
+// Body text, page header and footer background, object and table headers background.
+$color-1: #454545 !default
+
+// Page header and footer text and objec headers text.
+$color-2: #F2F0ED !default
+
+// Object body, topic, footnotes, top bar, breadcrumbs, tables and sidebar background.
+$color-3: #f7f3eb !default
+
+// Body and function/method parameters background.
+$color-4: white !default
+
+// Function/method returns body background and header text, method border, top bar background.
+$color-5: #DED5C5 !default
+
+// Top bar background.
+$color-6: #292827 !default
+
+// Links
+$link-fg: #3AA7D6 !default
+$link-hover-fg: lighten($link-fg, 20%) !default
+$link-active-fg: $link-fg !default
+$link-visited-fg: darken($link-fg, 20%) !default
+$link-focus-fg: $link-hover-fg !default
+
+// Radius of all the corners
+$radius: 16px !default
+
+// Padding
+$padding: 20px
+$padding-h: $radius !default
+$padding-v: $radius / 2 !default
+// $padding: $radius !default
+
+// Headings
+$headings-fg: $color-1 !default
+
+
+// Body
+$body-fg: $color-1 !default
+$body-bg: $color-4 !default
+
+// Header
+$page-header-bg: $color-1 !default
+$page-header-fg: $color-2 !default
+
+$social-buttons-bg: $color-2 !default
+
+// Footer
+$page-footer-bg: $color-1 !default
+$page-footer-fg: $color-2 !default
+
+// Object (class or function) header background and text color
+$object-header-bg: $color-1 !default
+$object-header-fg: $color-2 !default
+// Object body background and text color
+$object-body-bg: $color-3 !default
+$object-body-fg: $color-1 !default
+
+// Parameters background color
+$inside-bg: $color-4 !default
+// Returns header background and text color
+$returns-bg: $color-1 !default
+$returns-fg: $color-2 !default
+// Returns body background and text color
+$returns-value-bg: $color-5 !default
+$returns-value-fg: $color-1 !default
+
+// Class method header background and text color
+$method-header-bg: transparent !default
+$method-header-fg: $color-1 !default
+
+// Class method body background and text color
+$method-body-bg: transparent !default
+$method-body-fg: $color-1 !default
+
+// Class method border style
+$method-border-style: dotted !default
+$method-border-width: 2px !default
+$method-border-color: $color-5 !default
+
+// Note and Hint admonitions
+$admonition-1-header-bg: #F7DB00 !default
+$admonition-1-header-fg: $color-1 !default
+$admonition-1-body-bg: #FFEF73 !default
+$admonition-1-body-fg: $color-1 !default
+
+// See Also and Tip admonitions
+$admonition-2-header-bg: #72C257 !default
+$admonition-2-header-fg: $admonition-1-header-fg !default
+$admonition-2-body-bg: #DEFFD4 !default
+$admonition-2-body-fg: $admonition-1-body-fg !default
+
+// Attention, Danger, Error, Warning and Important admonitions
+$admonition-3-header-bg: #E01B6A !default
+$admonition-3-header-fg: $admonition-1-header-fg !default
+$admonition-3-body-bg: #FC9DC3 !default
+$admonition-3-body-fg: $admonition-1-body-fg !default
+
+// Code and literal
+$highlight-bg: $color-1 !default
+$highlight-emphasized: darken($highlight-bg, 10%) !default
+$literal-bg: $color-3 !default
+$literal-fg: $color-1 !default
+
+// Topic
+$topic-bg: $color-3 !default
+$topic-fg: $color-1 !default
+
+// Sidebar
+$sidebar-header-bg: $color-1 !default
+$sidebar-header-fg: $color-2 !default
+$sidebar-subtitle-bg: lighten($sidebar-header-bg, 20%) !default
+$sidebar-subtitle-fg: $color-2 !default
+$sidebar-body-bg: $color-3 !default
+$sidebar-body-fg: $color-1 !default
+
+// Blocqquote epigraph
+$epigraph-bg: transparent !default
+$epigraph-fg: inherit !default
+$epigraph-border-style: $method-border-style !default
+$epigraph-border-width: $method-border-width !default
+$epigraph-border-color: $method-border-color !default
+
+// Footnotes
+$footnote-header-bg: $color-1 !default
+$footnote-header-fg: $color-2 !default
+$footnote-body-bg: $color-3 !default
+$footnote-body-fg: $color-1 !default
+
+// Tables
+$table-header-bg: $color-1 !default
+$table-header-fg: $color-2 !default
+$table-body-bg: $color-3 !default
+$table-body-fg: $color-1 !default
+$table-odd-body-bg: darken($table-body-bg, 5%) !default
+$table-odd-body-fg: $color-1 !default
+
+// Breadcrumbs
+$breadcrumbs-base-bg: $color-1 !default
+$breadcrumbs-even-bg: $color-3 !default
+$breadcrumbs-odd-bg: $color-5 !default
+$breadcrumbs-fg: $color-1 !default
+
+
+@mixin basic($bg: transparent, $fg: $color-1, $pad: $padding)
+  background-color: $bg
+  color: $fg
+  padding: $pad
+
+@mixin top-corners($r: $radius)
+  border-top-left-radius: $r
+  border-top-right-radius: $r
+  padding: #{$padding-v} #{$padding-h}
+  margin: 0em
+
+@mixin bottom-corners($r: $radius)
+  border-bottom-left-radius: $r
+  border-bottom-right-radius: $r
+
+@mixin object()
+  // Header
+  >dt
+    @include basic($object-header-bg, $object-header-fg)
+    @include top-corners()
+    margin-bottom: 0em
+  // Body
+  >dd
+    @include basic($object-body-bg, $object-body-fg)
+    @include bottom-corners()
+  
+  // Table with parameters and return value.
+  table.field-list
+    border-radius: $radius * 2
+    margin-bottom: 0em
+    
+    // If there is code sample or admonition in the argument description
+    // Sphinx wraps it inside p
+    li > p
+      margin-bottom: $padding
+    
+    .field-body
+      ul
+        padding-right: 0em
+        
+        // Remove bottom margin on last element of the last argument.
+        &:last-child > li:last-child > *:last-child
+          margin-bottom: 0em
+    
+    tr
+      td, th
+        @include basic($inside-bg)
+        vertical-align: top
+        
+      th
+        padding-right: 0em
+      
+      &:first-child>th
+        border-top-left-radius: $radius
+      &:last-child>th
+        border-bottom-left-radius: $radius
+      
+      &:first-child>td:last-child
+        border-top-right-radius: $radius
+      &:last-child>td:last-child
+        border-bottom-right-radius: $radius
+    
+    // Returns header
+    tr.returns>th
+      background-color: $returns-bg
+      color: $returns-fg
+      vertical-align: middle
+    
+    // Returns body
+    tr.returns>td
+      background-color: $returns-value-bg
+      color: $returns-value-fg
+      vertical-align: middle
+      padding: $padding
+
+@mixin admonition($hbg: $admonition-1-header-bg, $hfg: $admonition-1-header-fg, $bbg: $admonition-1-body-bg, $bfg: $admonition-1-body-fg)
+  background-color: transparent
+  border: none
+  padding: 0em 0em #{$padding} 0em !important
+  border: 0em
+  background-color: $bbg
+  color: $bfg
+  @include top-corners($radius * 2)
+  @include bottom-corners()
+  margin-bottom: $margin
+  
+  // Header
+  .first
+    @include basic()
+    @include top-corners()
+    background-color: $hbg
+    color: $hfg
+    
+  // Body
+  &>*:not(:first-child)
+    @include basic()
+    margin-top: 0em
+    margin-bottom: 0em
+    padding-top: $padding
+    padding-bottom: 0em
+  
+  // Blockquote
+  &>blockquote
+    margin-top: $margin !important
+    margin: $margin
+    margin-bottom: 0em
+    padding: $padding !important
+
+@mixin triangle($angle: 0.5)
+  pointer-events: none
+  content: ''
+  width: 0px
+  height: 0px
+  line-height: 0px
+  display: block
+  position: absolute
+  border-style: solid
+  border-width: 100em #{100em * $angle}
+
+@mixin border-color($color)
+  border-color: transparent #{$color} transparent transparent
+  _border-left-color: lime
+  _border-bottom-color: lime
+  _border-left-color: lime
+  _filter: chroma(color=lime)
+
+@mixin even-odd($even-bg, $odd-bg)
+  &:nth-child(even)
+    background-color: $even-bg
+    &:after
+      @include border-color($odd-bg)
+    &:before
+      @include border-color($odd-bg)
+    
+  &:nth-child(odd)
+    background-color: $odd-bg
+    &:after
+      @include border-color($even-bg)
+    &:before
+      @include border-color($even-bg)
+
+@mixin breadcrumbs($base-bg, $even-bg, $odd-bg, $angle, $radius, $padding, $fg)
+  background-color: transparent
+  padding: 0em
+  border: none
+  
+  li
+    background-color: $even-bg
+    position: relative
+    padding: #{$padding / 2} #{$padding}
+    padding-left: $padding / 2
+    overflow: hidden
+    cursor: pointer
+    color: $fg
+    margin-bottom: $padding
+    
+    a
+      padding: 0em
+    
+    &.current a
+      color: $fg
+    
+    &:after
+      @include triangle($angle)
+      right: 0px
+      bottom: 50%
+      
+    &:before
+      @include triangle($angle)
+      right: 0px
+      top: 50%
+    
+    @include even-odd($even-bg, $odd-bg)
+    
+    &:first-child
+      background-color: $base-bg
+      border-top-left-radius: $radius
+      border-bottom-left-radius: $radius
+      padding-left: $padding
+      &:after
+        @include border-color($even-bg)
+        //border-color: transparent #{$object-body-bg} transparent transparent
+      &:before
+        @include border-color($even-bg)
+        //border-color: transparent #{$object-body-bg} transparent transparent
+    
+    &:last-child
+      border-top-right-radius: $radius
+      border-bottom-right-radius: $radius
+      &:after
+        border: none
+      &:before
+        border: none
+
+@mixin table-row-top-corners()
+  // Include to table row or header
+  &:first-child
+    border-top-left-radius: $radius
+  &:last-child
+    border-top-right-radius: $radius
+
+@mixin table-bottom-corners()
+  // Include directly to table
+  tr:last-child
+    td:first-child
+      border-bottom-left-radius: $radius
+    td:last-child
+      border-bottom-right-radius: $radius
+
+@mixin table-corners()
+  // Include directly to table
+  
+  @include bottom-corners()
+  border-top-left-radius: $radius * 1.5
+  border-top-right-radius: $radius * 1.5
+  
+  tr:last-child
+    td:first-child
+      border-bottom-left-radius: $radius
+    td:last-child
+      border-bottom-right-radius: $radius
+
+@mixin inner-shadow($color)
+  @include box-shadow(inset 1px 1px 3px rgba($color, 0.3))
+
+// Links
+a
+  color: $link-fg
+  &:hover
+    color: $link-hover-fg
+  &.headerlink
+    margin-left: 0.2em
+
+// Body
+body
+  color: $body-fg
+  background-color: $body-bg
+
+// Headings
+h1, h2, h3, h4, h5, h6
+  color: $headings-fg
+
+// Tables
+table, table tr, table tr:nth-of-type(even)
+  border: none
+  background-color: transparent  
+  background: none  
+
+// Header
+#header
+  background-color: $page-header-bg
+  color: $page-header-fg
+  h1
+    color: $page-header-fg
+
+div.social-buttons
+  background-color: $social-buttons-bg
+
+// Footer
+#footer-notice
+  background-color: $page-footer-bg
+  color: $page-footer-fg
+
+#navigation>ul
+  padding: $padding
+
+// Breadcrumbs
+ul.breadcrumbs
+  @include breadcrumbs($breadcrumbs-base-bg, $breadcrumbs-even-bg, $breadcrumbs-odd-bg, 0.5, $radius, $padding, $breadcrumbs-fg)
+  li a
+    color: $link-fg
+    &:hover
+      color: $link-hover-fg
+
+// Content
+#content
+  // Code
+  .highlight
+    background-color: $highlight-bg
+    padding: $padding
+    border-radius: $radius
+    line-height: 1em
+    >pre
+      padding: 0em
+      padding-bottom: 0.2em
+      background-color: transparent
+    .hll
+      display: block
+      border-radius: $radius / 2
+      padding: 4px
+      @include inner-shadow(darken($highlight-bg, 50%))
+      background-color: lighten($highlight-bg, 5%)
+  
+  // Literal
+  tt.docutils.literal:not(.xref)
+    padding: 0.2em 0.5em
+    border-radius: 0.4em
+    // Derive the shadow color from $literal-bg.
+    // Retain hue but set saturation to 100% and lightness to 10%
+    $_literal-shadow-color: hsl(hue($literal-bg), 100%, 10%)
+    background-color: rgba($_literal-shadow-color, 0.05)
+    @include inner-shadow($_literal-shadow-color)
+  
+  // Class object
+  .class
+    @include object()
+    
+    // Class method object
+    .method, .classmethod, .staticmethod
+      @include object()
+      &:last-child
+        margin-bottom: 0em
+      
+      // Override object mixin
+      >dt, >dd
+        background-color: $method-header-bg
+        color: $object-body-fg
+        border:
+          style: $method-border-style
+          width: $method-border-width
+          color: $method-border-color
+      >dd
+        background-color: $method-body-bg
+        border-top: none
+        margin-bottom: 0em
+        // TODO:
+        >*:last-child
+          margin-bottom: 0em
+  
+  // Function object
+  .function
+    @include object()
+    
+  dl>dd>table.docutils.field-list
+    margin-bottom: $padding
+    &:last-child
+      margin-bottom: 0em
+  
+  // Topic
+  .topic, .hlist, .genindex-jumpbox, .indextable
+    padding: $padding
+    td
+      padding-left: $padding !important
+      padding-right: $padding !important
+    border:
+      radius: $radius
+      style: none
+    background-color: $topic-bg
+    color: $topic-fg
+  
+  .topic
+    @include basic($object-body-bg, $object-body-fg)
+    padding: 0em
+    padding-bottom: 1px
+    border-style: none
+    @include side-radius(top, $radius * 1.5)
+    @include bottom-corners()
+    > *
+      margin-left: $padding
+      margin-right: $padding
+    // > p
+      // margin-top: $padding
+    .first
+      @include basic($object-header-bg, $object-header-fg)
+      @include top-corners()
+      margin-bottom: $padding
+  
+  // Tables
+  table.docutils:not(.citation)
+    background-color: transparent
+    td, th
+      background-color: $table-body-bg
+      color: $table-body-fg
+      padding: $padding
+      border: none
+      
+    tr.row-odd td
+      background-color: $table-odd-body-bg
+      color: $table-odd-body-fg
+      
+    thead th
+      background-color: $table-header-bg
+      color: $table-header-fg
+      @include table-row-top-corners()
+    
+    @include table-bottom-corners()
+  
+  table.longtable.docutils
+    tr:first-child
+      td:first-child
+        border-top-left-radius: $radius
+      td:last-child
+        border-top-right-radius: $radius
+  
+  // Mudlues index
+  div.modindex-jumpbox
+    border: none
+    
+  table.indextable
+    background-color: $object-body-bg
+    padding: 0em
+    @include table-corners()
+    
+    tr
+      @include even-odd($table-odd-body-bg, transparent)
+    
+    // Header
+    tr.cap
+      td
+        @include basic($object-header-bg, $object-header-fg)
+        @include table-row-top-corners()
+    
+    tr.pcap
+      display: none
+   
+  table.genindextable
+    border-top-left-radius: $radius
+    border-top-right-radius: $radius
+
+  // Blockquote
+  blockquote, .epigraph
+    background-color: $epigraph-bg
+    color: $epigraph-fg
+    padding: $padding
+    border:
+      style: $epigraph-border-style
+      width: $epigraph-border-width
+      color: $epigraph-border-color
+      radius: $radius
+  
+  // Footnotes
+  table.docutils.citation
+    border: none
+    td
+      border-radius: 0px
+      padding: $padding
+      background-color: $footnote-body-bg
+      color: $footnote-body-fg
+    
+    td.label
+      background-color: $footnote-header-bg
+      color: $footnote-header-fg
+      text-align: left
+    
+    &:first-of-type
+      td
+        border-top-right-radius: $radius 
+      td.label
+        border-radius: 0em
+        border-top-left-radius: $radius 
+    
+    &:last-of-type
+      td
+        border-bottom-right-radius: $radius 
+      td.label
+        border-radius: 0em
+        border-bottom-left-radius: $radius 
+  
+  // Admonitions and sidebar
+  .admonition
+    &.note, &.hint
+      @include admonition()
+    
+    &.tip, &.seealso
+      @include admonition($admonition-2-header-bg, $admonition-2-header-fg, $admonition-2-body-bg, $admonition-2-body-fg)
+
+    &.attention, &.danger, &.error, &.warning, &.important
+      @include admonition($admonition-3-header-bg, $admonition-3-header-fg, $admonition-3-body-bg, $admonition-3-body-fg)
+
+  .sidebar
+    @include admonition($sidebar-header-bg, $sidebar-header-fg, $sidebar-body-bg, $sidebar-body-fg)
+    .sidebar-subtitle
+      padding: #{$padding-v} #{$padding-h}
+      margin: 0em
+      background-color: $sidebar-subtitle-bg
+      color: $sidebar-subtitle-fg

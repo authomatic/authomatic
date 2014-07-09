@@ -1,0 +1,944 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://peterhudec.github.io/authomatic/index.html" />
+	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="_static/jquery.js"></script>
+    	<script type="text/javascript" src="_static/underscore.js"></script>
+    	<script type="text/javascript" src="_static/doctools.js"></script>
+    	<script type="text/javascript" src="_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="#">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						<ul class="">
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html">Config</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="reference/adapters.html">Adapters</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/classes.html">Classes</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="reference/providers.html">Providers</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="reference/extras.html">Extras</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="examples/index.html">Tutorials / Examples</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="development.html">Development</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		
+			<li><a href="genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+		
+
+	
+		<li><a href="reference/index.html"  title="Reference">next &raquo;</a></li>
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="#">
+		
+	    	
+	    		<img id="logo" src="_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						<span>Authomatic</span><br />
+is an <em>authorization</em> / <em>authentication</em><br />
+client library for Python web applications<br />
+inspired by Alex Vagin’s
+<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
+In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
+but that name would be too long<br />
+for a succinct library.
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="http://peterhudec.github.io/authomatic/index.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="http://peterhudec.github.io/authomatic/index.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=peterhudec&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <div class="toctree-wrapper compound">
+</div>
+<div class="section" id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>Loosely coupled.</li>
+<li>Tiny but powerful interface.</li>
+<li>The <a class="reference external" href="http://pypi.python.org/pypi/python-openid/">python-openid</a> library is the only <strong>optional</strong> dependency.</li>
+<li>CSRF protection.</li>
+<li><strong>Framework agnostic</strong> thanks to adapters.
+Out of the box support for <strong>Django</strong>, <strong>Flask</strong> and <strong>Webapp2</strong>.</li>
+<li>Ready to accommodate future authorization / authentication protocols.</li>
+<li>Makes calls to provider APIs a breeze.</li>
+<li>Supports asynchronous requests.</li>
+<li>JavaScript library as a bonus.</li>
+<li>Out of the box support for:<ul>
+<li><a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> providers: <strong>Bitbucket</strong>, <strong>Flickr</strong>, <strong>Meetup</strong>, <strong>Plurk</strong>, <strong>Twitter</strong>,
+<strong>Tumblr</strong>, <strong>UbuntuOne</strong>, <strong>Vimeo</strong>, <strong>Xero</strong>, <strong>Xing</strong> and <strong>Yahoo</strong>.</li>
+<li><a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> providers: <strong>Behance</strong>, <strong>Bitly</strong>, <strong>Cosm</strong>, <strong>DeviantART</strong>, <strong>Facebook</strong>,
+<strong>Foursquare</strong>, <strong>GitHub</strong>, <strong>Google</strong>, <strong>LinkedIn</strong>, <strong>PayPal</strong>, <strong>Reddit</strong>, <strong>Viadeo</strong>,
+<strong>VK</strong>, <strong>WindowsLive</strong>, <strong>Yammer</strong> and <strong>Yandex</strong>.</li>
+<li><a class="reference external" href="http://pypi.python.org/pypi/python-openid/">python-openid</a> and <a class="reference external" href="https://developers.google.com/appengine/">Google App Engine</a> based <a class="reference external" href="http://openid.net/">OpenID</a>.</li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To cool your excitement down a little bit,
+the library is in its <strong>very early stage</strong>
+and there are practically <strong>no tests</strong>!</p>
+</div>
+</div>
+<div class="section" id="license-and-requirements">
+<h1>License and Requirements<a class="headerlink" href="#license-and-requirements" title="Permalink to this headline">¶</a></h1>
+<p>The package is licensed under
+<a class="reference external" href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>
+and requires <strong>Python 2.6</strong>.</p>
+</div>
+<div class="section" id="live-demo">
+<h1>Live Demo<a class="headerlink" href="#live-demo" title="Permalink to this headline">¶</a></h1>
+<p>There is a Google App Engine based live demo app running at
+<a class="reference external" href="http://authomatic-example.appspot.com">http://authomatic-example.appspot.com</a> which makes use of most of the features.</p>
+</div>
+<div class="section" id="contribute">
+<h1>Contribute<a class="headerlink" href="#contribute" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="http://waffle.io/peterhudec/authomatic"><img alt="Stories in Ready" src="http://badge.waffle.io/peterhudec/authomatic.png" /></a>
+<p>Contributions of any kind are very welcome.
+If you want to contribute, please read the
+<a class="reference external" href="http://peterhudec.github.io/authomatic/development.html">Development Guide</a>
+first. The project is hosted on
+<a class="reference external" href="https://github.com/peterhudec/authomatic">GitHub</a>.</p>
+<p>If you find this library useful and are using it in your projects,
+please don&#8217;t be shy and leave a comment about your use case on the
+<a class="reference external" href="https://github.com/peterhudec/authomatic/issues/1">Authomatic use cases</a> issue.</p>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#features" id="id1">Features</a></li>
+<li><a class="reference internal" href="#license-and-requirements" id="id2">License and Requirements</a></li>
+<li><a class="reference internal" href="#live-demo" id="id3">Live Demo</a></li>
+<li><a class="reference internal" href="#contribute" id="id4">Contribute</a></li>
+<li><a class="reference internal" href="#usage" id="id5">Usage</a><ul>
+<li><a class="reference internal" href="#instantiate-authomatic" id="id6">Instantiate Authomatic</a></li>
+<li><a class="reference internal" href="#log-the-user-in" id="id7">Log the User In</a></li>
+<li><a class="reference internal" href="#advanced" id="id8">Advanced</a><ul>
+<li><a class="reference internal" href="#credentials" id="id9">Credentials</a></li>
+<li><a class="reference internal" href="#asynchronous-requests" id="id10">Asynchronous Requests</a></li>
+<li><a class="reference internal" href="#session" id="id11">Session</a></li>
+<li><a class="reference internal" href="#javascript" id="id12">JavaScript</a><ul>
+<li><a class="reference internal" href="#popup" id="id13">Popup</a></li>
+<li><a class="reference internal" href="#access" id="id14">Access</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<p>So you want your app to be able to log a <strong>user</strong> in with <strong>Facebook</strong>, <strong>Twitter</strong>, <a class="reference external" href="http://openid.net/">OpenID</a> or whatever?
+First install <strong>Authomatic</strong> through <a class="reference external" href="https://pypi.python.org/pypi/Authomatic">PyPi</a>,</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install authomatic
+</pre></div>
+</div>
+<p>or clone it from <a class="reference external" href="http://github.com/peterhudec/authomatic">GitHub</a>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/peterhudec/authomatic.git
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">On <a class="reference external" href="https://developers.google.com/appengine/">Google App Engine</a> you need to include the <a class="reference internal" href="reference/functions.html#module-authomatic" title="authomatic"><tt class="xref py py-mod docutils literal"><span class="pre">authomatic</span></tt></a> module
+or a link to it inside your app&#8217;s directory.</p>
+</div>
+<p>Now it&#8217;s dead simple (hence the <em>Deadsimpleauth</em>). Just go through these two steps:</p>
+<ol class="arabic simple">
+<li>Make an instance of the <a class="reference internal" href="reference/classes.html#authomatic.Authomatic" title="authomatic.Authomatic"><tt class="xref py py-class docutils literal"><span class="pre">Authomatic</span></tt></a> class.</li>
+<li>Log the <strong>user</strong> in by calling the <a class="reference internal" href="reference/classes.html#authomatic.Authomatic.login" title="authomatic.Authomatic.login"><tt class="xref py py-meth docutils literal"><span class="pre">Authomatic.login()</span></tt></a> method inside a <em>request handler</em>.</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The interface of the library has recently been changed from:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">authomatic</span>
+<span class="n">authomatic</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">CONFIG</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to more flexible:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">Authomatic</span>
+<span class="n">authomatic</span> <span class="o">=</span> <span class="n">Authomatic</span><span class="p">(</span><span class="n">CONFIG</span><span class="p">,</span> <span class="s">&#39;secret&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">The old interface will be availabe up to version <strong>0.1.0</strong>,
+but you will recieve deprecation warnings in the log.</p>
+</div>
+<p>If everything goes good, you will get a <a class="reference internal" href="reference/classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> object with information like
+<a class="reference internal" href="reference/classes.html#authomatic.core.User.name" title="authomatic.core.User.name"><tt class="xref py py-attr docutils literal"><span class="pre">User.name</span></tt></a>, <a class="reference internal" href="reference/classes.html#authomatic.core.User.id" title="authomatic.core.User.id"><tt class="xref py py-attr docutils literal"><span class="pre">User.id</span></tt></a> or <a class="reference internal" href="reference/classes.html#authomatic.core.User.email" title="authomatic.core.User.email"><tt class="xref py py-attr docutils literal"><span class="pre">User.email</span></tt></a>.
+Moreover, if the <strong>user</strong> has logged in with an <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> or <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> provider,
+you will be able to access <strong>his/her protected resources</strong>.</p>
+<div class="section" id="instantiate-authomatic">
+<h2>Instantiate Authomatic<a class="headerlink" href="#instantiate-authomatic" title="Permalink to this headline">¶</a></h2>
+<p>You need to pass a <a class="reference internal" href="reference/config.html"><em>Config</em></a> dictionary and a random secret string
+used for session signing and CSRF token generation to the constructor of the <a class="reference internal" href="reference/classes.html#authomatic.Authomatic" title="authomatic.Authomatic"><tt class="xref py py-class docutils literal"><span class="pre">Authomatic</span></tt></a> class.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># main.py</span>
+
+<span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">Authomatic</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">Webapp2Adapter</span>
+
+<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+<span class="hll"><span class="n">authomatic</span> <span class="o">=</span> <span class="n">Authomatic</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="s">&#39;some random secret string&#39;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The <a class="reference internal" href="reference/config.html"><em>Config</em></a> is a dictionary in which you configure
+<a class="reference internal" href="reference/providers.html"><em>Providers</em></a> you want to use in your app.
+The keys are your internal <strong>provider</strong> names and
+values are dictionaries specifying configuration for a particular <strong>provider</strong> name.</p>
+<p>Choose a particular provider by assigning a <a class="reference external" href="/reference/providers">provider class</a> to the <tt class="docutils literal"><span class="pre">&quot;class_&quot;</span></tt> key of
+the nested <em>configuration dictionary</em>. All the other keys are just keyword arguments,
+which will be passed to the chosen <a class="reference external" href="/reference/providers">provider class</a> constructor.</p>
+<p>In this sample <em>config</em> we specify that Facebook will be available under the <tt class="docutils literal"><span class="pre">&quot;fb&quot;</span></tt> slug,
+Twitter under <tt class="docutils literal"><span class="pre">&quot;tw&quot;</span></tt>, OpenID under <tt class="docutils literal"><span class="pre">&quot;oi&quot;</span></tt> and Google App Engine OpenID under <tt class="docutils literal"><span class="pre">&quot;gae_oi&quot;</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># config.py</span>
+
+<span class="kn">from</span> <span class="nn">authomatic.providers</span> <span class="kn">import</span> <span class="n">oauth2</span><span class="p">,</span> <span class="n">oauth1</span><span class="p">,</span> <span class="n">openid</span><span class="p">,</span> <span class="n">gaeopenid</span>
+
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    
+    <span class="s">&#39;tw&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="c"># Your internal provider name</span>
+           
+        <span class="c"># Provider class</span>
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth1</span><span class="o">.</span><span class="n">Twitter</span><span class="p">,</span>
+        
+        <span class="c"># Twitter is an AuthorizationProvider so we need to set several other properties too:</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;########################&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;########################&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    
+    <span class="s">&#39;fb&#39;</span><span class="p">:</span> <span class="p">{</span>
+           
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>
+        
+        <span class="c"># Facebook is an AuthorizationProvider too.</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;########################&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;########################&#39;</span><span class="p">,</span>
+        
+        <span class="c"># But it is also an OAuth 2.0 provider and it needs scope.</span>
+        <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">,</span> <span class="s">&#39;publish_stream&#39;</span><span class="p">,</span> <span class="s">&#39;read_stream&#39;</span><span class="p">],</span>
+    <span class="p">},</span>
+    
+    <span class="s">&#39;gae_oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+           
+        <span class="c"># OpenID provider based on Google App Engine Users API.</span>
+        <span class="c"># Works only on GAE and returns only the id and email of a user.</span>
+        <span class="c"># Moreover, the id is not available in the development environment!</span>
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">gaeopenid</span><span class="o">.</span><span class="n">GAEOpenID</span><span class="p">,</span>
+    <span class="p">},</span>
+    
+    <span class="s">&#39;oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+           
+        <span class="c"># OpenID provider based on the python-openid library.</span>
+        <span class="c"># Works everywhere, is flexible, but requires more resources.</span>
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="log-the-user-in">
+<h2>Log the User In<a class="headerlink" href="#log-the-user-in" title="Permalink to this headline">¶</a></h2>
+<p>Now you can log the <strong>user</strong> in by calling the <a class="reference internal" href="reference/functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function inside a <em>request handler</em>.
+The <em>request handler</em> MUST be able to recieve both <tt class="docutils literal"><span class="pre">GET</span></tt> and <tt class="docutils literal"><span class="pre">POST</span></tt> HTTP methods.
+You need to pass it an <a class="reference internal" href="reference/adapters.html"><em>adapter</em></a> for your framework
+and one of the provider names which you specified in the keys of your <a class="reference internal" href="reference/config.html"><em>Config</em></a>.
+We will get the provider name from the URL slug.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">):</span>
+<span class="hll">        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">provider_name</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The <a class="reference internal" href="reference/functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function will redirect the <strong>user</strong> to the <strong>provider</strong>,
+which will prompt <strong>him/her</strong> to authorize your app (<strong>the consumer</strong>) to access <strong>his/her</strong>
+protected resources (<a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> and <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a>), or to verify <strong>his/her</strong> claimed ID (<a class="reference external" href="http://openid.net/">OpenID</a>).
+The <strong>provider</strong> then redirects the <strong>user</strong> back to <em>this request handler</em>.</p>
+<p>If the <em>login procedure</em> is over, <a class="reference internal" href="reference/functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> returns a <a class="reference internal" href="reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>.
+You can check for errors in <a class="reference internal" href="reference/classes.html#authomatic.core.LoginResult.error" title="authomatic.core.LoginResult.error"><tt class="xref py py-attr docutils literal"><span class="pre">LoginResult.error</span></tt></a>
+or in better case for a <a class="reference internal" href="reference/classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> in <a class="reference internal" href="reference/classes.html#authomatic.core.LoginResult.user" title="authomatic.core.LoginResult.user"><tt class="xref py py-attr docutils literal"><span class="pre">LoginResult.user</span></tt></a>.
+The <a class="reference internal" href="reference/classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> object has plenty of useful properties.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Do not write anything to the response unless the <em>login procedure</em> is over!
+The <a class="reference internal" href="reference/functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> either returns <tt class="docutils literal"><span class="pre">None</span></tt>,
+which means that the <em>login procedure</em> si still pending,
+or a <a class="reference internal" href="reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a> which means that the <em>login procedure</em> is over.</p>
+</div>
+<p>Check whether <em>login procedure</em> is over.</p>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;a href=&quot;..&quot;&gt;Home&lt;/a&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Check for errors, but hope that there is a <a class="reference internal" href="reference/classes.html#authomatic.core.LoginResult.user" title="authomatic.core.LoginResult.user"><tt class="xref py py-attr docutils literal"><span class="pre">LoginResult.user</span></tt></a>.
+If so, we have an authenticated <strong>user</strong> logged in.
+Before we print a welcoming message we need to update the <a class="reference internal" href="reference/classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a>
+to get more info about <strong>him/her</strong>.</p>
+<div class="highlight-python"><div class="highlight"><pre>            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h2&gt;Damn that error: {}&lt;/h2&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">):</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h1&gt;Hi {}&lt;/h1&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h2&gt;Your id is: {}&lt;/h2&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h2&gt;Your email is: {}&lt;/h2&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="advanced">
+<h2>Advanced<a class="headerlink" href="#advanced" title="Permalink to this headline">¶</a></h2>
+<p>Logging a <strong>user</strong> in is nice, but you can do more.</p>
+<p>You can use the <strong>user&#8217;s</strong> <a class="reference internal" href="#credentials">credentials</a> to <strong>access his/her protected resources</strong>,
+make <a class="reference internal" href="#asynchronous-requests">asynchronous requests</a>, use your own <a class="reference internal" href="#session">session</a> implementation and
+Save your backend&#8217;s resources by utilizing the <a class="reference internal" href="reference/javascript.html"><em>authomatic.js</em></a>
+<a class="reference internal" href="#javascript">javascript</a> library.</p>
+<div class="section" id="credentials">
+<h3>Credentials<a class="headerlink" href="#credentials" title="Permalink to this headline">¶</a></h3>
+<p>If the <a class="reference internal" href="reference/classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> has <a class="reference internal" href="reference/classes.html#authomatic.core.User.credentials" title="authomatic.core.User.credentials"><tt class="xref py py-attr docutils literal"><span class="pre">User.credentials</span></tt></a>,
+<strong>he/she</strong> is logged in either with <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> or <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a>,
+both of which are subclasses of <a class="reference internal" href="reference/providers.html#authomatic.providers.AuthorizationProvider" title="authomatic.providers.AuthorizationProvider"><tt class="xref py py-class docutils literal"><span class="pre">AuthorizationProvider</span></tt></a>.
+That means, that we can access the <strong>user&#8217;s protected resources</strong>.
+Lets get the <strong>user&#8217;s</strong> five most recent facebook statuses.</p>
+<div class="highlight-python"><div class="highlight"><pre>                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;fb&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your are logged in with Facebook.&lt;br /&gt;&#39;</span><span class="p">)</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://graph.facebook.com/{}?fields=feed.limit(5)&#39;</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="hll">                        <span class="n">response</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The call returns a <a class="reference internal" href="reference/classes.html#authomatic.core.Response" title="authomatic.core.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a> object. The <a class="reference internal" href="reference/classes.html#authomatic.core.Response.data" title="authomatic.core.Response.data"><tt class="xref py py-attr docutils literal"><span class="pre">Response.data</span></tt></a> contains the parsed
+response content.</p>
+<div class="highlight-python"><div class="highlight"><pre>                        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                            <span class="n">statuses</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;feed&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">)</span>
+                            <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error&#39;</span><span class="p">)</span>
+                            
+                            <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Damn that error: {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+                            <span class="k">elif</span> <span class="n">statuses</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your 5 most recent statuses:&lt;br /&gt;&#39;</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">:</span>
+                                    
+                                    <span class="n">text</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">)</span>
+                                    <span class="n">date</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;created_time&#39;</span><span class="p">)</span>
+                                    
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h3&gt;{}&lt;/h3&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Posted on: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that unknown error!&lt;br /&gt;&#39;</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Status: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Credentials can be serialized to a lightweight url-safe string.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">serialized_credentials</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>It would be useless if they could not be deserialized back to original.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The deserialization of the credentials is dependent on the <a class="reference internal" href="reference/config.html"><em>Config</em></a>
+used when the credentials have been serialized.
+You can deserialize them in a different application as long as you use the same <a class="reference internal" href="reference/config.html"><em>Config</em></a>.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">credentials</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">credentials</span><span class="p">(</span><span class="n">serialized_credentials</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>They know the provider name which you specified in the <a class="reference internal" href="reference/config.html"><em>Config</em></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">provider_name</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">provider_name</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> credentials have limited lifetime. You can check whether they are still valid,
+in how many seconds they expire, get the date and time or UNIX timestamp of their expiration
+and find out whether they expire soon.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">valid</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">valid</span> <span class="c"># True / False</span>
+<span class="n">seconds_remaining</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">expire_in</span>
+<span class="n">expire_on</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">expiration_date</span> <span class="c"># datetime.datetime()</span>
+<span class="n">expire_on</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">expiration_time</span> <span class="c"># 1362080855</span>
+<span class="n">should_refresh</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">expire_soon</span><span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span> <span class="c"># True if expire in less than one day</span>
+</pre></div>
+</div>
+<p>You can refresh the credentials while they are still valid.
+Otherwise you must repeat the <a class="reference internal" href="reference/functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> procedure to get new credentials.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">credentials</span><span class="o">.</span><span class="n">expire_soon</span><span class="p">():</span>
+   <span class="n">response</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+   <span class="k">if</span> <span class="n">response</span> <span class="ow">and</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+      <span class="k">print</span> <span class="s">&#39;Credentials have been refreshed successfully.&#39;</span>
+</pre></div>
+</div>
+<p>Finally use the credentials (serialized or deserialized) to access <strong>protected resources</strong> of the <strong>user</strong>
+to whom they belong by passing them to the <a class="reference internal" href="reference/functions.html#authomatic.access" title="authomatic.access"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.access()</span></tt></a> function along with the <strong>resource</strong> URL.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">response</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">credentials</span><span class="p">,</span> <span class="s">&#39;https://graph.facebook.com/{id}?fields=birthday&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can find out more about <a class="reference internal" href="reference/classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">Credentials</span></tt></a> in the <a class="reference internal" href="reference/index.html"><em>Reference</em></a>.
+There is also a short <a class="reference internal" href="examples/credentials.html"><em>tutorial about credentials</em></a>
+in the <a class="reference internal" href="examples/index.html"><em>Tutorials / Examples</em></a> section.</p>
+</div>
+<div class="section" id="asynchronous-requests">
+<h3>Asynchronous Requests<a class="headerlink" href="#asynchronous-requests" title="Permalink to this headline">¶</a></h3>
+<p>Following functions fetch remote URLs and
+block the current thread till they return a <a class="reference internal" href="reference/classes.html#authomatic.core.Response" title="authomatic.core.Response"><tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt></a>.</p>
+<ul class="simple">
+<li><a class="reference internal" href="reference/functions.html#authomatic.access" title="authomatic.access"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.access()</span></tt></a></li>
+<li><a class="reference internal" href="reference/providers.html#authomatic.providers.AuthorizationProvider.access" title="authomatic.providers.AuthorizationProvider.access"><tt class="xref py py-meth docutils literal"><span class="pre">AuthorizationProvider.access()</span></tt></a></li>
+<li><a class="reference internal" href="reference/classes.html#authomatic.core.User.update" title="authomatic.core.User.update"><tt class="xref py py-meth docutils literal"><span class="pre">User.update()</span></tt></a></li>
+<li><a class="reference internal" href="reference/classes.html#authomatic.core.Credentials.refresh" title="authomatic.core.Credentials.refresh"><tt class="xref py py-meth docutils literal"><span class="pre">Credentials.refresh()</span></tt></a></li>
+</ul>
+<p>If you need to call more than one of them in a single <em>request handler</em>,
+or if there is another <strong>time consuming</strong> task you need to do,
+there is an <strong>asynchronous</strong> alternative to each of these functions.</p>
+<ul class="simple">
+<li><a class="reference internal" href="reference/functions.html#authomatic.async_access" title="authomatic.async_access"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.async_access()</span></tt></a></li>
+<li><a class="reference internal" href="reference/providers.html#authomatic.providers.AuthorizationProvider.async_access" title="authomatic.providers.AuthorizationProvider.async_access"><tt class="xref py py-meth docutils literal"><span class="pre">AuthorizationProvider.async_access()</span></tt></a></li>
+<li><a class="reference internal" href="reference/classes.html#authomatic.core.User.async_update" title="authomatic.core.User.async_update"><tt class="xref py py-meth docutils literal"><span class="pre">User.async_update()</span></tt></a></li>
+<li><a class="reference internal" href="reference/classes.html#authomatic.core.Credentials.async_refresh" title="authomatic.core.Credentials.async_refresh"><tt class="xref py py-meth docutils literal"><span class="pre">Credentials.async_refresh()</span></tt></a></li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The internal implementation of the future pattern is quite naive. Use with caution!</p>
+</div>
+<p>These <strong>asynchronous</strong> alternatives all return a <a class="reference internal" href="reference/classes.html#authomatic.core.Future" title="authomatic.core.Future"><tt class="xref py py-class docutils literal"><span class="pre">Future</span></tt></a> instance which
+represents the separate thread in which their <strong>synchronous</strong> brethren are running.
+You should call all the <strong>asynchronous</strong> functions you want to use at once,
+then do your <strong>time consuming</strong> tasks and finally collect the results of the functions
+by calling the <a class="reference internal" href="reference/classes.html#authomatic.core.Future.get_result" title="authomatic.core.Future.get_result"><tt class="xref py py-meth docutils literal"><span class="pre">get_result()</span></tt></a> method of each of the
+<a class="reference internal" href="reference/classes.html#authomatic.core.Future" title="authomatic.core.Future"><tt class="xref py py-class docutils literal"><span class="pre">Future</span></tt></a> instances.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># These guys will run in parallel and each returns immediately.</span>
+<span class="n">user_future</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">async_update</span><span class="p">()</span>
+<span class="n">credentials_future</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">async_refresh</span><span class="p">()</span>
+<span class="n">foo_future</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span> <span class="s">&#39;http://api.example.com/foo&#39;</span><span class="p">)</span>
+<span class="n">bar_future</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span> <span class="s">&#39;http://api.example.com/bar&#39;</span><span class="p">)</span>
+
+<span class="c"># Do your time consuming task.</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c"># Collect results:</span>
+
+<span class="c"># Updates the User instance in place and returns response.</span>
+<span class="n">user_response</span> <span class="o">=</span> <span class="n">user_future</span><span class="o">.</span><span class="n">get_result</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">user_response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">&#39;User was updated successfully.&#39;</span>
+
+<span class="c"># Refreshes the Credentials instance in place and returns response.</span>
+<span class="n">credentials_response</span> <span class="o">=</span> <span class="n">credentials_future</span><span class="o">.</span><span class="n">get_result</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">credentials_response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">&#39;Credentials were refreshed successfully.&#39;</span>
+
+<span class="n">foo_response</span> <span class="o">=</span> <span class="n">foo_future</span><span class="o">.</span><span class="n">get_result</span><span class="p">()</span>
+<span class="n">bar_response</span> <span class="o">=</span> <span class="n">bar_future</span><span class="o">.</span><span class="n">get_result</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="session">
+<h3>Session<a class="headerlink" href="#session" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="reference/functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function uses a default <strong>secure cookie</strong> based session
+to store state during the <em>login procedure</em>.
+If you want to use different session implementation you can pass it
+together with its <strong>save method</strong> to the <a class="reference internal" href="reference/functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function.
+The only requirement is that the session implementation must have a dictionary-like interface.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The default <strong>secure cookie</strong> based session will be deleted immediately after
+the <em>login procedure</em> is over. Custom sessions however, will be preserved.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">from</span> <span class="nn">webapp2_extras</span> <span class="kn">import</span> <span class="n">sessions</span>
+<span class="kn">import</span> <span class="nn">authomatic</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">Webapp2Adapter</span>
+
+<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">):</span>
+
+      <span class="c"># Webapp2 session</span>
+      <span class="n">session_store</span> <span class="o">=</span> <span class="n">sessions</span><span class="o">.</span><span class="n">get_store</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
+      <span class="n">session</span> <span class="o">=</span> <span class="n">session_store</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+      <span class="n">session_saver</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">session_store</span><span class="o">.</span><span class="n">save_sessions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+
+      <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+                                <span class="n">provider_name</span><span class="p">,</span>
+                                <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+                                <span class="n">session_saver</span><span class="o">=</span><span class="n">session_saver</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Man, isn&#8217;t there a simpler way to make a Webapp2 session?
+You guessed it didn&#8217;t you? There is one in the <a class="reference internal" href="reference/extras.html#module-authomatic.extras.gae" title="authomatic.extras.gae"><tt class="xref py py-mod docutils literal"><span class="pre">authomatic.extras.gae</span></tt></a> module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">import</span> <span class="nn">authomatic</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">Webapp2Adapter</span>
+<span class="kn">from</span> <span class="nn">authomatic.extras</span> <span class="kn">import</span> <span class="n">gae</span>
+
+<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">):</span>
+
+      <span class="c"># Creates a new Webapp2 session.</span>
+      <span class="n">session</span> <span class="o">=</span> <span class="n">gae</span><span class="o">.</span><span class="n">Webapp2Session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="s">&#39;your-super-confidential-secret&#39;</span><span class="p">)</span>
+
+      <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+                                <span class="n">provider_name</span><span class="p">,</span>
+                                <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+                                <span class="n">session_saver</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">save</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you are already using a Webapp2 session you can do it like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">import</span> <span class="nn">authomatic</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">Webapp2Adapter</span>
+<span class="kn">from</span> <span class="nn">authomatic.extras</span> <span class="kn">import</span> <span class="n">gae</span>
+
+<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">):</span>
+
+      <span class="c"># Wraps an existing Webapp2 session.</span>
+      <span class="n">session</span> <span class="o">=</span> <span class="n">gae</span><span class="o">.</span><span class="n">Webapp2Session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+
+      <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+                                <span class="n">provider_name</span><span class="p">,</span>
+                                <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+                                <span class="n">session_saver</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">save</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="javascript">
+<h3>JavaScript<a class="headerlink" href="#javascript" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="popup">
+<h4>Popup<a class="headerlink" href="#popup" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="reference/functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function redirects the <strong>user</strong> to the <strong>provider</strong>
+to ask him for <strong>his/her</strong> consent. If you rather want to make the redirect in a popup,
+the <a class="reference internal" href="reference/javascript.html#js-popup-init"><em>authomatic.popupInit()</em></a> function of the
+<a class="reference internal" href="reference/javascript.html#js"><em>javascript.js</em></a> library with conjunction with <tt class="xref py py-meth docutils literal"><span class="pre">LoginResult.js_callback()</span></tt>
+make it a breeze.</p>
+<p>Just add the <tt class="docutils literal"><span class="pre">authomatic</span></tt> class to your <em>login handler</em> links and forms
+and change their default behavior by calling the <a class="reference internal" href="reference/javascript.html#js-popup-init"><em>authomatic.popupInit()</em></a> function.
+The elements will now open a 600 x 800 centered popup on click or submit respectively.
+you can change the popup dimensions with the <a class="reference internal" href="reference/javascript.html#js-setup"><em>authomatic.setup()</em></a>.</p>
+<p>Set the <tt class="docutils literal"><span class="pre">onLoginComplete</span></tt> event handler to the <a class="reference internal" href="reference/javascript.html#js-setup"><em>authomatic.setup()</em></a> function,
+which should accept a <tt class="docutils literal"><span class="pre">result</span></tt> argument.</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+   <span class="nt">&lt;head&gt;</span>
+
+      <span class="nt">&lt;title&gt;</span>Login Popup Example<span class="nt">&lt;title&gt;</span>
+
+      <span class="c">&lt;!-- authomatic.js is dependent on jQuery --&gt;</span>
+      <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.9.1.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+      <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;authomatic.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+   <span class="nt">&lt;/head&gt;</span>
+   <span class="nt">&lt;body&gt;</span>
+
+      <span class="c">&lt;!-- Opens a popup with location = &quot;login/facebook&quot; --&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;authomatic&quot;</span> <span class="na">href=</span><span class="s">&quot;login/facebook&quot;</span><span class="nt">&gt;</span>Login with Facebook<span class="nt">&lt;/a&gt;</span>
+
+      <span class="c">&lt;!-- Opens a popup with location = &quot;login/openid?id=me.yahoo.com&quot; --&gt;</span>
+      <span class="nt">&lt;form</span> <span class="na">class=</span><span class="s">&quot;authomatic&quot;</span> <span class="na">action=</span><span class="s">&quot;login/openid&quot;</span> <span class="na">method=</span><span class="s">&quot;GET&quot;</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span> <span class="na">value=</span><span class="s">&quot;me.yahoo.com&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">value=</span><span class="s">&quot;Login with OpenID&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;/form&gt;</span>
+
+      <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+
+         <span class="c1">// Set up the library</span>
+         <span class="nx">authomatic</span><span class="p">.</span><span class="nx">setup</span><span class="p">({</span>
+            <span class="nx">popupWidth</span><span class="o">:</span> <span class="mi">600</span><span class="p">,</span>
+            <span class="nx">popupHeight</span><span class="o">:</span> <span class="mi">400</span><span class="p">,</span>
+            <span class="nx">onLoginComplete</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+               <span class="c1">// Handle the login result when the popup closes.</span>
+               <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+                  <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Hi &#39;</span> <span class="o">+</span> <span class="nx">result</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+               <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+                  <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Error occurred: &#39;</span> <span class="o">+</span> <span class="nx">result</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+               <span class="p">}</span>
+            <span class="p">}</span>
+         <span class="p">});</span>
+
+         <span class="c1">// Change behavior of links and form of class=&quot;authomatic&quot;</span>
+         <span class="nx">authomatic</span><span class="p">.</span><span class="nx">popupInit</span><span class="p">();</span>
+
+      <span class="nt">&lt;/script&gt;</span>
+
+   <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div>
+<p>In your <em>login handler</em> just write the return value of the <tt class="xref py py-meth docutils literal"><span class="pre">LoginResult.js_callback()</span></tt> method
+to the response.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">import</span> <span class="nn">authomatic</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">Webapp2Adapter</span>
+
+<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">provider_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+<span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">js_callback</span><span class="p">())</span>
+</span></pre></div>
+</div>
+<p>The <tt class="xref py py-meth docutils literal"><span class="pre">LoginResult.js_callback()</span></tt> generates a HTML that closes the popup when the <em>login procedure</em>
+is over and triggers the <tt class="docutils literal"><span class="pre">onLoginComplete</span></tt> event handler with a JSON <em>login result</em> object passed as argument.
+The <em>login result</em> object has similar structure as the <a class="reference internal" href="reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>.</p>
+</div>
+<div class="section" id="access">
+<h4>Access<a class="headerlink" href="#access" title="Permalink to this headline">¶</a></h4>
+<p>Accessing the <strong>user&#8217;s protected resources</strong> and <strong>provider APIs</strong> is very easy
+thanks to the <a class="reference internal" href="reference/functions.html#authomatic.access" title="authomatic.access"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.access()</span></tt></a> function, but you could save your backend&#8217;s resources
+by delegating it to the <strong>user&#8217;s</strong> browser.</p>
+<p>This however is easier said then done because some <strong>providers</strong> do not support
+<em>cross-domain</em> and <em>JSONP</em> requests and all <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> request need to be signed
+with the <strong>consumer secret</strong> by the backend.
+Leave alone special request requirements invented by some zealous providers
+on top of the <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> and <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> standards.</p>
+<p>The <a class="reference internal" href="reference/javascript.html#js-access"><em>authomatic.access()</em></a> function of the <a class="reference internal" href="reference/javascript.html#js"><em>javascript.js</em></a> library
+solves this for you. It encapsulates solutions of all the aforementioned issues and
+always makes the request in the most efficient way.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">authomatic</span><span class="p">.</span><span class="nx">access</span><span class="p">(</span><span class="nx">loginResult</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">credentials</span><span class="p">,</span> <span class="s1">&#39;https://graph.facebook.com/{id}/feed&#39;</span><span class="p">,{</span>
+   <span class="nx">substitute</span><span class="o">:</span> <span class="nx">loginResult</span><span class="p">.</span><span class="nx">user</span><span class="p">,</span> <span class="c1">// replaces the {id} in the URL with loginResult.user.id.</span>
+   <span class="nx">onAccessSuccess</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Your most recent status is: &#39;</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">story</span><span class="p">);</span>
+   <span class="p">},</span>
+   <span class="nx">onAccessComplete</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">textStatus</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">textStatus</span> <span class="o">==</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span> <span class="p">{</span>
+         <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;We were unable to get your Facebook feed!&#39;</span><span class="p">);</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/adapters.html">Adapters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/providers.html">Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/extras.html">Extras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Tutorials / Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="genindex.html"  title="General Index">index</a></span>
+				<span><a href="py-modindex.html"  title="Python Module Index">modules</a></span>
+				<span><a href="reference/index.html"  title="Reference">next &raquo;</a></span></div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="http://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="_static/foundation/js/foundation.min.js"></script>
+	<script src="_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/peterhudec/authomatic">
+			<img
+				 src="_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>

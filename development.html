@@ -1,0 +1,729 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Development | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="Development | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://peterhudec.github.io/authomatic/development.html" />
+	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="_static/jquery.js"></script>
+    	<script type="text/javascript" src="_static/underscore.js"></script>
+    	<script type="text/javascript" src="_static/doctools.js"></script>
+    	<script type="text/javascript" src="_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						<ul class="current">
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html">Config</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="reference/adapters.html">Adapters</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/classes.html">Classes</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="reference/providers.html">Providers</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="reference/extras.html">Extras</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="examples/index.html">Tutorials / Examples</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1 current"><a class="current reference internal" href="">Development</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		<li><a href="examples/credentials.html"  title="Advanced Webapp2 Google App Engine Example">&laquo; previous</a></li>
+	
+		
+			<li><a href="genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+		
+		
+
+	
+		<li><a href="changelog.html"  title="Changelog">next &raquo;</a></li>
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="index.html">
+		
+	    	
+	    		<img id="logo" src="_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						<span>Authomatic</span><br />
+is an <em>authorization</em> / <em>authentication</em><br />
+client library for Python web applications<br />
+inspired by Alex Vagin’s
+<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
+In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
+but that name would be too long<br />
+for a succinct library.
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="http://peterhudec.github.io/authomatic/development.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="http://peterhudec.github.io/authomatic/development.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=peterhudec&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="Development | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	
+		<ul class="breadcrumbs">
+			
+		  	<li><a href="index.html">Authomatic</a></li>
+
+		  	
+
+		  	
+			<li class="current"><a href="">Development</a></li>
+		</ul>
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <div class="section" id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<p>Contributions are very welcome.
+Please read this guide if you want to contribute.</p>
+<div class="section" id="development-environment-setup">
+<h2>Development Environment Setup<a class="headerlink" href="#development-environment-setup" title="Permalink to this headline">¶</a></h2>
+<p>Fork the
+<a class="reference external" href="https://github.com/peterhudec/authomatic">Authomatic repository on Github</a>
+and clone it:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/&lt;your-github-id&gt;/authomatic.git
+<span class="nv">$ </span><span class="nb">cd </span>authomatic
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The rest of this document assumes that you are working in the <tt class="docutils literal"><span class="pre">authomatic/</span></tt> directory.</p>
+</div>
+<p>Although Authomatic has no dependencies except for the optional
+<a class="reference external" href="http://pypi.python.org/pypi/python-openid/">python-openid</a> package required by the <a class="reference internal" href="reference/providers.html#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">openid.OpenID</span></tt></a> provider,
+it has quite a lot of development dependencies.</p>
+<p>The easiest way to set up the development environment is to run the
+<tt class="docutils literal"><span class="pre">./bootstrap.sh</span></tt> script.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sh bootstrap.sh
+</pre></div>
+</div>
+<p>The script does following things:</p>
+<ol class="arabic">
+<li><p class="first">Initializes and updates GIT submodules. The
+<a class="reference external" href="https://github.com/peterhudec/foundation-sphinx-theme">Foundation Sphinx Theme</a>
+located in <tt class="docutils literal"><span class="pre">./doc/source_/themes/foundation-sphinx-theme</span></tt>
+is currently the only GIT submodule used.</p>
+</li>
+<li><p class="first">Creates a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtual environment</a>
+in <tt class="docutils literal"><span class="pre">./venv</span></tt>.</p>
+</li>
+<li><p class="first">Downloads and extracts the
+<a class="reference external" href="https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python">Google App Engine Python SDK</a>
+for <strong>Linux/Other Platforms</strong> to <tt class="docutils literal"><span class="pre">./venv/google_appengine</span></tt>.</p>
+</li>
+<li><p class="first">Downloads the <a class="reference external" href="https://code.google.com/p/chromedriver/">Chromedriver</a>
+executable needed by selenium tests to <tt class="docutils literal"><span class="pre">./venv/bin/chromedriver</span></tt>.</p>
+</li>
+<li><p class="first">Activates the virtual environment <tt class="docutils literal"><span class="pre">./venv</span></tt>.</p>
+</li>
+<li><p class="first">Installs the development dependencies specified in <tt class="docutils literal"><span class="pre">./requirements.txt</span></tt>.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Prepares the <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt> directory for deployment of the compiled documentation to <a class="reference external" href="https://pages.github.com/">Github Pages</a>.</dt>
+<dd><ol class="first last arabic simple">
+<li>Removes the <tt class="docutils literal"><span class="pre">./doc/build/</span></tt> directory if it exists.</li>
+<li>Clones the origin of this repository to <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt>.</li>
+<li>Creates the <strong>gh-pages</strong> branch there.</li>
+<li>Sets the GIT <strong>HEAD</strong> to <strong>gh-pages</strong>.</li>
+<li>Removes the GIT index.</li>
+<li>Removes everything in the directory with <tt class="docutils literal"><span class="pre">git</span> <span class="pre">claen</span> <span class="pre">-fdx</span></tt>.</li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p class="first">Compiles the documentation.</p>
+</li>
+<li><p class="first">Deactivates the virtual environment (probably unneccessary).</p>
+</li>
+</ol>
+</div>
+<div class="section" id="documentation-compilation-and-deployment">
+<h2>Documentation Compilation and Deployment<a class="headerlink" href="#documentation-compilation-and-deployment" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Allways keep the documentation in sync with the latest code changes.</p>
+</div>
+<p>Compile the documentation with this commands:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. ./venv/bin/activate
+<span class="o">(</span>venv<span class="o">)</span><span class="nv">$ </span><span class="nb">cd </span>doc
+<span class="o">(</span>venv<span class="o">)</span><span class="nv">$ </span>make html
+</pre></div>
+</div>
+<p>The documentation will be compiled to <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt>.
+For easy deploiment to <a class="reference external" href="https://pages.github.com/">Github Pages</a>,
+the <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt> directory is actually a clone of the <strong>origin</strong> of the
+actual project repository that you cloned from (your fork) with the
+<strong>gh-pages</strong> branch checked out.</p>
+<p>To deploy a compiled documentation to Github page go to the
+<tt class="docutils literal"><span class="pre">./doc/build/html</span></tt> directory, commit all changes and push to
+<strong>origin gh-pages</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>doc/build/html
+<span class="nv">$ </span>git add -A
+<span class="nv">$ </span>git commit -m <span class="s2">&quot;Updated documentation.&quot;</span>
+<span class="nv">$ </span>git push origin gh-pages
+</pre></div>
+</div>
+</div>
+<div class="section" id="tests">
+<h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h2>
+<p>There are currently only <em>functional</em> (or <em>end-to-end</em>)
+<a class="reference external" href="http://seleniumhq.org">Selenium</a> tests.
+They are designed to test the <em>login procedure</em> and
+<em>credentials refreshment</em> and to discover changes in provider APIs.
+Currently the tests cover only 12 of the 27 OAuth 2.0 providers.
+The tests are written for the <a class="reference external" href="http://pytest.org/latest/">pytest</a> framework.</p>
+<p>To run <em>functional</em> tests, you first need to create the
+<tt class="docutils literal"><span class="pre">./tests/functional_tests/config.py</span></tt> module by copying and filling out the
+<tt class="docutils literal"><span class="pre">./tests/functional_tests/config-template.py</span></tt> template.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>tests/functional_tests
+<span class="nv">$ </span>cp config-template.py config.py
+</pre></div>
+</div>
+<p>This is the <tt class="docutils literal"><span class="pre">config-template.py</span></tt> template:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">import</span> <span class="nn">constants</span>
+
+
+<span class="c"># Choose and configure the browser of your choice</span>
+<span class="k">def</span> <span class="nf">get_browser</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">()</span>
+
+
+<span class="c"># The host and port where the tested ap shoud listen.</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="s">&#39;127.0.0.1&#39;</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">8080</span>
+
+<span class="c"># The host alias set in the /etc/hosts file.</span>
+<span class="c"># The actual tests will navigate selenium browser to this host.</span>
+<span class="c"># This is necessary because some providers don&#39;t support localhost as the</span>
+<span class="c"># callback url.</span>
+<span class="n">HOST_ALIAS</span> <span class="o">=</span> <span class="s">&#39;authomatic.com&#39;</span>
+
+<span class="c"># Only providers included here will be tested.</span>
+<span class="c"># This is a convenience to easily exclude providers from tests by commenting</span>
+<span class="c"># them out.</span>
+<span class="n">INCLUDE_PROVIDERS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;behance&#39;</span><span class="p">,</span>
+    <span class="s">&#39;bitly&#39;</span><span class="p">,</span>
+    <span class="s">&#39;deviantart&#39;</span><span class="p">,</span>
+    <span class="s">&#39;facebook&#39;</span><span class="p">,</span>
+    <span class="s">&#39;foursquare&#39;</span><span class="p">,</span>
+    <span class="s">&#39;google&#39;</span><span class="p">,</span>
+    <span class="s">&#39;github&#39;</span><span class="p">,</span>
+    <span class="s">&#39;linkedin&#39;</span><span class="p">,</span>
+    <span class="s">&#39;paypal&#39;</span><span class="p">,</span>
+    <span class="s">&#39;reddit&#39;</span><span class="p">,</span>
+    <span class="s">&#39;vk&#39;</span><span class="p">,</span>
+    <span class="s">&#39;windowslive&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c"># Use these constants if you have the same user info by all tested providers.</span>
+<span class="n">EMAIL</span> <span class="o">=</span> <span class="s">&#39;andy.pipkin@littlebritain.co.uk&#39;</span>
+<span class="n">FIRST_NAME</span> <span class="o">=</span> <span class="s">&#39;Andy&#39;</span>
+<span class="n">LAST_NAME</span> <span class="o">=</span> <span class="s">&#39;Pipkin&#39;</span>
+<span class="n">NAME</span> <span class="o">=</span> <span class="n">FIRST_NAME</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="n">LAST_NAME</span>
+<span class="n">USERNAME</span> <span class="o">=</span> <span class="s">&#39;andypipkin&#39;</span>
+<span class="n">USERNAME_REVERSE</span> <span class="o">=</span> <span class="s">&#39;pipkinandy&#39;</span>
+<span class="n">NICKNAME</span> <span class="o">=</span> <span class="s">&#39;Mr. Pipkin&#39;</span>
+<span class="n">BIRTH_YEAR</span> <span class="o">=</span> <span class="s">&#39;1979&#39;</span>
+<span class="n">BIRTH_DATE</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1979</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+<span class="n">CITY</span> <span class="o">=</span> <span class="s">&#39;London&#39;</span>
+<span class="n">COUNTRY</span> <span class="o">=</span> <span class="s">&#39;Great Britain&#39;</span>
+<span class="n">POSTAL_CODE</span> <span class="o">=</span> <span class="s">&#39;EC1A1DH&#39;</span>
+<span class="n">PHONE</span> <span class="o">=</span> <span class="s">&#39;??????????&#39;</span>
+<span class="n">PHONE_INTERNATIONAL</span> <span class="o">=</span> <span class="s">&#39;0044??????????&#39;</span>
+<span class="n">GENDER</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">GENDER_MALE</span>
+<span class="n">LOCALE</span> <span class="o">=</span> <span class="s">&#39;en_UK&#39;</span>
+
+<span class="c"># Common values for all providers</span>
+<span class="n">COMMON</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c"># Could be same if the user sets it so</span>
+    <span class="s">&#39;user_birth_date&#39;</span><span class="p">:</span> <span class="n">BIRTH_DATE</span><span class="p">,</span>
+    <span class="s">&#39;user_login&#39;</span><span class="p">:</span> <span class="n">EMAIL</span><span class="p">,</span>
+    <span class="s">&#39;user_email&#39;</span><span class="p">:</span> <span class="n">EMAIL</span><span class="p">,</span>
+    <span class="s">&#39;user_first_name&#39;</span><span class="p">:</span> <span class="n">FIRST_NAME</span><span class="p">,</span>
+    <span class="s">&#39;user_last_name&#39;</span><span class="p">:</span> <span class="n">LAST_NAME</span><span class="p">,</span>
+    <span class="s">&#39;user_name&#39;</span><span class="p">:</span> <span class="n">NAME</span><span class="p">,</span>
+    <span class="s">&#39;user_username&#39;</span><span class="p">:</span> <span class="n">USERNAME</span><span class="p">,</span>
+    <span class="s">&#39;user_username_reverse&#39;</span><span class="p">:</span> <span class="n">USERNAME_REVERSE</span><span class="p">,</span>
+    <span class="s">&#39;user_nickname&#39;</span><span class="p">:</span> <span class="n">NICKNAME</span><span class="p">,</span>
+    <span class="s">&#39;user_birth_year&#39;</span><span class="p">:</span> <span class="n">BIRTH_YEAR</span><span class="p">,</span>
+    <span class="s">&#39;user_city&#39;</span><span class="p">:</span> <span class="n">CITY</span><span class="p">,</span>
+    <span class="s">&#39;user_country&#39;</span><span class="p">:</span> <span class="n">COUNTRY</span><span class="p">,</span>
+    <span class="s">&#39;user_gender&#39;</span><span class="p">:</span> <span class="n">GENDER</span><span class="p">,</span>
+    <span class="s">&#39;user_phone&#39;</span><span class="p">:</span> <span class="n">PHONE</span><span class="p">,</span>
+    <span class="s">&#39;user_postal_code&#39;</span><span class="p">:</span> <span class="n">POSTAL_CODE</span><span class="p">,</span>
+    <span class="s">&#39;user_locale&#39;</span><span class="p">:</span> <span class="n">LOCALE</span><span class="p">,</span>
+
+    <span class="c"># It is not a good idea to have the same password for all providers</span>
+    <span class="c"># &#39;user_password&#39;: &#39;##########&#39;,</span>
+
+    <span class="c"># Provider and user specific value</span>
+    <span class="c"># &#39;user_id&#39;: &#39;&#39;,</span>
+    <span class="c"># &#39;user_locale&#39;: None,</span>
+    <span class="c"># &#39;user_timezone&#39;: None,</span>
+
+    <span class="c"># Provider specific format</span>
+    <span class="c"># &#39;user_picture&#39;: &#39;&#39;,</span>
+    <span class="c"># &#39;user_link&#39;: &#39;&#39;,</span>
+
+    <span class="c"># Provider specific value</span>
+    <span class="c"># &#39;consumer_key&#39;: &#39;&#39;,</span>
+    <span class="c"># &#39;consumer_secret&#39;: &#39;&#39;,</span>
+<span class="p">}</span>
+
+<span class="c"># Values from COMMON will be overriden by values from PROVIDERS[provider_name]</span>
+<span class="c"># if set.</span>
+<span class="n">PROVIDERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;behance&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;bitly&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;deviantart&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># This value changes when switching from and to Daylight Saving Time</span>
+        <span class="s">&#39;user_timezone&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;foursquare&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># The picture URL is a random CDN URL</span>
+        <span class="s">&#39;user_picture&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;google&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_locale&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># The picture URL is a random CDN URL</span>
+        <span class="s">&#39;user_picture&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;github&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># GitHub requires the User-Agent header in every request.</span>
+        <span class="s">&#39;access_headers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Authomatic.py Automated Functional &#39;</span>
+                                          <span class="s">&#39;Tests&#39;</span><span class="p">)},</span>
+    <span class="p">},</span>
+    <span class="s">&#39;linkedin&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># User link contains a slug derived from the username.</span>
+        <span class="s">&#39;user_link&#39;</span><span class="p">:</span> <span class="s">&#39;http://www.linkedin.com/in/??????????&#39;</span><span class="p">,</span>
+        <span class="c"># GitHub requires the User-Agent header in every request.</span>
+        <span class="s">&#39;user_picture&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_phone&#39;</span><span class="p">:</span> <span class="n">PHONE_INTERNATIONAL</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;paypal&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;reddit&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_login&#39;</span><span class="p">:</span> <span class="n">USERNAME</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="c"># Viadeo doesn&#39;t support access to its API</span>
+    <span class="c"># http://dev.viadeo.com/documentation/authentication/request-an-api-key/</span>
+    <span class="c"># &#39;viadeo&#39;: {</span>
+    <span class="c">#     &#39;consumer_key&#39;: &#39;##########&#39;,</span>
+    <span class="c">#     &#39;consumer_secret&#39;: &#39;##########&#39;,</span>
+    <span class="c"># },</span>
+    <span class="s">&#39;vk&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># City and country are numeric IDs</span>
+        <span class="s">&#39;user_city&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_country&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_gender&#39;</span><span class="p">:</span> <span class="s">&#39;2&#39;</span><span class="p">,</span>
+        <span class="c"># The picture URL is a random CDN URL</span>
+        <span class="s">&#39;user_picture&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_timezone&#39;</span><span class="p">:</span> <span class="s">&#39;1&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;windowslive&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you want to run tests for all of the 8 covered providers,
+you should register an <strong>application</strong> and a <strong>user account</strong> by each of them
+and fill out <strong>all possible</strong> settings in the user profile.
+You can exclude providers from the tests by comenting them out of the
+<tt class="docutils literal"><span class="pre">INCLUDE_PROVIDERS</span></tt> list.</p>
+<p>You should also add an alias for the IP address of your localhost, because
+some providers like Twitter require the <tt class="docutils literal"><span class="pre">callback_uri</span></tt>
+to match a domain pattern.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo <span class="nb">echo</span> -e <span class="s2">&quot;127.0.0.1\tauthomatic.com&quot;</span> &gt;&gt; /etc/hosts
+<span class="nv">$ </span>cat /etc/hosts
+<span class="c"># Host Database</span>
+<span class="c">#</span>
+<span class="c"># localhost is used to configure the loopback interface</span>
+<span class="c"># when the system is booting.  Do not change this entry.</span>
+<span class="c">##</span>
+127.0.0.1   localhost
+127.0.0.1   authomatic.com
+</pre></div>
+</div>
+<p>You can run the tests with the following command
+with the virtual environment activated:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. venv/bin/activate
+<span class="o">(</span>venv<span class="o">)</span><span class="nv">$ </span>py.test tests/functional_tests
+</pre></div>
+</div>
+</div>
+</div>
+
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/adapters.html">Adapters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/providers.html">Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/extras.html">Extras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Tutorials / Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="examples/credentials.html"  title="Advanced Webapp2 Google App Engine Example">&laquo; previous</a></span>
+			<span><a href="genindex.html"  title="General Index">index</a></span>
+				<span><a href="py-modindex.html"  title="Python Module Index">modules</a></span>
+				<span><a href="changelog.html"  title="Changelog">next &raquo;</a></span></div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="http://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="_static/foundation/js/foundation.min.js"></script>
+	<script src="_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/peterhudec/authomatic">
+			<img
+				 src="_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>

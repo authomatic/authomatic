@@ -1,0 +1,1302 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>authomatic.providers | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="../../_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="authomatic.providers | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://peterhudec.github.io/authomatic/_modules/authomatic/providers.html" />
+	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="../../_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="../../_static/jquery.js"></script>
+    	<script type="text/javascript" src="../../_static/underscore.js"></script>
+    	<script type="text/javascript" src="../../_static/doctools.js"></script>
+    	<script type="text/javascript" src="../../_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="../../index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						<ul class="">
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../reference/index.html">Reference</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../reference/config.html">Config</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../../reference/adapters.html">Adapters</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../../reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/classes.html">Classes</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../../reference/providers.html">Providers</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../../reference/extras.html">Extras</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../../reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../examples/index.html">Tutorials / Examples</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../development.html">Development</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		
+			<li><a href="../../genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="../../py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="../../index.html">
+		
+	    	
+	    		<img id="logo" src="../../_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						<span>Authomatic</span><br />
+is an <em>authorization</em> / <em>authentication</em><br />
+client library for Python web applications<br />
+inspired by Alex Vagin’s
+<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
+In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
+but that name would be too long<br />
+for a succinct library.
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="http://peterhudec.github.io/authomatic/_modules/authomatic/providers.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="http://peterhudec.github.io/authomatic/_modules/authomatic/providers.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=peterhudec&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="authomatic.providers | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <h1>Source code for authomatic.providers</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Abstract Classes for Providers</span>
+<span class="sd">------------------------------</span>
+
+<span class="sd">Abstract base classes for implementation of protocol specific providers.</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes prefixed with ``_x_`` serve the purpose of unification</span>
+<span class="sd">    of differences across providers.</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">    </span>
+<span class="sd">    login_decorator</span>
+<span class="sd">    BaseProvider</span>
+<span class="sd">    AuthorizationProvider</span>
+<span class="sd">    AuthenticationProvider</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">authomatic.core</span> <span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">AuthenticationError</span><span class="p">,</span> <span class="n">FetchError</span><span class="p">,</span> <span class="n">CredentialsError</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">authomatic.core</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">httplib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">urlparse</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;BaseProvider&#39;</span><span class="p">,</span> <span class="s">&#39;AuthorizationProvider&#39;</span><span class="p">,</span> <span class="s">&#39;AuthenticationProvider&#39;</span><span class="p">,</span> <span class="s">&#39;login_decorator&#39;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_error_traceback_html</span><span class="p">(</span><span class="n">exc_info</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates error traceback HTML.</span>
+<span class="sd">    </span>
+<span class="sd">    :param tuple exc_info:</span>
+<span class="sd">        Output of :func:`sys.exc_info` function.</span>
+<span class="sd">        </span>
+<span class="sd">    :param traceback:</span>
+<span class="sd">        Output of :func:`traceback.format_exc` function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">html</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">    &lt;html&gt;</span>
+<span class="s">        &lt;head&gt;</span>
+<span class="s">            &lt;title&gt;ERROR: {error}&lt;/title&gt;</span>
+<span class="s">        &lt;/head&gt;</span>
+<span class="s">        &lt;body style=&quot;font-family: sans-serif&quot;&gt;</span>
+<span class="s">            &lt;h4&gt;The Authomatic library encountered an error!&lt;/h4&gt;</span>
+<span class="s">            &lt;h1&gt;{error}&lt;/h1&gt;</span>
+<span class="s">            &lt;pre&gt;{traceback}&lt;/pre&gt;</span>
+<span class="s">        &lt;/body&gt;</span>
+<span class="s">    &lt;/html&gt;</span>
+<span class="s">    &quot;&quot;&quot;</span>
+    
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">exc_info</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">traceback</span><span class="o">=</span><span class="n">traceback</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="login_decorator"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.login_decorator">[docs]</a><span class="k">def</span> <span class="nf">login_decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorate the :meth:`.BaseProvider.login` implementations with this decorator.</span>
+<span class="sd">    </span>
+<span class="sd">    Provides mechanism for error reporting and returning result</span>
+<span class="sd">    which makes the :meth:`.BaseProvider.login` implementation cleaner.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">LoginResult</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">func</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">report_errors</span><span class="p">:</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="n">e</span>
+                <span class="n">provider</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="s">&#39;Reported suppressed exception: {0}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">error</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+                    <span class="c"># TODO: Check whether it actually works without middleware</span>
+                    <span class="n">provider</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_error_traceback_html</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
+                <span class="k">raise</span>
+        
+        <span class="c"># If there is user or error the login procedure has finished</span>
+        <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">user</span> <span class="ow">or</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">LoginResult</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+            <span class="c"># Add error to result</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error</span>
+            
+            <span class="c"># delete session cookie</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">provider</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Session</span><span class="p">):</span>
+                <span class="n">provider</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            
+            <span class="n">provider</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Procedure finished.&#39;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">callback</span><span class="p">:</span>
+                <span class="n">provider</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># Save session</span>
+            <span class="n">provider</span><span class="o">.</span><span class="n">save_session</span><span class="p">()</span>
+        
+    <span class="k">return</span> <span class="n">wrap</span>
+
+</div>
+<div class="viewcode-block" id="BaseProvider"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider">[docs]</a><span class="k">class</span> <span class="nc">BaseProvider</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class for all providers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">PROVIDER_TYPE_ID</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;user&#39;</span><span class="p">,)</span>
+    
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">session_saver</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">js_callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">prefix</span><span class="o">=</span><span class="s">&#39;authomatic&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span> <span class="o">=</span> <span class="n">adapter</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_session</span> <span class="o">=</span> <span class="n">session_saver</span>
+        
+        
+        <span class="c">#: :class:`str` The provider name as specified in the :doc:`config`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">provider_name</span>
+        
+        <span class="c">#: :class:`callable` An optional callback called when the login procedure</span>
+        <span class="c">#: is finished with :class:`.core.LoginResult` passed as argument.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
+        
+        <span class="c">#: :class:`str` Name of an optional javascript callback.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">js_callback</span> <span class="o">=</span> <span class="n">js_callback</span>
+                
+        <span class="c">#: :class:`.core.User`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">None</span>
+        
+        <span class="c">#: :class:`bool` If ``True``, the :attr:`.BaseProvider.user_authorization_url` will be displayed</span>
+        <span class="c">#: in a *popup mode*, if the **provider** supports it.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s">&#39;popup&#39;</span><span class="p">)</span>
+    
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span>
+    
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">params</span>
+    
+    
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">set_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">set_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">redirect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s">&#39;302 Found&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s">&#39;Location&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Abstract methods</span>
+    <span class="c">#===========================================================================</span>
+    
+    <span class="nd">@abc.abstractmethod</span>
+<div class="viewcode-block" id="BaseProvider.login"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider.login">[docs]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Launches the *login procedure* to get **user&#39;s credentials** from **provider**.</span>
+<span class="sd">        </span>
+<span class="sd">        Should be decorated with :func:`.login_decorator`.</span>
+<span class="sd">        The *login procedure* is considered finished when the :attr:`.user` attribute is</span>
+<span class="sd">        not empty when the method runs out of it&#39;s flow or when there are errors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Exposed methods</span>
+    <span class="c">#===========================================================================</span>
+    </div>
+<div class="viewcode-block" id="BaseProvider.to_dict"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the provider instance to a :class:`dict`.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`dict`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
+                    <span class="n">type_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_id</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_type</span><span class="p">(),</span>
+                    <span class="n">scope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;scope&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
+                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
+    </div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseProvider.get_type"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider.get_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the provider type.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`str` The full dotted path to base class e.g. :literal:`&quot;authomatic.providers.oauth2.OAuth2&quot;`. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__module__</span> <span class="o">+</span> <span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cls</span><span class="o">.</span><span class="n">__bases__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">__name__</span>
+    
+    </div>
+<div class="viewcode-block" id="BaseProvider.update_user"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider.update_user">[docs]</a>    <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates and returns :attr:`.user`.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.User`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Internal methods</span>
+    <span class="c">#===========================================================================</span>
+    </div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    
+    
+    <span class="k">def</span> <span class="nf">_kwarg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">kwname</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resolves keyword arguments from constructor or :doc:`config`.</span>
+<span class="sd">        </span>
+<span class="sd">        .. note::</span>
+<span class="sd">        </span>
+<span class="sd">            The keyword arguments take this order of precedence:</span>
+<span class="sd">            </span>
+<span class="sd">            1. Arguments passed to constructor through the :func:`authomatic.login`.</span>
+<span class="sd">            2. Provider specific arguments from :doc:`config`.</span>
+<span class="sd">            3. Arguments from :doc:`config` set in the ``__defaults__`` key.</span>
+<span class="sd">            2. The value from :data:`default` argument.</span>
+<span class="sd">        </span>
+<span class="sd">        :param dict kwargs:</span>
+<span class="sd">            Keyword arguments dictionary.</span>
+<span class="sd">        :param str kwname:</span>
+<span class="sd">            Name of the desired keyword argument.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">kwname</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">kwname</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;__defaults__&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">kwname</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="n">default</span>
+    
+    
+    <span class="k">def</span> <span class="nf">_session_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates session key string.</span>
+<span class="sd">        </span>
+<span class="sd">        :param str key:</span>
+<span class="sd">            e.g. ``&quot;authomatic:facebook:key&quot;``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="s">&#39;{0}:{1}:{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">_session_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Saves a value to session.&quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_session_key</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">value</span>
+    
+    
+    <span class="k">def</span> <span class="nf">_session_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves a value from session.&quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session_key</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+    
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="BaseProvider.csrf_generator"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.BaseProvider.csrf_generator">[docs]</a>    <span class="k">def</span> <span class="nf">csrf_generator</span><span class="p">(</span><span class="n">secret</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates CSRF token.</span>
+<span class="sd">        </span>
+<span class="sd">        Inspired by this article: http://blog.ptsecurity.com/2012/10/random-number-security-in-python.html</span>
+<span class="sd">                </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`str` Random unguessable string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c"># Create hash from random string plus salt.</span>
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">secret</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        
+        <span class="c"># Each time return random portion of the hash.</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>     
+        <span class="k">return</span> <span class="n">hashed</span><span class="p">[</span><span class="n">shift</span><span class="p">:</span><span class="n">shift</span> <span class="o">-</span> <span class="n">span</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    
+    </div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_log</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logs a message with pre-formatted prefix.</span>
+<span class="sd">        </span>
+<span class="sd">        :param int level:</span>
+<span class="sd">            Logging level as specified in the</span>
+<span class="sd">            `login module &lt;http://docs.python.org/2/library/logging.html&gt;`_ of</span>
+<span class="sd">            Python standard library.</span>
+<span class="sd">        </span>
+<span class="sd">        :param str msg:</span>
+<span class="sd">            The actual message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s">&#39;: &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s">&#39;authomatic&#39;</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">msg</span><span class="p">)))</span>
+        
+    
+    <span class="k">def</span> <span class="nf">_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">max_redirects</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches a URL.</span>
+<span class="sd">        </span>
+<span class="sd">        :param str url:</span>
+<span class="sd">            The URL to fetch.</span>
+<span class="sd">            </span>
+<span class="sd">        :param str method:</span>
+<span class="sd">            HTTP method of the request.</span>
+<span class="sd">            </span>
+<span class="sd">        :param dict params:</span>
+<span class="sd">            Dictionary of request parameters.</span>
+<span class="sd">            </span>
+<span class="sd">        :param dict headers:</span>
+<span class="sd">            HTTP headers of the request.</span>
+<span class="sd">            </span>
+<span class="sd">        :param str body:</span>
+<span class="sd">            Body of ``POST``, ``PUT`` and ``PATCH`` requests.</span>
+<span class="sd">            </span>
+<span class="sd">        :param int max_redirects:</span>
+<span class="sd">            Number of maximum HTTP redirects to follow.</span>
+<span class="sd">            </span>
+<span class="sd">        :param function content_parser:</span>
+<span class="sd">            A callable to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">params</span> <span class="o">=</span> <span class="n">params</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_params</span><span class="p">)</span>
+        
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_headers</span><span class="p">)</span>
+        
+        <span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">fragment</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;POST&#39;</span><span class="p">,</span> <span class="s">&#39;PUT&#39;</span><span class="p">,</span> <span class="s">&#39;PATCH&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">body</span><span class="p">:</span>
+                <span class="c"># Put querystring to body</span>
+                <span class="n">body</span> <span class="o">=</span> <span class="n">query</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">})</span>
+        
+        <span class="n">request_path</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlunsplit</span><span class="p">((</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> host: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">host</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> path: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request_path</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> method: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> body: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> params: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u2514\u2500</span><span class="s"> headers: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">headers</span><span class="p">))</span>
+        
+        <span class="c"># Connect</span>
+        <span class="k">if</span> <span class="n">scheme</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;https&#39;</span><span class="p">:</span>
+            <span class="n">connection</span> <span class="o">=</span> <span class="n">httplib</span><span class="o">.</span><span class="n">HTTPSConnection</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">connection</span> <span class="o">=</span> <span class="n">httplib</span><span class="o">.</span><span class="n">HTTPConnection</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+            
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">connection</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">request_path</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="s">&#39;Could not connect!&#39;</span><span class="p">,</span>
+                             <span class="n">original_message</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                             <span class="n">url</span><span class="o">=</span><span class="n">request_path</span><span class="p">)</span>
+        
+        <span class="n">response</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="s">&#39;Location&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">301</span><span class="p">,</span> <span class="mi">302</span><span class="p">,</span> <span class="mi">303</span><span class="p">,</span> <span class="mi">307</span><span class="p">)</span> <span class="ow">and</span> <span class="n">location</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="n">url</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="s">&#39;Url redirects to itself!&#39;</span><span class="p">,</span>
+                                 <span class="n">url</span><span class="o">=</span><span class="n">location</span><span class="p">,</span>
+                                 <span class="n">status</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+                
+            <span class="k">elif</span> <span class="n">max_redirects</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">remaining_redirects</span> <span class="o">=</span> <span class="n">max_redirects</span> <span class="o">-</span> <span class="mi">1</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39;Redirecting to {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39;Remaining redirects: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remaining_redirects</span><span class="p">))</span>
+                
+                <span class="c"># Call this method again.</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">location</span><span class="p">,</span>
+                                      <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+                                      <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+                                      <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+                                      <span class="n">max_redirects</span><span class="o">=</span><span class="n">remaining_redirects</span><span class="p">)</span>
+                
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FetchError</span><span class="p">(</span><span class="s">&#39;Max redirects reached!&#39;</span><span class="p">,</span>
+                                 <span class="n">url</span><span class="o">=</span><span class="n">location</span><span class="p">,</span>
+                                 <span class="n">status</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39;Got response:&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> url: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> status: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u2514\u2500</span><span class="s"> headers: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getheaders</span><span class="p">()))</span>
+                
+        <span class="k">return</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">content_parser</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">_update_or_create_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates or creates :attr:`.user`.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.User`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">User</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        
+        <span class="c"># Update.</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c"># Exclude data.</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">):</span>
+                <span class="c"># Extract every data item whose key matches the user property name,</span>
+                <span class="c"># but only if it has a value.</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        
+        <span class="c"># Handle different structure of data by different providers.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_user_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        
+        <span class="c"># TODO: Move to User</span>
+        <span class="c"># If there is no user.name,</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">:</span>
+                <span class="c"># Create it from first name and last name if available.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># Or use one of these.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">nickname</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">last_name</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span>    
+    
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles different structure of user info data by different providers.</span>
+<span class="sd">        </span>
+<span class="sd">        :param user:</span>
+<span class="sd">            :class:`.User`</span>
+<span class="sd">        :param dict data:</span>
+<span class="sd">            User info data returned by provider.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="n">user</span>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_http_status_in_category</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks whether a HTTP status code is in the category denoted</span>
+<span class="sd">        by the hundreds digit&quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">category</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span> <span class="s">&#39;HTTP status category must be a one-digit int!&#39;</span>
+        <span class="n">cat</span> <span class="o">=</span> <span class="n">category</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="k">return</span> <span class="n">status</span> <span class="o">&gt;=</span> <span class="n">cat</span> <span class="ow">and</span> <span class="n">status</span> <span class="o">&lt;</span> <span class="n">cat</span> <span class="o">+</span> <span class="mi">100</span>
+
+</div>
+<div class="viewcode-block" id="AuthorizationProvider"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider">[docs]</a><span class="k">class</span> <span class="nc">AuthorizationProvider</span><span class="p">(</span><span class="n">BaseProvider</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base provider for *authorization protocols* i.e. protocols which allow a **provider**</span>
+<span class="sd">    to authorize a **consumer** to access **protected resources** of a **user**.</span>
+<span class="sd">    e.g. `OAuth 2.0 &lt;http://oauth.net/2/&gt;`_ or `OAuth 1.0a &lt;http://oauth.net/core/1.0a/&gt;`_.    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
+    <span class="n">USER_AUTHORIZATION_REQUEST_TYPE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">ACCESS_TOKEN_REQUEST_TYPE</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">PROTECTED_RESOURCE_REQUEST_TYPE</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">REFRESH_TOKEN_REQUEST_TYPE</span> <span class="o">=</span> <span class="mi">5</span>
+    
+    <span class="n">BEARER</span> <span class="o">=</span> <span class="s">&#39;Bearer&#39;</span>
+    
+    <span class="n">_x_term_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="c">#: If ``True`` the provider doesn&#39;t support Cross-site HTTP requests.</span>
+    <span class="n">same_origin</span> <span class="o">=</span> <span class="bp">True</span>
+    
+    <span class="c">#: :class:`bool` Whether the provider supports JSONP requests.</span>
+    <span class="n">supports_jsonp</span> <span class="o">=</span> <span class="bp">False</span>
+    
+    <span class="c"># Whether to use the HTTP Authorization header.</span>
+    <span class="n">_x_use_authorization_header</span> <span class="o">=</span> <span class="bp">True</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Accepts additional keyword arguments:</span>
+<span class="sd">        </span>
+<span class="sd">        :arg str consumer_key:</span>
+<span class="sd">            The *key* assigned to our application (**consumer**) by the **provider**.</span>
+<span class="sd">            </span>
+<span class="sd">        :arg str consumer_secret:</span>
+<span class="sd">            The *secret* assigned to our application (**consumer**) by the **provider**.</span>
+<span class="sd">            </span>
+<span class="sd">        :arg int id:</span>
+<span class="sd">            A unique numeric ID used to serialize :class:`.Credentials`.</span>
+<span class="sd">            </span>
+<span class="sd">        :arg dict user_authorization_params:</span>
+<span class="sd">            A dictionary of additional request parameters for **user authorization request**.</span>
+<span class="sd">            </span>
+<span class="sd">        :arg dict access_token_params:</span>
+<span class="sd">            A dictionary of additional request parameters for **access_with_credentials token request**.</span>
+<span class="sd">            </span>
+<span class="sd">        :arg dict access_headers:</span>
+<span class="sd">            A dictionary of default HTTP headers that will be used when</span>
+<span class="sd">            accessing **user&#39;s** protected resources.</span>
+<span class="sd">            Applied by :meth:`.access()`, :meth:`.update_user()` and :meth:`.User.update()`</span>
+<span class="sd">            </span>
+<span class="sd">        :arg dict access_params:</span>
+<span class="sd">            A dictionary of default query string parameters that will be used when</span>
+<span class="sd">            accessing **user&#39;s** protected resources.</span>
+<span class="sd">            Applied by :meth:`.access()`, :meth:`.update_user()` and :meth:`.User.update()`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="nb">super</span><span class="p">(</span><span class="n">AuthorizationProvider</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">consumer_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s">&#39;consumer_key&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s">&#39;consumer_secret&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_authorization_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s">&#39;user_authorization_params&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token_headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s">&#39;user_authorization_headers&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s">&#39;access_token_params&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s">&#39;access_headers&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s">&#39;access_params&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        
+        <span class="c">#: :class:`.Credentials` to access **user&#39;s protected resources**.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Credentials</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Abstract properties</span>
+    <span class="c">#===========================================================================</span>
+        
+    <span class="nd">@abc.abstractproperty</span>
+<div class="viewcode-block" id="AuthorizationProvider.user_authorization_url"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.user_authorization_url">[docs]</a>    <span class="k">def</span> <span class="nf">user_authorization_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :class:`str` URL to which we redirect the **user** to grant our app i.e. the **consumer**</span>
+<span class="sd">        an **authorization** to access his **protected resources**.</span>
+<span class="sd">        see http://tools.ietf.org/html/rfc6749#section-4.1.1 and</span>
+<span class="sd">        http://oauth.net/core/1.0a/#auth_step2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    </div>
+    <span class="nd">@abc.abstractproperty</span>
+<div class="viewcode-block" id="AuthorizationProvider.access_token_url"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.access_token_url">[docs]</a>    <span class="k">def</span> <span class="nf">access_token_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :class:`str` URL where we can get the *access token* to access **protected resources** of a **user**.</span>
+<span class="sd">        see http://tools.ietf.org/html/rfc6749#section-4.1.3 and</span>
+<span class="sd">        http://oauth.net/core/1.0a/#auth_step3.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    </div>
+    <span class="nd">@abc.abstractproperty</span>
+<div class="viewcode-block" id="AuthorizationProvider.user_info_url"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.user_info_url">[docs]</a>    <span class="k">def</span> <span class="nf">user_info_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;        </span>
+<span class="sd">        :class:`str` URL where we can get the **user** info.</span>
+<span class="sd">        see http://tools.ietf.org/html/rfc6749#section-7 and</span>
+<span class="sd">        http://oauth.net/core/1.0a/#anchor12.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Abstract methods</span>
+    <span class="c">#===========================================================================</span>
+    </div>
+    <span class="nd">@abc.abstractmethod</span>
+<div class="viewcode-block" id="AuthorizationProvider.to_tuple"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.to_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Must convert :data:`credentials` to a :class:`tuple` to be used by :meth:`.Credentials.serialize`.</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            |classmethod|</span>
+
+<span class="sd">        :param credentials:</span>
+<span class="sd">            :class:`.Credentials`</span>
+<span class="sd">            </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`tuple`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    </div>
+    <span class="nd">@abc.abstractmethod</span>
+<div class="viewcode-block" id="AuthorizationProvider.reconstruct"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.reconstruct">[docs]</a>    <span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deserialized_tuple</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Must convert the :data:`deserialized_tuple` back to :class:`.Credentials`.</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            |classmethod|</span>
+
+<span class="sd">        :param tuple deserialized_tuple:</span>
+<span class="sd">            A tuple whose first index is the :attr:`.id` and the rest</span>
+<span class="sd">            are all the items of the :class:`tuple` created by :meth:`.to_tuple`.</span>
+<span class="sd">        </span>
+<span class="sd">        :param credentials:</span>
+<span class="sd">            A :class:`.Credentials` instance.</span>
+<span class="sd">            </span>
+<span class="sd">        :param dict cfg:</span>
+<span class="sd">            Provider configuration from :doc:`config`. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    </div>
+    <span class="nd">@abc.abstractmethod</span>
+<div class="viewcode-block" id="AuthorizationProvider.create_request_elements"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.create_request_elements">[docs]</a>    <span class="k">def</span> <span class="nf">create_request_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_type</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Must return :class:`.RequestElements`.</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            |classmethod|</span>
+
+<span class="sd">        :param int request_type:</span>
+<span class="sd">            Type of the request specified by one of the class&#39;s constants.</span>
+<span class="sd">            </span>
+<span class="sd">        :param credentials:</span>
+<span class="sd">            :class:`.Credentials` of the **user** whose</span>
+<span class="sd">            **protected resource** we want to access.</span>
+<span class="sd">            </span>
+<span class="sd">        :param str url:</span>
+<span class="sd">            URL of the request.</span>
+<span class="sd">            </span>
+<span class="sd">        :param str method:</span>
+<span class="sd">            HTTP method of the request.</span>
+<span class="sd">            </span>
+<span class="sd">        :param dict params:</span>
+<span class="sd">            Dictionary of request parameters.</span>
+<span class="sd">            </span>
+<span class="sd">        :param dict headers:</span>
+<span class="sd">            Dictionary of request headers.</span>
+<span class="sd">            </span>
+<span class="sd">        :param str body:</span>
+<span class="sd">            Body of ``POST``, ``PUT`` and ``PATCH`` requests.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.RequestElements`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Exposed methods</span>
+    <span class="c">#===========================================================================</span>
+    </div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="AuthorizationProvider.type_id"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.type_id">[docs]</a>    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A short string representing the provider implementation id used for</span>
+<span class="sd">        serialization of :class:`.Credentials` and to identify the type of provider in JavaScript.</span>
+<span class="sd">        The part before hyphen denotes the type of the provider, the part after hyphen denotes the class id</span>
+<span class="sd">        e.g. ``oauth2.Facebook.type_id = &#39;2-5&#39;``, ``oauth1.Twitter.type_id = &#39;1-5&#39;``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__module__</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PROVIDER_TYPE_ID</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">PROVIDER_ID_MAP</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">cls</span><span class="p">))</span>
+    
+    </div>
+<div class="viewcode-block" id="AuthorizationProvider.access"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.access">[docs]</a>    <span class="k">def</span> <span class="nf">access</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+               <span class="n">body</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">max_redirects</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches the **protected resource** of an authenticated **user**.</span>
+<span class="sd">        </span>
+<span class="sd">        :param credentials:</span>
+<span class="sd">            The **user&#39;s** :class:`.Credentials` (serialized or normal).</span>
+<span class="sd">            </span>
+<span class="sd">        :param str url:</span>
+<span class="sd">            The URL of the **protected resource**.</span>
+<span class="sd">            </span>
+<span class="sd">        :param str method:</span>
+<span class="sd">            HTTP method of the request.</span>
+<span class="sd">            </span>
+<span class="sd">        :param dict headers:</span>
+<span class="sd">            HTTP headers of the request.</span>
+<span class="sd">            </span>
+<span class="sd">        :param str body:</span>
+<span class="sd">            Body of ``POST``, ``PUT`` and ``PATCH`` requests.</span>
+<span class="sd">            </span>
+<span class="sd">        :param int max_redirects:</span>
+<span class="sd">            Maximum number of HTTP redirects to follow.</span>
+<span class="sd">            </span>
+<span class="sd">        :param function content_parser:</span>
+<span class="sd">            A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.Response`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CredentialsError</span><span class="p">(</span><span class="s">&#39;There is no authenticated user!&#39;</span><span class="p">)</span>
+        
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="p">{}</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Accessing protected resource {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+        
+        <span class="n">request_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_request_elements</span><span class="p">(</span><span class="n">request_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">PROTECTED_RESOURCE_REQUEST_TYPE</span><span class="p">,</span>
+                                                        <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
+                                                        <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                                                        <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+                                                        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+                                                        <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+                                                        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+        
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch</span><span class="p">(</span><span class="o">*</span><span class="n">request_elements</span><span class="p">,</span>
+                              <span class="n">max_redirects</span><span class="o">=</span><span class="n">max_redirects</span><span class="p">,</span>
+                              <span class="n">content_parser</span><span class="o">=</span><span class="n">content_parser</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Got response. HTTP status = {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+</div>
+<div class="viewcode-block" id="AuthorizationProvider.async_access"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.async_access">[docs]</a>    <span class="k">def</span> <span class="nf">async_access</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as :meth:`.access` but runs asynchronously in a separate thread.</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            |async|</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.Future` instance representing the separate thread.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+    </div>
+<div class="viewcode-block" id="AuthorizationProvider.update_user"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthorizationProvider.update_user">[docs]</a>    <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the :attr:`.BaseProvider.user`.</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            Fetches the :attr:`.user_info_url`!</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.UserInfoResponse`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_info_url</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_access_user_info</span><span class="p">()</span>
+    
+    
+    <span class="c">#===========================================================================</span>
+    <span class="c"># Internal methods</span>
+    <span class="c">#===========================================================================</span>
+    </div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_authorization_header</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates authorization headers if the provider supports it.</span>
+<span class="sd">        See: http://en.wikipedia.org/wiki/Basic_access_authentication.</span>
+<span class="sd">        </span>
+<span class="sd">        :param credentials:</span>
+<span class="sd">            :class:`.Credentials`</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            Headers as :class:`dict`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">_x_use_authorization_header</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="s">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">credentials</span><span class="o">.</span><span class="n">consumer_key</span><span class="p">,</span> <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_secret</span><span class="p">))</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s">&#39;Basic {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res</span><span class="p">)}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+    
+    
+    <span class="k">def</span> <span class="nf">_check_consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates the :attr:`.consumer`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">key</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;Consumer key not specified for provider {0}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">secret</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;Consumer secret not specified for provider {0}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_split_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <span class="s">&quot;Splits given url to url base and params converted to list of tuples&quot;</span>
+        
+        <span class="n">split</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlunsplit</span><span class="p">((</span><span class="n">split</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="n">split</span><span class="o">.</span><span class="n">netloc</span><span class="p">,</span> <span class="n">split</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">split</span><span class="o">.</span><span class="n">query</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span>
+    
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_x_request_elements_filter</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">request_type</span><span class="p">,</span> <span class="n">request_elements</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override this to handle special request requirements of zealous providers.</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            |classmethod|</span>
+<span class="sd">        </span>
+<span class="sd">        :param int request_type:</span>
+<span class="sd">            Type of request.</span>
+<span class="sd">            </span>
+<span class="sd">        :param request_elements:</span>
+<span class="sd">            :class:`.RequestElements`</span>
+<span class="sd">            </span>
+<span class="sd">        :param credentials:</span>
+<span class="sd">            :class:`.Credentials`</span>
+<span class="sd">            </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.RequestElements`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="n">request_elements</span>
+    
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_credentials_parser</span><span class="p">(</span><span class="n">credentials</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override this to handle differences in naming conventions across providers.</span>
+<span class="sd">        </span>
+<span class="sd">        :param credentials:</span>
+<span class="sd">            :class:`.Credentials`</span>
+<span class="sd">            </span>
+<span class="sd">        :param dict data:</span>
+<span class="sd">            Response data dictionary.</span>
+<span class="sd">            </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.Credentials`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">credentials</span>
+    
+    
+    <span class="k">def</span> <span class="nf">_access_user_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Accesses the :attr:`.user_info_url`.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.UserInfoResponse`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_info_url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">__dict__</span><span class="p">)</span>
+        
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        
+        <span class="c"># Create user.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_or_create_user</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        
+        <span class="c"># Return UserInfoResponse.</span>
+        <span class="k">return</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">UserInfoResponse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">httplib_response</span><span class="p">)</span>
+    
+</div>
+<div class="viewcode-block" id="AuthenticationProvider"><a class="viewcode-back" href="../../reference/providers.html#authomatic.providers.AuthenticationProvider">[docs]</a><span class="k">class</span> <span class="nc">AuthenticationProvider</span><span class="p">(</span><span class="n">BaseProvider</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base provider for *authentication protocols* i.e. protocols which allow a **provider** to</span>
+<span class="sd">    authenticate a *claimed identity* of a **user**. e.g. `OpenID &lt;http://openid.net/&gt;`_.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c">#: Indicates whether the **provider** supports access_with_credentials to</span>
+    <span class="c">#: **user&#39;s** protected resources.</span>
+    <span class="c"># TODO: Useless</span>
+    <span class="n">has_protected_resources</span> <span class="o">=</span> <span class="bp">False</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>   
+        <span class="nb">super</span><span class="p">(</span><span class="n">AuthenticationProvider</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+        <span class="c"># Lookup default identifier, if available in provider</span>
+        <span class="n">default_identifier</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;identifier&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="c"># Allow for custom name for the &quot;id&quot; querystring parameter.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">identifier_param</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;identifier_param&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">)</span>
+        
+        <span class="c"># Get the identifier from request params, or use default as fallback.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">identifier_param</span><span class="p">,</span> <span class="n">default_identifier</span><span class="p">)</span>
+        
+</div>
+<span class="n">PROVIDER_ID_MAP</span> <span class="o">=</span> <span class="p">[</span><span class="n">BaseProvider</span><span class="p">,</span> <span class="n">AuthorizationProvider</span><span class="p">,</span> <span class="n">AuthenticationProvider</span><span class="p">]</span>
+        
+</pre></div>
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/adapters.html">Adapters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/providers.html">Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/extras.html">Extras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Tutorials / Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="../../genindex.html"  title="General Index">index</a></span>
+				<span><a href="../../py-modindex.html"  title="Python Module Index">modules</a></span>
+				</div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="http://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '../../_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="../../_static/foundation/js/foundation.min.js"></script>
+	<script src="../../_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/peterhudec/authomatic">
+			<img
+				 src="../../_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>
