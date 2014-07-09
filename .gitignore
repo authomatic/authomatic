@@ -31,3 +31,4 @@ bootstrap/bootstrap.py
 venv26
 bower_components/
 .DS_Store
+ghostdriver.log
