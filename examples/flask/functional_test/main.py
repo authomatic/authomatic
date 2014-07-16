@@ -1,4 +1,6 @@
 # encoding: utf-8
+import logging
+
 from flask import Flask, request
 from flask.helpers import make_response
 from flask.templating import render_template
@@ -17,7 +19,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 authomatic = authomatic.Authomatic(fixtures.ASSEMBLED_CONFIG, '123',
-                                   report_errors=False)
+                                   report_errors=False,
+                                   logger=app.logger)
 
 @app.route('/')
 def home():
