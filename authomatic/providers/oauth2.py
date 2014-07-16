@@ -1443,6 +1443,7 @@ class Yammer(OAuth2):
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
+        # import pdb; pdb.set_trace()
         credentials.token_type = cls.BEARER
         _access_token = data.get('access_token', {})
         credentials.token = _access_token.get('token')
@@ -1453,18 +1454,25 @@ class Yammer(OAuth2):
     
     @staticmethod
     def _x_user_parser(user, data):
+
+        # Yammer provides most of the user info in the access token request,
+        # but provides more on in user info request.
+        _user = data.get('user', {})
+        if not _user:
+            # If there is "user key", it is token request.
+            _user = data
         
-        user.username = data.get('name')
-        user.name = data.get('full_name')
-        user.link = data.get('web_url')
-        user.picture = data.get('mugshot_url')
+        user.username = _user.get('name')
+        user.name = _user.get('full_name')
+        user.link = _user.get('web_url')
+        user.picture = _user.get('mugshot_url')
         
-        user.city, user.country = data.get('location', ',').split(',')
+        user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
         user.country = user.country.strip()
         
         # Contact
-        _contact = data.get('contact', {})
+        _contact = _user.get('contact', {})
         user.phone = _contact.get('phone_numbers', [{}])[0].get('number')
         _emails = _contact.get('email_addresses', [])
         for email in _emails:
@@ -1473,9 +1481,9 @@ class Yammer(OAuth2):
                 break
         
         try:
-            user.birth_date = datetime.datetime.strptime(data.get('birth_date'), "%B %d")
+            user.birth_date = datetime.datetime.strptime(_user.get('birth_date'), "%B %d")
         except:
-            user.birth_date = data.get('birth_date')
+            user.birth_date = _user.get('birth_date')
         
         return user
 
