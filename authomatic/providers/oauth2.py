@@ -1443,13 +1443,12 @@ class Yammer(OAuth2):
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
-        
+        credentials.token_type = cls.BEARER
         _access_token = data.get('access_token', {})
         credentials.token = _access_token.get('token')
         _expire_in = _access_token.get('expires_at', 0)
         if _expire_in:
             credentials.expire_in = _expire_in
-        
         return credentials
     
     @staticmethod
