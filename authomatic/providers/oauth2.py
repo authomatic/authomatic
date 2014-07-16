@@ -1431,10 +1431,6 @@ class WindowsLive(OAuth2):
 class Yammer(OAuth2):
     """
     Yammer |oauth2| provider.
-    
-    .. warning::
-        
-        |no-csrf|
 
     * Dashboard: https://www.yammer.com/client_applications
     * Docs: https://developer.yammer.com/authentication/
@@ -1444,8 +1440,6 @@ class Yammer(OAuth2):
     user_authorization_url = 'https://www.yammer.com/dialog/oauth'
     access_token_url = 'https://www.yammer.com/oauth2/access_token.json'
     user_info_url = 'https://www.yammer.com/api/v1/users/current.json'
-    
-    supports_csrf_protection = False
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
