@@ -35,6 +35,7 @@ INCLUDE_PROVIDERS = [
     'reddit',
     'vk',
     'windowslive',
+    'yammer',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -191,5 +192,14 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
+    },
+    'yammer': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_id': '??????????',
+        'user_picture': ('https://mug0.assets-yammer.com/mugshot/images/48x48/'
+                         '??????????'),
+        'user_timezone': '??????????',
+        'user_locale': '??????????',
     },
 }

@@ -1435,11 +1435,52 @@ class Yammer(OAuth2):
     * Dashboard: https://www.yammer.com/client_applications
     * Docs: https://developer.yammer.com/authentication/
     * API reference: https://developer.yammer.com/restapi/
+
+    Supported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * first_name
+    * id
+    * last_name
+    * link
+    * locale
+    * name
+    * phone
+    * picture
+    * timezone
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * gender
+    * nickname
+    * postal_code
+
     """
     
     user_authorization_url = 'https://www.yammer.com/dialog/oauth'
     access_token_url = 'https://www.yammer.com/oauth2/access_token.json'
     user_info_url = 'https://www.yammer.com/api/v1/users/current.json'
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
+        city=True,
+        country=True,
+        email=True,
+        first_name=True,
+        id=True,
+        last_name=True,
+        link=True,
+        locale=True,
+        name=True,
+        phone=True,
+        picture=True,
+        timezone=True,
+        username=True
+    )
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
@@ -1470,6 +1511,7 @@ class Yammer(OAuth2):
         user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
         user.country = user.country.strip()
+        user.locale = _user.get('web_preferences', {}).get('locale')
         
         # Contact
         _contact = _user.get('contact', {})
