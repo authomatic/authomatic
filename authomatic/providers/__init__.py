@@ -327,9 +327,10 @@ class BaseProvider(object):
         :param str msg:
             The actual message.
         """
-        
-        authomatic.core._logger.log(level, ': '.join(('authomatic', cls.__name__, msg)))
-        
+
+        logger = cls._logger or authomatic.core._logger
+        logger.log(level, ': '.join(('authomatic', cls.__name__, msg)))
+
     
     def _fetch(self, url, method='GET', params=None, headers=None, body='', max_redirects=5, content_parser=None):
         """

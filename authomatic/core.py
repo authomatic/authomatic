@@ -14,6 +14,7 @@ import threading
 import time
 import urllib
 import urlparse
+import sys
 
 from authomatic.exceptions import SessionError, CredentialsError, RequestElementsError
 
@@ -23,6 +24,8 @@ from authomatic.exceptions import SessionError, CredentialsError, RequestElement
 #===============================================================================
 
 _logger = logging.getLogger(__name__)
+_logger.addHandler(logging.StreamHandler(sys.stdout))
+
 _counter = None
 
 
@@ -1219,8 +1222,9 @@ class RequestElements(tuple):
 
 class Authomatic(object):
     def __init__(self, config, secret, session_max_age=600, secure_cookie=False,
-                 session=None, session_save_method=None, report_errors=True, debug=False,
-                 logging_level=logging.INFO, prefix='authomatic'):
+                 session=None, session_save_method=None, report_errors=True,
+                 debug=False, logging_level=logging.INFO, prefix='authomatic',
+                 logger=None):
         """
         Encapsulates all the functionality of this package.
         
@@ -1253,12 +1257,17 @@ class Authomatic(object):
             Default is ``False``.
     
         :param int logging_level:
-            The logging level threshold as specified in the standard Python
+            The logging level threshold for the default logger as specified in
+            the standard Python
             `logging library <http://docs.python.org/2/library/logging.html>`_.
-            Default is ``logging.INFO``
+            This setting is ignored when :data:`logger` is set.
+            Default is ``logging.INFO``.
     
         :param str prefix:
             Prefix used as the :class:`.Session` cookie name.
+
+        :param logger:
+            A :class:`logging.logger` instance.
         """
         
         self.config = config
@@ -1271,10 +1280,11 @@ class Authomatic(object):
         self.debug = debug
         self.logging_level = logging_level
         self.prefix = prefix
-        self._logger = logging.getLogger(str(id(self)))
+        self._logger = logger or logging.getLogger(str(id(self)))
         
         # Set logging level.
-        self._logger.setLevel(logging_level)
+        if logger is None:
+            self._logger.setLevel(logging_level)
     
     
     def login(self, adapter, provider_name, callback=None, session=None, session_saver=None, **kwargs):
@@ -1330,6 +1340,9 @@ class Authomatic(object):
             if not class_:
                 raise exceptions.ConfigError('The "class_" key not specified in the config for provider {0}!'.format(provider_name))
             ProviderClass = resolve_provider_class(class_)
+
+            # FIXME: Find a nicer solution
+            ProviderClass._logger = self._logger
     
             # instantiate provider class
             provider = ProviderClass(self,

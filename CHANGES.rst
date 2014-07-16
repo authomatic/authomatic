@@ -6,6 +6,7 @@ Version 0.0.9 (development)
     This version is still in development and has not been released to
     `PyPI <https://pypi.python.org/pypi/Authomatic>`__ yet.
 
+* Added the ``logger`` keyword argument to :class:`.Authomatic` constructor.
 * Added the ``v=20140501`` parameter to each request of the
   :class:`.oauth2.Foursquare` provider.
 * The :class:`.oauth2.LinkedIn` provider now supports the
