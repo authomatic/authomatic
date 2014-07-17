@@ -27,7 +27,7 @@ def home():
     return fixtures.render_home()
 
 
-@app.route('/login/<provider_name>/', methods=['GET', 'POST'])
+@app.route('/login/<provider_name>', methods=['GET', 'POST'])
 def login(provider_name):
     response = make_response()
     result = authomatic.login(WerkzeugAdapter(request, response),
