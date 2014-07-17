@@ -323,7 +323,7 @@ class OAuth2(providers.AuthorizationProvider):
                                                              redirect_uri=self.url,
                                                              params=self.access_token_params,
                                                              headers=self.access_token_headers)
-            
+
             response = self._fetch(*request_elements)
             
             access_token = response.data.get('access_token', '')
@@ -1536,12 +1536,38 @@ class Yandex(OAuth2):
     
     * Dashboard: https://oauth.yandex.com/client/my
     * Docs: http://api.yandex.com/oauth/doc/dg/reference/obtain-access-token.xml
-    * API reference: 
+    * API reference:
+
+    Supported :class:`.User` properties:
+
+    * id
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * first_name
+    * gender
+    * last_name
+    * link
+    * locale
+    * name
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+    * username
+
     """
     
     user_authorization_url = 'https://oauth.yandex.com/authorize'
     access_token_url = 'https://oauth.yandex.com/token'
     user_info_url = 'https://login.yandex.ru/info'
+
+    supported_user_attributes = core.SupportedUserAttributes(id=True)
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):

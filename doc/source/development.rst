@@ -95,7 +95,7 @@ There are currently only *functional* (or *end-to-end*)
 `Selenium <http://seleniumhq.org>`__ tests.
 They are designed to test the *login procedure* and
 *credentials refreshment* and to discover changes in provider APIs.
-Currently the tests cover only 13 of the 27 |oauth2| providers.
+Currently the tests cover 14 |oauth2| providers.
 The tests are written for the `pytest <http://pytest.org/latest/>`__ framework.
 
 To run *functional* tests, you first need to create the
