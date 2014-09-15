@@ -35,7 +35,7 @@ from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 import authomatic.core as core
 
-__all__ = ['OAuth2', 'Behance', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'GitHub',
+__all__ = ['OAuth2', 'Behance', 'Bitly', 'Cosm', 'DeviantART', 'Eventbrite', 'Facebook', 'Foursquare', 'GitHub',
            'Google', 'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive', 'Yammer', 'Yandex']
 
 
