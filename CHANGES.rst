@@ -6,6 +6,8 @@ Version 0.0.9 (development)
     This version is still in development and has not been released to
     `PyPI <https://pypi.python.org/pypi/Authomatic>`__ yet.
 
+* The :class:`.oauth2.Yandex` provider now supports :attr:`.User.name` and.
+  :attr:`.User.username` properties.
 * Updated :class:`.oauth2.WindowsLive` |oauth2| endpoints.
 * Fixed a bug with the :class:`.oauth2.Yammer` provider when *user info* request
   failed because the ``token_type`` was not ``"Bearer"``.

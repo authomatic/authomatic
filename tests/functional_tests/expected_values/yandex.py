@@ -23,19 +23,20 @@ CONFIG = {
         'last_name': None,
         'link': None,
         'locale': None,
-        'name': None,
+        'name': conf.user_username,
         'nickname': None,
         'phone': None,
         'picture': None,
         'postal_code': None,
         'timezone': None,
-        'username': None,
+        'username': conf.user_username,
     },
     'content_should_contain': [
         conf.user_id,
+        conf.user_username,
 
         # User info JSON keys
-        'id',
+        'login', 'id'
     ],
     # Case insensitive
     'content_should_not_contain':
@@ -49,8 +50,7 @@ CONFIG = {
         conf.no_nickname +
         conf.no_phone +
         conf.no_postal_code +
-        conf.no_timezone +
-        conf.no_username,
+        conf.no_timezone,
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': 'Bearer',

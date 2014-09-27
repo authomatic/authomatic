@@ -1562,6 +1562,8 @@ class Yandex(OAuth2):
     Supported :class:`.User` properties:
 
     * id
+    * name
+    * username
 
     Unsupported :class:`.User` properties:
 
@@ -1574,13 +1576,11 @@ class Yandex(OAuth2):
     * last_name
     * link
     * locale
-    * name
     * nickname
     * phone
     * picture
     * postal_code
     * timezone
-    * username
 
     """
     
@@ -1588,7 +1588,11 @@ class Yandex(OAuth2):
     access_token_url = 'https://oauth.yandex.com/token'
     user_info_url = 'https://login.yandex.ru/info'
 
-    supported_user_attributes = core.SupportedUserAttributes(id=True)
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        name=True,
+        username=True
+    )
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
@@ -1605,6 +1609,7 @@ class Yandex(OAuth2):
         user.nickname = data.get('display_name')
         user.gender = data.get('Sex')
         user.email = data.get('Default_email')
+        user.username = data.get('login')
         
         try:
             user.birth_date = datetime.datetime.strptime(data.get('birthday'), "%Y-%m-%d")
