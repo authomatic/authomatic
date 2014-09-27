@@ -6,6 +6,7 @@ Version 0.0.9 (development)
     This version is still in development and has not been released to
     `PyPI <https://pypi.python.org/pypi/Authomatic>`__ yet.
 
+* Updated :class:`.oauth2.WindowsLive` |oauth2| endpoints.
 * Fixed a bug with the :class:`.oauth2.Yammer` provider when *user info* request
   failed because the ``token_type`` was not ``"Bearer"``.
 * The :class:`.oauth2.Yammer` provider now supports CSRF protection.

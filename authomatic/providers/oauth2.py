@@ -1382,8 +1382,8 @@ class WindowsLive(OAuth2):
     """
     Windows Live |oauth2| provider.
     
-    * Dashboard: https://manage.dev.live.com/Applications/Index
-    * Docs: http://msdn.microsoft.com/en-us/library/live/hh826528.aspx
+    * Dashboard: https://account.live.com/developers/applications
+    * Docs: http://msdn.microsoft.com/en-us/library/hh243647.aspx
     * API explorer: http://isdk.dev.live.com/?mkt=en-us
 
     Supported :class:`.User` properties:
@@ -1410,9 +1410,9 @@ class WindowsLive(OAuth2):
     * username
 
     """
-    
-    user_authorization_url = 'https://oauth.live.com/authorize'
-    access_token_url = 'https://oauth.live.com/token'
+
+    user_authorization_url = 'https://login.live.com/oauth20_authorize.srf'
+    access_token_url = 'https://login.live.com/oauth20_token.srf'
     user_info_url = 'https://apis.live.net/v5.0/me'
     
     user_info_scope = ['wl.basic', 'wl.emails', 'wl.photos']
