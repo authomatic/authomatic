@@ -10,12 +10,13 @@ PICTURE = 'http://bitly.com/u/{0}.png'.format(conf.user_id)
 
 CONFIG = {
     'pre_login_xpaths': [
-        '//*[@id="sign-in"]/div[3]/fieldset/label/a',
+        '//*[@id="sign-in"]/div[2]/fieldset/div/a',
+        # '//*[@id="sign-in"]/div[3]/fieldset/label/a',
     ],
-    'login_xpath': '//*[@id="sign-in"]/div[2]/fieldset/label[1]/input',
-    'password_xpath': '//*[@id="sign-in"]/div[2]/fieldset/label[2]/input',
+    'login_xpath': '//*[@id="sign-in"]/div[3]/fieldset/label[1]/input',
+    'password_xpath': '//*[@id="sign-in"]/div[3]/fieldset/label[2]/input',
     'consent_xpaths': [
-        '//*[@id="sign-in"]/div[2]/fieldset/input[2]',
+        '//*[@id="sign-in"]/div[3]/fieldset/input[2]',
         '//*[@id="oauth_access"]/form/button[1]',
     ],
     'consent_wait_seconds': 1,
