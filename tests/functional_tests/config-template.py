@@ -168,6 +168,8 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_login': USERNAME,
         'user_id': '??????????',
+        'access_headers': {'User-Agent': ('Authomatic.py Automated Functional '
+                                          'Tests')}
     },
     # Viadeo doesn't support access to its API
     # http://dev.viadeo.com/documentation/authentication/request-an-api-key/

@@ -1145,6 +1145,27 @@ class Reddit(OAuth2):
     * Docs: https://github.com/reddit/reddit/wiki/OAuth2
     * API reference: http://www.reddit.com/dev/api
 
+    .. note::
+
+        According to Reddit API
+        `docs <https://github.com/reddit/reddit/wiki/API#rules>`_,
+        you have to include a `User-Agent` header in each API call.
+
+        You can apply a default ``User-Agent`` header for all API calls in the
+        config like this:
+
+        .. code-block:: python
+            :emphasize-lines: 6
+
+            CONFIG = {
+                'reddit': {
+                    'class_': oauth2.Reddit,
+                    'consumer_key': '#####',
+                    'consumer_secret': '#####',
+                    'access_headers': {'User-Agent': 'Andy Pipkin's App'},
+                }
+            }
+
     Supported :class:`.User` properties:
 
     * id
