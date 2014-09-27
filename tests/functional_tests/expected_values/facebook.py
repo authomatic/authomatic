@@ -46,12 +46,12 @@ CONFIG = {
         conf.user_timezone,
 
         # User info JSON keys
-        'id', 'name', 'first_name', 'last_name', 'link', 'hometown',
-        'location', 'bio', 'quotes', 'work', 'employer', 'position',
-        'description', 'start_date', 'sports', 'with', 'favorite_teams',
-        'favorite_athletes', 'inspirational_people', 'education', 'school',
-        'year', 'type', 'classes', 'gender', 'email', 'timezone', 'locale',
-        'languages', 'verified', 'updated_time', 'username'
+        'id', 'bio', 'education', 'school', 'name', 'type', 'with', 'year',
+        'email', 'favorite_athletes', 'favorite_teams', 'first_name', 'gender',
+        'hometown', 'inspirational_people', 'languages', 'last_name', 'link',
+        'location', 'locale', 'sports', 'quotes', 'timezone', 'updated_time',
+        'username', 'verified', 'work', 'description', 'employer', 'position',
+        'start_date'
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date,
