@@ -6,6 +6,7 @@ Version 0.0.9 (development)
     This version is still in development and has not been released to
     `PyPI <https://pypi.python.org/pypi/Authomatic>`__ yet.
 
+* Updated *user info* URL scheme of the :class:`.oauth1.Yahoo` provider.
 * The :class:`.oauth2.Yandex` provider now supports :attr:`.User.name` and.
   :attr:`.User.username` properties.
 * Updated :class:`.oauth2.WindowsLive` |oauth2| endpoints.
