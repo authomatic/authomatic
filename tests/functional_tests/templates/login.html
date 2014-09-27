@@ -9,7 +9,7 @@
   </div>
 {% else %}
 
-  {% set safe_content = result.user.content|replace("'", "&#8217;")|default('', None)|safe or '""' %}
+  {% set safe_content = result.user.content.strip('"')|replace("'", "&#8217;")|default('', None)|safe or '""' %}
   {% set safe_cred_response = credentials_response.content|default('', None)|safe or '""' %}
 
   <h1>User</h1>
@@ -83,7 +83,7 @@
     // Display syntax-highlighted credentials refresh response content
     var credentialsResponse = document.getElementById('credentials-response');
     try {
-        credentialsResponse.innerHTML = JSON.stringify({{ safe_cred_response }}, undefined, 4);
+        credentialsResponse.innerHTML = JSON.stringify('{{ safe_cred_response|replace('\n', ' ')|replace('\r', ' ') }}', undefined, 4);
     } catch(e) {
         credentialsResponse.innerHTML = '{{ safe_cred_response|replace('\n', ' ')|replace('\r', ' ') }}';
     }
