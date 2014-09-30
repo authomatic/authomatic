@@ -164,7 +164,7 @@ def import_string(import_name, silent=False):
             return getattr(__import__(module, None, None, [obj]), obj)
         else:
             return __import__(import_name)
-    except (ImportError, AttributeError), e:
+    except (ImportError, AttributeError) as e:
         if not silent:
             raise exceptions.ImportStringError('Import from string failed for path {0}'.format(import_name),
                                                str(e))
