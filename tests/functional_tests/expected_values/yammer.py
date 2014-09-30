@@ -76,8 +76,8 @@ CONFIG = {
         'dismissed_group_tooltip', 'dismissed_profile_prompt',
         'dismissed_invite_tooltip', 'dismissed_apps_tooltip',
         'dismissed_invite_tooltip_at', 'dismissed_browser_lifecycle_banner',
-        'make_yammer_homepage', 'locale', 'yammer_now_app_id',
-        'has_yammer_now', 'follow_general_messages', 'web_oauth_access_token'
+        'make_yammer_homepage', 'locale', 'yammer_now_app_id', 'has_yammer_now',
+        'has_mobile_client', 'follow_general_messages'
     ],
     # Case insensitive
     'content_should_not_contain':
