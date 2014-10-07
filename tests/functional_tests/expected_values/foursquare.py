@@ -56,8 +56,7 @@ CONFIG = {
         'stats', 'checkinsCount', 'usersCount', 'tipCount', 'like', 'likes',
         'width', 'height', 'visibility', 'following', 'requests', 'editable',
         'public', 'collaborative', 'canonicalUrl', 'followers', 'listItems',
-        'checkin', 'scores', 'recent', 'max', 'goal', 'blockedStatus',
-        'referralId'
+        'checkin', 'blockedStatus', 'referralId'
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_birth_date +
