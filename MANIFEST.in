@@ -1,5 +1,0 @@
-include *.txt *.rst
-include javascript/authomatic.js
-recursive-include examples *.py *.yaml *.html *.js *.css
-recursive-include doc/build/html *.html *.js *.css *.ico *.jpg *.png *.gif *.svg *.inv *.xml *.txt
-prune examples/*/venv

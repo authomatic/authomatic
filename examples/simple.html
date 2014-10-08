@@ -1,0 +1,810 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Simple Webapp2 Google App Engine Example | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="../_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="Simple Webapp2 Google App Engine Example | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://peterhudec.github.io/authomatic/examples/simple.html" />
+	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="A simple tutorial where we create a Google App Engine app which can log users in with Facebook, Twitter and OpenID and read their recent statuses." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="A simple tutorial where we create a Google App Engine app which can log users in with Facebook, Twitter and OpenID and read their recent statuses.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="../_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="../_static/jquery.js"></script>
+    	<script type="text/javascript" src="../_static/underscore.js"></script>
+    	<script type="text/javascript" src="../_static/doctools.js"></script>
+    	<script type="text/javascript" src="../_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="../index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						<ul class="current">
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../reference/config.html">Config</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../reference/adapters.html">Adapters</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/classes.html">Classes</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../reference/providers.html">Providers</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../reference/extras.html">Extras</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1 current"><a class="reference internal" href="index.html">Tutorials / Examples</a><ul class="dropdown current">
+<li class="toctree-l2"><a class="reference internal" href="django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../development.html">Development</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		<li><a href="pyramid-simple.html"  title="Simple Pyramid Example">&laquo; previous</a></li>
+	
+		
+			<li><a href="../genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="../py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+		
+		
+
+	
+		<li><a href="credentials.html"  title="Advanced Webapp2 Google App Engine Example">next &raquo;</a></li>
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="../index.html">
+		
+	    	
+	    		<img id="logo" src="../_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						<span>Authomatic</span><br />
+is an <em>authorization</em> / <em>authentication</em><br />
+client library for Python web applications<br />
+inspired by Alex Vagin’s
+<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
+In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
+but that name would be too long<br />
+for a succinct library.
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="http://peterhudec.github.io/authomatic/examples/simple.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="http://peterhudec.github.io/authomatic/examples/simple.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=peterhudec&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="Simple Webapp2 Google App Engine Example | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	
+		<ul class="breadcrumbs">
+			
+		  	<li><a href="../index.html">Authomatic</a></li>
+
+		  	
+		  		<li><a href="index.html">Tutorials / Examples</a></li>
+
+		  	
+			<li class="current"><a href="">Simple Webapp2 Google App Engine Example</a></li>
+		</ul>
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <div class="section" id="simple-webapp2-gae-example">
+<h1>Simple Webapp2 Google App Engine Example<a class="headerlink" href="#simple-webapp2-gae-example" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial we will create a simple <a class="reference external" href="https://developers.google.com/appengine/">Google App Engine</a> <a class="reference external" href="http://webapp-improved.appspot.com/">Webapp2</a> application
+that will be able to log <strong>users</strong> in with Facebook, Twitter and <a class="reference external" href="http://openid.net/">OpenID</a>
+and retrieve their 5 most recent tweets/statuses.</p>
+<p>You can download all the source files we are about to create
+<a class="reference external" href="https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple">here</a>.</p>
+<p>First create the <a class="reference internal" href="../reference/config.html"><em>Config</em></a> dictionary where you set up all the providers you want to use.
+Yo will need the <tt class="docutils literal"><span class="pre">consumer_key</span></tt> and <tt class="docutils literal"><span class="pre">consumer_secret</span></tt> which you can get
+<a class="reference external" href="https://developers.facebook.com/apps">here</a> for Facebook and
+<a class="reference external" href="https://dev.twitter.com/apps">here</a> for Twitter.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Facebook and other OAuth 2.0 providers require a <strong>redirect URI</strong>
+which should be the URL of the <em>login request handler</em>
+which we will create in this tutorial and whose walue in our case will be
+<tt class="docutils literal"><span class="pre">http://[hostname]:[port]/login/fb</span></tt> for Facebook.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># config.py</span>
+
+<span class="kn">from</span> <span class="nn">authomatic.providers</span> <span class="kn">import</span> <span class="n">oauth2</span><span class="p">,</span> <span class="n">oauth1</span><span class="p">,</span> <span class="n">openid</span><span class="p">,</span> <span class="n">gaeopenid</span>
+
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    
+    <span class="s">&#39;tw&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="c"># Your internal provider name</span>
+           
+        <span class="c"># Provider class</span>
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth1</span><span class="o">.</span><span class="n">Twitter</span><span class="p">,</span>
+        
+        <span class="c"># Twitter is an AuthorizationProvider so we need to set several other properties too:</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;########################&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;########################&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    
+    <span class="s">&#39;fb&#39;</span><span class="p">:</span> <span class="p">{</span>
+           
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>
+        
+        <span class="c"># Facebook is an AuthorizationProvider too.</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;########################&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;########################&#39;</span><span class="p">,</span>
+        
+        <span class="c"># But it is also an OAuth 2.0 provider and it needs scope.</span>
+        <span class="s">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">,</span> <span class="s">&#39;publish_stream&#39;</span><span class="p">,</span> <span class="s">&#39;read_stream&#39;</span><span class="p">],</span>
+    <span class="p">},</span>
+    
+    <span class="s">&#39;gae_oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+           
+        <span class="c"># OpenID provider based on Google App Engine Users API.</span>
+        <span class="c"># Works only on GAE and returns only the id and email of a user.</span>
+        <span class="c"># Moreover, the id is not available in the development environment!</span>
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">gaeopenid</span><span class="o">.</span><span class="n">GAEOpenID</span><span class="p">,</span>
+    <span class="p">},</span>
+    
+    <span class="s">&#39;oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+           
+        <span class="c"># OpenID provider based on the python-openid library.</span>
+        <span class="c"># Works everywhere, is flexible, but requires more resources.</span>
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Create <tt class="docutils literal"><span class="pre">main.py</span></tt> file and import what&#8217;s needed.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># main.py</span>
+
+<span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">Authomatic</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">Webapp2Adapter</span>
+
+<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+</pre></div>
+</div>
+<p>Make an instance of the <a class="reference internal" href="../reference/classes.html#authomatic.Authomatic" title="authomatic.Authomatic"><tt class="xref py py-class docutils literal"><span class="pre">Authomatic</span></tt></a> class and pass
+the <a class="reference internal" href="../reference/config.html"><em>Config</em></a> together with a random secret string
+used for session and CSRF token generation to it&#8217;s constructor.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">authomatic</span> <span class="o">=</span> <span class="n">Authomatic</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="s">&#39;some random secret string&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create a simple request handler which accepts <tt class="docutils literal"><span class="pre">GET</span></tt> and <tt class="docutils literal"><span class="pre">POST</span></tt> HTTP methods and
+receives the <tt class="docutils literal"><span class="pre">provider_name</span></tt> URL variable.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Log the <strong>user</strong> in by calling the <a class="reference internal" href="../reference/classes.html#authomatic.Authomatic.login" title="authomatic.Authomatic.login"><tt class="xref py py-meth docutils literal"><span class="pre">Authomatic.login()</span></tt></a> method inside the handler.
+You must pass it an <a class="reference internal" href="../reference/adapters.html"><em>adapter for your framework</em></a>,
+in our case the <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.Webapp2Adapter" title="authomatic.adapters.Webapp2Adapter"><tt class="xref py py-class docutils literal"><span class="pre">Webapp2Adapter</span></tt></a>
+and one of the <em>provider names</em> that you defined in the <a class="reference internal" href="../reference/config.html"><em>Config</em></a>,
+which we get from the URL path of the request.</p>
+<p>The method will redirect the <strong>user</strong> to the specified <strong>provider</strong>
+to prompt <strong>him/her</strong> for consent and redirect <strong>him/her</strong> back to this handler.</p>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">provider_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <em>login procedure</em> is over when <a class="reference internal" href="../reference/classes.html#authomatic.Authomatic.login" title="authomatic.Authomatic.login"><tt class="xref py py-meth docutils literal"><span class="pre">Authomatic.login()</span></tt></a> returns a <a class="reference internal" href="../reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Do not write anything to the response unless the <em>login procedure</em> is over!
+The <a class="reference internal" href="../reference/classes.html#authomatic.Authomatic.login" title="authomatic.Authomatic.login"><tt class="xref py py-meth docutils literal"><span class="pre">Authomatic.login()</span></tt></a> either returns <tt class="docutils literal"><span class="pre">None</span></tt>,
+which means that the <em>login procedure</em> si still pending,
+or a <a class="reference internal" href="../reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a> which means that the <em>login procedure</em> is over.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;a href=&quot;..&quot;&gt;Home&lt;/a&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Hopefully there is no <a class="reference internal" href="../reference/classes.html#authomatic.core.LoginResult.error" title="authomatic.core.LoginResult.error"><tt class="xref py py-attr docutils literal"><span class="pre">LoginResult.error</span></tt></a> but rather the <a class="reference internal" href="../reference/classes.html#authomatic.core.LoginResult.user" title="authomatic.core.LoginResult.user"><tt class="xref py py-attr docutils literal"><span class="pre">LoginResult.user</span></tt></a>.
+Most of the <strong>providers</strong> don&#8217;t provide <strong>user</strong> info on login.
+To get more <strong>user</strong> info we need to call the <a class="reference internal" href="../reference/classes.html#authomatic.core.User.update" title="authomatic.core.User.update"><tt class="xref py py-meth docutils literal"><span class="pre">User.update()</span></tt></a> method.</p>
+<div class="highlight-python"><div class="highlight"><pre>            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h2&gt;Damn that error: {}&lt;/h2&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">):</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Now we can welcome the <strong>user</strong> by name.</p>
+<div class="highlight-python"><div class="highlight"><pre>                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h1&gt;Hi {}&lt;/h1&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h2&gt;Your id is: {}&lt;/h2&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h2&gt;Your email is: {}&lt;/h2&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Seems like we&#8217;re done, but we can do more:</p>
+<p>If there are <a class="reference internal" href="../reference/classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><tt class="xref py py-class docutils literal"><span class="pre">credentials</span></tt></a> the <strong>user</strong> has logged in with an
+<a class="reference internal" href="../reference/providers.html#authomatic.providers.AuthorizationProvider" title="authomatic.providers.AuthorizationProvider"><tt class="xref py py-class docutils literal"><span class="pre">AuthorizationProvider</span></tt></a>
+i.e. <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> or <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> and we can access <strong>his/her</strong> <strong>protected resources</strong>.</p>
+<div class="highlight-python"><div class="highlight"><pre>                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>Each <strong>provider</strong> has it&#8217;s specific API.
+Let&#8217;s first get the <strong>user&#8217;s</strong> five most recent <strong>Facebook</strong> statuses.</p>
+<div class="highlight-python"><div class="highlight"><pre>                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;fb&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your are logged in with Facebook.&lt;br /&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Prepare the <a class="reference external" href="http://developers.facebook.com/docs/reference/api/">Facebook Graph API</a> URL.</p>
+<div class="highlight-python"><div class="highlight"><pre>                        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://graph.facebook.com/{}?fields=feed.limit(5)&#39;</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Access the <strong>protected resource</strong> of the <strong>user</strong> at that URL.</p>
+<div class="highlight-python"><div class="highlight"><pre>                        <span class="n">response</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parse the response. The <a class="reference internal" href="../reference/classes.html#authomatic.core.Response.data" title="authomatic.core.Response.data"><tt class="xref py py-attr docutils literal"><span class="pre">Response.data</span></tt></a> is a data structure (list or dictionary)
+parsed from the <a class="reference internal" href="../reference/classes.html#authomatic.core.Response.content" title="authomatic.core.Response.content"><tt class="xref py py-attr docutils literal"><span class="pre">Response.content</span></tt></a> which usually is JSON.</p>
+<div class="highlight-python"><div class="highlight"><pre>                        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                            <span class="c"># Parse response.</span>
+                            <span class="n">statuses</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;feed&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">)</span>
+                            <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error&#39;</span><span class="p">)</span>
+                            
+                            <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Damn that error: {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+                            <span class="k">elif</span> <span class="n">statuses</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your 5 most recent statuses:&lt;br /&gt;&#39;</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">:</span>
+                                    
+                                    <span class="n">text</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">)</span>
+                                    <span class="n">date</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;created_time&#39;</span><span class="p">)</span>
+                                    
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h3&gt;{}&lt;/h3&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Posted on: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that unknown error!&lt;br /&gt;&#39;</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Status: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Do the same with Twitter.</p>
+<div class="highlight-python"><div class="highlight"><pre>                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;tw&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your are logged in with Twitter.&lt;br /&gt;&#39;</span><span class="p">)</span>
+                        
+                        <span class="c"># We will get the user&#39;s 5 most recent tweets.</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/1.1/statuses/user_timeline.json&#39;</span>
+                        
+                        <span class="c"># You can pass a dictionary of querystring parameters.</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+                                                
+                        <span class="c"># Parse response.</span>
+                        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+                                <span class="c"># Twitter returns the tweets as a JSON list.</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your 5 most recent tweets:&#39;</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">tweet</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                                    <span class="n">text</span> <span class="o">=</span> <span class="n">tweet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;text&#39;</span><span class="p">)</span>
+                                    <span class="n">date</span> <span class="o">=</span> <span class="n">tweet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;created_at&#39;</span><span class="p">)</span>
+                                    
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h3&gt;{}&lt;/h3&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">u&#39;</span><span class="se">\u2013</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;[???]&#39;</span><span class="p">)))</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Tweeted on: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                                    
+                            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Damn that error: {}!&#39;</span><span class="o">.</span>\
+                                                    <span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that unknown error!&lt;br /&gt;&#39;</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Status: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>That&#8217;s it for the <em>Login</em> handler.</p>
+<p>Now just for convenience that we don&#8217;t have to enter all the URLs manually
+let&#8217;s create a <em>Home</em> handler.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Home</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Create links to our <em>Login</em> handler.</p>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Login with &lt;a href=&quot;login/fb&quot;&gt;Facebook&lt;/a&gt;.&lt;br /&gt;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Login with &lt;a href=&quot;login/tw&quot;&gt;Twitter&lt;/a&gt;.&lt;br /&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create <strong>OpenID</strong> forms where the <strong>user</strong> can specify <strong>his/her</strong> <strong>claimed ID</strong>.
+The library by default extracts the identifier from the query string <tt class="docutils literal"><span class="pre">id</span></tt> parameter,
+but you can change its name to whatever you want.</p>
+<div class="highlight-python"><div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">            &lt;form action=&quot;login/oi&quot;&gt;</span>
+<span class="s">                &lt;input type=&quot;text&quot; name=&quot;id&quot; value=&quot;me.yahoo.com&quot; /&gt;</span>
+<span class="s">                &lt;input type=&quot;submit&quot; value=&quot;Authenticate With OpenID&quot;&gt;</span>
+<span class="s">            &lt;/form&gt;</span>
+<span class="s">        &#39;&#39;&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">            &lt;form action=&quot;login/gae_oi&quot;&gt;</span>
+<span class="s">                &lt;input type=&quot;text&quot; name=&quot;id&quot; value=&quot;me.yahoo.com&quot; /&gt;</span>
+<span class="s">                &lt;input type=&quot;submit&quot; value=&quot;Authenticate With GAEOpenID&quot;&gt;</span>
+<span class="s">            &lt;/form&gt;</span>
+<span class="s">        &#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Route URLs to your handlers.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ROUTES</span> <span class="o">=</span> <span class="p">[</span><span class="n">webapp2</span><span class="o">.</span><span class="n">Route</span><span class="p">(</span><span class="s">r&#39;/login/&lt;:.*&gt;&#39;</span><span class="p">,</span> <span class="n">Login</span><span class="p">,</span> <span class="n">handler_method</span><span class="o">=</span><span class="s">&#39;any&#39;</span><span class="p">),</span>
+          <span class="n">webapp2</span><span class="o">.</span><span class="n">Route</span><span class="p">(</span><span class="s">r&#39;/&#39;</span><span class="p">,</span> <span class="n">Home</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Finally instantiate the WSGI application.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">app</span> <span class="o">=</span> <span class="n">webapp2</span><span class="o">.</span><span class="n">WSGIApplication</span><span class="p">(</span><span class="n">ROUTES</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Don&#8217;t forget to set up the <tt class="docutils literal"><span class="pre">app.yaml</span></tt> file.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="c1"># app.yaml</span>
+
+<span class="l-Scalar-Plain">application</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">authomatic-simple-example</span>
+<span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
+<span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">python27</span>
+<span class="l-Scalar-Plain">api_version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+<span class="l-Scalar-Plain">threadsafe</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+
+<span class="l-Scalar-Plain">handlers</span><span class="p-Indicator">:</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">url</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/.*</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">main.app</span>
+</pre></div>
+</div>
+<p>That&#8217;s it. Now just run the application.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python dev_appserver.py <span class="o">[</span>path to the root folder of this app<span class="o">]</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>Some of the providers don&#8217;t support authorization from apps running on <strong>localhost</strong>.
+Probably the best solution is to use an arbitrary domain as an alias of the <tt class="docutils literal"><span class="pre">127.0.0.1</span></tt> IP address.</p>
+<p>You can do this on UNIX systems by adding an alias to the <tt class="docutils literal"><span class="pre">/etc/hosts</span></tt> file.</p>
+<div class="last highlight-none"><div class="highlight"><pre>    # /etc/hosts
+    127.0.0.1    localhost
+<span class="hll">    127.0.0.1    yourlocalhostalias.com
+</span></pre></div>
+</div>
+</div>
+<p>And here is the complete app. Remember that you can download all the files we just created from
+<a class="reference external" href="https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple">GitHub</a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># main.py</span>
+
+<span class="kn">import</span> <span class="nn">webapp2</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">Authomatic</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">Webapp2Adapter</span>
+
+<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+<span class="c"># Instantiate Authomatic.</span>
+<span class="n">authomatic</span> <span class="o">=</span> <span class="n">Authomatic</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="s">&#39;some random secret string&#39;</span><span class="p">)</span>
+
+<span class="c"># Create a simple request handler for the login procedure.</span>
+<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    
+    <span class="c"># The handler must accept GET and POST http methods and</span>
+    <span class="c"># Accept any HTTP method and catch the &quot;provider_name&quot; URL variable.</span>
+    <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">):</span>
+                
+        <span class="c"># It all begins with login.</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">provider_name</span><span class="p">)</span>
+        
+        <span class="c"># Do not write anything to the response if there is no result!</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="c"># If there is result, the login procedure is over and we can write to response.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;a href=&quot;..&quot;&gt;Home&lt;/a&gt;&#39;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="c"># Login procedure finished with an error.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h2&gt;Damn that error: {}&lt;/h2&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+            
+            <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+                <span class="c"># Hooray, we have the user!</span>
+                
+                <span class="c"># OAuth 2.0 and OAuth 1.0a provide only limited user data on login,</span>
+                <span class="c"># We need to update the user to get more info.</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">):</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+                
+                <span class="c"># Welcome the user.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h1&gt;Hi {}&lt;/h1&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h2&gt;Your id is: {}&lt;/h2&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h2&gt;Your email is: {}&lt;/h2&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">))</span>
+                
+                <span class="c"># Seems like we&#39;re done, but there&#39;s more we can do...</span>
+                
+                <span class="c"># If there are credentials (only by AuthorizationProvider),</span>
+                <span class="c"># we can _access user&#39;s protected resources.</span>
+                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">credentials</span><span class="p">:</span>
+                    
+                    <span class="c"># Each provider has it&#39;s specific API.</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;fb&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your are logged in with Facebook.&lt;br /&gt;&#39;</span><span class="p">)</span>
+                        
+                        <span class="c"># We will access the user&#39;s 5 most recent statuses.</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://graph.facebook.com/{}?fields=feed.limit(5)&#39;</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                        
+                        <span class="c"># Access user&#39;s protected resource.</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+                        
+                        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                            <span class="c"># Parse response.</span>
+                            <span class="n">statuses</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;feed&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">)</span>
+                            <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error&#39;</span><span class="p">)</span>
+                            
+                            <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Damn that error: {}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+                            <span class="k">elif</span> <span class="n">statuses</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your 5 most recent statuses:&lt;br /&gt;&#39;</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">:</span>
+                                    
+                                    <span class="n">text</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">)</span>
+                                    <span class="n">date</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;created_time&#39;</span><span class="p">)</span>
+                                    
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h3&gt;{}&lt;/h3&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Posted on: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that unknown error!&lt;br /&gt;&#39;</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Status: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
+                        
+                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;tw&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your are logged in with Twitter.&lt;br /&gt;&#39;</span><span class="p">)</span>
+                        
+                        <span class="c"># We will get the user&#39;s 5 most recent tweets.</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/1.1/statuses/user_timeline.json&#39;</span>
+                        
+                        <span class="c"># You can pass a dictionary of querystring parameters.</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+                                                
+                        <span class="c"># Parse response.</span>
+                        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+                                <span class="c"># Twitter returns the tweets as a JSON list.</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Your 5 most recent tweets:&#39;</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">tweet</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                                    <span class="n">text</span> <span class="o">=</span> <span class="n">tweet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;text&#39;</span><span class="p">)</span>
+                                    <span class="n">date</span> <span class="o">=</span> <span class="n">tweet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;created_at&#39;</span><span class="p">)</span>
+                                    
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;&lt;h3&gt;{}&lt;/h3&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">u&#39;</span><span class="se">\u2013</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;[???]&#39;</span><span class="p">)))</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Tweeted on: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                                    
+                            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Damn that error: {}!&#39;</span><span class="o">.</span>\
+                                                    <span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Damn that unknown error!&lt;br /&gt;&#39;</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">u&#39;Status: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
+
+
+<span class="c"># Create a home request handler just that you don&#39;t have to enter the urls manually.</span>
+<span class="k">class</span> <span class="nc">Home</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="c"># Create links to the Login handler.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Login with &lt;a href=&quot;login/fb&quot;&gt;Facebook&lt;/a&gt;.&lt;br /&gt;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;Login with &lt;a href=&quot;login/tw&quot;&gt;Twitter&lt;/a&gt;.&lt;br /&gt;&#39;</span><span class="p">)</span>
+        
+        <span class="c"># Create OpenID form where the user can specify his claimed identifier.</span>
+        <span class="c"># The library by default extracts the identifier from the &quot;id&quot; parameter.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">            &lt;form action=&quot;login/oi&quot;&gt;</span>
+<span class="s">                &lt;input type=&quot;text&quot; name=&quot;id&quot; value=&quot;me.yahoo.com&quot; /&gt;</span>
+<span class="s">                &lt;input type=&quot;submit&quot; value=&quot;Authenticate With OpenID&quot;&gt;</span>
+<span class="s">            &lt;/form&gt;</span>
+<span class="s">        &#39;&#39;&#39;</span><span class="p">)</span>
+        
+        <span class="c"># Create GAEOpenID form</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">            &lt;form action=&quot;login/gae_oi&quot;&gt;</span>
+<span class="s">                &lt;input type=&quot;text&quot; name=&quot;id&quot; value=&quot;me.yahoo.com&quot; /&gt;</span>
+<span class="s">                &lt;input type=&quot;submit&quot; value=&quot;Authenticate With GAEOpenID&quot;&gt;</span>
+<span class="s">            &lt;/form&gt;</span>
+<span class="s">        &#39;&#39;&#39;</span><span class="p">)</span>
+
+
+<span class="c"># Create routes.</span>
+<span class="n">ROUTES</span> <span class="o">=</span> <span class="p">[</span><span class="n">webapp2</span><span class="o">.</span><span class="n">Route</span><span class="p">(</span><span class="s">r&#39;/login/&lt;:.*&gt;&#39;</span><span class="p">,</span> <span class="n">Login</span><span class="p">,</span> <span class="n">handler_method</span><span class="o">=</span><span class="s">&#39;any&#39;</span><span class="p">),</span>
+          <span class="n">webapp2</span><span class="o">.</span><span class="n">Route</span><span class="p">(</span><span class="s">r&#39;/&#39;</span><span class="p">,</span> <span class="n">Home</span><span class="p">)]</span>
+
+<span class="c"># Instantiate the webapp2 WSGI application.</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">webapp2</span><span class="o">.</span><span class="n">WSGIApplication</span><span class="p">(</span><span class="n">ROUTES</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/adapters.html">Adapters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/providers.html">Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/extras.html">Extras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials / Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9-development">Version 0.0.9 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="pyramid-simple.html"  title="Simple Pyramid Example">&laquo; previous</a></span>
+			<span><a href="../genindex.html"  title="General Index">index</a></span>
+				<span><a href="../py-modindex.html"  title="Python Module Index">modules</a></span>
+				<span><a href="credentials.html"  title="Advanced Webapp2 Google App Engine Example">next &raquo;</a></span></div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="http://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '../_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="../_static/foundation/js/foundation.min.js"></script>
+	<script src="../_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/peterhudec/authomatic">
+			<img
+				 src="../_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>
