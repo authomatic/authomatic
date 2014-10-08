@@ -52,12 +52,6 @@ Features
 		**VK**, **WindowsLive**, **Yammer** and **Yandex**.
 	*	|pyopenid|_ and |gae|_ based |openid|_.
 
-.. note::
-
-	To cool your excitement down a little bit,
-	the library is in its **very early stage**
-	and there are practically **no tests**!
-
 License and Requirements
 ========================
 

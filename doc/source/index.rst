@@ -16,7 +16,7 @@ Features
 
 .. include:: ../../README.rst
    :start-line: 35
-   :end-line: 89
+   :end-line: 83
 
 .. contents::
    :backlinks: none
