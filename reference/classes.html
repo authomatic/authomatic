@@ -299,7 +299,11 @@ for a succinct library.
 </table>
 <dl class="class">
 <dt id="authomatic.Authomatic">
+<<<<<<< HEAD
 <em class="property">class </em><tt class="descclassname">authomatic.</tt><tt class="descname">Authomatic</tt><big>(</big><em>config</em>, <em>secret</em>, <em>session_max_age=600</em>, <em>secure_cookie=False</em>, <em>session=None</em>, <em>session_save_method=None</em>, <em>report_errors=True</em>, <em>debug=False</em>, <em>logging_level=20</em>, <em>prefix='authomatic'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#authomatic.Authomatic" title="Permalink to this definition">¶</a></dt>
+=======
+<em class="property">class </em><tt class="descclassname">authomatic.</tt><tt class="descname">Authomatic</tt><big>(</big><em>config</em>, <em>secret</em>, <em>session_max_age=600</em>, <em>secure_cookie=False</em>, <em>session=None</em>, <em>session_save_method=None</em>, <em>report_errors=True</em>, <em>debug=False</em>, <em>logging_level=20</em>, <em>prefix='authomatic'</em><big>)</big><a class="headerlink" href="#authomatic.Authomatic" title="Permalink to this definition">¶</a></dt>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 <dd><p>Encapsulates all the functionality of this package.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -318,6 +322,7 @@ will be caught and reported in the <a class="reference internal" href="#authomat
 Default is <tt class="docutils literal"><span class="pre">True</span></tt>.</li>
 <li><strong>debug</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt> traceback of exceptions will be written to response.
 Default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li>
+<<<<<<< HEAD
 <li><strong>logging_level</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The logging level threshold for the default logger as specified in
 the standard Python
 <a class="reference external" href="http://docs.python.org/2/library/logging.html">logging library</a>.
@@ -325,6 +330,12 @@ This setting is ignored when <tt class="xref py py-data docutils literal"><span 
 Default is <tt class="docutils literal"><span class="pre">logging.INFO</span></tt>.</li>
 <li><strong>prefix</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Prefix used as the <tt class="xref py py-class docutils literal"><span class="pre">Session</span></tt> cookie name.</li>
 <li><strong>logger</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">logging.logger</span></tt> instance.</li>
+=======
+<li><strong>logging_level</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The logging level threshold as specified in the standard Python
+<a class="reference external" href="http://docs.python.org/2/library/logging.html">logging library</a>.
+Default is <tt class="docutils literal"><span class="pre">logging.INFO</span></tt></li>
+<li><strong>prefix</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Prefix used as the <tt class="xref py py-class docutils literal"><span class="pre">Session</span></tt> cookie name.</li>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </ul>
 </td>
 </tr>
@@ -600,7 +611,11 @@ Accepts arbitrary positional and keyword arguments which will be passed to <tt c
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
+<<<<<<< HEAD
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> &#8211; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">float</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt> A timeout for the <tt class="xref py py-data docutils literal"><span class="pre">func</span></tt> to return in seconds.</td>
+=======
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">float</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> A timeout for the <tt class="xref py py-data docutils literal"><span class="pre">func</span></tt> to return in seconds.</td>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The result of the wrapped <tt class="xref py py-data docutils literal"><span class="pre">func</span></tt>.</td>
 </tr>
@@ -646,103 +661,171 @@ The structure differs across <strong>providers</strong>.</p>
 <dl class="attribute">
 <dt id="authomatic.core.User.id">
 <tt class="descname">id</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.id" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> ID assigned to the <strong>user</strong> by the <strong>provider</strong>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> ID assigned to the <strong>user</strong> by the <strong>provider</strong>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.username">
 <tt class="descname">username</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.username" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> User name e.g. <em>andrewpipkin</em>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> User name e.g. <em>andrewpipkin</em>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.name">
 <tt class="descname">name</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.name" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Name e.g. <em>Andrew Pipkin</em>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Name e.g. <em>Andrew Pipkin</em>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.first_name">
 <tt class="descname">first_name</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.first_name" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> First name e.g. <em>Andrew</em>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> First name e.g. <em>Andrew</em>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.last_name">
 <tt class="descname">last_name</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.last_name" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Last name e.g. <em>Pipkin</em>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Last name e.g. <em>Pipkin</em>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.nickname">
 <tt class="descname">nickname</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.nickname" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Nickname e.g. <em>Andy</em>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Nickname e.g. <em>Andy</em>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.link">
 <tt class="descname">link</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.link" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Link URL.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Link URL.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.gender">
 <tt class="descname">gender</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.gender" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Gender.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Gender.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.timezone">
 <tt class="descname">timezone</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.timezone" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Timezone.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Timezone.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.locale">
 <tt class="descname">locale</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.locale" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Locale.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Locale.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.email">
 <tt class="descname">email</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.email" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> E-mail.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> E-mail.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.phone">
 <tt class="descname">phone</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.phone" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> phone.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> phone.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.picture">
 <tt class="descname">picture</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.picture" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Picture URL.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Picture URL.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.birth_date">
 <tt class="descname">birth_date</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.birth_date" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p>Birth date as <tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime()</span></tt> or <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> if parsing failed or <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+=======
+<dd><p>Birth date as <tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime()</span></tt> or <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> if parsing failed or <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.country">
 <tt class="descname">country</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.country" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Country.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Country.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.city">
 <tt class="descname">city</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.city" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> City.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> City.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.User.postal_code">
 <tt class="descname">postal_code</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.postal_code" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Postal code.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Postal code.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
@@ -814,25 +897,41 @@ Only present when using the <a class="reference internal" href="providers.html#a
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.token">
 <tt class="descname">token</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.token" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> User <strong>access token</strong>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> User <strong>access token</strong>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.token_type">
 <tt class="descname">token_type</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.token_type" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Access token type.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Access token type.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.refresh_token">
 <tt class="descname">refresh_token</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.refresh_token" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Refresh token.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Refresh token.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.token_secret">
 <tt class="descname">token_secret</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.token_secret" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Access token secret.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Access token secret.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
@@ -844,25 +943,41 @@ Only present when using the <a class="reference internal" href="providers.html#a
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.provider_name">
 <tt class="descname">provider_name</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.provider_name" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Provider name specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Provider name specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.provider_type">
 <tt class="descname">provider_type</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.provider_type" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Provider type e.g. <tt class="docutils literal"><span class="pre">&quot;authomatic.providers.oauth2.OAuth2&quot;</span></tt>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Provider type e.g. <tt class="docutils literal"><span class="pre">&quot;authomatic.providers.oauth2.OAuth2&quot;</span></tt>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.provider_type_id">
 <tt class="descname">provider_type_id</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.provider_type_id" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Provider type e.g. <tt class="docutils literal"><span class="pre">&quot;authomatic.providers.oauth2.OAuth2&quot;</span></tt>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Provider type e.g. <tt class="docutils literal"><span class="pre">&quot;authomatic.providers.oauth2.OAuth2&quot;</span></tt>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.provider_id">
 <tt class="descname">provider_id</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.provider_id" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Provider short name specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Provider short name specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
@@ -874,13 +989,21 @@ Only present when using the <a class="reference internal" href="providers.html#a
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.consumer_key">
 <tt class="descname">consumer_key</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.consumer_key" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Consumer key specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Consumer key specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.consumer_secret">
 <tt class="descname">consumer_secret</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.consumer_secret" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> Consumer secret specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> Consumer secret specified in the <a class="reference internal" href="config.html"><em>Config</em></a>.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
@@ -891,7 +1014,11 @@ Only present when using the <a class="reference internal" href="providers.html#a
 <dl class="attribute">
 <dt id="authomatic.core.Credentials.expiration_time">
 <tt class="descname">expiration_time</tt><a class="reference internal" href="../_modules/authomatic/core.html#Credentials.expiration_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Credentials.expiration_time" title="Permalink to this definition">¶</a></dt>
+<<<<<<< HEAD
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">int</span></tt></a> Expiration date as UNIX timestamp.</p>
+=======
+<dd><p><tt class="xref py py-class docutils literal"><span class="pre">int</span></tt> Expiration date as UNIX timestamp.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </dd></dl>
 
 <dl class="attribute">
@@ -1064,7 +1191,11 @@ If <tt class="docutils literal"><span class="pre">None</span></tt>, no newlines 
 </ul>
 </td>
 </tr>
+<<<<<<< HEAD
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> with JavaScript.</p>
+=======
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> with JavaScript.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </td>
 </tr>
 </tbody>
@@ -1100,7 +1231,11 @@ which will be replaced by the provider name.</li>
 </ul>
 </td>
 </tr>
+<<<<<<< HEAD
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> with HTML.</p>
+=======
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> with HTML.</p>
+>>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 </td>
 </tr>
 </tbody>
