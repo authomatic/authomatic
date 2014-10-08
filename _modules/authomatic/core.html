@@ -266,10 +266,7 @@ for a succinct library.
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">urllib</span>
 <span class="kn">import</span> <span class="nn">urlparse</span>
-<<<<<<< HEAD
 <span class="kn">import</span> <span class="nn">sys</span>
-=======
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 
 <span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="n">SessionError</span><span class="p">,</span> <span class="n">CredentialsError</span><span class="p">,</span> <span class="n">RequestElementsError</span>
 
@@ -279,11 +276,8 @@ for a succinct library.
 <span class="c">#===============================================================================</span>
 
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-<<<<<<< HEAD
 <span class="n">_logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">))</span>
 
-=======
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 <span class="n">_counter</span> <span class="o">=</span> <span class="bp">None</span>
 
 
@@ -1480,14 +1474,9 @@ for a succinct library.
 
 <span class="k">class</span> <span class="nc">Authomatic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">session_max_age</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">secure_cookie</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-<<<<<<< HEAD
                  <span class="n">session</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">session_save_method</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">report_errors</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                  <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">logging_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s">&#39;authomatic&#39;</span><span class="p">,</span>
                  <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-=======
-                 <span class="n">session</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">session_save_method</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">report_errors</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                 <span class="n">logging_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s">&#39;authomatic&#39;</span><span class="p">):</span>
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Encapsulates all the functionality of this package.</span>
 <span class="sd">        </span>
@@ -1520,7 +1509,6 @@ for a succinct library.
 <span class="sd">            Default is ``False``.</span>
 <span class="sd">    </span>
 <span class="sd">        :param int logging_level:</span>
-<<<<<<< HEAD
 <span class="sd">            The logging level threshold for the default logger as specified in</span>
 <span class="sd">            the standard Python</span>
 <span class="sd">            `logging library &lt;http://docs.python.org/2/library/logging.html&gt;`_.</span>
@@ -1532,14 +1520,6 @@ for a succinct library.
 
 <span class="sd">        :param logger:</span>
 <span class="sd">            A :class:`logging.logger` instance.</span>
-=======
-<span class="sd">            The logging level threshold as specified in the standard Python</span>
-<span class="sd">            `logging library &lt;http://docs.python.org/2/library/logging.html&gt;`_.</span>
-<span class="sd">            Default is ``logging.INFO``</span>
-<span class="sd">    </span>
-<span class="sd">        :param str prefix:</span>
-<span class="sd">            Prefix used as the :class:`.Session` cookie name.</span>
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
@@ -1552,18 +1532,11 @@ for a succinct library.
         <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logging_level</span> <span class="o">=</span> <span class="n">logging_level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
-<<<<<<< HEAD
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="ow">or</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
         
         <span class="c"># Set logging level.</span>
         <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging_level</span><span class="p">)</span>
-=======
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
-        
-        <span class="c"># Set logging level.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging_level</span><span class="p">)</span>
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
     
     
     <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">session_saver</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1619,12 +1592,9 @@ for a succinct library.
             <span class="k">if</span> <span class="ow">not</span> <span class="n">class_</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;The &quot;class_&quot; key not specified in the config for provider {0}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_name</span><span class="p">))</span>
             <span class="n">ProviderClass</span> <span class="o">=</span> <span class="n">resolve_provider_class</span><span class="p">(</span><span class="n">class_</span><span class="p">)</span>
-<<<<<<< HEAD
 
             <span class="c"># FIXME: Find a nicer solution</span>
             <span class="n">ProviderClass</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
-=======
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
     
             <span class="c"># instantiate provider class</span>
             <span class="n">provider</span> <span class="o">=</span> <span class="n">ProviderClass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>

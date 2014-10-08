@@ -28,13 +28,13 @@
 	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
 	
 	
-	<meta property="og:description" content="A simple tutorial where we create a Flask app which can can log users in with Facebook, Twitter and OpenID and read their recent statuses." />
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
 	<meta property="og:site_name" content="Authomatic" />
 	
 	
     
     
-	<meta name="description" content="A simple tutorial where we create a Flask app which can can log users in with Facebook, Twitter and OpenID and read their recent statuses.">
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
     
 	
 	
@@ -345,13 +345,8 @@ provider which we have configured in the <a class="reference internal" href="../
 <p>Now just Log the <strong>user</strong> in by calling the <a class="reference internal" href="../reference/classes.html#authomatic.Authomatic.login" title="authomatic.Authomatic.login"><tt class="xref py py-meth docutils literal"><span class="pre">Authomatic.login()</span></tt></a> method inside the <em>login</em> handler.
 You must pass it the <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><tt class="xref py py-class docutils literal"><span class="pre">WerkzeugAdapter</span></tt></a>
 and the <tt class="docutils literal"><span class="pre">provider_name</span></tt> URL variable.
-<<<<<<< HEAD
 The <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><tt class="xref py py-class docutils literal"><span class="pre">WerkzeugAdapter</span></tt></a> needs instances of <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Request" title="(in Werkzeug v0.10-dev)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Request</span></tt></a>
 and <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Response" title="(in Werkzeug v0.10-dev)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Response</span></tt></a> classes.
-=======
-The <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><tt class="xref py py-class docutils literal"><span class="pre">WerkzeugAdapter</span></tt></a> needs instances of <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Request" title="(in Werkzeug v0.10)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Request</span></tt></a>
-and <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Response" title="(in Werkzeug v0.10)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Response</span></tt></a> classes.
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 The handler must return the <tt class="docutils literal"><span class="pre">response</span></tt> so we assign it to a variable.</p>
 <div class="highlight-python"><div class="highlight"><pre>    <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">()</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">WerkzeugAdapter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">),</span> <span class="n">provider_name</span><span class="p">)</span>
@@ -454,11 +449,7 @@ First create a link to the <em>home</em> handler.</p>
 <div class="highlight-html+jinja"><div class="highlight"><pre>            <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.status</span> <span class="o">==</span> <span class="m">200</span> <span class="cp">%}</span>
 </pre></div>
 </div>
-<<<<<<< HEAD
 <p>Parse the <a class="reference internal" href="../reference/classes.html#authomatic.core.Response.data" title="authomatic.core.Response.data"><tt class="xref py py-attr docutils literal"><span class="pre">Response.data</span></tt></a> attribute which is a data structure (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a> or <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></a>)
-=======
-<p>Parse the <a class="reference internal" href="../reference/classes.html#authomatic.core.Response.data" title="authomatic.core.Response.data"><tt class="xref py py-attr docutils literal"><span class="pre">Response.data</span></tt></a> attribute which is a data structure (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a> or <tt class="xref py py-class docutils literal"><span class="pre">list</span></tt>)
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 parsed from the <a class="reference internal" href="../reference/classes.html#authomatic.core.Response.content" title="authomatic.core.Response.content"><tt class="xref py py-attr docutils literal"><span class="pre">Response.content</span></tt></a> which usually is <strong>JSON</strong>.</p>
 <p>Handle possible errors.</p>
 <div class="highlight-html+jinja"><div class="highlight"><pre>                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data.error</span> <span class="cp">%}</span>
@@ -466,11 +457,7 @@ parsed from the <a class="reference internal" href="../reference/classes.html#au
                 <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
 </pre></div>
 </div>
-<<<<<<< HEAD
 <p>If there are no errors, there should be a <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></a> of statuses in the <tt class="docutils literal"><span class="pre">response.data.feed.data</span></tt> node.</p>
-=======
-<p>If there are no errors, there should be a <tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of statuses in the <tt class="docutils literal"><span class="pre">response.data.feed.data</span></tt> node.</p>
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 <div class="highlight-html+jinja"><div class="highlight"><pre>                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data.feed.data</span> <span class="cp">%}</span>
                     Your 5 most recent statuses:<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
                     <span class="cp">{%</span> <span class="k">for</span> <span class="nv">status</span> <span class="k">in</span> <span class="nv">response.data.feed.data</span> <span class="cp">%}</span>

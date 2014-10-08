@@ -575,11 +575,7 @@ for a succinct library.
                                                              <span class="n">redirect_uri</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
                                                              <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_params</span><span class="p">,</span>
                                                              <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_headers</span><span class="p">)</span>
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch</span><span class="p">(</span><span class="o">*</span><span class="n">request_elements</span><span class="p">)</span>
             
             <span class="n">access_token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;access_token&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
@@ -1401,7 +1397,6 @@ for a succinct library.
 <span class="sd">    * Docs: https://github.com/reddit/reddit/wiki/OAuth2</span>
 <span class="sd">    * API reference: http://www.reddit.com/dev/api</span>
 
-<<<<<<< HEAD
 <span class="sd">    .. note::</span>
 
 <span class="sd">        According to Reddit API</span>
@@ -1423,8 +1418,6 @@ for a succinct library.
 <span class="sd">                }</span>
 <span class="sd">            }</span>
 
-=======
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 <span class="sd">    Supported :class:`.User` properties:</span>
 
 <span class="sd">    * id</span>
@@ -1641,7 +1634,6 @@ for a succinct library.
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Windows Live |oauth2| provider.</span>
 <span class="sd">    </span>
-<<<<<<< HEAD
 <span class="sd">    * Dashboard: https://account.live.com/developers/applications</span>
 <span class="sd">    * Docs: http://msdn.microsoft.com/en-us/library/hh243647.aspx</span>
 <span class="sd">    * API explorer: http://isdk.dev.live.com/?mkt=en-us</span>
@@ -1687,18 +1679,6 @@ for a succinct library.
         <span class="n">name</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="n">picture</span><span class="o">=</span><span class="bp">True</span>
     <span class="p">)</span>
-=======
-<span class="sd">    * Dashboard: https://manage.dev.live.com/Applications/Index</span>
-<span class="sd">    * Docs: http://msdn.microsoft.com/en-us/library/live/hh826528.aspx</span>
-<span class="sd">    * API explorer: http://isdk.dev.live.com/?mkt=en-us</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s">&#39;https://oauth.live.com/authorize&#39;</span>
-    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s">&#39;https://oauth.live.com/token&#39;</span>
-    <span class="n">user_info_url</span> <span class="o">=</span> <span class="s">&#39;https://apis.live.net/v5.0/me&#39;</span>
-    
-    <span class="n">user_info_scope</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;wl.basic&#39;</span><span class="p">,</span> <span class="s">&#39;wl.emails&#39;</span><span class="p">,</span> <span class="s">&#39;wl.photos&#39;</span><span class="p">]</span>
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">WindowsLive</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1724,18 +1704,10 @@ for a succinct library.
 <div class="viewcode-block" id="Yammer"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth2.Yammer">[docs]</a><span class="k">class</span> <span class="nc">Yammer</span><span class="p">(</span><span class="n">OAuth2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Yammer |oauth2| provider.</span>
-<<<<<<< HEAD
-=======
-<span class="sd">    </span>
-<span class="sd">    .. warning::</span>
-<span class="sd">        </span>
-<span class="sd">        |no-csrf|</span>
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 
 <span class="sd">    * Dashboard: https://www.yammer.com/client_applications</span>
 <span class="sd">    * Docs: https://developer.yammer.com/authentication/</span>
 <span class="sd">    * API reference: https://developer.yammer.com/restapi/</span>
-<<<<<<< HEAD
 
 <span class="sd">    Supported :class:`.User` properties:</span>
 
@@ -1760,14 +1732,11 @@ for a succinct library.
 <span class="sd">    * nickname</span>
 <span class="sd">    * postal_code</span>
 
-=======
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s">&#39;https://www.yammer.com/dialog/oauth&#39;</span>
     <span class="n">access_token_url</span> <span class="o">=</span> <span class="s">&#39;https://www.yammer.com/oauth2/access_token.json&#39;</span>
     <span class="n">user_info_url</span> <span class="o">=</span> <span class="s">&#39;https://www.yammer.com/api/v1/users/current.json&#39;</span>
-<<<<<<< HEAD
 
     <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
         <span class="n">birth_date</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
@@ -1790,28 +1759,15 @@ for a succinct library.
     <span class="k">def</span> <span class="nf">_x_credentials_parser</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="c"># import pdb; pdb.set_trace()</span>
         <span class="n">credentials</span><span class="o">.</span><span class="n">token_type</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">BEARER</span>
-=======
-    
-    <span class="n">supports_csrf_protection</span> <span class="o">=</span> <span class="bp">False</span>
-    
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_x_credentials_parser</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
         <span class="n">_access_token</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;access_token&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">_access_token</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;token&#39;</span><span class="p">)</span>
         <span class="n">_expire_in</span> <span class="o">=</span> <span class="n">_access_token</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;expires_at&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">_expire_in</span><span class="p">:</span>
             <span class="n">credentials</span><span class="o">.</span><span class="n">expire_in</span> <span class="o">=</span> <span class="n">_expire_in</span>
-<<<<<<< HEAD
-=======
-        
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
         <span class="k">return</span> <span class="n">credentials</span>
     
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<<<<<<< HEAD
 
         <span class="c"># Yammer provides most of the user info in the access token request,</span>
         <span class="c"># but provides more on in user info request.</span>
@@ -1832,20 +1788,6 @@ for a succinct library.
         
         <span class="c"># Contact</span>
         <span class="n">_contact</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;contact&#39;</span><span class="p">,</span> <span class="p">{})</span>
-=======
-        
-        <span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
-        <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;full_name&#39;</span><span class="p">)</span>
-        <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;web_url&#39;</span><span class="p">)</span>
-        <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;mugshot_url&#39;</span><span class="p">)</span>
-        
-        <span class="n">user</span><span class="o">.</span><span class="n">city</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;location&#39;</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
-        <span class="n">user</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">city</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">country</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        
-        <span class="c"># Contact</span>
-        <span class="n">_contact</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;contact&#39;</span><span class="p">,</span> <span class="p">{})</span>
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
         <span class="n">user</span><span class="o">.</span><span class="n">phone</span> <span class="o">=</span> <span class="n">_contact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;phone_numbers&#39;</span><span class="p">,</span> <span class="p">[{}])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;number&#39;</span><span class="p">)</span>
         <span class="n">_emails</span> <span class="o">=</span> <span class="n">_contact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;email_addresses&#39;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">_emails</span><span class="p">:</span>
@@ -1854,15 +1796,9 @@ for a succinct library.
                 <span class="k">break</span>
         
         <span class="k">try</span><span class="p">:</span>
-<<<<<<< HEAD
             <span class="n">user</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;birth_date&#39;</span><span class="p">),</span> <span class="s">&quot;%B </span><span class="si">%d</span><span class="s">&quot;</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">user</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;birth_date&#39;</span><span class="p">)</span>
-=======
-            <span class="n">user</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;birth_date&#39;</span><span class="p">),</span> <span class="s">&quot;%B </span><span class="si">%d</span><span class="s">&quot;</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="n">user</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;birth_date&#39;</span><span class="p">)</span>
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
         
         <span class="k">return</span> <span class="n">user</span>
 
@@ -1873,7 +1809,6 @@ for a succinct library.
 <span class="sd">    </span>
 <span class="sd">    * Dashboard: https://oauth.yandex.com/client/my</span>
 <span class="sd">    * Docs: http://api.yandex.com/oauth/doc/dg/reference/obtain-access-token.xml</span>
-<<<<<<< HEAD
 <span class="sd">    * API reference:</span>
 
 <span class="sd">    Supported :class:`.User` properties:</span>
@@ -1899,23 +1834,17 @@ for a succinct library.
 <span class="sd">    * postal_code</span>
 <span class="sd">    * timezone</span>
 
-=======
-<span class="sd">    * API reference: </span>
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s">&#39;https://oauth.yandex.com/authorize&#39;</span>
     <span class="n">access_token_url</span> <span class="o">=</span> <span class="s">&#39;https://oauth.yandex.com/token&#39;</span>
     <span class="n">user_info_url</span> <span class="o">=</span> <span class="s">&#39;https://login.yandex.ru/info&#39;</span>
-<<<<<<< HEAD
 
     <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="n">username</span><span class="o">=</span><span class="bp">True</span>
     <span class="p">)</span>
-=======
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
     
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_x_credentials_parser</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -1932,10 +1861,7 @@ for a succinct library.
         <span class="n">user</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;display_name&#39;</span><span class="p">)</span>
         <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;Sex&#39;</span><span class="p">)</span>
         <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;Default_email&#39;</span><span class="p">)</span>
-<<<<<<< HEAD
         <span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;login&#39;</span><span class="p">)</span>
-=======
->>>>>>> 562bfc53a2338d3eb598c603e5720b780acf32ee
         
         <span class="k">try</span><span class="p">:</span>
             <span class="n">user</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;birthday&#39;</span><span class="p">),</span> <span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s">&quot;</span><span class="p">)</span>
