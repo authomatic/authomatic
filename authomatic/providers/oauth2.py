@@ -1162,7 +1162,7 @@ class Reddit(OAuth2):
                     'class_': oauth2.Reddit,
                     'consumer_key': '#####',
                     'consumer_secret': '#####',
-                    'access_headers': {'User-Agent': 'Andy Pipkin's App'},
+                    'access_headers': {'User-Agent': "Andy Pipkin's App"},
                 }
             }
 

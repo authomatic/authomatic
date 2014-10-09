@@ -11,10 +11,12 @@ import webapp2
 from authomatic import Authomatic
 from authomatic.adapters import Webapp2Adapter
 
-
-
-# import config
-import config_public as config
+if 'development' in os.environ['SERVER_SOFTWARE'].lower():
+    import config
+    logging.info('imported config')
+else:
+    import config_public as config
+    logging.info('public config')
 
 authomatic = Authomatic(config=config.config,
                         secret=config.SECRET,
