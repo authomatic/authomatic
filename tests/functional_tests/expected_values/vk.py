@@ -1,4 +1,5 @@
 import datetime
+import re
 
 import fixtures
 import constants
@@ -9,6 +10,7 @@ conf = fixtures.get_configuration('vk')
 
 BIRTH_DATE = datetime.datetime.strptime(conf.user_birth_date[:10], '%Y-%m-%d')
 FORMATTED_DATE = datetime.datetime.strftime(BIRTH_DATE, '%d.%m.%Y')
+PICTURE = re.compile(r'http://[A-Za-z0-9]+\.vk\.me/[A-Za-z0-9-/]+\.jpg')
 
 CONFIG = {
     'login_xpath': '//*[@id="box"]/div/input[5]',
@@ -35,7 +37,7 @@ CONFIG = {
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
-        'picture': conf.user_picture,
+        'picture': PICTURE,
         'postal_code': None,
         'timezone': conf.user_timezone,
         'username': None,
@@ -48,7 +50,6 @@ CONFIG = {
         conf.user_gender,
         conf.user_id,
         conf.user_last_name,
-        conf.user_picture.replace('/', r'\/'),
         conf.user_timezone,
 
         # User info JSON keys

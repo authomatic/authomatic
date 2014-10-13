@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 import os
+import re
 import time
 
 from selenium.webdriver.common.keys import Keys
@@ -231,7 +232,12 @@ class TestUser(object):
     def fixture(self, app, provider, browser):
         def f(property_name):
             value = browser.find_element_by_id(property_name).text or None
-            assert value == provider['user'][property_name]
+            expected = provider['user'][property_name]
+
+            if isinstance(expected, type(re.compile(''))):
+                assert expected.match(value)
+            else:
+                assert value == expected
         return f
 
     def test_id(self, fixture):
