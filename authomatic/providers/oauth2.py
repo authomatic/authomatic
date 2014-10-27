@@ -409,6 +409,8 @@ class Amazon(OAuth2):
     * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/content/registration
     * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/docs/customer_profile.html
     * Docs: https://images-na.ssl-images-amazon.com/images/G/01/lwa/dev/docs/website-developer-guide._TTH_.pdf
+    
+    Note: Amazon will only accept a return_uri that uses HTTPS, and will therefore not work on localhost
 
             CONFIG = {
                 'amazon': {
