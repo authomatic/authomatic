@@ -36,7 +36,7 @@ from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 import authomatic.core as core
 
 __all__ = ['OAuth2', 'Behance', 'Bitly', 'Cosm', 'DeviantART', 'Facebook', 'Foursquare', 'GitHub',
-           'Google', 'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive', 'Yammer', 'Yandex']
+           'Google', 'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive', 'Yammer', 'Yandex', 'Amazon',]
 
 
 class OAuth2(providers.AuthorizationProvider):
@@ -400,6 +400,66 @@ class OAuth2(providers.AuthorizationProvider):
             self._log(logging.INFO, 'Redirecting user to {0}.'.format(request_elements.full_url))
             
             self.redirect(request_elements.full_url)
+
+class Amazon(OAuth2):
+    """
+    Amazon |oauth2| provider.
+
+    * Dashboard:https://developer.amazon.com/home.html
+    * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/content/registration
+    * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/docs/customer_profile.html
+    * Docs: https://images-na.ssl-images-amazon.com/images/G/01/lwa/dev/docs/website-developer-guide._TTH_.pdf
+
+            CONFIG = {
+                'amazon': {
+                    'class_': oauth2.Amazon,
+                    'consumer_key': '#####################################',
+                    'consumer_secret': '###################################',
+                    'scope' : ['profile', 'postal_code']
+                }
+            }
+    Available scopes:
+    * profile (CustomerId, Name, PrimaryEmail)
+    * profile:user_id (CustomerId)
+    * postal_code (PostalCode)
+
+    * CustomerId
+    * Name
+    * PostalCode
+    * PrimaryEmail
+    """
+
+    user_authorization_url = 'https://www.amazon.com/ap/oa'
+    access_token_url = 'https://api.amazon.com/auth/o2/token'
+    user_info_url = 'https://api.amazon.com/user/profile'
+    user_info_scope = ['profile', 'postal_code']
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        email=True,
+        id=True,
+        name=True,
+    )
+
+    def _x_scope_parser(self, scope):
+        """
+        Amazon has space-separated scopes
+        """
+        return ' '.join(scope)
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.id = data.get('user_id')
+        user.name = data.get('name')
+        user.email = data.get('email')
+        user.postal_code = data.get('postal_code')
+
+        return user
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
 
 
 class Behance(OAuth2):
@@ -1622,4 +1682,4 @@ class Yandex(OAuth2):
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers don't change!
 PROVIDER_ID_MAP = [OAuth2, Behance, Bitly, Cosm, DeviantART, Facebook, Foursquare, GitHub, Google, LinkedIn,
-          PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex]
+          PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex, Amazon]
