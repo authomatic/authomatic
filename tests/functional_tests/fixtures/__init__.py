@@ -122,7 +122,8 @@ def get_configuration(provider):
 ASSEMBLED_CONFIG = {}
 expected_values_path = path.dirname(expected_values.__file__)
 
-# Loop through all modules of the expected_values package.
+# Loop through all modules of the expected_values package
+# except the _template.py
 for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):
     # Import the module
     mod = importer.find_module(name).load_module(name)
