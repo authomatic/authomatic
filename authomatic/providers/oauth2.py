@@ -12,6 +12,7 @@ Providers which implement the |oauth2|_ protocol.
     Bitly
     Cosm
     DeviantART
+    Eventbrite
     Facebook
     Foursquare
     GitHub
@@ -594,12 +595,40 @@ class DeviantART(OAuth2):
         user.picture = data.get('usericonurl')
         return user
 
+
 class Eventbrite(OAuth2):
     """
     Eventbrite |oauth2| provider.
+
+    Thanks to `Paul Brown <http://www.paulsprogrammingnotes.com/>`__.
     
     * Dashboard: http://www.eventbrite.com/myaccount/apps/
-    * Docs: http://developer.eventbrite.com/docs/
+    * Docs: https://developer.eventbrite.com/docs/auth/
+    * API: http://developer.eventbrite.com/docs/
+
+    Supported :class:`.User` properties:
+
+    * email
+    * first_name
+    * id
+    * last_name
+    * name
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * gender
+    * link
+    * locale
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+    * username
+
     """
 
     user_authorization_url = 'https://www.eventbrite.com/oauth/authorize'
@@ -607,41 +636,29 @@ class Eventbrite(OAuth2):
     user_info_url = 'https://www.eventbriteapi.com/v3/users/me'
     
     supported_user_attributes = core.SupportedUserAttributes(
-        id=True,
         email=True,
-        name=True,
         first_name=True,
+        id=True,
         last_name=True,
+        name=True,
     )
-    
-    type_id = 100017 # prevents AttributeError: 'module' object has no attribute 'PROVIDER_ID_MAP'
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
-        credentials.token = data.get('access_token')
         if data.get('token_type') == 'bearer':
-            credentials.token_type = cls.BEARER # prevents ValueError: u'bearer' is not in list
+            credentials.token_type = cls.BEARER
         return credentials
     
     @staticmethod
     def _x_user_parser(user, data):
-        """
-        Use this to populate the User object with data from JSON
-        returned by provider on User.update().
-        """      
-        
-        user.id = data.get('id')
-        _emails = data.get('emails', [])
-        for email in _emails:
-            if email.get('type', '') == 'primary':
-                user.email = email.get('address')
+        for email in data.get('emails', []):
+            if email.get('primary'):
+                user.email = email.get('email')
                 break
-        user.first_name = data.get('first_name')
-        user.last_name = data.get('last_name')
-        user.name = data.get('name')
-        
+
         return user
-        
+
+
 class Facebook(OAuth2):
     """
     Facebook |oauth2| provider.
@@ -1669,4 +1686,4 @@ class Yandex(OAuth2):
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers don't change!
 PROVIDER_ID_MAP = [OAuth2, Behance, Bitly, Cosm, DeviantART, Facebook, Foursquare, GitHub, Google, LinkedIn,
-          PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex]
+          PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex, Eventbrite]

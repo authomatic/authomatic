@@ -45,11 +45,13 @@ Features
 *	JavaScript library as a bonus.
 *	Out of the box support for:
 
-	*	|oauth1|_ providers: **Bitbucket**, **Flickr**, **Meetup**, **Plurk**, **Twitter**,
-		**Tumblr**, **UbuntuOne**, **Vimeo**, **Xero**, **Xing** and **Yahoo**.
-	*	|oauth2|_ providers: **Behance**, **Bitly**, **Cosm**, **DeviantART**, **Facebook**,
-		**Foursquare**, **GitHub**, **Google**, **LinkedIn**, **PayPal**, **Reddit**, **Viadeo**,
-		**VK**, **WindowsLive**, **Yammer** and **Yandex**.
+	*	|oauth1|_ providers: **Bitbucket**, **Flickr**, **Meetup**, **Plurk**,
+	    **Twitter**, **Tumblr**, **UbuntuOne**, **Vimeo**, **Xero**, **Xing**
+	    and **Yahoo**.
+	*	|oauth2|_ providers: **Behance**, **Bitly**, **Cosm**, **DeviantART**,
+	    **Eventbrite**, **Facebook**, **Foursquare**, **GitHub**, **Google**,
+	    **LinkedIn**, **PayPal**, **Reddit**, **Viadeo**, **VK**,
+	    **WindowsLive**, **Yammer** and **Yandex**.
 	*	|pyopenid|_ and |gae|_ based |openid|_.
 
 License and Requirements
@@ -57,7 +59,7 @@ License and Requirements
 
 The package is licensed under
 `MIT license <http://en.wikipedia.org/wiki/MIT_License>`__
-and requires **Python 2.6**.
+and requires **Python 2.6** and higher, but doesn't support **Python 3** yet.
 
 Live Demo
 =========

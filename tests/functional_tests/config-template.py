@@ -114,6 +114,12 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
     },
+    'eventbrite': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': '??????????',
+    },
     'facebook': {
         'consumer_key': '##########',
         'consumer_secret': '##########',

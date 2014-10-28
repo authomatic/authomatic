@@ -1,6 +1,8 @@
 Version 0.0.10 (development)
 ----------------------------
 
+* Added the :class:`.oauth2.Eventbrite` provider.
+
 Version 0.0.9
 -------------
 
