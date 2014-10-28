@@ -125,8 +125,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        # This value changes when switching from and to Daylight Saving Time
-        'user_timezone': '??????????',
     },
     'foursquare': {
         'consumer_key': '##########',

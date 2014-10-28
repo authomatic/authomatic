@@ -1,3 +1,5 @@
+import re
+
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -33,7 +35,7 @@ CONFIG = {
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
-        'timezone': conf.user_timezone,
+        'timezone': re.compile(r'\d+'),
     },
     'content_should_contain': [
         conf.user_id,
@@ -43,7 +45,6 @@ CONFIG = {
         conf.user_gender,
         LINK.replace('/', '\/'),
         conf.user_locale,
-        conf.user_timezone,
 
         # User info JSON keys
         'id', 'bio', 'education', 'school', 'name', 'type', 'with', 'year',
