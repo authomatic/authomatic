@@ -88,7 +88,11 @@ def get_configuration(provider):
     # Merge and override common settings with provider settings.
     conf = {}
     conf.update(config.COMMON)
-    conf.update(config.PROVIDERS[provider])
+    try:
+        conf.update(config.PROVIDERS[provider])
+    except KeyError:
+        raise Exception('No record for the provider "{0}" was not found in the '
+                        'config!'.format(provider))
 
     class_name = '{0}Configuration'.format(provider.capitalize())
     Res = namedtuple(class_name, sorted(conf.keys()))
