@@ -31,4 +31,12 @@ CONFIG = {
         # OpenID provider dependent on the python-openid package.
         'class_': openid.OpenID,
     }
+    
+    'amazon': {
+        'class_': oauth2.Amazon,
+        'consumer_key': '##########################',
+        'consumer_secret': '##########################',
+        'scope': ['profile', 'postal_code' ],
+        },
+
 }
