@@ -782,9 +782,14 @@ class Yahoo(OAuth1):
         
         user.picture = _user.get('image', {}).get('imageUrl')
         
-        user.city, user.country = _user.get('location', ',').split(',')
-        user.city = user.city.strip()
-        user.country = user.country.strip()
+        try:
+            user.city, user.country = _user.get('location', ',').split(',')
+            user.city = user.city.strip()
+            user.country = user.country.strip()
+        except ValueError:
+            # probably user hasn't activated Yahoo Profile
+            user.city = None
+            user.country = None
         
         _date = _user.get('birthdate')
         _year = _user.get('birthYear')
