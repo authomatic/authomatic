@@ -1,0 +1,7 @@
+Django
+Flask
+pyramid
+liveandletdie
+pytest
+selenium
+Sphinx==1.1.3

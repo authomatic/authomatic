@@ -4,7 +4,7 @@ from xml.etree import ElementTree
 import collections
 import copy
 import datetime
-import exceptions
+from . import exceptions
 import hashlib
 import hmac
 import logging
@@ -12,8 +12,7 @@ import json
 import pickle
 import threading
 import time
-import urllib
-import urlparse
+from six.moves.urllib import parse
 import sys
 
 from authomatic.exceptions import SessionError, CredentialsError, RequestElementsError
@@ -41,7 +40,7 @@ def normalize_dict(dict_):
     """
 
     return dict([(k, v[0] if not type(v) is str and len(v) == 1 else v)
-                 for k, v in dict_.items()])
+                 for k, v in list(dict_.items())])
 
 
 def items_to_dict(items):
@@ -120,8 +119,7 @@ def provider_id():
 
 def escape(s):
     """Escape a URL including any /."""
-    return urllib.quote(s.encode('utf-8'), safe='~')
-
+    return parse.quote(s.encode('utf-8'), safe='~')
 
 def json_qs_parser(body):
     """
@@ -134,7 +132,6 @@ def json_qs_parser(body):
         :class:`dict`, :class:`list` if input is JSON or query string,
         :class:`xml.etree.ElementTree.Element` if XML.
     """
-
     try:
         # Try JSON first.
         return json.loads(body)
@@ -148,7 +145,7 @@ def json_qs_parser(body):
         pass
 
     # Finally query string.
-    return dict(urlparse.parse_qsl(body))
+    return dict(parse.parse_qsl(body))
 
 
 def import_string(import_name, silent=False):
@@ -177,7 +174,7 @@ def resolve_provider_class(class_):
     :param class_name: :class:`string` or :class:`authomatic.providers.BaseProvider` subclass.
     """
 
-    if type(class_) in (str, unicode):
+    if type(class_) in (str, str):
         # prepare path for authomatic.providers package
         path = '.'.join([__package__, 'providers', class_])
 
@@ -198,7 +195,7 @@ def id_to_name(config, short_name):
         Value of the id parameter in the :ref:`config` to search for.
     """
 
-    for k, v in config.items():
+    for k, v in list(config.items()):
         if v.get('id') == short_name:
             return k
             break
@@ -236,7 +233,7 @@ class ReprMixin(object):
         # construct keyword arguments
         args = []
 
-        for k, v in self.__dict__.items():
+        for k, v in list(self.__dict__.items()):
 
             # ignore attributes with leading underscores and those listed in _repr_ignore
             if v and not k.startswith('_') and not k in self._repr_ignore:
@@ -352,7 +349,7 @@ class Session(object):
 
         value = 'deleted' if delete else self._serialize(self.data)
 
-        split_url = urlparse.urlsplit(self.adapter.url)
+        split_url = parse.urlsplit(self.adapter.url)
         domain = split_url.netloc.split(':')[0]
 
         # Work-around for issue #11, failure of WebKit-based browsers to accept
@@ -438,7 +435,7 @@ class Session(object):
 
         # 1. Handle non json serializable objects.
         for key in self.NOT_JSON_SERIALIZABLE:
-            if key in data.keys():
+            if key in list(data.keys()):
                 data[key] = pickle.dumps(data[key])
 
 
@@ -447,7 +444,7 @@ class Session(object):
 
         # 3. Encode
         # Percent encoding produces smaller result then urlsafe base64.
-        encoded = urllib.quote(serialized, '')
+        encoded = parse.quote(serialized, '')
 
         # Create timestamp
         timestamp = str(int(time.time()))
@@ -482,14 +479,14 @@ class Session(object):
             return None
 
         # 3. Decode
-        decoded = urllib.unquote(encoded)
+        decoded = parse.unquote(encoded)
 
         # 2. Deserialize
         deserialized = json.loads(decoded)
 
         # 1. Unpickle non json serializable objects.
         for key in self.NOT_JSON_SERIALIZABLE:
-            if key in deserialized.keys():
+            if key in list(deserialized.keys()):
                 deserialized[key] = pickle.loads(str(deserialized[key]))
 
         return deserialized
@@ -860,7 +857,7 @@ class Credentials(ReprMixin):
         concatenated = '\n'.join(stringified)
 
         # Percent encode.
-        return urllib.quote(concatenated, '')
+        return parse.quote(concatenated, '')
 
 
     @classmethod
@@ -882,7 +879,7 @@ class Credentials(ReprMixin):
         if type(credentials) is Credentials:
             return credentials
 
-        decoded = urllib.unquote(credentials)
+        decoded = parse.unquote(credentials)
 
         split = decoded.split('\n')
 
@@ -1120,7 +1117,7 @@ class Response(ReprMixin):
         """
 
         if not self._content:
-            self._content = self.httplib_response.read()
+            self._content = self.httplib_response.read().decode()
         return self._content
 
 
@@ -1202,7 +1199,7 @@ class RequestElements(tuple):
         Query string of the request.
         """
 
-        return urllib.urlencode(self.params)
+        return parse.urlencode(self.params)
 
     @property
     def full_url(self):
