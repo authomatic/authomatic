@@ -3,6 +3,7 @@
 import os
 import re
 import time
+import urlparse
 
 from selenium.webdriver.common.keys import Keys
 import pytest
@@ -13,7 +14,6 @@ from tests.functional_tests import fixtures
 import constants
 
 
-HOME = 'http://{0}:{1}/'.format(config.HOST_ALIAS, config.PORT)
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
 PROVIDERS = dict((k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items() if
@@ -21,9 +21,10 @@ PROVIDERS = dict((k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items() if
 APPS = {
     'Flask': liveandletdie.Flask(
         os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
-        suppress_output=False,
         host=config.HOST,
-        port=config.PORT
+        port=config.PORT,
+        check_url=config.HOST_ALIAS,
+        ssl=True
     ),
 }
 
@@ -47,7 +48,7 @@ def app(request):
 
     try:
         # Run the live server.
-        _app.live(kill=True)
+        _app.live(kill_port=True)
     except Exception as e:
         # Skip test if not started.
         pytest.fail(e.message)
@@ -57,7 +58,7 @@ def app(request):
 
 
 @pytest.fixture(scope='module', params=PROVIDERS)
-def provider(request, browser):
+def provider(request, browser, app):
     """Runs for each provider."""
 
     _provider = fixtures.ASSEMBLED_CONFIG[request.param]
@@ -65,7 +66,7 @@ def provider(request, browser):
     conf = fixtures.get_configuration(request.param)
 
     # Andy types the login handler url to the address bar.
-    browser.get(HOME + 'login/' + _provider['name'])
+    browser.get(urlparse.urljoin(app.check_url, 'login/' + _provider['name']))
 
     # Andy authenticates by the provider.
     login_xpath = _provider.get('login_xpath')
@@ -105,7 +106,7 @@ def provider(request, browser):
 class TestCredentials(object):
 
     @pytest.fixture()
-    def fixture(self, app, provider, browser):
+    def fixture(self, provider, browser):
         def f(property_name):
             id_ = 'original-credentials-{0}'.format(property_name)
             value = browser.find_element_by_id(id_).text or None
