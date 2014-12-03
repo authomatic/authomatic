@@ -23,6 +23,7 @@ HOST_ALIAS = 'authomatic.com'
 # This is a convenience to easily exclude providers from tests by commenting
 # them out.
 INCLUDE_PROVIDERS = [
+    'amazon',
     'behance',
     'bitly',
     'deviantart',
@@ -97,6 +98,12 @@ COMMON = {
 # Values from COMMON will be overriden by values from PROVIDERS[provider_name]
 # if set.
 PROVIDERS = {
+    'amazon': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_id': '??????????',
+        'user_password': '##########',
+    },
     'behance': {
         'consumer_key': '##########',
         'consumer_secret': '##########',

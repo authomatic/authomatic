@@ -8,6 +8,7 @@ Providers which implement the |oauth2|_ protocol.
 .. autosummary::
     
     OAuth2
+    Amazon
     Behance
     Bitly
     Cosm
@@ -36,8 +37,11 @@ from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 import authomatic.core as core
 
-__all__ = ['OAuth2', 'Behance', 'Bitly', 'Cosm', 'DeviantART', 'Eventbrite', 'Facebook', 'Foursquare', 'GitHub',
-           'Google', 'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive', 'Yammer', 'Yandex']
+
+__all__ = ['OAuth2', 'Amazon', 'Behance', 'Bitly', 'Cosm', 'DeviantART',
+           'Eventbrite', 'Facebook', 'Foursquare', 'GitHub', 'Google',
+           'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive',
+           'Yammer', 'Yandex']
 
 
 class OAuth2(providers.AuthorizationProvider):
@@ -401,6 +405,74 @@ class OAuth2(providers.AuthorizationProvider):
             self._log(logging.INFO, 'Redirecting user to {0}.'.format(request_elements.full_url))
             
             self.redirect(request_elements.full_url)
+
+
+class Amazon(OAuth2):
+    """
+    Amazon |oauth2| provider.
+
+    Thanks to `Ghufran Syed <https://github.com/ghufransyed>`__.
+
+    * Dashboard: https://developer.amazon.com/home.html
+    * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/docs/conceptual_overview.html
+    * API reference: https://developer.amazon.com/public/apis
+    
+    .. note::
+
+        Amazon only accepts **redirect_uri** with **https** schema,
+        Therefore the *login handler* must also be accessible through **https**.
+
+    Supported :class:`.User` properties:
+
+    * email
+    * id
+    * name
+    * postal_code
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * first_name
+    * gender
+    * last_name
+    * link
+    * locale
+    * nickname
+    * phone
+    * picture
+    * timezone
+    * username
+
+    """
+
+    user_authorization_url = 'https://www.amazon.com/ap/oa'
+    access_token_url = 'https://api.amazon.com/auth/o2/token'
+    user_info_url = 'https://api.amazon.com/user/profile'
+    user_info_scope = ['profile', 'postal_code']
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        email=True,
+        id=True,
+        name=True,
+        postal_code=True
+    )
+
+    def _x_scope_parser(self, scope):
+        # Amazon has space-separated scopes
+        return ' '.join(scope)
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.id = data.get('user_id')
+        return user
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
 
 
 class Behance(OAuth2):
@@ -1686,4 +1758,4 @@ class Yandex(OAuth2):
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers don't change!
 PROVIDER_ID_MAP = [OAuth2, Behance, Bitly, Cosm, DeviantART, Facebook, Foursquare, GitHub, Google, LinkedIn,
-          PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex, Eventbrite]
+          PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex, Eventbrite, Amazon]
