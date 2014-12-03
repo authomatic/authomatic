@@ -8,6 +8,7 @@ Providers which implement the |oauth2|_ protocol.
 .. autosummary::
     
     OAuth2
+    Amazon
     Behance
     Bitly
     Cosm
@@ -405,34 +406,45 @@ class OAuth2(providers.AuthorizationProvider):
             
             self.redirect(request_elements.full_url)
 
+
 class Amazon(OAuth2):
     """
     Amazon |oauth2| provider.
 
-    * Dashboard:https://developer.amazon.com/home.html
-    * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/content/registration
-    * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/docs/customer_profile.html
-    * Docs: https://images-na.ssl-images-amazon.com/images/G/01/lwa/dev/docs/website-developer-guide._TTH_.pdf
+    Thanks to `Ghufran Syed <https://github.com/ghufransyed>`__.
+
+    * Dashboard: https://developer.amazon.com/home.html
+    * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/docs/conceptual_overview.html
+    * API reference: https://developer.amazon.com/public/apis
     
-    Note: Amazon will only accept a return_uri that uses HTTPS, and will therefore not work on localhost
+    .. note::
 
-            CONFIG = {
-                'amazon': {
-                    'class_': oauth2.Amazon,
-                    'consumer_key': '#####################################',
-                    'consumer_secret': '###################################',
-                    'scope' : ['profile', 'postal_code']
-                }
-            }
-    Available scopes:
-    * profile (CustomerId, Name, PrimaryEmail)
-    * profile:user_id (CustomerId)
-    * postal_code (PostalCode)
+        Amazon only accepts **redirect_uri** with **https** schema,
+        Therefore the *login handler* must also be accessible through **https**.
 
-    * CustomerId
-    * Name
-    * PostalCode
-    * PrimaryEmail
+    Supported :class:`.User` properties:
+
+    * email
+    * id
+    * name
+    * postal_code
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * first_name
+    * gender
+    * last_name
+    * link
+    * locale
+    * nickname
+    * phone
+    * picture
+    * timezone
+    * username
+
     """
 
     user_authorization_url = 'https://www.amazon.com/ap/oa'
@@ -444,21 +456,16 @@ class Amazon(OAuth2):
         email=True,
         id=True,
         name=True,
+        postal_code=True
     )
 
     def _x_scope_parser(self, scope):
-        """
-        Amazon has space-separated scopes
-        """
+        # Amazon has space-separated scopes
         return ' '.join(scope)
 
     @staticmethod
     def _x_user_parser(user, data):
         user.id = data.get('user_id')
-        user.name = data.get('name')
-        user.email = data.get('email')
-        user.postal_code = data.get('postal_code')
-
         return user
 
     @classmethod

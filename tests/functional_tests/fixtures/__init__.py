@@ -96,18 +96,18 @@ def get_configuration(provider):
     # Add additional class attributes which are not allowed to be passed
     # to the namedtuple
     Res.email_escaped = conf['user_email'].replace('@', '\u0040')
-    Res.no_email = [conf['user_email'], Res.email_escaped, 'email', 'e-mail']
-    Res.no_phone = [conf['user_phone'], 'phone']
     Res.no_birth_date = [conf['user_birth_year'], 'birth']
-    Res.no_gender = [conf['user_gender'], 'gender']
-    Res.no_locale = [conf['user_locale'], 'language', 'locale']
+    Res.no_city = [conf['user_city'], 'city']
+    Res.no_email = [conf['user_email'], Res.email_escaped, 'email', 'e-mail']
     Res.no_first_name = ['"{0}"'.format(conf['user_first_name']), 'first']
     Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last']
+    Res.no_gender = [conf['user_gender'], 'gender']
+    Res.no_locale = [conf['user_locale'], 'language', 'locale']
     Res.no_nickname = ['nickname', conf['user_nickname']]
-    Res.no_username = ['username', '"{}"'.format(conf['user_username'])]
-    Res.no_timezone = ['timezone']
+    Res.no_phone = [conf['user_phone'], 'phone']
     Res.no_postal_code = [conf['user_postal_code'], 'postal', 'zip']
-    Res.no_city = [conf['user_city'], 'city']
+    Res.no_timezone = ['timezone']
+    Res.no_username = ['username', '"{}"'.format(conf['user_username'])]
     Res.no_location = [conf['user_country'], 'city',
         'country', 'location'] + Res.no_postal_code + Res.no_city
 
