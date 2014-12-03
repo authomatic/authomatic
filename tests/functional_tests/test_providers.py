@@ -51,7 +51,7 @@ def app(request):
         _app.live(kill_port=True)
     except Exception as e:
         # Skip test if not started.
-        pytest.fail(e.message)
+        pytest.exit(e.message)
 
     request.addfinalizer(lambda: _app.die())
     return _app
