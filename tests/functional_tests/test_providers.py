@@ -104,17 +104,21 @@ def provider(request, browser, app):
 
 
 class TestCredentials(object):
-
     @pytest.fixture()
-    def fixture(self, provider, browser):
-        def f(property_name):
+    def fixture(self, app, provider, browser):
+        def f(property_name, coerce=None):
             id_ = 'original-credentials-{0}'.format(property_name)
             value = browser.find_element_by_id(id_).text or None
 
             expected = provider['credentials'][property_name]
+
             if expected is True:
                 assert value
             else:
+                if coerce is not None and isinstance(expected, basestring):
+                    expected = coerce(expected)
+                    value = coerce(value)
+
                 assert value == expected
         return f
 
@@ -130,7 +134,7 @@ class TestCredentials(object):
         fixture('provider_type_id')
 
     def test__expiration_time(self, fixture):
-        fixture('_expiration_time')
+        fixture('_expiration_time', float)
 
     def test_consumer_key(self, fixture):
         fixture('consumer_key')
@@ -148,7 +152,7 @@ class TestCredentials(object):
         fixture('token_secret')
 
     def test__expire_in(self, fixture):
-        fixture('_expire_in')
+        fixture('_expire_in', float)
 
     def test_provider_name(self, fixture):
         fixture('provider_name')
@@ -169,7 +173,7 @@ class TestCredentialsChange(object):
         supports_refresh = refresh_status != \
                            constants.CREDENTIALS_REFRESH_NOT_SUPPORTED
 
-        def f(property_name):
+        def f(property_name, coerce=None):
             if not supports_refresh:
                 pytest.skip("Doesn't support credentials refresh.")
 
@@ -180,10 +184,14 @@ class TestCredentialsChange(object):
                 original_id = 'original-credentials-{0}'.format(property_name)
                 changed_id = 'refreshed-credentials-{0}'.format(property_name)
 
-                original_val = browser.find_element_by_id(original_id).text or \
-                               None
-                changed_val = browser.find_element_by_id(changed_id).text or \
-                              None
+                original_val = browser.find_element_by_id(original_id).text\
+                    or None
+                changed_val = browser.find_element_by_id(changed_id).text\
+                    or None
+
+                if coerce is not None:
+                    original_val = coerce(original_val)
+                    changed_val = coerce(changed_val)
 
                 expected = changed_values[property_name]
                 if expected is not None:
@@ -198,7 +206,7 @@ class TestCredentialsChange(object):
         fixture('provider_type_id')
 
     def test__expiration_time(self, fixture):
-        fixture('_expiration_time')
+        fixture('_expiration_time', float)
 
     def test_consumer_key(self, fixture):
         fixture('consumer_key')
@@ -216,7 +224,7 @@ class TestCredentialsChange(object):
         fixture('token_secret')
 
     def test__expire_in(self, fixture):
-        fixture('_expire_in')
+        fixture('_expire_in', float)
 
     def test_provider_name(self, fixture):
         fixture('provider_name')
