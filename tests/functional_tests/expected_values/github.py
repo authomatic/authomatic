@@ -1,3 +1,5 @@
+import re
+
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -6,7 +8,8 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('github')
 
 LINK = 'https://github.com/{0}'.format(conf.user_username)
-PICTURE = 'https://avatars.githubusercontent.com/u/{0}?v=2'.format(conf.user_id)
+PICTURE = re.compile('https://avatars\.githubusercontent.com/u/{0}\?v=\d'
+                     .format(conf.user_id))
 
 CONFIG = {
     'login_xpath': '//*[@id="login_field"]',
