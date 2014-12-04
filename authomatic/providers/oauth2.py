@@ -478,10 +478,16 @@ class Amazon(OAuth2):
 class Behance(OAuth2):
     """
     Behance |oauth2| provider.
+
+    .. note::
+
+        Behance doesn't support third party authorization anymore,
+        which renders this class pretty much useless.
     
     * Dashboard: http://www.behance.net/dev/apps
     * Docs: http://www.behance.net/dev/authentication
     * API reference: http://www.behance.net/dev/api/endpoints/
+
     """
     
     user_authorization_url = 'https://www.behance.net/v2/oauth/authenticate'

@@ -24,7 +24,7 @@ HOST_ALIAS = 'authomatic.com'
 # them out.
 INCLUDE_PROVIDERS = [
     'amazon',
-    'behance',
+    # 'behance', # Behance doesn't support third party authorization anymore.
     'bitly',
     'deviantart',
     'facebook',
@@ -104,12 +104,13 @@ PROVIDERS = {
         'user_id': '??????????',
         'user_password': '##########',
     },
-    'behance': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
+    # Behance doesn't support third party authorization anymore.
+    # 'behance': {
+    #     'consumer_key': '##########',
+    #     'consumer_secret': '##########',
+    #     'user_password': '##########',
+    #     'user_id': '??????????',
+    # },
     'bitly': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
