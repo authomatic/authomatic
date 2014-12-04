@@ -2,6 +2,8 @@ Version 0.0.10 (development)
 ----------------------------
 
 * Added the :class:`.oauth2.Eventbrite` provider.
+* Added the :class:`.oauth2.Amaxon` provider.
+* Improved OAuth 2.0 Error Handling.
 
 Version 0.0.9
 -------------
