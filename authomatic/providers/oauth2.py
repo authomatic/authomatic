@@ -370,11 +370,13 @@ class OAuth2(providers.AuthorizationProvider):
             # Phase 2 after redirect with error
             #===================================================================
             
-            error_reason = self.params.get('error_reason')
-            error_description = self.params.get('error_description') or error_message
-            
-            if error_reason == 'user_denied':
-                raise CancellationError(error_description, url=self.user_authorization_url)
+            error_reason = self.params.get('error_reason') or error
+            error_description = self.params.get('error_description') \
+                                or error_message or error
+
+            if 'denied' in error_reason:
+                raise CancellationError(error_description,
+                                        url=self.user_authorization_url)
             else:
                 raise FailureError(error_description, url=self.user_authorization_url)
             
