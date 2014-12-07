@@ -12,10 +12,12 @@
   {% set safe_content = content.strip('"')|replace("'", "&#8217;")|default('', None)|safe or '""' %}
   {% set safe_cred_response = credentials_response.content|default('', None)|safe or '""' %}
 
-  <h1>User</h1>
+  <hr/>
+  <h1>Login result for provider: <span id="login-result">{{ result.provider.name }}</span></h1>
+  <h2>User</h2>
   <table>
     {% for property in user_properties %}
-      <tr">
+      <tr>
         <td><strong>{{ property }}:&nbsp;</strong></td>
         <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
       </tr>
@@ -27,7 +29,7 @@
   </table>
 
   {% if original_credentials %}
-    <h1>Original Credentials</h1>
+    <h2>Original Credentials</h2>
     <table>
       {% for k, v in original_credentials.items() %}
       <tr class="{% if k == 'config' %}hidden{% endif %}"}>
@@ -37,11 +39,11 @@
       {% endfor %}
     </table>
 
-    <h2>Credentials Refresh</h2>
+    <h3>Credentials Refresh</h3>
     <h4>Refresh Response Status: <span id="original-credentials-refresh_status">{{ credentials_response.status|default('REFRESH NOT SUPPORTED') }}</span></h4>
     <pre id="credentials-response" class="prettyprint"></pre>
 
-    <h1>Refreshed Credentials</h1>
+    <h2>Refreshed Credentials</h2>
     <table>
       {% for k, v in refreshed_credentials.items() %}
       <tr class="{% if k == 'config' %}hidden{% endif %}"}>
@@ -52,9 +54,9 @@
     </table>
   {% endif %}
 
-  <h2>Human Readable Content</h2>
+  <h3>Human Readable Content</h3>
   <pre id="human-readable-user-content" class="prettyprint"></pre>
-  <h2>User content should contain these strings:</h2>
+  <h3>User content should contain these strings:</h3>
   <pre id="user-content-json-keys" class="prettyprint"></pre>
 
   <script type="text/javascript">
