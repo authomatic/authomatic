@@ -312,15 +312,9 @@ class Future(threading.Thread):
 
 
 class Session(object):
-    """
-    A dictionary-like secure cookie session implementation.
-    """
-
-    # List of keys which values are not json serializable.
-    NOT_JSON_SERIALIZABLE = ['_yadis_services__openid_consumer_',
-                             '_openid_consumer_last_token']
-
-    def __init__(self, adapter, secret, name='authomatic', max_age=600, secure=False):
+    """A dictionary-like secure cookie session implementation."""
+    def __init__(self, adapter, secret, name='authomatic', max_age=600,
+                 secure=False):
         """
         :param str secret:
             Session secret used to sign the session cookie.
@@ -329,7 +323,8 @@ class Session(object):
         :param int max_age:
             Maximum allowed age of session cookie nonce in seconds.
         :param bool secure:
-            If ``True`` the session cookie will be saved wit ``Secure`` attribute.
+            If ``True`` the session cookie will be saved with ``Secure``
+            attribute.
         """
 
         self.adapter = adapter
@@ -337,9 +332,7 @@ class Session(object):
         self.secret = secret
         self.max_age = max_age
         self.secure = secure
-
         self._data = {}
-
 
     def create_cookie(self, delete=None):
         """
@@ -349,32 +342,29 @@ class Session(object):
             If ``True`` the cookie value will be ``deleted`` and the
             Expires value will be ``Thu, 01-Jan-1970 00:00:01 GMT``.
         """
-
         value = 'deleted' if delete else self._serialize(self.data)
-
         split_url = urlparse.urlsplit(self.adapter.url)
         domain = split_url.netloc.split(':')[0]
 
         # Work-around for issue #11, failure of WebKit-based browsers to accept
         # cookies set as part of a redirect response in some circumstances.
-        if not '.' in domain:
+        if '.' not in domain:
             template = '{name}={value}; Path={path}; HttpOnly{secure}{expires}'
         else:
-            template = '{name}={value}; Domain={domain}; Path={path}; HttpOnly{secure}{expires}'
+            template = ('{name}={value}; Domain={domain}; Path={path}; '
+                        'HttpOnly{secure}{expires}')
 
-        return template.format(name=self.name,
-                               value=value,
-                               domain=domain,
-                               path=split_url.path,
-                               secure='; Secure' if self.secure else '',
-                               expires='; Expires=Thu, 01-Jan-1970 00:00:01 GMT' if delete else '')
-
+        return template.format(
+            name=self.name,
+            value=value,
+            domain=domain,
+            path=split_url.path,
+            secure='; Secure' if self.secure else '',
+            expires='; Expires=Thu, 01-Jan-1970 00:00:01 GMT' if delete else ''
+        )
 
     def save(self):
-        """
-        Adds the session cookie to headers.
-        """
-
+        """Adds the session cookie to headers."""
         if self.data:
             # Set the cookie header.
             self.adapter.set_header('Set-Cookie', self.create_cookie())
@@ -382,26 +372,17 @@ class Session(object):
             # Reset data
             self._data = {}
 
-
     def delete(self):
         self.adapter.set_header('Set-Cookie', self.create_cookie(delete=True))
 
-
     def _get_data(self):
-        """
-        Extracts the session data from cookie.
-        """
-
+        """Extracts the session data from cookie."""
         cookie = self.adapter.cookies.get(self.name)
         return self._deserialize(cookie) if cookie else {}
 
-
     @property
     def data(self):
-        """
-        Gets session data lazily.
-        """
-
+        """Gets session data lazily."""
         if not self._data:
             self._data = self._get_data()
         # Always return a dict, even if deserialization returned nothing
@@ -409,23 +390,15 @@ class Session(object):
             self._data = {}
         return self._data
 
-
     def _signature(self, *parts):
-        """
-        Creates signature for the session.
-        """
-
+        """Creates signature for the session."""
         signature = hmac.new(self.secret, digestmod=hashlib.sha1)
         signature.update('|'.join(parts))
         return signature.hexdigest()
 
-
     def _serialize(self, value):
         """
         Converts the value to a signed string with timestamp.
-
-        TODO: Check licence!
-        Taken from `webapp2_extras.securecookie <http://webapp-improved.appspot.com/guide/extras.html>`_.
 
         :param value:
             Object to be serialized.
@@ -436,26 +409,16 @@ class Session(object):
 
         data = copy.deepcopy(value)
 
-        # 1. Handle non json serializable objects.
-        for key in self.NOT_JSON_SERIALIZABLE:
-            if key in data.keys():
-                data[key] = pickle.dumps(data[key])
-
-
-        # 2. Serialize
+        # 1. Serialize
         serialized = json.dumps(data)
 
-        # 3. Encode
+        # 2. Encode
         # Percent encoding produces smaller result then urlsafe base64.
         encoded = urllib.quote(serialized, '')
 
-        # Create timestamp
+        # 3. Concatenate
         timestamp = str(int(time.time()))
-
-        # Create signature
         signature = self._signature(self.name, encoded, timestamp)
-
-        # 4. Concatenate
         return '|'.join([encoded, timestamp, signature])
 
 
@@ -470,7 +433,7 @@ class Session(object):
             Deserialized object.
         """
 
-        # 4. Split
+        # 3. Split
         encoded, timestamp, signature = value.split('|')
 
         # Verify signature
@@ -481,31 +444,22 @@ class Session(object):
         if int(timestamp) < int(time.time()) - self.max_age:
             return None
 
-        # 3. Decode
+        # 2. Decode
         decoded = urllib.unquote(encoded)
 
-        # 2. Deserialize
+        # 1. Deserialize
         deserialized = json.loads(decoded)
 
-        # 1. Unpickle non json serializable objects.
-        for key in self.NOT_JSON_SERIALIZABLE:
-            if key in deserialized.keys():
-                deserialized[key] = pickle.loads(str(deserialized[key]))
-
         return deserialized
-
 
     def __setitem__(self, key, value):
         self._data[key] = value
 
-
     def __getitem__(self, key):
         return self.data.__getitem__(key)
 
-
     def __delitem__(self, key):
         return self._data.__delitem__(key)
-
 
     def get(self, key, default=None):
         return self.data.get(key, default)

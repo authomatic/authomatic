@@ -1,6 +1,8 @@
 Version 0.0.10 (development)
 ----------------------------
 
+* Fixed a bug when saving non-JSON-serializable values to third party sessions
+  by the ``python-openid`` package caused a ``KeyError``.
 * Added the :class:`.oauth2.Eventbrite` provider.
 * Added the :class:`.oauth2.Amaxon` provider.
 * Improved OAuth 2.0 Error Handling.

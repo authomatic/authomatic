@@ -211,6 +211,7 @@ html_theme_options = {
 }
 
 intersphinx_mapping = {
+    'flask': ('http://flask.pocoo.org/docs/', None),
     'python': ('http://docs.python.org/2.7', None),
     'django': ('http://docs.djangoproject.com/en/dev/',
                'http://docs.djangoproject.com/en/dev/_objects/'),

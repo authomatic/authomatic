@@ -21,13 +21,17 @@ Providers which implement the |openid|_ protocol based on the
 # We need absolute import to import from openid library which has the same name as this module
 from __future__ import absolute_import
 import datetime
+import json
 import logging
+import pickle
 import time
 
 from openid import oidutil
 from openid.consumer import consumer
 from openid.extensions import ax, pape, sreg
 from openid.association import Association
+from openid.yadis.manager import YadisServiceManager
+from openid.consumer.discover import OpenIDServiceEndpoint
 
 from authomatic import providers
 from authomatic.exceptions import FailureError, CancellationError, OpenIDError
@@ -69,10 +73,44 @@ XRDS_XML = \
 """
 
 
+class SessionWrapper(object):
+    """Handles JSON serialization of non-JSON-serializable values."""
+
+    NON_JSON_SERIALIZABLE = (YadisServiceManager, OpenIDServiceEndpoint)
+
+    def __init__(self, session, prefix='__not_json_serializable__'):
+        self.session = session
+        self.prefix = prefix
+
+    def __setitem__(self, key, val):
+        if isinstance(val, self.NON_JSON_SERIALIZABLE):
+            self.session[key] = self.prefix + pickle.dumps(val)
+        else:
+            try:
+                json.dumps(val)
+            except TypeError:
+                assert False, (key, val)
+
+    def get(self, key):
+        val = self.session.get(key)
+        if val and val.startswith(self.prefix):
+            split = val.split(self.prefix)[1]
+            unpickled = pickle.loads(split)
+            # import pdb; pdb.set_trace()
+
+            return unpickled
+        else:
+            return val
+
+    def __delitem__(self, key):
+        return self.session.__delitem__(key)
+
+
 class SessionOpenIDStore(object):
     """
-    A very primitive session-based implementation of the :class:`openid.store.interface.OpenIDStore`
-    interface of the `python-openid`_ library.
+    A very primitive session-based implementation of the
+    :class:`openid.store.interface.OpenIDStore` interface of the
+    `python-openid`_ library.
     
     .. warning::
         
@@ -81,40 +119,42 @@ class SessionOpenIDStore(object):
     """
     
     _log = lambda level, message: None
+    ASSOCIATION_KEY = ('authomatic.providers.openid.SessionOpenIDStore:'
+                       'association')
     
     def __init__(self, session, nonce_timeout=None):
         """
         :param int nonce_timeout:
+
             Nonces older than this in seconds will be considered expired.
             Default is 600.
         """
-        
         self.session = session
         self.nonce_timeout = nonce_timeout or 600
     
     def storeAssociation(self, server_url, association):
-        self._log(logging.DEBUG, 'SessionOpenIDStore: Storing association to session.')
+        self._log(logging.DEBUG,
+                  'SessionOpenIDStore: Storing association to session.')
+
         # Always store only one association as a tuple.
-        self.session['oia'] = (server_url, association.handle, association.serialize())
-    
-    
+        self.session[self.ASSOCIATION_KEY] = (server_url, association.handle,
+                                              association.serialize())
+
     def getAssociation(self, server_url, handle=None):
         # Try to get association.
-        assoc = self.session.get('oia')
-        
+        assoc = self.session.get(self.ASSOCIATION_KEY)
         if assoc and assoc[0] == server_url:
             # If found deserialize and return it.
             self._log(logging.DEBUG, 'SessionOpenIDStore: Association found.')
             return Association.deserialize(assoc[2])
         else:
-            self._log(logging.DEBUG, 'SessionOpenIDStore: Association not found.')
-    
-    
+            self._log(logging.DEBUG,
+                      'SessionOpenIDStore: Association not found.')
+
     def removeAssociation(self, server_url, handle):
         # Just inform the caller that it's gone.
         True
-    
-    
+
     def useNonce(self, server_url, timestamp, salt):
         # Evaluate expired nonces as false.
         age = int(time.time()) - int(timestamp)
@@ -273,10 +313,10 @@ class OpenID(providers.AuthenticationProvider):
     
     @providers.login_decorator
     def login(self):
-                
         # Instantiate consumer
         self.store._log = self._log
-        oi_consumer = consumer.Consumer(self.session, self.store)
+        oi_consumer = consumer.Consumer(SessionWrapper(self.session),
+                                        self.store)
         
         # handle realm and XRDS if there is only one query parameter
         if self.use_realm and len(self.params) == 1:
