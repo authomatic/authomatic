@@ -139,7 +139,8 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul class="dropdown ">
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10-development">Version 0.0.10 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>
@@ -272,12 +273,12 @@ for a succinct library.
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#providers" id="id28">Providers</a><ul>
-<li><a class="reference internal" href="#oauth2-providers" id="id29">OAuth 2.0 Providers</a></li>
-<li><a class="reference internal" href="#oauth1-providers" id="id30">OAuth 1.0a Providers</a></li>
-<li><a class="reference internal" href="#openid-providers" id="id31">OpenID Providers</a></li>
-<li><a class="reference internal" href="#google-app-engine-openid-providers" id="id32">Google App Engine OpenID Providers</a></li>
-<li><a class="reference internal" href="#abstract-classes-for-providers" id="id33">Abstract Classes for Providers</a></li>
+<li><a class="reference internal" href="#providers" id="id30">Providers</a><ul>
+<li><a class="reference internal" href="#oauth2-providers" id="id31">OAuth 2.0 Providers</a></li>
+<li><a class="reference internal" href="#oauth1-providers" id="id32">OAuth 1.0a Providers</a></li>
+<li><a class="reference internal" href="#openid-providers" id="id33">OpenID Providers</a></li>
+<li><a class="reference internal" href="#google-app-engine-openid-providers" id="id34">Google App Engine OpenID Providers</a></li>
+<li><a class="reference internal" href="#abstract-classes-for-providers" id="id35">Abstract Classes for Providers</a></li>
 </ul>
 </li>
 </ul>
@@ -476,58 +477,68 @@ the values set in <a class="reference internal" href="config.html"><em>Config</e
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Behance" title="authomatic.providers.oauth2.Behance"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Behance</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Amazon" title="authomatic.providers.oauth2.Amazon"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Amazon</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Bitbucket" title="authomatic.providers.oauth1.Bitbucket"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Bitbucket</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">openid.OpenID</span></tt></a></td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Bitly" title="authomatic.providers.oauth2.Bitly"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Bitly</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Behance" title="authomatic.providers.oauth2.Behance"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Behance</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Flickr" title="authomatic.providers.oauth1.Flickr"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Flickr</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.openid.Yahoo" title="authomatic.providers.openid.Yahoo"><tt class="xref py py-class docutils literal"><span class="pre">openid.Yahoo</span></tt></a></td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Cosm" title="authomatic.providers.oauth2.Cosm"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Cosm</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Bitly" title="authomatic.providers.oauth2.Bitly"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Bitly</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Meetup" title="authomatic.providers.oauth1.Meetup"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Meetup</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.openid.Google" title="authomatic.providers.openid.Google"><tt class="xref py py-class docutils literal"><span class="pre">openid.Google</span></tt></a></td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.DeviantART" title="authomatic.providers.oauth2.DeviantART"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.DeviantART</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Cosm" title="authomatic.providers.oauth2.Cosm"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Cosm</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Plurk" title="authomatic.providers.oauth1.Plurk"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Plurk</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.gaeopenid.GAEOpenID" title="authomatic.providers.gaeopenid.GAEOpenID"><tt class="xref py py-class docutils literal"><span class="pre">gaeopenid.GAEOpenID</span></tt></a></td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Facebook" title="authomatic.providers.oauth2.Facebook"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Facebook</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.DeviantART" title="authomatic.providers.oauth2.DeviantART"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.DeviantART</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Twitter" title="authomatic.providers.oauth1.Twitter"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Twitter</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.gaeopenid.Yahoo" title="authomatic.providers.gaeopenid.Yahoo"><tt class="xref py py-class docutils literal"><span class="pre">gaeopenid.Yahoo</span></tt></a></td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Foursquare" title="authomatic.providers.oauth2.Foursquare"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Foursquare</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Eventbrite" title="authomatic.providers.oauth2.Eventbrite"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Eventbrite</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Tumblr" title="authomatic.providers.oauth1.Tumblr"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Tumblr</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.gaeopenid.Google" title="authomatic.providers.gaeopenid.Google"><tt class="xref py py-class docutils literal"><span class="pre">gaeopenid.Google</span></tt></a></td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.GitHub" title="authomatic.providers.oauth2.GitHub"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.GitHub</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Facebook" title="authomatic.providers.oauth2.Facebook"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Facebook</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.UbuntuOne" title="authomatic.providers.oauth1.UbuntuOne"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.UbuntuOne</span></tt></a></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Google" title="authomatic.providers.oauth2.Google"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Google</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Foursquare" title="authomatic.providers.oauth2.Foursquare"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Foursquare</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Vimeo" title="authomatic.providers.oauth1.Vimeo"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Vimeo</span></tt></a></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.LinkedIn" title="authomatic.providers.oauth2.LinkedIn"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.LinkedIn</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.GitHub" title="authomatic.providers.oauth2.GitHub"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.GitHub</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Xero" title="authomatic.providers.oauth1.Xero"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Xero</span></tt></a></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.PayPal" title="authomatic.providers.oauth2.PayPal"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.PayPal</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Google" title="authomatic.providers.oauth2.Google"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Google</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Yahoo" title="authomatic.providers.oauth1.Yahoo"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Yahoo</span></tt></a></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Reddit" title="authomatic.providers.oauth2.Reddit"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Reddit</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.LinkedIn" title="authomatic.providers.oauth2.LinkedIn"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.LinkedIn</span></tt></a></td>
 <td><a class="reference internal" href="#authomatic.providers.oauth1.Xing" title="authomatic.providers.oauth1.Xing"><tt class="xref py py-class docutils literal"><span class="pre">oauth1.Xing</span></tt></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.PayPal" title="authomatic.providers.oauth2.PayPal"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.PayPal</span></tt></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Reddit" title="authomatic.providers.oauth2.Reddit"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Reddit</span></tt></a></td>
+<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -570,17 +581,23 @@ the values set in <a class="reference internal" href="config.html"><em>Config</e
 <tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.OAuth2" title="authomatic.providers.oauth2.OAuth2"><tt class="xref py py-obj docutils literal"><span class="pre">OAuth2</span></tt></a>(*args,&nbsp;**kwargs)</td>
 <td>Base class for <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> providers.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Behance" title="authomatic.providers.oauth2.Behance"><tt class="xref py py-obj docutils literal"><span class="pre">Behance</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Amazon" title="authomatic.providers.oauth2.Amazon"><tt class="xref py py-obj docutils literal"><span class="pre">Amazon</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>Amazon OAuth 2.0 provider.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Behance" title="authomatic.providers.oauth2.Behance"><tt class="xref py py-obj docutils literal"><span class="pre">Behance</span></tt></a>(*args,&nbsp;**kwargs)</td>
 <td>Behance OAuth 2.0 provider.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Bitly" title="authomatic.providers.oauth2.Bitly"><tt class="xref py py-obj docutils literal"><span class="pre">Bitly</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Bitly" title="authomatic.providers.oauth2.Bitly"><tt class="xref py py-obj docutils literal"><span class="pre">Bitly</span></tt></a>(*args,&nbsp;**kwargs)</td>
 <td>Bitly OAuth 2.0 provider.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Cosm" title="authomatic.providers.oauth2.Cosm"><tt class="xref py py-obj docutils literal"><span class="pre">Cosm</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Cosm" title="authomatic.providers.oauth2.Cosm"><tt class="xref py py-obj docutils literal"><span class="pre">Cosm</span></tt></a>(*args,&nbsp;**kwargs)</td>
 <td>Cosm OAuth 2.0 provider.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.DeviantART" title="authomatic.providers.oauth2.DeviantART"><tt class="xref py py-obj docutils literal"><span class="pre">DeviantART</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.DeviantART" title="authomatic.providers.oauth2.DeviantART"><tt class="xref py py-obj docutils literal"><span class="pre">DeviantART</span></tt></a>(*args,&nbsp;**kwargs)</td>
 <td>DeviantART OAuth 2.0 provider.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.providers.oauth2.Eventbrite" title="authomatic.providers.oauth2.Eventbrite"><tt class="xref py py-obj docutils literal"><span class="pre">Eventbrite</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>Eventbrite OAuth 2.0 provider.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#authomatic.providers.oauth2.Facebook" title="authomatic.providers.oauth2.Facebook"><tt class="xref py py-obj docutils literal"><span class="pre">Facebook</span></tt></a>(*args,&nbsp;**kwargs)</td>
 <td>Facebook OAuth 2.0 provider.</td>
@@ -678,9 +695,71 @@ Use it in the <a class="reference internal" href="config.html"><em>Config</em></
 </dd></dl>
 
 <dl class="class">
+<dt id="authomatic.providers.oauth2.Amazon">
+<em class="property">class </em><tt class="descclassname">authomatic.providers.oauth2.</tt><tt class="descname">Amazon</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#authomatic.providers.oauth2.Amazon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amazon OAuth 2.0 provider.</p>
+<p>Thanks to <a class="reference external" href="https://github.com/ghufransyed">Ghufran Syed</a>.</p>
+<ul class="simple">
+<li>Dashboard: <a class="reference external" href="https://developer.amazon.com/home.html">https://developer.amazon.com/home.html</a></li>
+<li>Docs: <a class="reference external" href="https://developer.amazon.com/public/apis/engage/login-with-amazon/docs/conceptual_overview.html">https://developer.amazon.com/public/apis/engage/login-with-amazon/docs/conceptual_overview.html</a></li>
+<li>API reference: <a class="reference external" href="https://developer.amazon.com/public/apis">https://developer.amazon.com/public/apis</a></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Amazon only accepts <strong>redirect_uri</strong> with <strong>https</strong> schema,
+Therefore the <em>login handler</em> must also be accessible through <strong>https</strong>.</p>
+</div>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>email</li>
+<li>id</li>
+<li>name</li>
+<li>postal_code</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>city</li>
+<li>country</li>
+<li>first_name</li>
+<li>gender</li>
+<li>last_name</li>
+<li>link</li>
+<li>locale</li>
+<li>nickname</li>
+<li>phone</li>
+<li>picture</li>
+<li>timezone</li>
+<li>username</li>
+</ul>
+<p>Accepts additional keyword arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scope</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; <p>List of strings specifying requested permissions as described in the
+<a class="reference external" href="http://tools.ietf.org/html/rfc6749#section-3.3">OAuth 2.0 spec</a>.</p>
+</li>
+<li><strong>offline</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt> the <strong>provider</strong> will be set up to request an <em>offline access token</em>.
+default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>As well as those inherited from <a class="reference internal" href="#authomatic.providers.AuthorizationProvider" title="authomatic.providers.AuthorizationProvider"><tt class="xref py py-class docutils literal"><span class="pre">AuthorizationProvider</span></tt></a> constructor.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="authomatic.providers.oauth2.Behance">
 <em class="property">class </em><tt class="descclassname">authomatic.providers.oauth2.</tt><tt class="descname">Behance</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/oauth2.html#Behance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.oauth2.Behance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Behance OAuth 2.0 provider.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Behance doesn&#8217;t support third party authorization anymore,
+which renders this class pretty much useless.</p>
+</div>
 <ul class="simple">
 <li>Dashboard: <a class="reference external" href="http://www.behance.net/dev/apps">http://www.behance.net/dev/apps</a></li>
 <li>Docs: <a class="reference external" href="http://www.behance.net/dev/authentication">http://www.behance.net/dev/authentication</a></li>
@@ -807,6 +886,58 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 <li>postal_code</li>
 <li>timezone</li>
 </ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.providers.oauth2.Eventbrite">
+<em class="property">class </em><tt class="descclassname">authomatic.providers.oauth2.</tt><tt class="descname">Eventbrite</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#authomatic.providers.oauth2.Eventbrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Eventbrite OAuth 2.0 provider.</p>
+<p>Thanks to <a class="reference external" href="http://www.paulsprogrammingnotes.com/">Paul Brown</a>.</p>
+<ul class="simple">
+<li>Dashboard: <a class="reference external" href="http://www.eventbrite.com/myaccount/apps/">http://www.eventbrite.com/myaccount/apps/</a></li>
+<li>Docs: <a class="reference external" href="https://developer.eventbrite.com/docs/auth/">https://developer.eventbrite.com/docs/auth/</a></li>
+<li>API: <a class="reference external" href="http://developer.eventbrite.com/docs/">http://developer.eventbrite.com/docs/</a></li>
+</ul>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>email</li>
+<li>first_name</li>
+<li>id</li>
+<li>last_name</li>
+<li>name</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>city</li>
+<li>country</li>
+<li>gender</li>
+<li>link</li>
+<li>locale</li>
+<li>nickname</li>
+<li>phone</li>
+<li>picture</li>
+<li>postal_code</li>
+<li>timezone</li>
+<li>username</li>
+</ul>
+<p>Accepts additional keyword arguments:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scope</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; <p>List of strings specifying requested permissions as described in the
+<a class="reference external" href="http://tools.ietf.org/html/rfc6749#section-3.3">OAuth 2.0 spec</a>.</p>
+</li>
+<li><strong>offline</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt> the <strong>provider</strong> will be set up to request an <em>offline access token</em>.
+default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>As well as those inherited from <a class="reference internal" href="#authomatic.providers.AuthorizationProvider" title="authomatic.providers.AuthorizationProvider"><tt class="xref py py-class docutils literal"><span class="pre">AuthorizationProvider</span></tt></a> constructor.</p>
 </dd></dl>
 
 <dl class="class">
@@ -1118,7 +1249,7 @@ config like this:</p>
         <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Reddit</span><span class="p">,</span>
         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;#####&#39;</span><span class="p">,</span>
         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;#####&#39;</span><span class="p">,</span>
-<span class="hll">        <span class="s">&#39;access_headers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s">&#39;Andy Pipkin&#39;</span><span class="n">s</span> <span class="n">App</span><span class="s">&#39;},</span>
+<span class="hll">        <span class="s">&#39;access_headers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s">&quot;Andy Pipkin&#39;s App&quot;</span><span class="p">},</span>
 </span>    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -2460,7 +2591,8 @@ authenticate a <em>claimed identity</em> of a <strong>user</strong>. e.g. <a cla
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10-development">Version 0.0.10 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>

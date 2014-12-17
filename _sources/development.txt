@@ -95,7 +95,7 @@ There are currently only *functional* (or *end-to-end*)
 `Selenium <http://seleniumhq.org>`__ tests.
 They are designed to test the *login procedure* and
 *credentials refreshment* and to discover changes in provider APIs.
-Currently the tests cover 14 |oauth2| providers.
+Currently the tests cover all the |oauth2| providers.
 The tests are written for the `pytest <http://pytest.org/latest/>`__ framework.
 
 To run *functional* tests, you first need to create the
@@ -111,7 +111,7 @@ This is the ``config-template.py`` template:
 
 .. literalinclude:: ../../tests/functional_tests/config-template.py
 
-If you want to run tests for all of the 8 covered providers,
+If you want to run tests for all of the covered providers,
 you should register an **application** and a **user account** by each of them
 and fill out **all possible** settings in the user profile.
 You can exclude providers from the tests by comenting them out of the

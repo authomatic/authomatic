@@ -17,14 +17,14 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
 
-	<title>Tutorials / Examples | Authomatic</title>
+	<title>OAuth 2.0 Provider Implementation Tutorial | Authomatic</title>
     	<link rel="icon" type="image/x-icon" href="../_static/img/favicon.ico" />
 	
 	
 	
-	<meta property="og:title" content="Tutorials / Examples | Authomatic" />
+	<meta property="og:title" content="OAuth 2.0 Provider Implementation Tutorial | Authomatic" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="http://peterhudec.github.io/authomatic/examples/index.html" />
+	<meta property="og:url" content="http://peterhudec.github.io/authomatic/examples/providers.html" />
 	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
 	
 	
@@ -124,12 +124,16 @@
 <li class="toctree-l2"><a class="reference internal" href="../reference/javascript.html">JavaScript</a></li>
 </ul>
 </li>
-<li class="has-dropdown toctree-l1 current"><a class="current reference internal" href="">Tutorials / Examples</a><ul class="dropdown ">
+<li class="has-dropdown toctree-l1 current"><a class="reference internal" href="index.html">Tutorials / Examples</a><ul class="dropdown current">
 <li class="toctree-l2"><a class="reference internal" href="django-simple.html">Simple Django Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flask-simple.html">Simple Flask Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyramid-simple.html">Simple Pyramid Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple.html">Simple Webapp2 Google App Engine Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+<li class="has-dropdown toctree-l2 current"><a class="current reference internal" href="">OAuth 2.0 Provider Implementation Tutorial</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="#add-the-new-provider-to-functional-tests">Add the new provider to functional tests</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../development.html">Development</a><ul class="dropdown ">
@@ -139,8 +143,7 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul class="dropdown ">
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10-development">Version 0.0.10 (development)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>
@@ -155,7 +158,7 @@
 	<li class="divider"></li>
 
 	
-		<li><a href="../reference/javascript.html"  title="JavaScript">&laquo; previous</a></li>
+		<li><a href="credentials.html"  title="Advanced Webapp2 Google App Engine Example">&laquo; previous</a></li>
 	
 		
 			<li><a href="../genindex.html"  title="General Index">index</a></li>
@@ -167,7 +170,7 @@
 		
 
 	
-		<li><a href="django-simple.html"  title="Simple Django Example">next &raquo;</a></li>
+		<li><a href="../development.html"  title="Development">next &raquo;</a></li>
 	
 					</ul>
 				</section>
@@ -207,10 +210,10 @@ for a succinct library.
 	    <div class="social-buttons">
 	    	<ul>
 	    		<li>
-	    			<div class="fb-like" data-href="http://peterhudec.github.io/authomatic/examples/index.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    			<div class="fb-like" data-href="http://peterhudec.github.io/authomatic/examples/providers.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
 	    		</li>
 	    		<li>
-	    			<div class="g-plusone" data-size="medium" data-href="http://peterhudec.github.io/authomatic/examples/index.html"></div>
+	    			<div class="g-plusone" data-size="medium" data-href="http://peterhudec.github.io/authomatic/examples/providers.html"></div>
 	    		</li>
 	    		<li>
 	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
@@ -235,7 +238,7 @@ for a succinct library.
 	    				data-flattr-button="compact"
 	    				data-flattr-tags=""
 	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
-	    				title="Tutorials / Examples | Authomatic"></a>
+	    				title="OAuth 2.0 Provider Implementation Tutorial | Authomatic"></a>
 	    		</li>
 	    		
 	    		<li class="reddit">
@@ -256,9 +259,10 @@ for a succinct library.
 		  	<li><a href="../index.html">Authomatic</a></li>
 
 		  	
+		  		<li><a href="index.html">Tutorials / Examples</a></li>
 
 		  	
-			<li class="current"><a href="">Tutorials / Examples</a></li>
+			<li class="current"><a href="">OAuth 2.0 Provider Implementation Tutorial</a></li>
 		</ul>
 	</div>
 		
@@ -267,16 +271,120 @@ for a succinct library.
 			
 			<div id="content" class="large-9 push-3 columns">
 				
-  <div class="section" id="tutorials-examples">
-<h1>Tutorials / Examples<a class="headerlink" href="#tutorials-examples" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="django-simple.html">Simple Django Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="flask-simple.html">Simple Flask Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pyramid-simple.html">Simple Pyramid Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="simple.html">Simple Webapp2 Google App Engine Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
-</ul>
+  <div class="section" id="oauth2-provider-implementation-tutorial">
+<h1>OAuth 2.0 Provider Implementation Tutorial<a class="headerlink" href="#oauth2-provider-implementation-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>Activate the virtual environment <tt class="docutils literal"><span class="pre">./venv</span></tt>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. ./venv/bin/activate
+</pre></div>
+</div>
+<div class="section" id="add-the-new-provider-to-functional-tests">
+<h2>Add the new provider to functional tests<a class="headerlink" href="#add-the-new-provider-to-functional-tests" title="Permalink to this headline">¶</a></h2>
+<p>Change directory to <tt class="docutils literal"><span class="pre">./tests/functional_tests/</span></tt>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="k">$(</span>venv<span class="k">)</span> <span class="nb">cd</span> ./tests/functional_tests/
+</pre></div>
+</div>
+<p>Create the <em>expected values</em> module for the new provider by copying the
+<tt class="docutils literal"><span class="pre">tests/functional_tests/expected_values/new_provider.py.template</span></tt> file to
+<tt class="docutils literal"><span class="pre">tests/functional_tests/expected_values/eventbrite.py</span></tt>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="k">$(</span>venv<span class="k">)</span> cp expected_values/new_provider.py.template expected_values/eventbrite.py
+</pre></div>
+</div>
+<p>Create the functional tests config from the template
+<tt class="docutils literal"><span class="pre">tests/functional_tests/config-template.py</span></tt>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="k">$(</span>venv<span class="k">)</span> cp config-template.py config.py
+</pre></div>
+</div>
+<p>Add a new provider slug to the <tt class="docutils literal"><span class="pre">INCLUDE_PROVIDERS</span></tt> list in the config in
+correct alphabetical order and comment out all the other providers.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># tests/functional_tests/config.py</span>
+
+<span class="c"># Only providers included here will be tested.</span>
+<span class="c"># This is a convenience to easily exclude providers from tests by commenting</span>
+<span class="c"># them out.</span>
+<span class="n">INCLUDE_PROVIDERS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c"># &#39;behance&#39;,</span>
+    <span class="c"># &#39;bitly&#39;,</span>
+    <span class="c"># &#39;deviantart&#39;,</span>
+    <span class="s">&#39;eventbrite&#39;</span><span class="p">,</span>
+    <span class="c"># &#39;facebook&#39;,</span>
+    <span class="c"># &#39;foursquare&#39;,</span>
+    <span class="c"># &#39;google&#39;,</span>
+    <span class="c"># &#39;github&#39;,</span>
+    <span class="c"># &#39;linkedin&#39;,</span>
+    <span class="c"># &#39;paypal&#39;,</span>
+    <span class="c"># &#39;reddit&#39;,</span>
+    <span class="c"># &#39;vk&#39;,</span>
+    <span class="c"># &#39;windowslive&#39;,</span>
+    <span class="c"># &#39;yammer&#39;,</span>
+    <span class="c"># &#39;yandex&#39;,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Run the test. Make sure that you have the virtual environment active.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="k">$(</span>venv<span class="k">)</span> py.test -vv
+</pre></div>
+</div>
+<p>The test should fail with the
+<tt class="docutils literal"><span class="pre">No</span> <span class="pre">record</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">provider</span> <span class="pre">&quot;provider_slug&quot;</span> <span class="pre">was</span> <span class="pre">not</span> <span class="pre">found</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">config!</span></tt> exception.
+Replace the <tt class="docutils literal"><span class="pre">'provider_slug'</span></tt> value on line 7 with the slug of the new provider.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># tests/functional_tests/expected_values/eventbrite.py</span>
+
+<span class="c"># (...)</span>
+
+<span class="n">conf</span> <span class="o">=</span> <span class="n">fixtures</span><span class="o">.</span><span class="n">get_configuration</span><span class="p">(</span><span class="s">&#39;eventbrite&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Run the test again.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="k">$(</span>venv<span class="k">)</span> py.test -vv
+</pre></div>
+</div>
+<p>It should fail again, this time with this exception:
+<tt class="docutils literal"><span class="pre">No</span> <span class="pre">record</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">provider</span> <span class="pre">&quot;eventbrite&quot;</span> <span class="pre">was</span> <span class="pre">not</span> <span class="pre">found</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">config!</span></tt>.
+We need to add a record for the new provider to the actual config.</p>
+<ol class="arabic simple">
+<li>Register by the provider and fill out ALL possible user profile fields.</li>
+<li>Register an OAuth 2.0 application by the provider.</li>
+<li>Find the OAuth 2.0 flow and user info endpoints in the provider&#8217;s API documentation.</li>
+<li>Make a domain alias for localhost.</li>
+<li>Launch the <tt class="docutils literal"><span class="pre">./examples/flask/functional_test</span></tt> application.</li>
+<li>Create a new class for the provider.</li>
+<li>Override the OAuth 2.0 enpoints.</li>
+<li>Add the provider to functional tests.</li>
+</ol>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Add an entry to the functional tests config.</li>
+<li>Comment out all other providers in the <tt class="docutils literal"><span class="pre">INCLUDE_PROVIDERS</span></tt> list.</li>
+</ol>
+<blockquote>
+<div><ol class="arabic">
+<li><dl class="first docutils">
+<dt>Refresh the functional tests app and click on the link of the new provider.</dt>
+<dd><ol class="first last arabic simple">
+<li>On the consent page open the browser inspector and copy the login,
+password and consent button(s) xpaths to the expected values file.</li>
+<li>If there was a problem debug, identify the problem and handle it in the
+<tt class="docutils literal"><span class="pre">_x_credentials_parser()</span></tt> method.</li>
+<li>If everything went good there should be a syntax highlighted json response.</li>
+<li>If the json response has any properties which were not automatically parsed
+to the user object you need to override the <tt class="docutils literal"><span class="pre">_x_user_parser()</span></tt> method.</li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple">
+<li>Stop the functional tests app.</li>
+<li>Run <tt class="docutils literal"><span class="pre">py.test</span> <span class="pre">-vv</span> <span class="pre">tests/functional_tests</span></tt></li>
+<li>A Firefox window should open and the tests should fill out the consent form
+and hit the consent button.</li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple">
+<li>Add the provider&#8217;s OAuth 2.0, API and app dashboard links if any to the
+docstring.</li>
+</ol>
 </div>
 </div>
 
@@ -313,12 +421,16 @@ for a succinct library.
 <li class="toctree-l2"><a class="reference internal" href="../reference/javascript.html">JavaScript</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Tutorials / Examples</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials / Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="django-simple.html">Simple Django Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flask-simple.html">Simple Flask Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyramid-simple.html">Simple Pyramid Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple.html">Simple Webapp2 Google App Engine Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">OAuth 2.0 Provider Implementation Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#add-the-new-provider-to-functional-tests">Add the new provider to functional tests</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a><ul>
@@ -328,8 +440,7 @@ for a succinct library.
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10-development">Version 0.0.10 (development)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>
@@ -343,10 +454,10 @@ for a succinct library.
 		</div>
 		
 		<div id="root_footer"></div>
-	</div><div id="footer"><div id="bottom-nav"><span><a href="../reference/javascript.html"  title="JavaScript">&laquo; previous</a></span>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="credentials.html"  title="Advanced Webapp2 Google App Engine Example">&laquo; previous</a></span>
 			<span><a href="../genindex.html"  title="General Index">index</a></span>
 				<span><a href="../py-modindex.html"  title="Python Module Index">modules</a></span>
-				<span><a href="django-simple.html"  title="Simple Django Example">next &raquo;</a></span></div><div id="footer-notice">
+				<span><a href="../development.html"  title="Development">next &raquo;</a></span></div><div id="footer-notice">
 			    	&copy; Copyright 2014,
 			    	
 			    		<a href="http://peterhudec.com">Peter Hudec</a>

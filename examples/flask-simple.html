@@ -139,7 +139,8 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul class="dropdown ">
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10-development">Version 0.0.10 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>
@@ -352,6 +353,21 @@ The handler must return the <tt class="docutils literal"><span class="pre">respo
 <div class="highlight-python"><div class="highlight"><pre>    <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">()</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">WerkzeugAdapter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">),</span> <span class="n">provider_name</span><span class="p">)</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If you want to use the <a class="reference external" href="http://flask.pocoo.org/docs/api/#flask.session" title="(in Flask v1.0-dev)"><tt class="xref py py-class docutils literal"><span class="pre">flask.session</span></tt></a>, you can do it like this:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="c"># You need to set a secret string otherwise the session will not work.</span>
+<span class="n">app</span><span class="o">.</span><span class="n">secret_key</span> <span class="o">=</span> <span class="s">&#39;random secret string&#39;</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+   <span class="n">WerkzeugAdapter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">),</span>
+   <span class="n">provider_name</span><span class="p">,</span>
+<span class="hll">   <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+</span><span class="hll">   <span class="n">session_saver</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">save_session</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <p>Now check whether there is a <a class="reference internal" href="../reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><tt class="xref py py-class docutils literal"><span class="pre">LoginResult</span></tt></a>.
 If so, we need to update the <a class="reference internal" href="../reference/classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> to get <strong>his/her</strong> info.
@@ -706,7 +722,8 @@ Remember that you can download all the files we just created from
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10-development">Version 0.0.10 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>

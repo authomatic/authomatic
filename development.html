@@ -139,7 +139,8 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul class="dropdown ">
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-10-development">Version 0.0.10 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-8">Version 0.0.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-7">Version 0.0.7</a></li>
@@ -364,7 +365,7 @@ actual project repository that you cloned from (your fork) with the
 <a class="reference external" href="http://seleniumhq.org">Selenium</a> tests.
 They are designed to test the <em>login procedure</em> and
 <em>credentials refreshment</em> and to discover changes in provider APIs.
-Currently the tests cover 14 OAuth 2.0 providers.
+Currently the tests cover all the OAuth 2.0 providers.
 The tests are written for the <a class="reference external" href="http://pytest.org/latest/">pytest</a> framework.</p>
 <p>To run <em>functional</em> tests, you first need to create the
 <tt class="docutils literal"><span class="pre">./tests/functional_tests/config.py</span></tt> module by copying and filling out the
@@ -399,7 +400,8 @@ The tests are written for the <a class="reference external" href="http://pytest.
 <span class="c"># This is a convenience to easily exclude providers from tests by commenting</span>
 <span class="c"># them out.</span>
 <span class="n">INCLUDE_PROVIDERS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s">&#39;behance&#39;</span><span class="p">,</span>
+    <span class="s">&#39;amazon&#39;</span><span class="p">,</span>
+    <span class="c"># &#39;behance&#39;, # Behance doesn&#39;t support third party authorization anymore.</span>
     <span class="s">&#39;bitly&#39;</span><span class="p">,</span>
     <span class="s">&#39;deviantart&#39;</span><span class="p">,</span>
     <span class="s">&#39;facebook&#39;</span><span class="p">,</span>
@@ -473,12 +475,19 @@ The tests are written for the <a class="reference external" href="http://pytest.
 <span class="c"># Values from COMMON will be overriden by values from PROVIDERS[provider_name]</span>
 <span class="c"># if set.</span>
 <span class="n">PROVIDERS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;behance&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&#39;amazon&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
-        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
         <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
     <span class="p">},</span>
+    <span class="c"># Behance doesn&#39;t support third party authorization anymore.</span>
+    <span class="c"># &#39;behance&#39;: {</span>
+    <span class="c">#     &#39;consumer_key&#39;: &#39;##########&#39;,</span>
+    <span class="c">#     &#39;consumer_secret&#39;: &#39;##########&#39;,</span>
+    <span class="c">#     &#39;user_password&#39;: &#39;##########&#39;,</span>
+    <span class="c">#     &#39;user_id&#39;: &#39;??????????&#39;,</span>
+    <span class="c"># },</span>
     <span class="s">&#39;bitly&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
@@ -490,13 +499,17 @@ The tests are written for the <a class="reference external" href="http://pytest.
         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
         <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
     <span class="p">},</span>
+    <span class="s">&#39;eventbrite&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
     <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
         <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
         <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
         <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
-        <span class="c"># This value changes when switching from and to Daylight Saving Time</span>
-        <span class="s">&#39;user_timezone&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s">&#39;foursquare&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
@@ -562,8 +575,6 @@ The tests are written for the <a class="reference external" href="http://pytest.
         <span class="s">&#39;user_city&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
         <span class="s">&#39;user_country&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
         <span class="s">&#39;user_gender&#39;</span><span class="p">:</span> <span class="s">&#39;2&#39;</span><span class="p">,</span>
-        <span class="c"># The picture URL is a random CDN URL</span>
-        <span class="s">&#39;user_picture&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
         <span class="s">&#39;user_timezone&#39;</span><span class="p">:</span> <span class="s">&#39;1&#39;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s">&#39;windowslive&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -592,7 +603,7 @@ The tests are written for the <a class="reference external" href="http://pytest.
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>If you want to run tests for all of the 8 covered providers,
+<p>If you want to run tests for all of the covered providers,
 you should register an <strong>application</strong> and a <strong>user account</strong> by each of them
 and fill out <strong>all possible</strong> settings in the user profile.
 You can exclude providers from the tests by comenting them out of the
@@ -668,7 +679,8 @@ with the virtual environment activated:</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-10-development">Version 0.0.10 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-8">Version 0.0.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-7">Version 0.0.7</a></li>
