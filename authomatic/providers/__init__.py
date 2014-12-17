@@ -409,7 +409,8 @@ class BaseProvider(object):
                 remaining_redirects = max_redirects - 1
                 
                 self._log(logging.DEBUG, 'Redirecting to {0}'.format(url))
-                self._log(logging.DEBUG, 'Remaining redirects: '.format(remaining_redirects))
+                self._log(logging.DEBUG, 'Remaining redirects: {0}'
+                          .format(remaining_redirects))
                 
                 # Call this method again.
                 response = self._fetch(url=location,
