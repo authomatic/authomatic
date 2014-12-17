@@ -2,7 +2,7 @@ Django
 Flask
 pyramid
 python-openid
-liveandletdie>=0.0.3
+liveandletdie>=0.0.4
 pytest
 selenium
 Sphinx==1.1.3
