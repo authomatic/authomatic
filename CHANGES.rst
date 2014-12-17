@@ -1,5 +1,8 @@
-Version 0.0.10 (development)
+Version 0.0.11 (development)
 ----------------------------
+
+Version 0.0.10
+--------------
 
 * Fixed a bug when saving non-JSON-serializable values to third party sessions
   by the ``python-openid`` package caused a ``KeyError``.
