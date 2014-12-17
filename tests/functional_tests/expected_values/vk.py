@@ -19,7 +19,7 @@ CONFIG = {
         '//*[@id="install_allow"]',
         '//*[@id="install_allow"]',
     ],
-    'consent_wait_seconds': 2,
+    'consent_wait_seconds': 4,
     'class_': oauth2.VK,
     'scope': oauth2.VK.user_info_scope,
     'offline': True,
