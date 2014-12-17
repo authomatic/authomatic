@@ -85,7 +85,7 @@ CONFIG = {
         'consumer_secret': True,
         'token': False,
         'token_secret': True,
-        '_expire_in': True,
+        '_expire_in': None, # Somtimes differ in one second.
         'provider_name': True,
         'refresh_token': True,
         'provider_type': True,
