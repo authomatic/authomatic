@@ -9,6 +9,9 @@ PICTURE = 'http://a.deviantart.net/avatars/p/e/{0}.jpg?1'\
     .format(conf.user_username)
 
 CONFIG = {
+    'pre_login_xpaths': [
+        '//*[@id="joinform"]/fieldset/small/a'
+    ],
     'login_xpath': '//*[@id="username"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [
