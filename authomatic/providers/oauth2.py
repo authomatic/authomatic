@@ -415,7 +415,7 @@ class Amazon(OAuth2):
 
     Thanks to `Ghufran Syed <https://github.com/ghufransyed>`__.
 
-    * Dashboard: https://developer.amazon.com/home.html
+    * Dashboard: https://developer.amazon.com/lwa/sp/overview.html
     * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/docs/conceptual_overview.html
     * API reference: https://developer.amazon.com/public/apis
     
