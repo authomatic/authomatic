@@ -8333,3 +8333,16 @@ input[type=text] {
 .provider-button.amazon:hover {
   background-color: #303030;
 }
+
+
+/* Eventbrite - manually added */
+.provider-button.eventbrite {
+  color: white;
+  background-color: #666;
+  border-color: #606060;
+}
+/* line 47, ../sass/app.sass */
+.provider-button.eventbrite:hover {
+  background-color: #606060;
+}
+

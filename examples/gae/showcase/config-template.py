@@ -188,6 +188,19 @@ OAUTH2 = {
         'id': authomatic.provider_id(),
         'scope': oauth2.DeviantART.user_info_scope,
     },
+
+    'eventbrite': {
+        'class_': oauth2.Eventbrite,
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'id': authomatic.provider_id(),
+        'scope': oauth2.Eventbrite.user_info_scope,
+        '_apis': {
+            'List your orders': ('GET', 'https://www.eventbriteapi.com/v3/users/{user.id}/orders/'),
+            'List your owned events': ('GET', 'https://www.eventbriteapi.com/v3/users/{user.id}/owned_events/'),
+            'Search for event': ('GET', 'https://www.eventbriteapi.com/v3/events/search/?q={message}', 'search string', 'Little Britain'),
+        },
+    },
     
     'facebook': {
            
