@@ -29,7 +29,7 @@ Providers which implement the |oauth2|_ protocol.
     
 """
 
-from urllib import urlencode
+from six.moves.urllib.parse import urlencode
 import datetime
 import logging
 
@@ -950,7 +950,7 @@ class Foursquare(OAuth2):
             _photo_suffix = _photo.get('suffix', '').strip('/')
             user.picture = '/'.join([_photo_prefix, _photo_suffix])
 
-        if isinstance(_photo, basestring):
+        if isinstance(_photo, str):
             user.picture = _photo
         
         user.city, user.country = _user.get('homeCity', ', ').split(', ')

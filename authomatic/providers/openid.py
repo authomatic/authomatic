@@ -371,7 +371,7 @@ class OpenID(providers.AuthenticationProvider):
                     self._log(logging.INFO, 'Got AX data.')
                     ax_data = {}
                     # convert iterable values to their first item
-                    for k, v in ax_response.data.iteritems():
+                    for k, v in ax_response.data.items():
                         if v and type(v) in (list, tuple):
                             ax_data[k] = v[0]
                     data['ax'] = ax_data

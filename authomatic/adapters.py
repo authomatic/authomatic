@@ -64,7 +64,6 @@ class BaseAdapter(object):
 
     __metaclass__ = abc.ABCMeta
 
-
     @abc.abstractproperty
     def params(self):
         """
