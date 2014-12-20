@@ -12,6 +12,7 @@ import json
 import pickle
 import threading
 import time
+import six
 from six.moves.urllib import parse
 import sys
 
@@ -389,8 +390,8 @@ class Session(object):
 
     def _signature(self, *parts):
         """Creates signature for the session."""
-        signature = hmac.new(self.secret, digestmod=hashlib.sha1)
-        signature.update('|'.join(parts))
+        signature = hmac.new(six.b(self.secret), digestmod=hashlib.sha1)
+        signature.update(six.b('|'.join(parts)))
         return signature.hexdigest()
 
     def _serialize(self, value):

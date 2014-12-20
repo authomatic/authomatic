@@ -34,7 +34,7 @@ def login(provider_name):
                               provider_name)
 
     if result:
-        response.data += fixtures.render_login_result(result)
+        response.data += fixtures.render_login_result(result).encode()
 
     return response
 
@@ -50,4 +50,4 @@ if __name__ == '__main__':
 
     # Unix
     # ???
-    app.run(debug=True, port=8080, ssl_context='adhoc')
+    app.run(debug=True, port=8080)

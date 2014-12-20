@@ -3,7 +3,7 @@
 import os
 import re
 import time
-import urlparse
+from six.moves.urllib import parse
 
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
@@ -24,8 +24,7 @@ APPS = {
         os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
         host=config.HOST,
         port=config.PORT,
-        check_url=config.HOST_ALIAS,
-        ssl=True
+        check_url=config.HOST_ALIAS
     ),
 }
 
@@ -67,7 +66,7 @@ def provider(request, browser, app):
     conf = fixtures.get_configuration(request.param)
 
     # Andy types the login handler url to the address bar.
-    browser.get(urlparse.urljoin(app.check_url, 'login/' + _provider['name']))
+    browser.get(parse.urljoin(app.check_url, 'login/' + _provider['name']))
 
     # Andy authenticates by the provider.
     login_xpath = _provider.get('login_xpath')

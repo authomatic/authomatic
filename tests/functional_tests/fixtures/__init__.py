@@ -5,7 +5,8 @@ from collections import namedtuple
 import pkgutil
 import sys
 import time
-
+import six
+from six.moves import reload_module
 from jinja2 import Environment, FileSystemLoader
 
 # Add path of the functional_tests_path package to PYTHONPATH.
@@ -42,8 +43,9 @@ def render_login_result(result):
 
     """
 
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
+    reload_module(sys)
+    if six.PY2:
+        sys.setdefaultencoding('utf-8')
 
     response = None
     original_credentials = {}
@@ -58,7 +60,7 @@ def render_login_result(result):
                 response = result.user.credentials.refresh(force=True)
                 refreshed_credentials.update(result.user.credentials.__dict__)
 
-        user_properties = ASSEMBLED_CONFIG.values()[0]['user'].keys()
+        user_properties = list(ASSEMBLED_CONFIG.values())[0]['user'].keys()
         template = env.get_template('login.html')
         return template.render(result=result,
                                providers=ASSEMBLED_CONFIG.keys(),
