@@ -32,6 +32,7 @@ import hashlib
 import hmac
 import logging
 import time
+import six
 from six.moves.urllib import parse
 import uuid
 
@@ -176,10 +177,10 @@ class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
         
         base_string = _create_base_string(method, base, params)
         key = cls._create_key(consumer_secret, token_secret)
-        
-        hashed = hmac.new(key, base_string, hashlib.sha1)
-        
-        
+
+        hashed = hmac.new(six.b(key), base_string.encode('utf-8'), hashlib.sha1)
+
+
         base64_encoded = binascii.b2a_base64(hashed.digest())[:-1]
         
         return base64_encoded
@@ -320,7 +321,7 @@ class OAuth1(providers.AuthorizationProvider):
             # http://oauth.net/core/1.0a/#rfc.section.9.1
             params['oauth_signature_method'] = cls._signature_generator.method
             params['oauth_timestamp'] = str(int(time.time()))
-            params['oauth_nonce'] = cls.csrf_generator(uuid.uuid4())
+            params['oauth_nonce'] = cls.csrf_generator(str(uuid.uuid4()))
             params['oauth_version'] = '1.0'
             
             # add signature to params

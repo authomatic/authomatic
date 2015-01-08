@@ -10,6 +10,7 @@ import hmac
 import logging
 import json
 import pickle
+import six
 import threading
 import time
 from six.moves.urllib import parse
@@ -412,8 +413,8 @@ class Session(object):
         Creates signature for the session.
         """
 
-        signature = hmac.new(self.secret, digestmod=hashlib.sha1)
-        signature.update('|'.join(parts))
+        signature = hmac.new(six.b(self.secret), digestmod=hashlib.sha1)
+        signature.update(six.b('|'.join(parts)))
         return signature.hexdigest()
 
 
