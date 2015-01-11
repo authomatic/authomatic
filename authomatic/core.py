@@ -10,7 +10,6 @@ import hmac
 import logging
 import json
 import pickle
-import six
 import threading
 import time
 import six
@@ -41,7 +40,7 @@ def normalize_dict(dict_):
         Normalized dictionary.
     """
 
-    return dict([(k, v[0] if not type(v) is str and len(v) == 1 else v)
+    return dict([(k, v[0] if not isinstance(v, str) and len(v) == 1 else v)
                  for k, v in list(dict_.items())])
 
 
@@ -176,7 +175,7 @@ def resolve_provider_class(class_):
     :param class_name: :class:`string` or :class:`authomatic.providers.BaseProvider` subclass.
     """
 
-    if type(class_) in (str, str):
+    if isinstance(class_, str):
         # prepare path for authomatic.providers package
         path = '.'.join([__package__, 'providers', class_])
 
@@ -835,7 +834,7 @@ class Credentials(ReprMixin):
         """
 
         # Accept both serialized and normal.
-        if type(credentials) is Credentials:
+        if isinstance(credentials, Credentials):
             return credentials
 
         decoded = parse.unquote(credentials)
