@@ -96,7 +96,6 @@ class SessionWrapper(object):
         if val and val.startswith(self.prefix):
             split = val.split(self.prefix)[1]
             unpickled = pickle.loads(split)
-            # import pdb; pdb.set_trace()
 
             return unpickled
         else:
