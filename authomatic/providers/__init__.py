@@ -328,7 +328,7 @@ class BaseProvider(object):
             The actual message.
         """
 
-        logger = cls._logger or authomatic.core._logger
+        logger = getattr(cls, '_logger', None) or authomatic.core._logger
         logger.log(level, ': '.join(('authomatic', cls.__name__, msg)))
 
     
