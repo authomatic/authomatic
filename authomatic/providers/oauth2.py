@@ -823,7 +823,7 @@ class Facebook(OAuth2):
     
     @staticmethod
     def _x_user_parser(user, data):
-        user.picture = 'http://graph.facebook.com/{0}/picture?type=large'.format(data.get('username'))
+        user.picture = 'http://graph.facebook.com/{0}/picture?type=large'.format(data.get('id'))
 
         location = data.get('location', {}).get('name')
         if location and location.split:
