@@ -1,6 +1,9 @@
 Version 0.0.11 (development)
 ----------------------------
 
+* The :class:`.oauth2.Foursquare` provider now supports
+  :attr:`.User.birth_date`.
+
 Version 0.0.10
 --------------
 

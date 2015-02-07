@@ -19,7 +19,11 @@
     {% for property in user_properties %}
       <tr>
         <td><strong>{{ property }}:&nbsp;</strong></td>
-        <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
+        {% if property == 'birth_date' and result.user[property] %}
+          <td id="{{ property }}">{{ result.user[property].strftime('%x') }}</td>
+        {% else %}
+          <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
+        {% endif %}
       </tr>
     {% endfor %}
     <tr class="hidden">
