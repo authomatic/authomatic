@@ -61,7 +61,7 @@ CONFIG = {
         'consumer_secret': None,
         'token': True,
         'token_secret': None,
-        '_expire_in': '31536000',
+        '_expire_in': True,
         'provider_name': 'yandex',
         'refresh_token': None,
         'provider_type': 'authomatic.providers.oauth2.OAuth2',
