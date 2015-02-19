@@ -1075,7 +1075,7 @@ class Response(ReprMixin):
         """
 
         if not self._content:
-            self._content = self.httplib_response.read().decode()
+            self._content = self.httplib_response.read().decode('utf-8')
         return self._content
 
 

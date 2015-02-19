@@ -1,6 +1,8 @@
 Version 0.0.11 (development)
 ----------------------------
 
+* Fixed a bug when :class:`.authomatic.Response` could not be decoded.
+
 Version 0.0.10
 --------------
 
