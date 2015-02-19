@@ -900,6 +900,7 @@ class Foursquare(OAuth2):
     same_origin = False
 
     supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
         city=True,
         country=True,
         email=True,
@@ -943,6 +944,10 @@ class Foursquare(OAuth2):
         user.first_name = _user.get('firstName')
         user.last_name = _user.get('lastName')
         user.gender = _user.get('gender')
+
+        _birth_date = _user.get('birthday')
+        if _birth_date:
+            user.birth_date = datetime.datetime.fromtimestamp(_birth_date)
 
         _photo = _user.get('photo', {})
         if isinstance(_photo, dict):

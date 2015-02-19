@@ -21,7 +21,7 @@ CONFIG = {
         'first_name': conf.user_first_name,
         'last_name': conf.user_last_name,
         'nickname': None,
-        'birth_date': None,
+        'birth_date': conf.user_birth_date,
         'city': conf.user_city,
         'country': conf.user_country,
         'gender': conf.user_gender,
@@ -46,21 +46,21 @@ CONFIG = {
         'relationship', 'photo', 'prefix', 'suffix', 'friends', 'count',
         'groups', 'name', 'items', 'tips', 'lists', 'homeCity', 'bio',
         'contact', 'email', 'facebook', 'twitter', 'superuser', 'default',
-        'phone', 'checkinPings', 'pings', 'badges', 'badgeId', 'unlockMessage',
-        'description', 'badgeText', 'image', 'sizes', 'unlocks', 'checkins',
-        'createdAt', 'shout', 'timeZoneOffset', 'location', 'lat', 'lng',
-        'photos', 'posts', 'textCount', 'comments', 'source', 'url',
-        'mayorships', 'venue', 'formattedPhone', 'facebookName', 'address',
-        'postalCode', 'cc', 'city', 'state', 'country', 'formattedAddress',
-        'categories', 'pluralName', 'shortName', 'icon', 'primary', 'verified',
-        'stats', 'checkinsCount', 'usersCount', 'tipCount', 'like', 'likes',
-        'width', 'height', 'visibility', 'following', 'requests', 'editable',
-        'public', 'collaborative', 'canonicalUrl', 'followers', 'listItems',
-        'checkin', 'blockedStatus', 'referralId'
+        'birthday', 'phone', 'checkinPings', 'pings', 'badges', 'badgeId',
+        'unlockMessage', 'description', 'badgeText', 'image', 'sizes',
+        'unlocks', 'checkins', 'createdAt', 'shout', 'timeZoneOffset',
+        'location', 'lat', 'lng', 'photos', 'posts', 'textCount', 'comments',
+        'source', 'url', 'mayorships', 'venue', 'formattedPhone',
+        'facebookName', 'address', 'postalCode', 'cc', 'neighborhood', 'city',
+        'state', 'country', 'formattedAddress', 'categories', 'pluralName',
+        'shortName', 'icon', 'primary', 'verified', 'stats', 'checkinsCount',
+        'usersCount', 'tipCount', 'like', 'likes', 'width', 'height',
+        'visibility', 'requests', 'editable', 'public', 'collaborative',
+        'canonicalUrl', 'followers', 'listItems', 'checkin', 'blockedStatus',
+        'referralId'
     ],
     # Case insensitive
-    'content_should_not_contain': conf.no_birth_date +
-        [
+    'content_should_not_contain': [
             'locale',
             'language',
             'deprecated',

@@ -2,6 +2,8 @@ Version 0.0.11 (development)
 ----------------------------
 
 * Fixed a bug when :class:`.authomatic.Response` could not be decoded.
+* The :class:`.oauth2.Foursquare` provider now supports
+  :attr:`.User.birth_date`.
 
 Version 0.0.10
 --------------

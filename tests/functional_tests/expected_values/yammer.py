@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -9,7 +11,8 @@ LINK = 'https://www.yammer.com/peterhudec.com/users/{}'\
 
 # Yammer allows users to only set month and day of their birth day.
 # The year is always 1900.
-BIRTH_DATE = '1900' + conf.user_birth_date[4:]
+BD = datetime.strptime(conf.user_birth_date, '%x')
+BIRTH_DATE = datetime(1900, BD.month, BD.day).strftime('%x')
 
 CONFIG = {
     'login_xpath': '//*[@id="login"]',
@@ -61,7 +64,7 @@ CONFIG = {
         'last_name', 'network_name', 'network_domains', 'url', 'web_url',
         'name', 'mugshot_url', 'mugshot_url_template', 'hire_date',
         'birth_date', 'timezone', 'external_urls', 'admin', 'verified_admin',
-        'can_broadcast', 'department', 'previous_companies', 'schools',
+        'can_broadcast', 'department', 'email', 'previous_companies', 'schools',
         'contact', 'im', 'provider', 'username', 'phone_numbers', 'number',
         'email_addresses', 'address', 'has_fake_email', 'stats', 'following',
         'followers', 'updates', 'settings', 'xdr_proxy', 'web_preferences',
@@ -69,9 +72,8 @@ CONFIG = {
         'message_prompt', 'allow_attachments', 'show_communities_directory',
         'enable_groups', 'allow_yammer_apps', 'admin_can_delete_messages',
         'allow_inline_document_view', 'allow_inline_video',
-        'enable_private_messages', 'allow_external_sharing', 'enable_chat',
-        'home_tabs', 'select_name', 'feed_description', 'ordering_index',
-        'enter_does_not_submit_message', 'preferred_my_feed',
+        'enable_private_messages', 'allow_external_sharing',
+        'enable_chat', 'enter_does_not_submit_message', 'preferred_my_feed',
         'prescribed_my_feed', 'sticky_my_feed', 'dismissed_feed_tooltip',
         'dismissed_group_tooltip', 'dismissed_profile_prompt',
         'dismissed_invite_tooltip', 'dismissed_apps_tooltip',
