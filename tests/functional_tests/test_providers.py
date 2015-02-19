@@ -24,7 +24,8 @@ APPS = {
         os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
         host=config.HOST,
         port=config.PORT,
-        check_url=config.HOST_ALIAS
+        check_url=config.HOST_ALIAS,
+        ssl=True,
     ),
 }
 
@@ -129,7 +130,11 @@ class TestCredentials(Base):
             if expected is True:
                 assert value
             else:
-                if coerce is not None and isinstance(expected, basestring):
+                try:
+                    unicode
+                except NameError:
+                    class unicode(object): pass
+                if coerce is not None and isinstance(expected, (str, unicode)):
                     expected = coerce(expected)
                     value = coerce(value)
 
