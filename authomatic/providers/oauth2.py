@@ -8,6 +8,7 @@ Providers which implement the |oauth2|_ protocol.
 .. autosummary::
     
     OAuth2
+    Amazon
     Behance
     Bitly
     Cosm
@@ -28,7 +29,7 @@ Providers which implement the |oauth2|_ protocol.
     
 """
 
-from urllib import urlencode
+from six.moves.urllib.parse import urlencode
 import datetime
 import logging
 
@@ -36,8 +37,11 @@ from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 import authomatic.core as core
 
-__all__ = ['OAuth2', 'Behance', 'Bitly', 'Cosm', 'DeviantART', 'Eventbrite', 'Facebook', 'Foursquare', 'GitHub',
-           'Google', 'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive', 'Yammer', 'Yandex']
+
+__all__ = ['OAuth2', 'Amazon', 'Behance', 'Bitly', 'Cosm', 'DeviantART',
+           'Eventbrite', 'Facebook', 'Foursquare', 'GitHub', 'Google',
+           'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive',
+           'Yammer', 'Yandex']
 
 
 class OAuth2(providers.AuthorizationProvider):
@@ -366,11 +370,13 @@ class OAuth2(providers.AuthorizationProvider):
             # Phase 2 after redirect with error
             #===================================================================
             
-            error_reason = self.params.get('error_reason')
-            error_description = self.params.get('error_description') or error_message
-            
-            if error_reason == 'user_denied':
-                raise CancellationError(error_description, url=self.user_authorization_url)
+            error_reason = self.params.get('error_reason') or error
+            error_description = self.params.get('error_description') \
+                                or error_message or error
+
+            if 'denied' in error_reason:
+                raise CancellationError(error_description,
+                                        url=self.user_authorization_url)
             else:
                 raise FailureError(error_description, url=self.user_authorization_url)
             
@@ -403,13 +409,87 @@ class OAuth2(providers.AuthorizationProvider):
             self.redirect(request_elements.full_url)
 
 
+class Amazon(OAuth2):
+    """
+    Amazon |oauth2| provider.
+
+    Thanks to `Ghufran Syed <https://github.com/ghufransyed>`__.
+
+    * Dashboard: https://developer.amazon.com/lwa/sp/overview.html
+    * Docs: https://developer.amazon.com/public/apis/engage/login-with-amazon/docs/conceptual_overview.html
+    * API reference: https://developer.amazon.com/public/apis
+    
+    .. note::
+
+        Amazon only accepts **redirect_uri** with **https** schema,
+        Therefore the *login handler* must also be accessible through **https**.
+
+    Supported :class:`.User` properties:
+
+    * email
+    * id
+    * name
+    * postal_code
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * first_name
+    * gender
+    * last_name
+    * link
+    * locale
+    * nickname
+    * phone
+    * picture
+    * timezone
+    * username
+
+    """
+
+    user_authorization_url = 'https://www.amazon.com/ap/oa'
+    access_token_url = 'https://api.amazon.com/auth/o2/token'
+    user_info_url = 'https://api.amazon.com/user/profile'
+    user_info_scope = ['profile', 'postal_code']
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        email=True,
+        id=True,
+        name=True,
+        postal_code=True
+    )
+
+    def _x_scope_parser(self, scope):
+        # Amazon has space-separated scopes
+        return ' '.join(scope)
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.id = data.get('user_id')
+        return user
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
+
+
 class Behance(OAuth2):
     """
     Behance |oauth2| provider.
+
+    .. note::
+
+        Behance doesn't support third party authorization anymore,
+        which renders this class pretty much useless.
     
     * Dashboard: http://www.behance.net/dev/apps
     * Docs: http://www.behance.net/dev/authentication
     * API reference: http://www.behance.net/dev/api/endpoints/
+
     """
     
     user_authorization_url = 'https://www.behance.net/v2/oauth/authenticate'
@@ -820,6 +900,7 @@ class Foursquare(OAuth2):
     same_origin = False
 
     supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
         city=True,
         country=True,
         email=True,
@@ -864,13 +945,17 @@ class Foursquare(OAuth2):
         user.last_name = _user.get('lastName')
         user.gender = _user.get('gender')
 
+        _birth_date = _user.get('birthday')
+        if _birth_date:
+            user.birth_date = datetime.datetime.fromtimestamp(_birth_date)
+
         _photo = _user.get('photo', {})
         if isinstance(_photo, dict):
             _photo_prefix = _photo.get('prefix', '').strip('/')
             _photo_suffix = _photo.get('suffix', '').strip('/')
             user.picture = '/'.join([_photo_prefix, _photo_suffix])
 
-        if isinstance(_photo, basestring):
+        if isinstance(_photo, str):
             user.picture = _photo
         
         user.city, user.country = _user.get('homeCity', ', ').split(', ')
@@ -1686,4 +1771,4 @@ class Yandex(OAuth2):
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers don't change!
 PROVIDER_ID_MAP = [OAuth2, Behance, Bitly, Cosm, DeviantART, Facebook, Foursquare, GitHub, Google, LinkedIn,
-          PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex, Eventbrite]
+          PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex, Eventbrite, Amazon]

@@ -127,27 +127,29 @@ Available provider classes:
 +------------------------------+----------------------------+-------------------------------+-+
 | |oauth2|                     | |oauth1|                   | |openid|                      | |
 +==============================+============================+===============================+=+
-| :class:`.oauth2.Behance`     | :class:`.oauth1.Bitbucket` | :class:`.openid.OpenID`       | |
+| :class:`.oauth2.Amazon`      | :class:`.oauth1.Bitbucket` | :class:`.openid.OpenID`       | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.Bitly`       |:class:`.oauth1.Flickr`     | :class:`.openid.Yahoo`        | |
+| :class:`.oauth2.Behance`     | :class:`.oauth1.Flickr`    | :class:`.openid.Yahoo`        | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.Cosm`        |:class:`.oauth1.Meetup`     | :class:`.openid.Google`       | |
+| :class:`.oauth2.Bitly`       | :class:`.oauth1.Meetup`    | :class:`.openid.Google`       | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.DeviantART`  | :class:`.oauth1.Plurk`     | :class:`.gaeopenid.GAEOpenID` | |
+| :class:`.oauth2.Cosm`        | :class:`.oauth1.Plurk`     | :class:`.gaeopenid.GAEOpenID` | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.Eventbrite`  | :class:`.oauth1.Twitter`   | :class:`.gaeopenid.Yahoo`     | |
+| :class:`.oauth2.DeviantART`  | :class:`.oauth1.Twitter`   | :class:`.gaeopenid.Yahoo`     | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.Facebook`    | :class:`.oauth1.Tumblr`    | :class:`.gaeopenid.Google`    | |
+| :class:`.oauth2.Eventbrite`  | :class:`.oauth1.Tumblr`    | :class:`.gaeopenid.Google`    | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.Foursquare`  | :class:`.oauth1.UbuntuOne` |                               | |
+| :class:`.oauth2.Facebook`    | :class:`.oauth1.UbuntuOne` |                               | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.GitHub`      | :class:`.oauth1.Vimeo`     |                               | |
+| :class:`.oauth2.Foursquare`  | :class:`.oauth1.Vimeo`     |                               | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.Google`      | :class:`.oauth1.Xero`      |                               | |
+| :class:`.oauth2.GitHub`      | :class:`.oauth1.Xero`      |                               | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.LinkedIn`    | :class:`.oauth1.Yahoo`     |                               | |
+| :class:`.oauth2.Google`      | :class:`.oauth1.Yahoo`     |                               | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.PayPal`      | :class:`.oauth1.Xing`      |                               | |
+| :class:`.oauth2.LinkedIn`    | :class:`.oauth1.Xing`      |                               | |
++------------------------------+----------------------------+-------------------------------+-+
+| :class:`.oauth2.PayPal`      |                            |                               | |
 +------------------------------+----------------------------+-------------------------------+-+
 | :class:`.oauth2.Reddit`      |                            |                               | |
 +------------------------------+----------------------------+-------------------------------+-+

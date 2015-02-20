@@ -1,5 +1,5 @@
 application: authomatic-example
-version: 2
+version: 4
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -24,6 +24,7 @@ handlers:
 
 - url: /.*
   script: main.app
+  secure: always
 
 libraries:
 - name: jinja2

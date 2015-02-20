@@ -33,26 +33,24 @@ For more info visit the project page at http://peterhudec.github.io/authomatic.
 Features
 ========
 
-*	Loosely coupled.
-*	Tiny but powerful interface.
-*	The |pyopenid|_ library is the only **optional** dependency.
-*	CSRF protection.
-*	**Framework agnostic** thanks to adapters.
-	Out of the box support for **Django**, **Flask** and **Webapp2**. 
-*	Ready to accommodate future authorization / authentication protocols.
-*	Makes calls to provider APIs a breeze.
-*	Supports asynchronous requests.
-*	JavaScript library as a bonus.
-*	Out of the box support for:
+* Loosely coupled.
+* Tiny but powerful interface.
+* The |pyopenid|_ library is the only **optional** dependency.
+* CSRF protection.
+* **Framework agnostic** thanks to adapters. Out of the box support for **Django**, **Flask**, **Pyramid** and **Webapp2**.
+* Ready to accommodate future authorization / authentication protocols.
+* Makes calls to provider APIs a breeze.
+* Supports asynchronous requests.
+* JavaScript library as a bonus.
+* Out of the box support for:
 
-	*	|oauth1|_ providers: **Bitbucket**, **Flickr**, **Meetup**, **Plurk**,
-	    **Twitter**, **Tumblr**, **UbuntuOne**, **Vimeo**, **Xero**, **Xing**
-	    and **Yahoo**.
-	*	|oauth2|_ providers: **Behance**, **Bitly**, **Cosm**, **DeviantART**,
-	    **Eventbrite**, **Facebook**, **Foursquare**, **GitHub**, **Google**,
-	    **LinkedIn**, **PayPal**, **Reddit**, **Viadeo**, **VK**,
-	    **WindowsLive**, **Yammer** and **Yandex**.
-	*	|pyopenid|_ and |gae|_ based |openid|_.
+  * |oauth1|_ providers: **Bitbucket**, **Flickr**, **Meetup**, **Plurk**,
+    **Twitter**, **Tumblr**, **UbuntuOne**, **Vimeo**, **Xero**, **Xing** and **Yahoo**.
+  * |oauth2|_ providers: **Amazon**, **Behance**, **Bitly**, **Cosm**,
+    **DeviantART**, **Eventbrite**, **Facebook**, **Foursquare**,
+    **GitHub**, **Google**, **LinkedIn**, **PayPal**, **Reddit**,
+    **Viadeo**, **VK**, **WindowsLive**, **Yammer** and **Yandex**.
+  * |pyopenid|_ and |gae|_ based |openid|_.
 
 License and Requirements
 ========================

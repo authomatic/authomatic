@@ -139,18 +139,27 @@ OAUTH1 = {
 }
 
 OAUTH2 = {
-    'behance': {
-        'class_': oauth2.Behance,
+    'amazon': {
+        'class_': oauth2.Amazon,
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'id': authomatic.provider_id(),
-        'scope': oauth2.Behance.user_info_scope + ['post_as'],
-        '_apis': {
-            'Get your collections.': ('GET', 'http://behance.net/v2/users/{user.username}/collections'),
-            'Get your statistics.': ('GET', 'http://behance.net/v2/users/{user.username}/stats'),
-            'Follow a user.': ('POST', 'http://behance.net/v2/users/{message}/follow', 'Username or ID', 'peterhudec'),
-        },
+        'scope': oauth2.Amazon.user_info_scope,
     },
+
+    # Behance doesn't support third party authorization anymore
+    # 'behance': {
+    #     'class_': oauth2.Behance,
+    #     'consumer_key': '##########',
+    #     'consumer_secret': '##########',
+    #     'id': authomatic.provider_id(),
+    #     'scope': oauth2.Behance.user_info_scope + ['post_as'],
+    #     '_apis': {
+    #         'Get your collections.': ('GET', 'http://behance.net/v2/users/{user.username}/collections'),
+    #         'Get your statistics.': ('GET', 'http://behance.net/v2/users/{user.username}/stats'),
+    #         'Follow a user.': ('POST', 'http://behance.net/v2/users/{message}/follow', 'Username or ID', 'peterhudec'),
+    #     },
+    # },
           
     'bitly': {
         'class_': oauth2.Bitly,
@@ -178,6 +187,19 @@ OAUTH2 = {
         'consumer_secret': '##########',
         'id': authomatic.provider_id(),
         'scope': oauth2.DeviantART.user_info_scope,
+    },
+
+    'eventbrite': {
+        'class_': oauth2.Eventbrite,
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'id': authomatic.provider_id(),
+        'scope': oauth2.Eventbrite.user_info_scope,
+        '_apis': {
+            'List your orders': ('GET', 'https://www.eventbriteapi.com/v3/users/{user.id}/orders/'),
+            'List your owned events': ('GET', 'https://www.eventbriteapi.com/v3/users/{user.id}/owned_events/'),
+            'Search for event': ('GET', 'https://www.eventbriteapi.com/v3/events/search/?q={message}', 'search string', 'Little Britain'),
+        },
     },
     
     'facebook': {
@@ -264,19 +286,20 @@ OAUTH2 = {
         'id': authomatic.provider_id(),
         'scope': oauth2.Reddit.user_info_scope,
     },
-    
-    'viadeo': {
-        'class_': oauth2.Viadeo,
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'id': authomatic.provider_id(),
-        'scope': oauth2.Viadeo.user_info_scope,
-        '_apis': {
-            'Get your inbox': ('GET', 'https://api.viadeo.com/me/inbox'),
-            'Get your newsfeed': ('GET', 'https://api.viadeo.com/me/home_newsfeed'),
-            'Post a status': ('POST', 'https://api.viadeo.com/status?message={message}', 'Status', DEFAULT_MESSAGE),
-        },
-    },
+
+    # Viadeo doesn't support OAuth 2.0 API publicly anymore.
+    # 'viadeo': {
+    #     'class_': oauth2.Viadeo,
+    #     'consumer_key': '##########',
+    #     'consumer_secret': '##########',
+    #     'id': authomatic.provider_id(),
+    #     'scope': oauth2.Viadeo.user_info_scope,
+    #     '_apis': {
+    #         'Get your inbox': ('GET', 'https://api.viadeo.com/me/inbox'),
+    #         'Get your newsfeed': ('GET', 'https://api.viadeo.com/me/home_newsfeed'),
+    #         'Post a status': ('POST', 'https://api.viadeo.com/status?message={message}', 'Status', DEFAULT_MESSAGE),
+    #     },
+    # },
     
     'vk': {
         'class_': oauth2.VK,

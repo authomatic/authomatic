@@ -2,8 +2,9 @@ Django
 Flask
 pyramid
 python-openid
-liveandletdie
+liveandletdie>=0.0.4
 pytest
 selenium
 Sphinx==1.1.3
 gae_installer
+six

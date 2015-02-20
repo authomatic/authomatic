@@ -13,7 +13,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="submit_approve_access"]',
     ],
-    'consent_wait_seconds': 3,
+    'consent_wait_seconds': 5,
     'class_': oauth2.Google,
     'scope': oauth2.Google.user_info_scope,
     'offline': True,
@@ -85,7 +85,7 @@ CONFIG = {
         'consumer_secret': True,
         'token': False,
         'token_secret': True,
-        '_expire_in': True,
+        '_expire_in': None, # Somtimes differ in one second.
         'provider_name': True,
         'refresh_token': True,
         'provider_type': True,

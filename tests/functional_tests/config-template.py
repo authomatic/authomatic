@@ -23,7 +23,8 @@ HOST_ALIAS = 'authomatic.com'
 # This is a convenience to easily exclude providers from tests by commenting
 # them out.
 INCLUDE_PROVIDERS = [
-    'behance',
+    'amazon',
+    # 'behance', # Behance doesn't support third party authorization anymore.
     'bitly',
     'deviantart',
     'facebook',
@@ -48,7 +49,7 @@ USERNAME = 'andypipkin'
 USERNAME_REVERSE = 'pipkinandy'
 NICKNAME = 'Mr. Pipkin'
 BIRTH_YEAR = '1979'
-BIRTH_DATE = str(datetime.datetime(1979, 12, 31))
+BIRTH_DATE = datetime.datetime(1979, 12, 31).strftime('%x')
 CITY = 'London'
 COUNTRY = 'Great Britain'
 POSTAL_CODE = 'EC1A1DH'
@@ -97,12 +98,19 @@ COMMON = {
 # Values from COMMON will be overriden by values from PROVIDERS[provider_name]
 # if set.
 PROVIDERS = {
-    'behance': {
+    'amazon': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
-        'user_password': '##########',
         'user_id': '??????????',
+        'user_password': '##########',
     },
+    # Behance doesn't support third party authorization anymore.
+    # 'behance': {
+    #     'consumer_key': '##########',
+    #     'consumer_secret': '##########',
+    #     'user_password': '##########',
+    #     'user_id': '??????????',
+    # },
     'bitly': {
         'consumer_key': '##########',
         'consumer_secret': '##########',

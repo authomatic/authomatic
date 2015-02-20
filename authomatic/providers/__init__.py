@@ -27,14 +27,14 @@ import base64
 import copy
 import datetime
 import hashlib
-import httplib
 import logging
 import os
 import random
 import sys
 import traceback
-import urllib
-import urlparse
+import six
+from six.moves.urllib import parse
+from six.moves import http_client
 import uuid
 
 
@@ -123,7 +123,7 @@ class BaseProvider(object):
     PROVIDER_TYPE_ID = 0
     
     _repr_ignore = ('user',)
-    
+
     __metaclass__ = abc.ABCMeta
 
     supported_user_attributes = authomatic.core.SupportedUserAttributes()
@@ -306,7 +306,7 @@ class BaseProvider(object):
         """
         
         # Create hash from random string plus salt.
-        hashed = hashlib.md5(str(uuid.uuid4()) + str(secret)).hexdigest()
+        hashed = hashlib.md5(uuid.uuid4().bytes + six.b(secret)).hexdigest()
         
         # Each time return random portion of the hash.
         span = 5
@@ -328,7 +328,7 @@ class BaseProvider(object):
             The actual message.
         """
 
-        logger = cls._logger or authomatic.core._logger
+        logger = getattr(cls, '_logger', None) or authomatic.core._logger
         logger.log(level, ': '.join(('authomatic', cls.__name__, msg)))
 
     
@@ -357,37 +357,36 @@ class BaseProvider(object):
         :param function content_parser:
             A callable to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
         """
-        
         params = params or {}
         params.update(self.access_params)
         
         headers = headers or {}
         headers.update(self.access_headers)
         
-        scheme, host, path, query, fragment = urlparse.urlsplit(url)
-        query = urllib.urlencode(params)
+        scheme, host, path, query, fragment = parse.urlsplit(url)
+        query = parse.urlencode(params)
         
         if method in ('POST', 'PUT', 'PATCH'):
             if not body:
                 # Put querystring to body
                 body = query
-                query = None
+                query = ''
                 headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
+        print(path, query)
+        request_path = parse.urlunsplit(('', '', path or '', query or '', ''))
         
-        request_path = urlparse.urlunsplit((None, None, path, query, None))
-        
-        self._log(logging.DEBUG, u' \u251C\u2500 host: {0}'.format(host))
-        self._log(logging.DEBUG, u' \u251C\u2500 path: {0}'.format(request_path))
-        self._log(logging.DEBUG, u' \u251C\u2500 method: {0}'.format(method))
-        self._log(logging.DEBUG, u' \u251C\u2500 body: {0}'.format(body))
-        self._log(logging.DEBUG, u' \u251C\u2500 params: {0}'.format(params))
-        self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(headers))
+        self._log(logging.DEBUG, ' \u251C\u2500 host: {0}'.format(host))
+        self._log(logging.DEBUG, ' \u251C\u2500 path: {0}'.format(request_path))
+        self._log(logging.DEBUG, ' \u251C\u2500 method: {0}'.format(method))
+        self._log(logging.DEBUG, ' \u251C\u2500 body: {0}'.format(body))
+        self._log(logging.DEBUG, ' \u251C\u2500 params: {0}'.format(params))
+        self._log(logging.DEBUG, ' \u2514\u2500 headers: {0}'.format(headers))
         
         # Connect
         if scheme.lower() == 'https':
-            connection = httplib.HTTPSConnection(host)
+            connection = http_client.HTTPSConnection(host)
         else:
-            connection = httplib.HTTPConnection(host)
+            connection = http_client.HTTPConnection(host)
             
         try:
             connection.request(method, request_path, body, headers)
@@ -409,7 +408,8 @@ class BaseProvider(object):
                 remaining_redirects = max_redirects - 1
                 
                 self._log(logging.DEBUG, 'Redirecting to {0}'.format(url))
-                self._log(logging.DEBUG, 'Remaining redirects: '.format(remaining_redirects))
+                self._log(logging.DEBUG, 'Remaining redirects: {0}'
+                          .format(remaining_redirects))
                 
                 # Call this method again.
                 response = self._fetch(url=location,
@@ -423,10 +423,10 @@ class BaseProvider(object):
                                  url=location,
                                  status=response.status)
         else:
-            self._log(logging.DEBUG, u'Got response:')
-            self._log(logging.DEBUG, u' \u251C\u2500 url: {0}'.format(url))
-            self._log(logging.DEBUG, u' \u251C\u2500 status: {0}'.format(response.status))
-            self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(response.getheaders()))
+            self._log(logging.DEBUG, 'Got response:')
+            self._log(logging.DEBUG, ' \u251C\u2500 url: {0}'.format(url))
+            self._log(logging.DEBUG, ' \u251C\u2500 status: {0}'.format(response.status))
+            self._log(logging.DEBUG, ' \u2514\u2500 headers: {0}'.format(response.getheaders()))
                 
         return authomatic.core.Response(response, content_parser)
     
@@ -446,7 +446,7 @@ class BaseProvider(object):
         self.user.data = data
         
         # Update.
-        for key in self.user.__dict__.keys():
+        for key in list(self.user.__dict__.keys()):
             # Exclude data.
             if key not in ('data', 'content'):
                 # Extract every data item whose key matches the user property name,
@@ -749,7 +749,7 @@ class AuthorizationProvider(BaseProvider):
                               max_redirects=max_redirects,
                               content_parser=content_parser)
         
-        self._log(logging.INFO, 'Got response. HTTP status = {0}.'.format(response.status))
+        self._log(logging.INFO, 'Got response. HTTP status = {0}. {1}'.format(response.status, response.content))
         return response
 
 
@@ -803,7 +803,7 @@ class AuthorizationProvider(BaseProvider):
         
         if cls._x_use_authorization_header:
             res = ':'.join((credentials.consumer_key, credentials.consumer_secret))
-            res = base64.b64encode(res)
+            res = base64.b64encode(six.b(res)).decode()
             return {'Authorization': 'Basic {0}'.format(res)}
         else:
             return {}
@@ -825,9 +825,9 @@ class AuthorizationProvider(BaseProvider):
     def _split_url(url):
         "Splits given url to url base and params converted to list of tuples"
         
-        split = urlparse.urlsplit(url)
-        base = urlparse.urlunsplit((split.scheme, split.netloc, split.path, 0, 0))
-        params = urlparse.parse_qsl(split.query, True)
+        split = parse.urlsplit(url)
+        base = parse.urlunsplit((split.scheme, split.netloc, split.path, 0, 0))
+        params = parse.parse_qsl(split.query, True)
         
         return base, params
     

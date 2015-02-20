@@ -13,6 +13,7 @@ CONFIG = {
         '//*[@id="authentication-container"]/div/form/div[3]/div[4]/input',
         '//*[@id="access_choices_allow"]',
     ],
+    'consent_wait_seconds': 2,
     'class_': oauth2.Eventbrite,
     'scope': oauth2.Eventbrite.user_info_scope,
     'user': {

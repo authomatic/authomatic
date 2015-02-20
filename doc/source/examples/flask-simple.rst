@@ -59,6 +59,23 @@ The handler must return the ``response`` so we assign it to a variable.
    :language: python
    :lines: 34, 37
 
+.. note::
+
+   If you want to use the :class:`flask.session`, you can do it like this:
+
+   .. code-block:: python
+      :emphasize-lines: 7-8
+
+      # You need to set a secret string otherwise the session will not work.
+      app.secret_key = 'random secret string'
+
+      result = authomatic.login(
+         WerkzeugAdapter(request, response),
+         provider_name,
+         session=session,
+         session_saver=lambda: app.save_session(session, response)
+      )
+
 Now check whether there is a :class:`.LoginResult`.
 If so, we need to update the :class:`.User` to get **his/her** info.
 Then just pass the whole :class:`.LoginResult` to the template.

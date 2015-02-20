@@ -1,7 +1,18 @@
-Version 0.0.10 (development)
+Version 0.0.11 (development)
 ----------------------------
 
+* Fixed a bug when :class:`.authomatic.Response` could not be decoded.
+* The :class:`.oauth2.Foursquare` provider now supports
+  :attr:`.User.birth_date`.
+
+Version 0.0.10
+--------------
+
+* Fixed a bug when saving non-JSON-serializable values to third party sessions
+  by the ``python-openid`` package caused a ``KeyError``.
 * Added the :class:`.oauth2.Eventbrite` provider.
+* Added the :class:`.oauth2.Amazon` provider.
+* Improved OAuth 2.0 Error Handling.
 
 Version 0.0.9
 -------------

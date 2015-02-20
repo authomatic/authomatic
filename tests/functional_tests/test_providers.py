@@ -3,8 +3,10 @@
 import os
 import re
 import time
+from six.moves.urllib import parse
 
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 import pytest
 import liveandletdie
 
@@ -13,7 +15,6 @@ from tests.functional_tests import fixtures
 import constants
 
 
-HOME = 'http://{0}:{1}/'.format(config.HOST_ALIAS, config.PORT)
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
 PROVIDERS = dict((k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items() if
@@ -21,9 +22,10 @@ PROVIDERS = dict((k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items() if
 APPS = {
     'Flask': liveandletdie.Flask(
         os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
-        suppress_output=False,
         host=config.HOST,
-        port=config.PORT
+        port=config.PORT,
+        check_url=config.HOST_ALIAS,
+        ssl=True,
     ),
 }
 
@@ -47,17 +49,17 @@ def app(request):
 
     try:
         # Run the live server.
-        _app.live(kill=True)
+        _app.live(kill_port=True)
     except Exception as e:
         # Skip test if not started.
-        pytest.fail(e.message)
+        pytest.exit(e.message)
 
     request.addfinalizer(lambda: _app.die())
     return _app
 
 
 @pytest.fixture(scope='module', params=PROVIDERS)
-def provider(request, browser):
+def provider(request, browser, app):
     """Runs for each provider."""
 
     _provider = fixtures.ASSEMBLED_CONFIG[request.param]
@@ -65,7 +67,7 @@ def provider(request, browser):
     conf = fixtures.get_configuration(request.param)
 
     # Andy types the login handler url to the address bar.
-    browser.get(HOME + 'login/' + _provider['name'])
+    browser.get(parse.urljoin(app.check_url, 'login/' + _provider['name']))
 
     # Andy authenticates by the provider.
     login_xpath = _provider.get('login_xpath')
@@ -99,13 +101,26 @@ def provider(request, browser):
                 print('No consent needed.')
                 pass
 
+    try:
+        success = browser.find_element_by_id('login-result')
+    except NoSuchElementException as e:
+        _provider['__login_error__'] = e
+
     return _provider
 
 
-class TestCredentials(object):
+class Base(object):
+
+    def skip_if_login_failed(self, provider):
+        assert provider.get('__login_error__') is None
+
+
+class TestCredentials(Base):
 
     @pytest.fixture()
     def fixture(self, app, provider, browser):
+        self.skip_if_login_failed(provider)
+
         def f(property_name, coerce=None):
             id_ = 'original-credentials-{0}'.format(property_name)
             value = browser.find_element_by_id(id_).text or None
@@ -115,7 +130,11 @@ class TestCredentials(object):
             if expected is True:
                 assert value
             else:
-                if coerce is not None and isinstance(expected, basestring):
+                try:
+                    unicode
+                except NameError:
+                    class unicode(object): pass
+                if coerce is not None and isinstance(expected, (str, unicode)):
                     expected = coerce(expected)
                     value = coerce(value)
 
@@ -164,9 +183,12 @@ class TestCredentials(object):
         fixture('provider_type')
 
 
-class TestCredentialsChange(object):
+class TestCredentialsChange(Base):
+
     @pytest.fixture()
     def fixture(self, app, provider, browser):
+        self.skip_if_login_failed(provider)
+
         refresh_status = browser.find_element_by_id('original-credentials-'
                                                       'refresh_status').text
 
@@ -236,9 +258,12 @@ class TestCredentialsChange(object):
         fixture('provider_type')
 
 
-class TestUser(object):
+class TestUser(Base):
+
     @pytest.fixture()
     def fixture(self, app, provider, browser):
+        self.skip_if_login_failed(provider)
+
         def f(property_name):
             value = browser.find_element_by_id(property_name).text or None
             expected = provider['user'][property_name]
@@ -301,17 +326,20 @@ class TestUser(object):
         fixture('timezone')
 
     def test_content_should_contain(self, app, provider, browser):
+        self.skip_if_login_failed(provider)
         content = browser.find_element_by_id('content').text
         for item in provider['content_should_contain']:
             assert item in content
 
     def test_content_should_not_contain(self, app, provider, browser):
+        self.skip_if_login_failed(provider)
         content = browser.find_element_by_id('content').text.lower()
         for item in provider['content_should_not_contain']:
             if item:
                 assert item.lower() not in content
 
     def test_provider_support(self, app, provider):
+        self.skip_if_login_failed(provider)
         sua = provider['class_'].supported_user_attributes
         tested = dict((k, getattr(sua, k)) for k in sua._fields)
         expected = dict((k, bool(v)) for k, v in provider['user'].items() if
