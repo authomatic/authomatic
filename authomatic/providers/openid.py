@@ -95,7 +95,7 @@ class SessionWrapper(object):
         val = self.session.get(key)
         if val and val.startswith(self.prefix):
             split = val.split(self.prefix)[1]
-            unpickled = pickle.loads(split)
+            unpickled = pickle.loads(str(split))
 
             return unpickled
         else:
