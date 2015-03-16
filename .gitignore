@@ -34,3 +34,5 @@ bower_components/
 ghostdriver.log
 e3/
 e2/
+e
+.tox/
