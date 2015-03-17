@@ -9,7 +9,10 @@ import hashlib
 import hmac
 import logging
 import json
-import pickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 import threading
 import time
 import six
@@ -364,8 +367,15 @@ class Session(object):
     def save(self):
         """Adds the session cookie to headers."""
         if self.data:
-            # Set the cookie header.
-            self.adapter.set_header('Set-Cookie', self.create_cookie())
+            cookie = self.create_cookie()
+            cookie_len = len(cookie)
+
+            if cookie_len > 4093:
+                raise SessionError('Cookie too long! The cookie size {0} '
+                                   'is more than 4093 bytes.'
+                                   .format(cookie_len))
+
+            self.adapter.set_header('Set-Cookie', cookie)
 
             # Reset data
             self._data = {}
@@ -389,10 +399,7 @@ class Session(object):
         return self._data
 
     def _signature(self, *parts):
-        """
-        Creates signature for the session.
-        """
-
+        """Creates signature for the session."""
         signature = hmac.new(six.b(self.secret), digestmod=hashlib.sha1)
         signature.update(six.b('|'.join(parts)))
         return signature.hexdigest()
@@ -408,10 +415,11 @@ class Session(object):
             Serialized value.
         """
 
-        data = copy.deepcopy(value)
+        # data = copy.deepcopy(value)
+        data = value
 
         # 1. Serialize
-        serialized = json.dumps(data)
+        serialized = pickle.dumps(data).decode('latin-1')
 
         # 2. Encode
         # Percent encoding produces smaller result then urlsafe base64.
@@ -420,7 +428,9 @@ class Session(object):
         # 3. Concatenate
         timestamp = str(int(time.time()))
         signature = self._signature(self.name, encoded, timestamp)
-        return '|'.join([encoded, timestamp, signature])
+        concatenated = '|'.join([encoded, timestamp, signature])
+
+        return concatenated
 
 
     def _deserialize(self, value):
@@ -449,7 +459,7 @@ class Session(object):
         decoded = parse.unquote(encoded)
 
         # 1. Deserialize
-        deserialized = json.loads(decoded)
+        deserialized = pickle.loads(decoded.encode('latin-1'))
 
         return deserialized
 
