@@ -41,6 +41,7 @@ INCLUDE_PROVIDERS = [
 
     'openid_yahoo',
     'openid_livejournal',
+    'openid_wordpress',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -236,5 +237,11 @@ PROVIDERS = {
         'openid_identifier': '{0}.livejournal.com'.format(USERNAME),
         'user_login': USERNAME,
         'user_id': 'http://{0}.livejournal.com/'.format(USERNAME)
+    },
+    'openid_wordpress': {
+        'openid_identifier': '{0}.wordpress.com'.format(USERNAME),
+        'user_login': EMAIL,
+        'user_id': 'https://{0}.wordpress.com/'.format(USERNAME),
+        'user_nickname': NICKNAME,
     },
 }
