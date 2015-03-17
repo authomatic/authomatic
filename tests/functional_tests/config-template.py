@@ -42,6 +42,7 @@ INCLUDE_PROVIDERS = [
     'openid_yahoo',
     'openid_livejournal',
     'openid_wordpress',
+    'openid_verisignlabs',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -243,5 +244,14 @@ PROVIDERS = {
         'user_login': EMAIL,
         'user_id': 'https://{0}.wordpress.com/'.format(USERNAME),
         'user_nickname': NICKNAME,
+    },
+    'openid_verisignlabs': {
+        'openid_identifier': '{0}.pip.verisignlabs.com'.format(USERNAME),
+        'user_login': USERNAME,
+        'user_id': 'http://{0}.pip.verisignlabs.com/'.format(USERNAME),
+        'user_nickname': NICKNAME,
+        'user_timezone': '???',
+        'user_locale': '???',
+        'user_gender': '???',
     },
 }
