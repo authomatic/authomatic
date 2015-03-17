@@ -263,7 +263,7 @@ class WerkzeugAdapter(BaseAdapter):
         self.response = response
 
     def write(self, value):
-        self.response.data += value
+        self.response.data = self.response.data.decode('utf-8') + value
 
     def set_header(self, key, value):
         self.response.headers[key] = value
