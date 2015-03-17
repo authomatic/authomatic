@@ -68,12 +68,19 @@ def provider(request, browser, app):
 
     # Andy types the login handler url to the address bar.
     url = parse.urljoin(app.check_url, 'login/' + _provider['_path'])
-    browser.get(url)
 
     # Andy authenticates by the provider.
+    login_url = _provider.get('login_url')
     login_xpath = _provider.get('login_xpath')
     password_xpath = _provider.get('password_xpath')
     pre_login_xpaths = _provider.get('pre_login_xpaths')
+
+    if login_url:
+        # Go to login URL to log in
+        browser.get(login_url)
+    else:
+        browser.get(url)
+
     if login_xpath:
         if pre_login_xpaths:
             for xpath in pre_login_xpaths:
@@ -88,9 +95,14 @@ def provider(request, browser, app):
         password_element.send_keys(conf.user_password)
         password_element.send_keys(Keys.ENTER)
 
+    if login_url:
+        # Return back from login URL
+        browser.get(url)
+
     # Andy authorizes this app to access his protected resources.
     consent_xpaths = _provider.get('consent_xpaths')
     consent_wait_seconds = _provider.get('consent_wait_seconds', 0)
+
     if consent_xpaths:
         for xpath in consent_xpaths:
             try:
