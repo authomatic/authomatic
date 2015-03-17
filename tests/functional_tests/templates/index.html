@@ -20,13 +20,18 @@
         <ul>
             {% for provider in providers %}
             <li>
-                <a	id="{{ provider }}"
-                    href="/login/{{ provider }}">
-                    {{ provider }}
+                <a id="{{ provider._path }}"
+                    href="/login/{{ provider._path }}">
+                    {{ provider._path }}
                 </a>
             </li>
             {% endfor %}
         </ul>
+        <h2>OpenID</h2>
+        <form action="/login/openid">
+          <input type="text" name="id" />
+          <input type="submit" value="login" />
+        </form>
         {% block body %}{% endblock %}
     </body>
 </html>

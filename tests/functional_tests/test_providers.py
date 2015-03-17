@@ -67,7 +67,8 @@ def provider(request, browser, app):
     conf = fixtures.get_configuration(request.param)
 
     # Andy types the login handler url to the address bar.
-    browser.get(parse.urljoin(app.check_url, 'login/' + _provider['name']))
+    url = parse.urljoin(app.check_url, 'login/' + _provider['_path'])
+    browser.get(url)
 
     # Andy authenticates by the provider.
     login_xpath = _provider.get('login_xpath')
@@ -114,11 +115,16 @@ class Base(object):
     def skip_if_login_failed(self, provider):
         assert provider.get('__login_error__') is None
 
+    def skip_if_openid(self, provider):
+        if provider.get('openid_identifier'):
+            pytest.skip("OpenID provider has no credentials.")
+
 
 class TestCredentials(Base):
 
     @pytest.fixture()
     def fixture(self, app, provider, browser):
+        self.skip_if_openid(provider)
         self.skip_if_login_failed(provider)
 
         def f(property_name, coerce=None):
@@ -187,6 +193,7 @@ class TestCredentialsChange(Base):
 
     @pytest.fixture()
     def fixture(self, app, provider, browser):
+        self.skip_if_openid(provider)
         self.skip_if_login_failed(provider)
 
         refresh_status = browser.find_element_by_id('original-credentials-'
@@ -326,12 +333,14 @@ class TestUser(Base):
         fixture('timezone')
 
     def test_content_should_contain(self, app, provider, browser):
+        self.skip_if_openid(provider)
         self.skip_if_login_failed(provider)
         content = browser.find_element_by_id('content').text
         for item in provider['content_should_contain']:
             assert item in content
 
     def test_content_should_not_contain(self, app, provider, browser):
+        self.skip_if_openid(provider)
         self.skip_if_login_failed(provider)
         content = browser.find_element_by_id('content').text.lower()
         for item in provider['content_should_not_contain']:
@@ -339,6 +348,7 @@ class TestUser(Base):
                 assert item.lower() not in content
 
     def test_provider_support(self, app, provider):
+        self.skip_if_openid(provider)
         self.skip_if_login_failed(provider)
         sua = provider['class_'].supported_user_attributes
         tested = dict((k, getattr(sua, k)) for k in sua._fields)

@@ -29,7 +29,7 @@ def render_home():
     """Renders the homepage"""
 
     template = env.get_template('index.html')
-    return template.render(providers=ASSEMBLED_CONFIG.keys())
+    return template.render(providers=ASSEMBLED_CONFIG.values())
 
 
 def render_login_result(result):
@@ -63,7 +63,7 @@ def render_login_result(result):
         user_properties = list(ASSEMBLED_CONFIG.values())[0]['user'].keys()
         template = env.get_template('login.html')
         return template.render(result=result,
-                               providers=ASSEMBLED_CONFIG.keys(),
+                               providers=ASSEMBLED_CONFIG.values(),
                                user_properties=user_properties,
                                error=result.error,
                                credentials_response=response,
@@ -129,4 +129,8 @@ for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):
     result = {}
     result.update(config.PROVIDERS[name])
     result.update(mod.CONFIG)
+
+    result['_path'] = '{0}?id={1}'.format(name, result['openid_identifier']) \
+        if result.get('openid_identifier') else name
+
     ASSEMBLED_CONFIG[name] = result

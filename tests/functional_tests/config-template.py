@@ -38,6 +38,9 @@ INCLUDE_PROVIDERS = [
     'windowslive',
     'yammer',
     'yandex',
+
+    'openid_yahoo',
+    'openid_livejournal',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -222,5 +225,16 @@ PROVIDERS = {
         'user_password': '##########',
         'user_login': USERNAME,
         'user_id': '??????????',
+    },
+    'openid_yahoo': {
+        'openid_identifier': 'me.yahoo.com',
+        'user_id': '???',
+        'user_login': USERNAME_REVERSE,
+        'user_email': 'hudecpeter@yahoo.com',
+    },
+    'openid_livejournal': {
+        'openid_identifier': '{0}.livejournal.com'.format(USERNAME),
+        'user_login': USERNAME,
+        'user_id': 'http://{0}.livejournal.com/'.format(USERNAME)
     },
 }
