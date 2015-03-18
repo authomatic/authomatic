@@ -17,8 +17,9 @@
     </head>
     <body>
         <h1>Providers</h1>
+        <h2>Oauth 1.0a</h2>
         <ul>
-            {% for provider in providers %}
+            {% for key, provider in oauth1_providers|dictsort() %}
             <li>
                 <a id="{{ provider._path }}"
                     href="/login/{{ provider._path }}">
@@ -27,11 +28,28 @@
             </li>
             {% endfor %}
         </ul>
-        <h2>OpenID</h2>
-        <form action="/login/openid">
-          <input type="text" name="id" />
-          <input type="submit" value="login" />
-        </form>
+        <h2>Oauth 2.0</h2>
+        <ul>
+            {% for key, provider in oauth2_providers|dictsort() %}
+            <li>
+                <a id="{{ provider._path }}"
+                    href="/login/{{ provider._path }}">
+                    {{ provider._path }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <h2>Openid</h2>
+        <ul>
+            {% for key, provider in openid_providers|dictsort() %}
+            <li>
+                <a id="{{ provider._path }}"
+                    href="/login/{{ provider._path }}">
+                    {{ provider._path }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
         {% block body %}{% endblock %}
     </body>
 </html>

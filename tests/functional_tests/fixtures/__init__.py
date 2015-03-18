@@ -8,6 +8,11 @@ import time
 import six
 from six.moves import reload_module
 from jinja2 import Environment, FileSystemLoader
+from authomatic.providers import (
+    oauth1,
+    oauth2,
+    openid,
+)
 
 # Add path of the functional_tests_path package to PYTHONPATH.
 # Tis is necessary for the following imports to work when this module is
@@ -25,11 +30,22 @@ TEMPLATES_DIR = path.join(path.abspath(path.dirname(__file__)), '../templates')
 env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
 
 
+ASSEMBLED_CONFIG = {}
+OAUTH2_PROVIDERS = {}
+OAUTH1_PROVIDERS = {}
+OPENID_PROVIDERS = {}
+
+
 def render_home():
     """Renders the homepage"""
 
+    # oauth2_providers = dict(filter(lambda x: oauth2.OAuth2 in x[1]['class_'].__mro__, ASSEMBLED_CONFIG.items()))
+
     template = env.get_template('index.html')
-    return template.render(providers=ASSEMBLED_CONFIG.values())
+    return template.render(providers=ASSEMBLED_CONFIG,
+                           oauth2_providers=OAUTH2_PROVIDERS,
+                           oauth1_providers=OAUTH1_PROVIDERS,
+                           openid_providers=OPENID_PROVIDERS)
 
 
 def render_login_result(result):
@@ -64,6 +80,9 @@ def render_login_result(result):
         template = env.get_template('login.html')
         return template.render(result=result,
                                providers=ASSEMBLED_CONFIG.values(),
+                               oauth2_providers=OAUTH2_PROVIDERS,
+                               oauth1_providers=OAUTH1_PROVIDERS,
+                               openid_providers=OPENID_PROVIDERS,
                                user_properties=user_properties,
                                error=result.error,
                                credentials_response=response,
@@ -117,7 +136,6 @@ def get_configuration(provider):
     return Res(**conf)
 
 
-ASSEMBLED_CONFIG = {}
 expected_values_path = path.dirname(expected_values.__file__)
 
 # Loop through all modules of the expected_values package.
@@ -134,3 +152,11 @@ for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):
         if result.get('openid_identifier') else name
 
     ASSEMBLED_CONFIG[name] = result
+    if oauth2.OAuth2 in result['class_'].__mro__:
+        OAUTH2_PROVIDERS[name] = result
+
+    if oauth1.OAuth1 in result['class_'].__mro__:
+        OAUTH1_PROVIDERS[name] = result
+
+    if openid.OpenID in result['class_'].__mro__:
+        OPENID_PROVIDERS[name] = result
