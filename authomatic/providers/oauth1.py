@@ -598,7 +598,42 @@ class Twitter(OAuth1):
     * Dashboard: https://dev.twitter.com/apps
     * Docs: https://dev.twitter.com/docs
     * API reference: https://dev.twitter.com/docs/api
+
+    Supported :class:`.User` properties:
+
+    * city
+    * country
+    * id
+    * link
+    * locale
+    * name
+    * picture
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * email
+    * gender
+    * first_name
+    * last_name
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        city=True,
+        country=True,
+        id=True,
+        link=True,
+        locale=True,
+        name=True,
+        picture=True,
+        username=True
+    )
     
     request_token_url = 'https://api.twitter.com/oauth/request_token'
     user_authorization_url = 'https://api.twitter.com/oauth/authenticate'
@@ -614,6 +649,12 @@ class Twitter(OAuth1):
         user.picture = data.get('profile_image_url')
         user.locale = data.get('lang')
         user.link = data.get('url')
+
+        _location = data.get('location', '')
+        if _location:
+            _city, _country = _location.split(',')
+            user.city = _city.strip()
+            user.country = _country.strip()
         return user
 
 

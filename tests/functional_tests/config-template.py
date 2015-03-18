@@ -23,6 +23,8 @@ HOST_ALIAS = 'authomatic.com'
 # This is a convenience to easily exclude providers from tests by commenting
 # them out.
 INCLUDE_PROVIDERS = [
+    'twitter',
+
     'amazon',
     # 'behance', # Behance doesn't support third party authorization anymore.
     'bitly',
@@ -103,6 +105,19 @@ COMMON = {
 # Values from COMMON will be overriden by values from PROVIDERS[provider_name]
 # if set.
 PROVIDERS = {
+    # OAuth 1.0a
+    'twitter': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_id': '???',
+        'user_password': '##########',
+        'user_link': '???',
+        'user_picture': '???',
+        'user_username': '???',
+        'user_locale': '???',
+    },
+
+    # OAuth 2.0
     'amazon': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
@@ -228,6 +243,8 @@ PROVIDERS = {
         'user_login': USERNAME,
         'user_id': '??????????',
     },
+
+    # OpenID
     'openid_yahoo': {
         'openid_identifier': 'me.yahoo.com',
         'user_id': '???',
