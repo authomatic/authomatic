@@ -16,7 +16,7 @@
   <h1>Login result for provider: <span id="login-result">{{ result.provider.name }}</span></h1>
   <h2>User</h2>
   <table>
-    {% for property in user_properties %}
+    {% for property in user_properties|sort %}
       <tr>
         <td><strong>{{ property }}:&nbsp;</strong></td>
         {% if property == 'birth_date' and result.user[property] %}
@@ -35,7 +35,7 @@
   {% if original_credentials %}
     <h2>Original Credentials</h2>
     <table>
-      {% for k, v in original_credentials.items() %}
+      {% for k, v in original_credentials|dictsort %}
       <tr class="{% if k == 'config' %}hidden{% endif %}"}>
         <td><strong>{{ k }}:&nbsp;</strong></td>
         <td id="original-credentials-{{ k }}">{{ v|default('', true) }}</td>
@@ -49,7 +49,7 @@
 
     <h2>Refreshed Credentials</h2>
     <table>
-      {% for k, v in refreshed_credentials.items() %}
+      {% for k, v in refreshed_credentials|dictsort %}
       <tr class="{% if k == 'config' %}hidden{% endif %}"}>
         <td><strong>{{ k }}:&nbsp;</strong></td>
         <td id="refreshed-credentials-{{ k }}">{{ v|default('', true) }}</td>
