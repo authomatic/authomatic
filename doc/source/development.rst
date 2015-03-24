@@ -31,21 +31,20 @@ The easiest way to set up the development environment is to run the
 
    $ sh bootstrap.sh
 
-The script does following things:
+The script does following:
 
 #. Initializes and updates GIT submodules. The
    `Foundation Sphinx Theme <https://github.com/peterhudec/foundation-sphinx-theme>`__
    located in ``./doc/source_/themes/foundation-sphinx-theme``
    is currently the only GIT submodule used.
 #. Creates a `virtual environment <https://virtualenv.pypa.io/en/latest/>`__
-   in ``./venv``.
-#. Downloads and extracts the
-   `Google App Engine Python SDK <https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python>`__
-   for **Linux/Other Platforms** to ``./venv/google_appengine``.
-#. Downloads the `Chromedriver <https://code.google.com/p/chromedriver/>`__
-   executable needed by selenium tests to ``./venv/bin/chromedriver``.
-#. Activates the virtual environment ``./venv``.
-#. Installs the development dependencies specified in ``./requirements.txt``.
+   ``./e``.
+#. Installs the development dependencies specified in ``./requirements.txt``
+   to the ``e`` virtual environment.
+#. Runs the ``tox -r --notest`` command which creates virtual environments
+   ``./.tox/py26``, ``./.tox/py27`` and ``./tox/py34``.
+#. Creates symbolic links to ``./.tox/py27/lib/python2.7/site-packages/openid``
+   and ``./authomatic`` in each of the ``./examples/gae/*`` directories.
 #. Prepares the ``./doc/build/html`` directory for deployment of the compiled documentation to `Github Pages <https://pages.github.com/>`__.
     #. Removes the ``./doc/build/`` directory if it exists.
     #. Clones the origin of this repository to ``./doc/build/html``.
@@ -53,8 +52,31 @@ The script does following things:
     #. Sets the GIT **HEAD** to **gh-pages**.
     #. Removes the GIT index.
     #. Removes everything in the directory with ``git claen -fdx``.
-#. Compiles the documentation.
-#. Deactivates the virtual environment (probably unneccessary).
+#. Compiles the documentation with the ``./.tox/py27`` virtual environment
+   activated.
+
+PyOpenSSL Error
+^^^^^^^^^^^^^^^
+
+It is likely, that you will encounter some of following errors during
+installation of the **pyopenssl** package:
+
+Missing Python headers ``Python.h: No such file or directory``:
+
+Fix it by installing Python development package e.g:
+
+.. code-block:: bash
+
+    $ sudo apt-get install python3.4-dev
+
+Missing libffi headers ``ffi.h: No such file or directory``:
+
+Fix it by installing libffi development package e.g:
+
+.. code-block:: bash
+
+    $ sudo apt-get install libffi-dev
+
 
 Documentation Compilation and Deployment
 ----------------------------------------
@@ -67,9 +89,9 @@ Compile the documentation with this commands:
 
 .. code-block:: bash
 
-   $ . ./venv/bin/activate
-   (venv)$ cd doc
-   (venv)$ make html
+   $ . ./.tox/py27/bin/activate
+   (py27)$ cd doc
+   (py27)$ make html
 
 The documentation will be compiled to ``./doc/build/html``.
 For easy deploiment to `Github Pages <https://pages.github.com/>`__,
@@ -77,7 +99,7 @@ the ``./doc/build/html`` directory is actually a clone of the **origin** of the
 actual project repository that you cloned from (your fork) with the
 **gh-pages** branch checked out.
 
-To deploy a compiled documentation to Github page go to the
+To deploy a compiled documentation to GitHub page go to the
 ``./doc/build/html`` directory, commit all changes and push to
 **origin gh-pages**:
 
@@ -88,15 +110,19 @@ To deploy a compiled documentation to Github page go to the
     $ git commit -m "Updated documentation."
     $ git push origin gh-pages
 
-Tests
------
+Testing
+-------
 
-There are currently only *functional* (or *end-to-end*)
+Tests are written in `pytest <http://pytest.org/>`__
+and `Tox <https://testrun.org/tox>`__ is used to run them in
+**Python 2.6**, **Python 2.7** and **Python 3.4**.
+
+
+There are currently only *functional* (*end-to-end*)
 `Selenium <http://seleniumhq.org>`__ tests.
 They are designed to test the *login procedure* and
 *credentials refreshment* and to discover changes in provider APIs.
-Currently the tests cover all the |oauth2| providers.
-The tests are written for the `pytest <http://pytest.org/latest/>`__ framework.
+Currently the tests cover all of the |oauth2| and select |openid| providers.
 
 To run *functional* tests, you first need to create the
 ``./tests/functional_tests/config.py`` module by copying and filling out the
@@ -106,10 +132,6 @@ To run *functional* tests, you first need to create the
 
     $ cd tests/functional_tests
     $ cp config-template.py config.py
-
-This is the ``config-template.py`` template:
-
-.. literalinclude:: ../../tests/functional_tests/config-template.py
 
 If you want to run tests for all of the covered providers,
 you should register an **application** and a **user account** by each of them
@@ -133,13 +155,35 @@ to match a domain pattern.
     127.0.0.1	localhost
     127.0.0.1	authomatic.com
 
-You can run the tests with the following command
-with the virtual environment activated:
+Finally launch the tests:
 
 .. code-block:: bash
 
-    $ . venv/bin/activate
-    (venv)$ py.test tests/functional_tests
+    (e)$ tox
 
+If you want **tox** to only run tests for let's say
+**Python 2.6** and **Python 3.4** use the ``-e`` option:
 
+.. code-block:: bash
 
+    (e)$ tox -e py26, py34
+
+Running the Examples
+--------------------
+
+If you want to run any of the ``./examples/`` just copy the example's
+``config-template.py`` to ``config.py``, fill it out,
+activate one of the virtual environments in ``./tox/`` and run the example
+the usual way according to its framework.
+
+.. note::
+
+    The examples for functional tests
+    (currently there is only one in ``./examples/flask/functional_test/``)
+    use the **config** from ``./tests/functional_tests/config.py``.
+
+.. note::
+
+    The |gae| examples will only work in **Python 2.7**
+    The |gae| command line tools are installed in the ``./tox/py27/bin``
+    directory.
