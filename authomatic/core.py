@@ -1,25 +1,29 @@
 # -*- coding: utf-8 -*-
 
-from xml.etree import ElementTree
 import collections
 import copy
 import datetime
 from . import exceptions
 import hashlib
 import hmac
-import logging
 import json
+import logging
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
+import sys
 import threading
 import time
-import six
-from six.moves.urllib import parse
-import sys
+from xml.etree import ElementTree
 
-from authomatic.exceptions import SessionError, CredentialsError, RequestElementsError
+from authomatic.exceptions import (
+    SessionError,
+    CredentialsError,
+    RequestElementsError,
+)
+from authomatic import six
+from authomatic.six.moves import urllib_parse as parse
 
 
 #===============================================================================

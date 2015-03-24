@@ -19,24 +19,25 @@ Abstract base classes for implementation of protocol specific providers.
 
 """
 
-from authomatic.core import Session
-from authomatic.exceptions import ConfigError, AuthenticationError, FetchError, CredentialsError
 import abc
 import authomatic.core
 import base64
-import copy
-import datetime
 import hashlib
 import logging
-import os
 import random
 import sys
 import traceback
-import six
-from six.moves.urllib import parse
-from six.moves import http_client
 import uuid
 
+from authomatic.core import Session
+from authomatic.exceptions import (
+    ConfigError,
+    FetchError,
+    CredentialsError,
+)
+from authomatic import six
+from authomatic.six.moves import urllib_parse as parse
+from authomatic.six.moves import http_client
 
 
 __all__ = ['BaseProvider', 'AuthorizationProvider', 'AuthenticationProvider', 'login_decorator']
