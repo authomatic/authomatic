@@ -18,9 +18,11 @@ import time
 from xml.etree import ElementTree
 
 from authomatic.exceptions import (
-    SessionError,
+    ConfigError,
     CredentialsError,
+    ImportStringError,
     RequestElementsError,
+    SessionError,
 )
 from authomatic import six
 from authomatic.six.moves import urllib_parse as parse
@@ -171,8 +173,8 @@ def import_string(import_name, silent=False):
             return __import__(import_name)
     except (ImportError, AttributeError) as e:
         if not silent:
-            raise exceptions.ImportStringError('Import from string failed for path {0}'.format(import_name),
-                                               str(e))
+            raise ImportStringError('Import from string failed for path {0}'
+                                    .format(import_name), str(e))
 
 
 def resolve_provider_class(class_):
@@ -813,8 +815,9 @@ class Credentials(ReprMixin):
         """
 
         if self.provider_id is None:
-            raise exceptions.ConfigError('To serialize credentials you need to specify a unique ' + \
-                                         'integer under the "id" key in the config for each provider!')
+            raise ConfigError('To serialize credentials you need to specify a '
+                              'unique integer under the "id" key in the config '
+                              'for each provider!')
 
         # Get the provider type specific items.
         rest = self.provider_type_class().to_tuple(self)
@@ -1290,7 +1293,8 @@ class Authomatic(object):
             # retrieve required settings for current provider and raise exceptions if missing
             provider_settings = self.config.get(provider_name)
             if not provider_settings:
-                raise exceptions.ConfigError('Provider name "{0}" not specified!'.format(provider_name))
+                raise ConfigError('Provider name "{0}" not specified!'
+                                  .format(provider_name))
     
             if not (session is None or session_saver is None):
                 session = session
@@ -1307,7 +1311,8 @@ class Authomatic(object):
             # Resolve provider class.
             class_ = provider_settings.get('class_')
             if not class_:
-                raise exceptions.ConfigError('The "class_" key not specified in the config for provider {0}!'.format(provider_name))
+                raise ConfigError('The "class_" key not specified in the config'
+                                  ' for provider {0}!'.format(provider_name))
             ProviderClass = resolve_provider_class(class_)
 
             # FIXME: Find a nicer solution
