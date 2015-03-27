@@ -26,9 +26,8 @@ from tests.functional_tests import expected_values
 
 
 # Create template environment to load templates.
-TEMPLATES_DIR = path.join(path.abspath(path.dirname(__file__)), '../templates')
+TEMPLATES_DIR = path.join(path.abspath(path.dirname(__file__)), '..', 'templates')
 env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
-
 
 ASSEMBLED_CONFIG = {}
 OAUTH2_PROVIDERS = {}
@@ -38,9 +37,6 @@ OPENID_PROVIDERS = {}
 
 def render_home():
     """Renders the homepage"""
-
-    # oauth2_providers = dict(filter(lambda x: oauth2.OAuth2 in x[1]['class_'].__mro__, ASSEMBLED_CONFIG.items()))
-
     template = env.get_template('index.html')
     return template.render(providers=ASSEMBLED_CONFIG,
                            oauth2_providers=OAUTH2_PROVIDERS,
