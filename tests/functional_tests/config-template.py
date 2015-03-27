@@ -19,9 +19,13 @@ PORT = 8080
 # callback url.
 HOST_ALIAS = 'authomatic.com'
 
+# Only frameworks included here will be tested.
+INCLUDE_FRAMEWORKS = [
+    'flask',
+    # 'pyramid',
+]
+
 # Only providers included here will be tested.
-# This is a convenience to easily exclude providers from tests by commenting
-# them out.
 INCLUDE_PROVIDERS = [
     'twitter',
 

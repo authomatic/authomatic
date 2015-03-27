@@ -19,7 +19,8 @@ PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
 PROVIDERS = dict((k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items() if
                  k in config.INCLUDE_PROVIDERS)
-APPS = {
+
+ALL_APPS = {
     'Flask': liveandletdie.Flask(
         os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
         host=config.HOST,
@@ -27,7 +28,16 @@ APPS = {
         check_url=config.HOST_ALIAS,
         ssl=True,
     ),
+    'Pyramid': liveandletdie.WsgirefSimpleServer(
+        os.path.join(EXAMPLES_DIR, 'pyramid/functional_test/main.py'),
+        host=config.HOST,
+        port=config.PORT,
+        check_url=config.HOST_ALIAS
+    ),
 }
+
+APPS = dict((k, v) for k, v in ALL_APPS.items() if
+            k.lower() in config.INCLUDE_FRAMEWORKS)
 
 
 @pytest.fixture('module')
@@ -80,6 +90,13 @@ def provider(request, browser, app):
         browser.get(login_url)
     else:
         browser.get(url)
+
+    try:
+        browser.find_element_by_id('login-result')
+        print('Provider remembers the consent.')
+        return _provider
+    except NoSuchElementException:
+        pass
 
     if login_xpath:
         if pre_login_xpaths:
