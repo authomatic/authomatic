@@ -1,0 +1,608 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Adapters | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="../_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="Adapters | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://peterhudec.github.io/authomatic/reference/adapters.html" />
+	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Adapters enable Authomatic to work with any Python web framework. Currently there are adapters for Django, Webapp2, WebOb, Werkzeug and Flask." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Adapters enable Authomatic to work with any Python web framework. Currently there are adapters for Django, Webapp2, WebOb, Werkzeug and Flask.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="../_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="../_static/jquery.js"></script>
+    	<script type="text/javascript" src="../_static/underscore.js"></script>
+    	<script type="text/javascript" src="../_static/doctools.js"></script>
+    	<script type="text/javascript" src="../_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="../index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						<ul class="current">
+<li class="has-dropdown toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="dropdown current">
+<li class="toctree-l2"><a class="reference internal" href="config.html">Config</a></li>
+<li class="has-dropdown toctree-l2 current"><a class="current reference internal" href="">Adapters</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classes.html">Classes</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="providers.html">Providers</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="extras.html">Extras</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../examples/index.html">Tutorials / Examples</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../development.html">Development</a><ul class="dropdown ">
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../development.html#development-environment-setup">Development Environment Setup</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#running-the-examples">Running the Examples</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		<li><a href="config.html"  title="Config">&laquo; previous</a></li>
+	
+		
+			<li><a href="../genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="../py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+		
+		
+
+	
+		<li><a href="functions.html"  title="Functions">next &raquo;</a></li>
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="../index.html">
+		
+	    	
+	    		<img id="logo" src="../_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						<span>Authomatic</span><br />
+is an <em>authorization</em> / <em>authentication</em><br />
+client library for Python web applications<br />
+inspired by Alex Vagin’s
+<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
+In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
+but that name would be too long<br />
+for a succinct library.
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="http://peterhudec.github.io/authomatic/reference/adapters.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="http://peterhudec.github.io/authomatic/reference/adapters.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=peterhudec&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="Adapters | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	
+		<ul class="breadcrumbs">
+			
+		  	<li><a href="../index.html">Authomatic</a></li>
+
+		  	
+		  		<li><a href="index.html">Reference</a></li>
+
+		  	
+			<li class="current"><a href="">Adapters</a></li>
+		</ul>
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <span class="target" id="module-authomatic.adapters"></span><div class="section" id="adapters">
+<h1>Adapters<a class="headerlink" href="#adapters" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#adapters" id="id1">Adapters</a><ul>
+<li><a class="reference internal" href="#available-adapters" id="id2">Available Adapters</a></li>
+<li><a class="reference internal" href="#implementing-an-adapter" id="id3">Implementing an Adapter</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>The <a class="reference internal" href="functions.html#authomatic.login" title="authomatic.login"><tt class="xref py py-func docutils literal"><span class="pre">authomatic.login()</span></tt></a> function needs access to functionality like
+getting the <strong>URL</strong> of the handler where it is being called, getting the <strong>request params</strong> and <strong>cookies</strong> and
+<strong>writing the body</strong>, <strong>headers</strong> and <strong>status</strong> to the response.</p>
+<p>Since implementation of these features varies across Python web frameworks,
+the Authomatic library uses <strong>adapters</strong> to unify these differences into a single interface.</p>
+<div class="section" id="available-adapters">
+<h2>Available Adapters<a class="headerlink" href="#available-adapters" title="Permalink to this headline">¶</a></h2>
+<p>If you are missing an adapter for the framework of your choice,
+please open an <a class="reference external" href="https://github.com/peterhudec/authomatic/issues">enhancement issue</a>
+or consider a contribution to this module by <a class="reference internal" href="#implement-adapters"><em>implementing</em></a> one by yourself.
+Its very easy and shouldn&#8217;t take you more than a few minutes.</p>
+<dl class="class">
+<dt id="authomatic.adapters.DjangoAdapter">
+<em class="property">class </em><tt class="descclassname">authomatic.adapters.</tt><tt class="descname">DjangoAdapter</tt><big>(</big><em>request</em>, <em>response</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#DjangoAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.DjangoAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adapter for the <a class="reference external" href="http://djangoproject.org/">Django</a> framework.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>request</strong> &#8211; An instance of the <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpRequest" title="(in Django v1.9)"><tt class="xref py py-class docutils literal"><span class="pre">django.http.HttpRequest</span></tt></a> class.</li>
+<li><strong>response</strong> &#8211; An instance of the <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse" title="(in Django v1.9)"><tt class="xref py py-class docutils literal"><span class="pre">django.http.HttpResponse</span></tt></a> class.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.adapters.Webapp2Adapter">
+<em class="property">class </em><tt class="descclassname">authomatic.adapters.</tt><tt class="descname">Webapp2Adapter</tt><big>(</big><em>handler</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#Webapp2Adapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.Webapp2Adapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adapter for the <a class="reference external" href="http://webapp-improved.appspot.com/">Webapp2</a> framework.</p>
+<p>Inherits from the <a class="reference internal" href="#authomatic.adapters.WebObAdapter" title="authomatic.adapters.WebObAdapter"><tt class="xref py py-class docutils literal"><span class="pre">WebObAdapter</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>handler</strong> &#8211; A <a class="reference external" href="http://webapp-improved.appspot.com/api/webapp2.html#webapp2.RequestHandler" title="(in webapp2 v2.5.1)"><tt class="xref py py-class docutils literal"><span class="pre">webapp2.RequestHandler</span></tt></a> instance.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.adapters.WebObAdapter">
+<em class="property">class </em><tt class="descclassname">authomatic.adapters.</tt><tt class="descname">WebObAdapter</tt><big>(</big><em>request</em>, <em>response</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#WebObAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.WebObAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adapter for the <a class="reference external" href="http://webob.org/">WebOb</a> package.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>request</strong> &#8211; A <a class="reference external" href="http://webob.org/">WebOb</a> <tt class="xref py py-class docutils literal"><span class="pre">Request</span></tt> instance.</li>
+<li><strong>response</strong> &#8211; A <a class="reference external" href="http://webob.org/">WebOb</a> <tt class="xref py py-class docutils literal"><span class="pre">Response</span></tt> instance.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.adapters.WerkzeugAdapter">
+<em class="property">class </em><tt class="descclassname">authomatic.adapters.</tt><tt class="descname">WerkzeugAdapter</tt><big>(</big><em>request</em>, <em>response</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#WerkzeugAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.WerkzeugAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adapter for <a class="reference external" href="http://flask.pocoo.org/">Flask</a> and other <a class="reference external" href="http://werkzeug.pocoo.org/">Werkzeug</a> based frameworks.</p>
+<p>Thanks to <a class="reference external" href="http://marksteve.com">Mark Steve Samson</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>request</strong> &#8211; Instance of the <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Request" title="(in Werkzeug v0.10-dev)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Request</span></tt></a> class.</li>
+<li><strong>response</strong> &#8211; Instance of the <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Response" title="(in Werkzeug v0.10-dev)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Response</span></tt></a> class.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="implementing-an-adapter">
+<span id="implement-adapters"></span><h2>Implementing an Adapter<a class="headerlink" href="#implementing-an-adapter" title="Permalink to this headline">¶</a></h2>
+<p>Implementing an adapter for a Python web framework is pretty easy.</p>
+<p>Do it by subclassing the <a class="reference internal" href="#authomatic.adapters.BaseAdapter" title="authomatic.adapters.BaseAdapter"><tt class="xref py py-class docutils literal"><span class="pre">BaseAdapter</span></tt></a> abstract class.
+There are only <strong>six</strong> members that you need to implement.</p>
+<p>Moreover if your framework is based on the <a class="reference external" href="http://webob.org/">WebOb</a> or <a class="reference external" href="http://werkzeug.pocoo.org/">Werkzeug</a> package
+you can subclass the <a class="reference internal" href="#authomatic.adapters.WebObAdapter" title="authomatic.adapters.WebObAdapter"><tt class="xref py py-class docutils literal"><span class="pre">WebObAdapter</span></tt></a> or <a class="reference internal" href="#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><tt class="xref py py-class docutils literal"><span class="pre">WerkzeugAdapter</span></tt></a> respectively.</p>
+<dl class="class">
+<dt id="authomatic.adapters.BaseAdapter">
+<em class="property">class </em><tt class="descclassname">authomatic.adapters.</tt><tt class="descname">BaseAdapter</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for platform adapters</p>
+<p>Defines common interface for WSGI framework specific functionality.</p>
+<dl class="attribute">
+<dt id="authomatic.adapters.BaseAdapter.params">
+<tt class="descname">params</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return a <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a> of all request parameters of any HTTP method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.adapters.BaseAdapter.url">
+<tt class="descname">url</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return the url of the actual request including path but without query and fragment</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.adapters.BaseAdapter.cookies">
+<tt class="descname">cookies</tt><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.cookies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.cookies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return cookies as a <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.adapters.BaseAdapter.write">
+<tt class="descname">write</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must write specified value to response.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; String to be written to response.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.adapters.BaseAdapter.set_header">
+<tt class="descname">set_header</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.set_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.set_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must set response headers to <tt class="docutils literal"><span class="pre">Key:</span> <span class="pre">value</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Header name.</li>
+<li><strong>value</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Header value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.adapters.BaseAdapter.set_status">
+<tt class="descname">set_status</tt><big>(</big><em>status</em><big>)</big><a class="reference internal" href="../_modules/authomatic/adapters.html#BaseAdapter.set_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.adapters.BaseAdapter.set_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must set the response status e.g. <tt class="docutils literal"><span class="pre">'302</span> <span class="pre">Found'</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The HTTP response status.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config.html">Config</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Adapters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="providers.html">Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="extras.html">Extras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Tutorials / Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#development-environment-setup">Development Environment Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#running-the-examples">Running the Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="config.html"  title="Config">&laquo; previous</a></span>
+			<span><a href="../genindex.html"  title="General Index">index</a></span>
+				<span><a href="../py-modindex.html"  title="Python Module Index">modules</a></span>
+				<span><a href="functions.html"  title="Functions">next &raquo;</a></span></div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="http://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '../_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="../_static/foundation/js/foundation.min.js"></script>
+	<script src="../_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/peterhudec/authomatic">
+			<img
+				 src="../_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>

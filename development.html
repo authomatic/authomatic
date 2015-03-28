@@ -1,0 +1,579 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Development | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="Development | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://peterhudec.github.io/authomatic/development.html" />
+	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="_static/jquery.js"></script>
+    	<script type="text/javascript" src="_static/underscore.js"></script>
+    	<script type="text/javascript" src="_static/doctools.js"></script>
+    	<script type="text/javascript" src="_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						<ul class="current">
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html">Config</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="reference/adapters.html">Adapters</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/classes.html">Classes</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="reference/providers.html">Providers</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="reference/extras.html">Extras</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="examples/index.html">Tutorials / Examples</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1 current"><a class="current reference internal" href="">Development</a><ul class="dropdown ">
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="#development-environment-setup">Development Environment Setup</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="#pyopenssl-error">PyOpenSSL Error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-examples">Running the Examples</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-10">Version 0.0.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-9">Version 0.0.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		<li><a href="examples/credentials.html"  title="Advanced Webapp2 Google App Engine Example">&laquo; previous</a></li>
+	
+		
+			<li><a href="genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+		
+		
+
+	
+		<li><a href="changelog.html"  title="Changelog">next &raquo;</a></li>
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="index.html">
+		
+	    	
+	    		<img id="logo" src="_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						<span>Authomatic</span><br />
+is an <em>authorization</em> / <em>authentication</em><br />
+client library for Python web applications<br />
+inspired by Alex Vagin’s
+<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
+In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
+but that name would be too long<br />
+for a succinct library.
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="http://peterhudec.github.io/authomatic/development.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="http://peterhudec.github.io/authomatic/development.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=peterhudec&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="Development | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	
+		<ul class="breadcrumbs">
+			
+		  	<li><a href="index.html">Authomatic</a></li>
+
+		  	
+
+		  	
+			<li class="current"><a href="">Development</a></li>
+		</ul>
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <div class="section" id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<p>Contributions are very welcome.
+Please read this guide if you want to contribute.</p>
+<div class="section" id="development-environment-setup">
+<h2>Development Environment Setup<a class="headerlink" href="#development-environment-setup" title="Permalink to this headline">¶</a></h2>
+<p>Fork the
+<a class="reference external" href="https://github.com/peterhudec/authomatic">Authomatic repository on Github</a>
+and clone it:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/&lt;your-github-id&gt;/authomatic.git
+<span class="nv">$ </span><span class="nb">cd </span>authomatic
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The rest of this document assumes that you are working in the <tt class="docutils literal"><span class="pre">authomatic/</span></tt> directory.</p>
+</div>
+<p>Although Authomatic has no dependencies except for the optional
+<a class="reference external" href="http://pypi.python.org/pypi/python-openid/">python-openid</a> package required by the <a class="reference internal" href="reference/providers.html#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><tt class="xref py py-class docutils literal"><span class="pre">openid.OpenID</span></tt></a> provider,
+it has quite a lot of development dependencies.</p>
+<p>The easiest way to set up the development environment is to run the
+<tt class="docutils literal"><span class="pre">./bootstrap.sh</span></tt> script.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sh bootstrap.sh
+</pre></div>
+</div>
+<p>The script does following:</p>
+<ol class="arabic">
+<li><p class="first">Initializes and updates GIT submodules. The
+<a class="reference external" href="https://github.com/peterhudec/foundation-sphinx-theme">Foundation Sphinx Theme</a>
+located in <tt class="docutils literal"><span class="pre">./doc/source_/themes/foundation-sphinx-theme</span></tt>
+is currently the only GIT submodule used.</p>
+</li>
+<li><p class="first">Creates a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtual environment</a>
+<tt class="docutils literal"><span class="pre">./e</span></tt>.</p>
+</li>
+<li><p class="first">Installs the development dependencies specified in <tt class="docutils literal"><span class="pre">./requirements.txt</span></tt>
+to the <tt class="docutils literal"><span class="pre">e</span></tt> virtual environment.</p>
+</li>
+<li><p class="first">Runs the <tt class="docutils literal"><span class="pre">tox</span> <span class="pre">-r</span> <span class="pre">--notest</span></tt> command which creates virtual environments
+<tt class="docutils literal"><span class="pre">./.tox/py26</span></tt>, <tt class="docutils literal"><span class="pre">./.tox/py27</span></tt> and <tt class="docutils literal"><span class="pre">./tox/py34</span></tt>.</p>
+</li>
+<li><p class="first">Creates symbolic links to <tt class="docutils literal"><span class="pre">./.tox/py27/lib/python2.7/site-packages/openid</span></tt>
+and <tt class="docutils literal"><span class="pre">./authomatic</span></tt> in each of the <tt class="docutils literal"><span class="pre">./examples/gae/*</span></tt> directories.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Prepares the <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt> directory for deployment of the compiled documentation to <a class="reference external" href="https://pages.github.com/">Github Pages</a>.</dt>
+<dd><ol class="first last arabic simple">
+<li>Removes the <tt class="docutils literal"><span class="pre">./doc/build/</span></tt> directory if it exists.</li>
+<li>Clones the origin of this repository to <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt>.</li>
+<li>Creates the <strong>gh-pages</strong> branch there.</li>
+<li>Sets the GIT <strong>HEAD</strong> to <strong>gh-pages</strong>.</li>
+<li>Removes the GIT index.</li>
+<li>Removes everything in the directory with <tt class="docutils literal"><span class="pre">git</span> <span class="pre">claen</span> <span class="pre">-fdx</span></tt>.</li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p class="first">Compiles the documentation with the <tt class="docutils literal"><span class="pre">./.tox/py27</span></tt> virtual environment
+activated.</p>
+</li>
+</ol>
+<div class="section" id="pyopenssl-error">
+<h3>PyOpenSSL Error<a class="headerlink" href="#pyopenssl-error" title="Permalink to this headline">¶</a></h3>
+<p>It is likely, that you will encounter some of following errors during
+installation of the <strong>pyopenssl</strong> package:</p>
+<p>Missing Python headers <tt class="docutils literal"><span class="pre">Python.h:</span> <span class="pre">No</span> <span class="pre">such</span> <span class="pre">file</span> <span class="pre">or</span> <span class="pre">directory</span></tt>:</p>
+<p>Fix it by installing Python development package e.g:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install python3.4-dev
+</pre></div>
+</div>
+<p>Missing libffi headers <tt class="docutils literal"><span class="pre">ffi.h:</span> <span class="pre">No</span> <span class="pre">such</span> <span class="pre">file</span> <span class="pre">or</span> <span class="pre">directory</span></tt>:</p>
+<p>Fix it by installing libffi development package e.g:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install libffi-dev
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="documentation-compilation-and-deployment">
+<h2>Documentation Compilation and Deployment<a class="headerlink" href="#documentation-compilation-and-deployment" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Allways keep the documentation in sync with the latest code changes.</p>
+</div>
+<p>Compile the documentation with this commands:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. ./.tox/py27/bin/activate
+<span class="o">(</span>py27<span class="o">)</span><span class="nv">$ </span><span class="nb">cd </span>doc
+<span class="o">(</span>py27<span class="o">)</span><span class="nv">$ </span>make html
+</pre></div>
+</div>
+<p>The documentation will be compiled to <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt>.
+For easy deploiment to <a class="reference external" href="https://pages.github.com/">Github Pages</a>,
+the <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt> directory is actually a clone of the <strong>origin</strong> of the
+actual project repository that you cloned from (your fork) with the
+<strong>gh-pages</strong> branch checked out.</p>
+<p>To deploy a compiled documentation to GitHub page go to the
+<tt class="docutils literal"><span class="pre">./doc/build/html</span></tt> directory, commit all changes and push to
+<strong>origin gh-pages</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>doc/build/html
+<span class="nv">$ </span>git add -A
+<span class="nv">$ </span>git commit -m <span class="s2">&quot;Updated documentation.&quot;</span>
+<span class="nv">$ </span>git push origin gh-pages
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Tests are written in <a class="reference external" href="http://pytest.org/">pytest</a>
+and <a class="reference external" href="https://testrun.org/tox">Tox</a> is used to run them in
+<strong>Python 2.6</strong>, <strong>Python 2.7</strong> and <strong>Python 3.4</strong>.</p>
+<p>There are currently only <em>functional</em> (<em>end-to-end</em>)
+<a class="reference external" href="http://seleniumhq.org">Selenium</a> tests.
+They are designed to test the <em>login procedure</em> and
+<em>credentials refreshment</em> and to discover changes in provider APIs.
+Currently the tests cover all of the OAuth 2.0 and select OpenID providers.</p>
+<p>To run <em>functional</em> tests, you first need to create the
+<tt class="docutils literal"><span class="pre">./tests/functional_tests/config.py</span></tt> module by copying and filling out the
+<tt class="docutils literal"><span class="pre">./tests/functional_tests/config-template.py</span></tt> template.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>tests/functional_tests
+<span class="nv">$ </span>cp config-template.py config.py
+</pre></div>
+</div>
+<p>If you want to run tests for all of the covered providers,
+you should register an <strong>application</strong> and a <strong>user account</strong> by each of them
+and fill out <strong>all possible</strong> settings in the user profile.
+You can exclude providers from the tests by comenting them out of the
+<tt class="docutils literal"><span class="pre">INCLUDE_PROVIDERS</span></tt> list.</p>
+<p>You should also add an alias for the IP address of your localhost, because
+some providers like Twitter require the <tt class="docutils literal"><span class="pre">callback_uri</span></tt>
+to match a domain pattern.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo <span class="nb">echo</span> -e <span class="s2">&quot;127.0.0.1\tauthomatic.com&quot;</span> &gt;&gt; /etc/hosts
+<span class="nv">$ </span>cat /etc/hosts
+<span class="c"># Host Database</span>
+<span class="c">#</span>
+<span class="c"># localhost is used to configure the loopback interface</span>
+<span class="c"># when the system is booting.  Do not change this entry.</span>
+<span class="c">##</span>
+127.0.0.1   localhost
+127.0.0.1   authomatic.com
+</pre></div>
+</div>
+<p>Finally launch the tests:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>tox
+</pre></div>
+</div>
+<p>If you want <strong>tox</strong> to only run tests for let&#8217;s say
+<strong>Python 2.6</strong> and <strong>Python 3.4</strong> use the <tt class="docutils literal"><span class="pre">-e</span></tt> option:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>tox -e py26, py34
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-the-examples">
+<h2>Running the Examples<a class="headerlink" href="#running-the-examples" title="Permalink to this headline">¶</a></h2>
+<p>If you want to run any of the <tt class="docutils literal"><span class="pre">./examples/</span></tt> just copy the example&#8217;s
+<tt class="docutils literal"><span class="pre">config-template.py</span></tt> to <tt class="docutils literal"><span class="pre">config.py</span></tt>, fill it out,
+activate one of the virtual environments in <tt class="docutils literal"><span class="pre">./tox/</span></tt> and run the example
+the usual way according to its framework.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The examples for functional tests
+(currently there is only one in <tt class="docutils literal"><span class="pre">./examples/flask/functional_test/</span></tt>)
+use the <strong>config</strong> from <tt class="docutils literal"><span class="pre">./tests/functional_tests/config.py</span></tt>.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The Google App Engine examples will only work in <strong>Python 2.7</strong>
+The Google App Engine command line tools are installed in the <tt class="docutils literal"><span class="pre">./tox/py27/bin</span></tt>
+directory.</p>
+</div>
+</div>
+</div>
+
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/adapters.html">Adapters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#available-adapters">Available Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/adapters.html#implementing-an-adapter">Implementing an Adapter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/providers.html">Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth2-providers">OAuth 2.0 Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#oauth1-providers">OAuth 1.0a Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#openid-providers">OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#google-app-engine-openid-providers">Google App Engine OpenID Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/providers.html#abstract-classes-for-providers">Abstract Classes for Providers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/extras.html">Extras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#flask-extras">Flask Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#gae-extras">Google App Engine Extras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/extras.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/javascript.html">JavaScript</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Tutorials / Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/django-simple.html">Simple Django Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/flask-simple.html">Simple Flask Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/pyramid-simple.html">Simple Pyramid Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple.html">Simple Webapp2 Google App Engine Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/credentials.html">Advanced Webapp2 Google App Engine Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#development-environment-setup">Development Environment Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyopenssl-error">PyOpenSSL Error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-examples">Running the Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-10">Version 0.0.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-9">Version 0.0.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-8">Version 0.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-7">Version 0.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-6">Version 0.0.6</a></li>
+</ul>
+</li>
+</ul>
+
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="examples/credentials.html"  title="Advanced Webapp2 Google App Engine Example">&laquo; previous</a></span>
+			<span><a href="genindex.html"  title="General Index">index</a></span>
+				<span><a href="py-modindex.html"  title="Python Module Index">modules</a></span>
+				<span><a href="changelog.html"  title="Changelog">next &raquo;</a></span></div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="http://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="_static/foundation/js/foundation.min.js"></script>
+	<script src="_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/peterhudec/authomatic">
+			<img
+				 src="_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>
