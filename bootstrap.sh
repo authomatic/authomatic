@@ -18,11 +18,9 @@ for i in ./examples/gae/*
 do
   if [ -d $i ]
     then
-      unlink "$i/openid"
-      ln -s `readlink -e .tox/py27/lib/python2.7/site-packages/openid` "$i/openid"
+      ln -sfF .tox/py27/lib/python2.7/site-packages/openid "$i/openid"
 
-      unlink "$i/authomatic"
-      ln -s `readlink -e ./authomatic` "$i/authomatic"
+      ln -sfF ./authomatic "$i/authomatic"
   fi
 done
 
