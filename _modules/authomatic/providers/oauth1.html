@@ -133,7 +133,6 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../development.html">Development</a><ul class="dropdown ">
-<<<<<<< HEAD
 <li class="has-dropdown toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a><ul class="dropdown ">
 <li class="toctree-l3"><a class="reference internal" href="../../../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -145,15 +144,6 @@
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul class="dropdown ">
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-11">Version 0.0.11</a></li>
-=======
-<li class="toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../development.html#tests">Tests</a></li>
-</ul>
-</li>
-<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul class="dropdown ">
-<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-8">Version 0.0.8</a></li>
@@ -290,11 +280,6 @@ for a succinct library.
 <span class="sd">    </span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<<<<<<< HEAD
-=======
-<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">providers</span>
-<span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="n">CancellationError</span><span class="p">,</span> <span class="n">FailureError</span><span class="p">,</span> <span class="n">OAuth1Error</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">authomatic.core</span> <span class="kn">as</span> <span class="nn">core</span>
 <span class="kn">import</span> <span class="nn">binascii</span>
@@ -303,7 +288,6 @@ for a succinct library.
 <span class="kn">import</span> <span class="nn">hmac</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<<<<<<< HEAD
 <span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">providers</span>
@@ -314,12 +298,6 @@ for a succinct library.
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">six</span>
 <span class="kn">from</span> <span class="nn">authomatic.six.moves</span> <span class="kn">import</span> <span class="n">urllib_parse</span> <span class="k">as</span> <span class="n">parse</span>
-=======
-<span class="kn">import</span> <span class="nn">urllib</span>
-<span class="kn">import</span> <span class="nn">urlparse</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
-
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;OAuth1&#39;</span><span class="p">,</span> <span class="s">&#39;Bitbucket&#39;</span><span class="p">,</span> <span class="s">&#39;Flickr&#39;</span><span class="p">,</span> <span class="s">&#39;Meetup&#39;</span><span class="p">,</span> <span class="s">&#39;Plurk&#39;</span><span class="p">,</span> <span class="s">&#39;Twitter&#39;</span><span class="p">,</span> <span class="s">&#39;Tumblr&#39;</span><span class="p">,</span> <span class="s">&#39;UbuntuOne&#39;</span><span class="p">,</span>
@@ -337,22 +315,14 @@ for a succinct library.
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
-<<<<<<< HEAD
         <span class="n">params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-=======
-        <span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     
     <span class="c"># remove &quot;realm&quot; and &quot;oauth_signature&quot;</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;oauth_signature&#39;</span><span class="p">,</span> <span class="s">&#39;realm&#39;</span><span class="p">)]</span>
     <span class="c"># sort</span>
     <span class="n">params</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
     <span class="c"># convert to query string</span>
-<<<<<<< HEAD
     <span class="n">qs</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-=======
-    <span class="n">qs</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     <span class="c"># replace &quot;+&quot; to &quot;%20&quot;</span>
     <span class="n">qs</span> <span class="o">=</span> <span class="n">qs</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;+&#39;</span><span class="p">,</span> <span class="s">&#39;%20&#39;</span><span class="p">)</span>
     <span class="c"># replace &quot;%7E&quot; to &quot;%20&quot;</span>
@@ -379,15 +349,9 @@ for a succinct library.
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract base class for all signature generators.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<<<<<<< HEAD
 
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
 
-=======
-    
-    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
-    
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     <span class="c">#: :class:`str` The name of the signature method.</span>
     <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
     
@@ -475,17 +439,10 @@ for a succinct library.
         
         <span class="n">base_string</span> <span class="o">=</span> <span class="n">_create_base_string</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_create_key</span><span class="p">(</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
-<<<<<<< HEAD
 
         <span class="n">hashed</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">b</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">base_string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span>
 
 
-=======
-        
-        <span class="n">hashed</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">base_string</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span>
-        
-        
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="n">base64_encoded</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">b2a_base64</span><span class="p">(</span><span class="n">hashed</span><span class="o">.</span><span class="n">digest</span><span class="p">())[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         
         <span class="k">return</span> <span class="n">base64_encoded</span>
@@ -502,17 +459,10 @@ for a succinct library.
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_signature</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
         
-<<<<<<< HEAD
         <span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
         <span class="n">token_secret</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">token_secret</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="s">&#39;&amp;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)),</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-=======
-        <span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">token_secret</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">token_secret</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-        
-        <span class="k">return</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="s">&#39;&amp;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)),</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 
 <div class="viewcode-block" id="OAuth1"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.OAuth1">[docs]</a><span class="k">class</span> <span class="nc">OAuth1</span><span class="p">(</span><span class="n">providers</span><span class="o">.</span><span class="n">AuthorizationProvider</span><span class="p">):</span>
@@ -633,11 +583,7 @@ for a succinct library.
             <span class="c"># http://oauth.net/core/1.0a/#rfc.section.9.1</span>
             <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_signature_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_signature_generator</span><span class="o">.</span><span class="n">method</span>
             <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
-<<<<<<< HEAD
             <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_nonce&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">csrf_generator</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()))</span>
-=======
-            <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_nonce&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">csrf_generator</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
             <span class="n">params</span><span class="p">[</span><span class="s">&#39;oauth_version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;1.0&#39;</span>
             
             <span class="c"># add signature to params</span>
@@ -914,7 +860,6 @@ for a succinct library.
 <span class="sd">    * Dashboard: https://dev.twitter.com/apps</span>
 <span class="sd">    * Docs: https://dev.twitter.com/docs</span>
 <span class="sd">    * API reference: https://dev.twitter.com/docs/api</span>
-<<<<<<< HEAD
 
 <span class="sd">    Supported :class:`.User` properties:</span>
 
@@ -951,9 +896,6 @@ for a succinct library.
         <span class="n">picture</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="n">username</span><span class="o">=</span><span class="bp">True</span>
     <span class="p">)</span>
-=======
-<span class="sd">    &quot;&quot;&quot;</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     
     <span class="n">request_token_url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/oauth/request_token&#39;</span>
     <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s">&#39;https://api.twitter.com/oauth/authenticate&#39;</span>
@@ -969,15 +911,12 @@ for a succinct library.
         <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;profile_image_url&#39;</span><span class="p">)</span>
         <span class="n">user</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;lang&#39;</span><span class="p">)</span>
         <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;url&#39;</span><span class="p">)</span>
-<<<<<<< HEAD
 
         <span class="n">_location</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;location&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">_location</span><span class="p">:</span>
             <span class="n">_city</span><span class="p">,</span> <span class="n">_country</span> <span class="o">=</span> <span class="n">_location</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
             <span class="n">user</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">_city</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">_country</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-=======
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="k">return</span> <span class="n">user</span>
 
 </div>
@@ -1005,11 +944,7 @@ for a succinct library.
         <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;blogs&#39;</span><span class="p">,</span> <span class="p">[{}])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;url&#39;</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">link</span><span class="p">:</span>
-<<<<<<< HEAD
             <span class="n">_host</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">link</span><span class="p">)</span><span class="o">.</span><span class="n">netloc</span>
-=======
-            <span class="n">_host</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">link</span><span class="p">)</span><span class="o">.</span><span class="n">netloc</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
             <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="s">&#39;http://api.tumblr.com/v2/blog/{0}/avatar/512&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_host</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="n">user</span>
@@ -1143,11 +1078,7 @@ for a succinct library.
         <span class="n">emails</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;emails&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">emails</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">emails</span><span class="p">:</span>
-<<<<<<< HEAD
                 <span class="k">if</span> <span class="s">&#39;primary&#39;</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">email</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-=======
-                <span class="k">if</span> <span class="s">&#39;primary&#39;</span> <span class="ow">in</span> <span class="n">email</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
                     <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;handle&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">emails</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">emails</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;handle&#39;</span><span class="p">)</span>
@@ -1249,11 +1180,7 @@ for a succinct library.
                 <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">_address</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;country&#39;</span><span class="p">)</span>
                 <span class="n">user</span><span class="o">.</span><span class="n">postal_code</span> <span class="o">=</span> <span class="n">_address</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;zip_code&#39;</span><span class="p">)</span>
 
-<<<<<<< HEAD
             <span class="n">_languages</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;languages&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-=======
-            <span class="n">_languages</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;languages&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
             <span class="k">if</span> <span class="n">_languages</span> <span class="ow">and</span> <span class="n">_languages</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="n">user</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">_languages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -1313,7 +1240,6 @@ for a succinct library.
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a><ul>
-<<<<<<< HEAD
 <li class="toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -1325,15 +1251,6 @@ for a succinct library.
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-11">Version 0.0.11</a></li>
-=======
-<li class="toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../development.html#tests">Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-8">Version 0.0.8</a></li>

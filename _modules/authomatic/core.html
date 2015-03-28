@@ -133,7 +133,6 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../../development.html">Development</a><ul class="dropdown ">
-<<<<<<< HEAD
 <li class="has-dropdown toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a><ul class="dropdown ">
 <li class="toctree-l3"><a class="reference internal" href="../../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -145,15 +144,6 @@
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul class="dropdown ">
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-11">Version 0.0.11</a></li>
-=======
-<li class="toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../development.html#tests">Tests</a></li>
-</ul>
-</li>
-<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul class="dropdown ">
-<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-8">Version 0.0.8</a></li>
@@ -268,7 +258,6 @@ for a succinct library.
   <h1>Source code for authomatic.core</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
 
-<<<<<<< HEAD
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
@@ -295,25 +284,6 @@ for a succinct library.
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">six</span>
 <span class="kn">from</span> <span class="nn">authomatic.six.moves</span> <span class="kn">import</span> <span class="n">urllib_parse</span> <span class="k">as</span> <span class="n">parse</span>
-=======
-<span class="kn">from</span> <span class="nn">xml.etree</span> <span class="kn">import</span> <span class="n">ElementTree</span>
-<span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">exceptions</span>
-<span class="kn">import</span> <span class="nn">hashlib</span>
-<span class="kn">import</span> <span class="nn">hmac</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">threading</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">urllib</span>
-<span class="kn">import</span> <span class="nn">urlparse</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-
-<span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="n">SessionError</span><span class="p">,</span> <span class="n">CredentialsError</span><span class="p">,</span> <span class="n">RequestElementsError</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 
 <span class="c">#===============================================================================</span>
@@ -337,13 +307,8 @@ for a succinct library.
 <span class="sd">        Normalized dictionary.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<<<<<<< HEAD
     <span class="k">return</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span>
                  <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">dict_</span><span class="o">.</span><span class="n">items</span><span class="p">())])</span>
-=======
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span>
-                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dict_</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 
 <span class="k">def</span> <span class="nf">items_to_dict</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
@@ -422,12 +387,7 @@ for a succinct library.
 
 <span class="k">def</span> <span class="nf">escape</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Escape a URL including any /.&quot;&quot;&quot;</span>
-<<<<<<< HEAD
     <span class="k">return</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">safe</span><span class="o">=</span><span class="s">&#39;~&#39;</span><span class="p">)</span>
-=======
-    <span class="k">return</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">safe</span><span class="o">=</span><span class="s">&#39;~&#39;</span><span class="p">)</span>
-
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 <span class="k">def</span> <span class="nf">json_qs_parser</span><span class="p">(</span><span class="n">body</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -440,10 +400,6 @@ for a succinct library.
 <span class="sd">        :class:`dict`, :class:`list` if input is JSON or query string,</span>
 <span class="sd">        :class:`xml.etree.ElementTree.Element` if XML.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<<<<<<< HEAD
-=======
-
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     <span class="k">try</span><span class="p">:</span>
         <span class="c"># Try JSON first.</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
@@ -457,11 +413,7 @@ for a succinct library.
         <span class="k">pass</span>
 
     <span class="c"># Finally query string.</span>
-<<<<<<< HEAD
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">parse</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
-=======
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">urlparse</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 
 <span class="k">def</span> <span class="nf">import_string</span><span class="p">(</span><span class="n">import_name</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
@@ -477,17 +429,10 @@ for a succinct library.
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">__import__</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">[</span><span class="n">obj</span><span class="p">]),</span> <span class="n">obj</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">import_name</span><span class="p">)</span>
-<<<<<<< HEAD
     <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">silent</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ImportStringError</span><span class="p">(</span><span class="s">&#39;Import from string failed for path {0}&#39;</span>
                                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">import_name</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-=======
-    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">),</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">silent</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ImportStringError</span><span class="p">(</span><span class="s">&#39;Import from string failed for path {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">import_name</span><span class="p">),</span>
-                                               <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 
 <span class="k">def</span> <span class="nf">resolve_provider_class</span><span class="p">(</span><span class="n">class_</span><span class="p">):</span>
@@ -497,11 +442,7 @@ for a succinct library.
 <span class="sd">    :param class_name: :class:`string` or :class:`authomatic.providers.BaseProvider` subclass.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<<<<<<< HEAD
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-=======
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">class_</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="c"># prepare path for authomatic.providers package</span>
         <span class="n">path</span> <span class="o">=</span> <span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">__package__</span><span class="p">,</span> <span class="s">&#39;providers&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="p">])</span>
 
@@ -522,11 +463,7 @@ for a succinct library.
 <span class="sd">        Value of the id parameter in the :ref:`config` to search for.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<<<<<<< HEAD
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-=======
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">short_name</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">k</span>
             <span class="k">break</span>
@@ -564,11 +501,7 @@ for a succinct library.
         <span class="c"># construct keyword arguments</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
 
-<<<<<<< HEAD
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-=======
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
             <span class="c"># ignore attributes with leading underscores and those listed in _repr_ignore</span>
             <span class="k">if</span> <span class="n">v</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repr_ignore</span><span class="p">:</span>
@@ -644,21 +577,9 @@ for a succinct library.
 
 </div></div>
 <span class="k">class</span> <span class="nc">Session</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<<<<<<< HEAD
     <span class="sd">&quot;&quot;&quot;A dictionary-like secure cookie session implementation.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;authomatic&#39;</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
                  <span class="n">secure</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-=======
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A dictionary-like secure cookie session implementation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c"># List of keys which values are not json serializable.</span>
-    <span class="n">NOT_JSON_SERIALIZABLE</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;_yadis_services__openid_consumer_&#39;</span><span class="p">,</span>
-                             <span class="s">&#39;_openid_consumer_last_token&#39;</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;authomatic&#39;</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">secure</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param str secret:</span>
 <span class="sd">            Session secret used to sign the session cookie.</span>
@@ -667,12 +588,8 @@ for a succinct library.
 <span class="sd">        :param int max_age:</span>
 <span class="sd">            Maximum allowed age of session cookie nonce in seconds.</span>
 <span class="sd">        :param bool secure:</span>
-<<<<<<< HEAD
 <span class="sd">            If ``True`` the session cookie will be saved with ``Secure``</span>
 <span class="sd">            attribute.</span>
-=======
-<span class="sd">            If ``True`` the session cookie will be saved wit ``Secure`` attribute.</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span> <span class="o">=</span> <span class="n">adapter</span>
@@ -680,15 +597,8 @@ for a succinct library.
         <span class="bp">self</span><span class="o">.</span><span class="n">secret</span> <span class="o">=</span> <span class="n">secret</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_age</span> <span class="o">=</span> <span class="n">max_age</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">secure</span> <span class="o">=</span> <span class="n">secure</span>
-<<<<<<< HEAD
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span>
 
-=======
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span>
-
-
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     <span class="k">def</span> <span class="nf">create_cookie</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates the value for ``Set-Cookie`` HTTP header.</span>
@@ -697,20 +607,12 @@ for a succinct library.
 <span class="sd">            If ``True`` the cookie value will be ``deleted`` and the</span>
 <span class="sd">            Expires value will be ``Thu, 01-Jan-1970 00:00:01 GMT``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-<<<<<<< HEAD
         <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;deleted&#39;</span> <span class="k">if</span> <span class="n">delete</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         <span class="n">split_url</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
-=======
-
-        <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;deleted&#39;</span> <span class="k">if</span> <span class="n">delete</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-
-        <span class="n">split_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="n">domain</span> <span class="o">=</span> <span class="n">split_url</span><span class="o">.</span><span class="n">netloc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c"># Work-around for issue #11, failure of WebKit-based browsers to accept</span>
         <span class="c"># cookies set as part of a redirect response in some circumstances.</span>
-<<<<<<< HEAD
         <span class="k">if</span> <span class="s">&#39;.&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">domain</span><span class="p">:</span>
             <span class="n">template</span> <span class="o">=</span> <span class="s">&#39;{name}={value}; Path={path}; HttpOnly{secure}{expires}&#39;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -738,34 +640,10 @@ for a succinct library.
                                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cookie_len</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s">&#39;Set-Cookie&#39;</span><span class="p">,</span> <span class="n">cookie</span><span class="p">)</span>
-=======
-        <span class="k">if</span> <span class="ow">not</span> <span class="s">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">domain</span><span class="p">:</span>
-            <span class="n">template</span> <span class="o">=</span> <span class="s">&#39;{name}={value}; Path={path}; HttpOnly{secure}{expires}&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">template</span> <span class="o">=</span> <span class="s">&#39;{name}={value}; Domain={domain}; Path={path}; HttpOnly{secure}{expires}&#39;</span>
-
-        <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                               <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
-                               <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
-                               <span class="n">path</span><span class="o">=</span><span class="n">split_url</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
-                               <span class="n">secure</span><span class="o">=</span><span class="s">&#39;; Secure&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">secure</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="p">,</span>
-                               <span class="n">expires</span><span class="o">=</span><span class="s">&#39;; Expires=Thu, 01-Jan-1970 00:00:01 GMT&#39;</span> <span class="k">if</span> <span class="n">delete</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-
-
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adds the session cookie to headers.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="c"># Set the cookie header.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s">&#39;Set-Cookie&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_cookie</span><span class="p">())</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
             <span class="c"># Reset data</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span>
 
-<<<<<<< HEAD
     <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s">&#39;Set-Cookie&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_cookie</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
 
@@ -777,28 +655,6 @@ for a succinct library.
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets session data lazily.&quot;&quot;&quot;</span>
-=======
-
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s">&#39;Set-Cookie&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_cookie</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
-
-
-    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extracts the session data from cookie.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">cookie</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deserialize</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span> <span class="k">if</span> <span class="n">cookie</span> <span class="k">else</span> <span class="p">{}</span>
-
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Gets session data lazily.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">()</span>
         <span class="c"># Always return a dict, even if deserialization returned nothing</span>
@@ -806,36 +662,16 @@ for a succinct library.
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
 
-<<<<<<< HEAD
     <span class="k">def</span> <span class="nf">_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">parts</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Creates signature for the session.&quot;&quot;&quot;</span>
         <span class="n">signature</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">),</span> <span class="n">digestmod</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span>
         <span class="n">signature</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">b</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">signature</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
 
-=======
-
-    <span class="k">def</span> <span class="nf">_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">parts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates signature for the session.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">signature</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span> <span class="n">digestmod</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span>
-        <span class="n">signature</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">signature</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-
-
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     <span class="k">def</span> <span class="nf">_serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the value to a signed string with timestamp.</span>
 
-<<<<<<< HEAD
-=======
-<span class="sd">        TODO: Check licence!</span>
-<span class="sd">        Taken from `webapp2_extras.securecookie &lt;http://webapp-improved.appspot.com/guide/extras.html&gt;`_.</span>
-
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <span class="sd">        :param value:</span>
 <span class="sd">            Object to be serialized.</span>
 
@@ -843,7 +679,6 @@ for a succinct library.
 <span class="sd">            Serialized value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-<<<<<<< HEAD
         <span class="c"># data = copy.deepcopy(value)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -860,31 +695,6 @@ for a succinct library.
         <span class="n">concatenated</span> <span class="o">=</span> <span class="s">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">encoded</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">signature</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">concatenated</span>
-=======
-        <span class="n">data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-
-        <span class="c"># 1. Handle non json serializable objects.</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">NOT_JSON_SERIALIZABLE</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-
-
-        <span class="c"># 2. Serialize</span>
-        <span class="n">serialized</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-        <span class="c"># 3. Encode</span>
-        <span class="c"># Percent encoding produces smaller result then urlsafe base64.</span>
-        <span class="n">encoded</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">serialized</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-
-        <span class="c"># Create timestamp</span>
-        <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
-
-        <span class="c"># Create signature</span>
-        <span class="n">signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">encoded</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
-
-        <span class="c"># 4. Concatenate</span>
-        <span class="k">return</span> <span class="s">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">encoded</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">signature</span><span class="p">])</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 
     <span class="k">def</span> <span class="nf">_deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -898,11 +708,7 @@ for a succinct library.
 <span class="sd">            Deserialized object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-<<<<<<< HEAD
         <span class="c"># 3. Split</span>
-=======
-        <span class="c"># 4. Split</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="n">encoded</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">signature</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
 
         <span class="c"># Verify signature</span>
@@ -913,7 +719,6 @@ for a succinct library.
         <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_age</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
 
-<<<<<<< HEAD
         <span class="c"># 2. Decode</span>
         <span class="n">decoded</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">unquote</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
 
@@ -931,34 +736,6 @@ for a succinct library.
     <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">__delitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
-=======
-        <span class="c"># 3. Decode</span>
-        <span class="n">decoded</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">unquote</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
-
-        <span class="c"># 2. Deserialize</span>
-        <span class="n">deserialized</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
-
-        <span class="c"># 1. Unpickle non json serializable objects.</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">NOT_JSON_SERIALIZABLE</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">deserialized</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="n">deserialized</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">deserialized</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
-
-        <span class="k">return</span> <span class="n">deserialized</span>
-
-
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-
-
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-
-    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">__delitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 
@@ -1296,14 +1073,9 @@ for a succinct library.
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-<<<<<<< HEAD
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;To serialize credentials you need to specify a &#39;</span>
                               <span class="s">&#39;unique integer under the &quot;id&quot; key in the config &#39;</span>
                               <span class="s">&#39;for each provider!&#39;</span><span class="p">)</span>
-=======
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;To serialize credentials you need to specify a unique &#39;</span> <span class="o">+</span> \
-                                         <span class="s">&#39;integer under the &quot;id&quot; key in the config for each provider!&#39;</span><span class="p">)</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
         <span class="c"># Get the provider type specific items.</span>
         <span class="n">rest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_type_class</span><span class="p">()</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -1318,11 +1090,7 @@ for a succinct library.
         <span class="n">concatenated</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stringified</span><span class="p">)</span>
 
         <span class="c"># Percent encode.</span>
-<<<<<<< HEAD
         <span class="k">return</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">concatenated</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-=======
-        <span class="k">return</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">concatenated</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 </div>
     <span class="nd">@classmethod</span>
@@ -1341,17 +1109,10 @@ for a succinct library.
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c"># Accept both serialized and normal.</span>
-<<<<<<< HEAD
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">credentials</span><span class="p">,</span> <span class="n">Credentials</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">credentials</span>
 
         <span class="n">decoded</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">unquote</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span>
-=======
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Credentials</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">credentials</span>
-
-        <span class="n">decoded</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">unquote</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
         <span class="n">split</span> <span class="o">=</span> <span class="n">decoded</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
 
@@ -1589,11 +1350,7 @@ for a succinct library.
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="p">:</span>
-<<<<<<< HEAD
             <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">httplib_response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
-=======
-            <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">httplib_response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span>
 
 </div>
@@ -1675,11 +1432,7 @@ for a succinct library.
 <span class="sd">        Query string of the request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-<<<<<<< HEAD
         <span class="k">return</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
-=======
-        <span class="k">return</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">full_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1798,12 +1551,8 @@ for a succinct library.
             <span class="c"># retrieve required settings for current provider and raise exceptions if missing</span>
             <span class="n">provider_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">provider_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">provider_settings</span><span class="p">:</span>
-<<<<<<< HEAD
                 <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;Provider name &quot;{0}&quot; not specified!&#39;</span>
                                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_name</span><span class="p">))</span>
-=======
-                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;Provider name &quot;{0}&quot; not specified!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_name</span><span class="p">))</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">session</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">session_saver</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
                 <span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
@@ -1820,12 +1569,8 @@ for a succinct library.
             <span class="c"># Resolve provider class.</span>
             <span class="n">class_</span> <span class="o">=</span> <span class="n">provider_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;class_&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">class_</span><span class="p">:</span>
-<<<<<<< HEAD
                 <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;The &quot;class_&quot; key not specified in the config&#39;</span>
                                   <span class="s">&#39; for provider {0}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_name</span><span class="p">))</span>
-=======
-                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigError</span><span class="p">(</span><span class="s">&#39;The &quot;class_&quot; key not specified in the config for provider {0}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_name</span><span class="p">))</span>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
             <span class="n">ProviderClass</span> <span class="o">=</span> <span class="n">resolve_provider_class</span><span class="p">(</span><span class="n">class_</span><span class="p">)</span>
 
             <span class="c"># FIXME: Find a nicer solution</span>
@@ -2339,7 +2084,6 @@ for a succinct library.
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a><ul>
-<<<<<<< HEAD
 <li class="toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -2351,15 +2095,6 @@ for a succinct library.
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-11">Version 0.0.11</a></li>
-=======
-<li class="toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../development.html#tests">Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
->>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-8">Version 0.0.8</a></li>
