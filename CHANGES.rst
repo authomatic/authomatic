@@ -1,6 +1,8 @@
-Version 0.0.11 (development)
-----------------------------
+Version 0.0.11
+--------------
 
+* Added **Python 3.x** support thanks to
+  `Emmanuel Leblond <https://github.com/touilleMan>`__.
 * Fixed a bug when :class:`.authomatic.Response` could not be decoded.
 * The :class:`.oauth2.Foursquare` provider now supports
   :attr:`.User.birth_date`.

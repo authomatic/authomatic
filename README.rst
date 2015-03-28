@@ -52,12 +52,18 @@ Features
     **Viadeo**, **VK**, **WindowsLive**, **Yammer** and **Yandex**.
   * |pyopenid|_ and |gae|_ based |openid|_.
 
-License and Requirements
-========================
+License
+=======
 
 The package is licensed under
-`MIT license <http://en.wikipedia.org/wiki/MIT_License>`__
-and requires **Python 2.6** and higher, but doesn't support **Python 3** yet.
+`MIT license <http://en.wikipedia.org/wiki/MIT_License>`__.
+
+Requirements
+============
+
+Requires **Python 2.6** and newer. **Python 3.x** support added in
+**Authomatic 0.0.11** thanks to
+`Emmanuel Leblond <https://github.com/touilleMan>`__.
 
 Live Demo
 =========
