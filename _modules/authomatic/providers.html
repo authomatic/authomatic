@@ -133,6 +133,7 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../../development.html">Development</a><ul class="dropdown ">
+<<<<<<< HEAD
 <li class="has-dropdown toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a><ul class="dropdown ">
 <li class="toctree-l3"><a class="reference internal" href="../../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -144,6 +145,15 @@
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul class="dropdown ">
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-11">Version 0.0.11</a></li>
+=======
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-8">Version 0.0.8</a></li>
@@ -277,6 +287,7 @@ for a succinct library.
 
 <span class="sd">&quot;&quot;&quot;</span>
 
+<<<<<<< HEAD
 <span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">authomatic.core</span>
 <span class="kn">import</span> <span class="nn">base64</span>
@@ -296,6 +307,26 @@ for a succinct library.
 <span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">six</span>
 <span class="kn">from</span> <span class="nn">authomatic.six.moves</span> <span class="kn">import</span> <span class="n">urllib_parse</span> <span class="k">as</span> <span class="n">parse</span>
 <span class="kn">from</span> <span class="nn">authomatic.six.moves</span> <span class="kn">import</span> <span class="n">http_client</span>
+=======
+<span class="kn">from</span> <span class="nn">authomatic.core</span> <span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">AuthenticationError</span><span class="p">,</span> <span class="n">FetchError</span><span class="p">,</span> <span class="n">CredentialsError</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">authomatic.core</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">httplib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">urlparse</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;BaseProvider&#39;</span><span class="p">,</span> <span class="s">&#39;AuthorizationProvider&#39;</span><span class="p">,</span> <span class="s">&#39;AuthenticationProvider&#39;</span><span class="p">,</span> <span class="s">&#39;login_decorator&#39;</span><span class="p">]</span>
@@ -382,7 +413,11 @@ for a succinct library.
     <span class="n">PROVIDER_TYPE_ID</span> <span class="o">=</span> <span class="mi">0</span>
     
     <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;user&#39;</span><span class="p">,)</span>
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
 
     <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">()</span>
@@ -565,7 +600,11 @@ for a succinct library.
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="c"># Create hash from random string plus salt.</span>
+<<<<<<< HEAD
         <span class="n">hashed</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">bytes</span> <span class="o">+</span> <span class="n">six</span><span class="o">.</span><span class="n">b</span><span class="p">(</span><span class="n">secret</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+=======
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">secret</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         
         <span class="c"># Each time return random portion of the hash.</span>
         <span class="n">span</span> <span class="o">=</span> <span class="mi">5</span>
@@ -587,7 +626,11 @@ for a succinct library.
 <span class="sd">            The actual message.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+<<<<<<< HEAD
         <span class="n">logger</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;_logger&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">_logger</span>
+=======
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_logger</span> <span class="ow">or</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">_logger</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s">&#39;: &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s">&#39;authomatic&#39;</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">msg</span><span class="p">)))</span>
 
     
@@ -616,19 +659,29 @@ for a succinct library.
 <span class="sd">        :param function content_parser:</span>
 <span class="sd">            A callable to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+<<<<<<< HEAD
+=======
+        
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="n">params</span> <span class="o">=</span> <span class="n">params</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_params</span><span class="p">)</span>
         
         <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_headers</span><span class="p">)</span>
         
+<<<<<<< HEAD
         <span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">fragment</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+=======
+        <span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">fragment</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         
         <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;POST&#39;</span><span class="p">,</span> <span class="s">&#39;PUT&#39;</span><span class="p">,</span> <span class="s">&#39;PATCH&#39;</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">body</span><span class="p">:</span>
                 <span class="c"># Put querystring to body</span>
                 <span class="n">body</span> <span class="o">=</span> <span class="n">query</span>
+<<<<<<< HEAD
                 <span class="n">query</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
                 <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">})</span>
         <span class="k">print</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
@@ -646,6 +699,25 @@ for a succinct library.
             <span class="n">connection</span> <span class="o">=</span> <span class="n">http_client</span><span class="o">.</span><span class="n">HTTPSConnection</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">connection</span> <span class="o">=</span> <span class="n">http_client</span><span class="o">.</span><span class="n">HTTPConnection</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+=======
+                <span class="n">query</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">})</span>
+        
+        <span class="n">request_path</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlunsplit</span><span class="p">((</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> host: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">host</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> path: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request_path</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> method: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> body: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> params: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u2514\u2500</span><span class="s"> headers: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">headers</span><span class="p">))</span>
+        
+        <span class="c"># Connect</span>
+        <span class="k">if</span> <span class="n">scheme</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;https&#39;</span><span class="p">:</span>
+            <span class="n">connection</span> <span class="o">=</span> <span class="n">httplib</span><span class="o">.</span><span class="n">HTTPSConnection</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">connection</span> <span class="o">=</span> <span class="n">httplib</span><span class="o">.</span><span class="n">HTTPConnection</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
             
         <span class="k">try</span><span class="p">:</span>
             <span class="n">connection</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">request_path</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
@@ -667,8 +739,12 @@ for a succinct library.
                 <span class="n">remaining_redirects</span> <span class="o">=</span> <span class="n">max_redirects</span> <span class="o">-</span> <span class="mi">1</span>
                 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39;Redirecting to {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+<<<<<<< HEAD
                 <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39;Remaining redirects: {0}&#39;</span>
                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remaining_redirects</span><span class="p">))</span>
+=======
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39;Remaining redirects: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remaining_redirects</span><span class="p">))</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
                 
                 <span class="c"># Call this method again.</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">location</span><span class="p">,</span>
@@ -682,10 +758,17 @@ for a succinct library.
                                  <span class="n">url</span><span class="o">=</span><span class="n">location</span><span class="p">,</span>
                                  <span class="n">status</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+<<<<<<< HEAD
             <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39;Got response:&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39; </span><span class="se">\u251C\u2500</span><span class="s"> url: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39; </span><span class="se">\u251C\u2500</span><span class="s"> status: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39; </span><span class="se">\u2514\u2500</span><span class="s"> headers: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getheaders</span><span class="p">()))</span>
+=======
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39;Got response:&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> url: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u251C\u2500</span><span class="s"> status: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">u&#39; </span><span class="se">\u2514\u2500</span><span class="s"> headers: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getheaders</span><span class="p">()))</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
                 
         <span class="k">return</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">content_parser</span><span class="p">)</span>
     
@@ -705,7 +788,11 @@ for a succinct library.
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
         
         <span class="c"># Update.</span>
+<<<<<<< HEAD
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+=======
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
             <span class="c"># Exclude data.</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">):</span>
                 <span class="c"># Extract every data item whose key matches the user property name,</span>
@@ -1008,7 +1095,11 @@ for a succinct library.
                               <span class="n">max_redirects</span><span class="o">=</span><span class="n">max_redirects</span><span class="p">,</span>
                               <span class="n">content_parser</span><span class="o">=</span><span class="n">content_parser</span><span class="p">)</span>
         
+<<<<<<< HEAD
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Got response. HTTP status = {0}. {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+=======
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Got response. HTTP status = {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="k">return</span> <span class="n">response</span>
 
 </div>
@@ -1062,7 +1153,11 @@ for a succinct library.
         
         <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">_x_use_authorization_header</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="s">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">credentials</span><span class="o">.</span><span class="n">consumer_key</span><span class="p">,</span> <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_secret</span><span class="p">))</span>
+<<<<<<< HEAD
             <span class="n">res</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">b</span><span class="p">(</span><span class="n">res</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+=======
+            <span class="n">res</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
             <span class="k">return</span> <span class="p">{</span><span class="s">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s">&#39;Basic {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res</span><span class="p">)}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{}</span>
@@ -1084,9 +1179,15 @@ for a succinct library.
     <span class="k">def</span> <span class="nf">_split_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
         <span class="s">&quot;Splits given url to url base and params converted to list of tuples&quot;</span>
         
+<<<<<<< HEAD
         <span class="n">split</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlunsplit</span><span class="p">((</span><span class="n">split</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="n">split</span><span class="o">.</span><span class="n">netloc</span><span class="p">,</span> <span class="n">split</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">split</span><span class="o">.</span><span class="n">query</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+=======
+        <span class="n">split</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlunsplit</span><span class="p">((</span><span class="n">split</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="n">split</span><span class="o">.</span><span class="n">netloc</span><span class="p">,</span> <span class="n">split</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">split</span><span class="o">.</span><span class="n">query</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         
         <span class="k">return</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span>
     
@@ -1222,6 +1323,7 @@ for a succinct library.
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a><ul>
+<<<<<<< HEAD
 <li class="toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -1233,6 +1335,15 @@ for a succinct library.
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-11">Version 0.0.11</a></li>
+=======
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-0-8">Version 0.0.8</a></li>

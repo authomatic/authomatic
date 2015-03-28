@@ -133,6 +133,7 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../development.html">Development</a><ul class="dropdown ">
+<<<<<<< HEAD
 <li class="has-dropdown toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a><ul class="dropdown ">
 <li class="toctree-l3"><a class="reference internal" href="../../../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -144,6 +145,15 @@
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul class="dropdown ">
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-11">Version 0.0.11</a></li>
+=======
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="has-dropdown toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-8">Version 0.0.8</a></li>
@@ -279,17 +289,24 @@ for a succinct library.
 <span class="c"># We need absolute import to import from openid library which has the same name as this module</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<<<<<<< HEAD
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
+=======
+<span class="kn">import</span> <span class="nn">logging</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">from</span> <span class="nn">openid</span> <span class="kn">import</span> <span class="n">oidutil</span>
 <span class="kn">from</span> <span class="nn">openid.consumer</span> <span class="kn">import</span> <span class="n">consumer</span>
 <span class="kn">from</span> <span class="nn">openid.extensions</span> <span class="kn">import</span> <span class="n">ax</span><span class="p">,</span> <span class="n">pape</span><span class="p">,</span> <span class="n">sreg</span>
 <span class="kn">from</span> <span class="nn">openid.association</span> <span class="kn">import</span> <span class="n">Association</span>
+<<<<<<< HEAD
 <span class="kn">from</span> <span class="nn">openid.yadis.manager</span> <span class="kn">import</span> <span class="n">YadisServiceManager</span>
 <span class="kn">from</span> <span class="nn">openid.consumer.discover</span> <span class="kn">import</span> <span class="n">OpenIDServiceEndpoint</span>
+=======
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 
 <span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">providers</span>
 <span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="n">FailureError</span><span class="p">,</span> <span class="n">CancellationError</span><span class="p">,</span> <span class="n">OpenIDError</span>
@@ -333,9 +350,14 @@ for a succinct library.
 
 <span class="k">class</span> <span class="nc">SessionOpenIDStore</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<<<<<<< HEAD
 <span class="sd">    A very primitive session-based implementation of the</span>
 <span class="sd">    :class:`openid.store.interface.OpenIDStore` interface of the</span>
 <span class="sd">    `python-openid`_ library.</span>
+=======
+<span class="sd">    A very primitive session-based implementation of the :class:`openid.store.interface.OpenIDStore`</span>
+<span class="sd">    interface of the `python-openid`_ library.</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <span class="sd">    </span>
 <span class="sd">    .. warning::</span>
 <span class="sd">        </span>
@@ -344,20 +366,31 @@ for a succinct library.
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">_log</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">level</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="bp">None</span>
+<<<<<<< HEAD
     <span class="n">ASSOCIATION_KEY</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;authomatic.providers.openid.SessionOpenIDStore:&#39;</span>
                        <span class="s">&#39;association&#39;</span><span class="p">)</span>
+=======
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">nonce_timeout</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param int nonce_timeout:</span>
+<<<<<<< HEAD
 
 <span class="sd">            Nonces older than this in seconds will be considered expired.</span>
 <span class="sd">            Default is 600.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+=======
+<span class="sd">            Nonces older than this in seconds will be considered expired.</span>
+<span class="sd">            Default is 600.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nonce_timeout</span> <span class="o">=</span> <span class="n">nonce_timeout</span> <span class="ow">or</span> <span class="mi">600</span>
     
     <span class="k">def</span> <span class="nf">storeAssociation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_url</span><span class="p">,</span> <span class="n">association</span><span class="p">):</span>
+<<<<<<< HEAD
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
                   <span class="s">&#39;SessionOpenIDStore: Storing association to session.&#39;</span><span class="p">)</span>
 
@@ -386,6 +419,30 @@ for a succinct library.
         <span class="c"># Just inform the caller that it&#39;s gone.</span>
         <span class="bp">True</span>
 
+=======
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39;SessionOpenIDStore: Storing association to session.&#39;</span><span class="p">)</span>
+        <span class="c"># Always store only one association as a tuple.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s">&#39;oia&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">server_url</span><span class="p">,</span> <span class="n">association</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">association</span><span class="o">.</span><span class="n">serialize</span><span class="p">())</span>
+    
+    
+    <span class="k">def</span> <span class="nf">getAssociation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_url</span><span class="p">,</span> <span class="n">handle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c"># Try to get association.</span>
+        <span class="n">assoc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;oia&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">assoc</span> <span class="ow">and</span> <span class="n">assoc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">server_url</span><span class="p">:</span>
+            <span class="c"># If found deserialize and return it.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39;SessionOpenIDStore: Association found.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Association</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">assoc</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s">&#39;SessionOpenIDStore: Association not found.&#39;</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">removeAssociation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_url</span><span class="p">,</span> <span class="n">handle</span><span class="p">):</span>
+        <span class="c"># Just inform the caller that it&#39;s gone.</span>
+        <span class="bp">True</span>
+    
+    
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
     <span class="k">def</span> <span class="nf">useNonce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_url</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">salt</span><span class="p">):</span>
         <span class="c"># Evaluate expired nonces as false.</span>
         <span class="n">age</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
@@ -544,6 +601,10 @@ for a succinct library.
     
     <span class="nd">@providers.login_decorator</span>
     <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<<<<<<< HEAD
+=======
+                
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
         <span class="c"># Instantiate consumer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log</span>
         <span class="n">oi_consumer</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">Consumer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">)</span>
@@ -601,7 +662,11 @@ for a succinct library.
                     <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s">&#39;Got AX data.&#39;</span><span class="p">)</span>
                     <span class="n">ax_data</span> <span class="o">=</span> <span class="p">{}</span>
                     <span class="c"># convert iterable values to their first item</span>
+<<<<<<< HEAD
                     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ax_response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+=======
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ax_response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
                         <span class="k">if</span> <span class="n">v</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                             <span class="n">ax_data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">data</span><span class="p">[</span><span class="s">&#39;ax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ax_data</span>
@@ -766,6 +831,7 @@ for a succinct library.
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a><ul>
+<<<<<<< HEAD
 <li class="toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../development.html#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -777,6 +843,15 @@ for a succinct library.
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-11">Version 0.0.11</a></li>
+=======
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-11-development">Version 0.0.11 (development)</a></li>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-9">Version 0.0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-0-8">Version 0.0.8</a></li>

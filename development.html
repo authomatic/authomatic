@@ -133,6 +133,7 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1 current"><a class="current reference internal" href="">Development</a><ul class="dropdown ">
+<<<<<<< HEAD
 <li class="has-dropdown toctree-l2"><a class="reference internal" href="#development-environment-setup">Development Environment Setup</a><ul class="dropdown ">
 <li class="toctree-l3"><a class="reference internal" href="#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -140,6 +141,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-the-examples">Running the Examples</a></li>
+=======
+<li class="toctree-l2"><a class="reference internal" href="#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a></li>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul class="dropdown ">
@@ -296,7 +302,11 @@ it has quite a lot of development dependencies.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sh bootstrap.sh
 </pre></div>
 </div>
+<<<<<<< HEAD
 <p>The script does following:</p>
+=======
+<p>The script does following things:</p>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <ol class="arabic">
 <li><p class="first">Initializes and updates GIT submodules. The
 <a class="reference external" href="https://github.com/peterhudec/foundation-sphinx-theme">Foundation Sphinx Theme</a>
@@ -304,6 +314,7 @@ located in <tt class="docutils literal"><span class="pre">./doc/source_/themes/f
 is currently the only GIT submodule used.</p>
 </li>
 <li><p class="first">Creates a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtual environment</a>
+<<<<<<< HEAD
 <tt class="docutils literal"><span class="pre">./e</span></tt>.</p>
 </li>
 <li><p class="first">Installs the development dependencies specified in <tt class="docutils literal"><span class="pre">./requirements.txt</span></tt>
@@ -314,6 +325,20 @@ to the <tt class="docutils literal"><span class="pre">e</span></tt> virtual envi
 </li>
 <li><p class="first">Creates symbolic links to <tt class="docutils literal"><span class="pre">./.tox/py27/lib/python2.7/site-packages/openid</span></tt>
 and <tt class="docutils literal"><span class="pre">./authomatic</span></tt> in each of the <tt class="docutils literal"><span class="pre">./examples/gae/*</span></tt> directories.</p>
+=======
+in <tt class="docutils literal"><span class="pre">./venv</span></tt>.</p>
+</li>
+<li><p class="first">Downloads and extracts the
+<a class="reference external" href="https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python">Google App Engine Python SDK</a>
+for <strong>Linux/Other Platforms</strong> to <tt class="docutils literal"><span class="pre">./venv/google_appengine</span></tt>.</p>
+</li>
+<li><p class="first">Downloads the <a class="reference external" href="https://code.google.com/p/chromedriver/">Chromedriver</a>
+executable needed by selenium tests to <tt class="docutils literal"><span class="pre">./venv/bin/chromedriver</span></tt>.</p>
+</li>
+<li><p class="first">Activates the virtual environment <tt class="docutils literal"><span class="pre">./venv</span></tt>.</p>
+</li>
+<li><p class="first">Installs the development dependencies specified in <tt class="docutils literal"><span class="pre">./requirements.txt</span></tt>.</p>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 </li>
 <li><dl class="first docutils">
 <dt>Prepares the <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt> directory for deployment of the compiled documentation to <a class="reference external" href="https://pages.github.com/">Github Pages</a>.</dt>
@@ -328,6 +353,7 @@ and <tt class="docutils literal"><span class="pre">./authomatic</span></tt> in e
 </dd>
 </dl>
 </li>
+<<<<<<< HEAD
 <li><p class="first">Compiles the documentation with the <tt class="docutils literal"><span class="pre">./.tox/py27</span></tt> virtual environment
 activated.</p>
 </li>
@@ -347,6 +373,13 @@ installation of the <strong>pyopenssl</strong> package:</p>
 </pre></div>
 </div>
 </div>
+=======
+<li><p class="first">Compiles the documentation.</p>
+</li>
+<li><p class="first">Deactivates the virtual environment (probably unneccessary).</p>
+</li>
+</ol>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 </div>
 <div class="section" id="documentation-compilation-and-deployment">
 <h2>Documentation Compilation and Deployment<a class="headerlink" href="#documentation-compilation-and-deployment" title="Permalink to this headline">¶</a></h2>
@@ -355,9 +388,15 @@ installation of the <strong>pyopenssl</strong> package:</p>
 <p class="last">Allways keep the documentation in sync with the latest code changes.</p>
 </div>
 <p>Compile the documentation with this commands:</p>
+<<<<<<< HEAD
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. ./.tox/py27/bin/activate
 <span class="o">(</span>py27<span class="o">)</span><span class="nv">$ </span><span class="nb">cd </span>doc
 <span class="o">(</span>py27<span class="o">)</span><span class="nv">$ </span>make html
+=======
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. ./venv/bin/activate
+<span class="o">(</span>venv<span class="o">)</span><span class="nv">$ </span><span class="nb">cd </span>doc
+<span class="o">(</span>venv<span class="o">)</span><span class="nv">$ </span>make html
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 </pre></div>
 </div>
 <p>The documentation will be compiled to <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt>.
@@ -365,7 +404,11 @@ For easy deploiment to <a class="reference external" href="https://pages.github.
 the <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt> directory is actually a clone of the <strong>origin</strong> of the
 actual project repository that you cloned from (your fork) with the
 <strong>gh-pages</strong> branch checked out.</p>
+<<<<<<< HEAD
 <p>To deploy a compiled documentation to GitHub page go to the
+=======
+<p>To deploy a compiled documentation to Github page go to the
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <tt class="docutils literal"><span class="pre">./doc/build/html</span></tt> directory, commit all changes and push to
 <strong>origin gh-pages</strong>:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>doc/build/html
@@ -375,6 +418,7 @@ actual project repository that you cloned from (your fork) with the
 </pre></div>
 </div>
 </div>
+<<<<<<< HEAD
 <div class="section" id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
 <p>Tests are written in <a class="reference external" href="http://pytest.org/">pytest</a>
@@ -385,6 +429,16 @@ and <a class="reference external" href="https://testrun.org/tox">Tox</a> is used
 They are designed to test the <em>login procedure</em> and
 <em>credentials refreshment</em> and to discover changes in provider APIs.
 Currently the tests cover all of the OAuth 2.0 and select OpenID providers.</p>
+=======
+<div class="section" id="tests">
+<h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h2>
+<p>There are currently only <em>functional</em> (or <em>end-to-end</em>)
+<a class="reference external" href="http://seleniumhq.org">Selenium</a> tests.
+They are designed to test the <em>login procedure</em> and
+<em>credentials refreshment</em> and to discover changes in provider APIs.
+Currently the tests cover all the OAuth 2.0 providers.
+The tests are written for the <a class="reference external" href="http://pytest.org/latest/">pytest</a> framework.</p>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <p>To run <em>functional</em> tests, you first need to create the
 <tt class="docutils literal"><span class="pre">./tests/functional_tests/config.py</span></tt> module by copying and filling out the
 <tt class="docutils literal"><span class="pre">./tests/functional_tests/config-template.py</span></tt> template.</p>
@@ -392,6 +446,238 @@ Currently the tests cover all of the OAuth 2.0 and select OpenID providers.</p>
 <span class="nv">$ </span>cp config-template.py config.py
 </pre></div>
 </div>
+<<<<<<< HEAD
+=======
+<p>This is the <tt class="docutils literal"><span class="pre">config-template.py</span></tt> template:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">import</span> <span class="nn">constants</span>
+
+
+<span class="c"># Choose and configure the browser of your choice</span>
+<span class="k">def</span> <span class="nf">get_browser</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">()</span>
+
+
+<span class="c"># The host and port where the tested ap shoud listen.</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="s">&#39;127.0.0.1&#39;</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">8080</span>
+
+<span class="c"># The host alias set in the /etc/hosts file.</span>
+<span class="c"># The actual tests will navigate selenium browser to this host.</span>
+<span class="c"># This is necessary because some providers don&#39;t support localhost as the</span>
+<span class="c"># callback url.</span>
+<span class="n">HOST_ALIAS</span> <span class="o">=</span> <span class="s">&#39;authomatic.com&#39;</span>
+
+<span class="c"># Only providers included here will be tested.</span>
+<span class="c"># This is a convenience to easily exclude providers from tests by commenting</span>
+<span class="c"># them out.</span>
+<span class="n">INCLUDE_PROVIDERS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;amazon&#39;</span><span class="p">,</span>
+    <span class="c"># &#39;behance&#39;, # Behance doesn&#39;t support third party authorization anymore.</span>
+    <span class="s">&#39;bitly&#39;</span><span class="p">,</span>
+    <span class="s">&#39;deviantart&#39;</span><span class="p">,</span>
+    <span class="s">&#39;facebook&#39;</span><span class="p">,</span>
+    <span class="s">&#39;foursquare&#39;</span><span class="p">,</span>
+    <span class="s">&#39;google&#39;</span><span class="p">,</span>
+    <span class="s">&#39;github&#39;</span><span class="p">,</span>
+    <span class="s">&#39;linkedin&#39;</span><span class="p">,</span>
+    <span class="s">&#39;paypal&#39;</span><span class="p">,</span>
+    <span class="s">&#39;reddit&#39;</span><span class="p">,</span>
+    <span class="s">&#39;vk&#39;</span><span class="p">,</span>
+    <span class="s">&#39;windowslive&#39;</span><span class="p">,</span>
+    <span class="s">&#39;yammer&#39;</span><span class="p">,</span>
+    <span class="s">&#39;yandex&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c"># Use these constants if you have the same user info by all tested providers.</span>
+<span class="n">EMAIL</span> <span class="o">=</span> <span class="s">&#39;andy.pipkin@littlebritain.co.uk&#39;</span>
+<span class="n">FIRST_NAME</span> <span class="o">=</span> <span class="s">&#39;Andy&#39;</span>
+<span class="n">LAST_NAME</span> <span class="o">=</span> <span class="s">&#39;Pipkin&#39;</span>
+<span class="n">NAME</span> <span class="o">=</span> <span class="n">FIRST_NAME</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="n">LAST_NAME</span>
+<span class="n">USERNAME</span> <span class="o">=</span> <span class="s">&#39;andypipkin&#39;</span>
+<span class="n">USERNAME_REVERSE</span> <span class="o">=</span> <span class="s">&#39;pipkinandy&#39;</span>
+<span class="n">NICKNAME</span> <span class="o">=</span> <span class="s">&#39;Mr. Pipkin&#39;</span>
+<span class="n">BIRTH_YEAR</span> <span class="o">=</span> <span class="s">&#39;1979&#39;</span>
+<span class="n">BIRTH_DATE</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1979</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+<span class="n">CITY</span> <span class="o">=</span> <span class="s">&#39;London&#39;</span>
+<span class="n">COUNTRY</span> <span class="o">=</span> <span class="s">&#39;Great Britain&#39;</span>
+<span class="n">POSTAL_CODE</span> <span class="o">=</span> <span class="s">&#39;EC1A1DH&#39;</span>
+<span class="n">PHONE</span> <span class="o">=</span> <span class="s">&#39;??????????&#39;</span>
+<span class="n">PHONE_INTERNATIONAL</span> <span class="o">=</span> <span class="s">&#39;0044??????????&#39;</span>
+<span class="n">GENDER</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">GENDER_MALE</span>
+<span class="n">LOCALE</span> <span class="o">=</span> <span class="s">&#39;en_UK&#39;</span>
+
+<span class="c"># Common values for all providers</span>
+<span class="n">COMMON</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c"># Could be same if the user sets it so</span>
+    <span class="s">&#39;user_birth_date&#39;</span><span class="p">:</span> <span class="n">BIRTH_DATE</span><span class="p">,</span>
+    <span class="s">&#39;user_login&#39;</span><span class="p">:</span> <span class="n">EMAIL</span><span class="p">,</span>
+    <span class="s">&#39;user_email&#39;</span><span class="p">:</span> <span class="n">EMAIL</span><span class="p">,</span>
+    <span class="s">&#39;user_first_name&#39;</span><span class="p">:</span> <span class="n">FIRST_NAME</span><span class="p">,</span>
+    <span class="s">&#39;user_last_name&#39;</span><span class="p">:</span> <span class="n">LAST_NAME</span><span class="p">,</span>
+    <span class="s">&#39;user_name&#39;</span><span class="p">:</span> <span class="n">NAME</span><span class="p">,</span>
+    <span class="s">&#39;user_username&#39;</span><span class="p">:</span> <span class="n">USERNAME</span><span class="p">,</span>
+    <span class="s">&#39;user_username_reverse&#39;</span><span class="p">:</span> <span class="n">USERNAME_REVERSE</span><span class="p">,</span>
+    <span class="s">&#39;user_nickname&#39;</span><span class="p">:</span> <span class="n">NICKNAME</span><span class="p">,</span>
+    <span class="s">&#39;user_birth_year&#39;</span><span class="p">:</span> <span class="n">BIRTH_YEAR</span><span class="p">,</span>
+    <span class="s">&#39;user_city&#39;</span><span class="p">:</span> <span class="n">CITY</span><span class="p">,</span>
+    <span class="s">&#39;user_country&#39;</span><span class="p">:</span> <span class="n">COUNTRY</span><span class="p">,</span>
+    <span class="s">&#39;user_gender&#39;</span><span class="p">:</span> <span class="n">GENDER</span><span class="p">,</span>
+    <span class="s">&#39;user_phone&#39;</span><span class="p">:</span> <span class="n">PHONE</span><span class="p">,</span>
+    <span class="s">&#39;user_postal_code&#39;</span><span class="p">:</span> <span class="n">POSTAL_CODE</span><span class="p">,</span>
+    <span class="s">&#39;user_locale&#39;</span><span class="p">:</span> <span class="n">LOCALE</span><span class="p">,</span>
+
+    <span class="c"># It is not a good idea to have the same password for all providers</span>
+    <span class="c"># &#39;user_password&#39;: &#39;##########&#39;,</span>
+
+    <span class="c"># Provider and user specific value</span>
+    <span class="c"># &#39;user_id&#39;: &#39;&#39;,</span>
+    <span class="c"># &#39;user_locale&#39;: None,</span>
+    <span class="c"># &#39;user_timezone&#39;: None,</span>
+
+    <span class="c"># Provider specific format</span>
+    <span class="c"># &#39;user_picture&#39;: &#39;&#39;,</span>
+    <span class="c"># &#39;user_link&#39;: &#39;&#39;,</span>
+
+    <span class="c"># Provider specific value</span>
+    <span class="c"># &#39;consumer_key&#39;: &#39;&#39;,</span>
+    <span class="c"># &#39;consumer_secret&#39;: &#39;&#39;,</span>
+<span class="p">}</span>
+
+<span class="c"># Values from COMMON will be overriden by values from PROVIDERS[provider_name]</span>
+<span class="c"># if set.</span>
+<span class="n">PROVIDERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;amazon&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="c"># Behance doesn&#39;t support third party authorization anymore.</span>
+    <span class="c"># &#39;behance&#39;: {</span>
+    <span class="c">#     &#39;consumer_key&#39;: &#39;##########&#39;,</span>
+    <span class="c">#     &#39;consumer_secret&#39;: &#39;##########&#39;,</span>
+    <span class="c">#     &#39;user_password&#39;: &#39;##########&#39;,</span>
+    <span class="c">#     &#39;user_id&#39;: &#39;??????????&#39;,</span>
+    <span class="c"># },</span>
+    <span class="s">&#39;bitly&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;deviantart&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;eventbrite&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;facebook&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;foursquare&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># The picture URL is a random CDN URL</span>
+        <span class="s">&#39;user_picture&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;google&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_locale&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># The picture URL is a random CDN URL</span>
+        <span class="s">&#39;user_picture&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;github&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># GitHub requires the User-Agent header in every request.</span>
+        <span class="s">&#39;access_headers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Authomatic.py Automated Functional &#39;</span>
+                                          <span class="s">&#39;Tests&#39;</span><span class="p">)},</span>
+    <span class="p">},</span>
+    <span class="s">&#39;linkedin&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># User link contains a slug derived from the username.</span>
+        <span class="s">&#39;user_link&#39;</span><span class="p">:</span> <span class="s">&#39;http://www.linkedin.com/in/??????????&#39;</span><span class="p">,</span>
+        <span class="c"># GitHub requires the User-Agent header in every request.</span>
+        <span class="s">&#39;user_picture&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_phone&#39;</span><span class="p">:</span> <span class="n">PHONE_INTERNATIONAL</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;paypal&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;reddit&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_login&#39;</span><span class="p">:</span> <span class="n">USERNAME</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;access_headers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Authomatic.py Automated Functional &#39;</span>
+                                          <span class="s">&#39;Tests&#39;</span><span class="p">)}</span>
+    <span class="p">},</span>
+    <span class="c"># Viadeo doesn&#39;t support access to its API</span>
+    <span class="c"># http://dev.viadeo.com/documentation/authentication/request-an-api-key/</span>
+    <span class="c"># &#39;viadeo&#39;: {</span>
+    <span class="c">#     &#39;consumer_key&#39;: &#39;##########&#39;,</span>
+    <span class="c">#     &#39;consumer_secret&#39;: &#39;##########&#39;,</span>
+    <span class="c"># },</span>
+    <span class="s">&#39;vk&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="c"># City and country are numeric IDs</span>
+        <span class="s">&#39;user_city&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_country&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_gender&#39;</span><span class="p">:</span> <span class="s">&#39;2&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_timezone&#39;</span><span class="p">:</span> <span class="s">&#39;1&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;windowslive&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;yammer&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_picture&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;https://mug0.assets-yammer.com/mugshot/images/48x48/&#39;</span>
+                         <span class="s">&#39;??????????&#39;</span><span class="p">),</span>
+        <span class="s">&#39;user_timezone&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_locale&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;yandex&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_password&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;user_login&#39;</span><span class="p">:</span> <span class="n">USERNAME</span><span class="p">,</span>
+        <span class="s">&#39;user_id&#39;</span><span class="p">:</span> <span class="s">&#39;??????????&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 <p>If you want to run tests for all of the covered providers,
 you should register an <strong>application</strong> and a <strong>user account</strong> by each of them
 and fill out <strong>all possible</strong> settings in the user profile.
@@ -411,6 +697,7 @@ to match a domain pattern.</p>
 127.0.0.1   authomatic.com
 </pre></div>
 </div>
+<<<<<<< HEAD
 <p>Finally launch the tests:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>tox
 </pre></div>
@@ -440,6 +727,15 @@ The Google App Engine command line tools are installed in the <tt class="docutil
 directory.</p>
 </div>
 </div>
+=======
+<p>You can run the tests with the following command
+with the virtual environment activated:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. venv/bin/activate
+<span class="o">(</span>venv<span class="o">)</span><span class="nv">$ </span>py.test tests/functional_tests
+</pre></div>
+</div>
+</div>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 </div>
 
 
@@ -484,6 +780,7 @@ directory.</p>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Development</a><ul>
+<<<<<<< HEAD
 <li class="toctree-l2"><a class="reference internal" href="#development-environment-setup">Development Environment Setup</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pyopenssl-error">PyOpenSSL Error</a></li>
 </ul>
@@ -491,6 +788,11 @@ directory.</p>
 <li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-the-examples">Running the Examples</a></li>
+=======
+<li class="toctree-l2"><a class="reference internal" href="#development-environment-setup">Development Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a></li>
+>>>>>>> db3e7552cc90b75945c75d41fbad99038e6633e6
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
