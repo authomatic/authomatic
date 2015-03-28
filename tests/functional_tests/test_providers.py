@@ -21,6 +21,12 @@ PROVIDERS = dict((k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items() if
                  k in config.INCLUDE_PROVIDERS)
 
 ALL_APPS = {
+    'Django': liveandletdie.Django(
+        os.path.join(EXAMPLES_DIR, 'django/functional_test'),
+        host=config.HOST,
+        port=config.PORT,
+        check_url=config.HOST_ALIAS,
+    ),
     'Flask': liveandletdie.Flask(
         os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
         host=config.HOST,

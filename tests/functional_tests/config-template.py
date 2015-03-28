@@ -21,6 +21,7 @@ HOST_ALIAS = 'authomatic.com'
 
 # Only frameworks included here will be tested.
 INCLUDE_FRAMEWORKS = [
+    # 'django',
     'flask',
     # 'pyramid',
 ]
