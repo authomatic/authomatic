@@ -133,23 +133,18 @@ def provider(request, browser, app):
                 button = browser.find_element_by_xpath(xpath)
                 print('Hitting consent button.')
                 button.click()
-            except Exception as e:
+            except NoSuchElementException:
                 print('No consent needed.')
-                pass
 
     try:
         success = browser.find_element_by_id('login-result')
-    except NoSuchElementException as e:
-        _provider['__login_error__'] = e
+    except NoSuchElementException:
+        pytest.fail('Login by provider "{0}" failed!'.format(request.param))
 
     return _provider
 
 
 class Base(object):
-
-    def skip_if_login_failed(self, provider):
-        assert provider.get('__login_error__') is None
-
     def skip_if_openid(self, provider):
         if provider.get('openid_identifier'):
             pytest.skip("OpenID provider has no credentials.")
@@ -160,7 +155,6 @@ class TestCredentials(Base):
     @pytest.fixture()
     def fixture(self, app, provider, browser):
         self.skip_if_openid(provider)
-        self.skip_if_login_failed(provider)
 
         def f(property_name, coerce=None):
             id_ = 'original-credentials-{0}'.format(property_name)
@@ -229,7 +223,6 @@ class TestCredentialsChange(Base):
     @pytest.fixture()
     def fixture(self, app, provider, browser):
         self.skip_if_openid(provider)
-        self.skip_if_login_failed(provider)
 
         refresh_status = browser.find_element_by_id('original-credentials-'
                                                       'refresh_status').text
@@ -304,7 +297,6 @@ class TestUser(Base):
 
     @pytest.fixture()
     def fixture(self, app, provider, browser):
-        self.skip_if_login_failed(provider)
 
         def f(property_name):
             value = browser.find_element_by_id(property_name).text or None
@@ -369,14 +361,12 @@ class TestUser(Base):
 
     def test_content_should_contain(self, app, provider, browser):
         self.skip_if_openid(provider)
-        self.skip_if_login_failed(provider)
         content = browser.find_element_by_id('content').text
         for item in provider['content_should_contain']:
             assert item in content
 
     def test_content_should_not_contain(self, app, provider, browser):
         self.skip_if_openid(provider)
-        self.skip_if_login_failed(provider)
         content = browser.find_element_by_id('content').text.lower()
         for item in provider['content_should_not_contain']:
             if item:
@@ -384,7 +374,6 @@ class TestUser(Base):
 
     def test_provider_support(self, app, provider):
         self.skip_if_openid(provider)
-        self.skip_if_login_failed(provider)
         sua = provider['class_'].supported_user_attributes
         tested = dict((k, getattr(sua, k)) for k in sua._fields)
         expected = dict((k, bool(v)) for k, v in provider['user'].items() if
