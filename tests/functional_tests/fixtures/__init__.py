@@ -35,16 +35,17 @@ OAUTH1_PROVIDERS = {}
 OPENID_PROVIDERS = {}
 
 
-def render_home():
+def render_home(framework_name):
     """Renders the homepage"""
     template = env.get_template('index.html')
     return template.render(providers=ASSEMBLED_CONFIG,
                            oauth2_providers=OAUTH2_PROVIDERS,
                            oauth1_providers=OAUTH1_PROVIDERS,
-                           openid_providers=OPENID_PROVIDERS)
+                           openid_providers=OPENID_PROVIDERS,
+                           framework_name=framework_name)
 
 
-def render_login_result(result):
+def render_login_result(framework_name, result):
     """
     Renders the login handler
 
@@ -83,7 +84,8 @@ def render_login_result(result):
                                error=result.error,
                                credentials_response=response,
                                original_credentials=original_credentials,
-                               refreshed_credentials=refreshed_credentials)
+                               refreshed_credentials=refreshed_credentials,
+                               framework_name=framework_name)
 
 
 def get_configuration(provider):

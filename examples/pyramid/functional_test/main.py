@@ -14,19 +14,19 @@ from tests.functional_tests import fixtures
 authomatic = Authomatic(fixtures.ASSEMBLED_CONFIG, '123', report_errors=False)
 
 
+def home(request):
+    return Response(fixtures.render_home('pyramid'))
+
+
 def login(request):
     provider_name = request.matchdict.get('provider_name')
     response = Response()
     result = authomatic.login(WebObAdapter(request, response), provider_name)
 
     if result:
-        response.write(fixtures.render_login_result(result).encode())
+        response.write(fixtures.render_login_result('pyramid', result).encode())
 
     return response
-
-
-def home(request):
-    return Response(fixtures.render_home())
 
 
 if __name__ == '__main__':

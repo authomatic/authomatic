@@ -24,7 +24,7 @@ authomatic = authomatic.Authomatic(fixtures.ASSEMBLED_CONFIG, '123',
 
 @app.route('/')
 def home():
-    return fixtures.render_home()
+    return fixtures.render_home('flask')
 
 
 @app.route('/login/<provider_name>', methods=['GET', 'POST'])
@@ -34,7 +34,7 @@ def login(provider_name):
                               provider_name)
 
     if result:
-        response.data += fixtures.render_login_result(result).encode()
+        response.data += fixtures.render_login_result('flask', result).encode()
 
     return response
 
