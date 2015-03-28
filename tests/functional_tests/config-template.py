@@ -22,7 +22,7 @@ HOST_ALIAS = 'authomatic.com'
 # Only frameworks included here will be tested.
 INCLUDE_FRAMEWORKS = [
     # 'django',
-    'flask',
+    'flask', # Runs with https
     # 'pyramid',
 ]
 
@@ -254,6 +254,7 @@ PROVIDERS = {
         'openid_identifier': 'me.yahoo.com',
         'user_id': '???',
         'user_login': USERNAME,
+        'user_password': '##########',
         'user_email': '{0}@yahoo.com'.format(USERNAME),
     },
     'openid_livejournal': {
