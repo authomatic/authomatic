@@ -252,27 +252,30 @@ PROVIDERS = {
     'openid_yahoo': {
         'openid_identifier': 'me.yahoo.com',
         'user_id': '???',
-        'user_login': USERNAME_REVERSE,
-        'user_email': 'hudecpeter@yahoo.com',
+        'user_login': USERNAME,
+        'user_email': '{0}@yahoo.com'.format(USERNAME),
     },
     'openid_livejournal': {
         'openid_identifier': '{0}.livejournal.com'.format(USERNAME),
         'user_login': USERNAME,
+        'user_password': '##########',
         'user_id': 'http://{0}.livejournal.com/'.format(USERNAME)
     },
     'openid_wordpress': {
         'openid_identifier': '{0}.wordpress.com'.format(USERNAME),
         'user_login': EMAIL,
+        'user_password': '##########',
         'user_id': 'https://{0}.wordpress.com/'.format(USERNAME),
         'user_nickname': NICKNAME,
     },
     'openid_verisignlabs': {
         'openid_identifier': '{0}.pip.verisignlabs.com'.format(USERNAME),
         'user_login': USERNAME,
+        'user_password': '##########',
         'user_id': 'http://{0}.pip.verisignlabs.com/'.format(USERNAME),
         'user_nickname': NICKNAME,
-        'user_timezone': '???',
-        'user_locale': '???',
-        'user_gender': '???',
+        'user_timezone': '???', # Europe/Bratislava, Europe/Paris ...
+        'user_locale': '???', # Slovak, English ...
+        'user_gender': '???', # M or F
     },
 }
