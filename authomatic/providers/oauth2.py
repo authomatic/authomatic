@@ -29,7 +29,7 @@ Providers which implement the |oauth2|_ protocol.
     
 """
 
-from six.moves.urllib.parse import urlencode
+from authomatic.six.moves.urllib.parse import urlencode
 import datetime
 import logging
 

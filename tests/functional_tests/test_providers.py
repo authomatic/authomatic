@@ -3,7 +3,7 @@
 import os
 import re
 import time
-from six.moves.urllib import parse
+from authomatic.six.moves.urllib import parse
 
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException

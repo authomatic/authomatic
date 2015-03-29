@@ -1,18 +1,21 @@
 # encoding: utf-8
 
-from os import path
 from collections import namedtuple
+from os import path
 import pkgutil
 import sys
 import time
-import six
-from six.moves import reload_module
+
 from jinja2 import Environment, FileSystemLoader
+
 from authomatic.providers import (
     oauth1,
     oauth2,
     openid,
 )
+from authomatic import six
+from authomatic.six.moves import reload_module
+
 
 # Add path of the functional_tests_path package to PYTHONPATH.
 # Tis is necessary for the following imports to work when this module is
