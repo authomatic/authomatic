@@ -1085,6 +1085,15 @@ class Response(ReprMixin):
         return self.httplib_response.getheaders()
 
 
+    def is_binary_string(self, content):
+        """
+        Return true if string is binary data
+        """
+
+        textchars = bytearray([7,8,9,10,12,13,27]) + bytearray(range(0x20, 0x100))
+        return bool(content.translate(None, textchars))
+
+
     @property
     def content(self):
         """
@@ -1092,7 +1101,11 @@ class Response(ReprMixin):
         """
 
         if not self._content:
-            self._content = self.httplib_response.read().decode('utf-8')
+            content = self.httplib_response.read()
+            if self.is_binary_string(content):
+                self._content = content
+            else:
+                self._content = content.decode('utf-8')
         return self._content
 
 

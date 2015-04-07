@@ -373,7 +373,6 @@ class BaseProvider(object):
                 body = query
                 query = ''
                 headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
-        print(path, query)
         request_path = parse.urlunsplit(('', '', path or '', query or '', ''))
         
         self._log(logging.DEBUG, ' \u251C\u2500 host: {0}'.format(host))
