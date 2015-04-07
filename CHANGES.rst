@@ -2,6 +2,7 @@ Version 0.0.12
 --------------
 
 * Fixed import errors of the **six** module.
+* Fixed an bug when decoding binary provider response resulted in an error.
 
 Version 0.0.11
 --------------
