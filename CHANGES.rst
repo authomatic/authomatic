@@ -1,3 +1,8 @@
+Version 0.0.12
+--------------
+
+* Fixed import errors of the **six** module.
+
 Version 0.0.11
 --------------
 
