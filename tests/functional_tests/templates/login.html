@@ -84,7 +84,7 @@
         }
     }
     var userContentJSONKeys = document.getElementById('user-content-json-keys');
-    userContentJSONKeys.innerHTML = "[" + output.join(', ') + "]";
+    userContentJSONKeys.innerHTML = "[" + output.sort().join(', ') + "]";
 
     // Display syntax-highlighted credentials refresh response content
     var credentialsResponse = document.getElementById('credentials-response');
