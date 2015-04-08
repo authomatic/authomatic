@@ -27,6 +27,7 @@ CONFIG = {
         'gender': conf.user_gender,
         'link': None,
         'locale': None,
+        'location': conf.user_location,
         'phone': conf.user_phone,
         'picture': conf.user_picture,
         'postal_code': None,

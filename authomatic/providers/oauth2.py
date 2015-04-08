@@ -879,6 +879,7 @@ class Foursquare(OAuth2):
     * gender
     * id
     * last_name
+    * location
     * name
     * phone
     * picture
@@ -910,6 +911,7 @@ class Foursquare(OAuth2):
         gender=True,
         id=True,
         last_name=True,
+        location=True,
         name=True,
         phone=True,
         picture=True
@@ -959,8 +961,13 @@ class Foursquare(OAuth2):
 
         if isinstance(_photo, str):
             user.picture = _photo
-        
-        user.city, user.country = _user.get('homeCity', ', ').split(', ')
+
+        user.location = _user.get('homeCity')
+        if user.location:
+            split_location = user.location.split(',')
+            user.city = split_location[0].strip()
+            if len(user.location) > 1:
+                user.country = split_location[1].strip()
         
         _contact = _user.get('contact', {})
         user.email = _contact.get('email')
