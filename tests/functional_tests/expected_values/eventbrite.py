@@ -5,12 +5,9 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('eventbrite')
 
 CONFIG = {
-    'login_xpath': ('//*[@id="authentication-container"]'
-                    '/div/form/div[3]/div[1]/input'),
-    'password_xpath': ('//*[@id="authentication-container"]'
-                       '/div/form/div[3]/div[2]/input'),
+    'login_xpath': '//*[@id="login-email"]',
+    'password_xpath': '//*[@id="login-password"]',
     'consent_xpaths': [
-        '//*[@id="authentication-container"]/div/form/div[3]/div[4]/input',
         '//*[@id="access_choices_allow"]',
     ],
     'consent_wait_seconds': 2,
@@ -27,6 +24,7 @@ CONFIG = {
         'last_name': conf.user_last_name,
         'link': None,
         'locale': None,
+        'location': None,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
