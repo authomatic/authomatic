@@ -759,6 +759,7 @@ class Facebook(OAuth2):
     * last_name
     * link
     * locale
+    * location
     * name
     * picture
     * timezone
@@ -780,19 +781,20 @@ class Facebook(OAuth2):
     same_origin = False
 
     supported_user_attributes = core.SupportedUserAttributes(
-        id=True,
-        email=True,
-        username=True,
-        name=True,
-        first_name=True,
-        last_name=True,
         city=True,
         country=True,
+        email=True,
+        first_name=True,
         gender=True,
-        link=True,
+        id=True,
+        last_name=True,
         locale=True,
+        link=True,
+        location=True,
+        name=True,
         picture=True,
-        timezone=True
+        timezone=True,
+        username=True
     )
     
     @classmethod
@@ -825,9 +827,9 @@ class Facebook(OAuth2):
     def _x_user_parser(user, data):
         user.picture = 'http://graph.facebook.com/{0}/picture?type=large'.format(data.get('username'))
 
-        location = data.get('location', {}).get('name')
-        if location and location.split:
-            split_location = location.split(', ')
+        user.location = data.get('location', {}).get('name')
+        if user.location:
+            split_location = user.location.split(', ')
             user.city = split_location[0].strip()
             if len(split_location) > 1:
                 user.country = split_location[1].strip()
