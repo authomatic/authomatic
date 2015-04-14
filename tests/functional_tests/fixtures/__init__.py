@@ -104,7 +104,7 @@ def get_configuration(provider):
     It merges the ``config.COMMON`` and the ``config.PROVIDERS[provider]``
     dictionaries and returns a named tuple.
 
-    :param str:
+    :param str provider:
         Provider slug used in ``config.PROVIDERS``.
 
     :returns:
