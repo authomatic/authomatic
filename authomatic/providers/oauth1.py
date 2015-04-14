@@ -605,11 +605,10 @@ class Twitter(OAuth1):
 
     Supported :class:`.User` properties:
 
-    * city
-    * country
     * id
     * link
     * locale
+    * location
     * name
     * picture
     * username
@@ -617,6 +616,8 @@ class Twitter(OAuth1):
     Unsupported :class:`.User` properties:
 
     * birth_date
+    * city
+    * country
     * email
     * gender
     * first_name
@@ -629,11 +630,10 @@ class Twitter(OAuth1):
     """
 
     supported_user_attributes = core.SupportedUserAttributes(
-        city=True,
-        country=True,
         id=True,
         link=True,
         locale=True,
+        location=True,
         name=True,
         picture=True,
         username=True
@@ -653,12 +653,6 @@ class Twitter(OAuth1):
         user.picture = data.get('profile_image_url')
         user.locale = data.get('lang')
         user.link = data.get('url')
-
-        _location = data.get('location', '')
-        if _location:
-            _city, _country = _location.split(',')
-            user.city = _city.strip()
-            user.country = _country.strip()
         return user
 
 

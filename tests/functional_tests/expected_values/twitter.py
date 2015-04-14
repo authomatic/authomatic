@@ -13,8 +13,8 @@ CONFIG = {
     'class_': oauth1.Twitter,
     'user': {
         'birth_date': None,
-        'city': conf.user_city,
-        'country': conf.user_country,
+        'city': None,
+        'country': None,
         'email': None,
         'gender': None,
         'id': conf.user_id,
@@ -22,6 +22,7 @@ CONFIG = {
         'last_name': None,
         'link': conf.user_link,
         'locale': conf.user_locale,
+        'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
@@ -32,7 +33,6 @@ CONFIG = {
     },
     'content_should_contain': [
         conf.user_id,
-        # conf.user_link,
         conf.user_locale,
         conf.user_name,
         conf.user_username,
