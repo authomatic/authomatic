@@ -22,8 +22,8 @@ CONFIG = {
     'scope': oauth2.GitHub.user_info_scope,
     'user': {
         'birth_date': None,
-        'city': conf.user_city,
-        'country': conf.user_country,
+        'city': None,
+        'country': None,
         'email': conf.user_email,
         'first_name': None,
         'gender': None,
@@ -31,6 +31,7 @@ CONFIG = {
         'last_name': None,
         'link': LINK,
         'locale': None,
+        'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,

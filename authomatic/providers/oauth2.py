@@ -1004,11 +1004,12 @@ class GitHub(OAuth2):
                 }
             }
 
-    * city
-    * country
+    Supported :class:`.User` properties:
+
     * email
     * id
     * link
+    * location
     * name
     * picture
     * username
@@ -1016,6 +1017,8 @@ class GitHub(OAuth2):
     Unsupported :class:`.User` properties:
 
     * birth_date
+    * city
+    * country
     * first_name
     * gender
     * last_name
@@ -1034,11 +1037,10 @@ class GitHub(OAuth2):
     same_origin = False
 
     supported_user_attributes = core.SupportedUserAttributes(
-        city=True,
-        country=True,
         email=True,
         id=True,
         link=True,
+        location=True,
         name=True,
         picture=True,
         username=True
@@ -1049,14 +1051,6 @@ class GitHub(OAuth2):
         user.username = data.get('login')
         user.picture = data.get('avatar_url')
         user.link = data.get('html_url')
-
-        location = data.get('location', '')
-        if location:
-            split_location = location.split(',')
-            user.city = split_location[0].strip()
-            if len(split_location) > 1:
-                user.country = split_location[1].strip()
-            
         return user
     
     @classmethod
