@@ -25,6 +25,7 @@ CONFIG = {
         'last_name': conf.user_last_name,
         'link': conf.user_link,
         'locale': None,
+        'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
         'phone': conf.user_phone,

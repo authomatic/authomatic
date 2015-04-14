@@ -1176,6 +1176,7 @@ class LinkedIn(OAuth2):
     * id
     * last_name
     * link
+    * location
     * name
     * phone
     * picture
@@ -1209,6 +1210,7 @@ class LinkedIn(OAuth2):
         id=True,
         last_name=True,
         link=True,
+        location=True,
         name=True,
         phone=True,
         picture=True
@@ -1234,7 +1236,9 @@ class LinkedIn(OAuth2):
         user.email = data.get('emailAddress')
         user.name = data.get('formattedName')
         user.country = data.get('location', {}).get('name')
-        user.phone = data.get('phoneNumbers', {}).get('values', [{}])[0].get('phoneNumber')
+        user.location = data.get('location', {}).get('country', {}).get('code')
+        user.phone = data.get('phoneNumbers', {}).get('values', [{}])[0]\
+            .get('phoneNumber')
         user.picture = data.get('pictureUrl')
         user.link = data.get('publicProfileUrl')
 
