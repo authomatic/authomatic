@@ -466,11 +466,20 @@ class BaseProvider(object):
         if not self.user.name:
             if self.user.first_name and self.user.last_name:
                 # Create it from first name and last name if available.
-                self.user.name = ' '.join((self.user.first_name, self.user.last_name))
+                self.user.name = ' '.join((self.user.first_name,
+                                           self.user.last_name))
             else:
                 # Or use one of these.
-                self.user.name = self.user.username or self.user.nickname or self.user.first_name or self.user.last_name
-        
+                self.user.name = (self.user.username or self.user.nickname or
+                                  self.user.first_name or self.user.last_name)
+
+        if not self.user.location:
+            if self.user.city and self.user.country:
+                self.user.location = '{0}, {1}'.format(self.user.city,
+                                                       self.user.country)
+            else:
+                self.user.location = self.user.city or self.user.country
+
         return self.user    
     
     
