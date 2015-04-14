@@ -1121,6 +1121,20 @@ class Google(OAuth2):
             if not 'approval_prompt' in self.user_authorization_params:
                 # And also approval_prompt=force.
                 self.user_authorization_params['approval_prompt'] = 'force'
+
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements,
+                                   credentials):
+        """
+        Google doesn't accept client ID and secret to be at the same time in
+        request parameters and in the basic authorization header in the
+        access token request.
+        """
+        if request_type is cls.ACCESS_TOKEN_REQUEST_TYPE:
+            params = request_elements[2]
+            del params['client_id']
+            del params['client_secret']
+        return request_elements
     
     @staticmethod
     def _x_user_parser(user, data):
