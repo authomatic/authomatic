@@ -76,8 +76,6 @@ def render_login_result(framework_name, result):
                 response = result.user.credentials.refresh(force=True)
                 refreshed_credentials.update(result.user.credentials.__dict__)
 
-        user_properties = ASSEMBLED_CONFIG.values()[0]['user'].keys()
-
         user_properties = ['birth_date', 'city', 'country', 'email',
                            'first_name', 'gender', 'id', 'last_name', 'link',
                            'locale', 'location', 'name', 'nickname', 'phone',
