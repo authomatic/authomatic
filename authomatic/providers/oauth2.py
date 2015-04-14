@@ -1352,6 +1352,7 @@ class Reddit(OAuth2):
     * last_name
     * link
     * locale
+    * location
     * name
     * nickname
     * phone
@@ -1486,6 +1487,7 @@ class VK(OAuth2):
     * gender
     * id
     * last_name
+    * location
     * name
     * picture
     * timezone
@@ -1515,6 +1517,7 @@ class VK(OAuth2):
         gender=True,
         id=True,
         last_name=True,
+        location=True,
         name=True,
         picture=True,
         timezone=True,
@@ -1574,6 +1577,7 @@ class WindowsLive(OAuth2):
     * country
     * gender
     * nickname
+    * location
     * phone
     * postal_code
     * timezone
@@ -1638,6 +1642,7 @@ class Yammer(OAuth2):
     * last_name
     * link
     * locale
+    * location
     * name
     * phone
     * picture
@@ -1666,6 +1671,7 @@ class Yammer(OAuth2):
         last_name=True,
         link=True,
         locale=True,
+        location=True,
         name=True,
         phone=True,
         picture=True,
@@ -1746,6 +1752,7 @@ class Yandex(OAuth2):
     * last_name
     * link
     * locale
+    * location
     * nickname
     * phone
     * picture

@@ -3,6 +3,8 @@ Version 0.0.12
 
 * Fixed import errors of the **six** module.
 * Fixed an bug when decoding binary provider response resulted in an error.
+* Improved handling of ambiguous user location by some providers. Introduced
+  the :class:`.User.location` attribute.
 
 Version 0.0.11
 --------------

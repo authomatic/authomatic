@@ -347,6 +347,9 @@ class TestUser(Base):
     def test_locale(self, fixture):
         fixture('locale')
 
+    def test_location(self, fixture):
+        fixture('location')
+
     def test_phone(self, fixture):
         fixture('phone')
 

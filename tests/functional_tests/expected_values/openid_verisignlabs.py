@@ -1,7 +1,4 @@
-import re
-
 import fixtures
-import constants
 from authomatic.providers import openid
 
 conf = fixtures.get_configuration('openid_verisignlabs')
@@ -26,6 +23,7 @@ CONFIG = {
         'country': conf.user_country,
         'gender': conf.user_gender,
         'link': None,
+        'location': conf.user_country,
         'locale': conf.user_locale,
         'phone': None,
         'picture': None,

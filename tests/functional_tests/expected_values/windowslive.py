@@ -31,6 +31,7 @@ CONFIG = {
         'last_name': conf.user_last_name,
         'link': 'https://profile.live.com/',
         'locale': conf.user_locale,
+        'location': None,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,

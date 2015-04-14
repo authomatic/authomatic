@@ -1,7 +1,4 @@
-import re
-
 import fixtures
-import constants
 from authomatic.providers import openid
 
 conf = fixtures.get_configuration('openid_wordpress')
@@ -28,6 +25,7 @@ CONFIG = {
         'gender': None,
         'link': None,
         'locale': None,
+        'location': None,
         'phone': None,
         'picture': None,
         'postal_code': None,

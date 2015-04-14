@@ -1,14 +1,11 @@
-import re
-
 import fixtures
-import constants
 from authomatic.providers import openid
 
 conf = fixtures.get_configuration('openid_livejournal')
 
 CONFIG = {
     'pre_login_xpaths': [
-        '//*[@id="js"]/body/div[6]/header/span',
+        '//*[@id="js"]/body/div[7]/header/span',
         '//*[@id="js"]/body/div[4]/header/div/nav[1]/ul[2]/li[1]/a',
     ],
     'login_xpath': '//*[@id="user"]',
@@ -31,6 +28,7 @@ CONFIG = {
         'country': None,
         'gender': None,
         'link': None,
+        'location': None,
         'locale': None,
         'phone': None,
         'picture': None,

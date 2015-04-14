@@ -34,6 +34,7 @@ CONFIG = {
         'gender': None,
         'link': None,
         'locale': None,
+        'location': None,
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,

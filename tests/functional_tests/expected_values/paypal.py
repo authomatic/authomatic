@@ -19,6 +19,7 @@ CONFIG = {
         'last_name': None,
         'link': None,
         'locale': None,
+        'location': None,
         'name': None,
         'nickname': None,
         'phone': None,

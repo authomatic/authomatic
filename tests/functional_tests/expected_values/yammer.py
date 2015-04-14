@@ -34,6 +34,7 @@ CONFIG = {
         'last_name': conf.user_last_name,
         'link': LINK,
         'locale': conf.user_locale,
+        'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
         'phone': conf.user_phone,
