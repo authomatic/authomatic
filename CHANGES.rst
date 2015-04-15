@@ -1,3 +1,10 @@
+Version 0.0.13
+--------------
+
+* Fixed an error in :class:`.oauth2.Google` when the access token request
+  resulted in an
+  ``OAuth 2 parameters can only have a single value: client_secret`` error.
+
 Version 0.0.12
 --------------
 
