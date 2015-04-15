@@ -1,3 +1,10 @@
+Version 0.0.13
+--------------
+
+* Fixed an error in :class:`.oauth2.Google` when the access token request
+  resulted in an
+  ``OAuth 2 parameters can only have a single value: client_secret`` error.
+
 Version 0.0.12
 --------------
 
@@ -27,11 +34,6 @@ Version 0.0.10
 Version 0.0.9
 -------------
 
-.. note::
-
-    This version is still in development and has not been released to
-    `PyPI <https://pypi.python.org/pypi/Authomatic>`__ yet.
-
 * Updated *user info* URL scheme of the :class:`.oauth1.Yahoo` provider.
 * The :class:`.oauth2.Yandex` provider now supports :attr:`.User.name` and.
   :attr:`.User.username` properties.
@@ -46,7 +48,6 @@ Version 0.0.9
   :attr:`.User.birth_date` attribute.
 * The :class:`.oauth2.Reddit` provider now supports the
   :attr:`.User.username` attribute.
-
 
 Version 0.0.8
 -------------
@@ -78,7 +79,6 @@ Version 0.0.7
   `issue #11 <https://github.com/peterhudec/authomatic/issues/11>`__,
   when WebKit-based browsers failed to accept cookies set as part of a
   redirect response in some circumstances.
-
 
 Version 0.0.6
 -------------
