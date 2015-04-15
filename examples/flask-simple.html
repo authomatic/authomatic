@@ -47,7 +47,7 @@
 	<script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.0.10',
+        VERSION:     '0.0.13',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -143,6 +143,8 @@
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-13">Version 0.0.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-12">Version 0.0.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11">Version 0.0.11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
@@ -351,8 +353,8 @@ provider which we have configured in the <a class="reference internal" href="../
 <p>Now just Log the <strong>user</strong> in by calling the <a class="reference internal" href="../reference/classes.html#authomatic.Authomatic.login" title="authomatic.Authomatic.login"><tt class="xref py py-meth docutils literal"><span class="pre">Authomatic.login()</span></tt></a> method inside the <em>login</em> handler.
 You must pass it the <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><tt class="xref py py-class docutils literal"><span class="pre">WerkzeugAdapter</span></tt></a>
 and the <tt class="docutils literal"><span class="pre">provider_name</span></tt> URL variable.
-The <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><tt class="xref py py-class docutils literal"><span class="pre">WerkzeugAdapter</span></tt></a> needs instances of <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Request" title="(in Werkzeug v0.10-dev)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Request</span></tt></a>
-and <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Response" title="(in Werkzeug v0.10-dev)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Response</span></tt></a> classes.
+The <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><tt class="xref py py-class docutils literal"><span class="pre">WerkzeugAdapter</span></tt></a> needs instances of <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Request" title="(in Werkzeug v0.11-dev)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Request</span></tt></a>
+and <a class="reference external" href="http://werkzeug.pocoo.org/docs/wrappers/#werkzeug.wrappers.Response" title="(in Werkzeug v0.11-dev)"><tt class="xref py py-class docutils literal"><span class="pre">werkzeug.wrappers.Response</span></tt></a> classes.
 The handler must return the <tt class="docutils literal"><span class="pre">response</span></tt> so we assign it to a variable.</p>
 <div class="highlight-python"><div class="highlight"><pre>    <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">()</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">WerkzeugAdapter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">),</span> <span class="n">provider_name</span><span class="p">)</span>
@@ -730,6 +732,8 @@ Remember that you can download all the files we just created from
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-13">Version 0.0.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-12">Version 0.0.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11">Version 0.0.11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-10">Version 0.0.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-9">Version 0.0.9</a></li>
