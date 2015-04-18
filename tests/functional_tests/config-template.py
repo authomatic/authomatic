@@ -46,10 +46,10 @@ INCLUDE_PROVIDERS = [
     'yammer',
     'yandex',
 
-    'openid_yahoo',
     'openid_livejournal',
-    'openid_wordpress',
     'openid_verisignlabs',
+    'openid_wordpress',
+    'openid_yahoo',
 ]
 
 # Use these constants if you have the same user info by all tested providers.
@@ -64,11 +64,13 @@ BIRTH_YEAR = '1979'
 BIRTH_DATE = datetime.datetime(1979, 12, 31).strftime('%x')
 CITY = 'London'
 COUNTRY = 'Great Britain'
+COUNTRY_ISO2 = 'gb'
 POSTAL_CODE = 'EC1A1DH'
 PHONE = '??????????'
 PHONE_INTERNATIONAL = '0044??????????'
 GENDER = constants.GENDER_MALE
 LOCALE = 'en_UK'
+LOCATION = CITY + ', ' + COUNTRY
 
 # Common values for all providers
 COMMON = {
@@ -89,6 +91,7 @@ COMMON = {
     'user_phone': PHONE,
     'user_postal_code': POSTAL_CODE,
     'user_locale': LOCALE,
+    'user_location': LOCATION,
 
     # It is not a good idea to have the same password for all providers
     # 'user_password': '##########',
@@ -195,6 +198,7 @@ PROVIDERS = {
         # GitHub requires the User-Agent header in every request.
         'user_picture': '??????????',
         'user_phone': PHONE_INTERNATIONAL,
+        'user_location': COUNTRY_ISO2,
     },
     'paypal': {
         'consumer_key': '##########',
@@ -222,6 +226,7 @@ PROVIDERS = {
         # City and country are numeric IDs
         'user_city': '??????????',
         'user_country': '??????????',
+        'user_location': '??????????, ??????????',
         'user_gender': '2',
         'user_timezone': '1',
     },
