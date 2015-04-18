@@ -28,10 +28,13 @@ INCLUDE_FRAMEWORKS = [
 
 # Only providers included here will be tested.
 INCLUDE_PROVIDERS = [
+    # OAuth 1.0a
+    'bitbucket',
     'twitter',
 
+    # OAuth 2.0
     'amazon',
-    # 'behance', # Behance doesn't support third party authorization anymore.
+    # 'behance', # doesn't support third party authorization anymore.
     'bitly',
     'deviantart',
     'facebook',
@@ -46,6 +49,7 @@ INCLUDE_PROVIDERS = [
     'yammer',
     'yandex',
 
+    # OpenID
     'openid_livejournal',
     'openid_verisignlabs',
     'openid_wordpress',
@@ -114,6 +118,13 @@ COMMON = {
 # if set.
 PROVIDERS = {
     # OAuth 1.0a
+    'bitbucket': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_id': USERNAME,
+        # The picture URL is a random CDN URL
+        'user_picture': '???',
+    },
     'twitter': {
         'consumer_key': '##########',
         'consumer_secret': '##########',

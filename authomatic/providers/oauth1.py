@@ -476,7 +476,42 @@ class Bitbucket(OAuth1):
     * Dashboard: https://bitbucket.org/account/user/peterhudec/api
     * Docs: https://confluence.atlassian.com/display/BITBUCKET/oauth+Endpoint
     * API reference: https://confluence.atlassian.com/display/BITBUCKET/Using+the+Bitbucket+REST+APIs
+
+    Supported :class:`.User` properties:
+
+    * first_name
+    * id
+    * last_name
+    * link
+    * name
+    * picture
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * gender
+    * locale
+    * location
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        first_name=True,
+        id=True,
+        last_name=True,
+        link=True,
+        name=True,
+        picture=True,
+        username=True
+    )
     
     request_token_url = 'https://bitbucket.org/!api/1.0/oauth/request_token'
     user_authorization_url = 'https://bitbucket.org/!api/1.0/oauth/authenticate'
@@ -491,7 +526,8 @@ class Bitbucket(OAuth1):
         user.first_name = _user.get('first_name')
         user.last_name = _user.get('last_name')
         user.picture = _user.get('avatar')
-        user.link = _user.get('resource_uri')
+        user.link = 'https://bitbucket.org/api{0}'\
+            .format(_user.get('resource_uri'))
         return user
 
 
