@@ -1,3 +1,10 @@
+Version 0.1.0
+-------------
+
+* Added the :attr:`.User.location` attribute.
+* Removed support for :attr:`.User.country` and :attr:`.User.city` from
+  :class:`.oauth1.Twitter` and :class:`.oauth2.GitHub` providers.
+
 Version 0.0.13
 --------------
 
