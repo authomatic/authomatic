@@ -538,18 +538,48 @@ class Flickr(OAuth1):
     * Dashboard: https://www.flickr.com/services/apps/
     * Docs: https://www.flickr.com/services/api/auth.oauth.html
     * API reference: https://www.flickr.com/services/api/
+
+    Supported :class:`.User` properties:
+
+    * id
+    * name
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * first_name
+    * gender
+    * last_name
+    * link
+    * locale
+    * location
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        name=True,
+        username=True
+    )
     
     request_token_url = 'http://www.flickr.com/services/oauth/request_token'
     user_authorization_url = 'http://www.flickr.com/services/oauth/authorize'
     access_token_url = 'http://www.flickr.com/services/oauth/access_token'
-    user_info_url = 'http://api.flickr.com/services/rest?method=flickr.test.login&format=json&nojsoncallback=1'
-    
+    user_info_url = None
+
     supports_jsonp = True
     
     @staticmethod
     def _x_user_parser(user, data):
-        
         _user = data.get('user', {})
         
         user.name = data.get('fullname') or _user.get('username', {}).get('_content')

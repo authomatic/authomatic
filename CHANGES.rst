@@ -1,6 +1,8 @@
 Version 0.1.0
 -------------
 
+* The :class:`.oauth1.Flickr` provider doesn't make the redundant API call
+  during :meth:`.oauth1.Flickr.update_user` anymore.
 * Added the :attr:`.User.location` attribute.
 * Removed support for :attr:`.User.country` and :attr:`.User.city` from
   :class:`.oauth1.Twitter` and :class:`.oauth2.GitHub` providers.
