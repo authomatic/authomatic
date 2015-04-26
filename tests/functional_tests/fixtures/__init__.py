@@ -128,6 +128,7 @@ def get_configuration(provider):
     Res.no_first_name = ['"{0}"'.format(conf['user_first_name']), 'first']
     Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last']
     Res.no_gender = [conf['user_gender'], 'gender']
+    Res.no_link = ['link']
     Res.no_locale = [conf['user_locale'], 'language', 'locale']
     Res.no_nickname = ['nickname', conf['user_nickname']]
     Res.no_phone = [conf['user_phone'], 'phone']
