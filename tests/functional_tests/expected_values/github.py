@@ -8,7 +8,7 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('github')
 
 LINK = 'https://github.com/{0}'.format(conf.user_username)
-PICTURE = re.compile('https://avatars\.githubusercontent.com/u/{0}\?v=\d'
+PICTURE = re.compile(r'https://avatars\.githubusercontent.com/u/{0}\?v=\d'
                      .format(conf.user_id))
 
 CONFIG = {
