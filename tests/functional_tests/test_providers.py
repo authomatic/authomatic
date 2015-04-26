@@ -104,6 +104,9 @@ def provider(request, browser, app):
     except NoSuchElementException:
         pass
 
+    if request.config.getoption("--pause"):
+        import pdb; pdb.set_trace()
+
     if login_xpath:
         if pre_login_xpaths:
             for xpath in pre_login_xpaths:
