@@ -8,6 +8,8 @@ Version 0.1.0
 Version 0.0.13
 --------------
 
+* Removed logging of response body in the
+  :meth:`.providers.AuthorizationProvider.access()` method.
 * Fixed an error in :class:`.oauth2.Google` when the access token request
   resulted in an
   ``OAuth 2 parameters can only have a single value: client_secret`` error.

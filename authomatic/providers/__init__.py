@@ -758,7 +758,7 @@ class AuthorizationProvider(BaseProvider):
                               max_redirects=max_redirects,
                               content_parser=content_parser)
         
-        self._log(logging.INFO, 'Got response. HTTP status = {0}. {1}'.format(response.status, response.content))
+        self._log(logging.INFO, 'Got response. HTTP status = {0}.'.format(response.status))
         return response
 
 
