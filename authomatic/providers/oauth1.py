@@ -626,7 +626,49 @@ class Plurk(OAuth1):
     * Docs: 
     * API: http://www.plurk.com/API
     * API explorer: http://www.plurk.com/OAuth/test/
+
+    Supported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * gender
+    * id
+    * link
+    * locale
+    * location
+    * name
+    * nickname
+    * picture
+    * timezone
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * first_name
+    * last_name
+    * phone
+    * postal_code
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
+        city=True,
+        country=True,
+        email=True,
+        gender=True,
+        id=True,
+        link=True,
+        locale=True,
+        location=True,
+        name=True,
+        nickname=True,
+        picture=True,
+        timezone=True,
+        username=True
+    )
     
     
     request_token_url = 'http://www.plurk.com/OAuth/request_token'
@@ -639,25 +681,33 @@ class Plurk(OAuth1):
     def _x_user_parser(user, data):
         
         _user = data.get('user_info', {})
-        
-        user.locale = _user.get('default_lang')
-        user.username = _user.get('display_name')
-        user.id = _user.get('id') or _user.get('uid')
-        user.nickname = _user.get('nick_name')
-        user.name = _user.get('full_name')
+
+        user.email = _user.get('email')
         user.gender = _user.get('gender')
-        user.timezone = _user.get('timezone')
+        user.id = _user.get('id') or _user.get('uid')
+        user.locale = _user.get('default_lang')
+        user.name = _user.get('full_name')
+        user.nickname = _user.get('nick_name')
         user.picture = 'http://avatars.plurk.com/{0}-big2.jpg'.format(user.id)
+        user.timezone = _user.get('timezone')
+        user.username = _user.get('display_name')
+
+        user.link = 'http://www.plurk.com/{0}/'.format(user.username)
         
         user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
         user.country = user.country.strip()
-        
-        try:
-            user.birth_date = datetime.datetime.strptime(_user.get('date_of_birth'), "%a, %d %b %Y %H:%M:%S %Z")
-        except:
-            user.birth_date = data.get('date_of_birth')
-        
+
+        _bd = _user.get('date_of_birth')
+        if _bd:
+            try:
+                user.birth_date = datetime.datetime.strptime(
+                    _bd,
+                    "%a, %d %b %Y %H:%M:%S %Z"
+                )
+            except ValueError:
+                pass
+
         return user
 
 

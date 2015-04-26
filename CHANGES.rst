@@ -1,6 +1,8 @@
 Version 0.1.0
 -------------
 
+* Added support for :attr:`.User.email` and :attr:`.User.link` to the
+  :class:`.oauth1.Plurk` provider.
 * The :class:`.oauth1.Flickr` provider doesn't make the redundant API call
   during :meth:`.oauth1.Flickr.update_user` anymore.
 * Added the :attr:`.User.location` attribute.
