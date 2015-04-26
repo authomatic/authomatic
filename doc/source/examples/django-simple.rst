@@ -27,7 +27,7 @@ Inside the newly created *example* project create a new application named *simpl
    $ python manage.py startapp simple
    $ cd simple
 
-Open the the ``example/simple/urls.py`` module and map the ``/`` root URL to the ``home`` view
+Open the ``example/simple/urls.py`` module and map the ``/`` root URL to the ``home`` view
 and the ``/login/[provider_name]`` URL to the ``login`` view.
 We will create the views later.
 
@@ -52,7 +52,7 @@ And create a route to the app in the ``example/example/urls.py`` module.
 
 Now in the ``example/simple`` directory create the ``config.py`` module
 with the :doc:`/reference/config` dictionary where you set up all the providers you want to use.
-Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
+You will need the ``consumer_key`` and ``consumer_secret`` which you can get
 `here <https://developers.facebook.com/apps>`__ for Facebook and
 `here <https://dev.twitter.com/apps>`__ for Twitter.
 
