@@ -31,6 +31,7 @@ INCLUDE_PROVIDERS = [
     # OAuth 1.0a
     'bitbucket',
     'flickr',
+    'plurk',
     'twitter',
 
     # OAuth 2.0
@@ -132,6 +133,16 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
+    },
+    'plurk': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': '??????????',
+        'user_gender': '??????????', # 0 or 1
+        'user_locale': '??????????', # ISO2 language code
+        'user_nickname': USERNAME,
+        'user_timezone': '??????????',
     },
     'twitter': {
         'consumer_key': '##########',

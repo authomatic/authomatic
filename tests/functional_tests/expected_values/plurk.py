@@ -1,0 +1,90 @@
+import fixtures
+import constants
+from authomatic.providers import oauth1
+
+conf = fixtures.get_configuration('plurk')
+
+LINK = 'http://www.plurk.com/{0}/'.format(conf.user_username)
+PICTURE = 'http://avatars.plurk.com/{0}-big2.jpg'.format(conf.user_id)
+
+CONFIG = {
+    'login_xpath': '//*[@id="input_nick_name"]',
+    'password_xpath': '//*[@id="password"]/input',
+    'consent_xpaths': [
+        '//*[@id="display_board"]/div[2]/div/form/input[5]',
+    ],
+    'class_': oauth1.Plurk,
+    'user': {
+        'birth_date': conf.user_birth_date,
+        'city': conf.user_city,
+        'country': conf.user_country,
+        'email': conf.user_email,
+        'gender': conf.user_gender,
+        'id': conf.user_id,
+        'first_name': None,
+        'last_name': None,
+        'link': LINK,
+        'locale': conf.user_locale,
+        'location': conf.user_location,
+        'name': conf.user_name,
+        'nickname': conf.user_nickname,
+        'phone': None,
+        'picture': PICTURE,
+        'postal_code': None,
+        'timezone': conf.user_timezone,
+        'username': conf.user_username,
+    },
+    'content_should_contain': [
+        conf.user_city,
+        conf.user_country,
+        conf.user_email,
+        conf.user_gender,
+        conf.user_id,
+        conf.user_locale,
+        conf.user_location,
+        conf.user_name,
+        conf.user_nickname,
+        PICTURE.replace('/', r'\/'),
+        conf.user_timezone,
+        conf.user_username,
+
+        # User info JSON keys
+        'about', 'accept_private_plurk_from', 'alerts_count', 'anonymous',
+        'avatar', 'avatar_big', 'avatar_medium', 'avatar_small', 'bday_privacy',
+        'content', 'content_raw', 'date_of_birth', 'dateformat', 'default_lang',
+        'display_name', 'email', 'email_confirmed', 'fans_count', 'favorers',
+        'favorite', 'favorite_count', 'friends_count', 'full_name', 'gender',
+        'has_profile_image', 'has_read_permission', 'id', 'is_unread', 'karma',
+        'lang', 'limited_to', 'location', 'name_color', 'nick_name',
+        'no_comments', 'owner_id', 'page_title', 'plurk_id', 'plurk_type',
+        'plurks', 'plurks_count', 'plurks_users', 'porn',
+        'post_anonymous_plurk', 'posted', 'privacy', 'profile_views',
+        'qualifier', 'qualifier_translated', 'recruited', 'relationship',
+        'replurkable', 'replurked', 'replurker_id', 'replurkers',
+        'replurkers_count', 'response_count', 'responses_seen',
+        'setup_facebook_sync', 'setup_twitter_sync', 'setup_weibo_sync',
+        'timezone', 'uid', 'unread_count', 'user_id', 'user_info',
+        'verified_account'
+    ],
+    # Case insensitive
+    'content_should_not_contain':
+        conf.no_first_name +
+        conf.no_last_name +
+        conf.no_postal_code,
+    # True means that any thruthy value is expected
+    'credentials': {
+        '_expiration_time': None,
+        '_expire_in': True,
+        'consumer_key': True,
+        'consumer_secret': True,
+        'provider_id': None,
+        'provider_name': 'plurk',
+        'provider_type': 'authomatic.providers.oauth1.OAuth1',
+        'provider_type_id': '1-4',
+        'refresh_status': constants.CREDENTIALS_REFRESH_NOT_SUPPORTED,
+        'refresh_token': None,
+        'token': True,
+        'token_secret': True,
+        'token_type': None,
+    },
+}
