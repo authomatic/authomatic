@@ -30,6 +30,7 @@ INCLUDE_FRAMEWORKS = [
 INCLUDE_PROVIDERS = [
     # OAuth 1.0a
     'bitbucket',
+    'flickr',
     'twitter',
 
     # OAuth 2.0
@@ -121,19 +122,26 @@ PROVIDERS = {
     'bitbucket': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
+        'user_password': '##########',
         'user_id': USERNAME,
         # The picture URL is a random CDN URL
-        'user_picture': '???',
+        'user_picture': '??????????',
+    },
+    'flickr': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': '??????????',
     },
     'twitter': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
-        'user_id': '???',
         'user_password': '##########',
-        'user_link': '???',
-        'user_picture': '???',
-        'user_username': '???',
-        'user_locale': '???',
+        'user_id': '??????????',
+        # The link and picture URL are random
+        'user_link': '??????????',
+        'user_picture': '??????????',
+        'user_locale': '??????????',
     },
 
     # OAuth 2.0
