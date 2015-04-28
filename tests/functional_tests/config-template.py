@@ -134,6 +134,14 @@ PROVIDERS = {
         'user_password': '##########',
         'user_id': '??????????',
     },
+    'meetup': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_login': EMAIL,
+        'user_id': '??????????',
+        'user_country': COUNTRY_ISO2,
+        'user_location': '{0}, {1}'.format(CITY, COUNTRY_ISO2),
+    },
     'plurk': {
         'consumer_key': '##########',
         'consumer_secret': '##########',

@@ -600,7 +600,43 @@ class Meetup(OAuth1):
     * Dashboard: http://www.meetup.com/meetup_api/oauth_consumers/
     * Docs: http://www.meetup.com/meetup_api/auth/#oauth
     * API: http://www.meetup.com/meetup_api/docs/
+
+    Supported :class:`.User` properties:
+
+    * city
+    * country
+    * id
+    * link
+    * locale
+    * location
+    * name
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * email
+    * first_name
+    * gender
+    * last_name
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+    * username
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        city=True,
+        country=True,
+        id=True,
+        link=True,
+        locale=True,
+        location=True,
+        name=True,
+        picture=True
+    )
     
     request_token_url = 'https://api.meetup.com/oauth/request/'
     user_authorization_url = 'http://www.meetup.com/authorize/'
