@@ -815,7 +815,38 @@ class Tumblr(OAuth1):
     * Dashboard: http://www.tumblr.com/oauth/apps
     * Docs: http://www.tumblr.com/docs/en/api/v2#auth
     * API reference: http://www.tumblr.com/docs/en/api/v2
+
+    Supported :class:`.User` properties:
+
+    * id
+    * name
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * gender
+    * first_name
+    * last_name
+    * link
+    * locale
+    * location
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        name=True,
+        username=True
+    )
     
     request_token_url = 'http://www.tumblr.com/oauth/request_token'
     user_authorization_url = 'http://www.tumblr.com/oauth/authorize'
@@ -827,14 +858,7 @@ class Tumblr(OAuth1):
     @staticmethod
     def _x_user_parser(user, data):
         _user = data.get('response', {}).get('user', {})
-        
         user.username = user.id = _user.get('name')
-        user.link = _user.get('blogs', [{}])[0].get('url')
-        
-        if user.link:
-            _host = parse.urlsplit(user.link).netloc
-            user.picture = 'http://api.tumblr.com/v2/blog/{0}/avatar/512'.format(_host)
-        
         return user
 
 

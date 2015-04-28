@@ -137,6 +137,7 @@ PROVIDERS = {
     'meetup': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
+        'user_password': '##########',
         'user_login': EMAIL,
         'user_id': '??????????',
         'user_country': COUNTRY_ISO2,
@@ -161,6 +162,13 @@ PROVIDERS = {
         'user_link': '??????????',
         'user_picture': '??????????',
         'user_locale': '??????????',
+    },
+    'tumblr': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': USERNAME,
+        'user_name': USERNAME,
     },
 
     # OAuth 2.0
