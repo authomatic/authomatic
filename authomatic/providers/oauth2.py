@@ -762,7 +762,6 @@ class Facebook(OAuth2):
     * name
     * picture
     * timezone
-    * username
 
     Unsupported :class:`.User` properties:
 
@@ -770,19 +769,20 @@ class Facebook(OAuth2):
     * nickname
     * phone
     * postal_code
+    * username
 
     """
     
     user_authorization_url = 'https://www.facebook.com/dialog/oauth'
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
     user_info_url = 'https://graph.facebook.com/me'
-    user_info_scope = ['user_about_me', 'email']
+    user_info_scope = ['public_profile', 'email']
     same_origin = False
 
     supported_user_attributes = core.SupportedUserAttributes(
         id=True,
         email=True,
-        username=True,
+        username=False,
         name=True,
         first_name=True,
         last_name=True,
@@ -823,7 +823,7 @@ class Facebook(OAuth2):
     
     @staticmethod
     def _x_user_parser(user, data):
-        user.picture = 'http://graph.facebook.com/{0}/picture?type=large'.format(data.get('username'))
+        user.picture = 'http://graph.facebook.com/{0}/picture?type=large'.format(data.get('id'))
 
         location = data.get('location', {}).get('name')
         if location and location.split:
