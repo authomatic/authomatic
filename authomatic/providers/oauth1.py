@@ -865,10 +865,17 @@ class Tumblr(OAuth1):
 class UbuntuOne(OAuth1):
     """
     Ubuntu One |oauth1| provider.
+
+    .. note::
+
+        The UbuntuOne service
+        `has been shut down <http://blog.canonical.com/2014/04/02/
+        shutting-down-ubuntu-one-file-services/>`__.
     
     .. warning::
 
-        Uses the `PLAINTEXT <http://oauth.net/core/1.0a/#anchor21>`_ Signature method!
+        Uses the `PLAINTEXT <http://oauth.net/core/1.0a/#anchor21>`_
+        Signature method!
 
     * Dashboard: https://one.ubuntu.com/developer/account_admin/auth/web
     * Docs: https://one.ubuntu.com/developer/account_admin/auth/web
