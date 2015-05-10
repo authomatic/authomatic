@@ -77,7 +77,6 @@ def app(request):
 @pytest.fixture(scope='module', params=PROVIDERS)
 def provider(request, browser, app):
     """Runs for each provider."""
-
     _provider = fixtures.ASSEMBLED_CONFIG[request.param]
     _provider['name'] = request.param
     conf = fixtures.get_configuration(request.param)
@@ -140,6 +139,7 @@ def provider(request, browser, app):
                 print('No consent needed.')
 
     try:
+        time.sleep(_provider.get('after_consent_wait_seconds', 0))
         success = browser.find_element_by_id('login-result')
     except NoSuchElementException:
         pytest.fail('Login by provider "{0}" failed!'.format(request.param))
