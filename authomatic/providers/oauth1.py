@@ -979,7 +979,40 @@ class Xero(OAuth1):
     * Dashboard: https://api.xero.com/Application
     * Docs: http://blog.xero.com/developer/api-overview/public-applications/
     * API reference: http://blog.xero.com/developer/api/
+
+    Supported :class:`.User` properties:
+
+    * email
+    * first_name
+    * id
+    * last_name
+    * name
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * gender
+    * link
+    * locale
+    * location
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+    * username
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        email=True,
+        first_name=True,
+        id=True,
+        last_name=True,
+        name=True
+    )
     
     request_token_url = 'https://api.xero.com/oauth/RequestToken'
     user_authorization_url = 'https://api.xero.com/oauth/Authorize'
@@ -992,12 +1025,11 @@ class Xero(OAuth1):
         # Data is xml.etree.ElementTree.Element object.
         if type(data) is not dict:
             # But only on user.update()
-            
             _user = data.find('Users/User')
-            
             user.id = _user.find('UserID').text
             user.first_name = _user.find('FirstName').text
             user.last_name = _user.find('LastName').text
+            user.email = _user.find('EmailAddress').text
         
         return user
 

@@ -37,6 +37,7 @@ INCLUDE_PROVIDERS = [
     # UbuntuOne service is no longer available
     # 'ubuntuone',
     'vimeo',
+    'xero',
 
     # OAuth 2.0
     'amazon',
@@ -175,6 +176,12 @@ PROVIDERS = {
         'user_name': USERNAME,
     },
     'vimeo': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': '??????????',
+    },
+    'xero': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_password': '##########',
