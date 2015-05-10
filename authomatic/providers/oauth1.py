@@ -906,33 +906,65 @@ class Vimeo(OAuth1):
     * Dashboard: https://developer.vimeo.com/apps
     * Docs: https://developer.vimeo.com/apis/advanced#oauth-endpoints
     * API reference: https://developer.vimeo.com/apis
+
+    Supported :class:`.User` properties:
+
+    * id
+    * link
+    * location
+    * name
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * gender
+    * first_name
+    * last_name
+    * locale
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+    * username
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        link=True,
+        location=True,
+        name=True,
+        picture=True
+    )
     
     request_token_url = 'https://vimeo.com/oauth/request_token'
     user_authorization_url = 'https://vimeo.com/oauth/authorize'
     access_token_url = 'https://vimeo.com/oauth/access_token'
-    user_info_url = 'http://vimeo.com/api/rest/v2?format=json&method=vimeo.oauth.checkAccessToken'
-    
+    user_info_url = ('http://vimeo.com/api/rest/v2?'
+                     'format=json&method=vimeo.oauth.checkAccessToken')
+
+    def _access_user_info(self):
+        """
+        Vimeo requires the user ID to access the user info endpoint,
+        so we need to make two requests: one to get user ID and
+        second to get user info.
+        """
+        response = super(Vimeo, self)._access_user_info()
+        uid = response.data.get('oauth', {}).get('user', {}).get('id')
+        if uid:
+            return self.access('http://vimeo.com/api/v2/{0}/info.json'
+                               .format(uid))
+        return response
     
     @staticmethod
     def _x_user_parser(user, data):
-        
-        _user = data.get('oauth', {}).get('user', {})
-        user.name = _user.get('display_name')
-        user.id = _user.get('id')
-        user.username = _user.get('username')
-        
-        # Vimeo needs user ID to get rich info so we need to make one more fetch.
-        if user.id:
-            response = user.provider.access('http://vimeo.com/api/v2/{0}/info.json'.format(user.username))
-            if response and response.status == 200:
-                user.name = response.data.get('display_name')
-                user.city, user.country = response.data.get('location', ',').split(',')
-                user.city = user.city.strip()
-                user.country = user.country.strip()
-                user.link = response.data.get('profile_url')
-                user.picture = response.data.get('portrait_huge')
-        
+        user.name = data.get('display_name')
+        user.link = data.get('profile_url')
+        user.picture = data.get('portrait_huge')
         return user
 
 
