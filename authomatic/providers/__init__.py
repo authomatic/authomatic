@@ -561,24 +561,27 @@ class AuthorizationProvider(BaseProvider):
             accessing **user's** protected resources.
             Applied by :meth:`.access()`, :meth:`.update_user()` and :meth:`.User.update()`
         """
-        
+
         super(AuthorizationProvider, self).__init__(*args, **kwargs)
         
         self.consumer_key = self._kwarg(kwargs, 'consumer_key')
         self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
         
         self.user_authorization_params = self._kwarg(kwargs, 'user_authorization_params', {})
-        
+
         self.access_token_headers = self._kwarg(kwargs, 'user_authorization_headers', {})
         self.access_token_params = self._kwarg(kwargs, 'access_token_params', {})
-        
+
         self.id = self._kwarg(kwargs, 'id')
-        
+
         self.access_headers = self._kwarg(kwargs, 'access_headers', {})
         self.access_params = self._kwarg(kwargs, 'access_params', {})
         
         #: :class:`.Credentials` to access **user's protected resources**.
         self.credentials = authomatic.core.Credentials(self.settings.config, provider=self)
+
+        #: Response of the *access token request*.
+        self.access_token_response = None
     
     #===========================================================================
     # Abstract properties

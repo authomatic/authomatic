@@ -81,6 +81,10 @@ def render_login_result(framework_name, result):
                            'locale', 'location', 'name', 'nickname', 'phone',
                            'picture', 'postal_code', 'timezone', 'username']
 
+        access_token_content = None
+        if hasattr(result.provider, 'access_token_response'):
+            access_token_content = result.provider.access_token_response.content
+
         template = env.get_template('login.html')
         return template.render(result=result,
                                providers=ASSEMBLED_CONFIG.values(),
@@ -92,7 +96,8 @@ def render_login_result(framework_name, result):
                                credentials_response=response,
                                original_credentials=original_credentials,
                                refreshed_credentials=refreshed_credentials,
-                               framework_name=framework_name)
+                               framework_name=framework_name,
+                               access_token_content=access_token_content)
 
 
 def get_configuration(provider):

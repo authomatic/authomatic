@@ -1,6 +1,7 @@
 Version 0.1.0
 -------------
 
+* Introduced the :attr:`.User.access_token_response` attribute.
 * Added support for :attr:`.User.email` and :attr:`.User.link` to the
   :class:`.oauth1.Plurk` provider.
 * The :class:`.oauth1.Flickr` provider doesn't make the redundant API call

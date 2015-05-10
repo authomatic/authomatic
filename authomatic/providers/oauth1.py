@@ -386,21 +386,26 @@ class OAuth1(providers.AuthorizationProvider):
                                                              params=self.access_token_params)
             
             response = self._fetch(*request_elements)
+            self.access_token_response = response
             
             if not self._http_status_in_category(response.status, 2):
-                raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {0}! HTTP status code: {1}.'\
-                                   .format(self.access_token_url, response.status),
-                                   original_message=response.content,
-                                   status=response.status,
-                                   url=self.access_token_url)
+                raise FailureError(
+                    'Failed to obtain OAuth 1.0a  oauth_token from {0}! '
+                    'HTTP status code: {1}.'
+                    .format(self.access_token_url, response.status),
+                    original_message=response.content,
+                    status=response.status,
+                    url=self.access_token_url
+                )
             
             self._log(logging.INFO, 'Got access token.')
-            
             self.credentials.token = response.data.get('oauth_token', '')
-            self.credentials.token_secret = response.data.get('oauth_token_secret', '')
+            self.credentials.token_secret = response.data.get(
+                'oauth_token_secret', ''
+            )
             
-            self.credentials = self._x_credentials_parser(self.credentials, response.data)
-            
+            self.credentials = self._x_credentials_parser(self.credentials,
+                                                          response.data)
             self._update_or_create_user(response.data, self.credentials)
             
             #===================================================================

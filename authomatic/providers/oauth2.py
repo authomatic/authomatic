@@ -330,6 +330,7 @@ class OAuth2(providers.AuthorizationProvider):
                                                              headers=self.access_token_headers)
 
             response = self._fetch(*request_elements)
+            self.access_token_response = response
             
             access_token = response.data.get('access_token', '')
             refresh_token = response.data.get('refresh_token', '')
