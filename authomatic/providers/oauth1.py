@@ -1145,7 +1145,9 @@ class Xing(OAuth1):
     * last_name
     * link
     * locale
+    * location
     * name
+    * phone
     * picture
     * postal_code
     * timezone
@@ -1154,7 +1156,6 @@ class Xing(OAuth1):
     Unsupported :class:`.User` properties:
 
     * nickname
-    * phone
 
     """
 
@@ -1174,7 +1175,9 @@ class Xing(OAuth1):
         last_name=True,
         link=True,
         locale=True,
+        location=True,
         name=True,
+        phone=True,
         picture=True,
         postal_code=True,
         timezone=True,
@@ -1202,6 +1205,8 @@ class Xing(OAuth1):
                 user.city = _address.get('city')
                 user.country = _address.get('country')
                 user.postal_code = _address.get('zip_code')
+                user.phone = (_address.get('phone', '') or
+                             _address.get('mobile_phone', '')).replace('|', '')
 
             _languages = list(_user.get('languages', {}).keys())
             if _languages and _languages[0]:
