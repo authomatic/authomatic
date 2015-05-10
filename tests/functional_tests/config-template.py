@@ -34,14 +34,14 @@ INCLUDE_PROVIDERS = [
     'plurk',
     'twitter',
     'tumblr',
-    # UbuntuOne service is no longer available
-    # 'ubuntuone',
+    # 'ubuntuone',  # UbuntuOne service is no longer available
     'vimeo',
     'xero',
+    'yahoo',
 
     # OAuth 2.0
     'amazon',
-    # 'behance', # doesn't support third party authorization anymore.
+    # 'behance',  # doesn't support third party authorization anymore.
     'bitly',
     'deviantart',
     'facebook',
@@ -186,6 +186,12 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
+    },
+    'yahoo': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_gender': 'M' # M or F
     },
 
     # OAuth 2.0

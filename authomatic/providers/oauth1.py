@@ -1042,7 +1042,42 @@ class Yahoo(OAuth1):
     * Docs: http://developer.yahoo.com/oauth/guide/oauth-auth-flow.html
     * API: http://developer.yahoo.com/everything.html
     * API explorer: http://developer.yahoo.com/yql/console/
+
+    Supported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * gender
+    * id
+    * link
+    * location
+    * name
+    * nickname
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * locale
+    * phone
+    * postal_code
+    * timezone
+    * username
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
+        city=True,
+        country=True,
+        gender=True,
+        id=True,
+        link=True,
+        location=True,
+        name=True,
+        nickname=True,
+        picture=True
+    )
     
     request_token_url = 'https://api.login.yahoo.com/oauth/v2/get_request_token'
     user_authorization_url = 'https://api.login.yahoo.com/oauth/v2/request_auth'
