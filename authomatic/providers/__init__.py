@@ -782,15 +782,17 @@ class AuthorizationProvider(BaseProvider):
         Updates the :attr:`.BaseProvider.user`.
         
         .. warning::
-
             Fetches the :attr:`.user_info_url`!
 
         :returns:
             :class:`.UserInfoResponse`
         """
-        
         if self.user_info_url:
-            return self._access_user_info()
+            response = self._access_user_info()
+            self.user = self._update_or_create_user(response.data,
+                                                    content=response.content)
+            return authomatic.core.UserInfoResponse(self.user,
+                                                    response.httplib_response)
     
     
     #===========================================================================
@@ -890,16 +892,8 @@ class AuthorizationProvider(BaseProvider):
         :returns:
             :class:`.UserInfoResponse`
         """
-        
         url = self.user_info_url.format(**self.user.__dict__)
-        
-        response = self.access(url)
-        
-        # Create user.
-        self.user = self._update_or_create_user(response.data, content=response.content)
-        
-        # Return UserInfoResponse.
-        return authomatic.core.UserInfoResponse(self.user, response.httplib_response)
+        return self.access(url)
     
 
 class AuthenticationProvider(BaseProvider):
