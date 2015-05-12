@@ -51,12 +51,11 @@ CONFIG = {
         'profile_background_color', 'profile_background_image_url',
         'profile_background_image_url_https', 'profile_background_tile',
         'profile_image_url', 'profile_image_url_https', 'profile_link_color',
-        'profile_location', 'profile_sidebar_border_color',
-        'profile_sidebar_fill_color', 'profile_text_color',
-        'profile_use_background_image', 'protected', 'retweet_count',
-        'retweeted', 'screen_name', 'source', 'status', 'statuses_count',
-        'symbols', 'text', 'time_zone', 'truncated', 'url', 'urls',
-        'user_mentions', 'utc_offset', 'verified'
+        'profile_sidebar_border_color', 'profile_sidebar_fill_color',
+        'profile_text_color', 'profile_use_background_image', 'protected',
+        'retweet_count', 'retweeted', 'screen_name', 'source', 'status',
+        'statuses_count', 'symbols', 'text', 'time_zone', 'truncated', 'url',
+        'urls', 'user_mentions', 'utc_offset', 'verified'
     ],
     # Case insensitive
     'content_should_not_contain':
