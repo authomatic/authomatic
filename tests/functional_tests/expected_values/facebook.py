@@ -1,3 +1,4 @@
+from datetime import datetime
 import re
 
 import fixtures
@@ -6,9 +7,9 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('facebook')
 
-LINK = 'https://www.facebook.com/' + conf.user_username_reverse
-PICTURE = 'http://graph.facebook.com/{0}/picture?type=large'\
-    .format(conf.user_username_reverse)
+LINK = 'http://www.facebook.com/' + conf.user_id
+PICTURE = 'http://graph.facebook.com/{0}/picture?type=large'.format(conf.user_id)
+BIRTHDATE = datetime.strptime(conf.user_birth_date, '%x').strftime('%m\/%d\/%Y')
 
 CONFIG = {
     'login_xpath': '//*[@id="email"]',
@@ -19,44 +20,50 @@ CONFIG = {
     'class_': oauth2.Facebook,
     'scope': oauth2.Facebook.user_info_scope,
     'user': {
-        'id': conf.user_id,
-        'email': conf.user_email,
-        'username': conf.user_username_reverse,
-        'name': conf.user_name,
-        'first_name': conf.user_first_name,
-        'last_name': conf.user_last_name,
-        'nickname': None,
-        'birth_date': None,
+        'birth_date': conf.user_birth_date,
         'city': conf.user_city,
         'country': conf.user_country,
+        'email': conf.user_email,
+        'first_name': conf.user_first_name,
         'gender': conf.user_gender,
+        'id': conf.user_id,
+        'last_name': conf.user_last_name,
         'link': LINK,
         'locale': conf.user_locale,
         'location': conf.user_location,
+        'name': conf.user_name,
+        'nickname': None,
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
         'timezone': re.compile(r'\d+'),
+        'username': None,
     },
     'content_should_contain': [
-        conf.user_id,
-        conf.user_username_reverse,
-        conf.user_name, conf.user_first_name, conf.user_last_name,
-        conf.user_city, conf.user_country,
+        BIRTHDATE,
+        conf.user_city,
+        conf.user_country,
+        conf.email_escaped,
+        conf.user_first_name,
         conf.user_gender,
+        conf.user_id,
+        conf.user_last_name,
         LINK.replace('/', '\/'),
         conf.user_locale,
+        conf.user_location,
+        conf.user_name,
 
         # User info JSON keys
-        'id', 'bio', 'education', 'school', 'name', 'type', 'with', 'year',
-        'email', 'favorite_athletes', 'favorite_teams', 'first_name', 'gender',
-        'hometown', 'inspirational_people', 'languages', 'last_name', 'link',
-        'location', 'locale', 'sports', 'quotes', 'timezone', 'updated_time',
-        'username', 'verified', 'work', 'description', 'employer', 'position',
-        'start_date'
+        'bio', 'birthday', 'email', 'first_name', 'gender', 'id', 'last_name',
+        'link', 'locale', 'location', 'name', 'timezone', 'updated_time',
+        'verified', 'website'
     ],
     # Case insensitive
-    'content_should_not_contain': conf.no_phone + conf.no_birth_date,
+    'content_should_not_contain':
+        conf.no_nickname +
+        conf.no_phone +
+        conf.no_postal_code +
+        conf.no_username,
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': None,

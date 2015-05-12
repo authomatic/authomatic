@@ -11,6 +11,9 @@ Version 0.1.0
   :class:`.oauth1.Twitter` and :class:`.oauth2.GitHub` providers.
 * Removed support for :attr:`.User.link` and :attr:`.User.picture` from
   :class:`.oauth1.Tumbler` provider.
+* Removed support for :attr:`.User.username` and added support for
+  :attr:`.User.birth_date` to :class:`.oauth2.Facebook` provider.
+* :class:`.oauth2.Facebook` provider now uses ``v2`` api for user info request.
 
 Version 0.0.13
 --------------

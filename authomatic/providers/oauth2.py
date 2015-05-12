@@ -751,6 +751,7 @@ class Facebook(OAuth2):
 
     Supported :class:`.User` properties:
 
+    * birth_date
     * city
     * country
     * email
@@ -764,24 +765,24 @@ class Facebook(OAuth2):
     * name
     * picture
     * timezone
-    * username
 
     Unsupported :class:`.User` properties:
 
-    * birth_date
     * nickname
     * phone
     * postal_code
+    * username
 
     """
-    
     user_authorization_url = 'https://www.facebook.com/dialog/oauth'
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
-    user_info_url = 'https://graph.facebook.com/me'
-    user_info_scope = ['user_about_me', 'email']
+    user_info_url = 'https://graph.facebook.com/v2.3/me'
+    user_info_scope = ['email', 'user_about_me', 'user_birthday',
+                       'user_location']
     same_origin = False
 
     supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
         city=True,
         country=True,
         email=True,
@@ -789,24 +790,25 @@ class Facebook(OAuth2):
         gender=True,
         id=True,
         last_name=True,
-        locale=True,
         link=True,
+        locale=True,
         location=True,
         name=True,
         picture=True,
-        timezone=True,
-        username=True
+        timezone=True
     )
     
     @classmethod
-    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+    def _x_request_elements_filter(cls, request_type, request_elements,
+                                   credentials):
         
         if request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
             # As always, Facebook has it's original name for "refresh_token"!
             url, method, params, headers, body = request_elements
             params['fb_exchange_token'] = params.pop('refresh_token')
             params['grant_type'] = 'fb_exchange_token'
-            request_elements = core.RequestElements(url, method, params, headers, body)
+            request_elements = core.RequestElements(url, method, params,
+                                                    headers, body)
         
         return request_elements
     
@@ -814,7 +816,8 @@ class Facebook(OAuth2):
     def __init__(self, *args, **kwargs):
         super(Facebook, self).__init__(*args, **kwargs)
         
-        # Handle special Facebook requirements to be able to refresh the access token.
+        # Handle special Facebook requirements to be able
+        # to refresh the access token.
         if self.offline:
             # Facebook needs an offline_access scope.
             if not 'offline_access' in self.scope:
@@ -826,7 +829,16 @@ class Facebook(OAuth2):
     
     @staticmethod
     def _x_user_parser(user, data):
-        user.picture = 'http://graph.facebook.com/{0}/picture?type=large'.format(data.get('username'))
+        _birth_date = data.get('birthday')
+        if _birth_date:
+            try:
+              user.birth_date = datetime.datetime.strptime(_birth_date,
+                                                           '%m/%d/%Y')
+            except ValueError:
+                pass
+
+        user.picture = ('http://graph.facebook.com/{0}/picture?type=large'
+                        .format(user.id))
 
         user.location = data.get('location', {}).get('name')
         if user.location:
