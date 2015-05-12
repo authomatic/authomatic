@@ -1,3 +1,5 @@
+import re
+
 import fixtures
 import constants
 from authomatic.providers import oauth1
@@ -6,7 +8,7 @@ conf = fixtures.get_configuration('bitbucket')
 
 
 LINK = 'https://bitbucket.org/api/1.0/users/{0}'.format(conf.user_username)
-
+PICTURE = re.compile(r'^https://secure.gravatar.com/avatar/.*\.png&s=32$')
 
 CONFIG = {
     'login_xpath': '//*[@id="id_username"]',
@@ -28,7 +30,7 @@ CONFIG = {
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
-        'picture': conf.user_picture,
+        'picture': PICTURE,
         'postal_code': None,
         'timezone': None,
         'username': conf.user_username,
@@ -39,7 +41,6 @@ CONFIG = {
         conf.user_last_name,
         conf.user_username,
         conf.user_name,
-        conf.user_picture,
 
         # User info JSON keys
         'avatar', 'display_name', 'first_name', 'is_staff', 'is_team',
