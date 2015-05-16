@@ -47,7 +47,7 @@ CONFIG = {
         'in_reply_to_status_id', 'in_reply_to_status_id_str',
         'in_reply_to_user_id', 'in_reply_to_user_id_str', 'indices',
         'is_translation_enabled', 'is_translator', 'lang', 'listed_count',
-        'location', 'name', 'notifications', 'place', 'possibly_sensitive',
+        'location', 'name', 'notifications', 'place',
         'profile_background_color', 'profile_background_image_url',
         'profile_background_image_url_https', 'profile_background_tile',
         'profile_image_url', 'profile_image_url_https', 'profile_link_color',

@@ -6,7 +6,10 @@ import pkgutil
 import sys
 import time
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import (
+    Environment,
+    FileSystemLoader
+)
 
 from authomatic.providers import (
     oauth1,
@@ -32,6 +35,7 @@ from tests.functional_tests import expected_values
 TEMPLATES_DIR = path.join(path.abspath(path.dirname(__file__)), '..', 'templates')
 env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
 
+BIRTH_DATE_FORMAT = '%m-%d-%Y'
 ASSEMBLED_CONFIG = {}
 OAUTH2_PROVIDERS = {}
 OAUTH1_PROVIDERS = {}
@@ -96,7 +100,8 @@ def render_login_result(framework_name, result):
                                original_credentials=original_credentials,
                                refreshed_credentials=refreshed_credentials,
                                framework_name=framework_name,
-                               access_token_content=access_token_content)
+                               access_token_content=access_token_content,
+                               birth_date_format=BIRTH_DATE_FORMAT)
 
 
 def get_configuration(provider):
@@ -126,7 +131,12 @@ def get_configuration(provider):
     # Add additional class attributes which are not allowed to be passed
     # to the namedtuple
     Res.email_escaped = conf['user_email'].replace('@', '\u0040')
-    Res.no_birth_date = [conf['user_birth_year'], 'birth']
+
+    Res.BIRTH_DATE_FORMAT = BIRTH_DATE_FORMAT
+    bday = conf['user_birth_date']
+    Res.user_birth_date_str = bday.strftime(Res.BIRTH_DATE_FORMAT)
+
+    Res.no_birth_date = ['birth']
     Res.no_city = [conf['user_city'], 'city']
     Res.no_country = [conf['user_country'], 'country']
     Res.no_email = [conf['user_email'], Res.email_escaped, 'email', 'e-mail']

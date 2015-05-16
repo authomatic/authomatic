@@ -18,7 +18,7 @@ CONFIG = {
     ],
     'class_': oauth1.Yahoo,
     'user': {
-        'birth_date': conf.user_birth_date,
+        'birth_date': conf.user_birth_date_str,
         'city': conf.user_city,
         'country': conf.user_country,
         'email': None,
@@ -38,6 +38,8 @@ CONFIG = {
         'username': None,
     },
     'content_should_contain': [
+        '"birthYear":"{0:%Y}",'.format(conf.user_birth_date),
+        '"birthdate":"{0:%m/%d}",'.format(conf.user_birth_date),
         conf.user_gender,
         conf.user_id,
         LINK,

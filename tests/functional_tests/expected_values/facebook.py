@@ -8,8 +8,8 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('facebook')
 
 LINK = 'http://www.facebook.com/' + conf.user_id
-PICTURE = 'http://graph.facebook.com/{0}/picture?type=large'.format(conf.user_id)
-BIRTHDATE = datetime.strptime(conf.user_birth_date, '%x').strftime('%m\/%d\/%Y')
+PICTURE = ('http://graph.facebook.com/{0}/picture?type=large'
+           .format(conf.user_id))
 
 CONFIG = {
     'login_xpath': '//*[@id="email"]',
@@ -20,7 +20,7 @@ CONFIG = {
     'class_': oauth2.Facebook,
     'scope': oauth2.Facebook.user_info_scope,
     'user': {
-        'birth_date': conf.user_birth_date,
+        'birth_date': conf.user_birth_date_str,
         'city': conf.user_city,
         'country': conf.user_country,
         'email': conf.user_email,
@@ -40,7 +40,7 @@ CONFIG = {
         'username': None,
     },
     'content_should_contain': [
-        BIRTHDATE,
+        conf.user_birth_date.strftime('%m\/%d\/%Y'),
         conf.user_city,
         conf.user_country,
         conf.email_escaped,

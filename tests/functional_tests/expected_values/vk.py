@@ -8,8 +8,6 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('vk')
 
-BIRTH_DATE = datetime.datetime.strptime(conf.user_birth_date[:10], '%x')
-FORMATTED_DATE = datetime.datetime.strftime(BIRTH_DATE, '%d.%m.%Y')
 PICTURE = re.compile(r'http://[A-Za-z0-9]+\.vk\.me/[A-Za-z0-9-/]+\.jpg')
 
 CONFIG = {
@@ -24,7 +22,7 @@ CONFIG = {
     'scope': oauth2.VK.user_info_scope,
     'offline': True,
     'user': {
-        'birth_date': conf.user_birth_date,
+        'birth_date': conf.user_birth_date_str,
         'city': conf.user_city,
         'country': conf.user_country,
         'email': None,
@@ -44,7 +42,7 @@ CONFIG = {
         'username': None,
     },
     'content_should_contain': [
-        # FORMATTED_DATE,
+        conf.user_birth_date.strftime('%d.%m.%Y'),
         conf.user_city,
         conf.user_country,
         conf.user_first_name,

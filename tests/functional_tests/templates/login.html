@@ -20,7 +20,7 @@
       <tr>
         <td><strong>{{ property }}:&nbsp;</strong></td>
         {% if property == 'birth_date' and result.user[property] %}
-          <td id="{{ property }}">{{ result.user[property].strftime('%x') }}</td>
+          <td id="{{ property }}">{{ result.user[property].strftime(birth_date_format) }}</td>
         {% else %}
           <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
         {% endif %}

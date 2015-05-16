@@ -369,6 +369,7 @@ class TestUser(Base):
         self.skip_if_openid(provider)
         content = browser.find_element_by_id('content').text
         for item in provider['content_should_contain']:
+
             assert item in content
 
     def test_content_should_not_contain(self, app, provider, browser):

@@ -18,7 +18,7 @@ CONFIG = {
     ],
     'class_': oauth1.Xing,
     'user': {
-        'birth_date': conf.user_birth_date,
+        'birth_date': conf.user_birth_date_str,
         'city': conf.user_city,
         'country': conf.user_country,
         'email': conf.user_email,
@@ -38,6 +38,9 @@ CONFIG = {
         'username': conf.user_username,
     },
     'content_should_contain': [
+        '"year":{0:%Y},'.format(conf.user_birth_date),
+        '"month":{0:%m},'.format(conf.user_birth_date),
+        '"day":{0:%d}'.format(conf.user_birth_date),
         conf.user_city,
         conf.user_country,
         conf.user_email,

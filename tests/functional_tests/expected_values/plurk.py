@@ -15,7 +15,7 @@ CONFIG = {
     ],
     'class_': oauth1.Plurk,
     'user': {
-        'birth_date': conf.user_birth_date,
+        'birth_date': conf.user_birth_date_str,
         'city': conf.user_city,
         'country': conf.user_country,
         'email': conf.user_email,
@@ -35,6 +35,7 @@ CONFIG = {
         'username': conf.user_username,
     },
     'content_should_contain': [
+        conf.user_birth_date.strftime('%a, %d %b %Y 00:01:00 GMT'),
         conf.user_city,
         conf.user_country,
         conf.user_email,

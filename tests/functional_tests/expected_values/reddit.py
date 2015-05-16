@@ -11,6 +11,7 @@ CONFIG = {
         '//*[@id="login_login"]/div/p/button',
         '/html/body/div[2]/div/div[2]/form/div/input[1]',
     ],
+    'consent_wait_seconds': 2,
     'class_': oauth2.Reddit,
     'scope': oauth2.Reddit.user_info_scope,
     'user': {

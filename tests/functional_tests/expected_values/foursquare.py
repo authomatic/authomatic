@@ -1,3 +1,5 @@
+import calendar
+
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -14,31 +16,34 @@ CONFIG = {
     'class_': oauth2.Foursquare,
     'scope': oauth2.Foursquare.user_info_scope,
     'user': {
-        'id': conf.user_id,
-        'email': conf.user_email,
-        'username': None,
-        'name': conf.user_name,
-        'first_name': conf.user_first_name,
-        'last_name': conf.user_last_name,
-        'nickname': None,
-        'birth_date': conf.user_birth_date,
+        'birth_date': conf.user_birth_date_str,
         'city': conf.user_city,
         'country': conf.user_country,
+        'email': conf.user_email,
+        'first_name': conf.user_first_name,
         'gender': conf.user_gender,
+        'id': conf.user_id,
+        'last_name': conf.user_last_name,
         'link': None,
         'locale': None,
         'location': conf.user_location,
+        'name': conf.user_name,
+        'nickname': None,
         'phone': conf.user_phone,
         'picture': conf.user_picture,
         'postal_code': None,
         'timezone': None,
+        'username': None,
     },
     'content_should_contain': [
-        conf.user_id,
-        conf.user_first_name, conf.user_last_name,
-        conf.user_city, conf.user_country,
-        conf.user_gender,
+        str(calendar.timegm(conf.user_birth_date.timetuple())),  # Timestamp
+        conf.user_city,
+        conf.user_country,
         conf.user_email,
+        conf.user_first_name,
+        conf.user_gender,
+        conf.user_id,
+        conf.user_last_name,
         conf.user_phone,
 
         # User info JSON keys
@@ -62,12 +67,12 @@ CONFIG = {
     ],
     # Case insensitive
     'content_should_not_contain': [
-            'locale',
-            'language',
-            'deprecated',
-            conf.user_postal_code,
-            conf.user_username_reverse
-        ],
+        'locale',
+        'language',
+        'deprecated',
+        conf.user_postal_code,
+        conf.user_username_reverse
+    ],
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': None,

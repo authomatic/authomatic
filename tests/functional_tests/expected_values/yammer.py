@@ -11,8 +11,8 @@ LINK = 'https://www.yammer.com/peterhudec.com/users/{0}'\
 
 # Yammer allows users to only set month and day of their birth day.
 # The year is always 1900.
-BD = datetime.strptime(conf.user_birth_date, '%x')
-BIRTH_DATE = datetime(1900, BD.month, BD.day).strftime('%x')
+BD = conf.user_birth_date
+BIRTH_DATE = datetime(1900, BD.month, BD.day).strftime(conf.BIRTH_DATE_FORMAT)
 
 CONFIG = {
     'login_xpath': '//*[@id="login"]',
@@ -44,6 +44,7 @@ CONFIG = {
         'username': conf.user_username,
     },
     'content_should_contain': [
+        # TODO: Add formatted bday
         conf.user_city,
         conf.user_country,
         conf.user_email,

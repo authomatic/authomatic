@@ -18,7 +18,7 @@ CONFIG = {
         'first_name': None,
         'last_name': None,
         'nickname': conf.user_nickname,
-        'birth_date': conf.user_birth_date,
+        'birth_date': conf.user_birth_date_str,
         'city': None,
         'country': conf.user_country,
         'gender': conf.user_gender,
