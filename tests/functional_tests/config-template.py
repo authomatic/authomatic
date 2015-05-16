@@ -277,9 +277,7 @@ PROVIDERS = {
         'user_id': '??????????',
         # User link contains a slug derived from the username.
         'user_link': 'http://www.linkedin.com/in/??????????',
-        # GitHub requires the User-Agent header in every request.
         'user_picture': '??????????',
-        'user_phone': PHONE_INTERNATIONAL,
         'user_location': COUNTRY_ISO2,
     },
     'paypal': {
