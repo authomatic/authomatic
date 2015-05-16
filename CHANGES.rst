@@ -14,6 +14,11 @@ Version 0.1.0
 * Removed support for :attr:`.User.username` and added support for
   :attr:`.User.birth_date` to :class:`.oauth2.Facebook` provider.
 * :class:`.oauth2.Facebook` provider now uses ``v2`` api for user info request.
+* Removed the ``r_fullprofile`` and ``r_fullprofile`` scopes from
+  :attr:`.oauth2.LinkedIn.user_info_scope` due to the
+  `Developer Program Transition <https://developer.linkedin.com/support/
+  developer-program-transition>`__ and as a consequence removed support for
+  :attr:`.User.birth_date` and :attr:`.User.phone`.
 
 Version 0.0.13
 --------------

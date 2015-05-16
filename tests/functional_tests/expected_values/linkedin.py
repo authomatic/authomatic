@@ -1,9 +1,13 @@
+import re
+
 import fixtures
 import constants
 from authomatic.providers import oauth2
 
 
 conf = fixtures.get_configuration('linkedin')
+
+PICTURE = re.compile(r'^https://media.licdn.com/mpr/mprx/[\w_-]+$')
 
 
 CONFIG = {
@@ -15,7 +19,7 @@ CONFIG = {
     'class_': oauth2.LinkedIn,
     'scope': oauth2.LinkedIn.user_info_scope,
     'user': {
-        'birth_date': conf.user_birth_date,
+        'birth_date': None,
         'city': None,
         'country': conf.user_country,
         'email': conf.user_email,
@@ -28,39 +32,36 @@ CONFIG = {
         'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
-        'phone': conf.user_phone,
-        'picture': conf.user_picture,
+        'phone': None,
+        'picture': PICTURE,
         'postal_code': None,
         'timezone': None,
         'username': None,
     },
     'content_should_contain': [
-        conf.user_id,
-        conf.user_name, conf.user_first_name, conf.user_last_name,
         conf.user_country,
         conf.user_email,
+        conf.user_first_name,
+        conf.user_id,
+        conf.user_last_name,
         conf.user_link,
-        conf.user_phone,
-        conf.user_picture,
+        conf.user_name,
 
         # User info JSON keys
-        'dateOfBirth', 'day', 'month', 'year', 'emailAddress', 'firstName',
-        'formattedName', 'id', 'lastName', 'location', 'country', 'code',
-        'name', 'phoneNumbers', '_total', 'values', 'phoneNumber', 'phoneType',
-        'pictureUrl', 'publicProfileUrl',
+        'code', 'country', 'emailAddress', 'firstName', 'formattedName', 'id',
+        'lastName', 'location', 'name', 'pictureUrl', 'publicProfileUrl',
     ],
     # Case insensitive
     'content_should_not_contain':
-        conf.no_timezone +
-        conf.no_postal_code +
-        conf.no_locale +
-        conf.no_gender +
+        conf.no_birth_date +
         conf.no_city +
-        [
-            conf.user_nickname,
-            '"{0}"'.format(conf.user_username),
-            '"{0}"'.format(conf.user_username_reverse),
-        ],
+        conf.no_gender +
+        conf.no_locale +
+        conf.no_nickname +
+        conf.no_phone +
+        conf.no_postal_code +
+        conf.no_timezone +
+        conf.no_username,
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': None,

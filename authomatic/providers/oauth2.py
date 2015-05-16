@@ -1196,7 +1196,6 @@ class LinkedIn(OAuth2):
 
     Supported :class:`.User` properties:
 
-    * birth_date
     * country
     * email
     * first_name
@@ -1205,15 +1204,16 @@ class LinkedIn(OAuth2):
     * link
     * location
     * name
-    * phone
     * picture
 
     Unsupported :class:`.User` properties:
 
+    * birth_date
     * city
     * gender
     * locale
     * nickname
+    * phone
     * postal_code
     * timezone
     * username
@@ -1221,16 +1221,17 @@ class LinkedIn(OAuth2):
     
     user_authorization_url = 'https://www.linkedin.com/uas/oauth2/authorization'
     access_token_url = 'https://www.linkedin.com/uas/oauth2/accessToken'
-    user_info_url = 'https://api.linkedin.com/v1/people/~:' + \
-                    '(id,first-name,last-name,formatted-name,location,picture-url,public-profile-url,email-address,date-of-birth,phone-numbers)?format=json'
-    
-    user_info_scope = ['r_fullprofile', 'r_emailaddress', 'r_contactinfo']
-    
+    user_info_url = ('https://api.linkedin.com/v1/people/~:'
+                     '(id,first-name,last-name,formatted-name,location,'
+                     'picture-url,public-profile-url,email-address)'
+                     '?format=json')
+
+    user_info_scope = ['r_emailaddress']
+
     token_request_method = 'GET'  # To avoid a bug with OAuth2.0 on Linkedin
     # http://developer.linkedin.com/forum/unauthorized-invalid-or-expired-token-immediately-after-receiving-oauth2-token
 
     supported_user_attributes = core.SupportedUserAttributes(
-        birth_date=True,
         country=True,
         email=True,
         first_name=True,
@@ -1239,22 +1240,21 @@ class LinkedIn(OAuth2):
         link=True,
         location=True,
         name=True,
-        phone=True,
         picture=True
     )
 
     @classmethod
-    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
-        
+    def _x_request_elements_filter(cls, request_type, request_elements,
+                                   credentials):
         if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             # LinkedIn too has it's own terminology!
             url, method, params, headers, body = request_elements
             params['oauth2_access_token'] = params.pop('access_token')
-            request_elements = core.RequestElements(url, method, params, headers, body)
+            request_elements = core.RequestElements(url, method, params,
+                                                    headers, body)
         
         return request_elements
-    
-    
+
     @staticmethod
     def _x_user_parser(user, data):
         
