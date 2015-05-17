@@ -12,7 +12,7 @@ CONFIG = {
         '//*[@id="SelectedOrganisation_suggestions"]/div/div',
         '//*[@id="ext-gen4"]'
     ],
-    'consent_wait_seconds': 1,
+    'consent_wait_seconds': 3,
     'after_consent_wait_seconds': 3,
     'class_': oauth1.Xero,
     'user': {
