@@ -13,6 +13,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="api_v1_oauth_authorize"]/div[2]/div/div[1]/div/div/div[2]/form/button[2]',
     ],
+    'consent_wait_seconds': 3,
     'class_': oauth1.Tumblr,
     'user': {
         'birth_date': None,

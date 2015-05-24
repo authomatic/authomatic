@@ -16,6 +16,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="oauth-container"]/div/div/div/form/input[5]',
     ],
+    'consent_wait_seconds': 3,
     'class_': oauth1.Xing,
     'user': {
         'birth_date': conf.user_birth_date_str,

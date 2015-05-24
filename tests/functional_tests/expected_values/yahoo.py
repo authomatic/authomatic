@@ -16,6 +16,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="xagree"]',
     ],
+    'consent_wait_seconds': 3,
     'class_': oauth1.Yahoo,
     'user': {
         'birth_date': conf.user_birth_date_str,

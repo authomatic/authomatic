@@ -130,8 +130,6 @@ def get_configuration(provider):
 
     # Add additional class attributes which are not allowed to be passed
     # to the namedtuple
-    Res.email_escaped = conf['user_email'].replace('@', '\u0040')
-
     Res.BIRTH_DATE_FORMAT = BIRTH_DATE_FORMAT
     bday = conf['user_birth_date']
     Res.user_birth_date_str = bday.strftime(Res.BIRTH_DATE_FORMAT)
@@ -139,7 +137,7 @@ def get_configuration(provider):
     Res.no_birth_date = ['birth']
     Res.no_city = [conf['user_city'], 'city']
     Res.no_country = [conf['user_country'], 'country']
-    Res.no_email = [conf['user_email'], Res.email_escaped, 'email', 'e-mail']
+    Res.no_email = [conf['user_email'], 'email']
     Res.no_first_name = ['"{0}"'.format(conf['user_first_name']), 'first']
     Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last']
     Res.no_gender = [conf['user_gender'], 'gender']

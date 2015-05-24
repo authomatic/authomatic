@@ -7,15 +7,15 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('facebook')
 
-LINK = 'http://www.facebook.com/' + conf.user_id
-PICTURE = ('http://graph.facebook.com/{0}/picture?type=large'
+LINK = u'http://www.facebook.com/' + conf.user_id
+PICTURE = (u'http://graph.facebook.com/{0}/picture?type=large'
            .format(conf.user_id))
 
 CONFIG = {
-    'login_xpath': '//*[@id="email"]',
-    'password_xpath': '//*[@id="pass"]',
+    'login_xpath': u'//*[@id="email"]',
+    'password_xpath': u'//*[@id="pass"]',
     'consent_xpaths': [
-        '//*[@id="platformDialogForm"]/div[2]/div/table/tbody/tr/td[2]/button[2]'
+        u'//*[@id="platformDialogForm"]/div[2]/div/table/tbody/tr/td[2]/button[2]'
     ],
     'class_': oauth2.Facebook,
     'scope': oauth2.Facebook.user_info_scope,
@@ -40,10 +40,10 @@ CONFIG = {
         'username': None,
     },
     'content_should_contain': [
-        conf.user_birth_date.strftime('%m\/%d\/%Y'),
+        conf.user_birth_date.strftime(u'%m\/%d\/%Y'),
         conf.user_city,
         conf.user_country,
-        conf.email_escaped,
+        conf.user_email.replace('@', '\\u0040'),
         conf.user_first_name,
         conf.user_gender,
         conf.user_id,

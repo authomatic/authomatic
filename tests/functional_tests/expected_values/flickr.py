@@ -10,6 +10,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="permissions"]/form/div/input[1]',
     ],
+    'consent_wait_seconds': 3,
     'class_': oauth1.Flickr,
     'user': {
         'birth_date': None,
