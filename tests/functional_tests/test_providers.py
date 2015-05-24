@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 import datetime
+import logging
 import os
 import re
 import sys
@@ -16,6 +17,7 @@ from tests.functional_tests import config
 from tests.functional_tests import fixtures
 import constants
 
+
 ME = os.path.dirname(__file__)
 LOG_PATH = os.path.join(ME, 'login-py{0}{1}.log'.format(sys.version_info[0],
                                                         sys.version_info[1]))
@@ -24,7 +26,7 @@ EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
 PROVIDERS = sorted([(k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items()
                     if k in config.INCLUDE_PROVIDERS])
 PROVIDERS_IDS = [k for k, v in PROVIDERS]
-
+PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
 
 ALL_APPS = {
     'Django': liveandletdie.Django(
@@ -51,9 +53,23 @@ ALL_APPS = {
 APPS = dict((k, v) for k, v in ALL_APPS.items() if
             k.lower() in config.INCLUDE_FRAMEWORKS)
 
-if os.path.exists(LOG_PATH):
-    # os.remove(LOG_PATH)
-    open(LOG_PATH, 'w').close()
+
+file_handler = logging.FileHandler(LOG_PATH, mode='w')
+file_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s', '%x %X'))
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(file_handler)
+
+
+def log(indent, provider_name, message):
+    tab_width = 2
+    logger.info('{provider:.<{indent}}{message}'.format(
+        provider=provider_name,
+        indent=PROVIDER_NAME_WIDTH + tab_width * (indent + 1),
+        message=message
+    ))
+
 
 @pytest.fixture('module')
 def browser(request):
@@ -61,7 +77,7 @@ def browser(request):
     _browser = config.get_browser()
     _browser.set_window_size(800, 600)
     _browser.set_window_position(1024 - 800 - 10, 40)
-    _browser.implicitly_wait(20)
+    # _browser.implicitly_wait(4)
     request.addfinalizer(lambda: _browser.quit())
     return _browser
 
@@ -84,24 +100,13 @@ def app(request):
     return _app
 
 
-def log(level, message):
-    with open(LOG_PATH, 'a') as f:
-        indent = '  ' * (level + 1)
-        print(message)
-        f.write('{time}{indent}{message}\n'.format(
-            time=datetime.datetime.now().strftime('%x %X'),
-            indent=indent,
-            message=message
-        ))
-
-
 def login(request, browser, app, attempt=1):
     """Runs for each provider."""
-    log(1, 'Attemtp {0}'.format(attempt))
     provider_name, provider = request.param
+    log(1, provider_name, 'Attempt {0}'.format(attempt))
 
     try:
-        log(2, 'Deleting {0} cookies'.format(len(browser.get_cookies())))
+        log(2, provider_name, 'Deleting {0} cookies'.format(len(browser.get_cookies())))
         browser.delete_all_cookies()
 
         _provider = fixtures.ASSEMBLED_CONFIG[provider_name]
@@ -125,7 +130,7 @@ def login(request, browser, app, attempt=1):
 
         try:
             browser.find_element_by_id('login-result')
-            log(2, 'Provider remembers consent.')
+            log(2, provider_name, 'Provider remembers consent.')
             return _provider
         except NoSuchElementException:
             pass
@@ -136,25 +141,25 @@ def login(request, browser, app, attempt=1):
         if login_xpath:
             if pre_login_xpaths:
                 for xpath in pre_login_xpaths:
-                    log(2, 'Finding pre-login element {0}'.format(xpath))
+                    log(2, provider_name, 'Finding pre-login element {0}'.format(xpath))
                     pre_login = browser.find_element_by_xpath(xpath)
 
-                    log(2, 'Clicking on pre-login element'.format(xpath))
+                    log(2, provider_name, 'Clicking on pre-login element'.format(xpath))
                     pre_login.click()
 
-            log(2, 'Finding login input {0}'.format(login_xpath))
+            log(2, provider_name, 'Finding login input {0}'.format(login_xpath))
             login_element = browser.find_element_by_xpath(login_xpath)
 
-            log(2, 'Filling out login')
+            log(2, provider_name, 'Filling out login')
             login_element.send_keys(conf.user_login)
 
-            log(2, 'Finding password input {0}'.format(password_xpath))
+            log(2, provider_name, 'Finding password input {0}'.format(password_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)
 
-            log(2, 'Filling out password')
+            log(2, provider_name, 'Filling out password')
             password_element.send_keys(conf.user_password)
 
-            log(2, 'Hitting ENTER')
+            log(2, provider_name, 'Hitting ENTER')
             password_element.send_keys(Keys.ENTER)
 
         if login_url:
@@ -168,39 +173,39 @@ def login(request, browser, app, attempt=1):
         if consent_xpaths:
             for xpath in consent_xpaths:
                 try:
-                    log(2, 'Waiting {0} seconds before consent'
+                    log(2, provider_name, 'Waiting {0} seconds before consent'
                         .format(consent_wait_seconds))
                     time.sleep(consent_wait_seconds)
 
-                    log(2, 'Finding consent button {0}'.format(xpath))
+                    log(2, provider_name, 'Finding consent button {0}'.format(xpath))
                     button = browser.find_element_by_xpath(xpath)
 
-                    log(2, 'Clicking consent button')
+                    log(2, provider_name, 'Clicking consent button')
                     button.click()
                 except NoSuchElementException:
-                    log(2, 'No consent needed.')
+                    log(2, provider_name, 'No consent needed.')
 
         after_consent_wait = _provider.get('after_consent_wait_seconds', 0)
-        log(2, 'Waiting {0} seconds after consent'.format(after_consent_wait))
+        log(2, provider_name, 'Waiting {0} seconds after consent'.format(after_consent_wait))
         time.sleep(after_consent_wait)
 
-        log(2, 'Finding result element')
+        log(2, provider_name, 'Finding result element')
         browser.find_element_by_id('login-result')
 
-        log(2, 'SUCCESS')
+        log(2, provider_name, 'SUCCESS')
 
     except Exception as e:
         if attempt < config.MAX_LOGIN_ATTEMPTS:
-            log(2, 'ERROR {0}: {1}'.format(type(e), e))
+            log(2, provider_name, 'ERROR {0}: {1}'.format(type(e), e))
 
             if request.config.getoption('--login-error-pdb'):
-                log(2, 'Entering PDB session')
+                log(2, provider_name, 'Entering PDB session')
                 import pdb
                 pdb.set_trace()
 
             login(request, browser, app, attempt + 1)
         else:
-            log(1, 'Giving up after attempt {0}!'.format(attempt))
+            log(1, provider_name, 'Giving up after attempt {0}!'.format(attempt))
             pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
 
     return _provider
@@ -208,7 +213,7 @@ def login(request, browser, app, attempt=1):
 
 @pytest.fixture(scope='module', params=PROVIDERS, ids=PROVIDERS_IDS)
 def provider(request, browser, app):
-    log(0, 'Logging in by {0}'.format(request.param[0]))
+    log(0, request.param[0], 'Logging in')
     return login(request, browser, app)
 
 
