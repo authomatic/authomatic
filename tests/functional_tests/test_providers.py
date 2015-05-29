@@ -114,8 +114,10 @@ def login(request, browser, app, attempt=1):
     log(1, provider_name, 'Attempt {0}'.format(attempt))
 
     try:
-        log(2, provider_name, 'Deleting {0} cookies'.format(len(browser.get_cookies())))
-        browser.delete_all_cookies()
+        cookies = browser.get_cookies()
+        if cookies:
+            log(2, provider_name, 'Deleting {0} cookies'.format(len(cookies)))
+            browser.delete_all_cookies()
 
         provider['name'] = provider_name
         conf = fixtures.get_configuration(provider_name)
