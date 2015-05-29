@@ -186,6 +186,12 @@ def login(request, browser, app, attempt=1):
             log(2, provider_name, 'Hitting ENTER')
             password_element.send_keys(Keys.ENTER)
 
+            after_login_wait = provider.get('after_login_wait_seconds', 0)
+            if after_login_wait:
+                log(2, provider_name, 'Waiting {0} seconds after login'
+                    .format(after_login_wait))
+                time.sleep(after_login_wait)
+
         if login_url:
             # Return back from login URL
             log(2, provider_name, 'Going back from login URL to: {0}'
