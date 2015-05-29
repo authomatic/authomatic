@@ -10,6 +10,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="main"]/div/form/p[3]/input[2]',
     ],
+    'after_login_wait_seconds': 1,
     'class_': openid.OpenID,
     'user': {
         'id': conf.user_id,
