@@ -119,11 +119,6 @@ def login(request, browser, app, attempt=1):
     log(1, provider_name, 'Attempt {0}'.format(attempt))
 
     try:
-        cookies = browser.get_cookies()
-        if cookies:
-            log(2, provider_name, 'Deleting {0} cookies'.format(len(cookies)))
-            browser.delete_all_cookies()
-
         provider['name'] = provider_name
         conf = fixtures.get_configuration(provider_name)
 
@@ -248,6 +243,12 @@ def login(request, browser, app, attempt=1):
         else:
             log(1, provider_name, 'Giving up after attempt {0}!'.format(attempt))
             pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
+
+    finally:
+        cookies = browser.get_cookies()
+        if cookies:
+            log(2, provider_name, 'Deleting {0} cookies'.format(len(cookies)))
+            browser.delete_all_cookies()
 
     return provider
 
