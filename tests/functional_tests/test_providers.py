@@ -9,7 +9,14 @@ import time
 from authomatic.six.moves.urllib import parse
 
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    TimeoutException,
+    UnexpectedAlertPresentException,
+)
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
 import pytest
 import liveandletdie
 
@@ -122,20 +129,36 @@ def login(request, browser, app, attempt=1):
         password_xpath = _provider.get('password_xpath')
         pre_login_xpaths = _provider.get('pre_login_xpaths')
 
+
+        # Go to login URL to log in
         if login_url:
-            # Go to login URL to log in
             browser.get(login_url)
         else:
             browser.get(url)
 
+        # Handle alerts
         try:
-            browser.find_element_by_id('login-result')
-            log(2, provider_name, 'Provider remembers consent.')
-            return _provider
-        except NoSuchElementException:
+            alert_wait = _provider.get('alert_wait_seconds', 0)
+            WebDriverWait(browser, alert_wait)\
+                .until(expected_conditions.alert_is_present())
+            log(2, provider_name, 'Waiting {0} seconds for alert.'.format(alert_wait))
+            alert = browser.switch_to_alert()
+            log(2, provider_name, 'Accepting alert: {0}'.format(alert.text))
+            alert.accept()
+        except TimeoutException:
             pass
 
+        # Check result
+        try:
+            browser.find_element_by_id('login-result')
+        except NoSuchElementException:
+            log(2, provider_name, 'Provider remembers consent.')
+        except UnexpectedAlertPresentException:
+            log(2, provider_name, 'Unexpected alert')
+
+        # Pause for getting login and password xpaths
         if request.config.getoption("--pause"):
+            log(2, provider_name, 'Pausing to pdb.')
             import pdb; pdb.set_trace()
 
         if login_xpath:
