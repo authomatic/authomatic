@@ -9,6 +9,8 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="login-signin"]'
     ],
+    'after_consent_wait_seconds': 3,
+    'logout_url': 'https://login.yahoo.com/config/login?logout=1',
     'class_': openid.OpenID,
     'user': {
         'id': conf.user_id,

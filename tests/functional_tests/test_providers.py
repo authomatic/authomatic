@@ -131,6 +131,11 @@ def login(request, browser, app, attempt=1):
         password_xpath = provider.get('password_xpath')
         pre_login_xpaths = provider.get('pre_login_xpaths')
 
+        logout_url = provider.get('logout_url')
+        if logout_url:
+            log(2, provider_name, 'First logging out at {0}'.format(logout_url))
+            browser.get(logout_url)
+
         # Go to login URL to log in
         if login_url:
             log(2, provider_name, 'Going to login URL: {0}'.format(login_url))

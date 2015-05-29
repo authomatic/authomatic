@@ -11,6 +11,7 @@ CONFIG = {
         '//*[@id="permissions"]/form/div/input[1]',
     ],
     'consent_wait_seconds': 3,
+    'logout_url': 'https://login.yahoo.com/config/login?logout=1',
     'class_': oauth1.Flickr,
     'user': {
         'birth_date': None,

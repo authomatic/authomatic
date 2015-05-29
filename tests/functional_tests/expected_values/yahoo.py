@@ -17,6 +17,7 @@ CONFIG = {
         '//*[@id="xagree"]',
     ],
     'consent_wait_seconds': 3,
+    'logout_url': 'https://login.yahoo.com/config/login?logout=1',
     'class_': oauth1.Yahoo,
     'user': {
         'birth_date': conf.user_birth_date_str,
