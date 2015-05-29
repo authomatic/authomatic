@@ -69,6 +69,11 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(file_handler)
 
 
+def teardown_module():
+    if hasattr(config, 'teardown') and hasattr(config.teardown, '__call__'):
+        config.teardown()
+
+
 def log(indent, provider_name, message):
     tab_width = 2
     logger.info('{provider:.<{padding}}{indent}{message}'.format(
