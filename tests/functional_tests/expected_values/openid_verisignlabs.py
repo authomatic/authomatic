@@ -9,6 +9,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="TrustAuthenticateExchange"]/div[2]/input[2]'
     ],
+    'alert_wait_seconds': 1,
     'class_': openid.OpenID,
     'user': {
         'id': conf.user_id,
