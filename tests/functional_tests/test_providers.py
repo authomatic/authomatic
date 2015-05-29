@@ -117,18 +117,17 @@ def login(request, browser, app, attempt=1):
         log(2, provider_name, 'Deleting {0} cookies'.format(len(browser.get_cookies())))
         browser.delete_all_cookies()
 
-        _provider = fixtures.ASSEMBLED_CONFIG[provider_name]
-        _provider['name'] = provider_name
+        provider['name'] = provider_name
         conf = fixtures.get_configuration(provider_name)
 
         # Andy types the login handler url to the address bar.
-        url = parse.urljoin(app.check_url, 'login/' + _provider['_path'])
+        url = parse.urljoin(app.check_url, 'login/' + provider['_path'])
 
         # Andy authenticates by the provider.
-        login_url = _provider.get('login_url')
-        login_xpath = _provider.get('login_xpath')
-        password_xpath = _provider.get('password_xpath')
-        pre_login_xpaths = _provider.get('pre_login_xpaths')
+        login_url = provider.get('login_url')
+        login_xpath = provider.get('login_xpath')
+        password_xpath = provider.get('password_xpath')
+        pre_login_xpaths = provider.get('pre_login_xpaths')
 
 
         # Go to login URL to log in
@@ -139,10 +138,14 @@ def login(request, browser, app, attempt=1):
 
         # Handle alerts
         try:
-            alert_wait = _provider.get('alert_wait_seconds', 0)
+            alert_wait = provider.get('alert_wait_seconds', 0)
             WebDriverWait(browser, alert_wait)\
                 .until(expected_conditions.alert_is_present())
-            log(2, provider_name, 'Waiting {0} seconds for alert.'.format(alert_wait))
+
+            if alert_wait:
+                log(2, provider_name, 'Waiting {0} seconds for alert.'
+                    .format(alert_wait))
+
             alert = browser.switch_to_alert()
             log(2, provider_name, 'Accepting alert: {0}'.format(alert.text))
             alert.accept()
@@ -165,10 +168,12 @@ def login(request, browser, app, attempt=1):
         if login_xpath:
             if pre_login_xpaths:
                 for xpath in pre_login_xpaths:
-                    log(2, provider_name, 'Finding pre-login element {0}'.format(xpath))
+                    log(2, provider_name,
+                        'Finding pre-login element {0}'.format(xpath))
                     pre_login = browser.find_element_by_xpath(xpath)
 
-                    log(2, provider_name, 'Clicking on pre-login element'.format(xpath))
+                    log(2, provider_name,
+                        'Clicking on pre-login element'.format(xpath))
                     pre_login.click()
 
             log(2, provider_name, 'Finding login input {0}'.format(login_xpath))
@@ -177,7 +182,8 @@ def login(request, browser, app, attempt=1):
             log(2, provider_name, 'Filling out login')
             login_element.send_keys(conf.user_login)
 
-            log(2, provider_name, 'Finding password input {0}'.format(password_xpath))
+            log(2, provider_name,
+                'Finding password input {0}'.format(password_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)
 
             log(2, provider_name, 'Filling out password')
@@ -191,15 +197,17 @@ def login(request, browser, app, attempt=1):
             browser.get(url)
 
         # Andy authorizes this app to access his protected resources.
-        consent_xpaths = _provider.get('consent_xpaths')
-        consent_wait_seconds = _provider.get('consent_wait_seconds', 0)
+        consent_xpaths = provider.get('consent_xpaths')
+        consent_wait_seconds = provider.get('consent_wait_seconds', 0)
 
         if consent_xpaths:
             for xpath in consent_xpaths:
                 try:
-                    log(2, provider_name, 'Waiting {0} seconds before consent'
-                        .format(consent_wait_seconds))
-                    time.sleep(consent_wait_seconds)
+                    if consent_wait_seconds:
+                        log(2, provider_name,
+                            'Waiting {0} seconds before consent'
+                            .format(consent_wait_seconds))
+                        time.sleep(consent_wait_seconds)
 
                     log(2, provider_name, 'Finding consent button {0}'.format(xpath))
                     button = browser.find_element_by_xpath(xpath)
@@ -209,9 +217,11 @@ def login(request, browser, app, attempt=1):
                 except NoSuchElementException:
                     log(2, provider_name, 'No consent needed.')
 
-        after_consent_wait = _provider.get('after_consent_wait_seconds', 0)
-        log(2, provider_name, 'Waiting {0} seconds after consent'.format(after_consent_wait))
-        time.sleep(after_consent_wait)
+        after_consent_wait = provider.get('after_consent_wait_seconds', 0)
+        if after_consent_wait:
+            log(2, provider_name, 'Waiting {0} seconds after consent'
+                .format(after_consent_wait))
+            time.sleep(after_consent_wait)
 
         log(2, provider_name, 'Finding result element')
         browser.find_element_by_id('login-result')
@@ -232,7 +242,7 @@ def login(request, browser, app, attempt=1):
             log(1, provider_name, 'Giving up after attempt {0}!'.format(attempt))
             pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
 
-    return _provider
+    return provider
 
 
 @pytest.fixture(scope='module', params=PROVIDERS, ids=PROVIDERS_IDS)
