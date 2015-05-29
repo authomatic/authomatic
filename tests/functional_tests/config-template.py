@@ -1,12 +1,23 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-import constants
+from pyvirtualdisplay import Display
+from selenium import webdriver
 
+import constants
 
 # Choose and configure the browser of your choice
 def get_browser():
-    return webdriver.Chrome()
+    global display
+
+    display = Display(visible=1, size=(1024, 768))
+    display.start()
+    return webdriver.Firefox()
+
+
+def teardown():
+    global display
+    display.stop()
 
 
 MAX_LOGIN_ATTEMPTS = 10
