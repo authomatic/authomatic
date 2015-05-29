@@ -131,9 +131,9 @@ def login(request, browser, app, attempt=1):
         password_xpath = provider.get('password_xpath')
         pre_login_xpaths = provider.get('pre_login_xpaths')
 
-
         # Go to login URL to log in
         if login_url:
+            log(2, provider_name, 'Going to login URL: {0}'.format(login_url))
             browser.get(login_url)
         else:
             browser.get(url)
@@ -145,7 +145,7 @@ def login(request, browser, app, attempt=1):
                 .until(expected_conditions.alert_is_present())
 
             if alert_wait:
-                log(2, provider_name, 'Waiting {0} seconds for alert.'
+                log(2, provider_name, 'Waiting {0} seconds for alert'
                     .format(alert_wait))
 
             alert = browser.switch_to_alert()
@@ -188,6 +188,9 @@ def login(request, browser, app, attempt=1):
 
         if login_url:
             # Return back from login URL
+            log(2, provider_name, 'Going back from login URL to: {0}'
+                .format(url))
+
             browser.get(url)
 
         # Andy authorizes this app to access his protected resources.
@@ -209,7 +212,7 @@ def login(request, browser, app, attempt=1):
                     log(2, provider_name, 'Clicking consent button')
                     button.click()
                 except NoSuchElementException:
-                    log(2, provider_name, 'No consent needed.')
+                    log(2, provider_name, 'Consent button not found!')
 
         after_consent_wait = provider.get('after_consent_wait_seconds', 0)
         if after_consent_wait:
