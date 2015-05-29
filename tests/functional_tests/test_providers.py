@@ -71,9 +71,10 @@ logger.addHandler(file_handler)
 
 def log(indent, provider_name, message):
     tab_width = 2
-    logger.info('{provider:.<{indent}}{message}'.format(
+    logger.info('{provider:.<{padding}}{indent}{message}'.format(
         provider=provider_name,
-        indent=PROVIDER_NAME_WIDTH + tab_width * (indent + 1),
+        padding=PROVIDER_NAME_WIDTH + 3,
+        indent=' ' * tab_width * indent,
         message=message
     ))
 
