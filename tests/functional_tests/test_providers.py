@@ -154,17 +154,9 @@ def login(request, browser, app, attempt=1):
         except TimeoutException:
             pass
 
-        # Check result
-        try:
-            browser.find_element_by_id('login-result')
-        except NoSuchElementException:
-            log(2, provider_name, 'Provider remembers consent.')
-        except UnexpectedAlertPresentException:
-            log(2, provider_name, 'Unexpected alert')
-
         # Pause for getting login and password xpaths
         if request.config.getoption("--pause"):
-            log(2, provider_name, 'Pausing to pdb.')
+            log(2, provider_name, 'Pausing to pdb')
             import pdb; pdb.set_trace()
 
         if login_xpath:
