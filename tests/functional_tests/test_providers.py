@@ -232,22 +232,23 @@ def login(request, browser, app, attempt=1):
                 .format(after_consent_wait))
             time.sleep(after_consent_wait)
 
-        log(2, provider_name, 'Finding result element')
-        result = browser.find_element_by_id('login-result')
-        if result:
-            log(3, provider_name, 'Result found')
+        try:
+            log(2, provider_name, 'Finding result element')
+            browser.find_element_by_id('login-result')
+            log(3, provider_name, 'Result element found')
             success = True
+        except NoSuchElementException:
+            log(3, provider_name, 'Result element not found!')
 
     except NoSuchElementException as e:
         try:
             log(2, provider_name,
                 'Finding result element after error {0}'.format(e.msg))
-            result = browser.find_element_by_id('login-result')
-            if result:
-                log(3, provider_name, 'Result found')
-                success = True
+            browser.find_element_by_id('login-result')
+            log(3, provider_name, 'Result element found')
+            success = True
         except NoSuchElementException:
-            log(3, provider_name, 'Result not found!')
+            log(3, provider_name, 'Result element not found!')
             raise e
 
     except Exception as e:
@@ -264,12 +265,6 @@ def login(request, browser, app, attempt=1):
             log(1, provider_name,
                 'Giving up after attempt {0}!'.format(attempt))
             pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
-
-    finally:
-        cookies = browser.get_cookies()
-        if cookies:
-            log(2, provider_name, 'Deleting {0} cookies'.format(len(cookies)))
-            browser.delete_all_cookies()
 
     if success:
         log(1, provider_name, 'SUCCESS')
