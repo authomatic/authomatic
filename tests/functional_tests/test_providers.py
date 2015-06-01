@@ -115,6 +115,7 @@ def app(request):
 
 def login(request, browser, app, attempt=1):
     """Runs for each provider."""
+    success = False
     provider_name, provider = request.param
     log(1, provider_name, 'Attempt {0}'.format(attempt))
 
@@ -171,21 +172,21 @@ def login(request, browser, app, attempt=1):
                         'Finding pre-login element {0}'.format(xpath))
                     pre_login = browser.find_element_by_xpath(xpath)
 
-                    log(2, provider_name,
+                    log(3, provider_name,
                         'Clicking on pre-login element'.format(xpath))
                     pre_login.click()
 
             log(2, provider_name, 'Finding login input {0}'.format(login_xpath))
             login_element = browser.find_element_by_xpath(login_xpath)
 
-            log(2, provider_name, 'Filling out login')
+            log(3, provider_name, 'Filling out login')
             login_element.send_keys(conf.user_login)
 
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)
 
-            log(2, provider_name, 'Filling out password')
+            log(3, provider_name, 'Filling out password')
             password_element.send_keys(conf.user_password)
 
             log(2, provider_name, 'Hitting ENTER')
@@ -220,10 +221,10 @@ def login(request, browser, app, attempt=1):
                     log(2, provider_name, 'Finding consent button {0}'.format(xpath))
                     button = browser.find_element_by_xpath(xpath)
 
-                    log(2, provider_name, 'Clicking consent button')
+                    log(3, provider_name, 'Clicking consent button')
                     button.click()
-                except NoSuchElementException:
-                    log(2, provider_name, 'Consent button not found!')
+                except NoSuchElementException as e:
+                    log(3, provider_name, 'Consent button not found!')
 
         after_consent_wait = provider.get('after_consent_wait_seconds', 0)
         if after_consent_wait:
@@ -232,9 +233,22 @@ def login(request, browser, app, attempt=1):
             time.sleep(after_consent_wait)
 
         log(2, provider_name, 'Finding result element')
-        browser.find_element_by_id('login-result')
+        result = browser.find_element_by_id('login-result')
+        if result:
+            log(3, provider_name, 'Result found')
+            success = True
 
-        log(2, provider_name, 'SUCCESS')
+    except NoSuchElementException as e:
+        try:
+            log(2, provider_name,
+                'Finding result element after error {0}'.format(e.msg))
+            result = browser.find_element_by_id('login-result')
+            if result:
+                log(3, provider_name, 'Result found')
+                success = True
+        except NoSuchElementException:
+            log(3, provider_name, 'Result not found!')
+            raise e
 
     except Exception as e:
         if attempt < config.MAX_LOGIN_ATTEMPTS:
@@ -247,7 +261,8 @@ def login(request, browser, app, attempt=1):
 
             login(request, browser, app, attempt + 1)
         else:
-            log(1, provider_name, 'Giving up after attempt {0}!'.format(attempt))
+            log(1, provider_name,
+                'Giving up after attempt {0}!'.format(attempt))
             pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
 
     finally:
@@ -255,6 +270,9 @@ def login(request, browser, app, attempt=1):
         if cookies:
             log(2, provider_name, 'Deleting {0} cookies'.format(len(cookies)))
             browser.delete_all_cookies()
+
+    if success:
+        log(1, provider_name, 'SUCCESS')
 
     return provider
 
