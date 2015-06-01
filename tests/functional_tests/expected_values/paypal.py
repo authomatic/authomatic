@@ -6,6 +6,7 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('paypal')
 
 CONFIG = {
+    'logout_url': 'https://www.paypal.com/sk/cgi-bin/webscr?cmd=_logout',
     'class_': oauth2.PayPal,
     'scope': oauth2.PayPal.user_info_scope,
     'user': {

@@ -14,8 +14,8 @@ CONFIG = {
     'login_xpath': '//*[@id="box"]/div/input[5]',
     'password_xpath': '//*[@id="box"]/div/input[6]',
     'consent_xpaths': [
-        '//*[@id="install_allow"]',
-        '//*[@id="install_allow"]',
+        # '//*[@id="install_allow"]',
+        # '//*[@id="install_allow"]',
     ],
     'consent_wait_seconds': 4,
     'class_': oauth2.VK,

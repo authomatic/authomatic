@@ -239,6 +239,7 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
+        'user_username': NAME,
     },
     'deviantart': {
         'consumer_key': '##########',

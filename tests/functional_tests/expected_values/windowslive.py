@@ -13,8 +13,8 @@ CONFIG = {
     'login_xpath': '//*[@id="i0116"]',
     'password_xpath': '//*[@id="i0118"]',
     'consent_xpaths': [
-        '//*[@id="idSIButton9"]',
-        '//*[@id="btnYes"]',
+        # '//*[@id="idSIButton9"]',
+        # '//*[@id="btnYes"]',
     ],
     'consent_wait_seconds': 0,
     'class_': oauth2.WindowsLive,

@@ -10,6 +10,7 @@ PICTURE = re.compile(r'http://\w+.vimeocdn.com/portrait/\d+_300x300.jpg')
 
 
 CONFIG = {
+    'logout_url': 'https://vimeo.com/log_out',
     'login_xpath': '//*[@id="email"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [

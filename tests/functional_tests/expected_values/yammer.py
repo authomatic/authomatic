@@ -18,8 +18,8 @@ CONFIG = {
     'login_xpath': '//*[@id="login"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [
-        '//*[@id="login-form"]/fieldset[2]/p[2]/button',
-        '//*[@id="oauth2-authorize"]/div[3]/div[3]/form/input[1]',
+        # '//*[@id="login-form"]/fieldset[2]/p[2]/button',
+        # '//*[@id="oauth2-authorize"]/div[3]/div[3]/form/input[1]',
     ],
     'class_': oauth2.Yammer,
     'scope': oauth2.Yammer.user_info_scope,

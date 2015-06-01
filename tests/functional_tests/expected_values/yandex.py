@@ -8,7 +8,7 @@ CONFIG = {
     'login_xpath': '//*[@id="login"]',
     'password_xpath': '//*[@id="passwd"]',
     'consent_xpaths': [
-        '/html/body/div[2]/div/div[2]/form/div[4]/div[2]/button',
+        # '/html/body/div[2]/div/div[2]/form/div[4]/div[2]/button',
     ],
     'class_': oauth2.Yandex,
     'scope': oauth2.Yandex.user_info_scope,

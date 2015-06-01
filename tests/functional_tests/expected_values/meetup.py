@@ -11,6 +11,7 @@ PICTURE = re.compile(r'http://photos\d+.meetupstatic.com/photos/member/'
                      r'\w/\d+/\w/\d+/member_\d+.jpeg')
 
 CONFIG = {
+    'logout_url': 'http://www.meetup.com/logout/',
     'login_xpath': '//*[@id="email"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [],

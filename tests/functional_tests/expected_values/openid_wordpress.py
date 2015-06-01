@@ -4,6 +4,7 @@ from authomatic.providers import openid
 conf = fixtures.get_configuration('openid_wordpress')
 
 CONFIG = {
+    'logout_url': 'https://peterhudec.wordpress.com/wp-login.php?action=logout',
     'login_url': 'https://wordpress.com/wp-login.php',
     'login_xpath': '//*[@id="user_login"]',
     'password_xpath': '//*[@id="user_pass"]',

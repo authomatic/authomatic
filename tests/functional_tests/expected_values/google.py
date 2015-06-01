@@ -8,6 +8,7 @@ conf = fixtures.get_configuration('google')
 LINK = 'https://plus.google.com/' + conf.user_id
 
 CONFIG = {
+    'logout_url': 'https://accounts.google.com/Logout',
     'login_xpath': '//*[@id="Email"]',
     'password_xpath': '//*[@id="Passwd"]',
     'consent_xpaths': [

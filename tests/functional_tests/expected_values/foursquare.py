@@ -8,6 +8,7 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('foursquare')
 
 CONFIG = {
+    'logout_url': 'https://foursquare.com/logout',
     'login_xpath': '//*[@id="username"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [

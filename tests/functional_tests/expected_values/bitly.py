@@ -9,14 +9,15 @@ LINK = 'http://bitly.com/u/{0}'.format(conf.user_id)
 PICTURE = 'http://bitly.com/u/{0}.png'.format(conf.user_id)
 
 CONFIG = {
+    'logout_url': 'https://bitly.com/a/sign_out',
     'pre_login_xpaths': [
         '//*[@id="sign-in"]/div[2]/fieldset/div/a',
-        # '//*[@id="sign-in"]/div[3]/fieldset/label/a',
+        '//*[@id="sign-in"]/div[3]/fieldset/label/a',
     ],
     'login_xpath': '//*[@id="sign-in"]/div[3]/fieldset/label[1]/input',
     'password_xpath': '//*[@id="sign-in"]/div[3]/fieldset/label[2]/input',
     'consent_xpaths': [
-        '//*[@id="sign-in"]/div[3]/fieldset/input[2]',
+        # '//*[@id="sign-in"]/div[3]/fieldset/input[2]',
         '//*[@id="oauth_access"]/form/button[1]',
     ],
     'consent_wait_seconds': 1,
@@ -25,7 +26,7 @@ CONFIG = {
     'user': {
         'id': conf.user_id,
         'email': None,
-        'username': conf.user_username_reverse,
+        'username': conf.user_username,
         'name': conf.user_name,
         'first_name': None,
         'last_name': None,
@@ -44,7 +45,6 @@ CONFIG = {
     },
     'content_should_contain': [
         conf.user_id,
-        conf.user_username_reverse,
         conf.user_name,
 
         # User info JSON keys

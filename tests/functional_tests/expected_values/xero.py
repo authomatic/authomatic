@@ -5,6 +5,7 @@ from authomatic.providers import oauth1
 conf = fixtures.get_configuration('xero')
 
 CONFIG = {
+    'logout_url': 'https://my.xero.com/logout',
     'login_xpath': '//*[@id="email"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [

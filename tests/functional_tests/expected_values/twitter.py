@@ -8,7 +8,7 @@ CONFIG = {
     'login_xpath': '//*[@id="username_or_email"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [
-        '//*[@id="allow"]',
+        # '//*[@id="allow"]',
     ],
     'class_': oauth1.Twitter,
     'user': {

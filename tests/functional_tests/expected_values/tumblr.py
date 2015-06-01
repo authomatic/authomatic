@@ -8,6 +8,7 @@ from authomatic.providers import oauth1
 conf = fixtures.get_configuration('tumblr')
 
 CONFIG = {
+    'logout_url': 'https://www.tumblr.com/logout',
     'login_xpath': '//*[@id="signup_email"]',
     'password_xpath': '//*[@id="signup_password"]',
     'consent_xpaths': [

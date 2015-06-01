@@ -11,6 +11,7 @@ LINK = 'https://bitbucket.org/api/1.0/users/{0}'.format(conf.user_username)
 PICTURE = re.compile(r'^https://secure.gravatar.com/avatar/.*\.png&s=32$')
 
 CONFIG = {
+    'logout_url': 'https://bitbucket.org/account/signout/',
     'login_xpath': '//*[@id="id_username"]',
     'password_xpath': '//*[@id="id_password"]',
     'consent_xpaths': [],

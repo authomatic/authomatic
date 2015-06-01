@@ -11,10 +11,11 @@ PITURE = re.compile(r'https://x\d+.xingassets.com/assets/frontend_minified/img/u
 
 
 CONFIG = {
+    'logout_url': 'https://www.xing.com/app/user?op=logout',
     'login_xpath': '//*[@id="login_form_username"]',
     'password_xpath': '//*[@id="login_form_password"]',
     'consent_xpaths': [
-        '//*[@id="oauth-container"]/div/div/div/form/input[5]',
+        # '//*[@id="oauth-container"]/div/div/div/form/input[5]',
     ],
     'consent_wait_seconds': 3,
     'class_': oauth1.Xing,

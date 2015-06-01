@@ -5,6 +5,7 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('eventbrite')
 
 CONFIG = {
+    'logout_url': 'https://www.eventbrite.com/logout',
     'login_xpath': '//*[@id="login-email"]',
     'password_xpath': '//*[@id="login-password"]',
     'consent_xpaths': [

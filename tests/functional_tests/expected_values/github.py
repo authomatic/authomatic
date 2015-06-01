@@ -15,7 +15,7 @@ CONFIG = {
     'login_xpath': '//*[@id="login_field"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [
-        '//*[@id="login"]/form/div[3]/input[4]',
+        # '//*[@id="login"]/form/div[3]/input[4]',
         '//*[@id="site-container"]/div/div[2]/form/p/button',
     ],
     'class_': oauth2.GitHub,
