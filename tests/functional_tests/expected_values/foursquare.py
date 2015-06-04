@@ -1,4 +1,5 @@
 import calendar
+import re
 
 import fixtures
 import constants
@@ -29,7 +30,7 @@ CONFIG = {
         'name': conf.user_name,
         'nickname': None,
         'phone': conf.user_phone,
-        'picture': conf.user_picture,
+        'picture': re.compile(r'^https://\w+\.\w+\.net/img/user/\w+\.jpg$'),
         'postal_code': None,
         'timezone': None,
         'username': None,

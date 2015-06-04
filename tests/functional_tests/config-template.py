@@ -251,8 +251,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        # The picture URL is a random CDN URL
-        'user_picture': '??????????',
     },
     'google': {
         'consumer_key': '##########',
