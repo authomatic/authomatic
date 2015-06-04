@@ -19,6 +19,9 @@ CONFIG = {
     ],
     'class_': oauth2.GitHub,
     'scope': oauth2.GitHub.user_info_scope,
+    'access_headers': {
+        'User-Agent': 'Authomatic.py Automated Functional Tests'
+    },
     'user': {
         'birth_date': None,
         'city': None,

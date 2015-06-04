@@ -264,9 +264,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        # GitHub requires the User-Agent header in every request.
-        'access_headers': {'User-Agent': ('Authomatic.py Automated Functional '
-                                          'Tests')},
     },
     'linkedin': {
         'consumer_key': '##########',
