@@ -1,3 +1,5 @@
+import re
+
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -31,10 +33,10 @@ CONFIG = {
         'country': None,
         'gender': conf.user_gender,
         'link': LINK,
-        'locale': conf.user_locale,
+        'locale': re.compile(r'^\w{2}$'),
         'location': None,
         'phone': None,
-        'picture': conf.user_picture,
+        'picture': re.compile(r'^https://\w+\.googleusercontent.com/-\w+/\w+/\w+/\w+/photo\.jpg\?sz=50$'),
         'postal_code': None,
         'timezone': None,
     },
@@ -44,8 +46,6 @@ CONFIG = {
         conf.user_name, conf.user_first_name, conf.user_last_name,
         conf.user_gender,
         LINK,
-        conf.user_locale,
-        conf.user_picture,
 
         # User info JSON keys
         'kind', 'etag', 'occupation', 'gender', 'emails', 'value', 'type',
