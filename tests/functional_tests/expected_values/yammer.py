@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 import fixtures
 import constants
@@ -32,12 +33,13 @@ CONFIG = {
         'id': conf.user_id,
         'last_name': conf.user_last_name,
         'link': LINK,
-        'locale': conf.user_locale,
+        'locale': re.compile(r'\w{2}-\w{2}'),
         'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
         'phone': conf.user_phone,
-        'picture': conf.user_picture,
+        'picture': re.compile(r'^https://\w+\.assets-yammer\.com/mugshot/'
+                              r'images/48x48/[\w-]+$'),
         'postal_code': None,
         'timezone': conf.user_timezone,
         'username': conf.user_username,
@@ -51,10 +53,8 @@ CONFIG = {
         conf.user_id,
         conf.user_last_name,
         LINK,
-        conf.user_locale,
         conf.user_name,
         conf.user_phone,
-        conf.user_picture,
         conf.user_timezone.replace('&', '\\u0026'),
         conf.user_username,
 
