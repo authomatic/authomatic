@@ -1,3 +1,5 @@
+import re
+
 import fixtures
 import constants
 from authomatic.providers import oauth1
@@ -18,20 +20,20 @@ CONFIG = {
         'id': conf.user_id,
         'first_name': None,
         'last_name': None,
-        'link': conf.user_link,
-        'locale': conf.user_locale,
+        'link': re.compile(r'^http://t.co/\w+$'),
+        'locale': re.compile(r'^\w{2}$'),
         'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
-        'picture': conf.user_picture,
+        'picture': re.compile(r'^http://\w+\.twimg\.com/profile_images/\d+/\w+.jpg$'),
         'postal_code': None,
         'timezone': None,
         'username': conf.user_username,
     },
     'content_should_contain': [
         conf.user_id,
-        conf.user_locale,
+        # conf.user_locale,
         conf.user_name,
         conf.user_username,
 
