@@ -221,7 +221,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        'user_username': NAME,
     },
     'deviantart': {
         'consumer_key': '##########',
@@ -251,7 +250,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        'user_locale': '??????????',
     },
     'github': {
         'consumer_key': '##########',
@@ -303,16 +301,10 @@ PROVIDERS = {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_password': '##########',
-        'user_login': USERNAME,
         'user_id': '??????????',
     },
 
     # OpenID
-    'openid_yahoo': {
-        'user_id': 'https://me.yahoo.com/a/???',
-        'user_login': USERNAME,
-        'user_password': '##########',
-    },
     'openid_livejournal': {
         'user_login': USERNAME,
         'user_password': '##########',
@@ -323,6 +315,11 @@ PROVIDERS = {
         'user_password': '##########',
     },
     'openid_verisignlabs': {
+        'user_login': USERNAME,
+        'user_password': '##########',
+    },
+    'openid_yahoo': {
+        'user_id': 'https://me.yahoo.com/a/???',
         'user_login': USERNAME,
         'user_password': '##########',
     },
