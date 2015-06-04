@@ -144,8 +144,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': USERNAME,
-        # The picture URL is a random CDN URL
-        'user_picture': '??????????',
     },
     'flickr': {
         'consumer_key': '##########',
@@ -201,8 +199,6 @@ PROVIDERS = {
         'user_id': '??????????',
         'user_username': '??????????',
         'user_country': COUNTRY_ISO2.upper(),
-        'user_gender': 'm',  # m or f
-        'user_locale': 'en',  # e.g. en, de, fr
         'user_location': '{0}, {1}'.format(CITY, COUNTRY_ISO2.upper()),
         'user_timezone': 'Europe/Bratislava',  # e.g. Europe/London
     },

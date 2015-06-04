@@ -7,7 +7,8 @@ from authomatic.providers import oauth1
 conf = fixtures.get_configuration('xing')
 
 LINK = 'https://www.xing.com/profile/{0}'.format(conf.user_username)
-PITURE = re.compile(r'https://x\d+.xingassets.com/assets/frontend_minified/img/users/\w+.140x185.jpg')
+PITURE = re.compile(r'https://x\d+.xingassets.com/assets/frontend_minified/img/'
+                    r'users/\w+.140x185.jpg')
 
 
 CONFIG = {
@@ -24,12 +25,12 @@ CONFIG = {
         'city': conf.user_city,
         'country': conf.user_country,
         'email': conf.user_email,
-        'gender': conf.user_gender,
+        'gender': re.compile(r'^\w$'),
         'id': conf.user_id,
         'first_name': conf.user_first_name,
         'last_name': conf.user_last_name,
         'link': LINK,
-        'locale': conf.user_locale,
+        'locale': re.compile(r'^\w{2}$'),
         'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
@@ -47,11 +48,9 @@ CONFIG = {
         conf.user_country,
         conf.user_email,
         conf.user_first_name,
-        conf.user_gender,
         conf.user_id,
         conf.user_last_name,
         LINK,
-        conf.user_locale,
         conf.user_name,
         conf.user_postal_code,
         conf.user_timezone,
