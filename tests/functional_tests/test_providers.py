@@ -132,11 +132,6 @@ def login(request, browser, app, attempt=1):
         password_xpath = provider.get('password_xpath')
         pre_login_xpaths = provider.get('pre_login_xpaths')
 
-        logout_url = provider.get('logout_url')
-        if logout_url:
-            log(2, provider_name, 'First logging out at {0}'.format(logout_url))
-            browser.get(logout_url)
-
         # Go to login URL to log in
         if login_url:
             log(2, provider_name, 'Going to login URL: {0}'.format(login_url))
@@ -224,7 +219,9 @@ def login(request, browser, app, attempt=1):
                     log(3, provider_name, 'Clicking consent button')
                     button.click()
                 except NoSuchElementException as e:
-                    log(3, provider_name, 'Consent button not found!')
+                    log(3, provider_name,
+                        'Consent button not found! '
+                        '(provider probably remembers consent)')
 
         after_consent_wait = provider.get('after_consent_wait_seconds', 0)
         if after_consent_wait:
@@ -241,6 +238,9 @@ def login(request, browser, app, attempt=1):
             log(3, provider_name, 'Result element not found!')
 
     except NoSuchElementException as e:
+        if request.config.getoption('--login-error-pdb'):
+            log(2, provider_name, 'Entering PDB session')
+            import pdb; pdb.set_trace()
         try:
             log(2, provider_name,
                 'Finding result element after error {0}'.format(e.msg))
@@ -249,31 +249,34 @@ def login(request, browser, app, attempt=1):
             success = True
         except NoSuchElementException:
             log(3, provider_name, 'Result element not found!')
-            raise e
-
-    except Exception as e:
-        if attempt < config.MAX_LOGIN_ATTEMPTS:
-            log(2, provider_name, 'ERROR {0}: {1}'.format(type(e), e))
-
-            if request.config.getoption('--login-error-pdb'):
-                log(2, provider_name, 'Entering PDB session')
-                import pdb
-                pdb.set_trace()
-
-            login(request, browser, app, attempt + 1)
-        else:
-            log(1, provider_name,
-                'Giving up after attempt {0}!'.format(attempt))
-            pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
 
     if success:
         log(1, provider_name, 'SUCCESS')
+    else:
+        if attempt < config.MAX_LOGIN_ATTEMPTS:
+            login(request, browser, app, attempt + 1)
+        else:
+            log(1, provider_name,
+                'Giving up after {0} attempts!'.format(attempt))
+            pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
 
     return provider
 
 
 @pytest.fixture(scope='module', params=PROVIDERS, ids=PROVIDERS_IDS)
 def provider(request, browser, app):
+    provider_name, provider = request.param
+
+    logout_url = provider.get('logout_url')
+    if logout_url:
+        log(0, provider_name, 'Logging out at {0}'.format(logout_url))
+        browser.get(logout_url)
+
+    cookies = browser.get_cookies()
+    if cookies:
+        log(0, provider_name, 'Deleting {0} cookies'.format(len(cookies)))
+        browser.delete_all_cookies()
+
     log(0, request.param[0], 'Logging in')
     return login(request, browser, app)
 
