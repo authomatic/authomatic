@@ -324,11 +324,8 @@ PROVIDERS = {
         'user_password': '##########',
     },
     'openid_wordpress': {
-        'openid_identifier': '{0}.wordpress.com'.format(USERNAME),
         'user_login': EMAIL,
         'user_password': '##########',
-        'user_id': 'https://{0}.wordpress.com/'.format(USERNAME),
-        'user_nickname': NICKNAME,
     },
     'openid_verisignlabs': {
         'openid_identifier': '{0}.pip.verisignlabs.com'.format(USERNAME),
