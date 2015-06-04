@@ -325,16 +325,11 @@ PROVIDERS = {
     },
     'openid_wordpress': {
         'user_login': EMAIL,
+        # user_username is used in the OpenID identifier
         'user_password': '##########',
     },
     'openid_verisignlabs': {
-        'openid_identifier': '{0}.pip.verisignlabs.com'.format(USERNAME),
         'user_login': USERNAME,
         'user_password': '##########',
-        'user_id': 'http://{0}.pip.verisignlabs.com/'.format(USERNAME),
-        'user_nickname': NICKNAME,
-        'user_timezone': '???', # Europe/Bratislava, Europe/Paris ...
-        'user_locale': '???', # Slovak, English ...
-        'user_gender': '???', # M or F
     },
 }
