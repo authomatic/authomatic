@@ -4,6 +4,7 @@ from authomatic.providers import openid
 conf = fixtures.get_configuration('openid_yahoo')
 
 CONFIG = {
+    'openid_identifier': 'me.yahoo.com',
     'login_xpath': '//*[@id="login-username"]',
     'password_xpath': '//*[@id="login-passwd"]',
     'consent_xpaths': [

@@ -315,11 +315,9 @@ PROVIDERS = {
 
     # OpenID
     'openid_yahoo': {
-        'openid_identifier': 'me.yahoo.com',
-        'user_id': '???',
+        'user_id': 'https://me.yahoo.com/a/???',
         'user_login': USERNAME,
         'user_password': '##########',
-        'user_email': '{0}@yahoo.com'.format(USERNAME),
     },
     'openid_livejournal': {
         'openid_identifier': '{0}.livejournal.com'.format(USERNAME),
