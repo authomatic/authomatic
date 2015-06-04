@@ -13,6 +13,9 @@ CONFIG = {
     'consent_wait_seconds': 3,
     'class_': oauth2.Reddit,
     'scope': oauth2.Reddit.user_info_scope,
+    'access_headers': {
+        'User-Agent': ('Authomatic.py Automated Functional Tests'),
+    },
     'user': {
         'id': conf.user_id,
         'email': None,
