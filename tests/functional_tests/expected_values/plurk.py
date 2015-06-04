@@ -1,3 +1,6 @@
+import re
+
+
 import fixtures
 import constants
 from authomatic.providers import oauth1
@@ -19,19 +22,19 @@ CONFIG = {
         'city': conf.user_city,
         'country': conf.user_country,
         'email': conf.user_email,
-        'gender': conf.user_gender,
+        'gender': re.compile(r'^\d$'),
         'id': conf.user_id,
         'first_name': None,
         'last_name': None,
         'link': LINK,
-        'locale': conf.user_locale,
+        'locale': re.compile(r'^\w{2}$'),
         'location': conf.user_location,
         'name': conf.user_name,
         'nickname': conf.user_nickname,
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
-        'timezone': conf.user_timezone,
+        'timezone': 'UTC',
         'username': conf.user_username,
     },
     'content_should_contain': [
@@ -39,14 +42,11 @@ CONFIG = {
         conf.user_city,
         conf.user_country,
         conf.user_email,
-        conf.user_gender,
         conf.user_id,
-        conf.user_locale,
         conf.user_location,
         conf.user_name,
         conf.user_nickname,
         PICTURE.replace('/', r'\/'),
-        conf.user_timezone,
         conf.user_username,
 
         # User info JSON keys
