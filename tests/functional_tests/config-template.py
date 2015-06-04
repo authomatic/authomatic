@@ -270,10 +270,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        # User link contains a slug derived from the username.
-        'user_link': 'http://www.linkedin.com/in/??????????',
-        'user_picture': '??????????',
-        'user_location': COUNTRY_ISO2,
     },
     'paypal': {
         'consumer_key': '##########',

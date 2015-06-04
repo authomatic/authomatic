@@ -7,8 +7,6 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('linkedin')
 
-PICTURE = re.compile(r'^https://media.licdn.com/mpr/mprx/[\w_-]+$')
-
 
 CONFIG = {
     'login_xpath': '//*[@id="session_key-oauth2SAuthorizeForm"]',
@@ -25,13 +23,13 @@ CONFIG = {
         'gender': None,
         'id': conf.user_id,
         'last_name': conf.user_last_name,
-        'link': conf.user_link,
+        'link': re.compile(r'^https://www\.linkedin\.com/in/\w+$'),
         'locale': None,
-        'location': conf.user_location,
+        'location': re.compile(r'^\w{2}$'),
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
-        'picture': PICTURE,
+        'picture': re.compile(r'^https://media.licdn.com/mpr/mprx/[\w_-]+$'),
         'postal_code': None,
         'timezone': None,
         'username': None,
@@ -42,7 +40,6 @@ CONFIG = {
         conf.user_first_name,
         conf.user_id,
         conf.user_last_name,
-        conf.user_link,
         conf.user_name,
 
         # User info JSON keys
