@@ -320,10 +320,8 @@ PROVIDERS = {
         'user_password': '##########',
     },
     'openid_livejournal': {
-        'openid_identifier': '{0}.livejournal.com'.format(USERNAME),
         'user_login': USERNAME,
         'user_password': '##########',
-        'user_id': 'http://{0}.livejournal.com/'.format(USERNAME)
     },
     'openid_wordpress': {
         'openid_identifier': '{0}.wordpress.com'.format(USERNAME),
