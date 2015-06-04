@@ -24,7 +24,7 @@ CONFIG = {
         'city': conf.user_city,
         'country': conf.user_country,
         'email': None,
-        'gender': conf.user_gender,
+        'gender': re.compile(r'^\w$'),
         'id': conf.user_id,
         'first_name': None,
         'last_name': None,
@@ -42,7 +42,6 @@ CONFIG = {
     'content_should_contain': [
         '"birthYear":"{0:%Y}",'.format(conf.user_birth_date),
         '"birthdate":"{0:%m/%d}",'.format(conf.user_birth_date),
-        conf.user_gender,
         conf.user_id,
         LINK,
         conf.user_location,

@@ -206,7 +206,6 @@ PROVIDERS = {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_password': '##########',
-        'user_gender': 'M' # M or F
     },
 
     # OAuth 2.0
