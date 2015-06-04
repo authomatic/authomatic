@@ -15,8 +15,9 @@ CONFIG = {
     'login_xpath': u'//*[@id="email"]',
     'password_xpath': u'//*[@id="pass"]',
     'consent_xpaths': [
-        u'//*[@id="platformDialogForm"]/div[2]/div/table/tbody/tr/td[2]/button[2]'
+        '//*[@id="platformDialogForm"]/div[2]/table/tbody/tr/td[2]/button[2]'
     ],
+    'after_consent_wait_seconds': 1,
     'class_': oauth2.Facebook,
     'scope': oauth2.Facebook.user_info_scope,
     'user': {
@@ -56,7 +57,7 @@ CONFIG = {
         # User info JSON keys
         'bio', 'birthday', 'email', 'first_name', 'gender', 'id', 'last_name',
         'link', 'locale', 'location', 'name', 'timezone', 'updated_time',
-        'verified', 'website'
+        'verified'
     ],
     # Case insensitive
     'content_should_not_contain':

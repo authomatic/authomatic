@@ -7,9 +7,7 @@ conf = fixtures.get_configuration('twitter')
 CONFIG = {
     'login_xpath': '//*[@id="username_or_email"]',
     'password_xpath': '//*[@id="password"]',
-    'consent_xpaths': [
-        # '//*[@id="allow"]',
-    ],
+    'consent_xpaths': [],
     'class_': oauth1.Twitter,
     'user': {
         'birth_date': None,

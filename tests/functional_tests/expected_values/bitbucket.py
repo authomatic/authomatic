@@ -14,7 +14,9 @@ CONFIG = {
     'logout_url': 'https://bitbucket.org/account/signout/',
     'login_xpath': '//*[@id="id_username"]',
     'password_xpath': '//*[@id="id_password"]',
-    'consent_xpaths': [],
+    'consent_xpaths': [
+        '//*[@id="oauth-authorize"]/section/form/div/div/button',
+    ],
     'class_': oauth1.Bitbucket,
     'user': {
         'birth_date': None,

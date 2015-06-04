@@ -11,9 +11,7 @@ CONFIG = {
     'logout_url': 'https://foursquare.com/logout',
     'login_xpath': '//*[@id="username"]',
     'password_xpath': '//*[@id="password"]',
-    'consent_xpaths': [
-        '//*[@id="loginFormButton"]',
-    ],
+    'consent_xpaths': [],
     'class_': oauth2.Foursquare,
     'scope': oauth2.Foursquare.user_info_scope,
     'user': {

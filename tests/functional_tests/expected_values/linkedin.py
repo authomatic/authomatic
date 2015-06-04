@@ -13,9 +13,7 @@ PICTURE = re.compile(r'^https://media.licdn.com/mpr/mprx/[\w_-]+$')
 CONFIG = {
     'login_xpath': '//*[@id="session_key-oauth2SAuthorizeForm"]',
     'password_xpath': '//*[@id="session_password-oauth2SAuthorizeForm"]',
-    'consent_xpaths': [
-        '//*[@id="body"]/div/form/div[2]/ul/li[1]/input',
-    ],
+    'consent_xpaths': [],
     'class_': oauth2.LinkedIn,
     'scope': oauth2.LinkedIn.user_info_scope,
     'user': {

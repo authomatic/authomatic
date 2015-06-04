@@ -10,8 +10,7 @@ CONFIG = {
     'login_xpath': '//*[@id="ap_email"]',
     'password_xpath': '//*[@id="ap_password"]',
     'consent_xpaths': [
-        # '//*[@id="signInSubmit"]/span/button',
-        # '//*[@id="ap-oaconsent-agree-button"]/span/button',
+        '//*[@id="ap-oaconsent-agree-button"]/span/button',
     ],
     'class_': oauth2.Amazon,
     'scope': oauth2.Amazon.user_info_scope,
