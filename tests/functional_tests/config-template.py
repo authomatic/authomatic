@@ -165,7 +165,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        'user_nickname': USERNAME,
     },
     'twitter': {
         'consumer_key': '##########',
@@ -178,7 +177,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': USERNAME,
-        'user_name': USERNAME,
     },
     'vimeo': {
         'consumer_key': '##########',
@@ -197,10 +195,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        'user_username': '??????????',
-        'user_country': COUNTRY_ISO2.upper(),
-        'user_location': '{0}, {1}'.format(CITY, COUNTRY_ISO2.upper()),
-        'user_timezone': 'Europe/Bratislava',  # e.g. Europe/London
     },
     'yahoo': {
         'consumer_key': '##########',
