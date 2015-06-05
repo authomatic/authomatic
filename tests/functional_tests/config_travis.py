@@ -8,7 +8,6 @@ import sys
 from pyvirtualdisplay import Display
 from selenium import webdriver
 
-import config
 import constants
 
 
@@ -82,6 +81,7 @@ INCLUDE_PROVIDERS = [
 ]
 
 if __name__ == '__main__':
+    import config
     travis_config = {}
     travis_config['common'] = config.COMMON
     travis_config['providers'] = config.PROVIDERS
