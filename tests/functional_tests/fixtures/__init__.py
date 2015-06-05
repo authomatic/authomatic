@@ -29,11 +29,11 @@ sys.path.append(FUNCTIONAL_TESTS_PATH)
 
 from tests.functional_tests import expected_values
 
-
-if os.environ.get('TRAVIS'):
-    from tests.functional_tests import config_travis as config
-else:
-    from tests.functional_tests import config
+from tests.functional_tests import config
+# if os.environ.get('TRAVIS'):
+#     from tests.functional_tests import config_travis as config
+# else:
+#     from tests.functional_tests import config
 
 
 # Create template environment to load templates.
