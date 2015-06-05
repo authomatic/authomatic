@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 from collections import namedtuple
-from os import path
+import os
 import pkgutil
 import sys
 import time
@@ -24,15 +24,21 @@ from authomatic.six.moves import reload_module
 # Tis is necessary for the following imports to work when this module is
 # imported from the expected_values.* modules.
 
-FUNCTIONAL_TESTS_PATH = path.join(path.dirname(__file__), '..')
+FUNCTIONAL_TESTS_PATH = os.path.join(os.path.dirname(__file__), '..')
 sys.path.append(FUNCTIONAL_TESTS_PATH)
 
-from tests.functional_tests import config
 from tests.functional_tests import expected_values
 
 
+if os.environ.get('TRAVIS'):
+    from tests.functional_tests import config_travis as config
+else:
+    from tests.functional_tests import config
+
+
 # Create template environment to load templates.
-TEMPLATES_DIR = path.join(path.abspath(path.dirname(__file__)), '..', 'templates')
+TEMPLATES_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                             '..', 'templates')
 env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
 
 BIRTH_DATE_FORMAT = '%m-%d-%Y'
@@ -156,7 +162,7 @@ def get_configuration(provider):
     return Res(**conf)
 
 
-expected_values_path = path.dirname(expected_values.__file__)
+expected_values_path = os.path.dirname(expected_values.__file__)
 
 # Loop through all modules of the expected_values package.
 for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):

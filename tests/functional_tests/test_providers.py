@@ -20,9 +20,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 import pytest
 import liveandletdie
 
-from tests.functional_tests import config
+# from tests.functional_tests import config
 from tests.functional_tests import fixtures
 import constants
+
+if os.environ.get('TRAVIS'):
+    from tests.functional_tests import config_travis as config
+else:
+    from tests.functional_tests import config
 
 
 ME = os.path.dirname(__file__)
