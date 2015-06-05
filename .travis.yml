@@ -1,7 +1,8 @@
 language: python
 before_install:  openssl aes-256-cbc -K $encrypted_cd197f1c301c_key -iv $encrypted_cd197f1c301c_iv -in tests/functional_tests/config.py.enc -out tests/functional_tests/config.py -d
 install: pip install -r requirements.txt
-script: tox
+script: tox -e py27
+after_script: cat tests/functional_tests/login-py27.log
 addons:
   hosts:
     - authomatic.com
