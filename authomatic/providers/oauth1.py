@@ -663,7 +663,7 @@ class Twitter(OAuth1):
                 _city, _country = _split_location
                 user.country = _country.strip()
             else:
-                _city = _split_location
+                _city = _split_location[0]
             user.city = _city.strip()
         return user
 
