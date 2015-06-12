@@ -21,6 +21,7 @@ Providers which implement the |oauth1|_ protocol.
     Yahoo
     
 """
+from __builtin__ import len
 
 import abc
 import authomatic.core as core
@@ -582,7 +583,6 @@ class Plurk(OAuth1):
         user.gender = _user.get('gender')
         user.timezone = _user.get('timezone')
         user.picture = 'http://avatars.plurk.com/{0}-big2.jpg'.format(user.id)
-        
         user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
         user.country = user.country.strip()
@@ -610,6 +610,7 @@ class Twitter(OAuth1):
     * id
     * link
     * locale
+    * location
     * name
     * picture
     * username
@@ -656,9 +657,14 @@ class Twitter(OAuth1):
 
         _location = data.get('location', '')
         if _location:
-            _city, _country = _location.split(',')
+            user.location = _location.strip()
+            _split_location = _location.split(',')
+            if len(_split_location) > 1:
+                _city, _country = _split_location
+                user.country = _country.strip()
+            else:
+                _city = _split_location
             user.city = _city.strip()
-            user.country = _country.strip()
         return user
 
 
