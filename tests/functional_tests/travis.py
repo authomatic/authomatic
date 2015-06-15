@@ -16,6 +16,13 @@ app = liveandletdie.Flask(
     ssl=True,
 )
 
-app.live()
-print('x' * 100)
+try:
+    print('check url = {0}'.format(app.check_url))
+    app.live(kill_port=True)
+    print('lives')
+except Exception as e:
+    print(e)
+    print('try again')
+    app.live(kill_port=True, check_url='https://authomatic.com:8080')
+
 app.die()
