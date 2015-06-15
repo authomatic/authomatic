@@ -41,6 +41,8 @@ PROVIDERS = sorted([(k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items()
 PROVIDERS_IDS = [k for k, v in PROVIDERS]
 PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
 
+CHECK_URL = 'https://authomatic.com'
+
 ALL_APPS = {
     'Django': liveandletdie.Django(
         os.path.join(EXAMPLES_DIR, 'django/functional_test'),
@@ -52,7 +54,7 @@ ALL_APPS = {
         os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
         host=config.HOST,
         port=config.PORT,
-        check_url=config.HOST_ALIAS,
+        check_url=CHECK_URL,
         ssl=True,
     ),
     'Pyramid': liveandletdie.WsgirefSimpleServer(
