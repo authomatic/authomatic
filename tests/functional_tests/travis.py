@@ -11,9 +11,9 @@ app = liveandletdie.Flask(
     os.path.join(ME, '../../examples/flask/functional_test/main.py'),
     host=HOST,
     port=PORT,
-    check_url='https://authomatic.com:8080',
-    logging=True,
-    ssl=True,
+    check_url='http://authomatic.com:8080',
+    # ssl=True,
+    logging=True
 )
 
 print('check url = {0}'.format(app.check_url))
