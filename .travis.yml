@@ -13,4 +13,4 @@ before_script:
 - java -jar selenium-server-standalone-2.46.0.jar > /tmp/selenium.log 2> /tmp/selenium.error
   &
 #script: PYTHONPATH=. python examples/flask/functional_test/main.py --liveandletdie=127.0.0.1:8080 --ssl=1 & sleep 5 && python tests/functional_tests/travis2.py
-script: PYTHONPATH=. python examples/flask/functional_test/main.py --liveandletdie=127.0.0.1:8080 --ssl=1 & sleep 5 && wget https://authomatic.com:8080
+script: PYTHONPATH=. python examples/flask/functional_test/main.py --liveandletdie=127.0.0.1:8080 --ssl=1 & sleep 5 && wget --no-check-certificate https://authomatic.com:8080
