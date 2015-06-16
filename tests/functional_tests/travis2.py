@@ -1,16 +1,14 @@
-import functools
-from urllib2 import urlopen
-import ssl
+import httplib
 
 
-old_init = ssl.SSLSocket.__init__
 
-@functools.wraps(old_init)
-def ubuntu_openssl_bug_965371(self, *args, **kwargs):
-    kwargs['ssl_version'] = ssl.PROTOCOL_TLSv1
-    old_init(self, *args, **kwargs)
+# print urlopen('https://authomatic.com:8080', context=ctx).read()
 
-ssl.SSLSocket.__init__ = ubuntu_openssl_bug_965371
+connection = httplib.HTTPSConnection('authomatic.com', 8080)
 
+connection.request('GET', '/')
 
-print urlopen('https://authomatic.com:8080').read()
+response = connection.getresponse()
+
+print response.status
+print response.read()
