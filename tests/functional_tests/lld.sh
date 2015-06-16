@@ -1,0 +1,1 @@
+pip install -e 'git+https://github.com/peterhudec/liveandletdie.git@requests#egg=liveandletdie'
