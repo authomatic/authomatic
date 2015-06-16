@@ -21,7 +21,7 @@ from authomatic.six.moves import reload_module
 
 
 # Add path of the functional_tests_path package to PYTHONPATH.
-# Tis is necessary for the following imports to work when this module is
+# This is necessary for the following imports to work when this module is
 # imported from the expected_values.* modules.
 
 FUNCTIONAL_TESTS_PATH = os.path.join(os.path.dirname(__file__), '..')
@@ -30,10 +30,6 @@ sys.path.append(FUNCTIONAL_TESTS_PATH)
 from tests.functional_tests import expected_values
 
 from tests.functional_tests import config
-# if os.environ.get('TRAVIS'):
-#     from tests.functional_tests import config_travis as config
-# else:
-#     from tests.functional_tests import config
 
 
 # Create template environment to load templates.

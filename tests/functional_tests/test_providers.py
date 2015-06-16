@@ -8,6 +8,7 @@ import sys
 import time
 from authomatic.six.moves.urllib import parse
 
+import requests
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import (
@@ -20,16 +21,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 import pytest
 import liveandletdie
 
-# from tests.functional_tests import config
 from tests.functional_tests import fixtures
 import constants
 
-# if os.environ.get('TRAVIS'):
-#     from tests.functional_tests import config_travis as config
-# else:
-#     from tests.functional_tests import config
 from tests.functional_tests import config
 
+
+requests.packages.urllib3.disable_warnings()
 
 ME = os.path.dirname(__file__)
 LOG_PATH = os.path.join(ME, 'login-py{0}{1}.log'.format(sys.version_info[0],
