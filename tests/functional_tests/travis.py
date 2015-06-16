@@ -1,6 +1,8 @@
 import os
+from urllib2 import urlopen
 
 import liveandletdie
+import OpenSSL
 
 ME = os.path.dirname(__file__)
 HOST = '127.0.0.1'
