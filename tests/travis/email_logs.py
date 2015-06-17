@@ -1,3 +1,5 @@
+"""Travis is blocking SMTP ports so this is for the time being useles."""
+
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
