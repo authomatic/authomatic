@@ -8,7 +8,8 @@ conf = fixtures.get_configuration('bitbucket')
 
 
 LINK = 'https://bitbucket.org/api/1.0/users/{0}'.format(conf.user_username)
-PICTURE = re.compile(r'^https://secure.gravatar.com/avatar/.*\.png&s=32$')
+PICTURE = ('https://bitbucket.org/account/{0}/avatar/32/'
+           .format(conf.user_username))
 
 CONFIG = {
     'logout_url': 'https://bitbucket.org/account/signout/',
@@ -44,6 +45,7 @@ CONFIG = {
         conf.user_last_name,
         conf.user_username,
         conf.user_name,
+        PICTURE,
 
         # User info JSON keys
         'avatar', 'display_name', 'first_name', 'is_staff', 'is_team',
