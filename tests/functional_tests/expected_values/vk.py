@@ -11,8 +11,8 @@ conf = fixtures.get_configuration('vk')
 PICTURE = re.compile(r'http://[A-Za-z0-9]+\.vk\.me/[A-Za-z0-9-/]+\.jpg')
 
 CONFIG = {
-    'login_xpath': '//*[@id="box"]/div/input[5]',
-    'password_xpath': '//*[@id="box"]/div/input[6]',
+    'login_xpath': '//*[@id="box"]/div/input[6]',
+    'password_xpath': '//*[@id="box"]/div/input[7]',
     'consent_xpaths': [
         '//*[@id="install_allow"]',
     ],
