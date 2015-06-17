@@ -87,7 +87,7 @@ def login_decorator(func):
         except Exception as e:
             if provider.settings.report_errors:
                 error = e
-                provider._log(logging.ERROR, 'Reported suppressed exception: {0}!'.format(repr(error)))
+                provider._log(logging.ERROR, u'Reported suppressed exception: {0}!'.format(repr(error)))
             else:
                 if provider.settings.debug:
                     # TODO: Check whether it actually works without middleware
@@ -104,7 +104,7 @@ def login_decorator(func):
             if isinstance(provider.session, authomatic.core.Session):
                 provider.session.delete()
             
-            provider._log(logging.INFO, 'Procedure finished.')
+            provider._log(logging.INFO, u'Procedure finished.')
             
             if provider.callback:
                 provider.callback(result)
@@ -375,12 +375,12 @@ class BaseProvider(object):
                 headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
         request_path = parse.urlunsplit(('', '', path or '', query or '', ''))
         
-        self._log(logging.DEBUG, ' \u251C\u2500 host: {0}'.format(host))
-        self._log(logging.DEBUG, ' \u251C\u2500 path: {0}'.format(request_path))
-        self._log(logging.DEBUG, ' \u251C\u2500 method: {0}'.format(method))
-        self._log(logging.DEBUG, ' \u251C\u2500 body: {0}'.format(body))
-        self._log(logging.DEBUG, ' \u251C\u2500 params: {0}'.format(params))
-        self._log(logging.DEBUG, ' \u2514\u2500 headers: {0}'.format(headers))
+        self._log(logging.DEBUG, u' \u251C\u2500 host: {0}'.format(host))
+        self._log(logging.DEBUG, u' \u251C\u2500 path: {0}'.format(request_path))
+        self._log(logging.DEBUG, u' \u251C\u2500 method: {0}'.format(method))
+        self._log(logging.DEBUG, u' \u251C\u2500 body: {0}'.format(body))
+        self._log(logging.DEBUG, u' \u251C\u2500 params: {0}'.format(params))
+        self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(headers))
         
         # Connect
         if scheme.lower() == 'https':
@@ -407,8 +407,8 @@ class BaseProvider(object):
             elif max_redirects > 0:
                 remaining_redirects = max_redirects - 1
                 
-                self._log(logging.DEBUG, 'Redirecting to {0}'.format(url))
-                self._log(logging.DEBUG, 'Remaining redirects: {0}'
+                self._log(logging.DEBUG, u'Redirecting to {0}'.format(url))
+                self._log(logging.DEBUG, u'Remaining redirects: {0}'
                           .format(remaining_redirects))
                 
                 # Call this method again.
@@ -423,10 +423,10 @@ class BaseProvider(object):
                                  url=location,
                                  status=response.status)
         else:
-            self._log(logging.DEBUG, 'Got response:')
-            self._log(logging.DEBUG, ' \u251C\u2500 url: {0}'.format(url))
-            self._log(logging.DEBUG, ' \u251C\u2500 status: {0}'.format(response.status))
-            self._log(logging.DEBUG, ' \u2514\u2500 headers: {0}'.format(response.getheaders()))
+            self._log(logging.DEBUG, u'Got response:')
+            self._log(logging.DEBUG, u' \u251C\u2500 url: {0}'.format(url))
+            self._log(logging.DEBUG, u' \u251C\u2500 status: {0}'.format(response.status))
+            self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(response.getheaders()))
                 
         return authomatic.core.Response(response, content_parser)
     
@@ -743,11 +743,11 @@ class AuthorizationProvider(BaseProvider):
         """
         
         if not self.user and not self.credentials:
-            raise CredentialsError('There is no authenticated user!')
+            raise CredentialsError(u'There is no authenticated user!')
         
         headers = headers or {}
         
-        self._log(logging.INFO, 'Accessing protected resource {0}.'.format(url))
+        self._log(logging.INFO, u'Accessing protected resource {0}.'.format(url))
         
         request_elements = self.create_request_elements(request_type=self.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                         credentials=self.credentials,
@@ -761,7 +761,7 @@ class AuthorizationProvider(BaseProvider):
                               max_redirects=max_redirects,
                               content_parser=content_parser)
         
-        self._log(logging.INFO, 'Got response. HTTP status = {0}.'.format(response.status))
+        self._log(logging.INFO, u'Got response. HTTP status = {0}.'.format(response.status))
         return response
 
 

@@ -250,7 +250,7 @@ class OAuth2(providers.AuthorizationProvider):
                                                         url=self.access_token_url,
                                                         method='POST')
         
-        self._log(logging.INFO, 'Refreshing credentials.')
+        self._log(logging.INFO, u'Refreshing credentials.')
         response = self._fetch(*request_elements)
         
         # We no longer need consumer info.
@@ -292,32 +292,32 @@ class OAuth2(providers.AuthorizationProvider):
                 # Phase 2 after redirect with success
                 #===================================================================
                 
-                self._log(logging.INFO, 'Continuing OAuth 2.0 authorization procedure after redirect.')
+                self._log(logging.INFO, u'Continuing OAuth 2.0 authorization procedure after redirect.')
                 
                 # validate CSRF token
                 if self.supports_csrf_protection:
-                    self._log(logging.INFO, 'Validating request by comparing request state with stored state.')
+                    self._log(logging.INFO, u'Validating request by comparing request state with stored state.')
                     stored_state = self._session_get('state')
                     
                     if not stored_state:
-                        raise FailureError('Unable to retrieve stored state!')
+                        raise FailureError(u'Unable to retrieve stored state!')
                     elif not stored_state == state:
-                        raise FailureError('The returned state "{0}" doesn\'t match with the stored state!'.format(state),
+                        raise FailureError(u'The returned state "{0}" doesn\'t match with the stored state!'.format(state),
                                            url=self.user_authorization_url)
-                    self._log(logging.INFO, 'Request is valid.')
+                    self._log(logging.INFO, u'Request is valid.')
                 else:
-                    self._log(logging.WARN, 'Skipping CSRF validation!')
+                    self._log(logging.WARN, u'Skipping CSRF validation!')
             
             elif not self.user_authorization_url:
                 #===================================================================
                 # Phase 1 without user authorization redirect.
                 #===================================================================
                 
-                self._log(logging.INFO, 'Starting OAuth 2.0 authorization procedure without ' + \
-                                        'user authorization redirect.')
+                self._log(logging.INFO, u'Starting OAuth 2.0 authorization procedure without ' + \
+                                        u'user authorization redirect.')
             
             # exchange authorization code for access token by the provider
-            self._log(logging.INFO, 'Fetching access token from {0}.'.format(self.access_token_url))
+            self._log(logging.INFO, u'Fetching access token from {0}.'.format(self.access_token_url))
             
             self.credentials.token = authorization_code
             
@@ -342,10 +342,10 @@ class OAuth2(providers.AuthorizationProvider):
                                   status=response.status,
                                   url=self.access_token_url)
             
-            self._log(logging.INFO, 'Got access token.')
+            self._log(logging.INFO, u'Got access token.')
             
             if refresh_token:
-                self._log(logging.INFO, 'Got refresh access token.')
+                self._log(logging.INFO, u'Got refresh access token.')
             
             # OAuth 2.0 credentials need access_token, refresh_token, token_type and expire_in.
             self.credentials.token = access_token
@@ -386,7 +386,7 @@ class OAuth2(providers.AuthorizationProvider):
             # Phase 1 before redirect
             #===================================================================
             
-            self._log(logging.INFO, 'Starting OAuth 2.0 authorization procedure.')
+            self._log(logging.INFO, u'Starting OAuth 2.0 authorization procedure.')
             
             csrf = ''
             if self.supports_csrf_protection:
@@ -395,7 +395,7 @@ class OAuth2(providers.AuthorizationProvider):
                 # and store it to session
                 self._session_set('state', csrf)
             else:
-                self._log(logging.WARN, 'Provider doesn\'t support CSRF validation!')
+                self._log(logging.WARN, u'Provider doesn\'t support CSRF validation!')
                         
             request_elements = self.create_request_elements(request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
                                                             credentials=self.credentials,
@@ -405,7 +405,7 @@ class OAuth2(providers.AuthorizationProvider):
                                                             csrf=csrf,
                                                             params=self.user_authorization_params)
             
-            self._log(logging.INFO, 'Redirecting user to {0}.'.format(request_elements.full_url))
+            self._log(logging.INFO, u'Redirecting user to {0}.'.format(request_elements.full_url))
             
             self.redirect(request_elements.full_url)
 

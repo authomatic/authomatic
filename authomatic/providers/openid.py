@@ -118,11 +118,11 @@ class SessionOpenIDStore(object):
         assoc = self.session.get(self.ASSOCIATION_KEY)
         if assoc and assoc[0] == server_url:
             # If found deserialize and return it.
-            self._log(logging.DEBUG, 'SessionOpenIDStore: Association found.')
+            self._log(logging.DEBUG, u'SessionOpenIDStore: Association found.')
             return Association.deserialize(assoc[2].encode('latin-1'))
         else:
             self._log(logging.DEBUG,
-                      'SessionOpenIDStore: Association not found.')
+                      u'SessionOpenIDStore: Association not found.')
 
     def removeAssociation(self, server_url, handle):
         # Just inform the caller that it's gone.
@@ -134,7 +134,7 @@ class SessionOpenIDStore(object):
         if age < self.nonce_timeout:
             return True
         else:
-            self._log(logging.ERROR, 'SessionOpenIDStore: Expired nonce!')
+            self._log(logging.ERROR, u'SessionOpenIDStore: Expired nonce!')
             return False
 
 
@@ -304,7 +304,7 @@ class OpenID(providers.AuthenticationProvider):
             # Realm HTML
             #===================================================================
             
-            self._log(logging.INFO, 'Writing OpenID realm HTML to the response.')
+            self._log(logging.INFO, u'Writing OpenID realm HTML to the response.')
             xrds_location = '{u}?{x}={x}'.format(u=self.url, x=self.xrds_param)
             self.write(REALM_HTML.format(xrds_location=xrds_location, body=self.realm_body))
             
@@ -313,7 +313,7 @@ class OpenID(providers.AuthenticationProvider):
             # XRDS XML
             #===================================================================
             
-            self._log(logging.INFO, 'Writing XRDS XML document to the response.')
+            self._log(logging.INFO, u'Writing XRDS XML document to the response.')
             self.set_header('Content-Type', 'application/xrds+xml')
             self.write(XRDS_XML.format(return_to=self.url))
         
@@ -322,7 +322,7 @@ class OpenID(providers.AuthenticationProvider):
             # Phase 2 after redirect
             #===================================================================
             
-            self._log(logging.INFO, 'Continuing OpenID authentication procedure after redirect.')
+            self._log(logging.INFO, u'Continuing OpenID authentication procedure after redirect.')
             
             # complete the authentication process
             response = oi_consumer.complete(self.params, self.url)            
@@ -335,12 +335,12 @@ class OpenID(providers.AuthenticationProvider):
                 # get user ID
                 data['guid'] = response.getDisplayIdentifier()
 
-                self._log(logging.INFO, 'Authentication successful.')
+                self._log(logging.INFO, u'Authentication successful.')
                 
                 # get user data from AX response
                 ax_response = ax.FetchResponse.fromSuccessResponse(response)
                 if ax_response and ax_response.data:
-                    self._log(logging.INFO, 'Got AX data.')
+                    self._log(logging.INFO, u'Got AX data.')
                     ax_data = {}
                     # convert iterable values to their first item
                     for k, v in ax_response.data.items():
@@ -352,14 +352,14 @@ class OpenID(providers.AuthenticationProvider):
                 # get user data from SREG response
                 sreg_response = sreg.SRegResponse.fromSuccessResponse(response)
                 if sreg_response and sreg_response.data:
-                    self._log(logging.INFO, 'Got SREG data.')
+                    self._log(logging.INFO, u'Got SREG data.')
                     data['sreg'] = sreg_response.data
                                 
                 
                 # get data from PAPE response
                 pape_response = pape.Response.fromSuccessResponse(response)
                 if pape_response and pape_response.auth_policies:
-                    self._log(logging.INFO, 'Got PAPE data.')
+                    self._log(logging.INFO, u'Got PAPE data.')
                     data['pape'] = pape_response.auth_policies
                 
                 # create user
@@ -370,7 +370,7 @@ class OpenID(providers.AuthenticationProvider):
                 #===============================================================
             
             elif response.status == consumer.CANCEL:
-                raise CancellationError('User cancelled the verification of ID "{0}"!'.format(response.getDisplayIdentifier()))
+                raise CancellationError(u'User cancelled the verification of ID "{0}"!'.format(response.getDisplayIdentifier()))
             
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
@@ -380,17 +380,17 @@ class OpenID(providers.AuthenticationProvider):
             # Phase 1 before redirect
             #===================================================================
             
-            self._log(logging.INFO, 'Starting OpenID authentication procedure.')
+            self._log(logging.INFO, u'Starting OpenID authentication procedure.')
             
             # get AuthRequest object
             try:
                 auth_request = oi_consumer.begin(self.identifier)
             except consumer.DiscoveryFailure as e:
-                raise FailureError('Discovery failed for identifier {0}!'.format(self.identifier),
+                raise FailureError(u'Discovery failed for identifier {0}!'.format(self.identifier),
                                    url=self.identifier,
                                    original_message=e.message)
             
-            self._log(logging.INFO, 'Service discovery for identifier {0} successful.'.format(self.identifier))
+            self._log(logging.INFO, u'Service discovery for identifier {0} successful.'.format(self.identifier))
             
             # add SREG extension
             # we need to remove required fields from optional fields because addExtension then raises an error
@@ -420,12 +420,12 @@ class OpenID(providers.AuthenticationProvider):
             if auth_request.shouldSendRedirect():
                 # can be redirected
                 url = auth_request.redirectURL(realm, return_to)
-                self._log(logging.INFO, 'Redirecting user to {0}.'.format(url))
+                self._log(logging.INFO, u'Redirecting user to {0}.'.format(url))
                 self.redirect(url)
             else:
                 # must be sent as POST
                 # this writes a html post form with auto-submit
-                self._log(logging.INFO, 'Writing an auto-submit HTML form to the response.')
+                self._log(logging.INFO, u'Writing an auto-submit HTML form to the response.')
                 form = auth_request.htmlMarkup(realm, return_to, False, dict(id='openid_form'))
                 self.write(form)
         else:
