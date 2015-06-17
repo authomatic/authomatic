@@ -13,8 +13,8 @@ ME = os.path.dirname(__file__)
 TESTS_DIR = os.path.join(ME, '..')
 
 
-if __name__ == '__main__':
-    smtpserver = smtplib.SMTP("smtp.gmail.com",587)
+if __name__ == '__main__' and config.SEND_LOGS:
+    smtpserver = smtplib.SMTP(config.SMTP_HOST, config.SMTP_PORT)
     smtpserver.ehlo()
     smtpserver.starttls()
     smtpserver.ehlo()
@@ -36,8 +36,7 @@ if __name__ == '__main__':
     )
     msg['Subject'] = subject
     msg.attach(MIMEText(
-        "Authomatic Travis CI logs\n"
-        "-------------------------\n\n"
+        "Authomatic Travis CI Logs\n\n"
         "Build:\t\t{build}\n"
         "Repository:\t{repo}\n"
         "Branch:\t\t{branch}\n"
@@ -46,7 +45,8 @@ if __name__ == '__main__':
         .format(build=build, repo=repo, branch=branch, commit=commit, pr=pr)
     ))
 
-    logs = glob(TESTS_DIR + '/functional_tests/*.log') + glob(ME + '/*.log')
+    logs = glob(TESTS_DIR + '/functional_tests/*.log') + \
+           glob(TESTS_DIR + '/*.log')
 
     for log in logs:
         with open(log) as f:
@@ -54,6 +54,7 @@ if __name__ == '__main__':
             attachment.add_header('Content-Disposition', 'attachment', filename=os.path.basename(log))
             msg.attach(attachment)
 
-    print('Sending logs to {0}'.format(config.EMAIL_TO))
+    print('Sending logs')
     smtpserver.sendmail(config.SMTP_LOGIN, config.EMAIL_TO, msg.as_string())
     smtpserver.close()
+    print('Done')
