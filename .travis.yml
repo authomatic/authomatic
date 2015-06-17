@@ -8,5 +8,6 @@ before_install:
 install: pip install tox
 script: tox
 after_script:
-- . .tox/py27/bin/activate
-- PYTHONPATH=:. python tests/travis/email_logs.py
+- cat tests/**/*.log
+#- . .tox/py27/bin/activate
+#- PYTHONPATH=:. python tests/travis/email_logs.py
