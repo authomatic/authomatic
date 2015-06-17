@@ -26,7 +26,7 @@ if __name__ == '__main__':
     pr = os.environ.get('TRAVIS_PULL_REQUEST', '<pull-request>')
     build = os.environ.get('TRAVIS_BUILD_NUMBER', '<build>')
 
-    subject = ('Authomatic Travis CI logs of build #{0} {1} | {2} | {3}'
+    subject = ('Authomatic Travis CI logs of build #{0} ({1} | {2} | {3})'
                .format(build, repo, branch, commit))
 
     msg = MIMEMultipart(
