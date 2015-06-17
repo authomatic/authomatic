@@ -14,10 +14,12 @@ TESTS_DIR = os.path.join(ME, '..')
 
 
 if __name__ == '__main__' and config.SEND_LOGS:
+    print('connecting to {0}'.format(config.SMTP_HOST))
     smtpserver = smtplib.SMTP(config.SMTP_HOST, config.SMTP_PORT)
     smtpserver.ehlo()
     smtpserver.starttls()
     smtpserver.ehlo()
+    print('Logging in')
     smtpserver.login(config.SMTP_LOGIN, config.SMTP_PASSWORD)
 
     repo = os.environ.get('TRAVIS_REPO_SLUG', '<repository>')
@@ -48,13 +50,17 @@ if __name__ == '__main__' and config.SEND_LOGS:
     logs = glob(TESTS_DIR + '/functional_tests/*.log') + \
            glob(TESTS_DIR + '/*.log')
 
+    print('Sending logs')
+
     for log in logs:
+        filename = os.path.basename(log)
+        print('  ' + filename)
         with open(log) as f:
             attachment = MIMEText(f.read())
-            attachment.add_header('Content-Disposition', 'attachment', filename=os.path.basename(log))
+            attachment.add_header('Content-Disposition', 'attachment',
+                                  filename=filename)
             msg.attach(attachment)
 
-    print('Sending logs')
     smtpserver.sendmail(config.SMTP_LOGIN, config.EMAIL_TO, msg.as_string())
     smtpserver.close()
     print('Done')
