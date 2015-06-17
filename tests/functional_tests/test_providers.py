@@ -183,6 +183,11 @@ def login(request, browser, app, attempt=1):
             log(3, provider_name, 'Filling out login')
             login_element.send_keys(conf.user_login)
 
+            enter_after_login_input = provider.get('enter_after_login_input')
+            if enter_after_login_input:
+                log(3, provider_name, 'Hitting ENTER after login input')
+                login_element.send_keys(Keys.ENTER)
+
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)

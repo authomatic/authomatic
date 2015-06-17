@@ -13,6 +13,7 @@ CONFIG = {
     'logout_url': 'https://accounts.google.com/Logout',
     'login_xpath': '//*[@id="Email"]',
     'password_xpath': '//*[@id="Passwd"]',
+    'enter_after_login_input': True,
     'consent_xpaths': [
         '//*[@id="submit_approve_access"]',
     ],
