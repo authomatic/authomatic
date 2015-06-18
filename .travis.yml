@@ -7,5 +7,7 @@ before_install:
   -in tests/functional_tests/config.py.enc -out tests/functional_tests/config.py -d
 install: pip install tox
 script: tox
+after_failure:
+- tail -n 1000000 tests/*.log
 after_script:
 - tail -n 1000000 tests/functional_tests/*.log
