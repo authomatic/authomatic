@@ -16,6 +16,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="display_board"]/div[2]/div/form/input[5]',
     ],
+    'consent_wait_seconds': 5,
     'class_': oauth1.Plurk,
     'user': {
         'birth_date': conf.user_birth_date_str,
