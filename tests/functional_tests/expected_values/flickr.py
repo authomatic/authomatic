@@ -10,7 +10,7 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="permissions"]/form/div/input[1]',
     ],
-    'consent_wait_seconds': 3,
+    'consent_wait_seconds': 6,
     'logout_url': 'https://login.yahoo.com/config/login?logout=1',
     'class_': oauth1.Flickr,
     'user': {
