@@ -29,6 +29,8 @@ from tests.functional_tests import config
 
 requests.packages.urllib3.disable_warnings()
 
+VIRTUALENV_NAME = os.path.basename(os.environ.get('VIRTUAL_ENV', ''))
+
 ME = os.path.dirname(__file__)
 LOG_PATH = os.path.join(ME, 'login-py{0}{1}.log'.format(sys.version_info[0],
                                                         sys.version_info[1]))
@@ -82,7 +84,8 @@ def teardown_module():
 
 def log(indent, provider_name, message):
     tab_width = 2
-    logger.info('{provider:.<{padding}}{indent}{message}'.format(
+    logger.info('({venv}) {provider:.<{padding}}{indent}{message}'.format(
+        venv=VIRTUALENV_NAME,
         provider=provider_name,
         padding=PROVIDER_NAME_WIDTH + 3,
         indent=' ' * tab_width * indent,
