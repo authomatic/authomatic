@@ -1,17 +1,15 @@
-#!/usr/bin/expect
+#!/usr/bin/env bash
+
+git config --global user.email "travis@authomatic.com"
+git config --global user.name "Travis CI"
+
 git clone $GIT_REPO logs-repo
-
-
-#cp $(grep -rl --include="*.log" --exclude=".*" --exclude="logs-repo" .) logs-repo
 
 cp ../*.log logs-repo
 cp ../**/*.log logs-repo
 cp ../**/**/*.log logs-repo
 
 cd logs-repo
-
-#git checkout --track -b $GIT_BRANCH origin/$GIT_BRANCH
-#git pull
 
 git status
 git add -A
@@ -20,3 +18,4 @@ git commit -m "build=$TRAVIS_BUILD_NUMBER repo=$TRAVIS_REPO_SLUG branch=$TRAVIS_
 git status
 
 expect ../tests/travis/git-logs.tcl
+expect ../tests/travis/git-logs2.tcl
