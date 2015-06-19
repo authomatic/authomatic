@@ -9,6 +9,4 @@ before_install:
 - sudo apt-get install -y expect
 install: pip install tox
 script: tox -e py27 -- --tb=no
-after_script:
-- . .tox/py27/bin/activate
-- PYTHONPATH=. python ./tests/travis/git_logs.py
+after_script: tail -n 1000000 tests/functional_tests/*.log
