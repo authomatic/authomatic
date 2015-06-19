@@ -18,4 +18,3 @@ git commit -m "build=$TRAVIS_BUILD_NUMBER repo=$TRAVIS_REPO_SLUG branch=$TRAVIS_
 git status
 
 expect ../tests/travis/git-logs.tcl
-expect ../tests/travis/git-logs2.tcl

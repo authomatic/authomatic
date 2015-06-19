@@ -1,3 +1,4 @@
+import hashlib
 import os
 import subprocess
 
@@ -10,5 +11,6 @@ if __name__ == '__main__':
     os.environ['GIT_BRANCH'] = config.GIT_BRANCH
     os.environ['GIT_USER'] = config.GIT_USER
     os.environ['GIT_PASSWORD'] = config.GIT_PASSWORD
+    os.environ['GIT_PASSWORD_HASH'] = hashlib.sha1(config.GIT_PASSWORD).hexdigest()
 
     subprocess.call(["sh", "tests/travis/git-logs.sh"])
