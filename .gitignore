@@ -37,3 +37,4 @@ e2/
 e
 .tox/
 *.log
+logs-repo

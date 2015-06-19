@@ -5,6 +5,7 @@ addons:
 before_install:
 - openssl aes-256-cbc -K $encrypted_cd197f1c301c_key -iv $encrypted_cd197f1c301c_iv
   -in tests/functional_tests/config.py.enc -out tests/functional_tests/config.py -d
+- apt-get install expect
 install: pip install tox
-script: tox -- --tb=no
-after_script: tail -n 1000000 tests/functional_tests/*.log
+script: tox -e py27 -- --tb=no
+after_script: PYTHONPATH=. python ./tests/travis/git_logs.py
