@@ -1,6 +1,13 @@
 #!/usr/bin/expect
 git clone $GIT_REPO logs-repo
-cp $(grep -rl --include="*.log" --exclude=".*" --exclude="logs-repo" .) logs-repo
+
+
+#cp $(grep -rl --include="*.log" --exclude=".*" --exclude="logs-repo" .) logs-repo
+
+cp ../*.log logs-repo
+cp ../**/*.log logs-repo
+cp ../**/**/*.log logs-repo
+
 cd logs-repo
 
 #git checkout --track -b $GIT_BRANCH origin/$GIT_BRANCH
