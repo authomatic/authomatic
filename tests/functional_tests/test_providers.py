@@ -188,6 +188,7 @@ def login(request, browser, app, attempt=1):
 
             enter_after_login_input = provider.get('enter_after_login_input')
             if enter_after_login_input:
+                # import pdb; pdb.set_trace()
                 log(3, provider_name, 'Hitting ENTER after login input')
                 login_element.send_keys(Keys.ENTER)
 
@@ -197,6 +198,12 @@ def login(request, browser, app, attempt=1):
 
             log(3, provider_name, 'Filling out password')
             password_element.send_keys(conf.user_password)
+
+            before_login_enter_wait = provider.get('before_login_enter_wait', 0)
+            if before_login_enter_wait:
+                log(2, provider_name, 'Waiting {0} seconds before hitting ENTER'
+                    .format(before_login_enter_wait))
+                time.sleep(before_login_enter_wait)
 
             log(2, provider_name, 'Hitting ENTER')
             password_element.send_keys(Keys.ENTER)
