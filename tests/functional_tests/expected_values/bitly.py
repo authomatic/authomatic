@@ -25,7 +25,7 @@ CONFIG = {
     'user': {
         'id': conf.user_id,
         'email': None,
-        'username': conf.user_username,
+        'username': conf.user_name,
         'name': conf.user_name,
         'first_name': None,
         'last_name': None,
