@@ -10,7 +10,7 @@ import constants
 def get_browser():
     global display
 
-    display = Display(visible=1, size=(1024, 768))
+    display = Display(visible=0, size=(1024, 768))
     display.start()
     return webdriver.Firefox()
 

@@ -3,8 +3,10 @@ addons:
   hosts:
   - authomatic.com
 before_install:
+- openssl aes-256-cbc -K $encrypted_5fa87d13797d_key -iv $encrypted_5fa87d13797d_iv
+  -in tests/functional_tests/config.py.enc -out tests/functional_tests/config.py -d
 - openssl aes-256-cbc -K $encrypted_cd197f1c301c_key -iv $encrypted_cd197f1c301c_iv
   -in tests/functional_tests/config.py.enc -out tests/functional_tests/config.py -d
 install: pip install tox
-script: tox -e py27 -- --tb=no
-after_script: tail -n 1000000 tests/functional_tests/*.log
+script: tox -- --tb=no
+after_failure: tail -n 1000000 tests/functional_tests/*.logFZ4W7ZlLs1vKa2hr9usW8P/6/054fkYhRPZS1dg30zi7xqBGlViVUn2PQLek5TYj/ugNoH01+NS3i+AUzL+oSS5NpA2QwD7s5cImsVtLlh4wegT2aGfZ5Wno=
