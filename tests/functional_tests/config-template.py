@@ -188,7 +188,6 @@ PROVIDERS = {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_password': '##########',
-        'user_id': '??????????',
     },
     'xing': {
         'consumer_key': '##########',

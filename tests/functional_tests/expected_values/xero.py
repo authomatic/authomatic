@@ -1,3 +1,5 @@
+import re
+
 import fixtures
 import constants
 from authomatic.providers import oauth1
@@ -22,7 +24,7 @@ CONFIG = {
         'country': None,
         'email': conf.user_email,
         'gender': None,
-        'id': conf.user_id,
+        'id': re.compile(r'\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'),
         'first_name': conf.user_first_name,
         'last_name': conf.user_last_name,
         'link': None,
@@ -39,7 +41,6 @@ CONFIG = {
     'content_should_contain': [
         conf.user_email,
         conf.user_first_name,
-        conf.user_id,
         conf.user_last_name,
         conf.user_name,
 
