@@ -168,6 +168,89 @@ If you want **tox** to only run tests for let's say
 
     (e)$ tox -e py26, py34
 
+Deployment to Travis CI
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Register at `Travis CI <https://travis-ci.org/>`__ and configure your fork
+of Authomatic (read the `getting started section
+<http://docs.travis-ci.com/user/getting-started/>`__ if you don't know how).
+
+Install the `Travis CI command line client
+<https://github.com/travis-ci/travis.rb>`__.
+
+.. code-block:: bash
+
+    (e)$ sudo gem install travis
+
+Log in.
+
+.. code-block:: bash
+
+    (e)$ travis login --org
+
+Comment out ``'linkedin'`` and ``'windowslive'`` providers from the
+``INCLUDE_PROVIDERS`` list in the ``tests/functional_tests/config.py``
+config (These providers complain when somebody is trying to log in from
+an unusual location).
+
+.. code-block:: python
+
+    # tests/functional_tests/config.p
+
+    INCLUDE_PROVIDERS = [
+        'bitbucket',
+        'flickr',
+        'meetup',
+        'plurk',
+        'twitter',
+        'tumblr',
+        # UbuntuOne service is no longer available
+        # 'ubuntuone',
+        'vimeo',
+        'xero',
+        'xing',
+        'yahoo',
+
+        'amazon',
+        # 'behance', # Behance doesn't support third party authorization anymore.
+        'bitly',
+        'deviantart',
+        'eventbrite',
+        'facebook',
+        'foursquare',
+        'google',
+        'github',
+        # 'linkedin',
+        'paypal',
+        'reddit',
+        'vk',
+        # 'windowslive',
+        'yammer',
+        'yandex',
+
+        'openid_livejournal',
+        'openid_verisignlabs',
+        'openid_wordpress',
+        'openid_yahoo',
+    ]
+
+Encrypt the config and add it automatically to ``.travis.yml``.
+
+.. code-block:: bash
+
+    (e)$ travis encrypt-file tests/functional_tests/config.py tests/functional_tests/config.py.enc --add
+
+Commit the encrypted config and updated ``.travis.yml`` and push it to GitHub.
+
+.. code-block:: bash
+
+    (e)$ git add .travis.yml tests/functional_tests/config.py.enc
+    (e)$ git commit -m 'Updated Travis CI config.'
+    (e)$ git push
+
+Go to ``https://travis-ci.org/<your-github-username>/authomatic/builds/`` and
+watch it pass (hopefully).
+
 Running the Examples
 --------------------
 
