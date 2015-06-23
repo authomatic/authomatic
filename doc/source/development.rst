@@ -189,7 +189,7 @@ Log in.
     (e)$ travis login --org
 
 Comment out ``'linkedin'`` and ``'windowslive'`` providers from the
-``INCLUDE_PROVIDERS`` list in the ``tests/functional_tests/config.py``
+``INCLUDE_PROVIDERS`` list in the ``./tests/functional_tests/config.py``
 config (These providers complain when somebody is trying to log in from
 an unusual location).
 
@@ -234,17 +234,17 @@ an unusual location).
         'openid_yahoo',
     ]
 
-Encrypt the config and add it automatically to ``.travis.yml``.
+Encrypt the config and add it automatically to ``./.travis.yml``.
 
 .. code-block:: bash
 
-    (e)$ travis encrypt-file tests/functional_tests/config.py tests/functional_tests/config.py.enc --add
+    (e)$ travis encrypt-file ./tests/functional_tests/config.py ./tests/functional_tests/config.py.enc --add
 
-Commit the encrypted config and updated ``.travis.yml`` and push it to GitHub.
+Commit the encrypted config and updated ``./.travis.yml`` and push it to GitHub.
 
 .. code-block:: bash
 
-    (e)$ git add .travis.yml tests/functional_tests/config.py.enc
+    (e)$ git add ./.travis.yml ./tests/functional_tests/config.py.enc
     (e)$ git commit -m 'Updated Travis CI config.'
     (e)$ git push
 
