@@ -17,6 +17,10 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="submit_approve_access"]',
     ],
+    'human_interaction_before_password': (
+        '//*[@id="identifier-captcha-input"]',
+        1
+    ),
     'consent_wait_seconds': 5,
     'class_': oauth2.Google,
     'scope': oauth2.Google.user_info_scope,

@@ -128,6 +128,31 @@ def login(request, browser, app, attempt=1):
     provider_name, provider = request.param
     log(1, provider_name, 'Attempt {0}'.format(attempt))
 
+    def human_interaction_needed(xpath, sleep=0):
+        log(2, provider_name, 'Checking if human interaction is needed')
+        try:
+            time.sleep(sleep)
+            el = browser.find_element_by_xpath(xpath)
+            if el.is_displayed():
+                print('Human interaction is needed (captcha or similar)!')
+                print('Go to the browser, do the interaction and hit "c".')
+
+                if os.environ.get('TRAVIS'):
+                    message = ('Human interaction needed, '
+                               'but not possible on Travis CI!')
+                    log(3, provider_name, message)
+                    pytest.fail(message)
+                    return
+
+                log(3, provider_name, 'Entering PDB for human interaction')
+                import pdb; pdb.set_trace()
+                log(3, provider_name, 'Returned from PDB')
+                return
+        except NoSuchElementException:
+            pass
+
+        log(3, provider_name, 'Not needed')
+
     try:
         provider['name'] = provider_name
         conf = fixtures.get_configuration(provider_name)
@@ -184,19 +209,25 @@ def login(request, browser, app, attempt=1):
             login_element = browser.find_element_by_xpath(login_xpath)
 
             log(3, provider_name, 'Filling out login')
+            login_element.clear()
             login_element.send_keys(conf.user_login)
 
             enter_after_login_input = provider.get('enter_after_login_input')
             if enter_after_login_input:
-                # import pdb; pdb.set_trace()
                 log(3, provider_name, 'Hitting ENTER after login input')
                 login_element.send_keys(Keys.ENTER)
+
+            hi_xpath, hi_sleep = provider\
+                .get('human_interaction_before_password')
+            if hi_xpath:
+                human_interaction_needed(hi_xpath, hi_sleep)
 
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)
 
             log(3, provider_name, 'Filling out password')
+            password_element.clear()
             password_element.send_keys(conf.user_password)
 
             before_login_enter_wait = provider.get('before_login_enter_wait', 0)
@@ -279,6 +310,9 @@ def login(request, browser, app, attempt=1):
         else:
             log(1, provider_name,
                 'Giving up after {0} attempts!'.format(attempt))
+
+            # import pdb; pdb.set_trace()
+
             pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
 
     return provider
