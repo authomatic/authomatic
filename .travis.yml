@@ -8,3 +8,11 @@ after_failure: tail -n 1000000 tests/functional_tests/*.log
 before_install:
 - openssl aes-256-cbc -K $encrypted_5fa87d13797d_key -iv $encrypted_5fa87d13797d_iv
   -in tests/functional_tests/config.py.enc -out tests/functional_tests/config.py -d
+- sudo apt-get install build-essential chrpath git-core libssl-dev libfontconfig1-dev
+- git clone git://github.com/ariya/phantomjs.git
+- cd phantomjs
+- git checkout 1.8
+- ./build.sh
+- git remote add detro https://github.com/detro/phantomjs.git
+- git fetch detro && git checkout -b detro-ghostdriver-dev remotes/detro/ghostdriver-dev
+- ./build.sh
