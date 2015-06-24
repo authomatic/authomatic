@@ -3,7 +3,7 @@ addons:
   hosts:
   - authomatic.com
 install: pip install tox
-script: tox -e py27 -- --tb=no
+script: tox -e py27
 after_failure: tail -n 1000000 tests/functional_tests/*.log
 before_install:
 - openssl aes-256-cbc -K $encrypted_5fa87d13797d_key -iv $encrypted_5fa87d13797d_iv
