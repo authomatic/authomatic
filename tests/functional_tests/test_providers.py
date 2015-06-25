@@ -84,11 +84,11 @@ def teardown_module():
 
 def log(indent, provider_name, message):
     tab_width = 2
-    logger.info('({venv}) {provider:.<{padding}}{indent}{message}'.format(
+    logger.info(u'({venv}) {provider:.<{padding}}{indent}{message}'.format(
         venv=VIRTUALENV_NAME,
         provider=provider_name,
         padding=PROVIDER_NAME_WIDTH + 3,
-        indent=' ' * tab_width * indent,
+        indent=u' ' * tab_width * indent,
         message=message
     ))
 
@@ -128,12 +128,21 @@ def login(request, browser, app, attempt=1):
     provider_name, provider = request.param
     log(1, provider_name, 'Attempt {0}'.format(attempt))
 
-    def human_interaction_needed(xpath, sleep=0):
+    def wait(seconds):
+        seconds = seconds or 0
+        seconds = seconds * config.WAIT_MULTIPLIER
+        if seconds < config.MIN_WAIT:
+            seconds = config.MIN_WAIT
+
+        if seconds:
+            log(0, provider_name, u' waiting {0} seconds '
+                .format(seconds).center(60, '#'))
+            time.sleep(seconds)
+
+    def human_interaction_needed(xpath, seconds=0):
         log(2, provider_name, 'Checking if human interaction is needed')
         try:
-            sleep = sleep * config.WAIT_MULTIPLIER + config.MIN_WAIT
-            log(3, provider_name, 'Waiting {0} seconds'.format(sleep))
-            time.sleep(sleep)
+            wait(seconds)
             el = browser.find_element_by_xpath(xpath)
             if el.is_displayed():
                 print('Human interaction is needed (captcha or similar)!')
@@ -228,20 +237,10 @@ def login(request, browser, app, attempt=1):
             log(3, provider_name, 'Filling out password')
             password_element.send_keys(conf.user_password)
 
-            before_login_enter_wait = provider.get('before_login_enter_wait', 0) * config.WAIT_MULTIPLIER + config.MIN_WAIT
-            if before_login_enter_wait:
-                log(2, provider_name, 'Waiting {0} seconds before hitting ENTER'
-                    .format(before_login_enter_wait))
-                time.sleep(before_login_enter_wait)
-
+            wait(provider.get('before_login_enter_wait'))
             log(2, provider_name, 'Hitting ENTER')
             password_element.send_keys(Keys.ENTER)
-
-            after_login_wait = provider.get('after_login_wait_seconds', 0) * config.WAIT_MULTIPLIER + config.MIN_WAIT
-            if after_login_wait:
-                log(2, provider_name, 'Waiting {0} seconds after login'
-                    .format(after_login_wait))
-                time.sleep(after_login_wait)
+            wait(provider.get('after_login_wait_seconds'))
 
         if login_url:
             # Return back from login URL
@@ -252,18 +251,14 @@ def login(request, browser, app, attempt=1):
 
         # Andy authorizes this app to access his protected resources.
         consent_xpaths = provider.get('consent_xpaths')
-        consent_wait_seconds = provider.get('consent_wait_seconds', 0) * config.WAIT_MULTIPLIER + config.MIN_WAIT
 
         if consent_xpaths:
             for xpath in consent_xpaths:
                 try:
-                    if consent_wait_seconds:
-                        log(2, provider_name,
-                            'Waiting {0} seconds before consent'
-                            .format(consent_wait_seconds))
-                        time.sleep(consent_wait_seconds)
+                    wait(provider.get('consent_wait_seconds'))
 
-                    log(2, provider_name, 'Finding consent button {0}'.format(xpath))
+                    log(2, provider_name,
+                        'Finding consent button {0}'.format(xpath))
                     button = browser.find_element_by_xpath(xpath)
 
                     log(3, provider_name, 'Clicking consent button')
@@ -273,11 +268,7 @@ def login(request, browser, app, attempt=1):
                         'Consent button not found! '
                         '(provider probably remembers consent)')
 
-        after_consent_wait = provider.get('after_consent_wait_seconds', 0) * config.WAIT_MULTIPLIER + config.MIN_WAIT
-        if after_consent_wait:
-            log(2, provider_name, 'Waiting {0} seconds after consent'
-                .format(after_consent_wait))
-            time.sleep(after_consent_wait)
+        wait(provider.get('after_consent_wait_seconds'))
 
         try:
             log(2, provider_name, 'Finding result element')
