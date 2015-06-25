@@ -217,10 +217,9 @@ def login(request, browser, app, attempt=1):
                 log(3, provider_name, 'Hitting ENTER after login input')
                 login_element.send_keys(Keys.ENTER)
 
-            hi_xpath, hi_sleep = provider\
-                .get('human_interaction_before_password')
-            if hi_xpath:
-                human_interaction_needed(hi_xpath, hi_sleep)
+            hi = provider.get('human_interaction_before_password')
+            if hi:
+                human_interaction_needed(*hi)
 
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
