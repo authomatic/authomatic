@@ -2,7 +2,7 @@ language: objective-c
 addons:
   hosts:
   - authomatic.com
-install: pip install tox
+install: sudo pip install tox
 script: tox -e py27
 after_failure: tail -n 1000000 tests/*.log
 before_install:
