@@ -12,7 +12,6 @@ CONFIG = {
     'logout_url': 'https://bitly.com/a/sign_out',
     'pre_login_xpaths': [
         '//*[@id="sign-in"]/div[2]/fieldset/div/a',
-        '//*[@id="sign-in"]/div[3]/fieldset/label/a',
     ],
     'login_xpath': '//*[@id="sign-in"]/div[3]/fieldset/label[1]/input',
     'password_xpath': '//*[@id="sign-in"]/div[3]/fieldset/label[2]/input',

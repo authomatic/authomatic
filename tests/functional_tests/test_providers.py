@@ -209,6 +209,7 @@ def login(request, browser, app, attempt=1):
             login_element = browser.find_element_by_xpath(login_xpath)
 
             log(3, provider_name, 'Filling out login')
+            login_element.click()
             login_element.clear()
             login_element.send_keys(conf.user_login)
 
@@ -224,8 +225,8 @@ def login(request, browser, app, attempt=1):
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)
-
             log(3, provider_name, 'Filling out password')
+            password_element.click()
             password_element.clear()
             password_element.send_keys(conf.user_password)
 
