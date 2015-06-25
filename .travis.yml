@@ -3,7 +3,7 @@ addons:
   hosts:
   - authomatic.com
 install: sudo pip install tox
-script: tox -- -vv --tb=no
+script: tox -e py34 -- -vv --tb=no
 after_failure:
 - tail -n 1000000 tests/functional_tests/*.log
 - tail -n 1000000 tests/*.log
@@ -13,3 +13,4 @@ before_install:
 - brew update
 - brew install caskroom/cask/brew-cask
 - brew cask install google-chrome
+- brew install python3
