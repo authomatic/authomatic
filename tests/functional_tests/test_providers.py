@@ -131,6 +131,8 @@ def login(request, browser, app, attempt=1):
     def human_interaction_needed(xpath, sleep=0):
         log(2, provider_name, 'Checking if human interaction is needed')
         try:
+            sleep = sleep * config.WAIT_MULTIPLIER + config.MIN_WAIT
+            log(3, provider_name, 'Waiting {0} seconds'.format(sleep))
             time.sleep(sleep)
             el = browser.find_element_by_xpath(xpath)
             if el.is_displayed():
@@ -226,7 +228,7 @@ def login(request, browser, app, attempt=1):
             log(3, provider_name, 'Filling out password')
             password_element.send_keys(conf.user_password)
 
-            before_login_enter_wait = provider.get('before_login_enter_wait', 0)
+            before_login_enter_wait = provider.get('before_login_enter_wait', 0) * config.WAIT_MULTIPLIER + config.MIN_WAIT
             if before_login_enter_wait:
                 log(2, provider_name, 'Waiting {0} seconds before hitting ENTER'
                     .format(before_login_enter_wait))
@@ -235,7 +237,7 @@ def login(request, browser, app, attempt=1):
             log(2, provider_name, 'Hitting ENTER')
             password_element.send_keys(Keys.ENTER)
 
-            after_login_wait = provider.get('after_login_wait_seconds', 0)
+            after_login_wait = provider.get('after_login_wait_seconds', 0) * config.WAIT_MULTIPLIER + config.MIN_WAIT
             if after_login_wait:
                 log(2, provider_name, 'Waiting {0} seconds after login'
                     .format(after_login_wait))
@@ -250,7 +252,7 @@ def login(request, browser, app, attempt=1):
 
         # Andy authorizes this app to access his protected resources.
         consent_xpaths = provider.get('consent_xpaths')
-        consent_wait_seconds = provider.get('consent_wait_seconds', 0)
+        consent_wait_seconds = provider.get('consent_wait_seconds', 0) * config.WAIT_MULTIPLIER + config.MIN_WAIT
 
         if consent_xpaths:
             for xpath in consent_xpaths:
@@ -271,7 +273,7 @@ def login(request, browser, app, attempt=1):
                         'Consent button not found! '
                         '(provider probably remembers consent)')
 
-        after_consent_wait = provider.get('after_consent_wait_seconds', 0)
+        after_consent_wait = provider.get('after_consent_wait_seconds', 0) * config.WAIT_MULTIPLIER + config.MIN_WAIT
         if after_consent_wait:
             log(2, provider_name, 'Waiting {0} seconds after consent'
                 .format(after_consent_wait))
