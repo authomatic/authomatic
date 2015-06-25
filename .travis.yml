@@ -1,5 +1,4 @@
-os: osx
-language: python
+language: objective-c
 addons:
   hosts:
   - authomatic.com
