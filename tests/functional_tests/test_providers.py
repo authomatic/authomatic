@@ -12,9 +12,10 @@ import requests
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import (
-    WebDriverException,
+    NoSuchElementException,
     TimeoutException,
     UnexpectedAlertPresentException,
+    WebDriverException,
 )
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
