@@ -11,12 +11,9 @@
    development
    changelog
 
-Features
-========
-
 .. include:: ../../README.rst
    :start-line: 35
-   :end-line: 83
+   :end-line: 88
 
 .. contents::
    :backlinks: none

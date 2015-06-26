@@ -39,11 +39,11 @@ Features
 * Loosely coupled.
 * Tiny but powerful interface.
 * The |pyopenid|_ library is the only **optional** dependency.
-* CSRF protection.
-* **Framework agnostic** thanks to adapters. Out of the box support for **Django**, **Flask**, **Pyramid** and **Webapp2**.
-* Ready to accommodate future authorization / authentication protocols.
-* Makes calls to provider APIs a breeze.
-* Supports asynchronous requests.
+* **Framework agnostic** thanks to adapters.
+  Out of the box support for **Django**, **Flask**, **Pyramid** and **Webapp2**.
+* Ready to accommodate future authorization/authentication protocols.
+* Makes provider API callls a breeze.
+* Asynchronous requests.
 * JavaScript library as a bonus.
 * Out of the box support for:
 
@@ -86,10 +86,6 @@ If you want to contribute, please read the
 `Development Guide <http://peterhudec.github.io/authomatic/development.html>`__
 first. The project is hosted on
 `GitHub <https://github.com/peterhudec/authomatic>`__.
-
-If you find this library useful and are using it in your projects,
-please don't be shy and leave a comment about your use case on the
-`Authomatic use cases <https://github.com/peterhudec/authomatic/issues/1>`_ issue.
 
 Usage
 =====
