@@ -83,7 +83,7 @@ Documentation Compilation and Deployment
 
 .. warning::
 
-    Allways keep the documentation in sync with the latest code changes.
+    Always keep the documentation in sync with the latest code changes.
 
 Compile the documentation with this commands:
 
@@ -114,7 +114,7 @@ Testing
 -------
 
 Tests are written in `pytest <http://pytest.org/>`__
-and `Tox <https://testrun.org/tox>`__ is used to run them in
+and `Tox <https://testrun.org/tox>`__ is used to run them against
 **Python 2.6**, **Python 2.7** and **Python 3.4**.
 
 
@@ -122,7 +122,6 @@ There are currently only *functional* (*end-to-end*)
 `Selenium <http://seleniumhq.org>`__ tests.
 They are designed to test the *login procedure* and
 *credentials refreshment* and to discover changes in provider APIs.
-Currently the tests cover all of the |oauth2| and select |openid| providers.
 
 To run *functional* tests, you first need to create the
 ``./tests/functional_tests/config.py`` module by copying and filling out the
@@ -135,7 +134,7 @@ To run *functional* tests, you first need to create the
 
 If you want to run tests for all of the covered providers,
 you should register an **application** and a **user account** by each of them
-and fill out **all possible** settings in the user profile.
+and fill out **all possible** settings of the user profile.
 You can exclude providers from the tests by comenting them out of the
 ``INCLUDE_PROVIDERS`` list.
 
@@ -191,36 +190,15 @@ Log in.
 Tweak the Travis CI specific settings in ``./tests/functional_tests/config.py``,
 or better leave it as it is.
 
+.. literalinclude:: ../../tests/functional_tests/config-template.py
+   :language: python
+   :lines: 92-108
+
 .. note::
 
     **LinkedIn** and **WindowsLive** add a *captcha* to the user login form
-    if the user tries to log in from an unusual location.
-
-.. code-block:: python
-
-    # tests/functional_tests/config.py
-
-    # (...)
-
-    # Recommended setup for Travis CI environment.
-    if os.environ.get('TRAVIS'):
-        MAX_LOGIN_ATTEMPTS = 20
-        WAIT_MULTIPLIER = 2
-        MIN_WAIT = 2
-
-        # LinkedIn and WindowsLive include a captcha in the login form
-        # if a user logs in from an unusual location.
-        INCLUDE_PROVIDERS = list(set(INCLUDE_PROVIDERS) -
-                                 set(['linkedin', 'windowslive']))
-
-        def get_browser():
-            # Eventbrite has problems with the login form on Firefox
-            return webdriver.Chrome()
-
-        def teardown():
-            pass
-
-    # (...)
+    if the user tries to log in from an unusual location
+    like the Travis CI servers in the US.
 
 Encrypt the config and add it automatically to ``./.travis.yml``.
 
@@ -247,14 +225,35 @@ If you want to run any of the ``./examples/`` just copy the example's
 activate one of the virtual environments in ``./tox/`` and run the example
 the usual way according to its framework.
 
-.. note::
+Example of launching the :doc:`examples/django-simple` with Python 3.4:
 
-    The examples for functional tests
-    (currently there is only one in ``./examples/flask/functional_test/``)
-    use the **config** from ``./tests/functional_tests/config.py``.
+.. code-block:: bash
+
+    $ . ./.tox/py34/bin/activate
+    (py34)$ cp ./examples/django/example/simple/config-template.py ./examples/django/example/simple/config.py
+    (py34)$ vim ./examples/django/example/simple/config.py
+    (py34)$ ./examples/django/example/manage.py runserver
+
+Example of launching the :doc:`examples/flask-simple` with Python 2.6:
+
+.. code-block:: bash
+
+    $ . ./.tox/py26/bin/activate
+    (py26)$ cp ./examples/flask/werkzeug_adapter/config-template.py ./examples/flask/werkzeug_adapter/config.py
+    (py26)$ vim ./examples/flask/werkzeug_adapter/config.py
+    (py26)$ python ./examples/flask/werkzeug_adapter/main.py
+
+Example of launching the :doc:`examples/credentials` with Python 2.7:
 
 .. note::
 
     The |gae| examples will only work in **Python 2.7**
-    The |gae| command line tools are installed in the ``./tox/py27/bin``
-    directory.
+    The |gae| command line tools are installed in the ``./tox/py27``
+    virtual environment.
+
+.. code-block:: bash
+
+    $ . ./.tox/py27/bin/activate
+    (py27)$ cp ./examples/gae/credentials/config-template.py ./examples/gae/credentials//config.py
+    (py27)$ vim ./examples/gae/credentials/config.py
+    (py27)$ dev_appserver ./examples/gae/credentials/
