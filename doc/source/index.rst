@@ -11,6 +11,9 @@
    development
    changelog
 
+.. image:: https://travis-ci.org/peterhudec/authomatic.svg?branch=master
+   :target: https://travis-ci.org/peterhudec/authomatic
+
 .. include:: ../../README.rst
    :start-line: 35
    :end-line: 88
