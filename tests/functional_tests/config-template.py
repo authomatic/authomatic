@@ -1,26 +1,38 @@
 # -*- coding: utf-8 -*-
 import datetime
+import os
 
 from pyvirtualdisplay import Display
 from selenium import webdriver
 
 import constants
 
+
 # Choose and configure the browser of your choice
 def get_browser():
-    global display
+    # # These work on Mac
+    # return webdriver.Chrome()
+    # return webdriver.Firefox()
 
+    # On Linux you need to initialize a display
+    global display
     display = Display(visible=0, size=(1024, 768))
     display.start()
     return webdriver.Firefox()
 
 
+# If present and callable, it will be called at the end of the whole test suite
 def teardown():
     global display
     display.stop()
 
 
-MAX_LOGIN_ATTEMPTS = 10
+# A failed login by a provider will be retried so many times as set here
+MAX_LOGIN_ATTEMPTS = 3
+# Multiplies the wait times set in expected values
+WAIT_MULTIPLIER = 1
+# Minimum wait time
+MIN_WAIT = 0
 
 # The host and port where the tested ap shoud listen.
 HOST = '127.0.0.1'
@@ -76,6 +88,24 @@ INCLUDE_PROVIDERS = [
     'openid_wordpress',
     'openid_yahoo',
 ]
+
+# Recommended setup for Travis CI environment.
+if os.environ.get('TRAVIS'):
+    MAX_LOGIN_ATTEMPTS = 20
+    WAIT_MULTIPLIER = 2
+    MIN_WAIT = 2
+
+    # LinkedIn and WindowsLive include a captcha in the login form
+    # if a user logs in from an unusual location.
+    INCLUDE_PROVIDERS = list(set(INCLUDE_PROVIDERS) -
+                             set(['linkedin', 'windowslive']))
+
+    def get_browser():
+        # Eventbrite has problems with the login form on Firefox
+        return webdriver.Chrome()
+
+    def teardown():
+        pass
 
 # Use these constants if you have the same user info by all tested providers.
 EMAIL = 'andy.pipkin@littlebritain.co.uk'

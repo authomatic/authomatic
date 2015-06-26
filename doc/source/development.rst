@@ -188,51 +188,39 @@ Log in.
 
     (e)$ travis login --org
 
-Comment out ``'linkedin'`` and ``'windowslive'`` providers from the
-``INCLUDE_PROVIDERS`` list in the ``./tests/functional_tests/config.py``
-config (These providers complain when somebody is trying to log in from
-an unusual location).
+Tweak the Travis CI specific settings in ``./tests/functional_tests/config.py``,
+or better leave it as it is.
+
+.. note::
+
+    **LinkedIn** and **WindowsLive** add a *captcha* to the user login form
+    if the user tries to log in from an unusual location.
 
 .. code-block:: python
 
-    # tests/functional_tests/config.p
+    # tests/functional_tests/config.py
 
-    INCLUDE_PROVIDERS = [
-        'bitbucket',
-        'flickr',
-        'meetup',
-        'plurk',
-        'twitter',
-        'tumblr',
-        # UbuntuOne service is no longer available
-        # 'ubuntuone',
-        'vimeo',
-        'xero',
-        'xing',
-        'yahoo',
+    # (...)
 
-        'amazon',
-        # 'behance', # Behance doesn't support third party authorization anymore.
-        'bitly',
-        'deviantart',
-        'eventbrite',
-        'facebook',
-        'foursquare',
-        'google',
-        'github',
-        # 'linkedin',
-        'paypal',
-        'reddit',
-        'vk',
-        # 'windowslive',
-        'yammer',
-        'yandex',
+    # Recommended setup for Travis CI environment.
+    if os.environ.get('TRAVIS'):
+        MAX_LOGIN_ATTEMPTS = 20
+        WAIT_MULTIPLIER = 2
+        MIN_WAIT = 2
 
-        'openid_livejournal',
-        'openid_verisignlabs',
-        'openid_wordpress',
-        'openid_yahoo',
-    ]
+        # LinkedIn and WindowsLive include a captcha in the login form
+        # if a user logs in from an unusual location.
+        INCLUDE_PROVIDERS = list(set(INCLUDE_PROVIDERS) -
+                                 set(['linkedin', 'windowslive']))
+
+        def get_browser():
+            # Eventbrite has problems with the login form on Firefox
+            return webdriver.Chrome()
+
+        def teardown():
+            pass
+
+    # (...)
 
 Encrypt the config and add it automatically to ``./.travis.yml``.
 

@@ -1,13 +1,13 @@
 # encoding: utf-8
 
-import datetime
 import logging
 import os
 import re
 import sys
 import time
-from authomatic.six.moves.urllib import parse
 
+import liveandletdie
+import pytest
 import requests
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
@@ -18,20 +18,17 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
-import pytest
-import liveandletdie
 
+from authomatic.six.moves.urllib import parse
 from tests.functional_tests import fixtures
 import constants
-
 from tests.functional_tests import config
 
 
 requests.packages.urllib3.disable_warnings()
 
-VIRTUALENV_NAME = os.path.basename(os.environ.get('VIRTUAL_ENV', ''))
-
 ME = os.path.dirname(__file__)
+VIRTUALENV_NAME = os.path.basename(os.environ.get('VIRTUAL_ENV', ''))
 LOG_PATH = os.path.join(ME, 'login-py{0}{1}.log'.format(sys.version_info[0],
                                                         sys.version_info[1]))
 PROJECT_DIR = os.path.abspath(os.path.join(ME, '../..'))
@@ -41,7 +38,7 @@ PROVIDERS = sorted([(k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items()
 PROVIDERS_IDS = [k for k, v in PROVIDERS]
 PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
 
-CHECK_URL = 'https://authomatic.com'
+# CHECK_URL = 'https://authomatic.com'
 
 ALL_APPS = {
     'Django': liveandletdie.Django(
@@ -54,7 +51,7 @@ ALL_APPS = {
         os.path.join(EXAMPLES_DIR, 'flask/functional_test/main.py'),
         host=config.HOST,
         port=config.PORT,
-        check_url=CHECK_URL,
+        check_url=config.HOST_ALIAS,
         ssl=True,
     ),
     'Pyramid': liveandletdie.WsgirefSimpleServer(
