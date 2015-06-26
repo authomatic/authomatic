@@ -167,6 +167,18 @@ If you want **tox** to only run tests for let's say
 
     (e)$ tox -e py26, py34
 
+If something goes wrong, you can examine the **py.test** logs, at
+``./tests/pytest-pyXX.log`` and the provider login logs at
+``./tests/functional_tests/login-pyXX.log``.
+
+You can watch the login logs while the tests are running with the
+``tail -f`` command. This is useful when debugging the login on Firefox on Linux
+in an invisible display.
+
+.. code-block:: bash
+
+    $ tail -f ./tests/functional_tests/login-py*.log
+
 Deployment to Travis CI
 ^^^^^^^^^^^^^^^^^^^^^^^
 
