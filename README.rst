@@ -20,6 +20,9 @@
 Authomatic
 ==========
 
+.. image:: https://travis-ci.org/peterhudec/authomatic.svg?branch=master
+    :target: https://travis-ci.org/peterhudec/authomatic
+
 Authomatic
 is an **authorization/authentication**
 client library for Python web applications
