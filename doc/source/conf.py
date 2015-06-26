@@ -178,14 +178,15 @@ html_theme = 'foundation'
 # further.  For a list of options available for each theme, see the
 # documentation.
 
-MOTTO = u"""<span>Authomatic</span><br />
-is an <em>authorization</em> / <em>authentication</em><br />
-client library for Python web applications<br />
-inspired by Alex Vagin’s
-<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
-In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
-but that name would be too long<br />
-for a succinct library."""
+MOTTO = u"""
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+"""
 
 html_theme_options = {
     'logo_screen': 'img/authomatic.svg',
