@@ -227,7 +227,10 @@ Commit the encrypted config and updated ``./.travis.yml`` and push it to GitHub.
     (e)$ git push
 
 Go to ``https://travis-ci.org/<your-github-username>/authomatic/builds/`` and
-watch it pass (hopefully).
+watch it pass (hopefully). If the tests fail, the
+``./tests/functional_tests/login-py*.log`` and the
+``./tests/pytest-py*.log`` logs will be displayed so you can get a hang of what
+went wrong.
 
 Running the Examples
 --------------------

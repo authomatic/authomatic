@@ -12,7 +12,7 @@ import requests
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import (
-    NoSuchElementException,
+    WebDriverException,
     TimeoutException,
     UnexpectedAlertPresentException,
 )
@@ -275,7 +275,7 @@ def login(request, browser, app, attempt=1):
         except NoSuchElementException:
             log(3, provider_name, 'Result element not found!')
 
-    except NoSuchElementException as e:
+    except WebDriverException as e:
         if request.config.getoption('--login-error-pdb'):
             log(2, provider_name, 'Entering PDB session')
             import pdb; pdb.set_trace()
