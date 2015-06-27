@@ -13,6 +13,7 @@ CONFIG = {
     'consent_wait_seconds': 6,
     'logout_url': 'https://login.yahoo.com/config/login?logout=1',
     'class_': oauth1.Flickr,
+    'user_authorization_params': dict(perms='read'),
     'user': {
         'birth_date': None,
         'city': None,

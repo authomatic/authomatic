@@ -568,6 +568,26 @@ class Flickr(OAuth1):
     * postal_code
     * timezone
 
+    .. note::
+
+        If you encounter the "Oops! Flickr doesn't recognise the
+        permission set." message, you need to add the ``perms=read`` or
+        ``perms=write`` parameter to the *user authorization request*.
+        You can do it by adding the ``user_authorization_params``
+        key to the :doc:`config`:
+
+        .. code-block:: python
+            :emphasize-lines: 6
+
+            CONFIG = {
+                'flickr': {
+                    'class_': oauth1.Flickr,
+                    'consumer_key': '##########',
+                    'consumer_secret': '##########',
+                    'user_authorization_params': dict(perms='read'),
+                },
+            }
+
     """
 
     supported_user_attributes = core.SupportedUserAttributes(
