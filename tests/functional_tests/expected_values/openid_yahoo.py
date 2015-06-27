@@ -1,17 +1,17 @@
-import re
-
 import fixtures
-import constants
 from authomatic.providers import openid
 
 conf = fixtures.get_configuration('openid_yahoo')
 
 CONFIG = {
+    'openid_identifier': 'me.yahoo.com',
     'login_xpath': '//*[@id="login-username"]',
     'password_xpath': '//*[@id="login-passwd"]',
     'consent_xpaths': [
         '//*[@id="login-signin"]'
     ],
+    'after_consent_wait_seconds': 3,
+    'logout_url': 'https://login.yahoo.com/config/login?logout=1',
     'class_': openid.OpenID,
     'user': {
         'id': conf.user_id,
@@ -27,6 +27,7 @@ CONFIG = {
         'gender': None,
         'link': None,
         'locale': None,
+        'location': None,
         'phone': None,
         'picture': None,
         'postal_code': None,

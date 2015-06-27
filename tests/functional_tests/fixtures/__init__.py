@@ -1,12 +1,15 @@
 # encoding: utf-8
 
 from collections import namedtuple
-from os import path
+import os
 import pkgutil
 import sys
 import time
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import (
+    Environment,
+    FileSystemLoader
+)
 
 from authomatic.providers import (
     oauth1,
@@ -18,20 +21,23 @@ from authomatic.six.moves import reload_module
 
 
 # Add path of the functional_tests_path package to PYTHONPATH.
-# Tis is necessary for the following imports to work when this module is
+# This is necessary for the following imports to work when this module is
 # imported from the expected_values.* modules.
 
-FUNCTIONAL_TESTS_PATH = path.join(path.dirname(__file__), '..')
+FUNCTIONAL_TESTS_PATH = os.path.join(os.path.dirname(__file__), '..')
 sys.path.append(FUNCTIONAL_TESTS_PATH)
 
-from tests.functional_tests import config
 from tests.functional_tests import expected_values
+
+from tests.functional_tests import config
 
 
 # Create template environment to load templates.
-TEMPLATES_DIR = path.join(path.abspath(path.dirname(__file__)), '..', 'templates')
+TEMPLATES_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                             '..', 'templates')
 env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
 
+BIRTH_DATE_FORMAT = '%m-%d-%Y'
 ASSEMBLED_CONFIG = {}
 OAUTH2_PROVIDERS = {}
 OAUTH1_PROVIDERS = {}
@@ -67,7 +73,6 @@ def render_login_result(framework_name, result):
     original_credentials = {}
     refreshed_credentials = {}
     if result:
-        response_message = ''
         if result.user:
             result.user.update()
             if result.user.credentials:
@@ -76,7 +81,15 @@ def render_login_result(framework_name, result):
                 response = result.user.credentials.refresh(force=True)
                 refreshed_credentials.update(result.user.credentials.__dict__)
 
-        user_properties = list(ASSEMBLED_CONFIG.values())[0]['user'].keys()
+        user_properties = ['birth_date', 'city', 'country', 'email',
+                           'first_name', 'gender', 'id', 'last_name', 'link',
+                           'locale', 'location', 'name', 'nickname', 'phone',
+                           'picture', 'postal_code', 'timezone', 'username']
+
+        access_token_content = None
+        if hasattr(result.provider, 'access_token_response'):
+            access_token_content = result.provider.access_token_response.content
+
         template = env.get_template('login.html')
         return template.render(result=result,
                                providers=ASSEMBLED_CONFIG.values(),
@@ -88,7 +101,9 @@ def render_login_result(framework_name, result):
                                credentials_response=response,
                                original_credentials=original_credentials,
                                refreshed_credentials=refreshed_credentials,
-                               framework_name=framework_name)
+                               framework_name=framework_name,
+                               access_token_content=access_token_content,
+                               birth_date_format=BIRTH_DATE_FORMAT)
 
 
 def get_configuration(provider):
@@ -98,7 +113,7 @@ def get_configuration(provider):
     It merges the ``config.COMMON`` and the ``config.PROVIDERS[provider]``
     dictionaries and returns a named tuple.
 
-    :param str:
+    :param str provider:
         Provider slug used in ``config.PROVIDERS``.
 
     :returns:
@@ -117,16 +132,22 @@ def get_configuration(provider):
 
     # Add additional class attributes which are not allowed to be passed
     # to the namedtuple
-    Res.email_escaped = conf['user_email'].replace('@', '\u0040')
-    Res.no_birth_date = [conf['user_birth_year'], 'birth']
+    Res.BIRTH_DATE_FORMAT = BIRTH_DATE_FORMAT
+    bday = conf['user_birth_date']
+    Res.user_birth_date_str = bday.strftime(Res.BIRTH_DATE_FORMAT)
+
+    Res.no_birth_date = ['birth']
     Res.no_city = [conf['user_city'], 'city']
-    Res.no_email = [conf['user_email'], Res.email_escaped, 'email', 'e-mail']
+    Res.no_country = [conf['user_country'], 'country']
+    Res.no_email = [conf['user_email'], 'email']
     Res.no_first_name = ['"{0}"'.format(conf['user_first_name']), 'first']
     Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last']
     Res.no_gender = [conf['user_gender'], 'gender']
+    Res.no_link = ['link']
     Res.no_locale = [conf['user_locale'], 'language', 'locale']
     Res.no_nickname = ['nickname', conf['user_nickname']]
     Res.no_phone = [conf['user_phone'], 'phone']
+    Res.no_picture = ['picture', 'avatar', 'image']
     Res.no_postal_code = [conf['user_postal_code'], 'postal', 'zip']
     Res.no_timezone = ['timezone']
     Res.no_username = ['username', '"{0}"'.format(conf['user_username'])]
@@ -137,7 +158,7 @@ def get_configuration(provider):
     return Res(**conf)
 
 
-expected_values_path = path.dirname(expected_values.__file__)
+expected_values_path = os.path.dirname(expected_values.__file__)
 
 # Loop through all modules of the expected_values package.
 for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):

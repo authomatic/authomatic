@@ -20,7 +20,7 @@
       <tr>
         <td><strong>{{ property }}:&nbsp;</strong></td>
         {% if property == 'birth_date' and result.user[property] %}
-          <td id="{{ property }}">{{ result.user[property].strftime('%x') }}</td>
+          <td id="{{ property }}">{{ result.user[property].strftime(birth_date_format) }}</td>
         {% else %}
           <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
         {% endif %}
@@ -58,13 +58,15 @@
     </table>
   {% endif %}
 
-  <h3>Human Readable Content</h3>
-  <pre id="human-readable-user-content" class="prettyprint"></pre>
+  <h3>Access Token Response Content</h3>
+  <pre id="access-token-content" class="prettyprint">{{ access_token_content }}</pre>
+
+  <h3>User Info Response Content</h3>
+  <pre id="human-readable-user-content" class="prettyprint">{{ content }}</pre>
   <h3>User content should contain these strings:</h3>
   <pre id="user-content-json-keys" class="prettyprint"></pre>
 
   <script type="text/javascript">
-
     // Display syntax-highlighted user-info response content
     var userContent = document.getElementById('human-readable-user-content');
     try {

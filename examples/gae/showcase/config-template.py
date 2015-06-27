@@ -87,17 +87,6 @@ OAUTH1 = {
         },
     },
     
-    'ubuntuone': {
-        'class_': oauth1.UbuntuOne,
-        'consumer_key': 'ubuntuone', # Ubuntu gives has the same key and secret for everyone.
-        'consumer_secret': 'hammertime',
-        'id': authomatic.provider_id(),
-        '_name': 'UbuntuOne',
-        '_apis': {
-            'Get your U1 quotas': ('GET', 'https://one.ubuntu.com/api/quota/'),
-        },
-    },
-    
     'vimeo': {
         'class_': oauth1.Vimeo,
         'consumer_key': '##########',

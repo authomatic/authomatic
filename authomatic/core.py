@@ -535,6 +535,8 @@ class User(ReprMixin):
         self.country = kwargs.get('country')
         #: :class:`str` City.
         self.city = kwargs.get('city')
+        #: :class:`str` Geographical location.
+        self.location = kwargs.get('location')
         #: :class:`str` Postal code.
         self.postal_code = kwargs.get('postal_code')
         #: Instance of the Google App Engine Users API
@@ -593,26 +595,16 @@ class User(ReprMixin):
         return d
 
 
-class SupportedUserAttributes(collections.namedtuple('SupportedUserAttributes',
-                                         [
-                                             'id',
-                                             'username',
-                                             'name',
-                                             'first_name',
-                                             'last_name',
-                                             'nickname',
-                                             'link',
-                                             'gender',
-                                             'timezone',
-                                             'locale',
-                                             'email',
-                                             'phone',
-                                             'picture',
-                                             'birth_date',
-                                             'country',
-                                             'city',
-                                             'postal_code',
-                                         ])):
+SupportedUserAttributesNT = collections.namedtuple(
+    typename='SupportedUserAttributesNT',
+    field_names=['birth_date', 'city', 'country', 'email', 'first_name',
+                 'gender', 'id', 'last_name', 'link', 'locale', 'location',
+                 'name', 'nickname', 'phone', 'picture', 'postal_code',
+                 'timezone', 'username',]
+)
+
+
+class SupportedUserAttributes(SupportedUserAttributesNT):
     def __new__(cls, **kwargs):
         defaults = dict((i, False) for i in SupportedUserAttributes._fields)
         defaults.update(**kwargs)
