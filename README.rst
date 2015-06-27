@@ -23,13 +23,13 @@ Authomatic
 .. image:: https://travis-ci.org/peterhudec/authomatic.svg?branch=master
     :target: https://travis-ci.org/peterhudec/authomatic
 
-Authomatic
-is an **authorization/authentication**
-client library for Python web applications
-inspired by Alex Vagin’s `Simpleauth <http://code.google.com/p/gae-simpleauth/>`_.
-In fact, I almost named it *Deadsimpleauth*,
-but that name would be too long
-for a succinct library.
+**Authomatic**
+is a **framework agnostic** library
+for **Python** web applications
+with a **minimalistic** but **powerful** interface
+which simplifies **authentication** of users
+by third party providers like **Facebook** or **Twitter**
+through standards like **OAuth** and **OpenID**.
 
 For more info visit the project page at http://peterhudec.github.io/authomatic.
 
