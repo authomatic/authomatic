@@ -18,6 +18,7 @@ CONFIG = {
         '//*[@id="terms_agree"]',
         '//*[@id="authorize_form"]/fieldset/div[2]/div[2]/a[1]',
     ],
+    # 'consent_wait_seconds': 2,
     'class_': oauth2.DeviantART,
     'scope': oauth2.DeviantART.user_info_scope,
     'user': {
@@ -34,6 +35,7 @@ CONFIG = {
         'gender': None,
         'link': None,
         'locale': None,
+        'location': None,
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,

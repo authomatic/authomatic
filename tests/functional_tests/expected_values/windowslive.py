@@ -13,8 +13,7 @@ CONFIG = {
     'login_xpath': '//*[@id="i0116"]',
     'password_xpath': '//*[@id="i0118"]',
     'consent_xpaths': [
-        '//*[@id="idSIButton9"]',
-        '//*[@id="btnYes"]',
+        '//*[@id="idBtn_Accept"]',
     ],
     'consent_wait_seconds': 0,
     'class_': oauth2.WindowsLive,
@@ -31,6 +30,7 @@ CONFIG = {
         'last_name': conf.user_last_name,
         'link': 'https://profile.live.com/',
         'locale': conf.user_locale,
+        'location': None,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,

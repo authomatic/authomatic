@@ -5,7 +5,7 @@ from authomatic import six
 
 setup(
     name='Authomatic',
-    version='0.0.13', # TODO: Put version in one place.
+    version='0.1.0', # TODO: Put version in one place.
     packages=find_packages(),
     package_data={'': ['*.txt', '*.rst']},
     author='Peter Hudec',
@@ -20,7 +20,7 @@ setup(
         'OpenID': ['python3-openid' if six.PY3 else 'python-openid'],
     },
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',

@@ -368,13 +368,13 @@ class OAuth1(providers.AuthorizationProvider):
         
         if request_token and verifier:
             # Phase 2 after redirect with success
-            self._log(logging.INFO, 'Continuing OAuth 1.0a authorization procedure after redirect.')
+            self._log(logging.INFO, u'Continuing OAuth 1.0a authorization procedure after redirect.')
             token_secret = self._session_get('token_secret')
             if not token_secret:
-                raise FailureError('Unable to retrieve token secret from storage!')
+                raise FailureError(u'Unable to retrieve token secret from storage!')
             
             # Get Access Token          
-            self._log(logging.INFO, 'Fetching for access token from {0}.'.format(self.access_token_url))
+            self._log(logging.INFO, u'Fetching for access token from {0}.'.format(self.access_token_url))
             
             self.credentials.token = request_token
             self.credentials.token_secret = token_secret
@@ -386,21 +386,26 @@ class OAuth1(providers.AuthorizationProvider):
                                                              params=self.access_token_params)
             
             response = self._fetch(*request_elements)
+            self.access_token_response = response
             
             if not self._http_status_in_category(response.status, 2):
-                raise FailureError('Failed to obtain OAuth 1.0a  oauth_token from {0}! HTTP status code: {1}.'\
-                                   .format(self.access_token_url, response.status),
-                                   original_message=response.content,
-                                   status=response.status,
-                                   url=self.access_token_url)
+                raise FailureError(
+                    'Failed to obtain OAuth 1.0a  oauth_token from {0}! '
+                    'HTTP status code: {1}.'
+                    .format(self.access_token_url, response.status),
+                    original_message=response.content,
+                    status=response.status,
+                    url=self.access_token_url
+                )
             
-            self._log(logging.INFO, 'Got access token.')
-            
+            self._log(logging.INFO, u'Got access token.')
             self.credentials.token = response.data.get('oauth_token', '')
-            self.credentials.token_secret = response.data.get('oauth_token_secret', '')
+            self.credentials.token_secret = response.data.get(
+                'oauth_token_secret', ''
+            )
             
-            self.credentials = self._x_credentials_parser(self.credentials, response.data)
-            
+            self.credentials = self._x_credentials_parser(self.credentials,
+                                                          response.data)
             self._update_or_create_user(response.data, self.credentials)
             
             #===================================================================
@@ -415,7 +420,7 @@ class OAuth1(providers.AuthorizationProvider):
                                   url=self.user_authorization_url)
         else:
             # Phase 1 before redirect
-            self._log(logging.INFO, 'Starting OAuth 1.0a authorization procedure.')
+            self._log(logging.INFO, u'Starting OAuth 1.0a authorization procedure.')
             
             # Fetch for request token
             request_elements = self.create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
@@ -424,12 +429,12 @@ class OAuth1(providers.AuthorizationProvider):
                                                              callback=self.url,
                                                              params=self.request_token_params)
             
-            self._log(logging.INFO, 'Fetching for request token and token secret.')
+            self._log(logging.INFO, u'Fetching for request token and token secret.')
             response = self._fetch(*request_elements)
             
             # check if response status is OK
             if not self._http_status_in_category(response.status, 2):
-                raise FailureError('Failed to obtain request token from {0}! HTTP status code: {1} content: {2}'\
+                raise FailureError(u'Failed to obtain request token from {0}! HTTP status code: {1} content: {2}'\
                                   .format(self.request_token_url, response.status, response.content),
                                   original_message=response.content,
                                   status=response.status,
@@ -451,12 +456,12 @@ class OAuth1(providers.AuthorizationProvider):
                 # we need token secret after user authorization redirect to get access token
                 self._session_set('token_secret', token_secret)
             else:
-                raise FailureError('Failed to obtain token secret from {0}!'.format(self.request_token_url),
+                raise FailureError(u'Failed to obtain token secret from {0}!'.format(self.request_token_url),
                                   original_message=response.content,
                                   url=self.request_token_url)
             
             
-            self._log(logging.INFO, 'Got request token and token secret')
+            self._log(logging.INFO, u'Got request token and token secret')
             
             # Create User Authorization URL
             request_elements = self.create_request_elements(request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
@@ -464,7 +469,7 @@ class OAuth1(providers.AuthorizationProvider):
                                                              url=self.user_authorization_url,
                                                              params=self.user_authorization_params)
             
-            self._log(logging.INFO, 'Redirecting user to {0}.'.format(request_elements.full_url))
+            self._log(logging.INFO, u'Redirecting user to {0}.'.format(request_elements.full_url))
             
             self.redirect(request_elements.full_url)
 
@@ -476,7 +481,42 @@ class Bitbucket(OAuth1):
     * Dashboard: https://bitbucket.org/account/user/peterhudec/api
     * Docs: https://confluence.atlassian.com/display/BITBUCKET/oauth+Endpoint
     * API reference: https://confluence.atlassian.com/display/BITBUCKET/Using+the+Bitbucket+REST+APIs
+
+    Supported :class:`.User` properties:
+
+    * first_name
+    * id
+    * last_name
+    * link
+    * name
+    * picture
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * gender
+    * locale
+    * location
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        first_name=True,
+        id=True,
+        last_name=True,
+        link=True,
+        name=True,
+        picture=True,
+        username=True
+    )
     
     request_token_url = 'https://bitbucket.org/!api/1.0/oauth/request_token'
     user_authorization_url = 'https://bitbucket.org/!api/1.0/oauth/authenticate'
@@ -491,7 +531,8 @@ class Bitbucket(OAuth1):
         user.first_name = _user.get('first_name')
         user.last_name = _user.get('last_name')
         user.picture = _user.get('avatar')
-        user.link = _user.get('resource_uri')
+        user.link = 'https://bitbucket.org/api{0}'\
+            .format(_user.get('resource_uri'))
         return user
 
 
@@ -502,18 +543,48 @@ class Flickr(OAuth1):
     * Dashboard: https://www.flickr.com/services/apps/
     * Docs: https://www.flickr.com/services/api/auth.oauth.html
     * API reference: https://www.flickr.com/services/api/
+
+    Supported :class:`.User` properties:
+
+    * id
+    * name
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * first_name
+    * gender
+    * last_name
+    * link
+    * locale
+    * location
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        name=True,
+        username=True
+    )
     
     request_token_url = 'http://www.flickr.com/services/oauth/request_token'
     user_authorization_url = 'http://www.flickr.com/services/oauth/authorize'
     access_token_url = 'http://www.flickr.com/services/oauth/access_token'
-    user_info_url = 'http://api.flickr.com/services/rest?method=flickr.test.login&format=json&nojsoncallback=1'
-    
+    user_info_url = None
+
     supports_jsonp = True
     
     @staticmethod
     def _x_user_parser(user, data):
-        
         _user = data.get('user', {})
         
         user.name = data.get('fullname') or _user.get('username', {}).get('_content')
@@ -534,7 +605,43 @@ class Meetup(OAuth1):
     * Dashboard: http://www.meetup.com/meetup_api/oauth_consumers/
     * Docs: http://www.meetup.com/meetup_api/auth/#oauth
     * API: http://www.meetup.com/meetup_api/docs/
+
+    Supported :class:`.User` properties:
+
+    * city
+    * country
+    * id
+    * link
+    * locale
+    * location
+    * name
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * email
+    * first_name
+    * gender
+    * last_name
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+    * username
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        city=True,
+        country=True,
+        id=True,
+        link=True,
+        locale=True,
+        location=True,
+        name=True,
+        picture=True
+    )
     
     request_token_url = 'https://api.meetup.com/oauth/request/'
     user_authorization_url = 'http://www.meetup.com/authorize/'
@@ -560,7 +667,49 @@ class Plurk(OAuth1):
     * Docs: 
     * API: http://www.plurk.com/API
     * API explorer: http://www.plurk.com/OAuth/test/
+
+    Supported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * gender
+    * id
+    * link
+    * locale
+    * location
+    * name
+    * nickname
+    * picture
+    * timezone
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * first_name
+    * last_name
+    * phone
+    * postal_code
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
+        city=True,
+        country=True,
+        email=True,
+        gender=True,
+        id=True,
+        link=True,
+        locale=True,
+        location=True,
+        name=True,
+        nickname=True,
+        picture=True,
+        timezone=True,
+        username=True
+    )
     
     
     request_token_url = 'http://www.plurk.com/OAuth/request_token'
@@ -573,25 +722,33 @@ class Plurk(OAuth1):
     def _x_user_parser(user, data):
         
         _user = data.get('user_info', {})
-        
-        user.locale = _user.get('default_lang')
-        user.username = _user.get('display_name')
-        user.id = _user.get('id') or _user.get('uid')
-        user.nickname = _user.get('nick_name')
-        user.name = _user.get('full_name')
+
+        user.email = _user.get('email')
         user.gender = _user.get('gender')
-        user.timezone = _user.get('timezone')
+        user.id = _user.get('id') or _user.get('uid')
+        user.locale = _user.get('default_lang')
+        user.name = _user.get('full_name')
+        user.nickname = _user.get('nick_name')
         user.picture = 'http://avatars.plurk.com/{0}-big2.jpg'.format(user.id)
+        user.timezone = _user.get('timezone')
+        user.username = _user.get('display_name')
+
+        user.link = 'http://www.plurk.com/{0}/'.format(user.username)
         
         user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
         user.country = user.country.strip()
-        
-        try:
-            user.birth_date = datetime.datetime.strptime(_user.get('date_of_birth'), "%a, %d %b %Y %H:%M:%S %Z")
-        except:
-            user.birth_date = data.get('date_of_birth')
-        
+
+        _bd = _user.get('date_of_birth')
+        if _bd:
+            try:
+                user.birth_date = datetime.datetime.strptime(
+                    _bd,
+                    "%a, %d %b %Y %H:%M:%S %Z"
+                )
+            except ValueError:
+                pass
+
         return user
 
 
@@ -605,11 +762,10 @@ class Twitter(OAuth1):
 
     Supported :class:`.User` properties:
 
-    * city
-    * country
     * id
     * link
     * locale
+    * location
     * name
     * picture
     * username
@@ -617,6 +773,8 @@ class Twitter(OAuth1):
     Unsupported :class:`.User` properties:
 
     * birth_date
+    * city
+    * country
     * email
     * gender
     * first_name
@@ -629,11 +787,10 @@ class Twitter(OAuth1):
     """
 
     supported_user_attributes = core.SupportedUserAttributes(
-        city=True,
-        country=True,
         id=True,
         link=True,
         locale=True,
+        location=True,
         name=True,
         picture=True,
         username=True
@@ -653,12 +810,6 @@ class Twitter(OAuth1):
         user.picture = data.get('profile_image_url')
         user.locale = data.get('lang')
         user.link = data.get('url')
-
-        _location = data.get('location', '')
-        if _location:
-            _city, _country = _location.split(',')
-            user.city = _city.strip()
-            user.country = _country.strip()
         return user
 
 
@@ -669,7 +820,38 @@ class Tumblr(OAuth1):
     * Dashboard: http://www.tumblr.com/oauth/apps
     * Docs: http://www.tumblr.com/docs/en/api/v2#auth
     * API reference: http://www.tumblr.com/docs/en/api/v2
+
+    Supported :class:`.User` properties:
+
+    * id
+    * name
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * gender
+    * first_name
+    * last_name
+    * link
+    * locale
+    * location
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        name=True,
+        username=True
+    )
     
     request_token_url = 'http://www.tumblr.com/oauth/request_token'
     user_authorization_url = 'http://www.tumblr.com/oauth/authorize'
@@ -681,24 +863,24 @@ class Tumblr(OAuth1):
     @staticmethod
     def _x_user_parser(user, data):
         _user = data.get('response', {}).get('user', {})
-        
         user.username = user.id = _user.get('name')
-        user.link = _user.get('blogs', [{}])[0].get('url')
-        
-        if user.link:
-            _host = parse.urlsplit(user.link).netloc
-            user.picture = 'http://api.tumblr.com/v2/blog/{0}/avatar/512'.format(_host)
-        
         return user
 
 
 class UbuntuOne(OAuth1):
     """
     Ubuntu One |oauth1| provider.
+
+    .. note::
+
+        The UbuntuOne service
+        `has been shut down <http://blog.canonical.com/2014/04/02/
+        shutting-down-ubuntu-one-file-services/>`__.
     
     .. warning::
 
-        Uses the `PLAINTEXT <http://oauth.net/core/1.0a/#anchor21>`_ Signature method!
+        Uses the `PLAINTEXT <http://oauth.net/core/1.0a/#anchor21>`_
+        Signature method!
 
     * Dashboard: https://one.ubuntu.com/developer/account_admin/auth/web
     * Docs: https://one.ubuntu.com/developer/account_admin/auth/web
@@ -724,33 +906,65 @@ class Vimeo(OAuth1):
     * Dashboard: https://developer.vimeo.com/apps
     * Docs: https://developer.vimeo.com/apis/advanced#oauth-endpoints
     * API reference: https://developer.vimeo.com/apis
+
+    Supported :class:`.User` properties:
+
+    * id
+    * link
+    * location
+    * name
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * email
+    * gender
+    * first_name
+    * last_name
+    * locale
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+    * username
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        link=True,
+        location=True,
+        name=True,
+        picture=True
+    )
     
     request_token_url = 'https://vimeo.com/oauth/request_token'
     user_authorization_url = 'https://vimeo.com/oauth/authorize'
     access_token_url = 'https://vimeo.com/oauth/access_token'
-    user_info_url = 'http://vimeo.com/api/rest/v2?format=json&method=vimeo.oauth.checkAccessToken'
-    
+    user_info_url = ('http://vimeo.com/api/rest/v2?'
+                     'format=json&method=vimeo.oauth.checkAccessToken')
+
+    def _access_user_info(self):
+        """
+        Vimeo requires the user ID to access the user info endpoint,
+        so we need to make two requests: one to get user ID and
+        second to get user info.
+        """
+        response = super(Vimeo, self)._access_user_info()
+        uid = response.data.get('oauth', {}).get('user', {}).get('id')
+        if uid:
+            return self.access('http://vimeo.com/api/v2/{0}/info.json'
+                               .format(uid))
+        return response
     
     @staticmethod
     def _x_user_parser(user, data):
-        
-        _user = data.get('oauth', {}).get('user', {})
-        user.name = _user.get('display_name')
-        user.id = _user.get('id')
-        user.username = _user.get('username')
-        
-        # Vimeo needs user ID to get rich info so we need to make one more fetch.
-        if user.id:
-            response = user.provider.access('http://vimeo.com/api/v2/{0}/info.json'.format(user.username))
-            if response and response.status == 200:
-                user.name = response.data.get('display_name')
-                user.city, user.country = response.data.get('location', ',').split(',')
-                user.city = user.city.strip()
-                user.country = user.country.strip()
-                user.link = response.data.get('profile_url')
-                user.picture = response.data.get('portrait_huge')
-        
+        user.name = data.get('display_name')
+        user.link = data.get('profile_url')
+        user.picture = data.get('portrait_huge')
         return user
 
 
@@ -765,7 +979,40 @@ class Xero(OAuth1):
     * Dashboard: https://api.xero.com/Application
     * Docs: http://blog.xero.com/developer/api-overview/public-applications/
     * API reference: http://blog.xero.com/developer/api/
+
+    Supported :class:`.User` properties:
+
+    * email
+    * first_name
+    * id
+    * last_name
+    * name
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * gender
+    * link
+    * locale
+    * location
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+    * username
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        email=True,
+        first_name=True,
+        id=True,
+        last_name=True,
+        name=True
+    )
     
     request_token_url = 'https://api.xero.com/oauth/RequestToken'
     user_authorization_url = 'https://api.xero.com/oauth/Authorize'
@@ -778,12 +1025,11 @@ class Xero(OAuth1):
         # Data is xml.etree.ElementTree.Element object.
         if type(data) is not dict:
             # But only on user.update()
-            
             _user = data.find('Users/User')
-            
             user.id = _user.find('UserID').text
             user.first_name = _user.find('FirstName').text
             user.last_name = _user.find('LastName').text
+            user.email = _user.find('EmailAddress').text
         
         return user
 
@@ -796,7 +1042,42 @@ class Yahoo(OAuth1):
     * Docs: http://developer.yahoo.com/oauth/guide/oauth-auth-flow.html
     * API: http://developer.yahoo.com/everything.html
     * API explorer: http://developer.yahoo.com/yql/console/
+
+    Supported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * gender
+    * id
+    * link
+    * location
+    * name
+    * nickname
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * locale
+    * phone
+    * postal_code
+    * timezone
+    * username
+
     """
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        birth_date=True,
+        city=True,
+        country=True,
+        gender=True,
+        id=True,
+        link=True,
+        location=True,
+        name=True,
+        nickname=True,
+        picture=True
+    )
     
     request_token_url = 'https://api.login.yahoo.com/oauth/v2/get_request_token'
     user_authorization_url = 'https://api.login.yahoo.com/oauth/v2/request_auth'
@@ -864,7 +1145,9 @@ class Xing(OAuth1):
     * last_name
     * link
     * locale
+    * location
     * name
+    * phone
     * picture
     * postal_code
     * timezone
@@ -873,7 +1156,6 @@ class Xing(OAuth1):
     Unsupported :class:`.User` properties:
 
     * nickname
-    * phone
 
     """
 
@@ -893,7 +1175,9 @@ class Xing(OAuth1):
         last_name=True,
         link=True,
         locale=True,
+        location=True,
         name=True,
+        phone=True,
         picture=True,
         postal_code=True,
         timezone=True,
@@ -921,6 +1205,8 @@ class Xing(OAuth1):
                 user.city = _address.get('city')
                 user.country = _address.get('country')
                 user.postal_code = _address.get('zip_code')
+                user.phone = (_address.get('phone', '') or
+                             _address.get('mobile_phone', '')).replace('|', '')
 
             _languages = list(_user.get('languages', {}).keys())
             if _languages and _languages[0]:
