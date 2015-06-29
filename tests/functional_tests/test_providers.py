@@ -81,8 +81,8 @@ def teardown_module():
 
 
 def log(indent, provider_name, message):
-    tab_width = 2
-    logger.info(u'({venv}) {provider:.<{padding}}{indent}{message}'.format(
+    tab_width = 4
+    logger.info(u'({venv}) {provider: <{padding}}{indent}{message}'.format(
         venv=VIRTUALENV_NAME,
         provider=provider_name,
         padding=PROVIDER_NAME_WIDTH + 3,
@@ -126,21 +126,22 @@ def login(request, browser, app, attempt=1):
     provider_name, provider = request.param
     log(1, provider_name, 'Attempt {0}'.format(attempt))
 
-    def wait(seconds):
+    def wait(indent, seconds):
         seconds = seconds or 0
         seconds = seconds * config.WAIT_MULTIPLIER
         if seconds < config.MIN_WAIT:
             seconds = config.MIN_WAIT
 
         if seconds:
-            log(0, provider_name, u' waiting {0} seconds '
-                .format(seconds).center(60, '#'))
+            log(indent, provider_name, u'(waiting {0} seconds)'.format(seconds))
+            # log(0, provider_name, u' waiting {0} seconds '
+            #     .format(seconds).center(60, '#'))
             time.sleep(seconds)
 
     def human_interaction_needed(xpath, seconds=0):
         log(2, provider_name, 'Checking if human interaction is needed')
         try:
-            wait(seconds)
+            wait(2, seconds)
             el = browser.find_element_by_xpath(xpath)
             if el.is_displayed():
                 print('Human interaction is needed (captcha or similar)!')
@@ -235,10 +236,10 @@ def login(request, browser, app, attempt=1):
             log(3, provider_name, 'Filling out password')
             password_element.send_keys(conf.user_password)
 
-            wait(provider.get('before_login_enter_wait'))
+            wait(2, provider.get('before_login_enter_wait'))
             log(2, provider_name, 'Hitting ENTER')
             password_element.send_keys(Keys.ENTER)
-            wait(provider.get('after_login_wait_seconds'))
+            wait(2, provider.get('after_login_wait_seconds'))
 
         if login_url:
             # Return back from login URL
@@ -253,7 +254,7 @@ def login(request, browser, app, attempt=1):
         if consent_xpaths:
             for xpath in consent_xpaths:
                 try:
-                    wait(provider.get('consent_wait_seconds'))
+                    wait(2, provider.get('consent_wait_seconds'))
 
                     log(2, provider_name,
                         'Finding consent button {0}'.format(xpath))
@@ -266,7 +267,7 @@ def login(request, browser, app, attempt=1):
                         'Consent button not found! '
                         '(provider probably remembers consent)')
 
-        wait(provider.get('after_consent_wait_seconds'))
+        wait(2, provider.get('after_consent_wait_seconds'))
 
         try:
             log(2, provider_name, 'Finding result element')
@@ -290,7 +291,7 @@ def login(request, browser, app, attempt=1):
             log(3, provider_name, 'Result element not found!')
 
     if success:
-        log(1, provider_name, 'SUCCESS')
+        log(0, provider_name, 'SUCCESS')
     else:
         if attempt < config.MAX_LOGIN_ATTEMPTS:
             login(request, browser, app, attempt + 1)
