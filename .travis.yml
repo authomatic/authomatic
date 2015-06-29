@@ -14,5 +14,5 @@ before_install:
   -in tests/functional_tests/config.py.enc -out tests/functional_tests/config.py -d
 - brew update
 - brew install caskroom/cask/brew-cask
-- sudo brew cask install google-chrome
+- brew cask install google-chrome 43.0.2357
 - brew install python3
