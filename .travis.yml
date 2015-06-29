@@ -14,5 +14,8 @@ before_install:
   -in tests/functional_tests/config.py.enc -out tests/functional_tests/config.py -d
 - brew update
 - brew install caskroom/cask/brew-cask
-- brew cask install google-chrome-canary
+- brew cask install google-chrome
 - brew install python3
+- wget -N http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux64.zip -P .
+- unzip ~/Downloads/chromedriver_linux64.zip -d .
+- chmod +x ./chromedriver
