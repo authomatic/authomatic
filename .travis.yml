@@ -5,7 +5,7 @@ addons:
   - authomatic.com
   - authomatic.org
 install: sudo pip install tox
-script: sudo tox -e py34 -- -vv --tb=no
+script: sudo tox -e py27 -- -vv --tb=no
 after_failure:
 - tail -n 1000000 tests/functional_tests/*.log
 - tail -n 1000000 tests/*.log
@@ -14,5 +14,5 @@ before_install:
   -in tests/functional_tests/config.py.enc -out tests/functional_tests/config.py -d
 - brew update
 - brew install caskroom/cask/brew-cask
-- brew cask install google-chrome 43.0.2357
+- brew cask install google-chrome-canary
 - brew install python3
