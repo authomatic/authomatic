@@ -36,13 +36,13 @@ MIN_WAIT = 0
 
 # The host and port where the tested ap shoud listen.
 HOST = '127.0.0.1'
-PORT = 8080
+PORT = 80
 
 # The host alias set in the /etc/hosts file.
 # The actual tests will navigate selenium browser to this host.
 # This is necessary because some providers don't support localhost as the
 # callback url.
-HOST_ALIAS = 'authomatic.com'
+HOST_ALIAS = 'authomatic.org'
 
 # Only frameworks included here will be tested.
 INCLUDE_FRAMEWORKS = [
