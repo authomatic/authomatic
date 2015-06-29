@@ -506,6 +506,12 @@ class Bitbucket(OAuth1):
     * postal_code
     * timezone
 
+    .. note::
+
+        To get the full user info, you need to select both the *Account Read*
+        and the *Repositories Read* permission in the Bitbucket application
+        edit form.
+
     """
 
     supported_user_attributes = core.SupportedUserAttributes(
