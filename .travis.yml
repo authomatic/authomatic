@@ -16,6 +16,8 @@ before_install:
 - brew install caskroom/cask/brew-cask
 - brew cask install google-chrome
 - brew install python3
-- wget -N http://chromedriver.storage.googleapis.com/2.10/chromedriver_mac32.zip -P .
+- wget -N http://chromedriver.storage.googleapis.com/2.10/chromedriver_mac32.zip -P
+  .
 - unzip ./chromedriver_mac32.zip -d .
 - chmod +x ./chromedriver
+- ls -lt
