@@ -5,7 +5,7 @@ addons:
   - authomatic.com
   - authomatic.org
 install: sudo pip install tox
-script: sudo tox -e py27 -- -vv --tb=no
+script: sudo tox -- -vvx --tb=no
 after_failure:
 - tail -n 1000000 tests/functional_tests/*.log
 - tail -n 1000000 tests/*.log
