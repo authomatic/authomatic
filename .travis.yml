@@ -20,4 +20,3 @@ before_install:
   .
 - unzip ./chromedriver_mac32.zip -d .
 - chmod +x ./chromedriver
-- ls -lt

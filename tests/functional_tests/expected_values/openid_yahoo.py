@@ -8,7 +8,8 @@ CONFIG = {
     'login_xpath': '//*[@id="login-username"]',
     'password_xpath': '//*[@id="login-passwd"]',
     'consent_xpaths': [
-        '//*[@id="login-signin"]'
+        '//*[@id="login-signin"]',
+        '//*[@id="agree"]',
     ],
     'after_consent_wait_seconds': 3,
     'logout_url': 'https://login.yahoo.com/config/login?logout=1',

@@ -62,7 +62,7 @@ CONFIG = {
         conf.no_birth_date +
         conf.no_gender +
         conf.no_nickname +
-        conf.no_phone +
+        # conf.no_phone +  # Contains unrelated phone string
         conf.no_postal_code +
         conf.no_timezone,
     # True means that any thruthy value is expected

@@ -13,7 +13,7 @@ CONFIG = {
     'login_xpath': '//*[@id="mainbody"]/form/table/tbody/tr[2]/td[2]/input',
     'password_xpath': '//*[@id="mainbody"]/form/table/tbody/tr[3]/td[2]/input',
     'consent_xpaths': [
-        # '//*[@id="TrustAuthenticateExchange"]/div[2]/input[2]',
+        '//*[@id="TrustAuthenticateExchange"]/div[2]/input[2]',
     ],
     'alert_wait_seconds': 1,
     'class_': openid.OpenID,
