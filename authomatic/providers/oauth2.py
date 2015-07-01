@@ -993,7 +993,7 @@ class GitHub(OAuth2):
     """
     GitHub |oauth2| provider.
     
-    * Dashboard: https://github.com/settings/applications/
+    * Dashboard: https://github.com/settings/developers
     * Docs: http://developer.github.com/v3/#authentication
     * API reference: http://developer.github.com/v3/
     
@@ -1104,6 +1104,12 @@ class Google(OAuth2):
     * postal_code
     * timezone
     * username
+
+    .. note::
+
+        To get the user info, you need to activate the **Google+ API**
+        in the **APIs & auth >> APIs** section of the`Google Developers Console
+        <https://console.developers.google.com/project>`__.
 
     """
     
@@ -1469,7 +1475,7 @@ class VK(OAuth2):
     """
     VK.com |oauth2| provider.
     
-    * Dashboard: Could not find any. You must do it like this: http://vk.com/editapp?id={consumer_key}
+    * Dashboard: http://vk.com/apps?act=manage
     * Docs: http://vk.com/developers.php?oid=-17680044&p=Authorizing_Sites
     * API reference: http://vk.com/developers.php?oid=-17680044&p=API_Method_Description
     
