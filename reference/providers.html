@@ -47,7 +47,7 @@
 	<script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.0.13',
+        VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -138,11 +138,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../development.html#deployment-to-travis-ci">Deployment to Travis CI</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../development.html#running-the-examples">Running the Examples</a></li>
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-1-0">Version 0.1.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-13">Version 0.0.13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-12">Version 0.0.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11">Version 0.0.11</a></li>
@@ -196,14 +200,15 @@
 		        </div>
 		        <div class="large-6 columns">
 		            <p id="motto">
-						<span>Authomatic</span><br />
-is an <em>authorization</em> / <em>authentication</em><br />
-client library for Python web applications<br />
-inspired by Alex Vagin’s
-<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
-In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
-but that name would be too long<br />
-for a succinct library.
+						
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+
 					</p>
 		        </div>
 		        
@@ -958,6 +963,7 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 </ul>
 <p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
 <ul class="simple">
+<li>birth_date</li>
 <li>city</li>
 <li>country</li>
 <li>email</li>
@@ -967,17 +973,17 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 <li>last_name</li>
 <li>link</li>
 <li>locale</li>
+<li>location</li>
 <li>name</li>
 <li>picture</li>
 <li>timezone</li>
-<li>username</li>
 </ul>
 <p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
 <ul class="simple">
-<li>birth_date</li>
 <li>nickname</li>
 <li>phone</li>
 <li>postal_code</li>
+<li>username</li>
 </ul>
 </dd></dl>
 
@@ -1006,6 +1012,7 @@ See <a class="reference external" href="https://developer.foursquare.com/overvie
 <li>gender</li>
 <li>id</li>
 <li>last_name</li>
+<li>location</li>
 <li>name</li>
 <li>phone</li>
 <li>picture</li>
@@ -1044,7 +1051,7 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 <em class="property">class </em><tt class="descclassname">authomatic.providers.oauth2.</tt><tt class="descname">GitHub</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/oauth2.html#GitHub"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.oauth2.GitHub" title="Permalink to this definition">¶</a></dt>
 <dd><p>GitHub OAuth 2.0 provider.</p>
 <ul class="simple">
-<li>Dashboard: <a class="reference external" href="https://github.com/settings/applications/">https://github.com/settings/applications/</a></li>
+<li>Dashboard: <a class="reference external" href="https://github.com/settings/developers">https://github.com/settings/developers</a></li>
 <li>Docs: <a class="reference external" href="http://developer.github.com/v3/#authentication">http://developer.github.com/v3/#authentication</a></li>
 <li>API reference: <a class="reference external" href="http://developer.github.com/v3/">http://developer.github.com/v3/</a></li>
 </ul>
@@ -1065,12 +1072,12 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 </pre></div>
 </div>
 </div>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
 <ul class="simple">
-<li>city</li>
-<li>country</li>
 <li>email</li>
 <li>id</li>
 <li>link</li>
+<li>location</li>
 <li>name</li>
 <li>picture</li>
 <li>username</li>
@@ -1078,6 +1085,8 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 <p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
 <ul class="simple">
 <li>birth_date</li>
+<li>city</li>
+<li>country</li>
 <li>first_name</li>
 <li>gender</li>
 <li>last_name</li>
@@ -1139,6 +1148,12 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 <li>timezone</li>
 <li>username</li>
 </ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To get the user info, you need to activate the <strong>Google+ API</strong>
+in the <strong>APIs &amp; auth &gt;&gt; APIs</strong> section of the`Google Developers Console
+&lt;<a class="reference external" href="https://console.developers.google.com/project">https://console.developers.google.com/project</a>&gt;`__.</p>
+</div>
 </dd></dl>
 
 <dl class="class">
@@ -1156,23 +1171,24 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 </ul>
 <p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
 <ul class="simple">
-<li>birth_date</li>
 <li>country</li>
 <li>email</li>
 <li>first_name</li>
 <li>id</li>
 <li>last_name</li>
 <li>link</li>
+<li>location</li>
 <li>name</li>
-<li>phone</li>
 <li>picture</li>
 </ul>
 <p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
 <ul class="simple">
+<li>birth_date</li>
 <li>city</li>
 <li>gender</li>
 <li>locale</li>
 <li>nickname</li>
+<li>phone</li>
 <li>postal_code</li>
 <li>timezone</li>
 <li>username</li>
@@ -1277,6 +1293,7 @@ config like this:</p>
 <li>last_name</li>
 <li>link</li>
 <li>locale</li>
+<li>location</li>
 <li>name</li>
 <li>nickname</li>
 <li>phone</li>
@@ -1332,7 +1349,7 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 <em class="property">class </em><tt class="descclassname">authomatic.providers.oauth2.</tt><tt class="descname">VK</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/oauth2.html#VK"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.oauth2.VK" title="Permalink to this definition">¶</a></dt>
 <dd><p>VK.com OAuth 2.0 provider.</p>
 <ul class="simple">
-<li>Dashboard: Could not find any. You must do it like this: <a class="reference external" href="http://vk.com/editapp">http://vk.com/editapp</a>?id={consumer_key}</li>
+<li>Dashboard: <a class="reference external" href="http://vk.com/apps?act=manage">http://vk.com/apps?act=manage</a></li>
 <li>Docs: <a class="reference external" href="http://vk.com/developers.php?oid=-17680044&amp;p=Authorizing_Sites">http://vk.com/developers.php?oid=-17680044&amp;p=Authorizing_Sites</a></li>
 <li>API reference: <a class="reference external" href="http://vk.com/developers.php?oid=-17680044&amp;p=API_Method_Description">http://vk.com/developers.php?oid=-17680044&amp;p=API_Method_Description</a></li>
 </ul>
@@ -1361,6 +1378,7 @@ Use it like this:</p>
 <li>gender</li>
 <li>id</li>
 <li>last_name</li>
+<li>location</li>
 <li>name</li>
 <li>picture</li>
 <li>timezone</li>
@@ -1404,6 +1422,7 @@ Use it like this:</p>
 <li>country</li>
 <li>gender</li>
 <li>nickname</li>
+<li>location</li>
 <li>phone</li>
 <li>postal_code</li>
 <li>timezone</li>
@@ -1431,6 +1450,7 @@ Use it like this:</p>
 <li>last_name</li>
 <li>link</li>
 <li>locale</li>
+<li>location</li>
 <li>name</li>
 <li>phone</li>
 <li>picture</li>
@@ -1488,6 +1508,7 @@ default is <tt class="docutils literal"><span class="pre">False</span></tt>.</li
 <li>last_name</li>
 <li>link</li>
 <li>locale</li>
+<li>location</li>
 <li>nickname</li>
 <li>phone</li>
 <li>picture</li>
@@ -1606,6 +1627,36 @@ see <a class="reference external" href="http://oauth.net/core/1.0a/#auth_step1">
 <li>Docs: <a class="reference external" href="https://confluence.atlassian.com/display/BITBUCKET/oauth+Endpoint">https://confluence.atlassian.com/display/BITBUCKET/oauth+Endpoint</a></li>
 <li>API reference: <a class="reference external" href="https://confluence.atlassian.com/display/BITBUCKET/Using+the+Bitbucket+REST+APIs">https://confluence.atlassian.com/display/BITBUCKET/Using+the+Bitbucket+REST+APIs</a></li>
 </ul>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>first_name</li>
+<li>id</li>
+<li>last_name</li>
+<li>link</li>
+<li>name</li>
+<li>picture</li>
+<li>username</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>city</li>
+<li>country</li>
+<li>email</li>
+<li>gender</li>
+<li>locale</li>
+<li>location</li>
+<li>nickname</li>
+<li>phone</li>
+<li>postal_code</li>
+<li>timezone</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To get the full user info, you need to select both the <em>Account Read</em>
+and the <em>Repositories Read</em> permission in the Bitbucket application
+edit form.</p>
+</div>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1634,6 +1685,48 @@ see <a class="reference external" href="http://oauth.net/core/1.0a/#auth_step1">
 <li>Docs: <a class="reference external" href="https://www.flickr.com/services/api/auth.oauth.html">https://www.flickr.com/services/api/auth.oauth.html</a></li>
 <li>API reference: <a class="reference external" href="https://www.flickr.com/services/api/">https://www.flickr.com/services/api/</a></li>
 </ul>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>id</li>
+<li>name</li>
+<li>username</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>city</li>
+<li>country</li>
+<li>email</li>
+<li>first_name</li>
+<li>gender</li>
+<li>last_name</li>
+<li>link</li>
+<li>locale</li>
+<li>location</li>
+<li>nickname</li>
+<li>phone</li>
+<li>picture</li>
+<li>postal_code</li>
+<li>timezone</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If you encounter the &#8220;Oops! Flickr doesn&#8217;t recognise the
+permission set.&#8221; message, you need to add the <tt class="docutils literal"><span class="pre">perms=read</span></tt> or
+<tt class="docutils literal"><span class="pre">perms=write</span></tt> parameter to the <em>user authorization request</em>.
+You can do it by adding the <tt class="docutils literal"><span class="pre">user_authorization_params</span></tt>
+key to the <a class="reference internal" href="config.html"><em>Config</em></a>:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;flickr&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth1</span><span class="o">.</span><span class="n">Flickr</span><span class="p">,</span>
+        <span class="s">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+        <span class="s">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s">&#39;##########&#39;</span><span class="p">,</span>
+<span class="hll">        <span class="s">&#39;user_authorization_params&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">perms</span><span class="o">=</span><span class="s">&#39;read&#39;</span><span class="p">),</span>
+</span>    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1667,6 +1760,30 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <li>Docs: <a class="reference external" href="http://www.meetup.com/meetup_api/auth/#oauth">http://www.meetup.com/meetup_api/auth/#oauth</a></li>
 <li>API: <a class="reference external" href="http://www.meetup.com/meetup_api/docs/">http://www.meetup.com/meetup_api/docs/</a></li>
 </ul>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>city</li>
+<li>country</li>
+<li>id</li>
+<li>link</li>
+<li>locale</li>
+<li>location</li>
+<li>name</li>
+<li>picture</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>email</li>
+<li>first_name</li>
+<li>gender</li>
+<li>last_name</li>
+<li>nickname</li>
+<li>phone</li>
+<li>postal_code</li>
+<li>timezone</li>
+<li>username</li>
+</ul>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1695,6 +1812,30 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <li>Docs:</li>
 <li>API: <a class="reference external" href="http://www.plurk.com/API">http://www.plurk.com/API</a></li>
 <li>API explorer: <a class="reference external" href="http://www.plurk.com/OAuth/test/">http://www.plurk.com/OAuth/test/</a></li>
+</ul>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>city</li>
+<li>country</li>
+<li>email</li>
+<li>gender</li>
+<li>id</li>
+<li>link</li>
+<li>locale</li>
+<li>location</li>
+<li>name</li>
+<li>nickname</li>
+<li>picture</li>
+<li>timezone</li>
+<li>username</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>first_name</li>
+<li>last_name</li>
+<li>phone</li>
+<li>postal_code</li>
 </ul>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1726,11 +1867,10 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 </ul>
 <p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
 <ul class="simple">
-<li>city</li>
-<li>country</li>
 <li>id</li>
 <li>link</li>
 <li>locale</li>
+<li>location</li>
 <li>name</li>
 <li>picture</li>
 <li>username</li>
@@ -1738,6 +1878,8 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
 <ul class="simple">
 <li>birth_date</li>
+<li>city</li>
+<li>country</li>
 <li>email</li>
 <li>gender</li>
 <li>first_name</li>
@@ -1775,6 +1917,30 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <li>Docs: <a class="reference external" href="http://www.tumblr.com/docs/en/api/v2#auth">http://www.tumblr.com/docs/en/api/v2#auth</a></li>
 <li>API reference: <a class="reference external" href="http://www.tumblr.com/docs/en/api/v2">http://www.tumblr.com/docs/en/api/v2</a></li>
 </ul>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>id</li>
+<li>name</li>
+<li>username</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>city</li>
+<li>country</li>
+<li>email</li>
+<li>gender</li>
+<li>first_name</li>
+<li>last_name</li>
+<li>link</li>
+<li>locale</li>
+<li>location</li>
+<li>nickname</li>
+<li>phone</li>
+<li>picture</li>
+<li>postal_code</li>
+<li>timezone</li>
+</ul>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1798,9 +1964,15 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <dt id="authomatic.providers.oauth1.UbuntuOne">
 <em class="property">class </em><tt class="descclassname">authomatic.providers.oauth1.</tt><tt class="descname">UbuntuOne</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/authomatic/providers/oauth1.html#UbuntuOne"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.oauth1.UbuntuOne" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ubuntu One OAuth 1.0a provider.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The UbuntuOne service
+<a class="reference external" href="http://blog.canonical.com/2014/04/02/shutting-down-ubuntu-one-file-services/">has been shut down</a>.</p>
+</div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Uses the <a class="reference external" href="http://oauth.net/core/1.0a/#anchor21">PLAINTEXT</a> Signature method!</p>
+<p class="last">Uses the <a class="reference external" href="http://oauth.net/core/1.0a/#anchor21">PLAINTEXT</a>
+Signature method!</p>
 </div>
 <ul class="simple">
 <li>Dashboard: <a class="reference external" href="https://one.ubuntu.com/developer/account_admin/auth/web">https://one.ubuntu.com/developer/account_admin/auth/web</a></li>
@@ -1839,6 +2011,30 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <li>Docs: <a class="reference external" href="https://developer.vimeo.com/apis/advanced#oauth-endpoints">https://developer.vimeo.com/apis/advanced#oauth-endpoints</a></li>
 <li>API reference: <a class="reference external" href="https://developer.vimeo.com/apis">https://developer.vimeo.com/apis</a></li>
 </ul>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>id</li>
+<li>link</li>
+<li>location</li>
+<li>name</li>
+<li>picture</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>city</li>
+<li>country</li>
+<li>email</li>
+<li>gender</li>
+<li>first_name</li>
+<li>last_name</li>
+<li>locale</li>
+<li>nickname</li>
+<li>phone</li>
+<li>postal_code</li>
+<li>timezone</li>
+<li>username</li>
+</ul>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1871,6 +2067,30 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <li>Docs: <a class="reference external" href="http://blog.xero.com/developer/api-overview/public-applications/">http://blog.xero.com/developer/api-overview/public-applications/</a></li>
 <li>API reference: <a class="reference external" href="http://blog.xero.com/developer/api/">http://blog.xero.com/developer/api/</a></li>
 </ul>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>email</li>
+<li>first_name</li>
+<li>id</li>
+<li>last_name</li>
+<li>name</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>city</li>
+<li>country</li>
+<li>gender</li>
+<li>link</li>
+<li>locale</li>
+<li>location</li>
+<li>nickname</li>
+<li>phone</li>
+<li>picture</li>
+<li>postal_code</li>
+<li>timezone</li>
+<li>username</li>
+</ul>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1899,6 +2119,27 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <li>Docs: <a class="reference external" href="http://developer.yahoo.com/oauth/guide/oauth-auth-flow.html">http://developer.yahoo.com/oauth/guide/oauth-auth-flow.html</a></li>
 <li>API: <a class="reference external" href="http://developer.yahoo.com/everything.html">http://developer.yahoo.com/everything.html</a></li>
 <li>API explorer: <a class="reference external" href="http://developer.yahoo.com/yql/console/">http://developer.yahoo.com/yql/console/</a></li>
+</ul>
+<p>Supported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>birth_date</li>
+<li>city</li>
+<li>country</li>
+<li>gender</li>
+<li>id</li>
+<li>link</li>
+<li>location</li>
+<li>name</li>
+<li>nickname</li>
+<li>picture</li>
+</ul>
+<p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
+<ul class="simple">
+<li>locale</li>
+<li>phone</li>
+<li>postal_code</li>
+<li>timezone</li>
+<li>username</li>
 </ul>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1940,7 +2181,9 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <li>last_name</li>
 <li>link</li>
 <li>locale</li>
+<li>location</li>
 <li>name</li>
+<li>phone</li>
 <li>picture</li>
 <li>postal_code</li>
 <li>timezone</li>
@@ -1949,7 +2192,6 @@ which they don&#8217;t provide in the OAuth 2.0 access token response.</p>
 <p>Unsupported <a class="reference internal" href="classes.html#authomatic.core.User" title="authomatic.core.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a> properties:</p>
 <ul class="simple">
 <li>nickname</li>
-<li>phone</li>
 </ul>
 <p>Accepts additional keyword arguments:</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -2383,6 +2625,12 @@ Applied by <a class="reference internal" href="#authomatic.providers.Authorizati
 </dd></dl>
 
 <dl class="attribute">
+<dt id="authomatic.providers.AuthorizationProvider.access_token_response">
+<tt class="descname">access_token_response</tt><em class="property"> = None</em><a class="headerlink" href="#authomatic.providers.AuthorizationProvider.access_token_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Response of the <em>access token request</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="authomatic.providers.AuthorizationProvider.user_authorization_url">
 <tt class="descname">user_authorization_url</tt><a class="reference internal" href="../_modules/authomatic/providers.html#AuthorizationProvider.user_authorization_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.providers.AuthorizationProvider.user_authorization_url" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> URL to which we redirect the <strong>user</strong> to grant our app i.e. the <strong>consumer</strong>
@@ -2619,11 +2867,15 @@ authenticate a <em>claimed identity</em> of a <strong>user</strong>. e.g. <a cla
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../development.html#deployment-to-travis-ci">Deployment to Travis CI</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../development.html#running-the-examples">Running the Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-1-0">Version 0.1.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-13">Version 0.0.13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-12">Version 0.0.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11">Version 0.0.11</a></li>

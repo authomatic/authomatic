@@ -47,7 +47,7 @@
 	<script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.0.13',
+        VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -138,11 +138,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="#testing">Testing</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="#deployment-to-travis-ci">Deployment to Travis CI</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#running-the-examples">Running the Examples</a></li>
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-1-0">Version 0.1.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-13">Version 0.0.13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-12">Version 0.0.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-11">Version 0.0.11</a></li>
@@ -196,14 +200,15 @@
 		        </div>
 		        <div class="large-6 columns">
 		            <p id="motto">
-						<span>Authomatic</span><br />
-is an <em>authorization</em> / <em>authentication</em><br />
-client library for Python web applications<br />
-inspired by Alex Vagin’s
-<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
-In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
-but that name would be too long<br />
-for a succinct library.
+						
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+
 					</p>
 		        </div>
 		        
@@ -354,7 +359,7 @@ installation of the <strong>pyopenssl</strong> package:</p>
 <h2>Documentation Compilation and Deployment<a class="headerlink" href="#documentation-compilation-and-deployment" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Allways keep the documentation in sync with the latest code changes.</p>
+<p class="last">Always keep the documentation in sync with the latest code changes.</p>
 </div>
 <p>Compile the documentation with this commands:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. ./.tox/py27/bin/activate
@@ -380,13 +385,12 @@ actual project repository that you cloned from (your fork) with the
 <div class="section" id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
 <p>Tests are written in <a class="reference external" href="http://pytest.org/">pytest</a>
-and <a class="reference external" href="https://testrun.org/tox">Tox</a> is used to run them in
+and <a class="reference external" href="https://testrun.org/tox">Tox</a> is used to run them against
 <strong>Python 2.6</strong>, <strong>Python 2.7</strong> and <strong>Python 3.4</strong>.</p>
 <p>There are currently only <em>functional</em> (<em>end-to-end</em>)
 <a class="reference external" href="http://seleniumhq.org">Selenium</a> tests.
 They are designed to test the <em>login procedure</em> and
-<em>credentials refreshment</em> and to discover changes in provider APIs.
-Currently the tests cover all of the OAuth 2.0 and select OpenID providers.</p>
+<em>credentials refreshment</em> and to discover changes in provider APIs.</p>
 <p>To run <em>functional</em> tests, you first need to create the
 <tt class="docutils literal"><span class="pre">./tests/functional_tests/config.py</span></tt> module by copying and filling out the
 <tt class="docutils literal"><span class="pre">./tests/functional_tests/config-template.py</span></tt> template.</p>
@@ -396,13 +400,13 @@ Currently the tests cover all of the OAuth 2.0 and select OpenID providers.</p>
 </div>
 <p>If you want to run tests for all of the covered providers,
 you should register an <strong>application</strong> and a <strong>user account</strong> by each of them
-and fill out <strong>all possible</strong> settings in the user profile.
+and fill out <strong>all possible</strong> settings of the user profile.
 You can exclude providers from the tests by comenting them out of the
 <tt class="docutils literal"><span class="pre">INCLUDE_PROVIDERS</span></tt> list.</p>
 <p>You should also add an alias for the IP address of your localhost, because
 some providers like Twitter require the <tt class="docutils literal"><span class="pre">callback_uri</span></tt>
 to match a domain pattern.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo <span class="nb">echo</span> -e <span class="s2">&quot;127.0.0.1\tauthomatic.com&quot;</span> &gt;&gt; /etc/hosts
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo <span class="nb">echo</span> -e <span class="s2">&quot;127.0.0.1\tauthomatic.org&quot;</span> &gt;&gt; /etc/hosts
 <span class="nv">$ </span>cat /etc/hosts
 <span class="c"># Host Database</span>
 <span class="c">#</span>
@@ -410,17 +414,84 @@ to match a domain pattern.</p>
 <span class="c"># when the system is booting.  Do not change this entry.</span>
 <span class="c">##</span>
 127.0.0.1   localhost
-127.0.0.1   authomatic.com
+127.0.0.1   authomatic.org
 </pre></div>
 </div>
-<p>Finally launch the tests:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>tox
+<p>Finally launch the tests. If you have set the <tt class="docutils literal"><span class="pre">PORT</span> <span class="pre">=</span> <span class="pre">80</span></tt> in
+<tt class="docutils literal"><span class="pre">./tests/functional_tests/config.py</span></tt> (this is needed because some providers
+like Yahoo don&#8217;t support custom ports),
+then you need to run the tests as <em>sudo</em>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>sudo tox
 </pre></div>
 </div>
 <p>If you want <strong>tox</strong> to only run tests for let&#8217;s say
 <strong>Python 2.6</strong> and <strong>Python 3.4</strong> use the <tt class="docutils literal"><span class="pre">-e</span></tt> option:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>tox -e py26, py34
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>sudo tox -e py26, py34
 </pre></div>
+</div>
+<p>If something goes wrong, you can examine the <strong>py.test</strong> logs, at
+<tt class="docutils literal"><span class="pre">./tests/pytest-pyXX.log</span></tt> and the provider login logs at
+<tt class="docutils literal"><span class="pre">./tests/functional_tests/login-pyXX.log</span></tt>.</p>
+<p>You can watch the login logs while the tests are running with the
+<tt class="docutils literal"><span class="pre">tail</span> <span class="pre">-f</span></tt> command. This is useful when debugging the login on Firefox on Linux
+in an invisible display.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>tail -f ./tests/functional_tests/login-py*.log
+</pre></div>
+</div>
+<div class="section" id="deployment-to-travis-ci">
+<h3>Deployment to Travis CI<a class="headerlink" href="#deployment-to-travis-ci" title="Permalink to this headline">¶</a></h3>
+<p>Register at <a class="reference external" href="https://travis-ci.org/">Travis CI</a> and configure your fork
+of Authomatic (read the <a class="reference external" href="http://docs.travis-ci.com/user/getting-started/">getting started section</a> if you don&#8217;t know how).</p>
+<p>Install the <a class="reference external" href="https://github.com/travis-ci/travis.rb">Travis CI command line client</a>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>sudo gem install travis
+</pre></div>
+</div>
+<p>Log in.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>travis login --org
+</pre></div>
+</div>
+<p>Tweak the Travis CI specific settings in <tt class="docutils literal"><span class="pre">./tests/functional_tests/config.py</span></tt>,
+or better leave it as it is.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Recommended setup for Travis CI environment.</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;TRAVIS&#39;</span><span class="p">):</span>
+    <span class="n">MAX_LOGIN_ATTEMPTS</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">WAIT_MULTIPLIER</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">MIN_WAIT</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="c"># LinkedIn and WindowsLive include a captcha in the login form</span>
+    <span class="c"># if a user logs in from an unusual location.</span>
+    <span class="n">INCLUDE_PROVIDERS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">INCLUDE_PROVIDERS</span><span class="p">)</span> <span class="o">-</span>
+                             <span class="nb">set</span><span class="p">([</span><span class="s">&#39;linkedin&#39;</span><span class="p">,</span> <span class="s">&#39;windowslive&#39;</span><span class="p">]))</span>
+
+    <span class="k">def</span> <span class="nf">get_browser</span><span class="p">():</span>
+        <span class="c"># Eventbrite has problems with the login form on Firefox</span>
+        <span class="k">return</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">teardown</span><span class="p">():</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>LinkedIn</strong> and <strong>WindowsLive</strong> add a <em>captcha</em> to the user login form
+if the user tries to log in from an unusual location
+like the Travis CI servers in the US.</p>
+</div>
+<p>Encrypt the config and add it automatically to <tt class="docutils literal"><span class="pre">./.travis.yml</span></tt>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>travis encrypt-file ./tests/functional_tests/config.py ./tests/functional_tests/config.py.enc --add
+</pre></div>
+</div>
+<p>Commit the encrypted config and updated <tt class="docutils literal"><span class="pre">./.travis.yml</span></tt> and push it to GitHub.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>git add ./.travis.yml ./tests/functional_tests/config.py.enc
+<span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>git commit -m <span class="s1">&#39;Updated Travis CI config.&#39;</span>
+<span class="o">(</span>e<span class="o">)</span><span class="nv">$ </span>git push
+</pre></div>
+</div>
+<p>Go to <tt class="docutils literal"><span class="pre">https://travis-ci.org/&lt;your-github-username&gt;/authomatic/builds/</span></tt> and
+watch it pass (hopefully). If the tests fail, the
+<tt class="docutils literal"><span class="pre">./tests/functional_tests/login-py*.log</span></tt> and the
+<tt class="docutils literal"><span class="pre">./tests/pytest-py*.log</span></tt> logs will be displayed at the end of the log
+so you can get a hang of what went wrong.</p>
 </div>
 </div>
 <div class="section" id="running-the-examples">
@@ -429,17 +500,32 @@ to match a domain pattern.</p>
 <tt class="docutils literal"><span class="pre">config-template.py</span></tt> to <tt class="docutils literal"><span class="pre">config.py</span></tt>, fill it out,
 activate one of the virtual environments in <tt class="docutils literal"><span class="pre">./tox/</span></tt> and run the example
 the usual way according to its framework.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The examples for functional tests
-(currently there is only one in <tt class="docutils literal"><span class="pre">./examples/flask/functional_test/</span></tt>)
-use the <strong>config</strong> from <tt class="docutils literal"><span class="pre">./tests/functional_tests/config.py</span></tt>.</p>
+<p>Example of launching the <a class="reference internal" href="examples/django-simple.html"><em>Simple Django Example</em></a> with Python 3.4:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. ./.tox/py34/bin/activate
+<span class="o">(</span>py34<span class="o">)</span><span class="nv">$ </span>cp ./examples/django/example/simple/config-template.py ./examples/django/example/simple/config.py
+<span class="o">(</span>py34<span class="o">)</span><span class="nv">$ </span>vim ./examples/django/example/simple/config.py
+<span class="o">(</span>py34<span class="o">)</span><span class="nv">$ </span>./examples/django/example/manage.py runserver
+</pre></div>
 </div>
+<p>Example of launching the <a class="reference internal" href="examples/flask-simple.html"><em>Simple Flask Example</em></a> with Python 2.6:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. ./.tox/py26/bin/activate
+<span class="o">(</span>py26<span class="o">)</span><span class="nv">$ </span>cp ./examples/flask/werkzeug_adapter/config-template.py ./examples/flask/werkzeug_adapter/config.py
+<span class="o">(</span>py26<span class="o">)</span><span class="nv">$ </span>vim ./examples/flask/werkzeug_adapter/config.py
+<span class="o">(</span>py26<span class="o">)</span><span class="nv">$ </span>python ./examples/flask/werkzeug_adapter/main.py
+</pre></div>
+</div>
+<p>Example of launching the <a class="reference internal" href="examples/credentials.html"><em>Advanced Webapp2 Google App Engine Example</em></a> with Python 2.7:</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The Google App Engine examples will only work in <strong>Python 2.7</strong>
-The Google App Engine command line tools are installed in the <tt class="docutils literal"><span class="pre">./tox/py27/bin</span></tt>
-directory.</p>
+The Google App Engine command line tools are installed in the <tt class="docutils literal"><span class="pre">./tox/py27</span></tt>
+virtual environment.</p>
+</div>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>. ./.tox/py27/bin/activate
+<span class="o">(</span>py27<span class="o">)</span><span class="nv">$ </span>cp ./examples/gae/credentials/config-template.py ./examples/gae/credentials//config.py
+<span class="o">(</span>py27<span class="o">)</span><span class="nv">$ </span>vim ./examples/gae/credentials/config.py
+<span class="o">(</span>py27<span class="o">)</span><span class="nv">$ </span>dev_appserver ./examples/gae/credentials/
+</pre></div>
 </div>
 </div>
 </div>
@@ -491,11 +577,15 @@ directory.</p>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deployment-to-travis-ci">Deployment to Travis CI</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#running-the-examples">Running the Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-1-0">Version 0.1.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-13">Version 0.0.13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-12">Version 0.0.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-11">Version 0.0.11</a></li>

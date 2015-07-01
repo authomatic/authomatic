@@ -28,13 +28,13 @@
 	<meta property="og:image" content="http://peterhudec.github.io/authomatic/_static/img/authomatic-seo.gif" />
 	
 	
-	<meta property="og:description" content="A simple tutorial where we create a Django app which can log users in with Facebook, Twitter and OpenID and read their recent statuses." />
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
 	<meta property="og:site_name" content="Authomatic" />
 	
 	
     
     
-	<meta name="description" content="A simple tutorial where we create a Django app which can log users in with Facebook, Twitter and OpenID and read their recent statuses.">
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
     
 	
 	
@@ -47,7 +47,7 @@
 	<script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.0.13',
+        VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -138,11 +138,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a></li>
+<li class="has-dropdown toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a><ul class="dropdown ">
+<li class="toctree-l3"><a class="reference internal" href="../development.html#deployment-to-travis-ci">Deployment to Travis CI</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../development.html#running-the-examples">Running the Examples</a></li>
 </ul>
 </li>
 <li class="has-dropdown toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul class="dropdown ">
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-1-0">Version 0.1.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-13">Version 0.0.13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-12">Version 0.0.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11">Version 0.0.11</a></li>
@@ -196,14 +200,15 @@
 		        </div>
 		        <div class="large-6 columns">
 		            <p id="motto">
-						<span>Authomatic</span><br />
-is an <em>authorization</em> / <em>authentication</em><br />
-client library for Python web applications<br />
-inspired by Alex Vagin’s
-<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
-In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
-but that name would be too long<br />
-for a succinct library.
+						
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+
 					</p>
 		        </div>
 		        
@@ -291,7 +296,7 @@ and retrieve their 5 most recent tweets/statuses.</p>
 <span class="nv">$ </span><span class="nb">cd </span>simple
 </pre></div>
 </div>
-<p>Open the the <tt class="docutils literal"><span class="pre">example/simple/urls.py</span></tt> module and map the <tt class="docutils literal"><span class="pre">/</span></tt> root URL to the <tt class="docutils literal"><span class="pre">home</span></tt> view
+<p>Open the <tt class="docutils literal"><span class="pre">example/simple/urls.py</span></tt> module and map the <tt class="docutils literal"><span class="pre">/</span></tt> root URL to the <tt class="docutils literal"><span class="pre">home</span></tt> view
 and the <tt class="docutils literal"><span class="pre">/login/[provider_name]</span></tt> URL to the <tt class="docutils literal"><span class="pre">login</span></tt> view.
 We will create the views later.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># example/simple/urls.py</span>
@@ -337,7 +342,7 @@ in the <tt class="docutils literal"><span class="pre">example/example/settings.p
 </div>
 <p>Now in the <tt class="docutils literal"><span class="pre">example/simple</span></tt> directory create the <tt class="docutils literal"><span class="pre">config.py</span></tt> module
 with the <a class="reference internal" href="../reference/config.html"><em>Config</em></a> dictionary where you set up all the providers you want to use.
-Yo will need the <tt class="docutils literal"><span class="pre">consumer_key</span></tt> and <tt class="docutils literal"><span class="pre">consumer_secret</span></tt> which you can get
+You will need the <tt class="docutils literal"><span class="pre">consumer_key</span></tt> and <tt class="docutils literal"><span class="pre">consumer_secret</span></tt> which you can get
 <a class="reference external" href="https://developers.facebook.com/apps">here</a> for Facebook and
 <a class="reference external" href="https://dev.twitter.com/apps">here</a> for Twitter.</p>
 <div class="admonition note">
@@ -721,11 +726,15 @@ Remember that you can download all the files we just created from
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../development.html#documentation-compilation-and-deployment">Documentation Compilation and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development.html#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../development.html#deployment-to-travis-ci">Deployment to Travis CI</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../development.html#running-the-examples">Running the Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-1-0">Version 0.1.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-13">Version 0.0.13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-12">Version 0.0.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#version-0-0-11">Version 0.0.11</a></li>
