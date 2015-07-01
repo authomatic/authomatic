@@ -144,7 +144,7 @@ to match a domain pattern.
 
 .. code-block:: bash
 
-    $ sudo echo -e "127.0.0.1\tauthomatic.com" >> /etc/hosts
+    $ sudo echo -e "127.0.0.1\tauthomatic.org" >> /etc/hosts
     $ cat /etc/hosts
     # Host Database
     #
@@ -152,20 +152,23 @@ to match a domain pattern.
     # when the system is booting.  Do not change this entry.
     ##
     127.0.0.1	localhost
-    127.0.0.1	authomatic.com
+    127.0.0.1	authomatic.org
 
-Finally launch the tests:
+Finally launch the tests. If you have set the ``PORT = 80`` in
+``./tests/functional_tests/config.py`` (this is needed because some providers
+like Yahoo don't support custom ports),
+then you need to run the tests as *sudo*:
 
 .. code-block:: bash
 
-    (e)$ tox
+    (e)$ sudo tox
 
 If you want **tox** to only run tests for let's say
 **Python 2.6** and **Python 3.4** use the ``-e`` option:
 
 .. code-block:: bash
 
-    (e)$ tox -e py26, py34
+    (e)$ sudo tox -e py26, py34
 
 If something goes wrong, you can examine the **py.test** logs, at
 ``./tests/pytest-pyXX.log`` and the provider login logs at
