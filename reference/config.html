@@ -284,9 +284,9 @@ through standards like <em>OAuth</em> and <em>OpenID</em>.
 <p>The config is a dictionary listing all the <strong>providers</strong> you want to use in your app.
 The keys are your internal <strong>provider</strong> names or slugs,
 the values are dictionaries specifying configuration for a particular <strong>provider</strong> name.</p>
-<p>Choose a provider implementation by assigning a <a class="reference external" href="/reference/providers">provider class</a> to the <tt class="docutils literal"><span class="pre">&quot;class_&quot;</span></tt> key of
+<p>Choose a provider implementation by assigning a <a class="reference external" href="providers">provider class</a> to the <tt class="docutils literal"><span class="pre">&quot;class_&quot;</span></tt> key of
 the nested <em>configuration dictionary</em>. All the other keys are just keyword arguments
-which will be passed to the chosen <a class="reference external" href="/reference/providers">provider class</a> constructor.</p>
+which will be passed to the chosen <a class="reference external" href="providers">provider class</a> constructor.</p>
 <p>There is one special <tt class="docutils literal"><span class="pre">&quot;__defaults__&quot;</span></tt> key under which you can specify default
 keyword arguments for all providers. Values of specific <strong>providers</strong> will override the default values.</p>
 <div class="admonition note">
