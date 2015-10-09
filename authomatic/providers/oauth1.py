@@ -491,13 +491,13 @@ class Bitbucket(OAuth1):
     * name
     * picture
     * username
+    * email
 
     Unsupported :class:`.User` properties:
 
     * birth_date
     * city
     * country
-    * email
     * gender
     * locale
     * location
@@ -521,13 +521,15 @@ class Bitbucket(OAuth1):
         link=True,
         name=True,
         picture=True,
-        username=True
+        username=True,
+        email=True
     )
     
     request_token_url = 'https://bitbucket.org/!api/1.0/oauth/request_token'
     user_authorization_url = 'https://bitbucket.org/!api/1.0/oauth/authenticate'
     access_token_url = 'https://bitbucket.org/!api/1.0/oauth/access_token'
     user_info_url = 'https://api.bitbucket.org/1.0/user'
+    user_email_url = 'https://api.bitbucket.org/1.0/emails'
     
     @staticmethod
     def _x_user_parser(user, data):
@@ -540,7 +542,22 @@ class Bitbucket(OAuth1):
         user.link = 'https://bitbucket.org/api{0}'\
             .format(_user.get('resource_uri'))
         return user
-
+    
+    def _access_user_info(self):
+        """
+        Email is available in separate method so second request is needed.
+        """
+        response = super(Bitbucket, self)._access_user_info()
+        
+        response.data.setdefault("email", None)
+        
+        email_response = self.access(self.user_email_url)
+        if email_response.data:
+            for item in email_response.data:
+                if item.get("primary", False):
+                    response.data.update(email=item.get("email", None))
+        
+        return response
 
 class Flickr(OAuth1):
     """
