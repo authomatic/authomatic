@@ -1556,7 +1556,11 @@ class VK(OAuth2):
 
         _birth_date = _resp.get('bdate')
         if _birth_date:
-            user.birth_date = datetime.datetime.strptime(_birth_date, '%d.%m.%Y')
+            # :TODO: handle the use case "1.10", without year or day or ... 
+            try:
+                user.birth_date = datetime.datetime.strptime(_birth_date, '%d.%m.%Y')
+            except:
+                pass
         user.id = _resp.get('uid')
         user.first_name = _resp.get('first_name')
         user.gender = _resp.get('sex')
