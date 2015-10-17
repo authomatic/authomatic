@@ -867,6 +867,16 @@ class Facebook(OAuth2):
         # Always refresh.
         return True
 
+    def access(self, url, params=None, **kwargs):
+        if params is None:
+            params = {}
+            
+        # syntax ?fields=field1,field2 is reqiured for getting attributes, 
+        # see https://developers.facebook.com/blog/post/2015/07/08/graph-api-v2.4/
+        params["fields"] = "id,email,name,first_name,last_name,gender,hometown,link,timezone,verified,website,locale,languages"
+
+        return super(Facebook, self).access(url, params, **kwargs)
+
 
 class Foursquare(OAuth2):
     """
