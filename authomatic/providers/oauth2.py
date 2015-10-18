@@ -1071,6 +1071,32 @@ class GitHub(OAuth2):
         if data.get('token_type') == 'bearer':
             credentials.token_type = cls.BEARER
         return credentials
+    
+    def access(self, url, **kwargs):
+        def parent_access(url):
+            return super(GitHub, self).access(url, **kwargs)
+        
+        response = parent_access(url)
+        
+        # additional action to get email is required:
+        # https://developer.github.com/v3/users/emails/
+        if response.status == 200:
+            email_response = parent_access(url + "/emails")
+            if email_response.status == 200:
+                response.data["emails"] = email_response.data
+                
+                # find first or primary email
+                primary_email = None
+                for item in email_response.data:
+                    is_primary = item["primary"]
+                    if not primary_email or is_primary:
+                        primary_email = item["email"]
+                        
+                    if is_primary:
+                        break
+                    
+                response.data["email"] = primary_email
+        return response
 
 
 class Google(OAuth2):
