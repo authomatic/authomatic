@@ -1073,6 +1073,11 @@ class GitHub(OAuth2):
         return credentials
     
     def access(self, url, **kwargs):
+        # https://developer.github.com/v3/#user-agent-required
+        headers = kwargs["headers"] = kwargs.get("headers", {})
+        if not headers.get("User-Agent"):
+            headers["User-Agent"] = self.settings.config[self.name]["consumer_key"]
+        
         def parent_access(url):
             return super(GitHub, self).access(url, **kwargs)
         
