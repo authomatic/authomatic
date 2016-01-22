@@ -34,6 +34,7 @@ import datetime
 import logging
 
 from authomatic import providers
+from authomatic.providers import AuthorizationProvider as authprovider
 from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 import authomatic.core as core
 
@@ -59,7 +60,7 @@ class OAuth2(providers.AuthorizationProvider):
     #: :class:`bool` If ``False``, the provider doesn't support CSRF protection.
     supports_csrf_protection = True
 
-    grant_type = ATHORIZATION_CODE_GRANT_TYPE
+    grant_type = providers.AuthorizationProvider.AUTHORIZATION_CODE_GRANT_TYPE
     
     token_request_method = 'POST'  # method for requesting an access token
     
@@ -82,6 +83,7 @@ class OAuth2(providers.AuthorizationProvider):
         
         self.scope = self._kwarg(kwargs, 'scope', [])
         self.offline = self._kwarg(kwargs, 'offline', False)
+        #self.grant_type = self._kwarg(kwargs, 'grant_type', providers.AuthorizationProvider.AUTHORIZATION_CODE_GRANT_TYPE)
     
     
     #===========================================================================
@@ -125,9 +127,9 @@ class OAuth2(providers.AuthorizationProvider):
             # User authorization request.
             # TODO: Raise error for specific message for each missing argument.
             if consumer_key and redirect_uri and (csrf or not cls.supports_csrf_protection):
-                if grant_type == cls.CLIENT_CREDENTIAL_GRANT_TYPE:
+                if cls.grant_type == cls.CLIENT_CREDENTIAL_GRANT_TYPE:
                     pass
-                elif grant_type == cls.ATHORIZATION_CODE_GRANT_TYPE:
+                elif cls.grant_type == cls.AUTHORIZATION_CODE_GRANT_TYPE:
                     params['client_id'] = consumer_key
                     params['redirect_uri'] = redirect_uri
                     params['scope'] = scope
@@ -143,18 +145,19 @@ class OAuth2(providers.AuthorizationProvider):
         elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
             # Access token request.
             if consumer_key and consumer_secret:
-                if grant_type == cls.ATHORIZATION_CODE_GRANT_TYPE:
+                if cls.grant_type == cls.AUTHORIZATION_CODE_GRANT_TYPE:
                     params['code'] = token
                     params['client_id'] = consumer_key
                     params['client_secret'] = consumer_secret
                     params['redirect_uri'] = redirect_uri
                     params['grant_type'] = 'authorization_code'
 
-                elif grant_type == cls.CLIENT_CREDENTIAL_GRANT_TYPE:
+                elif cls.grant_type == cls.CLIENT_CREDENTIAL_GRANT_TYPE:
                     params['client_id'] = consumer_key
                     params['client_secret'] = consumer_secret
                     params['redirect_uri'] = redirect_uri
                     params['grant_type'] = 'client_credentials'
+                    headers['Authorization'] = 'Basic {0}'.format(consumer_secret)
                 
                 # TODO: Check whether all providers accept it
                 headers.update(cls._authorization_header(credentials))
@@ -290,6 +293,7 @@ class OAuth2(providers.AuthorizationProvider):
     
     @providers.login_decorator
     def login(self):
+
         
         # get request parameters from which we can determine the login phase
         authorization_code = self.params.get('code')
@@ -298,7 +302,7 @@ class OAuth2(providers.AuthorizationProvider):
         state = self.params.get('state')      
         
         
-        if authorization_code or not self.user_authorization_url:
+        if authorization_code or not self.user_authorization_url or self.grant_type == authprovider.CLIENT_CREDENTIAL_GRANT_TYPE:
             
             if authorization_code:
                 #===================================================================
@@ -321,7 +325,7 @@ class OAuth2(providers.AuthorizationProvider):
                 else:
                     self._log(logging.WARN, u'Skipping CSRF validation!')
             
-            elif not self.user_authorization_url:
+            elif not self.user_authorization_url or self.grant_type == authprovider.CLIENT_CREDENTIAL_GRANT_TYPE:
                 #===================================================================
                 # Phase 1 without user authorization redirect.
                 #===================================================================
@@ -340,8 +344,7 @@ class OAuth2(providers.AuthorizationProvider):
                                                              method=self.token_request_method,
                                                              redirect_uri=self.url,
                                                              params=self.access_token_params,
-                                                             headers=self.access_token_headers,
-                                                             grant_type=self.grant_type)
+                                                             headers=self.access_token_headers)
 
             response = self._fetch(*request_elements)
             self.access_token_response = response
@@ -395,7 +398,7 @@ class OAuth2(providers.AuthorizationProvider):
             else:
                 raise FailureError(error_description, url=self.user_authorization_url)
             
-        elif not self.params and grant_type == cls.ATHORIZATION_CODE_GRANT_TYPE:
+        elif not self.params and self.grant_type == authprovider.AUTHORIZATION_CODE_GRANT_TYPE:
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
