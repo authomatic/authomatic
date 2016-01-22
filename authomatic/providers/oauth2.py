@@ -58,6 +58,8 @@ class OAuth2(providers.AuthorizationProvider):
     
     #: :class:`bool` If ``False``, the provider doesn't support CSRF protection.
     supports_csrf_protection = True
+
+    grant_type = ATHORIZATION_CODE_GRANT_TYPE
     
     token_request_method = 'POST'  # method for requesting an access token
     
@@ -123,11 +125,14 @@ class OAuth2(providers.AuthorizationProvider):
             # User authorization request.
             # TODO: Raise error for specific message for each missing argument.
             if consumer_key and redirect_uri and (csrf or not cls.supports_csrf_protection):
-                params['client_id'] = consumer_key
-                params['redirect_uri'] = redirect_uri
-                params['scope'] = scope
-                params['state'] = csrf
-                params['response_type'] = 'code'
+                if grant_type == cls.CLIENT_CREDENTIAL_GRANT_TYPE:
+                    pass
+                elif grant_type == cls.ATHORIZATION_CODE_GRANT_TYPE:
+                    params['client_id'] = consumer_key
+                    params['redirect_uri'] = redirect_uri
+                    params['scope'] = scope
+                    params['state'] = csrf
+                    params['response_type'] = 'code'
                 
                 # Add authorization header
                 headers.update(cls._authorization_header(credentials))
@@ -138,11 +143,18 @@ class OAuth2(providers.AuthorizationProvider):
         elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
             # Access token request.
             if consumer_key and consumer_secret:
-                params['code'] = token
-                params['client_id'] = consumer_key
-                params['client_secret'] = consumer_secret
-                params['redirect_uri'] = redirect_uri
-                params['grant_type'] = 'authorization_code'
+                if grant_type == cls.ATHORIZATION_CODE_GRANT_TYPE:
+                    params['code'] = token
+                    params['client_id'] = consumer_key
+                    params['client_secret'] = consumer_secret
+                    params['redirect_uri'] = redirect_uri
+                    params['grant_type'] = 'authorization_code'
+
+                elif grant_type == cls.CLIENT_CREDENTIAL_GRANT_TYPE:
+                    params['client_id'] = consumer_key
+                    params['client_secret'] = consumer_secret
+                    params['redirect_uri'] = redirect_uri
+                    params['grant_type'] = 'client_credentials'
                 
                 # TODO: Check whether all providers accept it
                 headers.update(cls._authorization_header(credentials))
@@ -285,6 +297,7 @@ class OAuth2(providers.AuthorizationProvider):
         error_message = self.params.get('error_message')
         state = self.params.get('state')      
         
+        
         if authorization_code or not self.user_authorization_url:
             
             if authorization_code:
@@ -327,7 +340,8 @@ class OAuth2(providers.AuthorizationProvider):
                                                              method=self.token_request_method,
                                                              redirect_uri=self.url,
                                                              params=self.access_token_params,
-                                                             headers=self.access_token_headers)
+                                                             headers=self.access_token_headers,
+                                                             grant_type=self.grant_type)
 
             response = self._fetch(*request_elements)
             self.access_token_response = response
@@ -381,7 +395,7 @@ class OAuth2(providers.AuthorizationProvider):
             else:
                 raise FailureError(error_description, url=self.user_authorization_url)
             
-        elif not self.params:
+        elif not self.params and grant_type == cls.ATHORIZATION_CODE_GRANT_TYPE:
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
