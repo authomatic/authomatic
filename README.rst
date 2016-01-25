@@ -1,29 +1,8 @@
-.. |gae| replace:: Google App Engine
-.. _gae: https://developers.google.com/appengine/
 
-.. |webapp2| replace:: Webapp2
-.. _webapp2: http://webapp-improved.appspot.com/
-
-.. |oauth2| replace:: OAuth 2.0
-.. _oauth2: http://oauth.net/2/
-
-.. |oauth1| replace:: OAuth 1.0a
-.. _oauth1: http://oauth.net/core/1.0a/
-
-.. |openid| replace:: OpenID
-.. _openid: http://openid.net/
-
-.. |pyopenid| replace:: python-openid
-.. _pyopenid: http://pypi.python.org/pypi/python-openid/
-
-==========
 Authomatic
 ==========
 
-.. image:: https://travis-ci.org/peterhudec/authomatic.svg?branch=master
-    :target: https://travis-ci.org/peterhudec/authomatic
-
-**Authomatic**
+Forked from **Authomatic** which
 is a **framework agnostic** library
 for **Python** web applications
 with a **minimalistic** but **powerful** interface
@@ -36,58 +15,25 @@ For more info visit the project page at http://peterhudec.github.io/authomatic.
 Features
 ========
 
-* Loosely coupled.
-* Tiny but powerful interface.
-* The |pyopenid|_ library is the only **optional** dependency.
-* **Framework agnostic** thanks to adapters.
-  Out of the box support for **Django**, **Flask**, **Pyramid** and **Webapp2**.
-* Ready to accommodate future authorization/authentication protocols.
-* Makes provider API callls a breeze.
-* Asynchronous requests.
-* JavaScript library as a bonus.
-* Out of the box support for:
-
-  * |oauth1|_ providers: **Bitbucket**, **Flickr**, **Meetup**, **Plurk**,
-    **Twitter**, **Tumblr**, **UbuntuOne**, **Vimeo**, **Xero**, **Xing** and **Yahoo**.
-  * |oauth2|_ providers: **Amazon**, **Behance**, **Bitly**, **Cosm**,
-    **DeviantART**, **Eventbrite**, **Facebook**, **Foursquare**,
-    **GitHub**, **Google**, **LinkedIn**, **PayPal**, **Reddit**,
-    **Viadeo**, **VK**, **WindowsLive**, **Yammer** and **Yandex**.
-  * |pyopenid|_ and |gae|_ based |openid|_.
-
-License
-=======
-
-The package is licensed under
-`MIT license <http://en.wikipedia.org/wiki/MIT_License>`__.
-
-Requirements
-============
-
-Requires **Python 2.6** and newer. **Python 3.x** support added in
-**Authomatic 0.0.11** thanks to
-`Emmanuel Leblond <https://github.com/touilleMan>`__.
-
-Live Demo
-=========
-
-There is a |gae| based live demo app running at
-http://authomatic-example.appspot.com which makes use of most of the features.
-
-Contribute
-==========
-
-.. image:: http://badge.waffle.io/peterhudec/authomatic.png
-   :target: http://waffle.io/peterhudec/authomatic
-   :alt: Stories in Ready
-
-Contributions of any kind are very welcome.
-If you want to contribute, please read the
-`Development Guide <http://peterhudec.github.io/authomatic/development.html>`__
-first. The project is hosted on
-`GitHub <https://github.com/peterhudec/authomatic>`__.
+* Added new client credentials grant type authorization for users
 
 Usage
 =====
 
 Read the exhaustive documentation at http://peterhudec.github.io/authomatic.
+Just a small change in configuring your providers, just mention the grant type
+for your authorization flow like this
+
+for Client credential grant type
+    ``
+    grant_type = AuthorizationProvider.CLIENT_CREDENTIAL_GRANT_TYPE
+    ``
+
+for authorization code grant type
+    ``
+    grant_type = AuthorizationProvider.AUTHORIZATION_CODE_GRANT_TYPE
+    ``
+
+The default grant_type is also AUTHORIZATION_CODE_GRANT_TYPE so if you
+don't mention the grant type it will automatically assume it to be 
+AUTHORIZATION_CODE_GRANT_TYPE.
