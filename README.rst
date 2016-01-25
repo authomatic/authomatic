@@ -22,17 +22,17 @@ Usage
 
 Read the exhaustive documentation at http://peterhudec.github.io/authomatic.
 Just a small change in configuring your providers, just mention the grant type
-for your authorization flow like this
+for your authorization flow in the provider class like this
 
 for Client credential grant type
-    ``
-    grant_type = AuthorizationProvider.CLIENT_CREDENTIAL_GRANT_TYPE
-    ``
+    ```
+    grant_type = AuthorizationProvider.CLIENT_CREDENTIALS_GRANT_TYPE
+    ```
 
 for authorization code grant type
-    ``
+    ```
     grant_type = AuthorizationProvider.AUTHORIZATION_CODE_GRANT_TYPE
-    ``
+    ```
 
 The default grant_type is also AUTHORIZATION_CODE_GRANT_TYPE so if you
 don't mention the grant type it will automatically assume it to be 
