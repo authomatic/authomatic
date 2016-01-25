@@ -127,7 +127,7 @@ class OAuth2(providers.AuthorizationProvider):
             # User authorization request.
             # TODO: Raise error for specific message for each missing argument.
             if consumer_key and redirect_uri and (csrf or not cls.supports_csrf_protection):
-                if cls.grant_type == cls.CLIENT_CREDENTIAL_GRANT_TYPE:
+                if cls.grant_type == cls.CLIENT_CREDENTIALS_GRANT_TYPE:
                     pass
                 elif cls.grant_type == cls.AUTHORIZATION_CODE_GRANT_TYPE:
                     params['client_id'] = consumer_key
@@ -152,7 +152,7 @@ class OAuth2(providers.AuthorizationProvider):
                     params['redirect_uri'] = redirect_uri
                     params['grant_type'] = 'authorization_code'
 
-                elif cls.grant_type == cls.CLIENT_CREDENTIAL_GRANT_TYPE:
+                elif cls.grant_type == cls.CLIENT_CREDENTIALS_GRANT_TYPE:
                     params['client_id'] = consumer_key
                     params['client_secret'] = consumer_secret
                     params['redirect_uri'] = redirect_uri
@@ -302,7 +302,7 @@ class OAuth2(providers.AuthorizationProvider):
         state = self.params.get('state')      
         
         
-        if authorization_code or not self.user_authorization_url or self.grant_type == authprovider.CLIENT_CREDENTIAL_GRANT_TYPE:
+        if authorization_code or not self.user_authorization_url or self.grant_type == authprovider.CLIENT_CREDENTIALS_GRANT_TYPE:
             
             if authorization_code:
                 #===================================================================
@@ -325,7 +325,7 @@ class OAuth2(providers.AuthorizationProvider):
                 else:
                     self._log(logging.WARN, u'Skipping CSRF validation!')
             
-            elif not self.user_authorization_url or self.grant_type == authprovider.CLIENT_CREDENTIAL_GRANT_TYPE:
+            elif not self.user_authorization_url or self.grant_type == authprovider.CLIENT_CREDENTIALS_GRANT_TYPE:
                 #===================================================================
                 # Phase 1 without user authorization redirect.
                 #===================================================================
