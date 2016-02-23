@@ -482,7 +482,8 @@ class TestUser(Base):
             value = browser.find_element_by_id(property_name).text or None
             expected = provider['user'][property_name]
 
-            if isinstance(expected, type(re.compile(''))):
+            is_regex = isinstance(expected, type(re.compile('')))
+            if is_regex:
                 assert expected.match(value)
             else:
                 assert value == expected
