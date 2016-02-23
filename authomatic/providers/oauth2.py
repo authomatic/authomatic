@@ -764,7 +764,6 @@ class Facebook(OAuth2):
     * location
     * name
     * picture
-    * timezone
 
     Unsupported :class:`.User` properties:
 
@@ -772,6 +771,7 @@ class Facebook(OAuth2):
     * phone
     * postal_code
     * username
+    * timezone
 
     """
     user_authorization_url = 'https://www.facebook.com/dialog/oauth'
@@ -795,7 +795,6 @@ class Facebook(OAuth2):
         location=True,
         name=True,
         picture=True,
-        timezone=True
     )
     
     @classmethod

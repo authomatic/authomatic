@@ -1,4 +1,4 @@
-Version 0.1.0
+Version 0.0.14
 -------------
 
 * Introduced the :attr:`.User.access_token_response` attribute.
@@ -13,6 +13,8 @@ Version 0.1.0
   :class:`.oauth1.Tumbler` provider.
 * Removed support for :attr:`.User.username` and added support for
   :attr:`.User.birth_date` to :class:`.oauth2.Facebook` provider.
+* Removed support for :attr:`.User.timezone` and from :class:`.oauth2.Facebook`
+  provider.
 * :class:`.oauth2.Facebook` provider now uses ``v2`` api for user info request.
 * Removed the ``r_fullprofile`` and ``r_fullprofile`` scopes from
   :attr:`.oauth2.LinkedIn.user_info_scope` due to the
