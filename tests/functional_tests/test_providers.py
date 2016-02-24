@@ -242,6 +242,7 @@ def login(request, browser, app, attempt=1):
             if hi:
                 human_interaction_needed(*hi)
 
+            wait(2, provider.get('before_password_input_wait'))
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)
