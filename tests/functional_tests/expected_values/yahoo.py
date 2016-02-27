@@ -20,11 +20,11 @@ CONFIG = {
     'logout_url': 'https://login.yahoo.com/config/login?logout=1',
     'class_': oauth1.Yahoo,
     'user': {
-        'birth_date': conf.user_birth_date_str,
+        'birth_date': None,
         'city': conf.user_city,
         'country': conf.user_country,
         'email': None,
-        'gender': re.compile(r'^\w$'),
+        'gender': None,
         'id': conf.user_id,
         'first_name': None,
         'last_name': None,
@@ -40,23 +40,23 @@ CONFIG = {
         'username': None,
     },
     'content_should_contain': [
-        '"birthYear":"{0:%Y}",'.format(conf.user_birth_date),
-        '"birthdate":"{0:%m/%d}",'.format(conf.user_birth_date),
         conf.user_id,
         LINK,
         conf.user_location,
         conf.user_name,
 
         # User info JSON keys
-        'aboutMe', 'ageCategory', 'birthYear', 'birthdate', 'count', 'created',
-        'displayAge', 'gender', 'guid', 'height', 'image', 'imageUrl',
-        'isConnected', 'lang', 'location', 'memberSince', 'nickname', 'profile',
-        'profileUrl', 'query', 'results', 'size', 'width'
+        'aboutMe', 'ageCategory', 'birthdate', 'count', 'created', 'guid',
+        'height', 'image', 'imageUrl', 'isConnected', 'lang', 'location',
+        'memberSince', 'nickname', 'profile', 'profileUrl', 'query', 'results',
+        'size', 'width'
     ],
     # Case insensitive
     'content_should_not_contain':
         ['city', 'country'] +
+        conf.no_birth_year +
         conf.no_email +
+        conf.no_gender +
         conf.no_locale +
         ['first_name', 'last_name', 'firstname', 'lastname'] +
         conf.no_phone +
