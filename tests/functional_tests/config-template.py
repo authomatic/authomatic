@@ -117,8 +117,10 @@ NAME = FIRST_NAME + ' ' + LAST_NAME
 USERNAME = 'andypipkin'
 USERNAME_REVERSE = 'pipkinandy'
 NICKNAME = 'Mr. Pipkin'
-BIRTH_YEAR = '1979'
-BIRTH_DATE = datetime.datetime(1979, 12, 31).strftime('%x')
+BIRTH_YEAR = 1979
+BIRTH_MONTH = 11
+BIRTH_DAY = 18
+BIRTH_DATE = datetime.datetime(BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY)
 CITY = 'London'
 COUNTRY = 'Great Britain'
 COUNTRY_ISO2 = 'gb'
@@ -133,6 +135,9 @@ LOCATION = CITY + ', ' + COUNTRY
 COMMON = {
     # Could be same if the user sets it so
     'user_birth_date': BIRTH_DATE,
+    'user_birth_day': BIRTH_DAY,
+    'user_birth_month': BIRTH_MONTH,
+    'user_birth_year': BIRTH_YEAR,
     'user_login': EMAIL,
     'user_email': EMAIL,
     'user_first_name': FIRST_NAME,
