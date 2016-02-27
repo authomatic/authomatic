@@ -28,6 +28,9 @@ from tests.functional_tests import config
 
 requests.packages.urllib3.disable_warnings()
 
+if os.getuid() and config.PORT == 80:
+    pytest.exit('You need to run this tests as sudo if config.PORT == 80')
+
 ME = os.path.dirname(__file__)
 VIRTUALENV_NAME = os.path.basename(os.environ.get('VIRTUAL_ENV', ''))
 LOG_PATH = os.path.join(ME, 'login-py{0}{1}.log'.format(sys.version_info[0],
