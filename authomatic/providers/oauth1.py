@@ -1071,10 +1071,8 @@ class Yahoo(OAuth1):
 
     Supported :class:`.User` properties:
 
-    * birth_date
     * city
     * country
-    * gender
     * id
     * link
     * location
@@ -1084,6 +1082,8 @@ class Yahoo(OAuth1):
 
     Unsupported :class:`.User` properties:
 
+    * birth_date
+    * gender
     * locale
     * phone
     * postal_code
@@ -1093,10 +1093,8 @@ class Yahoo(OAuth1):
     """
 
     supported_user_attributes = core.SupportedUserAttributes(
-        birth_date=True,
         city=True,
         country=True,
-        gender=True,
         id=True,
         link=True,
         location=True,
@@ -1137,16 +1135,6 @@ class Yahoo(OAuth1):
         user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
         user.country = user.country.strip()
-        
-        _date = _user.get('birthdate')
-        _year = _user.get('birthYear')
-        
-        if _date and _year:
-            _full = _date + '/' + _year
-            try:
-                user.birth_date = datetime.datetime.strptime(_full, "%m/%d/%Y")
-            except:
-                user.birth_date = _full
         
         return user
 
