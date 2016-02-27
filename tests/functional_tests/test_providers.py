@@ -41,7 +41,6 @@ PROVIDERS = sorted([(k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items()
 PROVIDERS_IDS = [k for k, v in PROVIDERS]
 PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
 
-# CHECK_URL = 'https://authomatic.com'
 
 ALL_APPS = {
     'Django': liveandletdie.Django(
@@ -578,7 +577,7 @@ class TestUser(Base):
         content = browser.find_element_by_id('content').text.lower()
         for item in provider['content_should_not_contain']:
             if item:
-                assert item.lower() not in content
+                assert str(item).lower() not in content
 
     def test_provider_support(self, app, provider):
         self.skip_if_openid(provider)
