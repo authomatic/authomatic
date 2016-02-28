@@ -8,7 +8,7 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('yammer')
 
 LINK = 'https://www.yammer.com/peterhudec.com/users/{0}'\
-    .format(conf.user_username)
+    .format(conf.user_id)
 
 # Yammer allows users to only set month and day of their birth day.
 # The year is always 1900.
@@ -61,28 +61,28 @@ CONFIG = {
         # User info JSON keys
         'absolute_timestamps', 'activated_at', 'address', 'admin',
         'admin_can_delete_messages', 'allow_attachments',
-        'allow_external_sharing', 'allow_inline_document_view',
-        'allow_inline_video', 'allow_notes', 'allow_yammer_apps', 'birth_date',
-        'can_broadcast', 'can_browse_external_networks',
-        'can_create_new_network', 'contact', 'department',
-        'dismissed_apps_tooltip', 'dismissed_browser_lifecycle_banner',
-        'dismissed_feed_tooltip', 'dismissed_group_tooltip',
-        'dismissed_invite_tooltip', 'dismissed_invite_tooltip_at',
-        'dismissed_profile_prompt', 'email', 'email_addresses', 'enable_chat',
-        'enable_groups', 'enable_private_messages',
-        'enter_does_not_submit_message', 'expertise', 'external_urls',
-        'first_name', 'follow_general_messages', 'followers', 'following',
-        'full_name', 'guid', 'has_fake_email', 'has_mobile_client',
+        'allow_external_sharing', 'allow_inline_document_view', 'allow_notes',
+        'allow_yammer_apps', 'auto_activated', 'birth_date', 'can_broadcast',
+        'can_browse_external_networks', 'can_create_new_network', 'contact',
+        'department', 'dismissed_apps_tooltip',
+        'dismissed_browser_lifecycle_banner', 'dismissed_feed_tooltip',
+        'dismissed_group_tooltip', 'dismissed_invite_tooltip',
+        'dismissed_invite_tooltip_at', 'dismissed_profile_prompt', 'email',
+        'email_addresses', 'enable_chat', 'enable_groups',
+        'enable_private_messages', 'enter_does_not_submit_message', 'expertise',
+        'external_urls', 'first_name', 'follow_general_messages', 'followers',
+        'following', 'full_name', 'guid', 'has_fake_email', 'has_mobile_client',
         'has_yammer_now', 'id', 'im', 'interests', 'job_title', 'kids_names',
         'last_name', 'locale', 'location', 'make_yammer_homepage',
         'message_prompt', 'mugshot_url', 'mugshot_url_template', 'name',
         'network_domains', 'network_id', 'network_name', 'network_settings',
         'number', 'phone_numbers', 'preferred_my_feed', 'prescribed_my_feed',
         'previous_companies', 'provider', 'schools', 'settings',
-        'show_ask_for_photo', 'show_communities_directory', 'significant_other',
-        'state', 'stats', 'sticky_my_feed', 'summary', 'threaded_mode',
-        'timezone', 'type', 'updates', 'url', 'username', 'verified_admin',
-        'web_preferences', 'web_url', 'xdr_proxy', 'yammer_now_app_id'
+        'show_ask_for_photo', 'show_communities_directory',
+        'show_invite_lightbox', 'significant_other', 'state', 'stats',
+        'sticky_my_feed', 'summary', 'supervisor_admin', 'timezone', 'type',
+        'updates', 'url', 'username', 'verified_admin', 'web_preferences',
+        'web_url', 'xdr_proxy', 'yammer_now_app_id'
     ],
     # Case insensitive
     'content_should_not_contain':
