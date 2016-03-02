@@ -1298,6 +1298,7 @@ class Authomatic(object):
         if provider_name:
             # retrieve required settings for current provider and raise exceptions if missing
             provider_settings = self.config.get(provider_name)
+            
             if not provider_settings:
                 raise ConfigError('Provider name "{0}" not specified!'
                                   .format(provider_name))
