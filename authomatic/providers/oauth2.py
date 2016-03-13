@@ -375,7 +375,7 @@ class OAuth2(providers.AuthorizationProvider):
             error_description = self.params.get('error_description') \
                                 or error_message or error
 
-            if 'denied' in error_reason:
+            if error_reason and 'denied' in error_reason:
                 raise CancellationError(error_description,
                                         url=self.user_authorization_url)
             else:
