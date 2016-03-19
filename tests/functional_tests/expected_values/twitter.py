@@ -1,16 +1,35 @@
 # -*- coding: utf-8 -*-
 import re
 
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
+
 import fixtures
 import constants
 from authomatic.providers import oauth1
 
 conf = fixtures.get_configuration('twitter')
 
+
+def after_login_hook(browser, log):
+    try:
+        log(4, 'twitter', 'Finding challenge element')
+        challenge = browser.find_element_by_xpath('//*[@id="challenge_response"]')
+
+        log(4, 'twitter', 'Answering challenge')
+        challenge.send_keys(conf.user_challenge_answer)
+
+        log(4, 'twitter', 'Submitting challenge')
+        challenge.send_keys(Keys.ENTER)
+    except NoSuchElementException:
+        log(5, 'twitter', 'Challenge element not found, hopefully not needed')
+
+
 CONFIG = {
     'login_xpath': '//*[@id="username_or_email"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [],
+    'after_login_hook': after_login_hook,
     'class_': oauth1.Twitter,
     'user': {
         'birth_date': None,

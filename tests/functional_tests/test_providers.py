@@ -253,6 +253,11 @@ def login(request, browser, app, attempt=1):
             password_element.send_keys(Keys.ENTER)
             wait(2, provider.get('after_login_wait_seconds'))
 
+        after_login_hook = provider.get('after_login_hook')
+        if after_login_hook:
+            log(3, provider_name, 'Calling no-result hook')
+            after_login_hook(browser, log)
+
         if login_url:
             # Return back from login URL
             log(2, provider_name, 'Going back from login URL to: {0}'
