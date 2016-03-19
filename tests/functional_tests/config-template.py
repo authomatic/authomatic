@@ -91,18 +91,14 @@ INCLUDE_PROVIDERS = [
 
 # Recommended setup for Travis CI environment.
 if os.environ.get('TRAVIS'):
-    MAX_LOGIN_ATTEMPTS = 20
+    MAX_LOGIN_ATTEMPTS = 10
     WAIT_MULTIPLIER = 2
     MIN_WAIT = 2
-
-    # LinkedIn and WindowsLive include a captcha in the login form
-    # if a user logs in from an unusual location.
-    INCLUDE_PROVIDERS = list(set(INCLUDE_PROVIDERS) -
-                             set(['linkedin', 'windowslive']))
+    EXCLUDED = ['linkedin', 'windowslive', 'deviantart']
+    INCLUDE_PROVIDERS = list(set(INCLUDE_PROVIDERS) - set(EXCLUDED))
 
     def get_browser():
-        # Eventbrite has problems with the login form on Firefox
-        return webdriver.Chrome()
+        return webdriver.Chrome('./chromedriver')
 
     def teardown():
         pass
