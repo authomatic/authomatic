@@ -5,7 +5,7 @@ from authomatic import six
 
 setup(
     name='Authomatic',
-    version='0.1.0.post1', # TODO: Put version in one place.
+    version='0.1.1', # TODO: Put version in one place.
     packages=find_packages(),
     package_data={'': ['*.txt', '*.rst']},
     author='Peter Hudec',
