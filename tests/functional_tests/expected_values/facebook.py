@@ -38,7 +38,7 @@ CONFIG = {
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
-        # 'timezone': re.compile(r'\d+'),
+        'timezone': None,
         'timezone': None,
         'username': None,
     },
