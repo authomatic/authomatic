@@ -206,6 +206,9 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
+        # Twitter considers selenium login attempts suspicious and occasionally
+        # asks a security challenge question. This will be used as the answer.
+        'user_challenge_answer': '??????????',
     },
     'tumblr': {
         'consumer_key': '##########',

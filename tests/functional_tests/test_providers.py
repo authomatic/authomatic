@@ -244,6 +244,11 @@ def login(request, browser, app, attempt=1):
             password_element.send_keys(Keys.ENTER)
             wait(2, provider.get('after_login_wait_seconds'))
 
+        after_login_hook = provider.get('after_login_hook')
+        if after_login_hook:
+            log(3, provider_name, 'Calling no-result hook')
+            after_login_hook(browser, log)
+
         if login_url:
             # Return back from login URL
             log(2, provider_name, 'Going back from login URL to: {0}'
@@ -301,8 +306,6 @@ def login(request, browser, app, attempt=1):
         else:
             log(1, provider_name,
                 'Giving up after {0} attempts!'.format(attempt))
-
-            # import pdb; pdb.set_trace()
 
             pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
 
