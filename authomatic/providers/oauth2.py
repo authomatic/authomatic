@@ -626,6 +626,25 @@ class DeviantART(OAuth2):
     * Docs: https://www.deviantart.com/developers/authentication
     * API reference: http://www.deviantart.com/developers/oauth2
 
+    .. note::
+
+        Although it is not documented anywhere, DeviantART requires the
+        *access token* request to contain a ``User-Agent`` header.
+        You can apply a default ``User-Agent`` header for all API calls in the
+        config like this:
+
+        .. code-block:: python
+            :emphasize-lines: 6
+
+            CONFIG = {
+                'deviantart': {
+                    'class_': oauth2.DeviantART,
+                    'consumer_key': '#####',
+                    'consumer_secret': '#####',
+                    'access_headers': {'User-Agent': 'Some User Agent'},
+                }
+            }
+
     Supported :class:`.User` properties:
 
     * name
@@ -651,8 +670,8 @@ class DeviantART(OAuth2):
 
     """
     
-    user_authorization_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
-    access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
+    user_authorization_url = 'https://www.deviantart.com/oauth2/authorize'
+    access_token_url = 'https://www.deviantart.com/oauth2/token'
     user_info_url = 'https://www.deviantart.com/api/oauth2/user/whoami'
 
     user_info_scope = ['basic']

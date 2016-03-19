@@ -19,6 +19,9 @@ CONFIG = {
         '//*[@id="authorize_form"]/fieldset/div[2]/div[2]/a[1]',
     ],
     # 'consent_wait_seconds': 2,
+    'access_headers': {
+        'User-Agent': 'Authomatic.py Automated Functional Tests',
+    },
     'class_': oauth2.DeviantART,
     'scope': oauth2.DeviantART.user_info_scope,
     'user': {
