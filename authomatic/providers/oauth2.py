@@ -321,13 +321,15 @@ class OAuth2(providers.AuthorizationProvider):
             
             self.credentials.token = authorization_code
             
-            request_elements = self.create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
-                                                             credentials=self.credentials,
-                                                             url=self.access_token_url,
-                                                             method=self.token_request_method,
-                                                             redirect_uri=self.url,
-                                                             params=self.access_token_params,
-                                                             headers=self.access_token_headers)
+            request_elements = self.create_request_elements(
+                request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
+                credentials=self.credentials,
+                url=self.access_token_url,
+                method=self.token_request_method,
+                redirect_uri=self.url,
+                params=self.access_token_params,
+                headers=self.access_token_headers
+            )
 
             response = self._fetch(*request_elements)
             self.access_token_response = response
@@ -336,11 +338,20 @@ class OAuth2(providers.AuthorizationProvider):
             refresh_token = response.data.get('refresh_token', '')
             
             if response.status != 200 or not access_token:
-                raise FailureError('Failed to obtain OAuth 2.0 access token from {0}! HTTP status: {1}, message: {2}.'\
-                                  .format(self.access_token_url, response.status, response.content),
-                                  original_message=response.content,
-                                  status=response.status,
-                                  url=self.access_token_url)
+                message = (u'Failed to obtain OAuth 2.0 access token from {0}! '
+                           u'HTTP status: {1}, message: {2}.'
+                           .format(self.access_token_url, response.status,
+                                   response.content))
+
+                # TODO: Check whether provider requires the User-Agent header
+                # if so, use more meaningful message.
+
+                raise FailureError(
+                    message=message,
+                    original_message=response.content,
+                    status=response.status,
+                    url=self.access_token_url,
+                )
             
             self._log(logging.INFO, u'Got access token.')
             
