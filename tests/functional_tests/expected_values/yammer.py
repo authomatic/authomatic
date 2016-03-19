@@ -82,7 +82,7 @@ CONFIG = {
         'show_invite_lightbox', 'significant_other', 'state', 'stats',
         'sticky_my_feed', 'summary', 'supervisor_admin', 'timezone', 'type',
         'updates', 'url', 'username', 'verified_admin', 'web_preferences',
-        'web_url', 'xdr_proxy', 'yammer_now_app_id'
+        'web_url', 'xdr_proxy'
     ],
     # Case insensitive
     'content_should_not_contain':
