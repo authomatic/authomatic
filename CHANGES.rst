@@ -3,8 +3,6 @@ Version 0.1.1
 
 * Removed support for :attr:`.User.birth_date` and :attr:`.User.gender`
   from the :class:`.oauth1.Yahoo` provider.
-* Removed support for :attr:`.User.timezone` and from :class:`.oauth2.Facebook`
-  provider.
 
 Version 0.1.0
 -------------
