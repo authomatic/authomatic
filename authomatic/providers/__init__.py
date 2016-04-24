@@ -20,15 +20,16 @@ Abstract base classes for implementation of protocol specific providers.
 """
 
 import abc
-import authomatic.core
 import base64
 import hashlib
 import logging
 import random
+import ssl
 import sys
 import traceback
 import uuid
 
+import authomatic.core
 from authomatic.core import Session
 from authomatic.exceptions import (
     ConfigError,
@@ -122,6 +123,10 @@ class BaseProvider(object):
     """
     
     PROVIDER_TYPE_ID = 0
+    KNOWN_SSL_ERROR_SUFFIXES = (
+        'handshake failure',
+        'violation of protocol',
+    )
     
     _repr_ignore = ('user',)
 
@@ -391,8 +396,24 @@ class BaseProvider(object):
         try:
             connection.request(method, request_path, body, headers)
         except Exception as e:
-            raise FetchError('Could not connect!',
-                             original_message=e.message,
+            message = 'Could not connect: {0}'.format(e)
+            major, minor, _, _, _ = sys.version_info
+            python_version = '{0}.{1}'.format(major, minor)
+            is_python26 = python_version == '2.6'
+            is_ssl = isinstance(e, ssl.SSLError)
+            is_known_ssl_error = str(e).endswith(self.KNOWN_SSL_ERROR_SUFFIXES)
+
+            if is_python26 and is_ssl and is_known_ssl_error:
+                message = (
+                    '{message}. The server {host} probably uses TLS 1.2 '
+                    'which is not supported by Python {version}.'
+                    .format(
+                        message=message,
+                        host=host,
+                        version=python_version,
+                    ))
+
+            raise FetchError(message, original_message=e.message,
                              url=request_path)
         
         response = connection.getresponse()
