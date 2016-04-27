@@ -7,8 +7,8 @@ from flask import Flask, render_template, request, make_response
 from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
 
-from config import CONFIG
-
+from config_template import CONFIG
+#change file name config  into config_template
 app = Flask(__name__)
 
 # Instantiate Authomatic.
