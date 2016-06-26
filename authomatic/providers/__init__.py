@@ -413,7 +413,8 @@ class BaseProvider(object):
                         version=python_version,
                     ))
 
-            raise FetchError(message, original_message=e.message,
+            original_message = e.message if hasattr(e, 'message') else str(e)
+            raise FetchError(message, original_message=original_message,
                              url=request_path)
         
         response = connection.getresponse()
