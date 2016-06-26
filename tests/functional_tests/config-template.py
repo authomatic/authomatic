@@ -89,19 +89,32 @@ INCLUDE_PROVIDERS = [
     'openid_yahoo',
 ]
 
+# Exclude providers who use TLS 1.2 from Python 2.6 tests
+if sys.version.startswith('2.6'):
+    EXCLUDED = EXCLUDED + [
+        'deviantart',
+        'paypal',
+        'reddit',
+    ]
+
+# There are some problems with OpenSSL on Python 3 on OSX
+if sys.version.startswith('3') and sys.platform == 'darwin':
+    EXCLUDED = EXCLUDED + [
+        'paypal',
+    ]
+
 # Recommended setup for Travis CI environment.
 if os.environ.get('TRAVIS'):
     MAX_LOGIN_ATTEMPTS = 10
     WAIT_MULTIPLIER = 2
     MIN_WAIT = 2
-    EXCLUDED = ['linkedin', 'windowslive', 'deviantart']
-    INCLUDE_PROVIDERS = list(set(INCLUDE_PROVIDERS) - set(EXCLUDED))
-
-    def get_browser():
-        return webdriver.Chrome('./chromedriver')
-
-    def teardown():
-        pass
+    EXCLUDED = EXCLUDED + [
+        'deviantart',
+        'google',
+        'linkedin',
+        'paypal',
+        'windowslive',
+    ]
 
 # Use these constants if you have the same user info by all tested providers.
 EMAIL = 'andy.pipkin@littlebritain.co.uk'

@@ -639,6 +639,13 @@ class DeviantART(OAuth2):
 
     .. note::
 
+        DeviantART seems to be using TLS 1.2 for SSL connection, which is not
+        supported by Python 2.6. For more info read `this stackoverflow question
+        <http://stackoverflow.com/questions/32853778/
+        python-sslv3-alert-handshake-failure-when-scraping-a-site>`__.
+
+    .. note::
+
         Although it is not documented anywhere, DeviantART requires the
         *access token* request to contain a ``User-Agent`` header.
         You can apply a default ``User-Agent`` header for all API calls in the
@@ -1330,6 +1337,13 @@ class PayPal(OAuth2):
         It grants you an **access token** based on your **app's** key and
         secret instead.
 
+    .. note::
+
+        Paypal seems to be using TLS 1.2 for SSL connection, which is not
+        supported by Python 2.6. For more info read `this stackoverflow question
+        <http://stackoverflow.com/questions/32853778/
+        python-sslv3-alert-handshake-failure-when-scraping-a-site>`__.
+
     """
     
     _x_use_authorization_header = True
@@ -1384,6 +1398,13 @@ class Reddit(OAuth2):
                     'access_headers': {'User-Agent': "Andy Pipkin's App"},
                 }
             }
+
+    .. note::
+
+        Reddit seems to be using TLS 1.2 for SSL connection, which is not
+        supported by Python 2.6. For more info read `this stackoverflow question
+        <http://stackoverflow.com/questions/32853778/
+        python-sslv3-alert-handshake-failure-when-scraping-a-site>`__.
 
     Supported :class:`.User` properties:
 

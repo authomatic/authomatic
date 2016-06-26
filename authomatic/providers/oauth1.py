@@ -933,6 +933,13 @@ class Vimeo(OAuth1):
     * Docs: https://developer.vimeo.com/apis/advanced#oauth-endpoints
     * API reference: https://developer.vimeo.com/apis
 
+    .. note::
+
+        Vimeo seems to be using TLS 1.2 for SSL connection, which is not
+        supported by Python 2.6. For more info read `this stackoverflow question
+        <http://stackoverflow.com/questions/32853778/
+        python-sslv3-alert-handshake-failure-when-scraping-a-site>`__.
+
     Supported :class:`.User` properties:
 
     * id
