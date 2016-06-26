@@ -61,12 +61,14 @@ INCLUDE_PROVIDERS = [
     'tumblr',
     # 'ubuntuone',  # UbuntuOne service is no longer available
     'vimeo',
-    'xero',
+    # Xero requires creation of a new trial project every month which makes
+    # the setup of the automated test too laborious to support it.
+    # 'xero',
     'xing',
     'yahoo',
 
     # OAuth 2.0
-    'amazon',
+    # 'amazon',  # Asks for a captcha (cannot be automated)
     # 'behance',  # doesn't support third party authorization anymore.
     'bitly',
     'deviantart',
@@ -74,7 +76,7 @@ INCLUDE_PROVIDERS = [
     'foursquare',
     'google',
     'github',
-    'linkedin',
+    'linkedin',  # Asks for verification when running in Travis CI evnironment
     'paypal',
     'reddit',
     'vk',
@@ -83,7 +85,7 @@ INCLUDE_PROVIDERS = [
     'yandex',
 
     # OpenID
-    'openid_livejournal',
+    # 'openid_livejournal',  # Login and password elements are not visible.
     'openid_verisignlabs',
     'openid_wordpress',
     'openid_yahoo',
