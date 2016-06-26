@@ -38,8 +38,7 @@ CONFIG = {
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
-        'timezone': None,
-        'timezone': None,
+        'timezone': re.compile(r'\d'),
         'username': None,
     },
     'content_should_contain': [
