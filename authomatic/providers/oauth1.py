@@ -825,7 +825,7 @@ class Twitter(OAuth1):
     request_token_url = 'https://api.twitter.com/oauth/request_token'
     user_authorization_url = 'https://api.twitter.com/oauth/authenticate'
     access_token_url = 'https://api.twitter.com/oauth/access_token'
-    user_info_url = 'https://api.twitter.com/1.1/account/verify_credentials.json'
+    user_info_url = 'https://api.twitter.com/1.1/account/verify_credentials.json?include_entities=true'
     
     supports_jsonp = True
      
