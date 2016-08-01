@@ -599,7 +599,7 @@ class Bitly(OAuth2):
         super(Bitly, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'grant_type' in self.access_token_params:
+            if 'grant_type' not in self.access_token_params:
                 self.access_token_params['grant_type'] = 'refresh_token'
     
     @staticmethod
@@ -687,7 +687,7 @@ class DeviantART(OAuth2):
         super(DeviantART, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'grant_type' in self.access_token_params:
+            if 'grant_type' not in self.access_token_params:
                 self.access_token_params['grant_type'] = 'refresh_token'
     
     
@@ -852,8 +852,8 @@ class Facebook(OAuth2):
         _birth_date = data.get('birthday')
         if _birth_date:
             try:
-              user.birth_date = datetime.datetime.strptime(_birth_date,
-                                                           '%m/%d/%Y')
+                user.birth_date = datetime.datetime.strptime(_birth_date,
+                                                             '%m/%d/%Y')
             except ValueError:
                 pass
 
@@ -1157,10 +1157,10 @@ class Google(OAuth2):
         
         # Handle special Google requirements to be able to refresh the access token.
         if self.offline:
-            if not 'access_type' in self.user_authorization_params:
+            if 'access_type' not in self.user_authorization_params:
                 # Google needs access_type=offline param in the user authorization request.
                 self.user_authorization_params['access_type'] = 'offline'
-            if not 'approval_prompt' in self.user_authorization_params:
+            if 'approval_prompt' not in self.user_authorization_params:
                 # And also approval_prompt=force.
                 self.user_authorization_params['approval_prompt'] = 'force'
 
@@ -1417,7 +1417,7 @@ class Reddit(OAuth2):
         super(Reddit, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'duration' in self.user_authorization_params:
+            if 'duration' not in self.user_authorization_params:
                 # http://www.reddit.com/r/changelog/comments/11jab9/reddit_change_permanent_oauth_grants_using/
                 self.user_authorization_params['duration'] = 'permanent'
 
@@ -1566,7 +1566,7 @@ class VK(OAuth2):
         super(VK, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'offline' in self.scope:
+            if 'offline' not in self.scope:
                 self.scope.append('offline')
     
     
@@ -1645,7 +1645,7 @@ class WindowsLive(OAuth2):
         super(WindowsLive, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'wl.offline_access' in self.scope:
+            if 'wl.offline_access' not in self.scope:
                 self.scope.append('wl.offline_access')
     
     @classmethod
