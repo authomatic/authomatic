@@ -29,8 +29,10 @@ Providers which implement the |oauth2|_ protocol.
     
 """
 
-from authomatic.six.moves.urllib.parse import urlencode
+from authomatic.six.moves.urllib.parse import urlencode, unquote
+import base64
 import datetime
+import json
 import logging
 
 from authomatic import providers
@@ -58,6 +60,9 @@ class OAuth2(providers.AuthorizationProvider):
     
     #: :class:`bool` If ``False``, the provider doesn't support CSRF protection.
     supports_csrf_protection = True
+    
+    #: :class:`bool` If ``False``, the provider doesn't support user_state.
+    supports_user_state = True
     
     token_request_method = 'POST'  # method for requesting an access token
     
@@ -100,7 +105,8 @@ class OAuth2(providers.AuthorizationProvider):
     
     @classmethod
     def create_request_elements(cls, request_type, credentials, url, method='GET', params=None,
-                                headers=None, body='', secret=None, redirect_uri='', scope='', csrf=''):
+                                headers=None, body='', secret=None, redirect_uri='', scope='',
+                                csrf='', user_state=''):
         """
         Creates |oauth2| request elements.
         """
@@ -126,7 +132,10 @@ class OAuth2(providers.AuthorizationProvider):
                 params['client_id'] = consumer_key
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
-                params['state'] = csrf
+                if cls.supports_user_state:
+                    params['state'] = base64.urlsafe_b64encode(json.dumps({"csrf": csrf, "user_state": user_state}))
+                else:
+                    params['state'] = csrf
                 params['response_type'] = 'code'
                 
                 # Add authorization header
@@ -221,7 +230,7 @@ class OAuth2(providers.AuthorizationProvider):
         credentials.token = token
         credentials.refresh_token = refresh_token
         credentials.expiration_time = expiration_time
-        credentials.token_type=cls.TOKEN_TYPES[int(token_type)]
+        credentials.token_type = cls.TOKEN_TYPES[int(token_type)]
         
         return credentials
     
@@ -283,7 +292,9 @@ class OAuth2(providers.AuthorizationProvider):
         authorization_code = self.params.get('code')
         error = self.params.get('error')
         error_message = self.params.get('error_message')
-        state = self.params.get('state')      
+        state = self.params.get('state')
+        # optional user_state to be passed in oauth2 state
+        user_state = self.params.get('user_state', '')
         
         if authorization_code or not self.user_authorization_url:
             
@@ -297,11 +308,19 @@ class OAuth2(providers.AuthorizationProvider):
                 # validate CSRF token
                 if self.supports_csrf_protection:
                     self._log(logging.INFO, u'Validating request by comparing request state with stored state.')
-                    stored_state = self._session_get('state')
+                    stored_csrf = self._session_get('csrf')
                     
-                    if not stored_state:
+                    # b64decode may throw TypeError
+                    # json.loads may throw ValueError
+                    # urlsafe_b64 may include = which will be quoted so unquote
+                    # b64decode seems to have trouble translating unicode so
+                    # convert to str, besides we know base64 should be str
+                    # compatible
+
+                    state_csrf = json.loads(base64.urlsafe_b64decode(unquote(str(state))))['csrf'] if state and self.supports_user_state else state
+                    if not stored_csrf:
                         raise FailureError(u'Unable to retrieve stored state!')
-                    elif not stored_state == state:
+                    elif not stored_csrf == state_csrf:
                         raise FailureError(u'The returned state "{0}" doesn\'t match with the stored state!'.format(state),
                                            url=self.user_authorization_url)
                     self._log(logging.INFO, u'Request is valid.')
@@ -381,7 +400,7 @@ class OAuth2(providers.AuthorizationProvider):
             else:
                 raise FailureError(error_description, url=self.user_authorization_url)
             
-        elif not self.params:
+        elif not self.params or len(self.params) == 1 and 'user_state' in self.params:
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
@@ -393,7 +412,7 @@ class OAuth2(providers.AuthorizationProvider):
                 # generate csfr
                 csrf = self.csrf_generator(self.settings.secret)
                 # and store it to session
-                self._session_set('state', csrf)
+                self._session_set('csrf', csrf)
             else:
                 self._log(logging.WARN, u'Provider doesn\'t support CSRF validation!')
                         
@@ -403,6 +422,7 @@ class OAuth2(providers.AuthorizationProvider):
                                                             redirect_uri=self.url,
                                                             scope=self._x_scope_parser(self.scope),
                                                             csrf=csrf,
+                                                            user_state=user_state,
                                                             params=self.user_authorization_params)
             
             self._log(logging.INFO, u'Redirecting user to {0}.'.format(request_elements.full_url))
