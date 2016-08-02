@@ -235,6 +235,29 @@ class OAuth2(providers.AuthorizationProvider):
         return credentials
     
     
+    @classmethod
+    def decode_state(cls, state, param='user_state'):
+        """Decode state and return param
+
+        :param str state:
+            state parameter passed through by provider
+        
+        :param str param:
+            key to query from decoded state variable. Options include 'csrf'
+            and 'user_state'.  
+        
+        :returns:
+            string value from decoded state
+        """
+        if state and cls.supports_user_state:
+            # urlsafe_b64 may include = which the browser quotes so must unquote
+            # Cast to str to void b64decode translation error. Base64 should be
+            # str compatible.
+            return json.loads(base64.urlsafe_b64decode(unquote(str(state))))[param]
+        else:
+            return state if param == 'csrf' else ''
+    
+    
     def refresh_credentials(self, credentials):
         """
         Refreshes :class:`.Credentials` if it gives sense.
@@ -310,18 +333,11 @@ class OAuth2(providers.AuthorizationProvider):
                     self._log(logging.INFO, u'Validating request by comparing request state with stored state.')
                     stored_csrf = self._session_get('csrf')
                     
-                    # b64decode may throw TypeError
-                    # json.loads may throw ValueError
-                    # urlsafe_b64 may include = which will be quoted so unquote
-                    # b64decode seems to have trouble translating unicode so
-                    # convert to str, besides we know base64 should be str
-                    # compatible
-
-                    state_csrf = json.loads(base64.urlsafe_b64decode(unquote(str(state))))['csrf'] if state and self.supports_user_state else state
+                    state_csrf = self.decode_state(state, 'csrf')
                     if not stored_csrf:
                         raise FailureError(u'Unable to retrieve stored state!')
                     elif not stored_csrf == state_csrf:
-                        raise FailureError(u'The returned state "{0}" doesn\'t match with the stored state!'.format(state),
+                        raise FailureError(u'The returned state csrf cookie "{0}" doesn\'t match with the stored state!'.format(state_csrf),
                                            url=self.user_authorization_url)
                     self._log(logging.INFO, u'Request is valid.')
                 else:
