@@ -361,7 +361,12 @@ class OAuth2(providers.AuthorizationProvider):
             
             # create user
             self._update_or_create_user(response.data, self.credentials)
-            
+
+            # Access user data from provider if we don't yet have a valid user,
+            # i.e. one with at least a non-empty `id`
+            if self.user and not self.user.id:
+                self.user.update()
+
             #===================================================================
             # We're done!
             #===================================================================
