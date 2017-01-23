@@ -133,7 +133,7 @@ class OAuth2(providers.AuthorizationProvider):
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
                 if cls.supports_user_state:
-                    params['state'] = base64.urlsafe_b64encode(json.dumps({"csrf": csrf, "user_state": user_state}))
+                    params['state'] = base64.urlsafe_b64encode(json.dumps({"csrf": csrf, "user_state": user_state}).encode('utf-8'))
                 else:
                     params['state'] = csrf
                 params['response_type'] = 'code'
@@ -253,7 +253,7 @@ class OAuth2(providers.AuthorizationProvider):
             # urlsafe_b64 may include = which the browser quotes so must unquote
             # Cast to str to void b64decode translation error. Base64 should be
             # str compatible.
-            return json.loads(base64.urlsafe_b64decode(unquote(str(state))))[param]
+            return json.loads(base64.urlsafe_b64decode(unquote(str(state))).decode('utf-8'))[param]
         else:
             return state if param == 'csrf' else ''
     
