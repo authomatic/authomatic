@@ -1115,7 +1115,7 @@ class Google(OAuth2):
     
     user_authorization_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
-    user_info_url = 'https://www.googleapis.com/plus/v1/people/me'
+    user_info_url = 'https://www.googleapis.com/oauth2/v3/userinfo?alt=json'
 
     user_info_scope = ['profile',
                        'email']
@@ -1126,9 +1126,7 @@ class Google(OAuth2):
         name=True,
         first_name=True,
         last_name=True,
-        gender=True,
         locale=True,
-        link=True,
         picture=True
     )
     
@@ -1168,17 +1166,15 @@ class Google(OAuth2):
                     user.email = email.get('value')
                     break
 
-        user.id = data.get('sub') or data.get('id')
-        user.name = data.get('displayName')
-        user.first_name = data.get('name',{}).get('givenName')
-        user.last_name = data.get('name',{}).get('familyName')
-        user.locale = data.get('language')
-        user.link = data.get('url')
-        user.picture = data.get('image',{}).get('url')
-        try:
-            user.birth_date = datetime.datetime.strptime(data.get('birthdate'), "%Y-%m-%d")
-        except:
-            user.birth_date = data.get('birthdate')
+        user.id = data.get('sub')
+        user.name = data.get('name')
+        user.first_name = data.get('given_name', '')
+        user.last_name = data.get('family_name', '')
+        user.locale = data.get('locale', '')
+        user.picture = data.get('picture', '')
+
+        user.email_verified = data.get("email_verified")
+        user.hosted_domain = data.get("hd")
         return user
     
     def _x_scope_parser(self, scope):
