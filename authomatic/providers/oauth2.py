@@ -795,7 +795,8 @@ class Facebook(OAuth2):
         location=True,
         name=True,
         picture=True,
-        timezone=True
+        timezone=True,
+        username=False,
     )
     
     @classmethod
