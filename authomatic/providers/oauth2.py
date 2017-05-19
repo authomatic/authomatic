@@ -777,7 +777,7 @@ class Facebook(OAuth2):
     user_authorization_url = 'https://www.facebook.com/dialog/oauth'
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
     user_info_url = 'https://graph.facebook.com/v2.3/me'
-    user_info_scope = ['email', 'user_about_me', 'user_birthday',
+    user_info_scope = ['email', 'public_profile', 'user_birthday',
                        'user_location']
     same_origin = False
 
