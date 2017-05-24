@@ -1,3 +1,14 @@
+Version 0.1.1
+-------------
+
+* The :class:`.oauth2.Google` provider now uses
+  ``https://www.googleapis.com/oauth2/v3/userinfo?alt=json`` as the ``user_info_url``
+  instead of the deprecated ``https://www.googleapis.com/plus/v1/people/me``
+*  Added support for :attr:`email_verified` and :attr:`hosted_domain`
+   to :class:`.oauth2.Google` provider.
+* Removed support for :attr:`gender`, :attr:`link` and :attr:`birth_date`
+   from :class:`.oauth2.Google` provider.
+
 Version 0.1.0
 -------------
 
