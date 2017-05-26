@@ -1,24 +1,45 @@
 # encoding: utf-8
 
+import logging
 import os
 import re
+import sys
 import time
-from authomatic.six.moves.urllib import parse
 
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
-import pytest
 import liveandletdie
+import pytest
+import requests
+from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    TimeoutException,
+    UnexpectedAlertPresentException,
+    WebDriverException,
+)
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
 
-from tests.functional_tests import config
+from authomatic.six.moves.urllib import parse
 from tests.functional_tests import fixtures
 import constants
+from tests.functional_tests import config
 
 
-PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+requests.packages.urllib3.disable_warnings()
+
+ME = os.path.dirname(__file__)
+VIRTUALENV_NAME = os.path.basename(os.environ.get('VIRTUAL_ENV', ''))
+LOG_PATH = os.path.join(ME, 'login-py{0}{1}.log'.format(sys.version_info[0],
+                                                        sys.version_info[1]))
+PROJECT_DIR = os.path.abspath(os.path.join(ME, '../..'))
 EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
-PROVIDERS = dict((k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items() if
-                 k in config.INCLUDE_PROVIDERS)
+PROVIDERS = sorted([(k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items()
+                    if k in config.INCLUDE_PROVIDERS])
+PROVIDERS_IDS = [k for k, v in PROVIDERS]
+PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
+
+# CHECK_URL = 'https://authomatic.com'
 
 ALL_APPS = {
     'Django': liveandletdie.Django(
@@ -46,12 +67,37 @@ APPS = dict((k, v) for k, v in ALL_APPS.items() if
             k.lower() in config.INCLUDE_FRAMEWORKS)
 
 
+file_handler = logging.FileHandler(LOG_PATH, mode='w')
+file_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s', '%x %X'))
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(file_handler)
+
+
+def teardown_module():
+    if hasattr(config, 'teardown') and hasattr(config.teardown, '__call__'):
+        config.teardown()
+
+
+def log(indent, provider_name, message):
+    tab_width = 4
+    logger.info(u'({venv}) {provider: <{padding}}{indent}{message}'.format(
+        venv=VIRTUALENV_NAME,
+        provider=provider_name,
+        padding=PROVIDER_NAME_WIDTH + 3,
+        indent=u' ' * tab_width * indent,
+        message=message
+    ))
+
+
 @pytest.fixture('module')
 def browser(request):
     """Starts and stops the server for each app in APPS"""
-
     _browser = config.get_browser()
-    _browser.implicitly_wait(3)
+    _browser.set_window_size(800, 600)
+    _browser.set_window_position(1024 - 800 - 10, 40)
+    # _browser.implicitly_wait(4)
     request.addfinalizer(lambda: _browser.quit())
     return _browser
 
@@ -74,74 +120,208 @@ def app(request):
     return _app
 
 
-@pytest.fixture(scope='module', params=PROVIDERS)
-def provider(request, browser, app):
+def login(request, browser, app, attempt=1):
     """Runs for each provider."""
+    success = False
+    provider_name, provider = request.param
+    log(1, provider_name, 'Attempt {0}'.format(attempt))
 
-    _provider = fixtures.ASSEMBLED_CONFIG[request.param]
-    _provider['name'] = request.param
-    conf = fixtures.get_configuration(request.param)
+    def wait(indent, seconds):
+        seconds = seconds or 0
+        seconds = seconds * config.WAIT_MULTIPLIER
+        if seconds < config.MIN_WAIT:
+            seconds = config.MIN_WAIT
 
-    # Andy types the login handler url to the address bar.
-    url = parse.urljoin(app.check_url, 'login/' + _provider['_path'])
+        if seconds:
+            log(indent, provider_name, u'(waiting {0} seconds)'.format(seconds))
+            # log(0, provider_name, u' waiting {0} seconds '
+            #     .format(seconds).center(60, '#'))
+            time.sleep(seconds)
 
-    # Andy authenticates by the provider.
-    login_url = _provider.get('login_url')
-    login_xpath = _provider.get('login_xpath')
-    password_xpath = _provider.get('password_xpath')
-    pre_login_xpaths = _provider.get('pre_login_xpaths')
+    def human_interaction_needed(xpath, seconds=0):
+        log(2, provider_name, 'Checking if human interaction is needed')
+        try:
+            wait(2, seconds)
+            el = browser.find_element_by_xpath(xpath)
+            if el.is_displayed():
+                print('Human interaction is needed (captcha or similar)!')
+                print('Go to the browser, do the interaction and hit "c".')
 
-    if login_url:
+                if os.environ.get('TRAVIS'):
+                    message = ('Human interaction needed, '
+                               'but not possible on Travis CI!')
+                    log(3, provider_name, message)
+                    pytest.fail(message)
+                    return
+
+                log(3, provider_name, 'Entering PDB for human interaction')
+                import pdb; pdb.set_trace()
+                log(3, provider_name, 'Returned from PDB')
+                return
+        except NoSuchElementException:
+            pass
+
+        log(3, provider_name, 'Not needed')
+
+    try:
+        provider['name'] = provider_name
+        conf = fixtures.get_configuration(provider_name)
+
+        # Andy types the login handler url to the address bar.
+        url = parse.urljoin(app.check_url, 'login/' + provider['_path'])
+
+        # Andy authenticates by the provider.
+        login_url = provider.get('login_url')
+        login_xpath = provider.get('login_xpath')
+        password_xpath = provider.get('password_xpath')
+        pre_login_xpaths = provider.get('pre_login_xpaths')
+
         # Go to login URL to log in
-        browser.get(login_url)
+        if login_url:
+            log(2, provider_name, 'Going to login URL: {0}'.format(login_url))
+            browser.get(login_url)
+        else:
+            browser.get(url)
+
+        # Handle alerts
+        try:
+            alert_wait = provider.get('alert_wait_seconds', 0)
+            WebDriverWait(browser, alert_wait)\
+                .until(expected_conditions.alert_is_present())
+
+            if alert_wait:
+                log(2, provider_name, 'Waiting {0} seconds for alert'
+                    .format(alert_wait))
+
+            alert = browser.switch_to_alert()
+            log(2, provider_name, 'Accepting alert: {0}'.format(alert.text))
+            alert.accept()
+        except TimeoutException:
+            pass
+
+        # Pause for getting login and password xpaths
+        if request.config.getoption("--pause"):
+            log(2, provider_name, 'Pausing to pdb')
+            import pdb; pdb.set_trace()
+
+        if login_xpath:
+            if pre_login_xpaths:
+                for xpath in pre_login_xpaths:
+                    log(2, provider_name,
+                        'Finding pre-login element {0}'.format(xpath))
+                    pre_login = browser.find_element_by_xpath(xpath)
+
+                    log(3, provider_name,
+                        'Clicking on pre-login element'.format(xpath))
+                    pre_login.click()
+
+            log(2, provider_name, 'Finding login input {0}'.format(login_xpath))
+            login_element = browser.find_element_by_xpath(login_xpath)
+
+            log(3, provider_name, 'Filling out login')
+            login_element.send_keys(conf.user_login)
+
+            enter_after_login_input = provider.get('enter_after_login_input')
+            if enter_after_login_input:
+                log(3, provider_name, 'Hitting ENTER after login input')
+                login_element.send_keys(Keys.ENTER)
+
+            hi = provider.get('human_interaction_before_password')
+            if hi:
+                human_interaction_needed(*hi)
+
+            log(2, provider_name,
+                'Finding password input {0}'.format(password_xpath))
+            password_element = browser.find_element_by_xpath(password_xpath)
+            log(3, provider_name, 'Filling out password')
+            password_element.send_keys(conf.user_password)
+
+            wait(2, provider.get('before_login_enter_wait'))
+            log(2, provider_name, 'Hitting ENTER')
+            password_element.send_keys(Keys.ENTER)
+            wait(2, provider.get('after_login_wait_seconds'))
+
+        if login_url:
+            # Return back from login URL
+            log(2, provider_name, 'Going back from login URL to: {0}'
+                .format(url))
+
+            browser.get(url)
+
+        # Andy authorizes this app to access his protected resources.
+        consent_xpaths = provider.get('consent_xpaths')
+
+        if consent_xpaths:
+            for xpath in consent_xpaths:
+                try:
+                    wait(2, provider.get('consent_wait_seconds'))
+
+                    log(2, provider_name,
+                        'Finding consent button {0}'.format(xpath))
+                    button = browser.find_element_by_xpath(xpath)
+
+                    log(3, provider_name, 'Clicking consent button')
+                    button.click()
+                except NoSuchElementException as e:
+                    log(3, provider_name,
+                        'Consent button not found! '
+                        '(provider probably remembers consent)')
+
+        wait(2, provider.get('after_consent_wait_seconds'))
+
+        try:
+            log(2, provider_name, 'Finding result element')
+            browser.find_element_by_id('login-result')
+            log(3, provider_name, 'Result element found')
+            success = True
+        except NoSuchElementException:
+            log(3, provider_name, 'Result element not found!')
+
+    except WebDriverException as e:
+        if request.config.getoption('--login-error-pdb'):
+            log(2, provider_name, 'Entering PDB session')
+            import pdb; pdb.set_trace()
+        try:
+            log(2, provider_name,
+                'Finding result element after error {0}'.format(e.msg))
+            browser.find_element_by_id('login-result')
+            log(3, provider_name, 'Result element found')
+            success = True
+        except NoSuchElementException:
+            log(3, provider_name, 'Result element not found!')
+
+    if success:
+        log(0, provider_name, 'SUCCESS')
     else:
-        browser.get(url)
+        if attempt < config.MAX_LOGIN_ATTEMPTS:
+            login(request, browser, app, attempt + 1)
+        else:
+            log(1, provider_name,
+                'Giving up after {0} attempts!'.format(attempt))
 
-    try:
-        browser.find_element_by_id('login-result')
-        print('Provider remembers the consent.')
-        return _provider
-    except NoSuchElementException:
-        pass
+            # import pdb; pdb.set_trace()
 
-    if login_xpath:
-        if pre_login_xpaths:
-            for xpath in pre_login_xpaths:
-                print('clicking on {0}'.format(xpath))
-                browser.find_element_by_xpath(xpath).click()
+            pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
 
-        print('logging the user in.')
-        browser.find_element_by_xpath(login_xpath)\
-            .send_keys(conf.user_login)
-        password_element = browser.\
-            find_element_by_xpath(password_xpath)
-        password_element.send_keys(conf.user_password)
-        password_element.send_keys(Keys.ENTER)
+    return provider
 
-    if login_url:
-        # Return back from login URL
-        browser.get(url)
 
-    # Andy authorizes this app to access his protected resources.
-    consent_xpaths = _provider.get('consent_xpaths')
-    consent_wait_seconds = _provider.get('consent_wait_seconds', 0)
+@pytest.fixture(scope='module', params=PROVIDERS, ids=PROVIDERS_IDS)
+def provider(request, browser, app):
+    provider_name, provider = request.param
 
-    if consent_xpaths:
-        for xpath in consent_xpaths:
-            try:
-                time.sleep(consent_wait_seconds)
-                button = browser.find_element_by_xpath(xpath)
-                print('Hitting consent button.')
-                button.click()
-            except NoSuchElementException:
-                print('No consent needed.')
+    logout_url = provider.get('logout_url')
+    if logout_url:
+        log(0, provider_name, 'Logging out at {0}'.format(logout_url))
+        browser.get(logout_url)
 
-    try:
-        success = browser.find_element_by_id('login-result')
-    except NoSuchElementException:
-        pytest.fail('Login by provider "{0}" failed!'.format(request.param))
+    cookies = browser.get_cookies()
+    if cookies:
+        log(0, provider_name, 'Deleting {0} cookies'.format(len(cookies)))
+        browser.delete_all_cookies()
 
-    return _provider
+    log(0, request.param[0], 'Logging in')
+    return login(request, browser, app)
 
 
 class Base(object):
@@ -347,6 +527,9 @@ class TestUser(Base):
     def test_locale(self, fixture):
         fixture('locale')
 
+    def test_location(self, fixture):
+        fixture('location')
+
     def test_phone(self, fixture):
         fixture('phone')
 
@@ -363,6 +546,7 @@ class TestUser(Base):
         self.skip_if_openid(provider)
         content = browser.find_element_by_id('content').text
         for item in provider['content_should_contain']:
+
             assert item in content
 
     def test_content_should_not_contain(self, app, provider, browser):

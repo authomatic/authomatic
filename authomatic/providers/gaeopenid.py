@@ -51,11 +51,11 @@ class GAEOpenID(providers.AuthenticationProvider):
             #===================================================================
             # Phase 1 before redirect.
             #===================================================================
-            self._log(logging.INFO, 'Starting OpenID authentication procedure.')
+            self._log(logging.INFO, u'Starting OpenID authentication procedure.')
             
             url = users.create_login_url(dest_url=self.url, federated_identity=self.identifier)
             
-            self._log(logging.INFO, 'Redirecting user to {0}.'.format(url))
+            self._log(logging.INFO, u'Redirecting user to {0}.'.format(url))
             
             self.redirect(url)
         else:
@@ -63,13 +63,13 @@ class GAEOpenID(providers.AuthenticationProvider):
             # Phase 2 after redirect.
             #===================================================================
             
-            self._log(logging.INFO, 'Continuing OpenID authentication procedure after redirect.')
+            self._log(logging.INFO, u'Continuing OpenID authentication procedure after redirect.')
             
             user = users.get_current_user()
             
             if user:
-                self._log(logging.INFO, 'Authentication successful.')
-                self._log(logging.INFO, 'Creating user.')
+                self._log(logging.INFO, u'Authentication successful.')
+                self._log(logging.INFO, u'Creating user.')
                 self.user = core.User(self,
                                      id=user.federated_identity(),
                                      email=user.email(),

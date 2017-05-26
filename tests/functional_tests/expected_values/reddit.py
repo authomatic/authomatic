@@ -8,11 +8,14 @@ CONFIG = {
     'login_xpath': '//*[@id="user_login"]',
     'password_xpath': '//*[@id="passwd_login"]',
     'consent_xpaths': [
-        '//*[@id="login_login"]/div/p/button',
         '/html/body/div[2]/div/div[2]/form/div/input[1]',
     ],
+    'consent_wait_seconds': 3,
     'class_': oauth2.Reddit,
     'scope': oauth2.Reddit.user_info_scope,
+    'access_headers': {
+        'User-Agent': ('Authomatic.py Automated Functional Tests'),
+    },
     'user': {
         'id': conf.user_id,
         'email': None,
@@ -27,6 +30,7 @@ CONFIG = {
         'gender': None,
         'link': None,
         'locale': None,
+        'location': None,
         'phone': None,
         'picture': None,
         'postal_code': None,

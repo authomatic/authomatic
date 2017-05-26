@@ -1,3 +1,5 @@
+import re
+
 import fixtures
 import constants
 from authomatic.providers import oauth1
@@ -7,33 +9,31 @@ conf = fixtures.get_configuration('twitter')
 CONFIG = {
     'login_xpath': '//*[@id="username_or_email"]',
     'password_xpath': '//*[@id="password"]',
-    'consent_xpaths': [
-        '//*[@id="allow"]',
-    ],
+    'consent_xpaths': [],
     'class_': oauth1.Twitter,
     'user': {
         'birth_date': None,
-        'city': conf.user_city,
-        'country': conf.user_country,
+        'city': None,
+        'country': None,
         'email': None,
         'gender': None,
         'id': conf.user_id,
         'first_name': None,
         'last_name': None,
-        'link': conf.user_link,
-        'locale': conf.user_locale,
+        'link': re.compile(r'^http://t.co/\w+$'),
+        'locale': re.compile(r'^\w{2}$'),
+        'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
-        'picture': conf.user_picture,
+        'picture': re.compile(r'^http://\w+\.twimg\.com/profile_images/\d+/\w+.jpg$'),
         'postal_code': None,
         'timezone': None,
         'username': conf.user_username,
     },
     'content_should_contain': [
         conf.user_id,
-        # conf.user_link,
-        conf.user_locale,
+        # conf.user_locale,
         conf.user_name,
         conf.user_username,
 
@@ -47,23 +47,22 @@ CONFIG = {
         'in_reply_to_status_id', 'in_reply_to_status_id_str',
         'in_reply_to_user_id', 'in_reply_to_user_id_str', 'indices',
         'is_translation_enabled', 'is_translator', 'lang', 'listed_count',
-        'location', 'name', 'notifications', 'place', 'possibly_sensitive',
+        'location', 'name', 'notifications', 'place',
         'profile_background_color', 'profile_background_image_url',
         'profile_background_image_url_https', 'profile_background_tile',
         'profile_image_url', 'profile_image_url_https', 'profile_link_color',
-        'profile_location', 'profile_sidebar_border_color',
-        'profile_sidebar_fill_color', 'profile_text_color',
-        'profile_use_background_image', 'protected', 'retweet_count',
-        'retweeted', 'screen_name', 'source', 'status', 'statuses_count',
-        'symbols', 'text', 'time_zone', 'truncated', 'url', 'urls',
-        'user_mentions', 'utc_offset', 'verified'
+        'profile_sidebar_border_color', 'profile_sidebar_fill_color',
+        'profile_text_color', 'profile_use_background_image', 'protected',
+        'retweet_count', 'retweeted', 'screen_name', 'source', 'status',
+        'statuses_count', 'symbols', 'text', 'time_zone', 'truncated', 'url',
+        'urls', 'user_mentions', 'utc_offset', 'verified'
     ],
     # Case insensitive
     'content_should_not_contain':
         conf.no_birth_date +
         conf.no_gender +
         conf.no_nickname +
-        conf.no_phone +
+        # conf.no_phone +  # Contains unrelated phone string
         conf.no_postal_code +
         conf.no_timezone,
     # True means that any thruthy value is expected
