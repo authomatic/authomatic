@@ -1,3 +1,9 @@
+Unreleased
+----------
+
+* Adjusted naming of default scope for :class:`.oauth2.Facebook` to Facebook v2 API
+
+
 Version 0.1.0
 -------------
 
