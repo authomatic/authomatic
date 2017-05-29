@@ -38,7 +38,7 @@ from authomatic.exceptions import (
 from authomatic import six
 from authomatic.six.moves import urllib_parse as parse
 from authomatic.six.moves import http_client
-
+from authomatic.exceptions import CancellationError
 
 __all__ = ['BaseProvider', 'AuthorizationProvider', 'AuthenticationProvider', 'login_decorator']
 
@@ -87,7 +87,8 @@ def login_decorator(func):
         except Exception as e:
             if provider.settings.report_errors:
                 error = e
-                provider._log(logging.ERROR, u'Reported suppressed exception: {0}!'.format(repr(error)))
+                if not isinstance(error, CancellationError):
+                    provider._log(logging.ERROR, u'Reported suppressed exception: {0}!'.format(repr(error)), exc_info=1)
             else:
                 if provider.settings.debug:
                     # TODO: Check whether it actually works without middleware
@@ -316,7 +317,7 @@ class BaseProvider(object):
     
     
     @classmethod
-    def _log(cls, level, msg):
+    def _log(cls, level, msg, **kwargs):
         """
         Logs a message with pre-formatted prefix.
         
@@ -330,7 +331,7 @@ class BaseProvider(object):
         """
 
         logger = getattr(cls, '_logger', None) or authomatic.core._logger
-        logger.log(level, ': '.join(('authomatic', cls.__name__, msg)))
+        logger.log(level, ': '.join(('authomatic', cls.__name__, msg)), **kwargs)
 
     
     def _fetch(self, url, method='GET', params=None, headers=None, body='', max_redirects=5, content_parser=None):
