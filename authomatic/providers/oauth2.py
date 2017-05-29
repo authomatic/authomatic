@@ -869,6 +869,14 @@ class Facebook(OAuth2):
         return True
 
 
+    def access(self, url, params=None, **kwargs):
+        if params is None:
+            params = {}
+        params['fields'] = 'id,first_name,last_name,picture,email,gender,timezone,location,birthday,locale'
+
+        return super(Facebook, self).access(url, params, **kwargs)
+
+
 class Foursquare(OAuth2):
     """
     Foursquare |oauth2| provider.
