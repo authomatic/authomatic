@@ -836,6 +836,16 @@ class Twitter(OAuth1):
         user.picture = data.get('profile_image_url')
         user.locale = data.get('lang')
         user.link = data.get('url')
+        _location = data.get('location', '')
+        if _location:
+            user.location = _location.strip()
+            _split_location = _location.split(',')
+            if len(_split_location) > 1:
+                _city, _country = _split_location
+                user.country = _country.strip()
+            else:
+                _city = _split_location[0]
+            user.city = _city.strip()
         return user
 
 
