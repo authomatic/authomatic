@@ -21,7 +21,6 @@ Providers which implement the |oauth1|_ protocol.
     Yahoo
     
 """
-from __builtin__ import len
 
 import abc
 import authomatic.core as core
