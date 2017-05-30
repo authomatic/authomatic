@@ -31,7 +31,14 @@ which simplifies **authentication** of users
 by third party providers like **Facebook** or **Twitter**
 through standards like **OAuth** and **OpenID**.
 
-For more info visit the project page at http://peterhudec.github.io/authomatic.
+For more info visit the project page at http://authomatic.github.io/authomatic.
+
+Update - 2017-05-17
+====================
+**Authomatic** is currently going through the process of migrating to becoming a community-managed project.
+Please bear with us during these changes.
+We hope to begin work on updating the project and working on Issues and PRs soon.
+Many thanks to peterhudec for all his hard work for creating and maintaining **authomatic**!
 
 Features
 ========
@@ -90,4 +97,4 @@ first. The project is hosted on
 Usage
 =====
 
-Read the exhaustive documentation at http://peterhudec.github.io/authomatic.
+Read the exhaustive documentation at http://authomatic.github.io/authomatic.

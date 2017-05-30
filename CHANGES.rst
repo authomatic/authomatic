@@ -1,3 +1,9 @@
+Unreleased
+----------
+
+* Adjusted naming of default scope for :class:`.oauth2.Facebook` to Facebook v2 API
+* Added support for :attr:`.User.email` to the :class:`.oauth1.Bitbucket` provider.
+
 Version 0.1.1
 -------------
 
