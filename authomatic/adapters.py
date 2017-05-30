@@ -145,7 +145,10 @@ class DjangoAdapter(BaseAdapter):
     
     @property
     def params(self):
-        return dict(self.request.REQUEST)
+        params = {}
+        params.update(self.request.GET.dict())
+        params.update(self.request.POST.dict())
+        return params
     
     @property
     def url(self):

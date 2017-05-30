@@ -491,13 +491,13 @@ class Bitbucket(OAuth1):
     * name
     * picture
     * username
+    * email
 
     Unsupported :class:`.User` properties:
 
     * birth_date
     * city
     * country
-    * email
     * gender
     * locale
     * location
@@ -521,13 +521,15 @@ class Bitbucket(OAuth1):
         link=True,
         name=True,
         picture=True,
-        username=True
+        username=True,
+        email=True
     )
     
     request_token_url = 'https://bitbucket.org/!api/1.0/oauth/request_token'
     user_authorization_url = 'https://bitbucket.org/!api/1.0/oauth/authenticate'
     access_token_url = 'https://bitbucket.org/!api/1.0/oauth/access_token'
     user_info_url = 'https://api.bitbucket.org/1.0/user'
+    user_email_url = 'https://api.bitbucket.org/1.0/emails'
     
     @staticmethod
     def _x_user_parser(user, data):
@@ -540,7 +542,22 @@ class Bitbucket(OAuth1):
         user.link = 'https://bitbucket.org/api{0}'\
             .format(_user.get('resource_uri'))
         return user
-
+    
+    def _access_user_info(self):
+        """
+        Email is available in separate method so second request is needed.
+        """
+        response = super(Bitbucket, self)._access_user_info()
+        
+        response.data.setdefault("email", None)
+        
+        email_response = self.access(self.user_email_url)
+        if email_response.data:
+            for item in email_response.data:
+                if item.get("primary", False):
+                    response.data.update(email=item.get("email", None))
+        
+        return response
 
 class Flickr(OAuth1):
     """
@@ -836,6 +853,16 @@ class Twitter(OAuth1):
         user.picture = data.get('profile_image_url')
         user.locale = data.get('lang')
         user.link = data.get('url')
+        _location = data.get('location', '')
+        if _location:
+            user.location = _location.strip()
+            _split_location = _location.split(',')
+            if len(_split_location) > 1:
+                _city, _country = _split_location
+                user.country = _country.strip()
+            else:
+                _city = _split_location[0]
+            user.city = _city.strip()
         return user
 
 
@@ -1134,9 +1161,14 @@ class Yahoo(OAuth1):
         
         user.picture = _user.get('image', {}).get('imageUrl')
         
-        user.city, user.country = _user.get('location', ',').split(',')
-        user.city = user.city.strip()
-        user.country = user.country.strip()
+        try:
+            user.city, user.country = _user.get('location', ',').split(',')
+            user.city = user.city.strip()
+            user.country = user.country.strip()
+        except ValueError:
+            # probably user hasn't activated Yahoo Profile
+            user.city = None
+            user.country = None
         
         _date = _user.get('birthdate')
         _year = _user.get('birthYear')

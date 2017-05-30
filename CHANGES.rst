@@ -1,5 +1,5 @@
-Version 0.1.1
--------------
+Unreleased
+----------
 
 * The :class:`.oauth2.Google` provider now uses
   ``https://www.googleapis.com/oauth2/v3/userinfo?alt=json`` as the ``user_info_url``
@@ -8,6 +8,8 @@ Version 0.1.1
    to :class:`.oauth2.Google` provider.
 * Removed support for :attr:`gender`, :attr:`link` and :attr:`birth_date`
    from :class:`.oauth2.Google` provider.
+* Adjusted naming of default scope for :class:`.oauth2.Facebook` to Facebook v2 API
+* Added support for :attr:`.User.email` to the :class:`.oauth1.Bitbucket` provider.
 
 Version 0.1.0
 -------------
