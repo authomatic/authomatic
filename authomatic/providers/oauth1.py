@@ -803,6 +803,10 @@ class Twitter(OAuth1):
     * Docs: https://dev.twitter.com/docs
     * API reference: https://dev.twitter.com/docs/api
 
+    .. note:: To prevent multiple authorization attempts, you should enable the option:
+      ``Allow this application to be used to Sign in with Twitter``
+      in the Twitter 'Application Management' page. (http://apps.twitter.com)
+
     Supported :class:`.User` properties:
 
     * id
