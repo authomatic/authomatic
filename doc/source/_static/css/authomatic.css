@@ -5731,7 +5731,6 @@ div.social-buttons > ul > li {
 #content pre, #content .highlight {
   background-color: #444444;
   color: #dddddd;
-  letter-spacing: -0.1em;
   white-space: pre;
 }
 /* line 147, ../../_themes/foundation-sphinx-theme/foundation/static/foundation/sass/basic.sass */

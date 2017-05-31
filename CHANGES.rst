@@ -4,10 +4,12 @@ Unreleased
 * The :class:`.oauth2.Google` provider now uses
   ``https://www.googleapis.com/oauth2/v3/userinfo?alt=json`` as the ``user_info_url``
   instead of the deprecated ``https://www.googleapis.com/plus/v1/people/me``
-*  Added support for :attr:`email_verified` and :attr:`hosted_domain`
-   to :class:`.oauth2.Google` provider.
+* Added support for :attr:`email_verified` and :attr:`hosted_domain`
+  to :class:`.oauth2.Google` provider.
 * Removed support for :attr:`gender`, :attr:`link` and :attr:`birth_date`
-   from :class:`.oauth2.Google` provider.
+  from :class:`.oauth2.Google` provider.
+* Fix #160: Handle token_type of bearer (lower-case).
+* Fix #130: explicitly request fields from Facebook. 
 * Adjusted naming of default scope for :class:`.oauth2.Facebook` to Facebook v2 API
 * Added support for :attr:`.User.email` to the :class:`.oauth1.Bitbucket` provider.
 
