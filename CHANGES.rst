@@ -1,6 +1,7 @@
 Unreleased
 ----------
 
+* Support passing of user state in oauth2 to support variable redirect urls.
 * The :class:`.oauth2.Google` provider now uses
   ``https://www.googleapis.com/oauth2/v3/userinfo?alt=json`` as the ``user_info_url``
   instead of the deprecated ``https://www.googleapis.com/plus/v1/people/me``
