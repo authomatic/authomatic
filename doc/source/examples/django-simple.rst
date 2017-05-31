@@ -11,7 +11,7 @@ that will be able to log **users** in with Facebook, Twitter and |openid|_
 and retrieve their 5 most recent tweets/statuses.
 
 You can download all the source files we are about to create
-`here <https://github.com/peterhudec/authomatic/tree/master/examples/django>`__.
+`here <https://github.com/authomatic/authomatic/tree/master/examples/django>`__.
 
 First create a new |django|_ project named *example*.
 
@@ -191,6 +191,6 @@ Run the app and navigate to ``http://[hostname]/simple`` in your browser.
 
 And here is the complete ``example/simple/views.py`` module.
 Remember that you can download all the files we just created from
-`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/django>`_.
+`GitHub <https://github.com/authomatic/authomatic/tree/master/examples/django>`_.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py

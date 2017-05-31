@@ -8,7 +8,7 @@ Development Environment Setup
 -----------------------------
 
 Fork the
-`Authomatic repository on Github <https://github.com/peterhudec/authomatic>`__
+`Authomatic repository on Github <https://github.com/authomatic/authomatic>`__
 and clone it:
 
 .. code-block:: bash
@@ -34,7 +34,7 @@ The easiest way to set up the development environment is to run the
 The script does following:
 
 #. Initializes and updates GIT submodules. The
-   `Foundation Sphinx Theme <https://github.com/peterhudec/foundation-sphinx-theme>`__
+   `Foundation Sphinx Theme <https://github.com/authomatic/foundation-sphinx-theme>`__
    located in ``./doc/source_/themes/foundation-sphinx-theme``
    is currently the only GIT submodule used.
 #. Creates a `virtual environment <https://virtualenv.pypa.io/en/latest/>`__

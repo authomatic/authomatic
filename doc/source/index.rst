@@ -11,8 +11,8 @@
    development
    changelog
 
-.. image:: https://travis-ci.org/peterhudec/authomatic.svg?branch=master
-   :target: https://travis-ci.org/peterhudec/authomatic
+.. image:: https://travis-ci.org/authomatic/authomatic.svg?branch=master
+   :target: https://travis-ci.org/authomatic/authomatic
 
 .. include:: ../../README.rst
    :start-line: 35
@@ -31,11 +31,11 @@ First install **Authomatic** through `PyPi <https://pypi.python.org/pypi/Authoma
    
    $ pip install authomatic
 
-or clone it from `GitHub <http://github.com/peterhudec/authomatic>`_.
+or clone it from `GitHub <http://github.com/authomatic/authomatic>`_.
 
 .. code-block:: bash
    
-   $ git clone git://github.com/peterhudec/authomatic.git
+   $ git clone git://github.com/authomatic/authomatic.git
 
 .. note::
    
