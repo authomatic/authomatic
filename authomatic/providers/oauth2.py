@@ -1203,22 +1203,22 @@ class LinkedIn(OAuth2):
 
     Supported :class:`.User` properties:
 
+    * city
     * country
     * email
     * first_name
     * id
     * last_name
     * link
-    * location
     * name
     * picture
 
     Unsupported :class:`.User` properties:
 
     * birth_date
-    * city
     * gender
     * locale
+    * location
     * nickname
     * phone
     * postal_code
@@ -1239,13 +1239,14 @@ class LinkedIn(OAuth2):
     # http://developer.linkedin.com/forum/unauthorized-invalid-or-expired-token-immediately-after-receiving-oauth2-token
 
     supported_user_attributes = core.SupportedUserAttributes(
+        city=True
         country=True,
         email=True,
         first_name=True,
         id=True,
         last_name=True,
         link=True,
-        location=True,
+        location=False,
         name=True,
         picture=True
     )
@@ -1259,18 +1260,18 @@ class LinkedIn(OAuth2):
             params['oauth2_access_token'] = params.pop('access_token')
             request_elements = core.RequestElements(url, method, params,
                                                     headers, body)
-        
+
         return request_elements
 
     @staticmethod
     def _x_user_parser(user, data):
-        
+
         user.first_name = data.get('firstName')
         user.last_name = data.get('lastName')
         user.email = data.get('emailAddress')
         user.name = data.get('formattedName')
-        user.country = data.get('location', {}).get('name')
-        user.location = data.get('location', {}).get('country', {}).get('code')
+        user.city = user.city = data.get('location', {}).get('name')
+        user.country = data.get('location', {}).get('country', {}).get('code')
         user.phone = data.get('phoneNumbers', {}).get('values', [{}])[0]\
             .get('phoneNumber')
         user.picture = data.get('pictureUrl')

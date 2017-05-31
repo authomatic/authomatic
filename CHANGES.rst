@@ -3,7 +3,8 @@ Unreleased
 
 * Adjusted naming of default scope for :class:`.oauth2.Facebook` to Facebook v2 API
 * Added support for :attr:`.User.email` to the :class:`.oauth1.Bitbucket` provider.
-
+* Added support for :attr:`.User.city`, updated :attr:`.User.country` and removed :attr: `User.location` in the
+  :class:`.oauth2.LinkedIn` provider.
 
 Version 0.1.0
 -------------
