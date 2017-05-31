@@ -1,6 +1,6 @@
 Unreleased
 ----------
-
+* Fixes #130: explicitly request fields from Facebook. 
 * Adjusted naming of default scope for :class:`.oauth2.Facebook` to Facebook v2 API
 * Added support for :attr:`.User.email` to the :class:`.oauth1.Bitbucket` provider.
 
