@@ -907,6 +907,16 @@ class Facebook(OAuth2):
         # Always refresh.
         return True
 
+    def access(self, url, params=None, **kwargs):
+        if params is None:
+            params = {}
+            
+        # syntax ?fields=field1,field2 is reqiured for getting attributes, 
+        # see https://developers.facebook.com/blog/post/2015/07/08/graph-api-v2.4/
+        params["fields"] = "id,email,name,first_name,last_name,gender,hometown,link,timezone,verified,website,locale,languages"
+
+        return super(Facebook, self).access(url, params, **kwargs)
+
 
     def access(self, url, params=None, **kwargs):
         if params is None:
@@ -1119,6 +1129,37 @@ class GitHub(OAuth2):
         if data.get('token_type') == 'bearer':
             credentials.token_type = cls.BEARER
         return credentials
+    
+    def access(self, url, **kwargs):
+        # https://developer.github.com/v3/#user-agent-required
+        headers = kwargs["headers"] = kwargs.get("headers", {})
+        if not headers.get("User-Agent"):
+            headers["User-Agent"] = self.settings.config[self.name]["consumer_key"]
+        
+        def parent_access(url):
+            return super(GitHub, self).access(url, **kwargs)
+        
+        response = parent_access(url)
+        
+        # additional action to get email is required:
+        # https://developer.github.com/v3/users/emails/
+        if response.status == 200:
+            email_response = parent_access(url + "/emails")
+            if email_response.status == 200:
+                response.data["emails"] = email_response.data
+                
+                # find first or primary email
+                primary_email = None
+                for item in email_response.data:
+                    is_primary = item["primary"]
+                    if not primary_email or is_primary:
+                        primary_email = item["email"]
+                        
+                    if is_primary:
+                        break
+                    
+                response.data["email"] = primary_email
+        return response
 
 
 class Google(OAuth2):
@@ -1600,7 +1641,11 @@ class VK(OAuth2):
 
         _birth_date = _resp.get('bdate')
         if _birth_date:
-            user.birth_date = datetime.datetime.strptime(_birth_date, '%d.%m.%Y')
+            # :TODO: handle the use case "1.10", without year or day or ... 
+            try:
+                user.birth_date = datetime.datetime.strptime(_birth_date, '%d.%m.%Y')
+            except:
+                pass
         user.id = _resp.get('uid')
         user.first_name = _resp.get('first_name')
         user.gender = _resp.get('sex')
