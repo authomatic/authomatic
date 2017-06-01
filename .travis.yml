@@ -7,11 +7,11 @@ addons:
 install: sudo pip install tox
 script: sudo tox -- -vvx --tb=no
 after_failure:
-- tail -n 1000000 tests/functional_tests/*.log
-- tail -n 1000000 tests/*.log
+- tail -n 1000000 authomatic_tests/functional_tests/*.log
+- tail -n 1000000 authomatic_tests/*.log
 before_install:
 - openssl aes-256-cbc -K $encrypted_cd197f1c301c_key -iv $encrypted_cd197f1c301c_iv
-  -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
+  -in ./authomatic_tests/functional_tests/config.py.enc -out ./authomatic_tests/functional_tests/config.py
   -d
 - brew update
 - brew install caskroom/cask/brew-cask
