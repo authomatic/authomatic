@@ -42,8 +42,20 @@ from authomatic import six
 from authomatic.six.moves import urllib_parse as parse
 
 
-__all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Meetup', 'Plurk', 'Twitter', 'Tumblr', 'UbuntuOne',
-           'Vimeo', 'Xero', 'Xing', 'Yahoo']
+__all__ = [
+    'OAuth1',
+    'Bitbucket',
+    'Flickr',
+    'Meetup',
+    'Plurk',
+    'Twitter',
+    'Tumblr',
+    'UbuntuOne',
+    'Vimeo',
+    'Xero',
+    'Xing',
+    'Yahoo'
+]
 
 
 def _normalize_params(params):
@@ -61,8 +73,10 @@ def _normalize_params(params):
         params = list(params.items())
 
     # remove "realm" and "oauth_signature"
-    params = sorted([(k, v)
-                     for k, v in params if k not in ('oauth_signature', 'realm')])
+    params = sorted([
+        (k, v) for k, v in params
+        if k not in ('oauth_signature', 'realm')
+    ])
     # sort
     # convert to query string
     qs = parse.urlencode(params)
@@ -122,7 +136,8 @@ class BaseSignatureGenerator(object):
             :attr:`.core.Consumer.secret`
 
         :param str token_secret:
-            Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.
+            Access token secret as specified in
+            http://oauth.net/core/1.0a/#anchor3.
 
         :returns:
             The signature string.
@@ -150,7 +165,8 @@ class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
             :attr:`.core.Consumer.secret`
 
         :param str token_secret:
-            Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.
+            Access token secret as specified in
+            http://oauth.net/core/1.0a/#anchor3.
 
         :returns:
             Key to sign the request with.
@@ -179,7 +195,8 @@ class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
             :attr:`.core.Consumer.secret`
 
         :param str token_secret:
-            Access token secret as specified in http://oauth.net/core/1.0a/#anchor3.
+            Access token secret as specified in
+            http://oauth.net/core/1.0a/#anchor3.
 
         :returns:
             The signature string.
@@ -234,22 +251,27 @@ class OAuth1(providers.AuthorizationProvider):
         Accepts additional keyword arguments:
 
         :param str consumer_key:
-            The *key* assigned to our application (**consumer**) by the **provider**.
+            The *key* assigned to our application (**consumer**) by
+            the **provider**.
 
         :param str consumer_secret:
-            The *secret* assigned to our application (**consumer**) by the **provider**.
+            The *secret* assigned to our application (**consumer**) by
+            the **provider**.
 
         :param id:
             A unique short name used to serialize :class:`.Credentials`.
 
         :param dict user_authorization_params:
-            A dictionary of additional request parameters for **user authorization request**.
+            A dictionary of additional request parameters for
+            **user authorization request**.
 
         :param dict access_token_params:
-            A dictionary of additional request parameters for **access token request**.
+            A dictionary of additional request parameters for
+            **access token request**.
 
         :param dict request_token_params:
-            A dictionary of additional request parameters for **request token request**.
+            A dictionary of additional request parameters for
+            **request token request**.
 
         """
 
@@ -258,9 +280,9 @@ class OAuth1(providers.AuthorizationProvider):
         self.request_token_params = self._kwarg(
             kwargs, 'request_token_params', {})
 
-    #=========================================================================
+    # ========================================================================
     # Abstract properties
-    #=========================================================================
+    # ========================================================================
 
     @abc.abstractproperty
     def request_token_url(self):
@@ -269,13 +291,15 @@ class OAuth1(providers.AuthorizationProvider):
         see http://oauth.net/core/1.0a/#auth_step1.
         """
 
-    #=========================================================================
+    # ========================================================================
     # Internal methods
-    #=========================================================================
+    # ========================================================================
 
     @classmethod
-    def create_request_elements(cls, request_type, credentials, url, params=None, headers=None,
-                                body='', method='GET', verifier='', callback=''):
+    def create_request_elements(
+        cls, request_type, credentials, url, params=None, headers=None,
+        body='', method='GET', verifier='', callback=''
+    ):
         """
         Creates |oauth1| request elements.
         """
@@ -300,7 +324,8 @@ class OAuth1(providers.AuthorizationProvider):
                 params['oauth_token'] = token
             else:
                 raise OAuth1Error(
-                    'Credentials with valid token are required to create User Authorization URL!')
+                    'Credentials with valid token are required to create '
+                    'User Authorization URL!')
         else:
             # signature needed
             if request_type == cls.REQUEST_TOKEN_REQUEST_TYPE:
@@ -309,8 +334,10 @@ class OAuth1(providers.AuthorizationProvider):
                     params['oauth_consumer_key'] = consumer_key
                     params['oauth_callback'] = callback
                 else:
-                    raise OAuth1Error('Credentials with valid consumer_key, consumer_secret and ' +
-                                      'callback are required to create Request Token URL!')
+                    raise OAuth1Error(
+                        'Credentials with valid consumer_key, consumer_secret '
+                        'and callback are required to create Request Token '
+                        'URL!')
 
             elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
                 # Access Token URL
@@ -319,8 +346,10 @@ class OAuth1(providers.AuthorizationProvider):
                     params['oauth_consumer_key'] = consumer_key
                     params['oauth_verifier'] = verifier
                 else:
-                    raise OAuth1Error('Credentials with valid consumer_key, consumer_secret, token ' +
-                                      'and argument verifier are required to create Access Token URL!')
+                    raise OAuth1Error(
+                        'Credentials with valid consumer_key, '
+                        'consumer_secret, token and argument verifier'
+                        ' are required to create Access Token URL!')
 
             elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
                 # Protected Resources URL
@@ -328,8 +357,10 @@ class OAuth1(providers.AuthorizationProvider):
                     params['oauth_token'] = token
                     params['oauth_consumer_key'] = consumer_key
                 else:
-                    raise OAuth1Error('Credentials with valid consumer_key, consumer_secret, token and ' +
-                                      'token_secret are required to create Protected Resources URL!')
+                    raise OAuth1Error(
+                        'Credentials with valid consumer_key, ' +
+                        'consumer_secret, token and token_secret are required '
+                        'to create Protected Resources URL!')
 
             # Sign request.
             # http://oauth.net/core/1.0a/#anchor13
@@ -342,7 +373,7 @@ class OAuth1(providers.AuthorizationProvider):
             params['oauth_version'] = '1.0'
 
             # add signature to params
-            params['oauth_signature'] = cls._signature_generator.create_signature(
+            params['oauth_signature'] = cls._signature_generator.create_signature(  # noqa
                 method, url, params, consumer_secret, token_secret)
 
         request_elements = core.RequestElements(
@@ -351,9 +382,9 @@ class OAuth1(providers.AuthorizationProvider):
         return cls._x_request_elements_filter(
             request_type, request_elements, credentials)
 
-    #=========================================================================
+    # ========================================================================
     # Exposed methods
-    #=========================================================================
+    # ========================================================================
 
     @staticmethod
     def to_tuple(credentials):
@@ -382,7 +413,8 @@ class OAuth1(providers.AuthorizationProvider):
             # Phase 2 after redirect with success
             self._log(
                 logging.INFO,
-                u'Continuing OAuth 1.0a authorization procedure after redirect.')
+                u'Continuing OAuth 1.0a authorization procedure after '
+                u'redirect.')
             token_secret = self._session_get('token_secret')
             if not token_secret:
                 raise FailureError(
@@ -397,11 +429,13 @@ class OAuth1(providers.AuthorizationProvider):
             self.credentials.token = request_token
             self.credentials.token_secret = token_secret
 
-            request_elements = self.create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
-                                                            url=self.access_token_url,
-                                                            credentials=self.credentials,
-                                                            verifier=verifier,
-                                                            params=self.access_token_params)
+            request_elements = self.create_request_elements(
+                request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
+                url=self.access_token_url,
+                credentials=self.credentials,
+                verifier=verifier,
+                params=self.access_token_params
+            )
 
             response = self._fetch(*request_elements)
             self.access_token_response = response
@@ -426,17 +460,17 @@ class OAuth1(providers.AuthorizationProvider):
                                                           response.data)
             self._update_or_create_user(response.data, self.credentials)
 
-            #==================================================================
+            # =================================================================
             # We're done!
-            #==================================================================
+            # =================================================================
 
         elif denied:
             # Phase 2 after redirect denied
-            raise CancellationError('User denied the request token {0} during a redirect to {1}!'.
-                                    format(
-                                        denied, self.user_authorization_url),
-                                    original_message=denied,
-                                    url=self.user_authorization_url)
+            raise CancellationError(
+                'User denied the request token {0} during a redirect'
+                'to {1}!'.format(denied, self.user_authorization_url),
+                original_message=denied,
+                url=self.user_authorization_url)
         else:
             # Phase 1 before redirect
             self._log(
@@ -444,11 +478,13 @@ class OAuth1(providers.AuthorizationProvider):
                 u'Starting OAuth 1.0a authorization procedure.')
 
             # Fetch for request token
-            request_elements = self.create_request_elements(request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
-                                                            credentials=self.credentials,
-                                                            url=self.request_token_url,
-                                                            callback=self.url,
-                                                            params=self.request_token_params)
+            request_elements = self.create_request_elements(
+                request_type=self.REQUEST_TOKEN_REQUEST_TYPE,
+                credentials=self.credentials,
+                url=self.request_token_url,
+                callback=self.url,
+                params=self.request_token_params
+            )
 
             self._log(
                 logging.INFO,
@@ -457,18 +493,25 @@ class OAuth1(providers.AuthorizationProvider):
 
             # check if response status is OK
             if not self._http_status_in_category(response.status, 2):
-                raise FailureError(u'Failed to obtain request token from {0}! HTTP status code: {1} content: {2}'
-                                   .format(self.request_token_url, response.status, response.content),
-                                   original_message=response.content,
-                                   status=response.status,
-                                   url=self.request_token_url)
+                raise FailureError(
+                    u'Failed to obtain request token from {0}! HTTP status '
+                    u'code: {1} content: {2}'.format(
+                        self.request_token_url,
+                        response.status,
+                        response.content
+                    ),
+                    original_message=response.content,
+                    status=response.status,
+                    url=self.request_token_url)
 
             # extract request token
             request_token = response.data.get('oauth_token')
             if not request_token:
-                raise FailureError('Response from {0} doesn\'t contain oauth_token parameter!'.format(self.request_token_url),
-                                   original_message=response.content,
-                                   url=self.request_token_url)
+                raise FailureError(
+                    'Response from {0} doesn\'t contain oauth_token '
+                    'parameter!'.format(self.request_token_url),
+                    original_message=response.content,
+                    url=self.request_token_url)
 
             # we need request token for user authorization redirect
             self.credentials.token = request_token
@@ -480,17 +523,21 @@ class OAuth1(providers.AuthorizationProvider):
                 # access token
                 self._session_set('token_secret', token_secret)
             else:
-                raise FailureError(u'Failed to obtain token secret from {0}!'.format(self.request_token_url),
-                                   original_message=response.content,
-                                   url=self.request_token_url)
+                raise FailureError(
+                    u'Failed to obtain token secret from {0}!'.format(
+                        self.request_token_url),
+                    original_message=response.content,
+                    url=self.request_token_url)
 
             self._log(logging.INFO, u'Got request token and token secret')
 
             # Create User Authorization URL
-            request_elements = self.create_request_elements(request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
-                                                            credentials=self.credentials,
-                                                            url=self.user_authorization_url,
-                                                            params=self.user_authorization_params)
+            request_elements = self.create_request_elements(
+                request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
+                credentials=self.credentials,
+                url=self.user_authorization_url,
+                params=self.user_authorization_params
+            )
 
             self._log(
                 logging.INFO,
@@ -506,7 +553,8 @@ class Bitbucket(OAuth1):
 
     * Dashboard: https://bitbucket.org/account/user/peterhudec/api
     * Docs: https://confluence.atlassian.com/display/BITBUCKET/oauth+Endpoint
-    * API reference: https://confluence.atlassian.com/display/BITBUCKET/Using+the+Bitbucket+REST+APIs
+    * API reference:
+      https://confluence.atlassian.com/display/BITBUCKET/Using+the+Bitbucket+REST+APIs
 
     Supported :class:`.User` properties:
 
@@ -552,7 +600,8 @@ class Bitbucket(OAuth1):
     )
 
     request_token_url = 'https://bitbucket.org/!api/1.0/oauth/request_token'
-    user_authorization_url = 'https://bitbucket.org/!api/1.0/oauth/authenticate'
+    user_authorization_url = 'https://bitbucket.org/!api/1.0/oauth/' + \
+                             'authenticate'
     access_token_url = 'https://bitbucket.org/!api/1.0/oauth/access_token'
     user_info_url = 'https://api.bitbucket.org/1.0/user'
     user_email_url = 'https://api.bitbucket.org/1.0/emails'
@@ -670,8 +719,9 @@ class Meetup(OAuth1):
 
     .. note::
 
-        Meetup also supports |oauth2| but you need the **user ID** to update the **user** info,
-        which they don't provide in the |oauth2| access token response.
+        Meetup also supports |oauth2| but you need the **user ID** to update
+        the **user** info, which they don't provide in the |oauth2| access
+        token response.
 
     * Dashboard: http://www.meetup.com/meetup_api/oauth_consumers/
     * Docs: http://www.meetup.com/meetup_api/auth/#oauth
@@ -828,7 +878,8 @@ class Twitter(OAuth1):
     * Docs: https://dev.twitter.com/docs
     * API reference: https://dev.twitter.com/docs/api
 
-    .. note:: To prevent multiple authorization attempts, you should enable the option:
+    .. note:: To prevent multiple authorization attempts, you should enable
+      the option:
       ``Allow this application to be used to Sign in with Twitter``
       in the Twitter 'Application Management' page. (http://apps.twitter.com)
 
@@ -874,7 +925,10 @@ class Twitter(OAuth1):
     request_token_url = 'https://api.twitter.com/oauth/request_token'
     user_authorization_url = 'https://api.twitter.com/oauth/authenticate'
     access_token_url = 'https://api.twitter.com/oauth/access_token'
-    user_info_url = 'https://api.twitter.com/1.1/account/verify_credentials.json?include_entities=true&include_email=true'
+    user_info_url = (
+        'https://api.twitter.com/1.1/account/verify_credentials.json?'
+        'include_entities=true&include_email=true'
+    )
     supports_jsonp = True
 
     @staticmethod
@@ -1162,11 +1216,15 @@ class Yahoo(OAuth1):
         picture=True
     )
 
-    request_token_url = 'https://api.login.yahoo.com/oauth/v2/get_request_token'
-    user_authorization_url = 'https://api.login.yahoo.com/oauth/v2/request_auth'
+    request_token_url = 'https://api.login.yahoo.com/oauth/v2/' + \
+                        'get_request_token'
+    user_authorization_url = 'https://api.login.yahoo.com/oauth/v2/' + \
+                             'request_auth'
     access_token_url = 'https://api.login.yahoo.com/oauth/v2/get_token'
-    user_info_url = ('https://query.yahooapis.com/v1/yql?q=select%20*%20from%20'
-                     'social.profile%20where%20guid%3Dme%3B&format=json')
+    user_info_url = (
+        'https://query.yahooapis.com/v1/yql?q=select%20*%20from%20'
+        'social.profile%20where%20guid%3Dme%3B&format=json'
+    )
 
     same_origin = False
     supports_jsonp = True
@@ -1293,8 +1351,9 @@ class Xing(OAuth1):
                 user.city = _address.get('city')
                 user.country = _address.get('country')
                 user.postal_code = _address.get('zip_code')
-                user.phone = (_address.get('phone', '') or
-                              _address.get('mobile_phone', '')).replace('|', '')
+                user.phone = (
+                    _address.get('phone', '') or
+                    _address.get('mobile_phone', '')).replace('|', '')
 
             _languages = list(_user.get('languages', {}).keys())
             if _languages and _languages[0]:
@@ -1314,15 +1373,16 @@ class Xing(OAuth1):
 # Always append new providers at the end so that ids of existing providers
 # don't change!
 PROVIDER_ID_MAP = [
-    OAuth1,
     Bitbucket,
     Flickr,
     Meetup,
+    OAuth1,
     Plurk,
-    Twitter,
     Tumblr,
+    Twitter,
     UbuntuOne,
     Vimeo,
     Xero,
+    Xing,
     Yahoo,
-    Xing]
+]

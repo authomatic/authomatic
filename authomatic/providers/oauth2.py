@@ -29,7 +29,7 @@ Providers which implement the |oauth2|_ protocol.
 
 """
 
-from authomatic.six.moves.urllib.parse import urlencode, unquote
+from authomatic.six.moves.urllib.parse import unquote
 import base64
 import datetime
 import json
@@ -55,10 +55,12 @@ class OAuth2(providers.AuthorizationProvider):
     TOKEN_TYPES = ['', 'Bearer']
 
     #: A scope preset to get most of the **user** info.
-    #: Use it in the :doc:`config` like ``{'scope': oauth2.Facebook.user_info_scope}``.
+    #: Use it in the :doc:`config` like
+    #: ``{'scope': oauth2.Facebook.user_info_scope}``.
     user_info_scope = []
 
-    #: :class:`bool` If ``False``, the provider doesn't support CSRF protection.
+    #: :class:`bool` If ``False``, the provider doesn't support CSRF
+    #: protection.
     supports_csrf_protection = True
 
     #: :class:`bool` If ``False``, the provider doesn't support user_state.
@@ -71,14 +73,17 @@ class OAuth2(providers.AuthorizationProvider):
         Accepts additional keyword arguments:
 
         :param list scope:
-            List of strings specifying requested permissions as described in the
+            List of strings specifying requested permissions as described
+            in the
             `OAuth 2.0 spec <http://tools.ietf.org/html/rfc6749#section-3.3>`_.
 
         :param bool offline:
-            If ``True`` the **provider** will be set up to request an *offline access token*.
-            default is ``False``.
+            If ``True`` the **provider** will be set up to request an
+            *offline access token*.
+            Default is ``False``.
 
-        As well as those inherited from :class:`.AuthorizationProvider` constructor.
+        As well as those inherited from :class:`.AuthorizationProvider`
+        constructor.
 
         """
 
@@ -87,9 +92,9 @@ class OAuth2(providers.AuthorizationProvider):
         self.scope = self._kwarg(kwargs, 'scope', [])
         self.offline = self._kwarg(kwargs, 'offline', False)
 
-    #=========================================================================
+    # ========================================================================
     # Internal methods
-    #=========================================================================
+    # ========================================================================
 
     def _x_scope_parser(self, scope):
         """
@@ -105,9 +110,11 @@ class OAuth2(providers.AuthorizationProvider):
         return ','.join(scope) if scope else ''
 
     @classmethod
-    def create_request_elements(cls, request_type, credentials, url, method='GET', params=None,
-                                headers=None, body='', secret=None, redirect_uri='', scope='',
-                                csrf='', user_state=''):
+    def create_request_elements(
+        cls, request_type, credentials, url, method='GET', params=None,
+        headers=None, body='', secret=None, redirect_uri='', scope='',
+        csrf='', user_state=''
+    ):
         """
         Creates |oauth2| request elements.
         """
@@ -135,8 +142,11 @@ class OAuth2(providers.AuthorizationProvider):
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
                 if cls.supports_user_state:
-                    params['state'] = base64.urlsafe_b64encode(json.dumps(
-                        {"csrf": csrf, "user_state": user_state}).encode('utf-8'))
+                    params['state'] = base64.urlsafe_b64encode(
+                        json.dumps(
+                            {"csrf": csrf, "user_state": user_state}
+                        ).encode('utf-8')
+                    )
                 else:
                     params['state'] = csrf
                 params['response_type'] = 'code'
@@ -144,8 +154,10 @@ class OAuth2(providers.AuthorizationProvider):
                 # Add authorization header
                 headers.update(cls._authorization_header(credentials))
             else:
-                raise OAuth2Error('Credentials with valid consumer_key and arguments redirect_uri, scope and ' +
-                                  'state are required to create OAuth 2.0 user authorization request elements!')
+                raise OAuth2Error(
+                    'Credentials with valid consumer_key and arguments '
+                    'redirect_uri, scope and state are required to create '
+                    'OAuth 2.0 user authorization request elements!')
 
         elif request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
             # Access token request.
@@ -159,8 +171,10 @@ class OAuth2(providers.AuthorizationProvider):
                 # TODO: Check whether all providers accept it
                 headers.update(cls._authorization_header(credentials))
             else:
-                raise OAuth2Error('Credentials with valid token, consumer_key, consumer_secret and argument ' +
-                                  'redirect_uri are required to create OAuth 2.0 access token request elements!')
+                raise OAuth2Error(
+                    'Credentials with valid token, consumer_key, '
+                    'consumer_secret and argument redirect_uri are required '
+                    'to create OAuth 2.0 access token request elements!')
 
         elif request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
             # Refresh access token request.
@@ -170,8 +184,10 @@ class OAuth2(providers.AuthorizationProvider):
                 params['client_secret'] = consumer_secret
                 params['grant_type'] = 'refresh_token'
             else:
-                raise OAuth2Error('Credentials with valid refresh_token, consumer_key, consumer_secret ' +
-                                  'are required to create OAuth 2.0 refresh token request elements!')
+                raise OAuth2Error(
+                    'Credentials with valid refresh_token, consumer_key, '
+                    'consumer_secret are required to create OAuth 2.0 '
+                    'refresh token request elements!')
 
         elif request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             # Protected resource request.
@@ -186,8 +202,9 @@ class OAuth2(providers.AuthorizationProvider):
             elif token:
                 params['access_token'] = token
             else:
-                raise OAuth2Error('Credentials with valid token are required to create ' +
-                                  'OAuth 2.0 protected resources request elements!')
+                raise OAuth2Error(
+                    'Credentials with valid token are required to create '
+                    'OAuth 2.0 protected resources request elements!')
 
         request_elements = core.RequestElements(
             url, method, params, headers, body)
@@ -216,9 +233,9 @@ class OAuth2(providers.AuthorizationProvider):
         if credentials.refresh_token:
             return True
 
-    #=========================================================================
+    # ========================================================================
     # Exposed methods
-    #=========================================================================
+    # ========================================================================
 
     @classmethod
     def to_tuple(cls, credentials):
@@ -256,9 +273,9 @@ class OAuth2(providers.AuthorizationProvider):
 
         """
         if state and cls.supports_user_state:
-            # urlsafe_b64 may include = which the browser quotes so must unquote
-            # Cast to str to void b64decode translation error. Base64 should be
-            # str compatible.
+            # urlsafe_b64 may include = which the browser quotes so must
+            # unquote Cast to str to void b64decode translation error. Base64
+            # should be str compatible.
             return json.loads(base64.urlsafe_b64decode(
                 unquote(str(state))).decode('utf-8'))[param]
         else:
@@ -284,10 +301,12 @@ class OAuth2(providers.AuthorizationProvider):
         credentials.consumer_key = cfg.get('consumer_key')
         credentials.consumer_secret = cfg.get('consumer_secret')
 
-        request_elements = self.create_request_elements(request_type=self.REFRESH_TOKEN_REQUEST_TYPE,
-                                                        credentials=credentials,
-                                                        url=self.access_token_url,
-                                                        method='POST')
+        request_elements = self.create_request_elements(
+            request_type=self.REFRESH_TOKEN_REQUEST_TYPE,
+            credentials=credentials,
+            url=self.access_token_url,
+            method='POST'
+        )
 
         self._log(logging.INFO, u'Refreshing credentials.')
         response = self._fetch(*request_elements)
@@ -329,38 +348,46 @@ class OAuth2(providers.AuthorizationProvider):
         if authorization_code or not self.user_authorization_url:
 
             if authorization_code:
-                #==============================================================
+                # =============================================================
                 # Phase 2 after redirect with success
-                #==============================================================
+                # =============================================================
 
                 self._log(
                     logging.INFO,
-                    u'Continuing OAuth 2.0 authorization procedure after redirect.')
+                    u'Continuing OAuth 2.0 authorization procedure after '
+                    u'redirect.')
 
                 # validate CSRF token
                 if self.supports_csrf_protection:
                     self._log(
                         logging.INFO,
-                        u'Validating request by comparing request state with stored state.')
+                        u'Validating request by comparing request state with '
+                        u'stored state.')
                     stored_csrf = self._session_get('csrf')
 
                     state_csrf = self.decode_state(state, 'csrf')
                     if not stored_csrf:
                         raise FailureError(u'Unable to retrieve stored state!')
                     elif not stored_csrf == state_csrf:
-                        raise FailureError(u'The returned state csrf cookie "{0}" doesn\'t match with the stored state!'.format(state_csrf),
-                                           url=self.user_authorization_url)
+                        raise FailureError(
+                            u'The returned state csrf cookie "{0}" doesn\'t '
+                            u'match with the stored state!'.format(
+                                state_csrf
+                            ),
+                            url=self.user_authorization_url)
                     self._log(logging.INFO, u'Request is valid.')
                 else:
                     self._log(logging.WARN, u'Skipping CSRF validation!')
 
             elif not self.user_authorization_url:
-                #==============================================================
+                # =============================================================
                 # Phase 1 without user authorization redirect.
-                #==============================================================
+                # =============================================================
 
-                self._log(logging.INFO, u'Starting OAuth 2.0 authorization procedure without ' +
-                                        u'user authorization redirect.')
+                self._log(
+                    logging.INFO,
+                    u'Starting OAuth 2.0 authorization procedure without '
+                    u'user authorization redirect.')
 
             # exchange authorization code for access token by the provider
             self._log(
@@ -370,13 +397,15 @@ class OAuth2(providers.AuthorizationProvider):
 
             self.credentials.token = authorization_code
 
-            request_elements = self.create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
-                                                            credentials=self.credentials,
-                                                            url=self.access_token_url,
-                                                            method=self.token_request_method,
-                                                            redirect_uri=self.url,
-                                                            params=self.access_token_params,
-                                                            headers=self.access_token_headers)
+            request_elements = self.create_request_elements(
+                request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
+                credentials=self.credentials,
+                url=self.access_token_url,
+                method=self.token_request_method,
+                redirect_uri=self.url,
+                params=self.access_token_params,
+                headers=self.access_token_headers
+            )
 
             response = self._fetch(*request_elements)
             self.access_token_response = response
@@ -385,11 +414,16 @@ class OAuth2(providers.AuthorizationProvider):
             refresh_token = response.data.get('refresh_token', '')
 
             if response.status != 200 or not access_token:
-                raise FailureError('Failed to obtain OAuth 2.0 access token from {0}! HTTP status: {1}, message: {2}.'
-                                   .format(self.access_token_url, response.status, response.content),
-                                   original_message=response.content,
-                                   status=response.status,
-                                   url=self.access_token_url)
+                raise FailureError(
+                    'Failed to obtain OAuth 2.0 access token from {0}! '
+                    'HTTP status: {1}, message: {2}.'.format(
+                        self.access_token_url,
+                        response.status,
+                        response.content
+                    ),
+                    original_message=response.content,
+                    status=response.status,
+                    url=self.access_token_url)
 
             self._log(logging.INFO, u'Got access token.')
 
@@ -413,14 +447,14 @@ class OAuth2(providers.AuthorizationProvider):
             # create user
             self._update_or_create_user(response.data, self.credentials)
 
-            #==================================================================
+            # =================================================================
             # We're done!
-            #==================================================================
+            # =================================================================
 
         elif error or error_message:
-            #==================================================================
+            # =================================================================
             # Phase 2 after redirect with error
-            #==================================================================
+            # =================================================================
 
             error_reason = self.params.get('error_reason') or error
             error_description = self.params.get('error_description') \
@@ -434,10 +468,14 @@ class OAuth2(providers.AuthorizationProvider):
                     error_description,
                     url=self.user_authorization_url)
 
-        elif not self.params or len(self.params) == 1 and 'user_state' in self.params:
-            #==================================================================
+        elif (
+            not self.params or
+            len(self.params) == 1 and
+            'user_state' in self.params
+        ):
+            # =================================================================
             # Phase 1 before redirect
-            #==================================================================
+            # =================================================================
 
             self._log(
                 logging.INFO,
@@ -454,15 +492,17 @@ class OAuth2(providers.AuthorizationProvider):
                     logging.WARN,
                     u'Provider doesn\'t support CSRF validation!')
 
-            request_elements = self.create_request_elements(request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
-                                                            credentials=self.credentials,
-                                                            url=self.user_authorization_url,
-                                                            redirect_uri=self.url,
-                                                            scope=self._x_scope_parser(
-                                                                self.scope),
-                                                            csrf=csrf,
-                                                            user_state=user_state,
-                                                            params=self.user_authorization_params)
+            request_elements = self.create_request_elements(
+                request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
+                credentials=self.credentials,
+                url=self.user_authorization_url,
+                redirect_uri=self.url,
+                scope=self._x_scope_parser(
+                    self.scope),
+                csrf=csrf,
+                user_state=user_state,
+                params=self.user_authorization_params
+            )
 
             self._log(
                 logging.INFO,
@@ -485,7 +525,8 @@ class Amazon(OAuth2):
     .. note::
 
         Amazon only accepts **redirect_uri** with **https** schema,
-        Therefore the *login handler* must also be accessible through **https**.
+        Therefore the *login handler* must also be accessible through
+        **https**.
 
     Supported :class:`.User` properties:
 
@@ -714,7 +755,8 @@ class DeviantART(OAuth2):
 
     """
 
-    user_authorization_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
+    user_authorization_url = 'https://www.deviantart.com/oauth2/draft15/' + \
+                             'authorize'
     access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
     user_info_url = 'https://www.deviantart.com/api/oauth2/user/whoami'
 
@@ -882,7 +924,7 @@ class Facebook(OAuth2):
         # to refresh the access token.
         if self.offline:
             # Facebook needs an offline_access scope.
-            if not 'offline_access' in self.scope:
+            if 'offline_access' not in self.scope:
                 self.scope.append('offline_access')
 
         if self.popup:
@@ -920,7 +962,8 @@ class Facebook(OAuth2):
         credentials.expire_in = data.get('expires')
 
         if data.get('token_type') == 'bearer':
-            credentials.token_type = cls.BEARER
+            # TODO: cls is not available here, hardcode for now.
+            credentials.token_type = 'Bearer'
 
         return credentials
 
@@ -932,7 +975,8 @@ class Facebook(OAuth2):
     def access(self, url, params=None, **kwargs):
         if params is None:
             params = {}
-        params['fields'] = 'id,first_name,last_name,picture,email,gender,timezone,location,birthday,locale'
+        params['fields'] = 'id,first_name,last_name,picture,email,gender,' + \
+                           'timezone,location,birthday,locale'
 
         return super(Facebook, self).access(url, params, **kwargs)
 
@@ -1067,11 +1111,14 @@ class GitHub(OAuth2):
 
     .. note::
 
-        GitHub API `documentation <http://developer.github.com/v3/#user-agent-required>`_ sais:
+        GitHub API
+        `documentation <http://developer.github.com/v3/#user-agent-required>`_
+        says:
 
             all API requests MUST include a valid ``User-Agent`` header.
 
-        You can apply a default ``User-Agent`` header for all API calls in the config like this:
+        You can apply a default ``User-Agent`` header for all API calls in
+        the config like this:
 
         .. code-block:: python
             :emphasize-lines: 6
@@ -1292,7 +1339,8 @@ class LinkedIn(OAuth2):
 
     """
 
-    user_authorization_url = 'https://www.linkedin.com/uas/oauth2/authorization'
+    user_authorization_url = 'https://www.linkedin.com/uas/oauth2/' + \
+                             'authorization'
     access_token_url = 'https://www.linkedin.com/uas/oauth2/accessToken'
     user_info_url = ('https://api.linkedin.com/v1/people/~:'
                      '(id,first-name,last-name,formatted-name,location,'
@@ -1359,7 +1407,8 @@ class PayPal(OAuth2):
     PayPal |oauth2| provider.
 
     * Dashboard: https://developer.paypal.com/webapps/developer/applications
-    * Docs: https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/
+    * Docs:
+      https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/
     * API reference: https://developer.paypal.com/webapps/developer/docs/api/
 
     .. note::
@@ -1397,7 +1446,8 @@ class Reddit(OAuth2):
 
     .. note::
 
-        Currently credentials refreshment returns ``{"error": "invalid_request"}``.
+        Currently credentials refreshment returns
+        ``{"error": "invalid_request"}``.
 
     * Dashboard: https://ssl.reddit.com/prefs/apps
     * Docs: https://github.com/reddit/reddit/wiki/OAuth2
@@ -1495,18 +1545,22 @@ class Viadeo(OAuth2):
             They are now exclusively reserved for its strategic partners.
 
     * Dashboard: http://dev.viadeo.com/dashboard/
-    * Docs: http://dev.viadeo.com/documentation/authentication/oauth-authentication/
+    * Docs:
+      http://dev.viadeo.com/documentation/authentication/oauth-authentication/
     * API reference: http://dev.viadeo.com/documentation/
 
     .. note::
 
         Viadeo doesn't support **credentials refreshment**.
-        As stated in their `docs <http://dev.viadeo.com/documentation/authentication/oauth-authentication/>`_:
+        As stated in their
+        `docs
+        <http://dev.viadeo.com/documentation/authentication/oauth-authentication/>`_:
         "The access token has an infinite time to live."
 
     """
 
-    user_authorization_url = 'https://secure.viadeo.com/oauth-provider/authorize2'
+    user_authorization_url = 'https://secure.viadeo.com/oauth-provider/' + \
+                             'authorize2'
     access_token_url = 'https://secure.viadeo.com/oauth-provider/access_token2'
     user_info_url = 'https://api.viadeo.com/me'
 
@@ -1543,11 +1597,14 @@ class VK(OAuth2):
 
     * Dashboard: http://vk.com/apps?act=manage
     * Docs: http://vk.com/developers.php?oid=-17680044&p=Authorizing_Sites
-    * API reference: http://vk.com/developers.php?oid=-17680044&p=API_Method_Description
+    * API reference: http://vk.com/developers.php?oid=-17680044&p=API_
+      Method_Description
 
     .. note::
 
-        VK uses a `bitmask scope <http://vk.com/developers.php?oid=-17680044&p=Application_Rights>`_!
+        VK uses a
+        `bitmask scope
+        <http://vk.com/developers.php?oid=-17680044&p=Application_Rights>`_!
         Use it like this:
 
     .. code-block:: python
@@ -1592,7 +1649,8 @@ class VK(OAuth2):
     user_authorization_url = 'http://api.vkontakte.ru/oauth/authorize'
     access_token_url = 'https://api.vkontakte.ru/oauth/access_token'
     user_info_url = 'https://api.vk.com/method/getProfiles?' + \
-                    'fields=uid,first_name,last_name,nickname,sex,bdate,city,country,timezone,photo_big'
+                    'fields=uid,first_name,last_name,nickname,sex,bdate,' + \
+                    'city,country,timezone,photo_big'
 
     supported_user_attributes = core.SupportedUserAttributes(
         birth_date=True,
@@ -1818,7 +1876,8 @@ class Yandex(OAuth2):
     Yandex |oauth2| provider.
 
     * Dashboard: https://oauth.yandex.com/client/my
-    * Docs: http://api.yandex.com/oauth/doc/dg/reference/obtain-access-token.xml
+    * Docs:
+      http://api.yandex.com/oauth/doc/dg/reference/obtain-access-token.xml
     * API reference:
 
     Supported :class:`.User` properties:
@@ -1885,5 +1944,24 @@ class Yandex(OAuth2):
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers
 # don't change!
-PROVIDER_ID_MAP = [OAuth2, Behance, Bitly, Cosm, DeviantART, Facebook, Foursquare, GitHub, Google, LinkedIn,
-                   PayPal, Reddit, Viadeo, VK, WindowsLive, Yammer, Yandex, Eventbrite, Amazon]
+PROVIDER_ID_MAP = [
+    Amazon,
+    Behance,
+    Bitly,
+    Cosm,
+    DeviantART,
+    Eventbrite,
+    Facebook,
+    Foursquare,
+    GitHub,
+    Google,
+    LinkedIn,
+    OAuth2,
+    PayPal,
+    Reddit,
+    Viadeo,
+    VK,
+    WindowsLive,
+    Yammer,
+    Yandex,
+]

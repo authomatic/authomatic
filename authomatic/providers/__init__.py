@@ -144,7 +144,8 @@ class BaseProvider(object):
 
     supported_user_attributes = authomatic.core.SupportedUserAttributes()
 
-    def __init__(self, settings, adapter, provider_name, session=None, session_saver=None, callback=None, js_callback=None,
+    def __init__(self, settings, adapter, provider_name, session=None,
+                 session_saver=None, callback=None, js_callback=None,
                  prefix='authomatic', **kwargs):
 
         self.settings = settings
@@ -156,8 +157,9 @@ class BaseProvider(object):
         #: :class:`str` The provider name as specified in the :doc:`config`.
         self.name = provider_name
 
-        #: :class:`callable` An optional callback called when the login procedure
-        #: is finished with :class:`.core.LoginResult` passed as argument.
+        #: :class:`callable` An optional callback called when the login
+        #: procedure is finished with :class:`.core.LoginResult` passed as
+        #: argument.
         self.callback = callback
 
         #: :class:`str` Name of an optional javascript callback.
@@ -166,7 +168,8 @@ class BaseProvider(object):
         #: :class:`.core.User`.
         self.user = None
 
-        #: :class:`bool` If ``True``, the :attr:`.BaseProvider.user_authorization_url` will be displayed
+        #: :class:`bool` If ``True``, the
+        #: :attr:`.BaseProvider.user_authorization_url` will be displayed
         #: in a *popup mode*, if the **provider** supports it.
         self.popup = self._kwarg(kwargs, 'popup')
 
@@ -191,9 +194,9 @@ class BaseProvider(object):
         self.set_status('302 Found')
         self.set_header('Location', url)
 
-    #=========================================================================
+    # ========================================================================
     # Abstract methods
-    #=========================================================================
+    # ========================================================================
 
     @abc.abstractmethod
     def login(self):
@@ -208,9 +211,9 @@ class BaseProvider(object):
 
         """
 
-    #=========================================================================
+    # ========================================================================
     # Exposed methods
-    #=========================================================================
+    # ========================================================================
 
     def to_dict(self):
         """
@@ -234,7 +237,8 @@ class BaseProvider(object):
         Returns the provider type.
 
         :returns:
-            :class:`str` The full dotted path to base class e.g. :literal:`"authomatic.providers.oauth2.OAuth2"`.
+            :class:`str` The full dotted path to base class e.g.
+            :literal:`"authomatic.providers.oauth2.OAuth2"`.
 
         """
 
@@ -249,9 +253,9 @@ class BaseProvider(object):
 
         """
 
-    #=========================================================================
+    # ========================================================================
     # Internal methods
-    #=========================================================================
+    # ========================================================================
 
     @property
     def type_id(self):
@@ -265,7 +269,8 @@ class BaseProvider(object):
 
             The keyword arguments take this order of precedence:
 
-            1. Arguments passed to constructor through the :func:`authomatic.login`.
+            1. Arguments passed to constructor through the
+               :func:`authomatic.login`.
             2. Provider specific arguments from :doc:`config`.
             3. Arguments from :doc:`config` set in the ``__defaults__`` key.
             2. The value from :data:`default` argument.
@@ -312,7 +317,8 @@ class BaseProvider(object):
         """
         Generates CSRF token.
 
-        Inspired by this article: http://blog.ptsecurity.com/2012/10/random-number-security-in-python.html
+        Inspired by this article:
+        http://blog.ptsecurity.com/2012/10/random-number-security-in-python.html
 
         :returns:
             :class:`str` Random unguessable string.
@@ -371,7 +377,8 @@ class BaseProvider(object):
             Number of maximum HTTP redirects to follow.
 
         :param function content_parser:
-            A callable to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
+            A callable to be used to parse the :attr:`.Response.data`
+            from :attr:`.Response.content`.
 
         """
         params = params or {}
@@ -474,8 +481,8 @@ class BaseProvider(object):
         for key in list(self.user.__dict__.keys()):
             # Exclude data.
             if key not in ('data', 'content'):
-                # Extract every data item whose key matches the user property name,
-                # but only if it has a value.
+                # Extract every data item whose key matches the user
+                # property name, but only if it has a value.
                 value = data.get(key)
                 if value:
                     setattr(self.user, key, value)
@@ -567,29 +574,35 @@ class AuthorizationProvider(BaseProvider):
         Accepts additional keyword arguments:
 
         :arg str consumer_key:
-            The *key* assigned to our application (**consumer**) by the **provider**.
+            The *key* assigned to our application (**consumer**) by the
+            **provider**.
 
         :arg str consumer_secret:
-            The *secret* assigned to our application (**consumer**) by the **provider**.
+            The *secret* assigned to our application (**consumer**) by the
+            **provider**.
 
         :arg int id:
             A unique numeric ID used to serialize :class:`.Credentials`.
 
         :arg dict user_authorization_params:
-            A dictionary of additional request parameters for **user authorization request**.
+            A dictionary of additional request parameters for
+            **user authorization request**.
 
         :arg dict access_token_params:
-            A dictionary of additional request parameters for **access_with_credentials token request**.
+            A dictionary of additional request parameters for
+            **access_with_credentials token request**.
 
         :arg dict access_headers:
             A dictionary of default HTTP headers that will be used when
             accessing **user's** protected resources.
-            Applied by :meth:`.access()`, :meth:`.update_user()` and :meth:`.User.update()`
+            Applied by :meth:`.access()`, :meth:`.update_user()` and
+            :meth:`.User.update()`
 
         :arg dict access_params:
-            A dictionary of default query string parameters that will be used when
-            accessing **user's** protected resources.
-            Applied by :meth:`.access()`, :meth:`.update_user()` and :meth:`.User.update()`
+            A dictionary of default query string parameters that will be used
+            when accessing **user's** protected resources.
+            Applied by :meth:`.access()`, :meth:`.update_user()` and
+            :meth:`.User.update()`
 
         """
 
@@ -618,24 +631,26 @@ class AuthorizationProvider(BaseProvider):
         #: Response of the *access token request*.
         self.access_token_response = None
 
-    #=========================================================================
+    # ========================================================================
     # Abstract properties
-    #=========================================================================
+    # ========================================================================
 
     @abc.abstractproperty
     def user_authorization_url(self):
         """
-        :class:`str` URL to which we redirect the **user** to grant our app i.e. the **consumer**
-        an **authorization** to access his **protected resources**.
-        see http://tools.ietf.org/html/rfc6749#section-4.1.1 and
+        :class:`str` URL to which we redirect the **user** to grant our app
+        i.e. the **consumer** an **authorization** to access his
+        **protected resources**. See
+        http://tools.ietf.org/html/rfc6749#section-4.1.1 and
         http://oauth.net/core/1.0a/#auth_step2.
         """
 
     @abc.abstractproperty
     def access_token_url(self):
         """
-        :class:`str` URL where we can get the *access token* to access **protected resources** of a **user**.
-        see http://tools.ietf.org/html/rfc6749#section-4.1.3 and
+        :class:`str` URL where we can get the *access token* to access
+        **protected resources** of a **user**. See
+        http://tools.ietf.org/html/rfc6749#section-4.1.3 and
         http://oauth.net/core/1.0a/#auth_step3.
         """
 
@@ -647,9 +662,9 @@ class AuthorizationProvider(BaseProvider):
         http://oauth.net/core/1.0a/#anchor12.
         """
 
-    #=========================================================================
+    # ========================================================================
     # Abstract methods
-    #=========================================================================
+    # ========================================================================
 
     @abc.abstractmethod
     def to_tuple(self, credentials):
@@ -681,7 +696,8 @@ class AuthorizationProvider(BaseProvider):
 
         :param tuple deserialized_tuple:
             A tuple whose first index is the :attr:`.id` and the rest
-            are all the items of the :class:`tuple` created by :meth:`.to_tuple`.
+            are all the items of the :class:`tuple` created by
+            :meth:`.to_tuple`.
 
         :param credentials:
             A :class:`.Credentials` instance.
@@ -693,7 +709,8 @@ class AuthorizationProvider(BaseProvider):
 
     @abc.abstractmethod
     def create_request_elements(self, request_type, credentials,
-                                url, method='GET', params=None, headers=None, body=''):
+                                url, method='GET', params=None, headers=None,
+                                body=''):
         """
         Must return :class:`.RequestElements`.
 
@@ -728,9 +745,9 @@ class AuthorizationProvider(BaseProvider):
 
         """
 
-    #=========================================================================
+    # ========================================================================
     # Exposed methods
-    #=========================================================================
+    # ========================================================================
 
     @property
     def type_id(self):
@@ -739,8 +756,10 @@ class AuthorizationProvider(BaseProvider):
         serialization of :class:`.Credentials` and to identify the type of
         provider in JavaScript.
 
-        The part before hyphen denotes the type of the provider, the part after hyphen denotes the class id
-        e.g. ``oauth2.Facebook.type_id = '2-5'``, ``oauth1.Twitter.type_id = '1-5'``.
+        The part before hyphen denotes the type of the provider, the part
+        after hyphen denotes the class id e.g.
+        ``oauth2.Facebook.type_id = '2-5'``,
+        ``oauth1.Twitter.type_id = '1-5'``.
 
         """
 
@@ -774,7 +793,8 @@ class AuthorizationProvider(BaseProvider):
             Maximum number of HTTP redirects to follow.
 
         :param function content_parser:
-            A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
+            A function to be used to parse the :attr:`.Response.data`
+            from :attr:`.Response.content`.
 
         :returns:
             :class:`.Response`
@@ -790,13 +810,15 @@ class AuthorizationProvider(BaseProvider):
             logging.INFO,
             u'Accessing protected resource {0}.'.format(url))
 
-        request_elements = self.create_request_elements(request_type=self.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                        credentials=self.credentials,
-                                                        url=url,
-                                                        body=body,
-                                                        params=params,
-                                                        headers=headers,
-                                                        method=method)
+        request_elements = self.create_request_elements(
+            request_type=self.PROTECTED_RESOURCE_REQUEST_TYPE,
+            credentials=self.credentials,
+            url=url,
+            body=body,
+            params=params,
+            headers=headers,
+            method=method
+        )
 
         response = self._fetch(*request_elements,
                                max_redirects=max_redirects,
@@ -841,9 +863,9 @@ class AuthorizationProvider(BaseProvider):
             return authomatic.core.UserInfoResponse(self.user,
                                                     response.httplib_response)
 
-    #=========================================================================
+    # ========================================================================
     # Internal methods
-    #=========================================================================
+    # ========================================================================
 
     @classmethod
     def _authorization_header(cls, credentials):
@@ -980,4 +1002,8 @@ class AuthenticationProvider(BaseProvider):
             self.identifier_param, default_identifier)
 
 
-PROVIDER_ID_MAP = [BaseProvider, AuthorizationProvider, AuthenticationProvider]
+PROVIDER_ID_MAP = [
+    AuthenticationProvider,
+    AuthorizationProvider,
+    BaseProvider,
+]

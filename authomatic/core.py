@@ -28,9 +28,9 @@ from authomatic import six
 from authomatic.six.moves import urllib_parse as parse
 
 
-#=========================================================================
+# =========================================================================
 # Global variables !!!
-#=========================================================================
+# =========================================================================
 
 _logger = logging.getLogger(__name__)
 _logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -194,7 +194,8 @@ def resolve_provider_class(class_):
     """
     Returns a provider class.
 
-    :param class_name: :class:`string` or :class:`authomatic.providers.BaseProvider` subclass.
+    :param class_name: :class:`string` or
+    :class:`authomatic.providers.BaseProvider` subclass.
 
     """
 
@@ -240,7 +241,8 @@ class ReprMixin(object):
     * listed in _repr_ignore.
 
     Values of attributes listed in _repr_sensitive will be replaced by *###*.
-    Values which repr() string is longer than _repr_length_limit will be represented as *ClassName(...)*
+    Values which repr() string is longer than _repr_length_limit will be
+    represented as *ClassName(...)*
 
     """
 
@@ -263,7 +265,7 @@ class ReprMixin(object):
 
             # ignore attributes with leading underscores and those listed in
             # _repr_ignore
-            if v and not k.startswith('_') and not k in self._repr_ignore:
+            if v and not k.startswith('_') and k not in self._repr_ignore:
 
                 # replace sensitive values
                 if k in self._repr_sensitive:
@@ -300,7 +302,8 @@ class Future(threading.Thread):
             The function to be run in separate thread.
 
         Calls :data:`func` in separate thread and returns immediately.
-        Accepts arbitrary positional and keyword arguments which will be passed to :data:`func`.
+        Accepts arbitrary positional and keyword arguments which will be
+        passed to :data:`func`.
         """
 
         super(Future, self).__init__()
@@ -320,10 +323,12 @@ class Future(threading.Thread):
 
         .. note::
 
-            This will block the **calling thread** until the :data:`func` returns.
+            This will block the **calling thread** until the :data:`func`
+            returns.
 
         :param timeout:
-            :class:`float` or ``None`` A timeout for the :data:`func` to return in seconds.
+            :class:`float` or ``None`` A timeout for the :data:`func` to
+            return in seconds.
 
         :returns:
             The result of the wrapped :data:`func`.
@@ -527,11 +532,13 @@ class User(ReprMixin):
         #: An :class:`.Credentials` instance.
         self.credentials = kwargs.get('credentials')
 
-        #: A :class:`dict` containing all the **user** information returned by the **provider**.
+        #: A :class:`dict` containing all the **user** information returned
+        #: by the **provider**.
         #: The structure differs across **providers**.
         self.data = kwargs.get('data')
 
-        #: The :attr:`.Response.content` of the request made to update the user.
+        #: The :attr:`.Response.content` of the request made to update
+        #: the user.
         self.content = kwargs.get('content')
 
         #: :class:`str` ID assigned to the **user** by the **provider**.
@@ -560,7 +567,8 @@ class User(ReprMixin):
         self.phone = kwargs.get('phone')
         #: :class:`str` Picture URL.
         self.picture = kwargs.get('picture')
-        #: Birth date as :class:`datetime.datetime()` or :class:`str` if parsing failed or ``None``.
+        #: Birth date as :class:`datetime.datetime()` or :class:`str`
+        #  if parsing failed or ``None``.
         self.birth_date = kwargs.get('birth_date')
         #: :class:`str` Country.
         self.country = kwargs.get('country')
@@ -681,10 +689,12 @@ class Credentials(ReprMixin):
             #: :class:`str` Provider name specified in the :doc:`config`.
             self.provider_name = provider.name
 
-            #: :class:`str` Provider type e.g. ``"authomatic.providers.oauth2.OAuth2"``.
+            #: :class:`str` Provider type e.g.
+            #  ``"authomatic.providers.oauth2.OAuth2"``.
             self.provider_type = provider.get_type()
 
-            #: :class:`str` Provider type e.g. ``"authomatic.providers.oauth2.OAuth2"``.
+            #: :class:`str` Provider type e.g.
+            #  ``"authomatic.providers.oauth2.OAuth2"``.
             self.provider_type_id = provider.type_id
 
             #: :class:`str` Provider short name specified in the :doc:`config`.
@@ -712,7 +722,7 @@ class Credentials(ReprMixin):
     @property
     def expire_in(self):
         """
-        
+
         """
 
         return self._expire_in
@@ -767,7 +777,8 @@ class Credentials(ReprMixin):
             Number of seconds.
 
         :returns:
-            ``True`` if credentials expire sooner than specified, else ``False``.
+            ``True`` if credentials expire sooner than specified,
+            else ``False``.
 
         """
 
@@ -784,14 +795,17 @@ class Credentials(ReprMixin):
         .. note::
 
             The credentials will be refreshed only if it gives sense
-            i.e. only |oauth2|_ has the notion of credentials *refreshment/extension*.
-            And there are also differences across providers
-            e.g. Google supports refreshment only if there is a ``refresh_token`` in the credentials and
-            that in turn is present only if the ``access_type`` parameter was set to ``offline``
-            in the **user authorization request**.
+            i.e. only |oauth2|_ has the notion of credentials
+            *refreshment/extension*.
+            And there are also differences across providers e.g. Google
+            supports refreshment only if there is a ``refresh_token`` in
+            the credentials and that in turn is present only if the
+            ``access_type`` parameter was set to ``offline`` in the
+            **user authorization request**.
 
         :param bool force:
-            If ``True`` the credentials will be refreshed even if they won't expire soon.
+            If ``True`` the credentials will be refreshed even if they
+            won't expire soon.
 
         :param int soon:
             Number of seconds specifying what means *soon*.
@@ -842,9 +856,10 @@ class Credentials(ReprMixin):
         """
 
         if self.provider_id is None:
-            raise ConfigError('To serialize credentials you need to specify a '
-                              'unique integer under the "id" key in the config '
-                              'for each provider!')
+            raise ConfigError(
+                'To serialize credentials you need to specify a '
+                'unique integer under the "id" key in the config '
+                'for each provider!')
 
         # Get the provider type specific items.
         rest = self.provider_type_class().to_tuple(self)
@@ -869,9 +884,11 @@ class Credentials(ReprMixin):
         instance.
 
         :param dict config:
-            The same :doc:`config` used in the :func:`.login` to get the credentials.
+            The same :doc:`config` used in the :func:`.login` to get the
+            credentials.
         :param str credentials:
-            :class:`string` The serialized credentials or :class:`.Credentials` instance.
+            :class:`string` The serialized credentials or
+            :class:`.Credentials` instance.
 
         :returns:
             :class:`.Credentials`
@@ -888,8 +905,9 @@ class Credentials(ReprMixin):
 
         # We need the provider ID to move forward.
         if split[0] is None:
-            raise CredentialsError('To deserialize credentials you need to specify a unique ' +
-                                   'integer under the "id" key in the config for each provider!')
+            raise CredentialsError(
+                'To deserialize credentials you need to specify a unique '
+                'integer under the "id" key in the config for each provider!')
 
         provider_id = int(split[0])
 
@@ -930,16 +948,18 @@ class LoginResult(ReprMixin):
         """
         Returns JavaScript that:
 
-        #.  Triggers the ``options.onLoginComplete(result, closer)`` handler set with the
-            :ref:`authomatic.setup() <js_setup>` function of :ref:`javascript.js <js>`.
+        #.  Triggers the ``options.onLoginComplete(result, closer)``
+            handler set with the :ref:`authomatic.setup() <js_setup>`
+            function of :ref:`javascript.js <js>`.
         #.  Calls the JavasScript callback specified by :data:`callback_name`
             on the opener of the *login handler popup* and passes it the
-            *login result* JSON object as first argument and the `closer` function which
-            you should call in your callback to close the popup.
+            *login result* JSON object as first argument and the `closer`
+            function which you should call in your callback to close the popup.
 
         :param str callback_name:
             The name of the javascript callback e.g ``foo.bar.loginCallback``
-            will result in ``window.opener.foo.bar.loginCallback(result);`` in the HTML.
+            will result in ``window.opener.foo.bar.loginCallback(result);``
+            in the HTML.
 
         :param int indent:
             The number of spaces to indent the JSON result object.
@@ -947,7 +967,8 @@ class LoginResult(ReprMixin):
             If ``None``, no newlines are added.
 
         :param custom:
-            Any JSON serializable object that will be passed to the ``result.custom`` attribute.
+            Any JSON serializable object that will be passed to the
+            ``result.custom`` attribute.
 
         :param str stay_open:
             If ``True``, the popup will stay open.
@@ -974,7 +995,9 @@ class LoginResult(ReprMixin):
 
             {custom_callback}
 
-            try {{ window.opener.authomatic.loginComplete(result, closer); }} catch(e) {{}}
+            try {{
+                window.opener.authomatic.loginComplete(result, closer);
+            }} catch(e) {{}}
 
         }})();
 
@@ -988,16 +1011,18 @@ class LoginResult(ReprMixin):
         """
         Returns a HTML with JavaScript that:
 
-        #.  Triggers the ``options.onLoginComplete(result, closer)`` handler set with the
-            :ref:`authomatic.setup() <js_setup>` function of :ref:`javascript.js <js>`.
+        #.  Triggers the ``options.onLoginComplete(result, closer)`` handler
+            set with the :ref:`authomatic.setup() <js_setup>` function of
+            :ref:`javascript.js <js>`.
         #.  Calls the JavasScript callback specified by :data:`callback_name`
             on the opener of the *login handler popup* and passes it the
-            *login result* JSON object as first argument and the `closer` function which
-            you should call in your callback to close the popup.
+            *login result* JSON object as first argument and the `closer`
+            function which you should call in your callback to close the popup.
 
         :param str callback_name:
             The name of the javascript callback e.g ``foo.bar.loginCallback``
-            will result in ``window.opener.foo.bar.loginCallback(result);`` in the HTML.
+            will result in ``window.opener.foo.bar.loginCallback(result);``
+            in the HTML.
 
         :param int indent:
             The number of spaces to indent the JSON result object.
@@ -1009,7 +1034,8 @@ class LoginResult(ReprMixin):
             which will be replaced by the provider name.
 
         :param custom:
-            Any JSON serializable object that will be passed to the ``result.custom`` attribute.
+            Any JSON serializable object that will be passed to the
+            ``result.custom`` attribute.
 
         :param str stay_open:
             If ``True``, the popup will stay open.
@@ -1029,8 +1055,10 @@ class LoginResult(ReprMixin):
             </script>
             </body>
         </html>
-        """.format(title=title.format(self.provider.name if self.provider else ''),
-                   js=self.popup_js(callback_name, indent, custom, stay_open))
+        """.format(
+            title=title.format(self.provider.name if self.provider else ''),
+            js=self.popup_js(callback_name, indent, custom, stay_open)
+        )
 
     @property
     def user(self):
@@ -1236,10 +1264,12 @@ class RequestElements(tuple):
 
 
 class Authomatic(object):
-    def __init__(self, config, secret, session_max_age=600, secure_cookie=False,
-                 session=None, session_save_method=None, report_errors=True,
-                 debug=False, logging_level=logging.INFO, prefix='authomatic',
-                 logger=None):
+    def __init__(
+        self, config, secret, session_max_age=600, secure_cookie=False,
+        session=None, session_save_method=None, report_errors=True,
+        debug=False, logging_level=logging.INFO, prefix='authomatic',
+        logger=None
+    ):
         """
         Encapsulates all the functionality of this package.
 
@@ -1247,24 +1277,27 @@ class Authomatic(object):
             :doc:`config`
 
         :param str secret:
-            A secret string that will be used as the key for signing :class:`.Session` cookie and
-            as a salt by *CSRF* token generation.
+            A secret string that will be used as the key for signing
+            :class:`.Session` cookie and as a salt by *CSRF* token generation.
 
         :param session_max_age:
             Maximum allowed age of :class:`.Session` cookie nonce in seconds.
 
         :param bool secure_cookie:
-            If ``True`` the :class:`.Session` cookie will be saved wit ``Secure`` attribute.
+            If ``True`` the :class:`.Session` cookie will be saved wit
+            ``Secure`` attribute.
 
         :param session:
             Custom dictionary-like session implementation.
 
         :param callable session_save_method:
-            A method of the supplied session or any mechanism that saves the session data and cookie.
+            A method of the supplied session or any mechanism that saves the
+            session data and cookie.
 
         :param bool report_errors:
             If ``True`` exceptions encountered during the **login procedure**
-            will be caught and reported in the :attr:`.LoginResult.error` attribute.
+            will be caught and reported in the :attr:`.LoginResult.error`
+            attribute.
             Default is ``True``.
 
         :param bool debug:
@@ -1309,25 +1342,28 @@ class Authomatic(object):
         corresponding :doc:`provider </reference/providers>` and returns
         :class:`.LoginResult`.
 
-        If :data:`provider_name` is empty, acts like :meth:`.Authomatic.backend`.
+        If :data:`provider_name` is empty, acts like
+        :meth:`.Authomatic.backend`.
 
         .. warning::
 
-            The method redirects the **user** to the **provider** which in turn redirects
-            **him/her** back to the *request handler* where it has been called.
+            The method redirects the **user** to the **provider** which in
+            turn redirects **him/her** back to the *request handler* where
+            it has been called.
 
         :param str provider_name:
             Name of the provider as specified in the keys of the :doc:`config`.
 
         :param callable callback:
-            If specified the method will call the callback with :class:`.LoginResult`
-            passed as argument and will return nothing.
+            If specified the method will call the callback with
+            :class:`.LoginResult` passed as argument and will return nothing.
 
         :param bool report_errors:
 
         .. note::
 
-            Accepts additional keyword arguments that will be passed to :doc:`provider <providers>` constructor.
+            Accepts additional keyword arguments that will be passed to
+            :doc:`provider <providers>` constructor.
 
         :returns:
             :class:`.LoginResult`
@@ -1357,8 +1393,9 @@ class Authomatic(object):
             # Resolve provider class.
             class_ = provider_settings.get('class_')
             if not class_:
-                raise ConfigError('The "class_" key not specified in the config'
-                                  ' for provider {0}!'.format(provider_name))
+                raise ConfigError(
+                    'The "class_" key not specified in the config'
+                    ' for provider {0}!'.format(provider_name))
             ProviderClass = resolve_provider_class(class_)
 
             # FIXME: Find a nicer solution
@@ -1385,7 +1422,8 @@ class Authomatic(object):
         Deserializes credentials.
 
         :param credentials:
-            Credentials serialized with :meth:`.Credentials.serialize` or :class:`.Credentials` instance.
+            Credentials serialized with :meth:`.Credentials.serialize` or
+            :class:`.Credentials` instance.
 
         :returns:
             :class:`.Credentials`
@@ -1418,7 +1456,8 @@ class Authomatic(object):
             Maximum number of HTTP redirects to follow.
 
         :param function content_parser:
-            A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
+            A function to be used to parse the :attr:`.Response.data`
+            from :attr:`.Response.content`.
 
         :returns:
             :class:`.Response`
@@ -1461,8 +1500,10 @@ class Authomatic(object):
 
         return Future(self.access, *args, **kwargs)
 
-    def request_elements(self, credentials=None, url=None, method='GET', params=None,
-                         headers=None, body='', json_input=None, return_json=False):
+    def request_elements(
+        self, credentials=None, url=None, method='GET', params=None,
+        headers=None, body='', json_input=None, return_json=False
+    ):
         """
         Creates request elements for accessing **protected resource of a
         user**. Required arguments are :data:`credentials` and :data:`url`. You
@@ -1488,8 +1529,9 @@ class Authomatic(object):
             Body of ``POST``, ``PUT`` and ``PATCH`` requests.
 
         :param str json_input:
-            you can pass :data:`credentials`, :data:`url`, :data:`method`, :data:`params` and :data:`headers`
-            in a JSON object. Values from arguments will be used for missing properties.
+            you can pass :data:`credentials`, :data:`url`, :data:`method`,
+            :data:`params` and :data:`headers` in a JSON object.
+            Values from arguments will be used for missing properties.
 
             ::
 
@@ -1543,21 +1585,23 @@ class Authomatic(object):
             body = parsed_input.get('body', body)
 
         if not credentials and url:
-            raise RequestElementsError('To create request elements, you must provide credentials ' +
-                                       'and URL either as keyword arguments or in the JSON object!')
+            raise RequestElementsError(
+                'To create request elements, you must provide credentials '
+                'and URL either as keyword arguments or in the JSON object!')
 
         # Get the provider class
         credentials = Credentials.deserialize(self.config, credentials)
         ProviderClass = credentials.provider_class
 
         # Create request elements
-        request_elements = ProviderClass.create_request_elements(ProviderClass.PROTECTED_RESOURCE_REQUEST_TYPE,
-                                                                 credentials=credentials,
-                                                                 url=url,
-                                                                 method=method,
-                                                                 params=params,
-                                                                 headers=headers,
-                                                                 body=body)
+        request_elements = ProviderClass.create_request_elements(
+            ProviderClass.PROTECTED_RESOURCE_REQUEST_TYPE,
+            credentials=credentials,
+            url=url,
+            method=method,
+            params=params,
+            headers=headers,
+            body=body)
 
         if return_json:
             return request_elements.to_json()
@@ -1584,7 +1628,8 @@ class Authomatic(object):
         The *request handler* will now accept these request parameters:
 
         :param str type:
-            Type of the request. Either ``auto``, ``fetch`` or ``elements``. Default is ``auto``.
+            Type of the request. Either ``auto``, ``fetch`` or ``elements``.
+            Default is ``auto``.
 
         :param str credentials:
             Serialized :class:`.Credentials`.
@@ -1602,10 +1647,12 @@ class Authomatic(object):
             HTTP params of the **protected resource** request as a JSON object.
 
         :param JSON headers:
-            HTTP headers of the **protected resource** request as a JSON object.
+            HTTP headers of the **protected resource** request as a
+            JSON object.
 
         :param JSON json:
-            You can pass all of the aforementioned params except ``type`` in a JSON object.
+            You can pass all of the aforementioned params except ``type``
+            in a JSON object.
 
             .. code-block:: javascript
 
@@ -1637,13 +1684,14 @@ class Authomatic(object):
                 }
             }
 
-        ... or make a fetch to the **protected resource** and forward it's response
-        content, status and headers with an additional ``Authomatic-Response-To: fetch`` header
-        to the response.
+        ... or make a fetch to the **protected resource** and forward
+        it's response content, status and headers with an additional
+        ``Authomatic-Response-To: fetch`` header to the response.
 
         .. warning::
 
-            The backend will not work if you write anything to the response in the handler!
+            The backend will not work if you write anything to the
+            response in the handler!
 
         """
 
@@ -1675,7 +1723,7 @@ class Authomatic(object):
                 request_type = 'elements'
             else:
                 # Remove the JSONP callback
-                if params.get('callback'):
+                if jsonp:
                     params.pop('callback')
                 request_type = 'fetch'
 

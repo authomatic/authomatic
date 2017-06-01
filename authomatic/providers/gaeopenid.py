@@ -14,7 +14,8 @@ Google App Engine OpenID Providers
     :attr:`.User.gae_user`
     attributes populated with data.
     Moreover the :attr:`.User.user_id` will always be empty on the
-    `GAE Development Server <https://developers.google.com/appengine/docs/python/tools/devserver>`_.
+    `GAE Development Server
+    <https://developers.google.com/appengine/docs/python/tools/devserver>`_.
 
 .. autosummary::
 
@@ -52,9 +53,9 @@ class GAEOpenID(providers.AuthenticationProvider):
         """
 
         if self.params.get(self.identifier_param):
-            #==================================================================
+            # =================================================================
             # Phase 1 before redirect.
-            #==================================================================
+            # =================================================================
             self._log(
                 logging.INFO,
                 u'Starting OpenID authentication procedure.')
@@ -66,9 +67,9 @@ class GAEOpenID(providers.AuthenticationProvider):
 
             self.redirect(url)
         else:
-            #==================================================================
+            # =================================================================
             # Phase 2 after redirect.
-            #==================================================================
+            # =================================================================
 
             self._log(
                 logging.INFO,
@@ -84,9 +85,9 @@ class GAEOpenID(providers.AuthenticationProvider):
                                       email=user.email(),
                                       gae_user=user)
 
-                #==============================================================
+                # =============================================================
                 # We're done
-                #==============================================================
+                # =============================================================
             else:
                 raise FailureError(
                     'Unable to authenticate identifier "{0}"!'.format(
@@ -95,7 +96,8 @@ class GAEOpenID(providers.AuthenticationProvider):
 
 class Yahoo(GAEOpenID):
     """
-    :class:`.GAEOpenID` provider with the :attr:`.identifier` set to ``"me.yahoo.com"``.
+    :class:`.GAEOpenID` provider with the :attr:`.identifier` set to
+    ``"me.yahoo.com"``.
     """
 
     identifier = 'me.yahoo.com'
@@ -103,7 +105,8 @@ class Yahoo(GAEOpenID):
 
 class Google(GAEOpenID):
     """
-    :class:`.GAEOpenID` provider with the :attr:`.identifier` set to ``"https://www.google.com/accounts/o8/id"``.
+    :class:`.GAEOpenID` provider with the :attr:`.identifier` set to
+    ``"https://www.google.com/accounts/o8/id"``.
     """
 
     identifier = 'https://www.google.com/accounts/o8/id'

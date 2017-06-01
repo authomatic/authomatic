@@ -3,7 +3,8 @@
 Interfaces
 ^^^^^^^^^^
 
-If you want to implement framework specific extras, use these abstract classes as bases:
+If you want to implement framework specific extras, use these abstract
+classes as bases:
 
 """
 

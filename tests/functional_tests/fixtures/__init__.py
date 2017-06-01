@@ -90,7 +90,7 @@ def render_login_result(framework_name, result):
 
         access_token_content = None
         if hasattr(result.provider, 'access_token_response'):
-            access_token_content = result.provider.access_token_response.content
+            access_token_content = result.provider.access_token_response.content  # noqa
 
         template = env.get_template('login.html')
         return template.render(result=result,
@@ -157,8 +157,12 @@ def get_configuration(provider):
     Res.no_postal_code = [conf['user_postal_code'], 'postal', 'zip']
     Res.no_timezone = ['timezone']
     Res.no_username = ['username', '"{0}"'.format(conf['user_username'])]
-    Res.no_location = [conf['user_country'], 'city',
-                       'country', 'location'] + Res.no_postal_code + Res.no_city
+    Res.no_location = [
+        conf['user_country'],
+        'city',
+        'country',
+        'location'
+    ] + Res.no_postal_code + Res.no_city
 
     # Populate the namedtuple with provider settings.
     return Res(**conf)

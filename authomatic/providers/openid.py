@@ -22,17 +22,13 @@ Providers which implement the |openid|_ protocol based on the
 # name as this module
 from __future__ import absolute_import
 import datetime
-import json
 import logging
-import pickle
 import time
 
 from openid import oidutil
 from openid.consumer import consumer
 from openid.extensions import ax, pape, sreg
 from openid.association import Association
-from openid.yadis.manager import YadisServiceManager
-from openid.consumer.discover import OpenIDServiceEndpoint
 
 from authomatic import providers
 from authomatic.exceptions import FailureError, CancellationError, OpenIDError
@@ -87,7 +83,9 @@ class SessionOpenIDStore(object):
 
     """
 
-    def _log(level, message): return None
+    def _log(level, message):
+        return None
+
     ASSOCIATION_KEY = ('authomatic.providers.openid.SessionOpenIDStore:'
                        'association')
 
@@ -168,20 +166,25 @@ class OpenID(providers.AuthenticationProvider):
             'language',
             'timezone']
 
-    PAPE = ['http://schemas.openid.net/pape/policies/2007/06/multi-factor-physical',
-            'http://schemas.openid.net/pape/policies/2007/06/multi-factor',
-            'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant']
+    PAPE = [
+        'http://schemas.openid.net/pape/policies/2007/06/'
+        'multi-factor-physical',
+        'http://schemas.openid.net/pape/policies/2007/06/multi-factor',
+        'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant'
+    ]
 
     def __init__(self, *args, **kwargs):
         """
         Accepts additional keyword arguments:
 
         :param store:
-            Any object which implements :class:`openid.store.interface.OpenIDStore`
+            Any object which implements
+            :class:`openid.store.interface.OpenIDStore`
             of the `python-openid`_ library.
 
         :param bool use_realm:
-            Whether to use `OpenID realm <http://openid.net/specs/openid-authentication-2_0-12.html#realms>`_.
+            Whether to use `OpenID realm
+            <http://openid.net/specs/openid-authentication-2_0-12.html#realms>`_
             If ``True`` the realm HTML document will be accessible at
             ``{current url}?{realm_param}={realm_param}``
             e.g. ``http://example.com/path?realm=realm``.
@@ -194,35 +197,46 @@ class OpenID(providers.AuthenticationProvider):
 
         :param str xrds_param:
             The name of the query parameter to be used to serve the
-            `XRDS document <http://openid.net/specs/openid-authentication-2_0-12.html#XRDS_Sample>`_.
+            `XRDS document
+            <http://openid.net/specs/openid-authentication-2_0-12.html#XRDS_Sample>`_.
 
         :param list sreg:
             List of strings of optional
-            `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
+            `SREG
+            <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_
+            fields.
             Default = :attr:`OpenID.SREG`.
 
         :param list sreg_required:
             List of strings of required
-            `SREG <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_ fields.
+            `SREG
+            <http://openid.net/specs/openid-simple-registration-extension-1_0.html>`_
+            fields.
             Default = ``[]``.
 
         :param list ax:
             List of strings of optional
-            `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
+            `AX
+            <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_
+            schemas.
             Default = :attr:`OpenID.AX`.
 
         :param list ax_required:
             List of strings of required
-            `AX <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_ schemas.
+            `AX
+            <http://openid.net/specs/openid-attribute-exchange-1_0.html>`_
+            schemas.
             Default = :attr:`OpenID.AX_REQUIRED`.
 
         :param list pape:
             of requested
-            `PAPE <http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html>`_
+            `PAPE
+            <http://openid.net/specs/openid-provider-authentication-policy-extension-1_0.html>`_
             policies.
             Default = :attr:`OpenID.PAPE`.
 
-        As well as those inherited from :class:`.AuthenticationProvider` constructor.
+        As well as those inherited from :class:`.AuthenticationProvider`
+        constructor.
 
         """
 
@@ -286,8 +300,13 @@ class OpenID(providers.AuthenticationProvider):
             data.get('ax', {}).get('http://axschema.org/contact/email') or \
             data.get('ax', {}).get('http://schema.openid.net/contact/email')
 
-        user.birth_date = datetime.datetime.strptime(data.get('sreg', {}).get('dob'), '%Y-%m-%d') if \
-            data.get('sreg', {}).get('dob') else None
+        if data.get('sreg', {}).get('dob'):
+            user.birth_date = datetime.datetime.strptime(
+                data.get('sreg', {}).get('dob'),
+                '%Y-%m-%d'
+            )
+        else:
+            user.birth_date = None
 
         return user
 
@@ -307,9 +326,9 @@ class OpenID(providers.AuthenticationProvider):
 
         # determine type of request
         if realm_request:
-            #==================================================================
+            # =================================================================
             # Realm HTML
-            #==================================================================
+            # =================================================================
 
             self._log(
                 logging.INFO,
@@ -321,9 +340,9 @@ class OpenID(providers.AuthenticationProvider):
                     body=self.realm_body))
 
         elif xrds_request:
-            #==================================================================
+            # =================================================================
             # XRDS XML
-            #==================================================================
+            # =================================================================
 
             self._log(
                 logging.INFO,
@@ -332,9 +351,9 @@ class OpenID(providers.AuthenticationProvider):
             self.write(XRDS_XML.format(return_to=self.url))
 
         elif self.params.get('openid.mode'):
-            #==================================================================
+            # =================================================================
             # Phase 2 after redirect
-            #==================================================================
+            # =================================================================
 
             self._log(
                 logging.INFO,
@@ -379,9 +398,9 @@ class OpenID(providers.AuthenticationProvider):
                 # create user
                 self._update_or_create_user(data)
 
-                #==============================================================
+                # =============================================================
                 # We're done!
-                #==============================================================
+                # =============================================================
 
             elif response.status == consumer.CANCEL:
                 raise CancellationError(
@@ -392,9 +411,9 @@ class OpenID(providers.AuthenticationProvider):
                 raise FailureError(response.message)
 
         elif self.identifier:  # As set in AuthenticationProvider.__init__
-            #==================================================================
+            # =================================================================
             # Phase 1 before redirect
-            #==================================================================
+            # =================================================================
 
             self._log(
                 logging.INFO,
@@ -404,9 +423,12 @@ class OpenID(providers.AuthenticationProvider):
             try:
                 auth_request = oi_consumer.begin(self.identifier)
             except consumer.DiscoveryFailure as e:
-                raise FailureError(u'Discovery failed for identifier {0}!'.format(self.identifier),
-                                   url=self.identifier,
-                                   original_message=e.message)
+                raise FailureError(
+                    u'Discovery failed for identifier {0}!'.format(
+                        self.identifier
+                    ),
+                    url=self.identifier,
+                    original_message=e.message)
 
             self._log(
                 logging.INFO,
@@ -417,8 +439,11 @@ class OpenID(providers.AuthenticationProvider):
             # we need to remove required fields from optional fields because
             # addExtension then raises an error
             self.sreg = [i for i in self.sreg if i not in self.sreg_required]
-            auth_request.addExtension(sreg.SRegRequest(optional=self.sreg,
-                                                       required=self.sreg_required))
+            auth_request.addExtension(
+                sreg.SRegRequest(
+                    optional=self.sreg,
+                    required=self.sreg_required)
+            )
 
             # add AX extension
             ax_request = ax.FetchRequest()

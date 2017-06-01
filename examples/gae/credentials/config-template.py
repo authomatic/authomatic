@@ -29,7 +29,12 @@ CONFIG = {
         # We need the "publish_stream" scope to post to users timeline,
         # the "offline_access" scope to be able to refresh credentials,
         # and the other scopes to get user info.
-        'scope': ['publish_stream', 'offline_access', 'user_about_me', 'email'],
+        'scope': [
+            'publish_stream',
+            'offline_access',
+            'user_about_me',
+            'email'
+        ],
     },
 
     'gae_oi': {

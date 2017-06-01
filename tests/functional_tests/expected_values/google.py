@@ -41,7 +41,10 @@ CONFIG = {
         'locale': re.compile(r'^\w{2}$'),
         'location': None,
         'phone': None,
-        'picture': re.compile(r'^https://\w+\.googleusercontent.com/-\w+/\w+/\w+/\w+/photo\.jpg\?sz=50$'),
+        'picture': re.compile(
+            r'^https://\w+\.googleusercontent.com/'
+            r'-\w+/\w+/\w+/\w+/photo\.jpg\?sz=50$'
+        ),
         'postal_code': None,
         'timezone': None,
     },
@@ -56,12 +59,13 @@ CONFIG = {
         'kind', 'etag', 'occupation', 'gender', 'emails', 'value', 'type',
         'urls', 'label', 'objectType', 'id', 'displayName', 'name',
         'familyName', 'givenName', 'aboutMe', 'url', 'image', 'organizations',
-        'title', 'startDate', 'endDate', 'primary', 'placesLived', 'isPlusUser',
-        'language', 'circledByCount', 'verified'
+        'title', 'startDate', 'endDate', 'primary', 'placesLived',
+        'isPlusUser', 'language', 'circledByCount', 'verified'
     ],
     # Case insensitive
-    'content_should_not_contain': [conf.user_postal_code]
-    + conf.no_phone + conf.no_birth_date,
+    'content_should_not_contain':
+        [conf.user_postal_code] + \
+        conf.no_phone + conf.no_birth_date,
 
     # True means that any thruthy value is expected
     'credentials': {

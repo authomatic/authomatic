@@ -91,7 +91,8 @@ def login(request):
                     response.write('Your are logged in with Twitter.<br />')
 
                     # We will get the user's 5 most recent tweets.
-                    url = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
+                    url = 'https://api.twitter.com/1.1/statuses/' + \
+                          'user_timeline.json'
 
                     # You can pass a dictionary of querystring parameters.
                     access_response = result.provider.access(url, {'count': 5})
@@ -106,7 +107,9 @@ def login(request):
                                 date = tweet.get('created_at')
 
                                 response.write(
-                                    u'<h3>{0}</h3>'.format(text.replace(u'\u2026', '...')))
+                                    u'<h3>{0}</h3>'.format(
+                                        text.replace(u'\u2026', '...')
+                                    ))
                                 response.write(u'Tweeted on: {0}'.format(date))
 
                         elif access_response.data.get('errors'):

@@ -6,15 +6,11 @@
 Utilities you can use when using this library on |gae|_.
 """
 
-import os
-
 from google.appengine.ext import ndb
 from webapp2_extras import sessions
 
 from authomatic import exceptions
-from authomatic.core import resolve_provider_class
 from authomatic.extras import interfaces
-from authomatic.providers import openid
 from authomatic.extras.gae.openid import NDBOpenIDStore
 
 
@@ -30,21 +26,24 @@ class Webapp2Session(interfaces.BaseSession):
     A simple wrapper for |webapp2|_ sessions. If you provide a session it wraps
     it and adds the :meth:`.save` method.
 
-    If you don't provide a session it creates a new one but you must provide the :data:`.secret`.
+    If you don't provide a session it creates a new one but you must provide
+    the :data:`.secret`.
 
     For more about |webapp2| sessions see:
     http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html.
 
     """
 
-    def __init__(self, handler, session=None, secret=None, cookie_name='webapp2authomatic',
-                 backend='memcache', config=None):
+    def __init__(self, handler, session=None, secret=None,
+                 cookie_name='webapp2authomatic', backend='memcache',
+                 config=None):
         """
         .. warning::
 
-            Do not use the ``'securecookie'`` backend with :class:`.providers.OpenID`
-            provider. The `python-openid`_ library saves **non json serializable** objects to session
-            which the ``'securecookie'`` backend cannot cope with.
+            Do not use the ``'securecookie'`` backend with
+            :class:`.providers.OpenID` provider. The
+            `python-openid`_ library saves **non json serializable** objects
+            to session which the ``'securecookie'`` backend cannot cope with.
 
         :param handler:
             A :class:`webapp2.RequestHandler` instance.
@@ -104,7 +103,8 @@ class NDBConfig(ndb.Model):
 
     .. note::
 
-        By :class:`.OpenID` provider uses :class:`.NDBOpenIDStore` as default :attr:`.OpenID.store`.
+        By :class:`.OpenID` provider uses :class:`.NDBOpenIDStore`
+        as default :attr:`.OpenID.store`.
 
     """
 
@@ -176,10 +176,11 @@ class NDBConfig(ndb.Model):
 
         .. note::
 
-            The *Datastore Viewer* in the ``_ah/admin/`` won't let you add properties to a model
-            if there is not an entity with that property already.
-            Therefore it is a good idea to keep the **"Example"** entity (which has all
-            possible properties set) in the datastore.
+            The *Datastore Viewer* in the ``_ah/admin/`` won't let you add
+            properties to a model if there is not an entity with that
+            property already. Therefore it is a good idea to keep the
+            **"Example"** entity (which has all possible properties set) in
+            the datastore.
 
         """
 
@@ -187,7 +188,8 @@ class NDBConfig(ndb.Model):
 
             example = cls.get_or_insert('Example')
 
-            example.class_ = 'Provider class e.g. "authomatic.providers.oauth2.Facebook".'
+            example.class_ = 'Provider class e.g. ' + \
+                             '"authomatic.providers.oauth2.Facebook".'
             example.provider_name = 'Your custom provider name e.g. "fb".'
 
             # AuthorizationProvider
@@ -199,14 +201,16 @@ class NDBConfig(ndb.Model):
             example.scope = 'coma, separated, list, of, scopes'
 
             # AuthenticationProvider
-            example.identifier_param = 'Querystring parameter for claimed id. default is "id"'
+            example.identifier_param = 'Querystring parameter for claimed ' + \
+                                       'id. default is "id"'
 
             # Save the example
             example.put()
 
             # Raise an information error.
-            raise GAEError('A NDBConfig data model was created! Go to Datastore Viewer ' +
-                           'in your dashboard and populate it with data!')
+            raise GAEError(
+                'A NDBConfig data model was created! Go to Datastore Viewer '
+                'in your dashboard and populate it with data!')
 
 
 def ndb_config():
@@ -214,15 +218,16 @@ def ndb_config():
     Allows you to have a **datastore** :doc:`config` instead of a hardcoded
     one.
 
-    This function creates an **"Example"** entity of kind **"NDBConfig"** in the datastore
-    if the model is empty and raises and error to inform you that you should populate the model with data.
+    This function creates an **"Example"** entity of kind **"NDBConfig"** in
+    the datastore if the model is empty and raises and error to inform you
+    that you should populate the model with data.
 
     .. note::
 
-        The *Datastore Viewer* of the |gae|_ admin won't let you add properties to a model
-        if there is not an entity with that property already.
-        Therefore it is a good idea to keep the **"Example"** entity (which has all
-        properties set) in the datastore.
+        The *Datastore Viewer* of the |gae|_ admin won't let you add
+        properties to a model if there is not an entity with that property
+        already. Therefore it is a good idea to keep the **"Example"**
+        entity (which has all properties set) in the datastore.
 
     :raises:
         :exc:`.GAEError`

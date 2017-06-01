@@ -7,18 +7,21 @@ Adapters
    :backlinks: none
 
 The :func:`authomatic.login` function needs access to functionality like
-getting the **URL** of the handler where it is being called, getting the **request params** and **cookies** and
-**writing the body**, **headers** and **status** to the response.
+getting the **URL** of the handler where it is being called, getting the
+**request params** and **cookies** and **writing the body**, **headers**
+and **status** to the response.
 
 Since implementation of these features varies across Python web frameworks,
-the Authomatic library uses **adapters** to unify these differences into a single interface.
+the Authomatic library uses **adapters** to unify these differences into a
+single interface.
 
 Available Adapters
 ^^^^^^^^^^^^^^^^^^
 
-If you are missing an adapter for the framework of your choice,
-please open an `enhancement issue <https://github.com/authomatic/authomatic/issues>`_
-or consider a contribution to this module by :ref:`implementing <implement_adapters>` one by yourself.
+If you are missing an adapter for the framework of your choice, please
+open an `enhancement issue <https://github.com/authomatic/authomatic/issues>`_
+or consider a contribution to this module by
+:ref:`implementing <implement_adapters>` one by yourself.
 Its very easy and shouldn't take you more than a few minutes.
 
 .. autoclass:: DjangoAdapter
@@ -44,7 +47,8 @@ Do it by subclassing the :class:`.BaseAdapter` abstract class.
 There are only **six** members that you need to implement.
 
 Moreover if your framework is based on the |webob|_ or |werkzeug|_ package
-you can subclass the :class:`.WebObAdapter` or :class:`.WerkzeugAdapter` respectively.
+you can subclass the :class:`.WebObAdapter` or :class:`.WerkzeugAdapter`
+respectively.
 
 .. autoclass:: BaseAdapter
     :members:
@@ -189,9 +193,9 @@ class WebObAdapter(BaseAdapter):
         self.request = request
         self.response = response
 
-    #=========================================================================
+    # =========================================================================
     # Request
-    #=========================================================================
+    # =========================================================================
 
     @property
     def url(self):
@@ -205,9 +209,9 @@ class WebObAdapter(BaseAdapter):
     def cookies(self):
         return dict(self.request.cookies)
 
-    #=========================================================================
+    # =========================================================================
     # Response
-    #=========================================================================
+    # =========================================================================
 
     def write(self, value):
         self.response.write(value)

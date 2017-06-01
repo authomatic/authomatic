@@ -10,11 +10,9 @@ import liveandletdie
 import pytest
 import requests
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import (
     NoSuchElementException,
     TimeoutException,
-    UnexpectedAlertPresentException,
     WebDriverException,
 )
 from selenium.webdriver.support import expected_conditions

@@ -32,7 +32,7 @@ class Login(webapp2.RequestHandler):
 
                 if result.user.credentials:
                     # Serialize credentials and store it as well.
-                    serialized_credentials = result.user.credentials.serialize()
+                    serialized_credentials = result.user.credentials.serialize()  # noqa
                     self.response.set_cookie(
                         'credentials', serialized_credentials)
 
@@ -67,9 +67,15 @@ class Home(webapp2.RequestHandler):
 
                 self.response.write("""
                 <p>
-                    You are logged in with <b>{0}</b> and we have your credentials.
+                    You are logged in with <b>{0}</b> and we have your
+                    credentials.
                 </p>
-                """.format(dict(fb='Facebook', tw='Twitter')[credentials.provider_name]))
+                """.format(
+                    dict(
+                        fb='Facebook',
+                        tw='Twitter'
+                    )[credentials.provider_name])
+                )
 
                 valid = 'still' if credentials.valid else 'not anymore'
                 expire_soon = 'less' if credentials.expire_soon(
@@ -96,7 +102,8 @@ class Home(webapp2.RequestHandler):
                 else:
                     self.response.write("""
                     <p>
-                        Repeat the <b>login procedure</b>to get new credentials.
+                        Repeat the <b>login procedure</b>to get new
+                        credentials.
                     </p>
                     <a href="login/{0}">Refresh</a>
                     """.format(credentials.provider_name))
@@ -151,7 +158,8 @@ class Action(webapp2.RequestHandler):
         <a href="..">Home</a>
         <p>We can {0} on your behalf.</p>
         <form method="post">
-            <input type="text" name="message" value="Have you got a bandage?" />
+            <input type="text" name="message"
+                   value="Have you got a bandage?" />
             <input type="submit" value="Do it!">
         </form>
         """.format(text))
@@ -182,18 +190,22 @@ class Action(webapp2.RequestHandler):
                 self.response.write(
                     '<p>Damn that error: {0}!</p>'.format(error))
             elif post_id:
-                self.response.write('<p>You just posted a status with id ' +
-                                    '{0} to your Facebook timeline.<p/>'.format(post_id))
+                self.response.write(
+                    '<p>You just posted a status with id ' +
+                    '{0} to your Facebook timeline.<p/>'.format(post_id))
             else:
-                self.response.write('<p>Damn that unknown error! Status code: {0}</p>'
-                                    .format(response.status))
+                self.response.write(
+                    '<p>Damn that unknown error! Status code: {0}</p>'.format(
+                        response.status
+                    ))
 
         elif provider_name == 'tw':
 
-            response = authomatic.access(serialized_credentials,
-                                         url='https://api.twitter.com/1.1/statuses/update.json',
-                                         params=dict(status=message),
-                                         method='POST')
+            response = authomatic.access(
+                serialized_credentials,
+                url='https://api.twitter.com/1.1/statuses/update.json',
+                params=dict(status=message),
+                method='POST')
 
             error = response.data.get('errors')
             tweet_id = response.data.get('id')

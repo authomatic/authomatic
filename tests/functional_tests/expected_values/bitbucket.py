@@ -32,7 +32,9 @@ CONFIG = {
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
-        'picture': re.compile(r'https://bitbucket\.org/account/\w+/avatar/32/.*'),
+        'picture': re.compile(
+            r'https://bitbucket\.org/account/\w+/avatar/32/.*'
+        ),
         'postal_code': None,
         'timezone': None,
         'username': conf.user_username,
