@@ -56,8 +56,7 @@ CONFIG = {
         conf.no_nickname +
         conf.no_phone +
         conf.no_timezone +
-        conf.no_username
-        ,
+        conf.no_username,
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': 'Bearer',

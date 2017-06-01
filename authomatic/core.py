@@ -28,9 +28,9 @@ from authomatic import six
 from authomatic.six.moves import urllib_parse as parse
 
 
-#===============================================================================
+#=========================================================================
 # Global variables !!!
-#===============================================================================
+#=========================================================================
 
 _logger = logging.getLogger(__name__)
 _logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -84,7 +84,9 @@ class Counter(object):
         self._count += 1
         return self._count
 
+
 _counter = Counter()
+
 
 def provider_id():
     """
@@ -131,6 +133,7 @@ def escape(s):
     """Escape a URL including any /."""
     return parse.quote(s.encode('utf-8'), safe='~')
 
+
 def json_qs_parser(body):
     """
     Parses response body from JSON, XML or query string.
@@ -145,13 +148,13 @@ def json_qs_parser(body):
     try:
         # Try JSON first.
         return json.loads(body)
-    except:
+    except Exception:
         pass
 
     try:
         # Then XML.
         return ElementTree.fromstring(body)
-    except:
+    except Exception:
         pass
 
     # Finally query string.
@@ -188,7 +191,8 @@ def resolve_provider_class(class_):
         # prepare path for authomatic.providers package
         path = '.'.join([__package__, 'providers', class_])
 
-        # try to import class by string from providers module or by fully qualified path
+        # try to import class by string from providers module or by fully
+        # qualified path
         return import_string(class_, True) or import_string(path)
     else:
         return class_
@@ -210,7 +214,8 @@ def id_to_name(config, short_name):
             return k
             break
     else:
-        raise Exception('No provider with id={0} found in the config!'.format(short_name))
+        raise Exception(
+            'No provider with id={0} found in the config!'.format(short_name))
 
 
 class ReprMixin(object):
@@ -234,7 +239,6 @@ class ReprMixin(object):
     #: `int` Values longer than this will be truncated to *ClassName(...)*.
     _repr_length_limit = 20
 
-
     def __repr__(self):
 
         # get class name
@@ -245,7 +249,8 @@ class ReprMixin(object):
 
         for k, v in list(self.__dict__.items()):
 
-            # ignore attributes with leading underscores and those listed in _repr_ignore
+            # ignore attributes with leading underscores and those listed in
+            # _repr_ignore
             if v and not k.startswith('_') and not k in self._repr_ignore:
 
                 # replace sensitive values
@@ -294,10 +299,8 @@ class Future(threading.Thread):
 
         self.start()
 
-
     def run(self):
         self._result = self._func(*self._args, **self._kwargs)
-
 
     def get_result(self, timeout=None):
         """
@@ -320,6 +323,7 @@ class Future(threading.Thread):
 
 class Session(object):
     """A dictionary-like secure cookie session implementation."""
+
     def __init__(self, adapter, secret, name='authomatic', max_age=600,
                  secure=False):
         """
@@ -438,7 +442,6 @@ class Session(object):
 
         return concatenated
 
-
     def _deserialize(self, value):
         """
         Deserializes and verifies the value created by :meth:`._serialize`.
@@ -544,7 +547,6 @@ class User(ReprMixin):
         #: Only present when using the :class:`authomatic.providers.gaeopenid.GAEOpenID` provider.
         self.gae_user = kwargs.get('gae_user')
 
-
     def update(self):
         """
         Updates the user info by fetching the **provider's** user info URL.
@@ -554,7 +556,6 @@ class User(ReprMixin):
         """
 
         return self.provider.update_user()
-
 
     def async_update(self):
         """
@@ -583,7 +584,8 @@ class User(ReprMixin):
 
         # Keep only the provider name to avoid circular reference
         d['provider'] = self.provider.name
-        d['credentials'] = self.credentials.serialize() if self.credentials else None
+        d['credentials'] = self.credentials.serialize(
+        ) if self.credentials else None
         d['birth_date'] = str(d['birth_date'])
 
         # Remove content
@@ -600,7 +602,7 @@ SupportedUserAttributesNT = collections.namedtuple(
     field_names=['birth_date', 'city', 'country', 'email', 'first_name',
                  'gender', 'id', 'last_name', 'link', 'locale', 'location',
                  'name', 'nickname', 'phone', 'picture', 'postal_code',
-                 'timezone', 'username',]
+                 'timezone', 'username', ]
 )
 
 
@@ -614,10 +616,11 @@ class SupportedUserAttributes(SupportedUserAttributesNT):
 class Credentials(ReprMixin):
     """Contains all necessary information to fetch **user's protected resources**."""
 
-    _repr_sensitive = ('token', 'refresh_token', 'token_secret', 'consumer_key', 'consumer_secret')
+    _repr_sensitive = ('token', 'refresh_token', 'token_secret',
+                       'consumer_key', 'consumer_secret')
 
     def __init__(self, config, **kwargs):
-        
+
         #: :class:`dict` :doc:`config`.
         self.config = config
 
@@ -673,7 +676,6 @@ class Credentials(ReprMixin):
             self.consumer_key = kwargs.get('consumer_key', '')
             self.consumer_secret = kwargs.get('consumer_secret', '')
 
-
     @property
     def expire_in(self):
         """
@@ -692,7 +694,6 @@ class Credentials(ReprMixin):
             self._expiration_time = int(time.time()) + int(value)
             self._expire_in = value
 
-
     @property
     def expiration_time(self):
         return self._expiration_time
@@ -701,7 +702,6 @@ class Credentials(ReprMixin):
     def expiration_time(self, value):
         self._expiration_time = int(value)
         self._expire_in = self._expiration_time - int(time.time())
-
 
     @property
     def expiration_date(self):
@@ -714,7 +714,6 @@ class Credentials(ReprMixin):
         else:
             return datetime.datetime.fromtimestamp(self.expiration_time)
 
-
     @property
     def valid(self):
         """
@@ -725,7 +724,6 @@ class Credentials(ReprMixin):
             return self.expiration_time > int(time.time())
         else:
             return True
-
 
     def expire_soon(self, seconds):
         """
@@ -742,7 +740,6 @@ class Credentials(ReprMixin):
             return self.expiration_time < int(time.time()) + int(seconds)
         else:
             return False
-
 
     def refresh(self, force=False, soon=86400):
         """
@@ -769,8 +766,8 @@ class Credentials(ReprMixin):
         if hasattr(self.provider_class, 'refresh_credentials'):
             if force or self.expire_soon(soon):
                 logging.info('PROVIDER NAME: {0}'.format(self.provider_name))
-                return self.provider_class(self, None, self.provider_name).refresh_credentials(self)
-
+                return self.provider_class(
+                    self, None, self.provider_name).refresh_credentials(self)
 
     def async_refresh(self, *args, **kwargs):
         """
@@ -786,7 +783,6 @@ class Credentials(ReprMixin):
 
         return Future(self.refresh, *args, **kwargs)
 
-
     def provider_type_class(self):
         """
         Returns the :doc:`provider <providers>` class specified in the :doc:`config`.
@@ -796,7 +792,6 @@ class Credentials(ReprMixin):
         """
 
         return resolve_provider_class(self.provider_type)
-
 
     def serialize(self):
         """
@@ -826,7 +821,6 @@ class Credentials(ReprMixin):
         # Percent encode.
         return parse.quote(concatenated, '')
 
-
     @classmethod
     def deserialize(cls, config, credentials):
         """
@@ -852,7 +846,7 @@ class Credentials(ReprMixin):
 
         # We need the provider ID to move forward.
         if split[0] is None:
-            raise CredentialsError('To deserialize credentials you need to specify a unique ' + \
+            raise CredentialsError('To deserialize credentials you need to specify a unique ' +
                                    'integer under the "id" key in the config for each provider!')
 
         provider_id = int(split[0])
@@ -889,8 +883,8 @@ class LoginResult(ReprMixin):
         #: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.
         self.error = None
 
-
-    def popup_js(self, callback_name=None, indent=None, custom=None, stay_open=False):
+    def popup_js(self, callback_name=None, indent=None,
+                 custom=None, stay_open=False):
         """
         Returns JavaScript that:
 
@@ -946,8 +940,8 @@ class LoginResult(ReprMixin):
                    custom_callback=custom_callback,
                    stay_open='// ' if stay_open else '')
 
-
-    def popup_html(self, callback_name=None, indent=None, title='Login | {0}', custom=None, stay_open=False):
+    def popup_html(self, callback_name=None, indent=None,
+                   title='Login | {0}', custom=None, stay_open=False):
         """
         Returns a HTML with JavaScript that:
 
@@ -1002,13 +996,12 @@ class LoginResult(ReprMixin):
 
         return self.provider.user if self.provider else None
 
-
     def to_dict(self):
         return dict(provider=self.provider, user=self.user, error=self.error)
 
-
     def to_json(self, indent=4):
-        return json.dumps(self, default=lambda obj: obj.to_dict() if hasattr(obj, 'to_dict') else '', indent=indent)
+        return json.dumps(self, default=lambda obj: obj.to_dict(
+        ) if hasattr(obj, 'to_dict') else '', indent=indent)
 
 
 class Response(ReprMixin):
@@ -1041,7 +1034,6 @@ class Response(ReprMixin):
         #: Same as :attr:`httplib.HTTPResponse.reason`.
         self.reason = httplib_response.reason
 
-
     def read(self, amt=None):
         """
         Same as :meth:`httplib.HTTPResponse.read`.
@@ -1050,7 +1042,6 @@ class Response(ReprMixin):
         """
 
         return self.httplib_response.read(amt)
-
 
     def getheader(self, name, default=None):
         """
@@ -1062,20 +1053,17 @@ class Response(ReprMixin):
 
         return self.httplib_response.getheader(name, default)
 
-
     def fileno(self):
         """
         Same as :meth:`httplib.HTTPResponse.fileno`.
         """
         return self.httplib_response.fileno()
 
-
     def getheaders(self):
         """
         Same as :meth:`httplib.HTTPResponse.getheaders`.
         """
         return self.httplib_response.getheaders()
-
 
     def is_binary_string(self, content):
         """
@@ -1085,7 +1073,6 @@ class Response(ReprMixin):
         textchars = (bytearray([7, 8, 9, 10, 12, 13, 27]) +
                      bytearray(range(0x20, 0x100)))
         return bool(content.translate(None, textchars))
-
 
     @property
     def content(self):
@@ -1100,7 +1087,6 @@ class Response(ReprMixin):
             else:
                 self._content = content.decode('utf-8')
         return self._content
-
 
     @property
     def data(self):
@@ -1192,10 +1178,10 @@ class RequestElements(tuple):
 
     def to_json(self):
         return json.dumps(dict(url=self.url,
-                          method=self.method,
-                          params=self.params,
-                          headers=self.headers,
-                          body=self.body))
+                               method=self.method,
+                               params=self.params,
+                               headers=self.headers,
+                               body=self.body))
 
 
 class Authomatic(object):
@@ -1205,49 +1191,49 @@ class Authomatic(object):
                  logger=None):
         """
         Encapsulates all the functionality of this package.
-        
+
         :param dict config:
             :doc:`config`
 
         :param str secret:
             A secret string that will be used as the key for signing :class:`.Session` cookie and
             as a salt by *CSRF* token generation.
-    
+
         :param session_max_age:
             Maximum allowed age of :class:`.Session` cookie nonce in seconds.
-    
+
         :param bool secure_cookie:
             If ``True`` the :class:`.Session` cookie will be saved wit ``Secure`` attribute.
-    
+
         :param session:
             Custom dictionary-like session implementation.
-    
+
         :param callable session_save_method:
             A method of the supplied session or any mechanism that saves the session data and cookie.
-    
+
         :param bool report_errors:
             If ``True`` exceptions encountered during the **login procedure**
             will be caught and reported in the :attr:`.LoginResult.error` attribute.
             Default is ``True``.
-    
+
         :param bool debug:
             If ``True`` traceback of exceptions will be written to response.
             Default is ``False``.
-    
+
         :param int logging_level:
             The logging level threshold for the default logger as specified in
             the standard Python
             `logging library <http://docs.python.org/2/library/logging.html>`_.
             This setting is ignored when :data:`logger` is set.
             Default is ``logging.INFO``.
-    
+
         :param str prefix:
             Prefix used as the :class:`.Session` cookie name.
 
         :param logger:
             A :class:`logging.logger` instance.
         """
-        
+
         self.config = config
         self.secret = secret
         self.session_max_age = session_max_age
@@ -1259,61 +1245,62 @@ class Authomatic(object):
         self.logging_level = logging_level
         self.prefix = prefix
         self._logger = logger or logging.getLogger(str(id(self)))
-        
+
         # Set logging level.
         if logger is None:
             self._logger.setLevel(logging_level)
-    
-    
-    def login(self, adapter, provider_name, callback=None, session=None, session_saver=None, **kwargs):
+
+    def login(self, adapter, provider_name, callback=None,
+              session=None, session_saver=None, **kwargs):
         """
         If :data:`provider_name` specified, launches the login procedure
         for corresponding :doc:`provider </reference/providers>` and
         returns :class:`.LoginResult`.
-    
+
         If :data:`provider_name` is empty, acts like :meth:`.Authomatic.backend`.
-    
+
         .. warning::
 
             The method redirects the **user** to the **provider** which in turn redirects
             **him/her** back to the *request handler* where it has been called.
-    
+
         :param str provider_name:
             Name of the provider as specified in the keys of the :doc:`config`.
-    
+
         :param callable callback:
             If specified the method will call the callback with :class:`.LoginResult`
             passed as argument and will return nothing.
-    
+
         :param bool report_errors:
-    
+
         .. note::
-    
+
             Accepts additional keyword arguments that will be passed to :doc:`provider <providers>` constructor.
-    
+
         :returns:
             :class:`.LoginResult`
         """
-        
+
         if provider_name:
-            # retrieve required settings for current provider and raise exceptions if missing
+            # retrieve required settings for current provider and raise
+            # exceptions if missing
             provider_settings = self.config.get(provider_name)
             if not provider_settings:
                 raise ConfigError('Provider name "{0}" not specified!'
                                   .format(provider_name))
-    
+
             if not (session is None or session_saver is None):
                 session = session
                 session_saver = session_saver
             else:
                 session = Session(adapter=adapter,
-                                   secret=self.secret,
-                                   max_age=self.session_max_age,
-                                   name=self.prefix,
-                                   secure=self.secure_cookie)
-    
+                                  secret=self.secret,
+                                  max_age=self.session_max_age,
+                                  name=self.prefix,
+                                  secure=self.secure_cookie)
+
                 session_saver = session.save
-    
+
             # Resolve provider class.
             class_ = provider_settings.get('class_')
             if not class_:
@@ -1323,7 +1310,7 @@ class Authomatic(object):
 
             # FIXME: Find a nicer solution
             ProviderClass._logger = self._logger
-    
+
             # instantiate provider class
             provider = ProviderClass(self,
                                      adapter=adapter,
@@ -1332,69 +1319,69 @@ class Authomatic(object):
                                      session=session,
                                      session_saver=session_saver,
                                      **kwargs)
-    
+
             # return login result
             return provider.login()
-    
+
         else:
             # Act like backend.
             self.backend(adapter)
 
- 
     def credentials(self, credentials):
         """
         Deserializes credentials.
-    
+
         :param credentials:
             Credentials serialized with :meth:`.Credentials.serialize` or :class:`.Credentials` instance.
-    
+
         :returns:
             :class:`.Credentials`
         """
-    
+
         return Credentials.deserialize(self.config, credentials)
-    
-    
-    def access(self, credentials, url, params=None, method='GET', headers=None, body='', max_redirects=5, content_parser=None):
+
+    def access(self, credentials, url, params=None, method='GET',
+               headers=None, body='', max_redirects=5, content_parser=None):
         """
         Accesses **protected resource** on behalf of the **user**.
-    
+
         :param credentials:
             The **user's** :class:`.Credentials` (serialized or normal).
-    
+
         :param str url:
             The **protected resource** URL.
-    
+
         :param str method:
             HTTP method of the request.
-    
+
         :param dict headers:
             HTTP headers of the request.
-    
+
         :param str body:
             Body of ``POST``, ``PUT`` and ``PATCH`` requests.
-    
+
         :param int max_redirects:
             Maximum number of HTTP redirects to follow.
-    
+
         :param function content_parser:
             A function to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
-    
+
         :returns:
             :class:`.Response`
         """
-    
+
         # Deserialize credentials.
         credentials = Credentials.deserialize(self.config, credentials)
-    
+
         # Resolve provider class.
         ProviderClass = credentials.provider_class
         logging.info('ACCESS HEADERS: {0}'.format(headers))
         # Access resource and return response.
-        
-        provider = ProviderClass(self, adapter=None, provider_name=credentials.provider_name)
+
+        provider = ProviderClass(
+            self, adapter=None, provider_name=credentials.provider_name)
         provider.credentials = credentials
-        
+
         return provider.access(url=url,
                                params=params,
                                method=method,
@@ -1402,23 +1389,21 @@ class Authomatic(object):
                                body=body,
                                max_redirects=max_redirects,
                                content_parser=content_parser)
-    
-    
+
     def async_access(self, *args, **kwargs):
         """
         Same as :meth:`.Authomatic.access` but runs asynchronously in a separate thread.
-    
+
         .. warning::
 
             |async|
-    
+
         :returns:
             :class:`.Future` instance representing the separate thread.
         """
-    
+
         return Future(self.access, *args, **kwargs)
-    
-    
+
     def request_elements(self, credentials=None, url=None, method='GET', params=None,
                          headers=None, body='', json_input=None, return_json=False):
         """
@@ -1426,31 +1411,31 @@ class Authomatic(object):
         Required arguments are :data:`credentials` and :data:`url`.
         You can pass :data:`credentials`, :data:`url`, :data:`method`, and :data:`params`
         as a JSON object.
-    
+
         :param credentials:
             The **user's** credentials (can be serialized).
-    
+
         :param str url:
             The url of the protected resource.
-    
+
         :param str method:
             The HTTP method of the request.
-    
+
         :param dict params:
             Dictionary of request parameters.
-    
+
         :param dict headers:
             Dictionary of request headers.
-    
+
         :param str body:
             Body of ``POST``, ``PUT`` and ``PATCH`` requests.
-    
+
         :param str json_input:
             you can pass :data:`credentials`, :data:`url`, :data:`method`, :data:`params` and :data:`headers`
             in a JSON object. Values from arguments will be used for missing properties.
-    
+
             ::
-    
+
                 {
                     "credentials": "###",
                     "url": "https://example.com/api",
@@ -1464,12 +1449,12 @@ class Authomatic(object):
                     },
                     "body": "Foo bar baz bing."
                 }
-    
+
         :param bool return_json:
             if ``True`` the function returns a json object.
-    
+
             ::
-    
+
                 {
                     "url": "https://example.com/api",
                     "method": "POST",
@@ -1483,30 +1468,30 @@ class Authomatic(object):
                     },
                     "body": "Foo bar baz bing."
                 }
-    
+
         :returns:
             :class:`.RequestElements` or JSON string.
         """
-    
+
         # Parse values from JSON
         if json_input:
             parsed_input = json.loads(json_input)
-    
+
             credentials = parsed_input.get('credentials', credentials)
             url = parsed_input.get('url', url)
             method = parsed_input.get('method', method)
             params = parsed_input.get('params', params)
             headers = parsed_input.get('headers', headers)
             body = parsed_input.get('body', body)
-    
+
         if not credentials and url:
-            raise RequestElementsError('To create request elements, you must provide credentials ' +\
-                                        'and URL either as keyword arguments or in the JSON object!')
-    
+            raise RequestElementsError('To create request elements, you must provide credentials ' +
+                                       'and URL either as keyword arguments or in the JSON object!')
+
         # Get the provider class
         credentials = Credentials.deserialize(self.config, credentials)
         ProviderClass = credentials.provider_class
-    
+
         # Create request elements
         request_elements = ProviderClass.create_request_elements(ProviderClass.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                                  credentials=credentials,
@@ -1515,57 +1500,56 @@ class Authomatic(object):
                                                                  params=params,
                                                                  headers=headers,
                                                                  body=body)
-    
+
         if return_json:
             return request_elements.to_json()
-    
+
         else:
             return request_elements
-    
-    
+
     def backend(self, adapter):
         """
         Converts a *request handler* to a JSON backend which you can use with :ref:`authomatic.js <js>`.
-    
+
         Just call it inside a *request handler* like this:
-    
+
         ::
-    
+
             class JSONHandler(webapp2.RequestHandler):
                 def get(self):
                     authomatic.backend(Webapp2Adapter(self))
-    
+
         :param adapter:
             The only argument is an :doc:`adapter <adapters>`.
-    
+
         The *request handler* will now accept these request parameters:
-    
+
         :param str type:
             Type of the request. Either ``auto``, ``fetch`` or ``elements``. Default is ``auto``.
-    
+
         :param str credentials:
             Serialized :class:`.Credentials`.
-    
+
         :param str url:
             URL of the **protected resource** request.
-    
+
         :param str method:
             HTTP method of the **protected resource** request.
-    
+
         :param str body:
             HTTP body of the **protected resource** request.
-    
+
         :param JSON params:
             HTTP params of the **protected resource** request as a JSON object.
-    
+
         :param JSON headers:
             HTTP headers of the **protected resource** request as a JSON object.
-    
+
         :param JSON json:
             You can pass all of the aforementioned params except ``type`` in a JSON object.
-    
+
             .. code-block:: javascript
-    
+
                 {
                     "credentials": "######",
                     "url": "https://example.com",
@@ -1574,13 +1558,13 @@ class Authomatic(object):
                     "headers": {"baz": "bing"},
                     "body": "the body of the request"
                 }
-    
+
         Depending on the ``type`` param, the handler will either write
         a JSON object with *request elements* to the response,
         and add an ``Authomatic-Response-To: elements`` response header, ...
-    
+
         .. code-block:: javascript
-    
+
             {
                 "url": "https://example.com/api",
                 "method": "POST",
@@ -1593,19 +1577,19 @@ class Authomatic(object):
                     "Authorization": "Bearer ###"
                 }
             }
-    
+
         ... or make a fetch to the **protected resource** and forward it's response
         content, status and headers with an additional ``Authomatic-Response-To: fetch`` header
         to the response.
-    
+
         .. warning::
 
             The backend will not work if you write anything to the response in the handler!
 
         """
-    
+
         AUTHOMATIC_HEADER = 'Authomatic-Response-To'
-    
+
         # Collect request params
         request_type = adapter.params.get('type', 'auto')
         json_input = adapter.params.get('json')
@@ -1613,20 +1597,20 @@ class Authomatic(object):
         url = adapter.params.get('url')
         method = adapter.params.get('method', 'GET')
         body = adapter.params.get('body', '')
-    
-    
+
         params = adapter.params.get('params')
         params = json.loads(params) if params else {}
-    
+
         headers = adapter.params.get('headers')
         headers = json.loads(headers) if headers else {}
-    
-        ProviderClass = Credentials.deserialize(self.config, credentials).provider_class
-    
+
+        ProviderClass = Credentials.deserialize(
+            self.config, credentials).provider_class
+
         if request_type == 'auto':
             # If there is a "callback" param, it's a JSONP request.
             jsonp = params.get('callback')
-    
+
             # JSONP is possible only with GET method.
             if ProviderClass.supports_jsonp and method is 'GET':
                 request_type = 'elements'
@@ -1635,40 +1619,42 @@ class Authomatic(object):
                 if params.get('callback'):
                     params.pop('callback')
                 request_type = 'fetch'
-    
+
         if request_type == 'fetch':
             # Access protected resource
-            response = self.access(credentials, url, params, method, headers, body)
+            response = self.access(
+                credentials, url, params, method, headers, body)
             result = response.content
-    
+
             # Forward status
             adapter.status = str(response.status) + ' ' + str(response.reason)
-    
+
             # Forward headers
             for k, v in response.getheaders():
                 logging.info('    {0}: {1}'.format(k, v))
                 adapter.set_header(k, v)
-    
+
         elif request_type == 'elements':
             # Create request elements
             if json_input:
-                result = self.request_elements(json_input=json_input, return_json=True)
+                result = self.request_elements(
+                    json_input=json_input, return_json=True)
             else:
                 result = self.request_elements(credentials=credentials,
-                                          url=url,
-                                          method=method,
-                                          params=params,
-                                          headers=headers,
-                                          body=body,
-                                          return_json=True)
-    
+                                               url=url,
+                                               method=method,
+                                               params=params,
+                                               headers=headers,
+                                               body=body,
+                                               return_json=True)
+
             adapter.set_header('Content-Type', 'application/json')
         else:
             result = '{"error": "Bad Request!"}'
-    
-    
+
         # Add the authomatic header
         adapter.set_header(AUTHOMATIC_HEADER, request_type)
-    
+
         # Write result to response
         adapter.write(result)
+

@@ -47,7 +47,7 @@ HOST_ALIAS = 'authomatic.org'
 # Only frameworks included here will be tested.
 INCLUDE_FRAMEWORKS = [
     # 'django',
-    'flask', # Runs with https
+    'flask',  # Runs with https
     # 'pyramid',
 ]
 
@@ -324,7 +324,7 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        'user_timezone': '??????????', #  e.g. 'Pacific Time (US & Canada)'
+        'user_timezone': '??????????',  # e.g. 'Pacific Time (US & Canada)'
     },
     'yandex': {
         'consumer_key': '##########',

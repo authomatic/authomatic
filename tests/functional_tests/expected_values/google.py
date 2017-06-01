@@ -61,7 +61,7 @@ CONFIG = {
     ],
     # Case insensitive
     'content_should_not_contain': [conf.user_postal_code]
-                                  + conf.no_phone + conf.no_birth_date,
+    + conf.no_phone + conf.no_birth_date,
 
     # True means that any thruthy value is expected
     'credentials': {
@@ -92,7 +92,7 @@ CONFIG = {
         'consumer_secret': True,
         'token': False,
         'token_secret': True,
-        '_expire_in': None, # Somtimes differ in one second.
+        '_expire_in': None,  # Somtimes differ in one second.
         'provider_name': True,
         'refresh_token': True,
         'provider_type': True,

@@ -73,7 +73,6 @@ class BaseAdapter(object):
             :class:`dict`
         """
 
-
     @abc.abstractproperty
     def url(self):
         """
@@ -82,7 +81,6 @@ class BaseAdapter(object):
         :returns:
             :class:`str`
         """
-
 
     @abc.abstractproperty
     def cookies(self):
@@ -93,7 +91,6 @@ class BaseAdapter(object):
             :class:`dict`
         """
 
-
     @abc.abstractmethod
     def write(self, value):
         """
@@ -102,7 +99,6 @@ class BaseAdapter(object):
         :param str value:
             String to be written to response.
         """
-
 
     @abc.abstractmethod
     def set_header(self, key, value):
@@ -115,7 +111,6 @@ class BaseAdapter(object):
         :param str value:
             Header value.
         """
-
 
     @abc.abstractmethod
     def set_status(self, status):
@@ -131,39 +126,39 @@ class DjangoAdapter(BaseAdapter):
     """
     Adapter for the |django|_ framework.
     """
-    
+
     def __init__(self, request, response):
-        """                
+        """
         :param request:
             An instance of the :class:`django.http.HttpRequest` class.
-            
+
         :param response:
             An instance of the :class:`django.http.HttpResponse` class.
         """
         self.request = request
         self.response = response
-    
+
     @property
     def params(self):
         params = {}
         params.update(self.request.GET.dict())
         params.update(self.request.POST.dict())
         return params
-    
+
     @property
     def url(self):
         return self.request.build_absolute_uri(self.request.path)
-    
+
     @property
     def cookies(self):
         return dict(self.request.COOKIES)
-    
+
     def write(self, value):
         self.response.write(value)
-    
+
     def set_header(self, key, value):
         self.response[key] = value
-        
+
     def set_status(self, status):
         status_code, reason = status.split(' ', 1)
         self.response.status_code = int(status_code)
@@ -171,49 +166,43 @@ class DjangoAdapter(BaseAdapter):
 
 class WebObAdapter(BaseAdapter):
     """Adapter for the |webob|_ package."""
-    
+
     def __init__(self, request, response):
         """
         :param request:
             A |webob|_ :class:`Request` instance.
-            
+
         :param response:
             A |webob|_ :class:`Response` instance.
         """
         self.request = request
         self.response = response
-        
 
-    #===========================================================================
+    #=========================================================================
     # Request
-    #===========================================================================
+    #=========================================================================
 
     @property
     def url(self):
         return self.request.path_url
 
-
     @property
     def params(self):
         return dict(self.request.params)
-
 
     @property
     def cookies(self):
         return dict(self.request.cookies)
 
-
-    #===========================================================================
+    #=========================================================================
     # Response
-    #===========================================================================
+    #=========================================================================
 
     def write(self, value):
         self.response.write(value)
 
-
     def set_header(self, key, value):
         self.response.headers[key] = str(value)
-
 
     def set_status(self, status):
         self.response.status = status
@@ -222,7 +211,7 @@ class WebObAdapter(BaseAdapter):
 class Webapp2Adapter(WebObAdapter):
     """
     Adapter for the |webapp2|_ framework.
-    
+
     Inherits from the :class:`.WebObAdapter`.
     """
 
@@ -238,7 +227,7 @@ class Webapp2Adapter(WebObAdapter):
 class WerkzeugAdapter(BaseAdapter):
     """
     Adapter for |flask|_ and other |werkzeug|_ based frameworks.
-    
+
     Thanks to `Mark Steve Samson <http://marksteve.com>`_.
     """
 
@@ -258,11 +247,11 @@ class WerkzeugAdapter(BaseAdapter):
         """
         :param request:
             Instance of the :class:`werkzeug.wrappers.Request` class.
-            
+
         :param response:
             Instance of the :class:`werkzeug.wrappers.Response` class.
         """
-        
+
         self.request = request
         self.response = response
 

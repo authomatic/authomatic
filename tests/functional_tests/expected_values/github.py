@@ -57,10 +57,10 @@ CONFIG = {
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date +
-                                  conf.no_locale + conf.no_first_name +
-                                  conf.no_last_name + conf.no_timezone +
-                                  conf.no_gender + conf.no_postal_code +
-                                  [conf.user_nickname],
+    conf.no_locale + conf.no_first_name +
+    conf.no_last_name + conf.no_timezone +
+    conf.no_gender + conf.no_postal_code +
+    [conf.user_nickname],
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': 'Bearer',

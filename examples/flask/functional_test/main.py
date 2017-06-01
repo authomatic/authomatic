@@ -22,6 +22,7 @@ authomatic = authomatic.Authomatic(fixtures.ASSEMBLED_CONFIG, '123',
                                    report_errors=False,
                                    logger=app.logger)
 
+
 @app.route('/')
 def home():
     return fixtures.render_home('flask')
@@ -51,5 +52,5 @@ if __name__ == '__main__':
     # This does nothing unles you run this module with --testliveserver flag.
     import liveandletdie
     liveandletdie.Flask.wrap(app)
-    
+
     app.run(debug=True, port=8080)

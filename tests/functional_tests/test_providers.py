@@ -68,7 +68,10 @@ APPS = dict((k, v) for k, v in ALL_APPS.items() if
 
 
 file_handler = logging.FileHandler(LOG_PATH, mode='w')
-file_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s', '%x %X'))
+file_handler.setFormatter(
+    logging.Formatter(
+        '%(asctime)s %(message)s',
+        '%x %X'))
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -133,7 +136,8 @@ def login(request, browser, app, attempt=1):
             seconds = config.MIN_WAIT
 
         if seconds:
-            log(indent, provider_name, u'(waiting {0} seconds)'.format(seconds))
+            log(indent, provider_name,
+                u'(waiting {0} seconds)'.format(seconds))
             # log(0, provider_name, u' waiting {0} seconds '
             #     .format(seconds).center(60, '#'))
             time.sleep(seconds)
@@ -155,7 +159,8 @@ def login(request, browser, app, attempt=1):
                     return
 
                 log(3, provider_name, 'Entering PDB for human interaction')
-                import pdb; pdb.set_trace()
+                import pdb
+                pdb.set_trace()
                 log(3, provider_name, 'Returned from PDB')
                 return
         except NoSuchElementException:
@@ -202,7 +207,8 @@ def login(request, browser, app, attempt=1):
         # Pause for getting login and password xpaths
         if request.config.getoption("--pause"):
             log(2, provider_name, 'Pausing to pdb')
-            import pdb; pdb.set_trace()
+            import pdb
+            pdb.set_trace()
 
         if login_xpath:
             if pre_login_xpaths:
@@ -215,7 +221,8 @@ def login(request, browser, app, attempt=1):
                         'Clicking on pre-login element'.format(xpath))
                     pre_login.click()
 
-            log(2, provider_name, 'Finding login input {0}'.format(login_xpath))
+            log(2, provider_name,
+                'Finding login input {0}'.format(login_xpath))
             login_element = browser.find_element_by_xpath(login_xpath)
 
             log(3, provider_name, 'Filling out login')
@@ -280,7 +287,8 @@ def login(request, browser, app, attempt=1):
     except WebDriverException as e:
         if request.config.getoption('--login-error-pdb'):
             log(2, provider_name, 'Entering PDB session')
-            import pdb; pdb.set_trace()
+            import pdb
+            pdb.set_trace()
         try:
             log(2, provider_name,
                 'Finding result element after error {0}'.format(e.msg))
@@ -301,7 +309,8 @@ def login(request, browser, app, attempt=1):
 
             # import pdb; pdb.set_trace()
 
-            pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
+            pytest.fail(
+                'Login by provider "{0}" failed!'.format(provider_name))
 
     return provider
 
@@ -348,7 +357,8 @@ class TestCredentials(Base):
                 try:
                     unicode
                 except NameError:
-                    class unicode(object): pass
+                    class unicode(object):
+                        pass
                 if coerce is not None and isinstance(expected, (str, unicode)):
                     expected = coerce(expected)
                     value = coerce(value)
@@ -405,10 +415,10 @@ class TestCredentialsChange(Base):
         self.skip_if_openid(provider)
 
         refresh_status = browser.find_element_by_id('original-credentials-'
-                                                      'refresh_status').text
+                                                    'refresh_status').text
 
         supports_refresh = refresh_status != \
-                           constants.CREDENTIALS_REFRESH_NOT_SUPPORTED
+            constants.CREDENTIALS_REFRESH_NOT_SUPPORTED
 
         def f(property_name, coerce=None):
             if not supports_refresh:
