@@ -49,6 +49,25 @@ globalOptions =
 log = (args...) ->
   console?.log('Authomatic:', args...) if (globalOptions.logging and console?.log?.apply?)
 
+iOSChromeFix = () ->
+  isIOS = /iphone|ipad|ipod/i.test navigator.userAgent.toLowerCase()
+  vendorName = window.navigator.vendor
+  isIOSChrome = isIOS and vendorName is "Google Inc."
+  loginResultKey = 'authomaticloginresult'
+      
+  if isIOSChrome and localStorage
+    localStorage.removeItem loginResultKey
+    waitForLogin = () ->
+      loginresult = localStorage.getItem loginResultKey
+      if loginresult?
+        authomatic.loginComplete JSON.parse(loginresult), () ->
+        localStorage.removeItem loginResultKey
+      else
+        setTimeout waitForLogin, 300
+
+    waitForLogin()
+
+
 # Opens a new centered window with the URL specified.
 openWindow = (url) ->
   width = globalOptions.popupWidth
@@ -59,6 +78,7 @@ openWindow = (url) ->
   settings = "width=#{width},height=#{height},top=#{top},left=#{left}"
   log('Opening popup:', url)
   globalOptions.onPopupOpen?(url)
+  iOSChromeFix()
   window.open(url, '', settings)
 
 # Parses a querystring and returns object.
