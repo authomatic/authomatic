@@ -57,9 +57,10 @@ from authomatic.core import Response
 
 class BaseAdapter(object):
     """
-    Base class for platform adapters
+    Base class for platform adapters.
 
     Defines common interface for WSGI framework specific functionality.
+
     """
 
     __metaclass__ = abc.ABCMeta
@@ -67,19 +68,23 @@ class BaseAdapter(object):
     @abc.abstractproperty
     def params(self):
         """
-        Must return a :class:`dict` of all request parameters of any HTTP method.
+        Must return a :class:`dict` of all request parameters of any HTTP
+        method.
 
         :returns:
             :class:`dict`
+
         """
 
     @abc.abstractproperty
     def url(self):
         """
-        Must return the url of the actual request including path but without query and fragment
+        Must return the url of the actual request including path but without
+        query and fragment.
 
         :returns:
             :class:`str`
+
         """
 
     @abc.abstractproperty
@@ -89,6 +94,7 @@ class BaseAdapter(object):
 
         :returns:
             :class:`dict`
+
         """
 
     @abc.abstractmethod
@@ -98,6 +104,7 @@ class BaseAdapter(object):
 
         :param str value:
             String to be written to response.
+
         """
 
     @abc.abstractmethod
@@ -110,6 +117,7 @@ class BaseAdapter(object):
 
         :param str value:
             Header value.
+
         """
 
     @abc.abstractmethod
@@ -119,6 +127,7 @@ class BaseAdapter(object):
 
         :param str status:
             The HTTP response status.
+
         """
 
 
@@ -165,7 +174,9 @@ class DjangoAdapter(BaseAdapter):
 
 
 class WebObAdapter(BaseAdapter):
-    """Adapter for the |webob|_ package."""
+    """
+    Adapter for the |webob|_ package.
+    """
 
     def __init__(self, request, response):
         """
@@ -213,6 +224,7 @@ class Webapp2Adapter(WebObAdapter):
     Adapter for the |webapp2|_ framework.
 
     Inherits from the :class:`.WebObAdapter`.
+
     """
 
     def __init__(self, handler):
@@ -229,6 +241,7 @@ class WerkzeugAdapter(BaseAdapter):
     Adapter for |flask|_ and other |werkzeug|_ based frameworks.
 
     Thanks to `Mark Steve Samson <http://marksteve.com>`_.
+
     """
 
     @property

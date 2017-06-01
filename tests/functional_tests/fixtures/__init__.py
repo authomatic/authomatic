@@ -45,7 +45,9 @@ OPENID_PROVIDERS = {}
 
 
 def render_home(framework_name):
-    """Renders the homepage"""
+    """
+    Renders the homepage.
+    """
     template = env.get_template('index.html')
     return template.render(providers=ASSEMBLED_CONFIG,
                            oauth2_providers=OAUTH2_PROVIDERS,
@@ -56,7 +58,7 @@ def render_home(framework_name):
 
 def render_login_result(framework_name, result):
     """
-    Renders the login handler
+    Renders the login handler.
 
     :param result:
 
@@ -108,7 +110,7 @@ def render_login_result(framework_name, result):
 
 def get_configuration(provider):
     """
-    Creates the user configuration which holds the tested values
+    Creates the user configuration which holds the tested values.
 
     It merges the ``config.COMMON`` and the ``config.PROVIDERS[provider]``
     dictionaries and returns a named tuple.

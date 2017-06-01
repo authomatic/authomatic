@@ -76,7 +76,8 @@ XRDS_XML = \
 
 class SessionOpenIDStore(object):
     """
-    A very primitive session-based implementation of the
+    A very primitive session-based implementation of the.
+
     :class:`openid.store.interface.OpenIDStore` interface of the
     `python-openid`_ library.
 
@@ -222,6 +223,7 @@ class OpenID(providers.AuthenticationProvider):
             Default = :attr:`OpenID.PAPE`.
 
         As well as those inherited from :class:`.AuthenticationProvider` constructor.
+
         """
 
         super(OpenID, self).__init__(*args, **kwargs)
@@ -461,7 +463,8 @@ class OpenID(providers.AuthenticationProvider):
 
 class Yahoo(OpenID):
     """
-    Yahoo  :class:`.OpenID` provider with the :attr:`.identifier` predefined to ``"me.yahoo.com"``.
+    Yahoo  :class:`.OpenID` provider with the :attr:`.identifier` predefined to
+    ``"me.yahoo.com"``.
     """
 
     identifier = 'me.yahoo.com'
@@ -469,7 +472,8 @@ class Yahoo(OpenID):
 
 class Google(OpenID):
     """
-    Google :class:`.OpenID` provider with the :attr:`.identifier` predefined to ``"https://www.google.com/accounts/o8/id"``.
+    Google :class:`.OpenID` provider with the :attr:`.identifier` predefined to
+    ``"https://www.google.com/accounts/o8/id"``.
     """
 
     identifier = 'https://www.google.com/accounts/o8/id'

@@ -21,8 +21,10 @@ class BaseSession(object):
     def save(self):
         """
         Called only once per request.
-        Should implement a mechanism for setting the the session **cookie** and
-        saving the session **data** to storage.
+
+        Should implement a mechanism for setting the the session
+        **cookie** and saving the session **data** to storage.
+
         """
 
     @abc.abstractmethod

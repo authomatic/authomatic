@@ -79,6 +79,7 @@ class OAuth2(providers.AuthorizationProvider):
             default is ``False``.
 
         As well as those inherited from :class:`.AuthorizationProvider` constructor.
+
         """
 
         super(OAuth2, self).__init__(*args, **kwargs)
@@ -92,10 +93,12 @@ class OAuth2(providers.AuthorizationProvider):
 
     def _x_scope_parser(self, scope):
         """
-        Override this to handle differences between accepted format of scope across providers.
+        Override this to handle differences between accepted format of scope
+        across providers.
 
         :attr list scope:
             List of scopes.
+
         """
 
         # Most providers accept csv scope.
@@ -195,7 +198,8 @@ class OAuth2(providers.AuthorizationProvider):
     @staticmethod
     def _x_refresh_credentials_if(credentials):
         """
-        Override this to specify conditions when it gives sense to refresh credentials.
+        Override this to specify conditions when it gives sense to refresh
+        credentials.
 
         .. warning::
 
@@ -206,6 +210,7 @@ class OAuth2(providers.AuthorizationProvider):
 
         :returns:
             ``True`` or ``False``
+
         """
 
         if credentials.refresh_token:
@@ -236,7 +241,8 @@ class OAuth2(providers.AuthorizationProvider):
 
     @classmethod
     def decode_state(cls, state, param='user_state'):
-        """Decode state and return param
+        """
+        Decode state and return param.
 
         :param str state:
             state parameter passed through by provider
@@ -247,6 +253,7 @@ class OAuth2(providers.AuthorizationProvider):
 
         :returns:
             string value from decoded state
+
         """
         if state and cls.supports_user_state:
             # urlsafe_b64 may include = which the browser quotes so must unquote
@@ -266,6 +273,7 @@ class OAuth2(providers.AuthorizationProvider):
 
         :returns:
             :class:`.Response`.
+
         """
 
         if not self._x_refresh_credentials_if(credentials):
@@ -555,7 +563,7 @@ class Behance(OAuth2):
 
     def _x_scope_parser(self, scope):
         """
-        Behance has pipe-separated scopes
+        Behance has pipe-separated scopes.
         """
         return '|'.join(scope)
 
@@ -660,6 +668,7 @@ class Cosm(OAuth2):
     * Dashboard: https://cosm.com/users/{your_username}/apps
     * Docs: https://cosm.com/docs/
     * API reference: https://cosm.com/docs/v2/
+
     """
 
     user_authorization_url = 'https://cosm.com/oauth/authenticate'
@@ -1208,8 +1217,8 @@ class Google(OAuth2):
                                    credentials):
         """
         Google doesn't accept client ID and secret to be at the same time in
-        request parameters and in the basic authorization header in the
-        access token request.
+        request parameters and in the basic authorization header in the access
+        token request.
         """
         if request_type is cls.ACCESS_TOKEN_REQUEST_TYPE:
             params = request_elements[2]
@@ -1240,7 +1249,7 @@ class Google(OAuth2):
 
     def _x_scope_parser(self, scope):
         """
-        Google has space-separated scopes
+        Google has space-separated scopes.
         """
         return ' '.join(scope)
 
@@ -1280,6 +1289,7 @@ class LinkedIn(OAuth2):
     * postal_code
     * timezone
     * username
+
     """
 
     user_authorization_url = 'https://www.linkedin.com/uas/oauth2/authorization'

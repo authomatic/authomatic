@@ -56,6 +56,7 @@ def _error_traceback_html(exc_info, traceback):
 
     :param traceback:
         Output of :func:`traceback.format_exc` function.
+
     """
 
     html = """
@@ -76,10 +77,12 @@ def _error_traceback_html(exc_info, traceback):
 
 def login_decorator(func):
     """
-    Decorate the :meth:`.BaseProvider.login` implementations with this decorator.
+    Decorate the :meth:`.BaseProvider.login` implementations with this
+    decorator.
 
-    Provides mechanism for error reporting and returning result
-    which makes the :meth:`.BaseProvider.login` implementation cleaner.
+    Provides mechanism for error reporting and returning result which
+    makes the :meth:`.BaseProvider.login` implementation cleaner.
+
     """
 
     def wrap(provider, *args, **kwargs):
@@ -195,11 +198,14 @@ class BaseProvider(object):
     @abc.abstractmethod
     def login(self):
         """
-        Launches the *login procedure* to get **user's credentials** from **provider**.
+        Launches the *login procedure* to get **user's credentials** from
+        **provider**.
 
-        Should be decorated with :func:`.login_decorator`.
-        The *login procedure* is considered finished when the :attr:`.user` attribute is
-        not empty when the method runs out of it's flow or when there are errors.
+        Should be decorated with :func:`.login_decorator`. The *login
+        procedure* is considered finished when the :attr:`.user`
+        attribute is not empty when the method runs out of it's flow or
+        when there are errors.
+
         """
 
     #=========================================================================
@@ -212,6 +218,7 @@ class BaseProvider(object):
 
         :returns:
             :class:`dict`
+
         """
 
         return dict(name=self.name,
@@ -228,6 +235,7 @@ class BaseProvider(object):
 
         :returns:
             :class:`str` The full dotted path to base class e.g. :literal:`"authomatic.providers.oauth2.OAuth2"`.
+
         """
 
         return cls.__module__ + '.' + cls.__bases__[0].__name__
@@ -238,6 +246,7 @@ class BaseProvider(object):
 
         :returns:
             :class:`.User`
+
         """
 
     #=========================================================================
@@ -265,6 +274,7 @@ class BaseProvider(object):
             Keyword arguments dictionary.
         :param str kwname:
             Name of the desired keyword argument.
+
         """
 
         return kwargs.get(kwname) or \
@@ -278,17 +288,22 @@ class BaseProvider(object):
 
         :param str key:
             e.g. ``"authomatic:facebook:key"``
+
         """
 
         return '{0}:{1}:{2}'.format(self.settings.prefix, self.name, key)
 
     def _session_set(self, key, value):
-        """Saves a value to session."""
+        """
+        Saves a value to session.
+        """
 
         self.session[self._session_key(key)] = value
 
     def _session_get(self, key):
-        """Retrieves a value from session."""
+        """
+        Retrieves a value from session.
+        """
 
         return self.session.get(self._session_key(key))
 
@@ -301,6 +316,7 @@ class BaseProvider(object):
 
         :returns:
             :class:`str` Random unguessable string.
+
         """
 
         # Create hash from random string plus salt.
@@ -323,6 +339,7 @@ class BaseProvider(object):
 
         :param str msg:
             The actual message.
+
         """
 
         logger = getattr(cls, '_logger', None) or authomatic.core._logger
@@ -355,6 +372,7 @@ class BaseProvider(object):
 
         :param function content_parser:
             A callable to be used to parse the :attr:`.Response.data` from :attr:`.Response.content`.
+
         """
         params = params or {}
         params.update(self.access_params)
@@ -443,6 +461,7 @@ class BaseProvider(object):
 
         :returns:
             :class:`.User`
+
         """
 
         if not self.user:
@@ -497,14 +516,17 @@ class BaseProvider(object):
             :class:`.User`
         :param dict data:
             User info data returned by provider.
+
         """
 
         return user
 
     @staticmethod
     def _http_status_in_category(status, category):
-        """Checks whether a HTTP status code is in the category denoted
-        by the hundreds digit"""
+        """
+        Checks whether a HTTP status code is in the category denoted by the
+        hundreds digit.
+        """
 
         assert category < 10, 'HTTP status category must be a one-digit int!'
         cat = category * 100
@@ -513,9 +535,13 @@ class BaseProvider(object):
 
 class AuthorizationProvider(BaseProvider):
     """
-    Base provider for *authorization protocols* i.e. protocols which allow a **provider**
-    to authorize a **consumer** to access **protected resources** of a **user**.
-    e.g. `OAuth 2.0 <http://oauth.net/2/>`_ or `OAuth 1.0a <http://oauth.net/core/1.0a/>`_.
+    Base provider for *authorization protocols* i.e. protocols which allow a
+    **provider** to authorize a **consumer** to access **protected resources**
+    of a **user**.
+
+    e.g. `OAuth 2.0 <http://oauth.net/2/>`_ or `OAuth 1.0a
+    <http://oauth.net/core/1.0a/>`_.
+
     """
 
     USER_AUTHORIZATION_REQUEST_TYPE = 2
@@ -564,6 +590,7 @@ class AuthorizationProvider(BaseProvider):
             A dictionary of default query string parameters that will be used when
             accessing **user's** protected resources.
             Applied by :meth:`.access()`, :meth:`.update_user()` and :meth:`.User.update()`
+
         """
 
         super(AuthorizationProvider, self).__init__(*args, **kwargs)
@@ -627,7 +654,8 @@ class AuthorizationProvider(BaseProvider):
     @abc.abstractmethod
     def to_tuple(self, credentials):
         """
-        Must convert :data:`credentials` to a :class:`tuple` to be used by :meth:`.Credentials.serialize`.
+        Must convert :data:`credentials` to a :class:`tuple` to be used by
+        :meth:`.Credentials.serialize`.
 
         .. warning::
 
@@ -638,12 +666,14 @@ class AuthorizationProvider(BaseProvider):
 
         :returns:
             :class:`tuple`
+
         """
 
     @abc.abstractmethod
     def reconstruct(self, deserialized_tuple, credentials, cfg):
         """
-        Must convert the :data:`deserialized_tuple` back to :class:`.Credentials`.
+        Must convert the :data:`deserialized_tuple` back to
+        :class:`.Credentials`.
 
         .. warning::
 
@@ -658,6 +688,7 @@ class AuthorizationProvider(BaseProvider):
 
         :param dict cfg:
             Provider configuration from :doc:`config`.
+
         """
 
     @abc.abstractmethod
@@ -694,6 +725,7 @@ class AuthorizationProvider(BaseProvider):
 
         :returns:
             :class:`.RequestElements`
+
         """
 
     #=========================================================================
@@ -704,9 +736,12 @@ class AuthorizationProvider(BaseProvider):
     def type_id(self):
         """
         A short string representing the provider implementation id used for
-        serialization of :class:`.Credentials` and to identify the type of provider in JavaScript.
+        serialization of :class:`.Credentials` and to identify the type of
+        provider in JavaScript.
+
         The part before hyphen denotes the type of the provider, the part after hyphen denotes the class id
         e.g. ``oauth2.Facebook.type_id = '2-5'``, ``oauth1.Twitter.type_id = '1-5'``.
+
         """
 
         cls = self.__class__
@@ -743,6 +778,7 @@ class AuthorizationProvider(BaseProvider):
 
         :returns:
             :class:`.Response`
+
         """
 
         if not self.user and not self.credentials:
@@ -782,6 +818,7 @@ class AuthorizationProvider(BaseProvider):
 
         :returns:
             :class:`.Future` instance representing the separate thread.
+
         """
 
         return authomatic.core.Future(self.access, *args, **kwargs)
@@ -795,6 +832,7 @@ class AuthorizationProvider(BaseProvider):
 
         :returns:
             :class:`.UserInfoResponse`
+
         """
         if self.user_info_url:
             response = self._access_user_info()
@@ -810,14 +848,15 @@ class AuthorizationProvider(BaseProvider):
     @classmethod
     def _authorization_header(cls, credentials):
         """
-        Creates authorization headers if the provider supports it.
-        See: http://en.wikipedia.org/wiki/Basic_access_authentication.
+        Creates authorization headers if the provider supports it. See:
+        http://en.wikipedia.org/wiki/Basic_access_authentication.
 
         :param credentials:
             :class:`.Credentials`
 
         :returns:
             Headers as :class:`dict`.
+
         """
 
         if cls._x_use_authorization_header:
@@ -846,7 +885,9 @@ class AuthorizationProvider(BaseProvider):
 
     @staticmethod
     def _split_url(url):
-        "Splits given url to url base and params converted to list of tuples"
+        """
+        Splits given url to url base and params converted to list of tuples.
+        """
 
         split = parse.urlsplit(url)
         base = parse.urlunsplit((split.scheme, split.netloc, split.path, 0, 0))
@@ -858,7 +899,8 @@ class AuthorizationProvider(BaseProvider):
     def _x_request_elements_filter(
             cls, request_type, request_elements, credentials):
         """
-        Override this to handle special request requirements of zealous providers.
+        Override this to handle special request requirements of zealous
+        providers.
 
         .. warning::
 
@@ -875,6 +917,7 @@ class AuthorizationProvider(BaseProvider):
 
         :returns:
             :class:`.RequestElements`
+
         """
 
         return request_elements
@@ -882,7 +925,8 @@ class AuthorizationProvider(BaseProvider):
     @staticmethod
     def _x_credentials_parser(credentials, data):
         """
-        Override this to handle differences in naming conventions across providers.
+        Override this to handle differences in naming conventions across
+        providers.
 
         :param credentials:
             :class:`.Credentials`
@@ -892,6 +936,7 @@ class AuthorizationProvider(BaseProvider):
 
         :returns:
             :class:`.Credentials`
+
         """
         return credentials
 
@@ -901,6 +946,7 @@ class AuthorizationProvider(BaseProvider):
 
         :returns:
             :class:`.UserInfoResponse`
+
         """
         url = self.user_info_url.format(**self.user.__dict__)
         return self.access(url)
@@ -908,8 +954,11 @@ class AuthorizationProvider(BaseProvider):
 
 class AuthenticationProvider(BaseProvider):
     """
-    Base provider for *authentication protocols* i.e. protocols which allow a **provider** to
-    authenticate a *claimed identity* of a **user**. e.g. `OpenID <http://openid.net/>`_.
+    Base provider for *authentication protocols* i.e. protocols which allow a
+    **provider** to authenticate a *claimed identity* of a **user**.
+
+    e.g. `OpenID <http://openid.net/>`_.
+
     """
 
     #: Indicates whether the **provider** supports access_with_credentials to

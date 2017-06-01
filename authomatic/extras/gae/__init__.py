@@ -27,19 +27,19 @@ class GAEError(exceptions.BaseError):
 
 class Webapp2Session(interfaces.BaseSession):
     """
-    A simple wrapper for |webapp2|_ sessions. If you provide a session
-    it wraps it and adds the :meth:`.save` method.
+    A simple wrapper for |webapp2|_ sessions. If you provide a session it wraps
+    it and adds the :meth:`.save` method.
 
     If you don't provide a session it creates a new one but you must provide the :data:`.secret`.
 
     For more about |webapp2| sessions see:
     http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html.
+
     """
 
     def __init__(self, handler, session=None, secret=None, cookie_name='webapp2authomatic',
                  backend='memcache', config=None):
         """
-
         .. warning::
 
             Do not use the ``'securecookie'`` backend with :class:`.providers.OpenID`
@@ -63,6 +63,7 @@ class Webapp2Session(interfaces.BaseSession):
 
         :param config:
             The session config.
+
         """
 
         self.handler = handler
@@ -130,6 +131,7 @@ class NDBConfig(ndb.Model):
 
         :returns:
             A configuration dictionary for specified provider.
+
         """
 
         # Query datastore.
@@ -168,8 +170,9 @@ class NDBConfig(ndb.Model):
     @classmethod
     def initialize(cls):
         """
-        Creates an **"Example"** entity of kind **"NDBConfig"** in the datastore
-        if the model is empty and raises and error to inform you that you should populate the model with data.
+        Creates an **"Example"** entity of kind **"NDBConfig"** in the
+        datastore if the model is empty and raises and error to inform you that
+        you should populate the model with data.
 
         .. note::
 
@@ -177,6 +180,7 @@ class NDBConfig(ndb.Model):
             if there is not an entity with that property already.
             Therefore it is a good idea to keep the **"Example"** entity (which has all
             possible properties set) in the datastore.
+
         """
 
         if not len(cls.query().fetch()):
@@ -207,7 +211,8 @@ class NDBConfig(ndb.Model):
 
 def ndb_config():
     """
-    Allows you to have a **datastore** :doc:`config` instead of a hardcoded one.
+    Allows you to have a **datastore** :doc:`config` instead of a hardcoded
+    one.
 
     This function creates an **"Example"** entity of kind **"NDBConfig"** in the datastore
     if the model is empty and raises and error to inform you that you should populate the model with data.
@@ -224,6 +229,7 @@ def ndb_config():
 
     :returns:
         :class:`.NDBConfig`
+
     """
 
     NDBConfig.initialize()

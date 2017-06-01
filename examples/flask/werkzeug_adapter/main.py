@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-This is a simple Flask app that uses Authomatic to log users in with Facebook Twitter and OpenID.
+This is a simple Flask app that uses Authomatic to log users in with Facebook
+Twitter and OpenID.
 """
 
 from flask import Flask, render_template, request, make_response
@@ -18,7 +19,7 @@ authomatic = Authomatic(CONFIG, 'your secret string', report_errors=False)
 @app.route('/')
 def index():
     """
-    Home handler
+    Home handler.
     """
 
     return render_template('index.html')

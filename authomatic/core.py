@@ -40,13 +40,15 @@ _counter = None
 
 def normalize_dict(dict_):
     """
-    Replaces all values that are single-item iterables with the value of its index 0.
+    Replaces all values that are single-item iterables with the value of its
+    index 0.
 
     :param dict dict_:
         Dictionary to normalize.
 
     :returns:
         Normalized dictionary.
+
     """
 
     return dict([(k, v[0] if not isinstance(v, str) and len(v) == 1 else v)
@@ -55,13 +57,15 @@ def normalize_dict(dict_):
 
 def items_to_dict(items):
     """
-    Converts list of tuples to dictionary with duplicate keys converted to lists.
+    Converts list of tuples to dictionary with duplicate keys converted to
+    lists.
 
     :param list items:
         List of tuples.
 
     :returns:
         :class:`dict`
+
     """
 
     res = collections.defaultdict(list)
@@ -124,13 +128,16 @@ def provider_id():
                  'scope': ['wl.basic', 'wl.emails', 'wl.photos']
             },
         }
+
     """
 
     return _counter.count()
 
 
 def escape(s):
-    """Escape a URL including any /."""
+    """
+    Escape a URL including any /.
+    """
     return parse.quote(s.encode('utf-8'), safe='~')
 
 
@@ -144,6 +151,7 @@ def json_qs_parser(body):
     :returns:
         :class:`dict`, :class:`list` if input is JSON or query string,
         :class:`xml.etree.ElementTree.Element` if XML.
+
     """
     try:
         # Try JSON first.
@@ -165,7 +173,9 @@ def import_string(import_name, silent=False):
     """
     Imports an object by string in dotted notation.
 
-    taken `from webapp2.import_string() <http://webapp-improved.appspot.com/api/webapp2.html#webapp2.import_string>`_
+    taken `from webapp2.import_string() <http://webapp-
+    improved.appspot.com/api/webapp2.html#webapp2.import_string>`_
+
     """
 
     try:
@@ -185,6 +195,7 @@ def resolve_provider_class(class_):
     Returns a provider class.
 
     :param class_name: :class:`string` or :class:`authomatic.providers.BaseProvider` subclass.
+
     """
 
     if isinstance(class_, str):
@@ -200,13 +211,13 @@ def resolve_provider_class(class_):
 
 def id_to_name(config, short_name):
     """
-    Returns the provider :doc:`config` key based on it's
-    ``id`` value.
+    Returns the provider :doc:`config` key based on it's ``id`` value.
 
     :param dict config:
         :doc:`config`.
     :param id:
         Value of the id parameter in the :ref:`config` to search for.
+
     """
 
     for k, v in list(config.items()):
@@ -230,6 +241,7 @@ class ReprMixin(object):
 
     Values of attributes listed in _repr_sensitive will be replaced by *###*.
     Values which repr() string is longer than _repr_length_limit will be represented as *ClassName(...)*
+
     """
 
     #: Iterable of attributes to be ignored.
@@ -273,8 +285,8 @@ class ReprMixin(object):
 
 class Future(threading.Thread):
     """
-    Represents an activity run in a separate thread.
-    Subclasses the standard library :class:`threading.Thread` and adds :attr:`.get_result` method.
+    Represents an activity run in a separate thread. Subclasses the standard
+    library :class:`threading.Thread` and adds :attr:`.get_result` method.
 
     .. warning::
 
@@ -315,6 +327,7 @@ class Future(threading.Thread):
 
         :returns:
             The result of the wrapped :data:`func`.
+
         """
 
         self.join(timeout)
@@ -322,7 +335,9 @@ class Future(threading.Thread):
 
 
 class Session(object):
-    """A dictionary-like secure cookie session implementation."""
+    """
+    A dictionary-like secure cookie session implementation.
+    """
 
     def __init__(self, adapter, secret, name='authomatic', max_age=600,
                  secure=False):
@@ -352,6 +367,7 @@ class Session(object):
         :param bool delete:
             If ``True`` the cookie value will be ``deleted`` and the
             Expires value will be ``Thu, 01-Jan-1970 00:00:01 GMT``.
+
         """
         value = 'deleted' if delete else self._serialize(self.data)
         split_url = parse.urlsplit(self.adapter.url)
@@ -375,7 +391,9 @@ class Session(object):
         )
 
     def save(self):
-        """Adds the session cookie to headers."""
+        """
+        Adds the session cookie to headers.
+        """
         if self.data:
             cookie = self.create_cookie()
             cookie_len = len(cookie)
@@ -394,13 +412,17 @@ class Session(object):
         self.adapter.set_header('Set-Cookie', self.create_cookie(delete=True))
 
     def _get_data(self):
-        """Extracts the session data from cookie."""
+        """
+        Extracts the session data from cookie.
+        """
         cookie = self.adapter.cookies.get(self.name)
         return self._deserialize(cookie) if cookie else {}
 
     @property
     def data(self):
-        """Gets session data lazily."""
+        """
+        Gets session data lazily.
+        """
         if not self._data:
             self._data = self._get_data()
         # Always return a dict, even if deserialization returned nothing
@@ -409,7 +431,9 @@ class Session(object):
         return self._data
 
     def _signature(self, *parts):
-        """Creates signature for the session."""
+        """
+        Creates signature for the session.
+        """
         signature = hmac.new(six.b(self.secret), digestmod=hashlib.sha1)
         signature.update(six.b('|'.join(parts)))
         return signature.hexdigest()
@@ -423,6 +447,7 @@ class Session(object):
 
         :returns:
             Serialized value.
+
         """
 
         # data = copy.deepcopy(value)
@@ -451,6 +476,7 @@ class Session(object):
 
         :returns:
             Deserialized object.
+
         """
 
         # 3. Split
@@ -487,9 +513,11 @@ class Session(object):
 
 class User(ReprMixin):
     """
-    Provides unified interface to selected **user** info returned by different **providers**.
+    Provides unified interface to selected **user** info returned by different
+    **providers**.
 
     .. note:: The value format may vary across providers.
+
     """
 
     def __init__(self, provider, **kwargs):
@@ -553,6 +581,7 @@ class User(ReprMixin):
 
         :returns:
             Updated instance of this class.
+
         """
 
         return self.provider.update_user()
@@ -567,6 +596,7 @@ class User(ReprMixin):
 
         :returns:
             :class:`.Future` instance representing the separate thread.
+
         """
 
         return Future(self.update)
@@ -577,6 +607,7 @@ class User(ReprMixin):
 
         :returns:
             :class:`dict`
+
         """
 
         # copy the dictionary
@@ -614,7 +645,9 @@ class SupportedUserAttributes(SupportedUserAttributesNT):
 
 
 class Credentials(ReprMixin):
-    """Contains all necessary information to fetch **user's protected resources**."""
+    """
+    Contains all necessary information to fetch **user's protected resources**.
+    """
 
     _repr_sensitive = ('token', 'refresh_token', 'token_secret',
                        'consumer_key', 'consumer_secret')
@@ -679,7 +712,7 @@ class Credentials(ReprMixin):
     @property
     def expire_in(self):
         """
-
+        
         """
 
         return self._expire_in
@@ -706,7 +739,8 @@ class Credentials(ReprMixin):
     @property
     def expiration_date(self):
         """
-        Expiration date as :class:`datetime.datetime` or ``None`` if credentials never expire.
+        Expiration date as :class:`datetime.datetime` or ``None`` if
+        credentials never expire.
         """
 
         if self.expire_in < 0:
@@ -734,6 +768,7 @@ class Credentials(ReprMixin):
 
         :returns:
             ``True`` if credentials expire sooner than specified, else ``False``.
+
         """
 
         if self.expiration_time:
@@ -743,9 +778,8 @@ class Credentials(ReprMixin):
 
     def refresh(self, force=False, soon=86400):
         """
-        Refreshes the credentials only if the **provider** supports it and
-        if it will expire in less than one day.
-        It does nothing in other cases.
+        Refreshes the credentials only if the **provider** supports it and if
+        it will expire in less than one day. It does nothing in other cases.
 
         .. note::
 
@@ -761,6 +795,7 @@ class Credentials(ReprMixin):
 
         :param int soon:
             Number of seconds specifying what means *soon*.
+
         """
 
         if hasattr(self.provider_class, 'refresh_credentials'):
@@ -779,26 +814,31 @@ class Credentials(ReprMixin):
 
         :returns:
             :class:`.Future` instance representing the separate thread.
+
         """
 
         return Future(self.refresh, *args, **kwargs)
 
     def provider_type_class(self):
         """
-        Returns the :doc:`provider <providers>` class specified in the :doc:`config`.
+        Returns the :doc:`provider <providers>` class specified in the
+        :doc:`config`.
 
         :returns:
             :class:`authomatic.providers.BaseProvider` subclass.
+
         """
 
         return resolve_provider_class(self.provider_type)
 
     def serialize(self):
         """
-        Converts the credentials to a percent encoded string to be stored for later use.
+        Converts the credentials to a percent encoded string to be stored for
+        later use.
 
         :returns:
             :class:`string`
+
         """
 
         if self.provider_id is None:
@@ -824,8 +864,9 @@ class Credentials(ReprMixin):
     @classmethod
     def deserialize(cls, config, credentials):
         """
-        A *class method* which reconstructs credentials created by :meth:`serialize`.
-        You can also pass it a :class:`.Credentials` instance.
+        A *class method* which reconstructs credentials created by
+        :meth:`serialize`. You can also pass it a :class:`.Credentials`
+        instance.
 
         :param dict config:
             The same :doc:`config` used in the :func:`.login` to get the credentials.
@@ -834,6 +875,7 @@ class Credentials(ReprMixin):
 
         :returns:
             :class:`.Credentials`
+
         """
 
         # Accept both serialized and normal.
@@ -912,6 +954,7 @@ class LoginResult(ReprMixin):
 
         :returns:
             :class:`str` with JavaScript.
+
         """
 
         custom_callback = """
@@ -973,6 +1016,7 @@ class LoginResult(ReprMixin):
 
         :returns:
             :class:`str` with HTML.
+
         """
 
         return """
@@ -1006,8 +1050,10 @@ class LoginResult(ReprMixin):
 
 class Response(ReprMixin):
     """
-    Wraps :class:`httplib.HTTPResponse` and adds
+    Wraps :class:`httplib.HTTPResponse` and adds.
+
     :attr:`.content` and :attr:`.data` attributes.
+
     """
 
     def __init__(self, httplib_response, content_parser=None):
@@ -1039,6 +1085,7 @@ class Response(ReprMixin):
         Same as :meth:`httplib.HTTPResponse.read`.
 
         :param amt:
+
         """
 
         return self.httplib_response.read(amt)
@@ -1049,6 +1096,7 @@ class Response(ReprMixin):
 
         :param name:
         :param default:
+
         """
 
         return self.httplib_response.getheader(name, default)
@@ -1067,7 +1115,7 @@ class Response(ReprMixin):
 
     def is_binary_string(self, content):
         """
-        Return true if string is binary data
+        Return true if string is binary data.
         """
 
         textchars = (bytearray([7, 8, 9, 10, 12, 13, 27]) +
@@ -1101,7 +1149,8 @@ class Response(ReprMixin):
 
 class UserInfoResponse(Response):
     """
-    Inherits from :class:`.Response`, adds  :attr:`~UserInfoResponse.user` attribute.
+    Inherits from :class:`.Response`, adds  :attr:`~UserInfoResponse.user`
+    attribute.
     """
 
     def __init__(self, user, *args, **kwargs):
@@ -1114,7 +1163,9 @@ class UserInfoResponse(Response):
 class RequestElements(tuple):
     """
     A tuple of ``(url, method, params, headers, body)`` request elements.
+
     With some additional properties.
+
     """
 
     def __new__(cls, url, method, params, headers, body):
@@ -1232,6 +1283,7 @@ class Authomatic(object):
 
         :param logger:
             A :class:`logging.logger` instance.
+
         """
 
         self.config = config
@@ -1253,9 +1305,9 @@ class Authomatic(object):
     def login(self, adapter, provider_name, callback=None,
               session=None, session_saver=None, **kwargs):
         """
-        If :data:`provider_name` specified, launches the login procedure
-        for corresponding :doc:`provider </reference/providers>` and
-        returns :class:`.LoginResult`.
+        If :data:`provider_name` specified, launches the login procedure for
+        corresponding :doc:`provider </reference/providers>` and returns
+        :class:`.LoginResult`.
 
         If :data:`provider_name` is empty, acts like :meth:`.Authomatic.backend`.
 
@@ -1279,6 +1331,7 @@ class Authomatic(object):
 
         :returns:
             :class:`.LoginResult`
+
         """
 
         if provider_name:
@@ -1336,6 +1389,7 @@ class Authomatic(object):
 
         :returns:
             :class:`.Credentials`
+
         """
 
         return Credentials.deserialize(self.config, credentials)
@@ -1368,6 +1422,7 @@ class Authomatic(object):
 
         :returns:
             :class:`.Response`
+
         """
 
         # Deserialize credentials.
@@ -1392,7 +1447,8 @@ class Authomatic(object):
 
     def async_access(self, *args, **kwargs):
         """
-        Same as :meth:`.Authomatic.access` but runs asynchronously in a separate thread.
+        Same as :meth:`.Authomatic.access` but runs asynchronously in a
+        separate thread.
 
         .. warning::
 
@@ -1400,6 +1456,7 @@ class Authomatic(object):
 
         :returns:
             :class:`.Future` instance representing the separate thread.
+
         """
 
         return Future(self.access, *args, **kwargs)
@@ -1407,10 +1464,10 @@ class Authomatic(object):
     def request_elements(self, credentials=None, url=None, method='GET', params=None,
                          headers=None, body='', json_input=None, return_json=False):
         """
-        Creates request elements for accessing **protected resource of a user**.
-        Required arguments are :data:`credentials` and :data:`url`.
-        You can pass :data:`credentials`, :data:`url`, :data:`method`, and :data:`params`
-        as a JSON object.
+        Creates request elements for accessing **protected resource of a
+        user**. Required arguments are :data:`credentials` and :data:`url`. You
+        can pass :data:`credentials`, :data:`url`, :data:`method`, and
+        :data:`params` as a JSON object.
 
         :param credentials:
             The **user's** credentials (can be serialized).
@@ -1471,6 +1528,7 @@ class Authomatic(object):
 
         :returns:
             :class:`.RequestElements` or JSON string.
+
         """
 
         # Parse values from JSON
@@ -1509,7 +1567,8 @@ class Authomatic(object):
 
     def backend(self, adapter):
         """
-        Converts a *request handler* to a JSON backend which you can use with :ref:`authomatic.js <js>`.
+        Converts a *request handler* to a JSON backend which you can use with
+        :ref:`authomatic.js <js>`.
 
         Just call it inside a *request handler* like this:
 

@@ -40,12 +40,16 @@ class GAEOpenID(providers.AuthenticationProvider):
     """
     |openid|_ provider based on the |gae_users_api|_.
 
-    Accepts additional keyword arguments inherited from :class:`.AuthenticationProvider`.
+    Accepts additional keyword arguments inherited from
+    :class:`.AuthenticationProvider`.
+
     """
 
     @providers.login_decorator
     def login(self):
-        """Launches the OpenID authentication procedure."""
+        """
+        Launches the OpenID authentication procedure.
+        """
 
         if self.params.get(self.identifier_param):
             #==================================================================

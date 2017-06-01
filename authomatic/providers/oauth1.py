@@ -49,11 +49,12 @@ __all__ = ['OAuth1', 'Bitbucket', 'Flickr', 'Meetup', 'Plurk', 'Twitter', 'Tumbl
 def _normalize_params(params):
     """
     Returns a normalized query string sorted first by key, then by value
-    excluding the ``realm`` and ``oauth_signature`` parameters
-    as specified here: http://oauth.net/core/1.0a/#rfc.section.9.1.1
+    excluding the ``realm`` and ``oauth_signature`` parameters as specified
+    here: http://oauth.net/core/1.0a/#rfc.section.9.1.1.
 
     :param params:
         :class:`dict` or :class:`list` of tuples.
+
     """
 
     if isinstance(params, dict):
@@ -79,8 +80,8 @@ def _join_by_ampersand(*args):
 
 def _create_base_string(method, base, params):
     """
-    Returns base string for HMAC-SHA1 signature
-    as specified in: http://oauth.net/core/1.0a/#rfc.section.9.1.3
+    Returns base string for HMAC-SHA1 signature as specified in:
+    http://oauth.net/core/1.0a/#rfc.section.9.1.3.
     """
 
     normalized_qs = _normalize_params(params)
@@ -125,13 +126,16 @@ class BaseSignatureGenerator(object):
 
         :returns:
             The signature string.
+
         """
 
 
 class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
     """
     HMAC-SHA1 signature generator.
+
     See: http://oauth.net/core/1.0a/#anchor15
+
     """
 
     method = 'HMAC-SHA1'
@@ -139,8 +143,8 @@ class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
     @classmethod
     def _create_key(cls, consumer_secret, token_secret=''):
         """
-        Returns a key for HMAC-SHA1 signature
-        as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2
+        Returns a key for HMAC-SHA1 signature as specified at:
+        http://oauth.net/core/1.0a/#rfc.section.9.2.
 
         :param str consumer_secret:
             :attr:`.core.Consumer.secret`
@@ -150,6 +154,7 @@ class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
 
         :returns:
             Key to sign the request with.
+
         """
 
         return _join_by_ampersand(consumer_secret, token_secret or '')
@@ -158,8 +163,8 @@ class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
     def create_signature(cls, method, base, params,
                          consumer_secret, token_secret=''):
         """
-        Returns HMAC-SHA1 signature
-        as specified at: http://oauth.net/core/1.0a/#rfc.section.9.2
+        Returns HMAC-SHA1 signature as specified at:
+        http://oauth.net/core/1.0a/#rfc.section.9.2.
 
         :param str method:
             HTTP method of the request to be signed.
@@ -178,6 +183,7 @@ class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
 
         :returns:
             The signature string.
+
         """
 
         base_string = _create_base_string(method, base, params)
@@ -196,7 +202,9 @@ class HMACSHA1SignatureGenerator(BaseSignatureGenerator):
 class PLAINTEXTSignatureGenerator(BaseSignatureGenerator):
     """
     PLAINTEXT signature generator.
+
     See: http://oauth.net/core/1.0a/#anchor21
+
     """
 
     method = 'PLAINTEXT'
@@ -242,6 +250,7 @@ class OAuth1(providers.AuthorizationProvider):
 
         :param dict request_token_params:
             A dictionary of additional request parameters for **request token request**.
+
         """
 
         super(OAuth1, self).__init__(*args, **kwargs)
@@ -960,6 +969,7 @@ class UbuntuOne(OAuth1):
     * Dashboard: https://one.ubuntu.com/developer/account_admin/auth/web
     * Docs: https://one.ubuntu.com/developer/account_admin/auth/web
     * API reference: https://one.ubuntu.com/developer/contents
+
     """
 
     _signature_generator = PLAINTEXTSignatureGenerator
@@ -1024,9 +1034,8 @@ class Vimeo(OAuth1):
 
     def _access_user_info(self):
         """
-        Vimeo requires the user ID to access the user info endpoint,
-        so we need to make two requests: one to get user ID and
-        second to get user info.
+        Vimeo requires the user ID to access the user info endpoint, so we need
+        to make two requests: one to get user ID and second to get user info.
         """
         response = super(Vimeo, self)._access_user_info()
         uid = response.data.get('oauth', {}).get('user', {}).get('id')

@@ -96,7 +96,9 @@ def log(indent, provider_name, message):
 
 @pytest.fixture('module')
 def browser(request):
-    """Starts and stops the server for each app in APPS"""
+    """
+    Starts and stops the server for each app in APPS.
+    """
     _browser = config.get_browser()
     _browser.set_window_size(800, 600)
     _browser.set_window_position(1024 - 800 - 10, 40)
@@ -107,7 +109,9 @@ def browser(request):
 
 @pytest.fixture('module', APPS)
 def app(request):
-    """Starts and stops the server for each app in APPS"""
+    """
+    Starts and stops the server for each app in APPS.
+    """
 
     _app = APPS[request.param]
     _app.name = request.param
@@ -124,7 +128,9 @@ def app(request):
 
 
 def login(request, browser, app, attempt=1):
-    """Runs for each provider."""
+    """
+    Runs for each provider.
+    """
     success = False
     provider_name, provider = request.param
     log(1, provider_name, 'Attempt {0}'.format(attempt))
