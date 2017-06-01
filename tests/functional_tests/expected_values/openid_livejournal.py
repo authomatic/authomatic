@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 from authomatic.providers import openid
 

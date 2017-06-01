@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # example/simple/views.py
 
 from django.http import HttpResponse
