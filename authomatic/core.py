@@ -3,7 +3,6 @@
 import collections
 import copy
 import datetime
-from . import exceptions
 import hashlib
 import hmac
 import json

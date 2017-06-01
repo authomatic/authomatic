@@ -368,7 +368,7 @@ class OAuth2(providers.AuthorizationProvider):
                     state_csrf = self.decode_state(state, 'csrf')
                     if not stored_csrf:
                         raise FailureError(u'Unable to retrieve stored state!')
-                    elif not stored_csrf == state_csrf:
+                    elif stored_csrf != state_csrf:
                         raise FailureError(
                             u'The returned state csrf cookie "{0}" doesn\'t '
                             u'match with the stored state!'.format(

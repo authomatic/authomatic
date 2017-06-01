@@ -83,6 +83,7 @@ class SessionOpenIDStore(object):
 
     """
 
+    @staticmethod
     def _log(level, message):
         return None
 
@@ -126,7 +127,7 @@ class SessionOpenIDStore(object):
 
     def removeAssociation(self, server_url, handle):
         # Just inform the caller that it's gone.
-        True
+        return True
 
     def useNonce(self, server_url, timestamp, salt):
         # Evaluate expired nonces as false.
@@ -379,7 +380,7 @@ class OpenID(providers.AuthenticationProvider):
                     ax_data = {}
                     # convert iterable values to their first item
                     for k, v in ax_response.data.items():
-                        if v and type(v) in (list, tuple):
+                        if v and isinstance(v, (list, tuple)):
                             ax_data[k] = v[0]
                     data['ax'] = ax_data
 
