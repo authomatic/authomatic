@@ -705,8 +705,8 @@ if print_ is None:
                 data = str(data)
             # If the file has an encoding, encode unicode with it.
             if (isinstance(fp, file) and
-                isinstance(data, unicode) and
-                fp.encoding is not None):
+                    isinstance(data, unicode) and
+                    fp.encoding is not None):
                 errors = getattr(fp, "errors", None)
                 if errors is None:
                     errors = "strict"
@@ -831,7 +831,7 @@ if sys.meta_path:
         # the six meta path importer, since the other six instance will have
         # inserted an importer with different class.
         if (type(importer).__name__ == "_SixMetaPathImporter" and
-            importer.name == __name__):
+                importer.name == __name__):
             del sys.meta_path[i]
             break
     del i, importer

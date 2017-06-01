@@ -1265,10 +1265,10 @@ class RequestElements(tuple):
 
 class Authomatic(object):
     def __init__(
-        self, config, secret, session_max_age=600, secure_cookie=False,
-        session=None, session_save_method=None, report_errors=True,
-        debug=False, logging_level=logging.INFO, prefix='authomatic',
-        logger=None
+            self, config, secret, session_max_age=600, secure_cookie=False,
+            session=None, session_save_method=None, report_errors=True,
+            debug=False, logging_level=logging.INFO, prefix='authomatic',
+            logger=None
     ):
         """
         Encapsulates all the functionality of this package.
@@ -1501,8 +1501,8 @@ class Authomatic(object):
         return Future(self.access, *args, **kwargs)
 
     def request_elements(
-        self, credentials=None, url=None, method='GET', params=None,
-        headers=None, body='', json_input=None, return_json=False
+            self, credentials=None, url=None, method='GET', params=None,
+            headers=None, body='', json_input=None, return_json=False
     ):
         """
         Creates request elements for accessing **protected resource of a

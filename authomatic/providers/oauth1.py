@@ -297,8 +297,8 @@ class OAuth1(providers.AuthorizationProvider):
 
     @classmethod
     def create_request_elements(
-        cls, request_type, credentials, url, params=None, headers=None,
-        body='', method='GET', verifier='', callback=''
+            cls, request_type, credentials, url, params=None, headers=None,
+            body='', method='GET', verifier='', callback=''
     ):
         """
         Creates |oauth1| request elements.

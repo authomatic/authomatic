@@ -111,9 +111,9 @@ class OAuth2(providers.AuthorizationProvider):
 
     @classmethod
     def create_request_elements(
-        cls, request_type, credentials, url, method='GET', params=None,
-        headers=None, body='', secret=None, redirect_uri='', scope='',
-        csrf='', user_state=''
+            cls, request_type, credentials, url, method='GET', params=None,
+            headers=None, body='', secret=None, redirect_uri='', scope='',
+            csrf='', user_state=''
     ):
         """
         Creates |oauth2| request elements.
@@ -469,9 +469,9 @@ class OAuth2(providers.AuthorizationProvider):
                     url=self.user_authorization_url)
 
         elif (
-            not self.params or
-            len(self.params) == 1 and
-            'user_state' in self.params
+                not self.params or
+                len(self.params) == 1 and
+                'user_state' in self.params
         ):
             # =================================================================
             # Phase 1 before redirect
