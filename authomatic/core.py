@@ -155,13 +155,13 @@ def json_qs_parser(body):
     try:
         # Try JSON first.
         return json.loads(body)
-    except Exception:
+    except OverflowError, TypeError, ValueError:
         pass
 
     try:
         # Then XML.
         return ElementTree.fromstring(body)
-    except Exception:
+    except ElementTree.ParseError, TypeError, ValueError:
         pass
 
     # Finally query string.

@@ -1865,7 +1865,7 @@ class Yammer(OAuth2):
         try:
             user.birth_date = datetime.datetime.strptime(
                 _user.get('birth_date'), "%B %d")
-        except Exception:
+        except ValueError:
             user.birth_date = _user.get('birth_date')
 
         return user
@@ -1935,7 +1935,7 @@ class Yandex(OAuth2):
         try:
             user.birth_date = datetime.datetime.strptime(
                 data.get('birthday'), "%Y-%m-%d")
-        except Exception:
+        except ValueError:
             user.birth_date = data.get('birthday')
 
         return user
