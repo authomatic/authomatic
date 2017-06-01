@@ -809,6 +809,8 @@ class Twitter(OAuth1):
 
     Supported :class:`.User` properties:
 
+    * city
+    * country
     * id
     * link
     * locale
@@ -820,8 +822,6 @@ class Twitter(OAuth1):
     Unsupported :class:`.User` properties:
 
     * birth_date
-    * city
-    * country
     * email
     * gender
     * first_name
@@ -834,6 +834,8 @@ class Twitter(OAuth1):
     """
 
     supported_user_attributes = core.SupportedUserAttributes(
+        city=True,
+        country=True,
         id=True,
         link=True,
         locale=True,
