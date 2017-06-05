@@ -278,9 +278,7 @@ class ReprMixin(object):
 
                 args.append('{0}={1}'.format(k, v))
 
-        args = ', '.join(args)
-
-        return '{0}({1})'.format(name, args)
+        return '{0}({1})'.format(name, ', '.join(args))
 
 
 class Future(threading.Thread):
