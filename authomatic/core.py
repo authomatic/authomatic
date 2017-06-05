@@ -223,10 +223,9 @@ def id_to_name(config, short_name):
     for k, v in list(config.items()):
         if v.get('id') == short_name:
             return k
-            break
-    else:
-        raise Exception(
-            'No provider with id={0} found in the config!'.format(short_name))
+
+    raise Exception(
+        'No provider with id={0} found in the config!'.format(short_name))
 
 
 class ReprMixin(object):
