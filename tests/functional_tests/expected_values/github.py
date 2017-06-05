@@ -8,7 +8,7 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('github')
 
 LINK = 'https://github.com/{0}'.format(conf.user_username)
-PICTURE = re.compile(r'https://avatars\.githubusercontent.com/u/{0}\?v=\d'
+PICTURE = re.compile(r'https://avatars\d*\.githubusercontent.com/u/{0}\?v=\d+'
                      .format(conf.user_id))
 
 CONFIG = {
@@ -45,7 +45,8 @@ CONFIG = {
     'content_should_contain': [
         conf.user_id,
         conf.user_name, conf.user_first_name, conf.user_last_name,
-        conf.user_city, conf.user_country,
+        conf.user_city,
+        conf.user_location,
 
         # User info JSON keys
         'login', 'id', 'avatar_url', 'gravatar_id', 'url', 'html_url',
