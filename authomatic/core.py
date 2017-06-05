@@ -1138,7 +1138,8 @@ class Response(ReprMixin):
         """
         return self.httplib_response.getheaders()
 
-    def is_binary_string(self, content):
+    @staticmethod
+    def is_binary_string(content):
         """
         Return true if string is binary data.
         """
