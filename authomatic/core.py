@@ -729,6 +729,7 @@ class Credentials(ReprMixin):
         Computes :attr:`.expiration_time` when the value is set.
         """
 
+        # pylint:disable=attribute-defined-outside-init
         if value:
             self._expiration_time = int(time.time()) + int(value)
             self._expire_in = value
@@ -739,6 +740,8 @@ class Credentials(ReprMixin):
 
     @expiration_time.setter
     def expiration_time(self, value):
+
+        # pylint:disable=attribute-defined-outside-init
         self._expiration_time = int(value)
         self._expire_in = self._expiration_time - int(time.time())
 
