@@ -29,12 +29,12 @@ Providers which implement the |oauth2|_ protocol.
 
 """
 
-from authomatic.six.moves.urllib.parse import unquote
 import base64
 import datetime
 import json
 import logging
 
+from authomatic.six.moves.urllib.parse import unquote
 from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 import authomatic.core as core

@@ -20,7 +20,6 @@ Abstract base classes for implementation of protocol specific providers.
 """
 
 import abc
-import authomatic.core
 import base64
 import hashlib
 import logging
@@ -29,7 +28,7 @@ import sys
 import traceback
 import uuid
 
-from authomatic.core import Session
+import authomatic.core
 from authomatic.exceptions import (
     ConfigError,
     FetchError,

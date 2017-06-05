@@ -23,7 +23,6 @@ Providers which implement the |oauth1|_ protocol.
 """
 
 import abc
-import authomatic.core as core
 import binascii
 import datetime
 import hashlib
@@ -32,6 +31,7 @@ import logging
 import time
 import uuid
 
+import authomatic.core as core
 from authomatic import providers
 from authomatic.exceptions import (
     CancellationError,
