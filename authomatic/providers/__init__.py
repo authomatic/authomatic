@@ -478,7 +478,7 @@ class BaseProvider(object):
         self.user.data = data
 
         # Update.
-        for key in list(self.user.__dict__.keys()):
+        for key in self.user.__dict__:
             # Exclude data.
             if key not in ('data', 'content'):
                 # Extract every data item whose key matches the user
