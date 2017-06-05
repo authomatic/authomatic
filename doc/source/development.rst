@@ -115,8 +115,7 @@ Testing
 
 Tests are written in `pytest <http://pytest.org/>`__
 and `Tox <https://testrun.org/tox>`__ is used to run them against
-**Python 2.6**, **Python 2.7** and **Python 3.4**.
-
+**Python 2.7** and **Python 3.6**.
 
 There are currently only *functional* (*end-to-end*)
 `Selenium <http://seleniumhq.org>`__ tests.
