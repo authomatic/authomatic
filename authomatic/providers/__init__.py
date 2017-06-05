@@ -91,7 +91,7 @@ def login_decorator(func):
 
         try:
             func(provider, *args, **kwargs)
-        except Exception as e:
+        except Exception as e:  # pylint:disable=broad-except
             if provider.settings.report_errors:
                 error = e
                 if not isinstance(error, CancellationError):
