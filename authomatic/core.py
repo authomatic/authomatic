@@ -905,10 +905,8 @@ class Credentials(ReprMixin):
                 'To deserialize credentials you need to specify a unique '
                 'integer under the "id" key in the config for each provider!')
 
-        provider_id = int(split[0])
-
         # Get provider config by short name.
-        provider_name = id_to_name(config, provider_id)
+        provider_name = id_to_name(config, int(split[0]))
         cfg = config.get(provider_name)
 
         # Get the provider class.
