@@ -19,7 +19,7 @@ CONFIG = {
         'birth_date': None,
         'city': None,
         'country': None,
-        'email': None,
+        'email': conf.user_email,
         'first_name': conf.user_first_name,
         'gender': None,
         'id': conf.user_id,
