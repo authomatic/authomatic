@@ -46,7 +46,7 @@ __all__ = [
     'login_decorator']
 
 
-def _error_traceback_html(exc_info, traceback):
+def _error_traceback_html(exc_info, traceback_):
     """
     Generates error traceback HTML.
 
@@ -71,7 +71,7 @@ def _error_traceback_html(exc_info, traceback):
     </html>
     """
 
-    return html.format(error=exc_info[1], traceback=traceback)
+    return html.format(error=exc_info[1], traceback=traceback_)
 
 
 def login_decorator(func):
