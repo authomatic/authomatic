@@ -11,8 +11,8 @@
    development
    changelog
 
-.. image:: https://travis-ci.org/peterhudec/authomatic.svg?branch=master
-   :target: https://travis-ci.org/peterhudec/authomatic
+.. image:: https://travis-ci.org/authomatic/authomatic.svg?branch=master
+   :target: https://travis-ci.org/authomatic/authomatic
 
 .. include:: ../../README.rst
    :start-line: 35
@@ -31,11 +31,11 @@ First install **Authomatic** through `PyPi <https://pypi.python.org/pypi/Authoma
    
    $ pip install authomatic
 
-or clone it from `GitHub <http://github.com/peterhudec/authomatic>`_.
+or clone it from `GitHub <http://github.com/authomatic/authomatic>`_.
 
 .. code-block:: bash
    
-   $ git clone git://github.com/peterhudec/authomatic.git
+   $ git clone git://github.com/authomatic/authomatic.git
 
 .. note::
    
@@ -98,7 +98,7 @@ Twitter under ``"tw"``, |openid| under ``"oi"`` and |gae| |openid| under ``"gae_
 Log the User In
 ---------------
 
-Now you can log the **user** in by calling the :func:`authomatic.login` function inside a *request handler*.
+Now you can log the **user** in by calling the :class:`.Authomatic.login` function inside a *request handler*.
 The *request handler* MUST be able to recieve both ``GET`` and ``POST`` HTTP methods.
 You need to pass it an :doc:`adapter <reference/adapters>` for your framework
 and one of the provider names which you specified in the keys of your :doc:`reference/config`.
@@ -108,12 +108,12 @@ We will get the provider name from the URL slug.
    :lines: 13, 17, 20
    :emphasize-lines: 3
 
-The :func:`authomatic.login` function will redirect the **user** to the **provider**,
+The :class:`.Authomatic.login` function will redirect the **user** to the **provider**,
 which will prompt **him/her** to authorize your app (**the consumer**) to access **his/her**
 protected resources (|oauth1|_ and |oauth2|_), or to verify **his/her** claimed ID (|openid|_).
 The **provider** then redirects the **user** back to *this request handler*.
 
-If the *login procedure* is over, :func:`authomatic.login` returns a :class:`.LoginResult`.
+If the *login procedure* is over, :class:`.Authomatic.login` returns a :class:`.LoginResult`.
 You can check for errors in :attr:`.LoginResult.error`
 or in better case for a :class:`.User` in :attr:`.LoginResult.user`.
 The :class:`.User` object has plenty of useful properties.
@@ -121,7 +121,7 @@ The :class:`.User` object has plenty of useful properties.
 .. warning::
    
    Do not write anything to the response unless the *login procedure* is over!
-   The :func:`authomatic.login` either returns ``None``,
+   The :class:`.Authomatic.login` either returns ``None``,
    which means that the *login procedure* si still pending,
    or a :class:`.LoginResult` which means that the *login procedure* is over.
 
@@ -205,7 +205,7 @@ and find out whether they expire soon.
    should_refresh = credentials.expire_soon(60 * 60 * 24) # True if expire in less than one day
 
 You can refresh the credentials while they are still valid.
-Otherwise you must repeat the :func:`authomatic.login` procedure to get new credentials.
+Otherwise you must repeat the :class:`.Authomatic.login` procedure to get new credentials.
 
 ::
    
@@ -215,7 +215,7 @@ Otherwise you must repeat the :func:`authomatic.login` procedure to get new cred
          print 'Credentials have been refreshed successfully.'
 
 Finally use the credentials (serialized or deserialized) to access **protected resources** of the **user**
-to whom they belong by passing them to the :func:`authomatic.access` function along with the **resource** URL.
+to whom they belong by passing them to the :class:`.Authomatic.access` function along with the **resource** URL.
 
 ::
    
@@ -231,7 +231,7 @@ Asynchronous Requests
 Following functions fetch remote URLs and
 block the current thread till they return a :class:`.Response`.
 
-* :func:`.authomatic.access`
+* :class:`.Authomatic.access`
 * :meth:`.AuthorizationProvider.access`
 * :meth:`.User.update`
 * :meth:`.Credentials.refresh`
@@ -240,7 +240,7 @@ If you need to call more than one of them in a single *request handler*,
 or if there is another **time consuming** task you need to do,
 there is an **asynchronous** alternative to each of these functions.
 
-* :func:`.authomatic.async_access`
+* :class:`.Authomatic.async_access`
 * :meth:`.AuthorizationProvider.async_access`
 * :meth:`.User.async_update`
 * :meth:`.Credentials.async_refresh`
@@ -285,10 +285,10 @@ by calling the :meth:`get_result() <.Future.get_result>` method of each of the
 Session
 ^^^^^^^
 
-The :func:`authomatic.login` function uses a default **secure cookie** based session
+The :class:`authomatic.Authomatic.login` function uses a default **secure cookie** based session
 to store state during the *login procedure*.
 If you want to use different session implementation you can pass it
-together with its **save method** to the :func:`authomatic.login` function.
+together with its **save method** to the :class:`authomatic.Authomatic.login` function.
 The only requirement is that the session implementation must have a dictionary-like interface.
 
 .. note::
@@ -363,10 +363,10 @@ JavaScript
 Popup
 """""
 
-The :func:`authomatic.login` function redirects the **user** to the **provider**
+The :class:`.Authomatic.login` function redirects the **user** to the **provider**
 to ask him for **his/her** consent. If you rather want to make the redirect in a popup,
 the :ref:`authomatic.popupInit() <js_popup_init>` function of the
-:ref:`javascript.js <js>` library with conjunction with :meth:`.LoginResult.js_callback`
+:ref:`javascript.js <js>` library with conjunction with :meth:`.LoginResult.popup_html`
 make it a breeze.
 
 Just add the ``authomatic`` class to your *login handler* links and forms
@@ -426,7 +426,7 @@ which should accept a ``result`` argument.
       </body>
    </html>
 
-In your *login handler* just write the return value of the :meth:`.LoginResult.js_callback` method
+In your *login handler* just write the return value of the :meth:`.LoginResult.popup_html` method
 to the response.
 
 .. code-block:: python
@@ -442,9 +442,9 @@ to the response.
            if result:
                if result.user:
                    result.user.update()
-               self.response.write(result.js_callback())
+               self.response.write(result.popup_html())
 
-The :meth:`.LoginResult.js_callback` generates a HTML that closes the popup when the *login procedure*
+The :meth:`.LoginResult.popup_html` generates a HTML that closes the popup when the *login procedure*
 is over and triggers the ``onLoginComplete`` event handler with a JSON *login result* object passed as argument.
 The *login result* object has similar structure as the :class:`.LoginResult`.
 
@@ -452,7 +452,7 @@ Access
 """"""
 
 Accessing the **user's protected resources** and **provider APIs** is very easy
-thanks to the :func:`authomatic.access` function, but you could save your backend's resources
+thanks to the :class:`.Authomatic.access` function, but you could save your backend's resources
 by delegating it to the **user's** browser.
    
 This however is easier said then done because some **providers** do not support

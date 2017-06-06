@@ -12,7 +12,7 @@ and we will use the :class:`.Credentials` of an **authenticated user** to
 post tweets and Facebook statuses on the **user's** behalf.
 
 You can download all the source files we are about to create
-`here <https://github.com/peterhudec/authomatic/tree/master/examples/gae/credentials>`__.
+`here <https://github.com/authomatic/authomatic/tree/master/examples/gae/credentials>`__.
 
 First create the :doc:`/reference/config` dictionary where you set up all the providers you want to use.
 Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
@@ -299,7 +299,7 @@ That's it. Now just run the application.
 .. include:: twitter-localhost.rst
 
 And here is the complete app. Remember that you can download all the files we just created from
-`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/gae/credentials>`_.
+`GitHub <https://github.com/authomatic/authomatic/tree/master/examples/gae/credentials>`_.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
    :language: python

@@ -125,7 +125,11 @@ def get_configuration(provider):
     # Merge and override common settings with provider settings.
     conf = {}
     conf.update(config.COMMON)
-    conf.update(config.PROVIDERS[provider])
+    try:
+        conf.update(config.PROVIDERS[provider])
+    except KeyError:
+        raise Exception('No record for the provider "{0}" was not found in the '
+                        'config!'.format(provider))
 
     class_name = '{0}Configuration'.format(provider.capitalize())
     Res = namedtuple(class_name, sorted(conf.keys()))
@@ -160,7 +164,8 @@ def get_configuration(provider):
 
 expected_values_path = os.path.dirname(expected_values.__file__)
 
-# Loop through all modules of the expected_values package.
+# Loop through all modules of the expected_values package
+# except the _template.py
 for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):
     # Import the module
     mod = importer.find_module(name).load_module(name)

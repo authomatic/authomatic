@@ -20,8 +20,8 @@
 Authomatic
 ==========
 
-.. image:: https://travis-ci.org/peterhudec/authomatic.svg?branch=master
-    :target: https://travis-ci.org/peterhudec/authomatic
+.. image:: https://travis-ci.org/authomatic/authomatic.svg?branch=master
+    :target: https://travis-ci.org/authomatic/authomatic
 
 **Authomatic**
 is a **framework agnostic** library
@@ -38,7 +38,7 @@ Update - 2017-05-17
 **Authomatic** is currently going through the process of migrating to becoming a community-managed project.
 Please bear with us during these changes.
 We hope to begin work on updating the project and working on Issues and PRs soon.
-Many thanks to peterhudec for all his hard work for creating and maintaining **authomatic**!
+Many thanks to Peter Hudec for all his hard work for creating and maintaining **authomatic**!
 
 Features
 ========
@@ -84,15 +84,11 @@ http://authomatic-example.appspot.com which makes use of most of the features.
 Contribute
 ==========
 
-.. image:: http://badge.waffle.io/peterhudec/authomatic.png
-   :target: http://waffle.io/peterhudec/authomatic
-   :alt: Stories in Ready
-
 Contributions of any kind are very welcome.
 If you want to contribute, please read the
-`Development Guide <http://peterhudec.github.io/authomatic/development.html>`__
+`Development Guide <http://authomatic.github.io/authomatic/development.html>`__
 first. The project is hosted on
-`GitHub <https://github.com/peterhudec/authomatic>`__.
+`GitHub <https://github.com/authomatic/authomatic>`__.
 
 Usage
 =====

@@ -809,6 +809,9 @@ class Twitter(OAuth1):
 
     Supported :class:`.User` properties:
 
+    * email
+    * city
+    * country
     * id
     * link
     * locale
@@ -820,9 +823,6 @@ class Twitter(OAuth1):
     Unsupported :class:`.User` properties:
 
     * birth_date
-    * city
-    * country
-    * email
     * gender
     * first_name
     * last_name
@@ -834,7 +834,10 @@ class Twitter(OAuth1):
     """
 
     supported_user_attributes = core.SupportedUserAttributes(
+        city=True,
+        country=True,
         id=True,
+        email=True,
         link=True,
         locale=True,
         location=True,
@@ -846,7 +849,7 @@ class Twitter(OAuth1):
     request_token_url = 'https://api.twitter.com/oauth/request_token'
     user_authorization_url = 'https://api.twitter.com/oauth/authenticate'
     access_token_url = 'https://api.twitter.com/oauth/access_token'
-    user_info_url = 'https://api.twitter.com/1.1/account/verify_credentials.json'
+    user_info_url = 'https://api.twitter.com/1.1/account/verify_credentials.json?include_entities=true&include_email=true'
     
     supports_jsonp = True
      
