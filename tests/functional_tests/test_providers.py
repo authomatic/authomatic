@@ -28,6 +28,9 @@ from tests.functional_tests import config
 
 requests.packages.urllib3.disable_warnings()
 
+if os.getuid() and config.PORT == 80:
+    pytest.exit('You need to run this tests as sudo if config.PORT == 80')
+
 ME = os.path.dirname(__file__)
 VIRTUALENV_NAME = os.path.basename(os.environ.get('VIRTUAL_ENV', ''))
 LOG_PATH = os.path.join(ME, 'login-py{0}{1}.log'.format(sys.version_info[0],
@@ -39,7 +42,6 @@ PROVIDERS = sorted([(k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items()
 PROVIDERS_IDS = [k for k, v in PROVIDERS]
 PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
 
-# CHECK_URL = 'https://authomatic.com'
 
 ALL_APPS = {
     'Django': liveandletdie.Django(
@@ -230,6 +232,7 @@ def login(request, browser, app, attempt=1):
             if hi:
                 human_interaction_needed(*hi)
 
+            wait(2, provider.get('before_password_input_wait'))
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)
@@ -240,6 +243,11 @@ def login(request, browser, app, attempt=1):
             log(2, provider_name, 'Hitting ENTER')
             password_element.send_keys(Keys.ENTER)
             wait(2, provider.get('after_login_wait_seconds'))
+
+        after_login_hook = provider.get('after_login_hook')
+        if after_login_hook:
+            log(3, provider_name, 'Calling no-result hook')
+            after_login_hook(browser, log)
 
         if login_url:
             # Return back from login URL
@@ -298,8 +306,6 @@ def login(request, browser, app, attempt=1):
         else:
             log(1, provider_name,
                 'Giving up after {0} attempts!'.format(attempt))
-
-            # import pdb; pdb.set_trace()
 
             pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
 
@@ -482,7 +488,8 @@ class TestUser(Base):
             value = browser.find_element_by_id(property_name).text or None
             expected = provider['user'][property_name]
 
-            if isinstance(expected, type(re.compile(''))):
+            is_regex = isinstance(expected, type(re.compile('')))
+            if is_regex:
                 assert expected.match(value)
             else:
                 assert value == expected
@@ -554,7 +561,7 @@ class TestUser(Base):
         content = browser.find_element_by_id('content').text.lower()
         for item in provider['content_should_not_contain']:
             if item:
-                assert item.lower() not in content
+                assert str(item).lower() not in content
 
     def test_provider_support(self, app, provider):
         self.skip_if_openid(provider)

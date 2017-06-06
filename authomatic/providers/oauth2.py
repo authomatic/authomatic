@@ -356,13 +356,15 @@ class OAuth2(providers.AuthorizationProvider):
             
             self.credentials.token = authorization_code
             
-            request_elements = self.create_request_elements(request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
-                                                             credentials=self.credentials,
-                                                             url=self.access_token_url,
-                                                             method=self.token_request_method,
-                                                             redirect_uri=self.url,
-                                                             params=self.access_token_params,
-                                                             headers=self.access_token_headers)
+            request_elements = self.create_request_elements(
+                request_type=self.ACCESS_TOKEN_REQUEST_TYPE,
+                credentials=self.credentials,
+                url=self.access_token_url,
+                method=self.token_request_method,
+                redirect_uri=self.url,
+                params=self.access_token_params,
+                headers=self.access_token_headers
+            )
 
             response = self._fetch(*request_elements)
             self.access_token_response = response
@@ -371,11 +373,20 @@ class OAuth2(providers.AuthorizationProvider):
             refresh_token = response.data.get('refresh_token', '')
             
             if response.status != 200 or not access_token:
-                raise FailureError('Failed to obtain OAuth 2.0 access token from {0}! HTTP status: {1}, message: {2}.'\
-                                  .format(self.access_token_url, response.status, response.content),
-                                  original_message=response.content,
-                                  status=response.status,
-                                  url=self.access_token_url)
+                message = (u'Failed to obtain OAuth 2.0 access token from {0}! '
+                           u'HTTP status: {1}, message: {2}.'
+                           .format(self.access_token_url, response.status,
+                                   response.content))
+
+                # TODO: Check whether provider requires the User-Agent header
+                # if so, use more meaningful message.
+
+                raise FailureError(
+                    message=message,
+                    original_message=response.content,
+                    status=response.status,
+                    url=self.access_token_url,
+                )
             
             self._log(logging.INFO, u'Got access token.')
             
@@ -662,6 +673,32 @@ class DeviantART(OAuth2):
     * Docs: https://www.deviantart.com/developers/authentication
     * API reference: http://www.deviantart.com/developers/oauth2
 
+    .. note::
+
+        DeviantART seems to be using TLS 1.2 for SSL connection, which is not
+        supported by Python 2.6. For more info read `this stackoverflow question
+        <http://stackoverflow.com/questions/32853778/
+        python-sslv3-alert-handshake-failure-when-scraping-a-site>`__.
+
+    .. note::
+
+        Although it is not documented anywhere, DeviantART requires the
+        *access token* request to contain a ``User-Agent`` header.
+        You can apply a default ``User-Agent`` header for all API calls in the
+        config like this:
+
+        .. code-block:: python
+            :emphasize-lines: 6
+
+            CONFIG = {
+                'deviantart': {
+                    'class_': oauth2.DeviantART,
+                    'consumer_key': '#####',
+                    'consumer_secret': '#####',
+                    'access_headers': {'User-Agent': 'Some User Agent'},
+                }
+            }
+
     Supported :class:`.User` properties:
 
     * name
@@ -687,8 +724,8 @@ class DeviantART(OAuth2):
 
     """
     
-    user_authorization_url = 'https://www.deviantart.com/oauth2/draft15/authorize'
-    access_token_url = 'https://www.deviantart.com/oauth2/draft15/token'
+    user_authorization_url = 'https://www.deviantart.com/oauth2/authorize'
+    access_token_url = 'https://www.deviantart.com/oauth2/token'
     user_info_url = 'https://www.deviantart.com/api/oauth2/user/whoami'
 
     user_info_scope = ['basic']
@@ -1344,6 +1381,13 @@ class PayPal(OAuth2):
         It grants you an **access token** based on your **app's** key and
         secret instead.
 
+    .. note::
+
+        Paypal seems to be using TLS 1.2 for SSL connection, which is not
+        supported by Python 2.6. For more info read `this stackoverflow question
+        <http://stackoverflow.com/questions/32853778/
+        python-sslv3-alert-handshake-failure-when-scraping-a-site>`__.
+
     """
     
     _x_use_authorization_header = True
@@ -1398,6 +1442,13 @@ class Reddit(OAuth2):
                     'access_headers': {'User-Agent': "Andy Pipkin's App"},
                 }
             }
+
+    .. note::
+
+        Reddit seems to be using TLS 1.2 for SSL connection, which is not
+        supported by Python 2.6. For more info read `this stackoverflow question
+        <http://stackoverflow.com/questions/32853778/
+        python-sslv3-alert-handshake-failure-when-scraping-a-site>`__.
 
     Supported :class:`.User` properties:
 

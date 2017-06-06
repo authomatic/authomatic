@@ -13,7 +13,8 @@ class BaseError(Exception):
         
         #: Error message.
         self.message = message
-        
+
+        # TODO: Refactor to original error
         #: Original message.
         self.original_message = original_message
         

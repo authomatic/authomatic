@@ -967,6 +967,13 @@ class Vimeo(OAuth1):
     * Docs: https://developer.vimeo.com/apis/advanced#oauth-endpoints
     * API reference: https://developer.vimeo.com/apis
 
+    .. note::
+
+        Vimeo seems to be using TLS 1.2 for SSL connection, which is not
+        supported by Python 2.6. For more info read `this stackoverflow question
+        <http://stackoverflow.com/questions/32853778/
+        python-sslv3-alert-handshake-failure-when-scraping-a-site>`__.
+
     Supported :class:`.User` properties:
 
     * id
@@ -1105,10 +1112,8 @@ class Yahoo(OAuth1):
 
     Supported :class:`.User` properties:
 
-    * birth_date
     * city
     * country
-    * gender
     * id
     * link
     * location
@@ -1118,6 +1123,8 @@ class Yahoo(OAuth1):
 
     Unsupported :class:`.User` properties:
 
+    * birth_date
+    * gender
     * locale
     * phone
     * postal_code
@@ -1127,10 +1134,8 @@ class Yahoo(OAuth1):
     """
 
     supported_user_attributes = core.SupportedUserAttributes(
-        birth_date=True,
         city=True,
         country=True,
-        gender=True,
         id=True,
         link=True,
         location=True,
@@ -1176,16 +1181,6 @@ class Yahoo(OAuth1):
             # probably user hasn't activated Yahoo Profile
             user.city = None
             user.country = None
-        
-        _date = _user.get('birthdate')
-        _year = _user.get('birthYear')
-        
-        if _date and _year:
-            _full = _date + '/' + _year
-            try:
-                user.birth_date = datetime.datetime.strptime(_full, "%m/%d/%Y")
-            except:
-                user.birth_date = _full
         
         return user
 

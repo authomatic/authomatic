@@ -7,7 +7,8 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('facebook')
 
-LINK = u'http://www.facebook.com/' + conf.user_id
+# LINK = u'http://www.facebook.com/' + conf.user_id
+LINK = u'https://www.facebook.com/app_scoped_user_id/{0}/'.format(conf.user_id)
 PICTURE = (u'http://graph.facebook.com/{0}/picture?type=large'
            .format(conf.user_id))
 
@@ -37,7 +38,7 @@ CONFIG = {
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
-        'timezone': re.compile(r'\d+'),
+        'timezone': re.compile(r'\d'),
         'username': None,
     },
     'content_should_contain': [
