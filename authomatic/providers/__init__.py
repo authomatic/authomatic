@@ -19,25 +19,26 @@ Abstract base classes for implementation of protocol specific providers.
 
 """
 
-from authomatic.core import Session
-from authomatic.exceptions import ConfigError, AuthenticationError, FetchError, CredentialsError
 import abc
 import authomatic.core
 import base64
-import copy
-import datetime
 import hashlib
 import logging
-import os
 import random
 import sys
 import traceback
-import six
-from six.moves.urllib import parse
-from six.moves import http_client
 import uuid
 
-
+from authomatic.core import Session
+from authomatic.exceptions import (
+    ConfigError,
+    FetchError,
+    CredentialsError,
+)
+from authomatic import six
+from authomatic.six.moves import urllib_parse as parse
+from authomatic.six.moves import http_client
+from authomatic.exceptions import CancellationError
 
 __all__ = ['BaseProvider', 'AuthorizationProvider', 'AuthenticationProvider', 'login_decorator']
 
@@ -86,7 +87,8 @@ def login_decorator(func):
         except Exception as e:
             if provider.settings.report_errors:
                 error = e
-                provider._log(logging.ERROR, 'Reported suppressed exception: {0}!'.format(repr(error)))
+                if not isinstance(error, CancellationError):
+                    provider._log(logging.ERROR, u'Reported suppressed exception: {0}!'.format(repr(error)), exc_info=1)
             else:
                 if provider.settings.debug:
                     # TODO: Check whether it actually works without middleware
@@ -103,7 +105,7 @@ def login_decorator(func):
             if isinstance(provider.session, authomatic.core.Session):
                 provider.session.delete()
             
-            provider._log(logging.INFO, 'Procedure finished.')
+            provider._log(logging.INFO, u'Procedure finished.')
             
             if provider.callback:
                 provider.callback(result)
@@ -315,7 +317,7 @@ class BaseProvider(object):
     
     
     @classmethod
-    def _log(cls, level, msg):
+    def _log(cls, level, msg, **kwargs):
         """
         Logs a message with pre-formatted prefix.
         
@@ -329,7 +331,7 @@ class BaseProvider(object):
         """
 
         logger = getattr(cls, '_logger', None) or authomatic.core._logger
-        logger.log(level, ': '.join(('authomatic', cls.__name__, msg)))
+        logger.log(level, ': '.join(('authomatic', cls.__name__, msg)), **kwargs)
 
     
     def _fetch(self, url, method='GET', params=None, headers=None, body='', max_redirects=5, content_parser=None):
@@ -372,15 +374,14 @@ class BaseProvider(object):
                 body = query
                 query = ''
                 headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
-        print(path, query)
         request_path = parse.urlunsplit(('', '', path or '', query or '', ''))
         
-        self._log(logging.DEBUG, ' \u251C\u2500 host: {0}'.format(host))
-        self._log(logging.DEBUG, ' \u251C\u2500 path: {0}'.format(request_path))
-        self._log(logging.DEBUG, ' \u251C\u2500 method: {0}'.format(method))
-        self._log(logging.DEBUG, ' \u251C\u2500 body: {0}'.format(body))
-        self._log(logging.DEBUG, ' \u251C\u2500 params: {0}'.format(params))
-        self._log(logging.DEBUG, ' \u2514\u2500 headers: {0}'.format(headers))
+        self._log(logging.DEBUG, u' \u251C\u2500 host: {0}'.format(host))
+        self._log(logging.DEBUG, u' \u251C\u2500 path: {0}'.format(request_path))
+        self._log(logging.DEBUG, u' \u251C\u2500 method: {0}'.format(method))
+        self._log(logging.DEBUG, u' \u251C\u2500 body: {0}'.format(body))
+        self._log(logging.DEBUG, u' \u251C\u2500 params: {0}'.format(params))
+        self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(headers))
         
         # Connect
         if scheme.lower() == 'https':
@@ -407,8 +408,8 @@ class BaseProvider(object):
             elif max_redirects > 0:
                 remaining_redirects = max_redirects - 1
                 
-                self._log(logging.DEBUG, 'Redirecting to {0}'.format(url))
-                self._log(logging.DEBUG, 'Remaining redirects: {0}'
+                self._log(logging.DEBUG, u'Redirecting to {0}'.format(url))
+                self._log(logging.DEBUG, u'Remaining redirects: {0}'
                           .format(remaining_redirects))
                 
                 # Call this method again.
@@ -423,10 +424,10 @@ class BaseProvider(object):
                                  url=location,
                                  status=response.status)
         else:
-            self._log(logging.DEBUG, 'Got response:')
-            self._log(logging.DEBUG, ' \u251C\u2500 url: {0}'.format(url))
-            self._log(logging.DEBUG, ' \u251C\u2500 status: {0}'.format(response.status))
-            self._log(logging.DEBUG, ' \u2514\u2500 headers: {0}'.format(response.getheaders()))
+            self._log(logging.DEBUG, u'Got response:')
+            self._log(logging.DEBUG, u' \u251C\u2500 url: {0}'.format(url))
+            self._log(logging.DEBUG, u' \u251C\u2500 status: {0}'.format(response.status))
+            self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(response.getheaders()))
                 
         return authomatic.core.Response(response, content_parser)
     
@@ -466,11 +467,20 @@ class BaseProvider(object):
         if not self.user.name:
             if self.user.first_name and self.user.last_name:
                 # Create it from first name and last name if available.
-                self.user.name = ' '.join((self.user.first_name, self.user.last_name))
+                self.user.name = ' '.join((self.user.first_name,
+                                           self.user.last_name))
             else:
                 # Or use one of these.
-                self.user.name = self.user.username or self.user.nickname or self.user.first_name or self.user.last_name
-        
+                self.user.name = (self.user.username or self.user.nickname or
+                                  self.user.first_name or self.user.last_name)
+
+        if not self.user.location:
+            if self.user.city and self.user.country:
+                self.user.location = '{0}, {1}'.format(self.user.city,
+                                                       self.user.country)
+            else:
+                self.user.location = self.user.city or self.user.country
+
         return self.user    
     
     
@@ -552,24 +562,27 @@ class AuthorizationProvider(BaseProvider):
             accessing **user's** protected resources.
             Applied by :meth:`.access()`, :meth:`.update_user()` and :meth:`.User.update()`
         """
-        
+
         super(AuthorizationProvider, self).__init__(*args, **kwargs)
         
         self.consumer_key = self._kwarg(kwargs, 'consumer_key')
         self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
         
         self.user_authorization_params = self._kwarg(kwargs, 'user_authorization_params', {})
-        
+
         self.access_token_headers = self._kwarg(kwargs, 'user_authorization_headers', {})
         self.access_token_params = self._kwarg(kwargs, 'access_token_params', {})
-        
+
         self.id = self._kwarg(kwargs, 'id')
-        
+
         self.access_headers = self._kwarg(kwargs, 'access_headers', {})
         self.access_params = self._kwarg(kwargs, 'access_params', {})
         
         #: :class:`.Credentials` to access **user's protected resources**.
         self.credentials = authomatic.core.Credentials(self.settings.config, provider=self)
+
+        #: Response of the *access token request*.
+        self.access_token_response = None
     
     #===========================================================================
     # Abstract properties
@@ -731,11 +744,11 @@ class AuthorizationProvider(BaseProvider):
         """
         
         if not self.user and not self.credentials:
-            raise CredentialsError('There is no authenticated user!')
+            raise CredentialsError(u'There is no authenticated user!')
         
         headers = headers or {}
         
-        self._log(logging.INFO, 'Accessing protected resource {0}.'.format(url))
+        self._log(logging.INFO, u'Accessing protected resource {0}.'.format(url))
         
         request_elements = self.create_request_elements(request_type=self.PROTECTED_RESOURCE_REQUEST_TYPE,
                                                         credentials=self.credentials,
@@ -749,7 +762,7 @@ class AuthorizationProvider(BaseProvider):
                               max_redirects=max_redirects,
                               content_parser=content_parser)
         
-        self._log(logging.INFO, 'Got response. HTTP status = {0}. {1}'.format(response.status, response.content))
+        self._log(logging.INFO, u'Got response. HTTP status = {0}.'.format(response.status))
         return response
 
 
@@ -773,15 +786,17 @@ class AuthorizationProvider(BaseProvider):
         Updates the :attr:`.BaseProvider.user`.
         
         .. warning::
-
             Fetches the :attr:`.user_info_url`!
 
         :returns:
             :class:`.UserInfoResponse`
         """
-        
         if self.user_info_url:
-            return self._access_user_info()
+            response = self._access_user_info()
+            self.user = self._update_or_create_user(response.data,
+                                                    content=response.content)
+            return authomatic.core.UserInfoResponse(self.user,
+                                                    response.httplib_response)
     
     
     #===========================================================================
@@ -881,16 +896,8 @@ class AuthorizationProvider(BaseProvider):
         :returns:
             :class:`.UserInfoResponse`
         """
-        
         url = self.user_info_url.format(**self.user.__dict__)
-        
-        response = self.access(url)
-        
-        # Create user.
-        self.user = self._update_or_create_user(response.data, content=response.content)
-        
-        # Return UserInfoResponse.
-        return authomatic.core.UserInfoResponse(self.user, response.httplib_response)
+        return self.access(url)
     
 
 class AuthenticationProvider(BaseProvider):

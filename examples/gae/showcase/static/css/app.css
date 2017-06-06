@@ -8091,17 +8091,6 @@ input[type=text] {
   background-color: #ebebeb;
 }
 
-/* line 197, ../sass/app.sass */
-.provider-button.ubuntuone {
-  color: #dd4713;
-  background-color: #fcece7;
-  border-color: #efe0db;
-}
-/* line 47, ../sass/app.sass */
-.provider-button.ubuntuone:hover {
-  background-color: #efe0db;
-}
-
 /* line 200, ../sass/app.sass */
 .provider-button.vimeo {
   color: white;

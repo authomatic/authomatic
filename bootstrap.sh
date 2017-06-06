@@ -2,13 +2,27 @@
 git submodule init
 git submodule update
 
-# Create and activate virtual environment "./venv"
-python bootstrap/makebootstrap.py
-python bootstrap/bootstrap.py venv
-. venv/bin/activate
+# Create and activate virtual environment
+virtualenv -p python2.7 e
+. ./e/bin/activate
+#echo `pwd` > ./e/lib/python2.7/site-packages/authomatic.pth
 
 # Install requirements
 pip install -r requirements.txt
+
+# Create tox virtual environments but skip tests
+tox -r --notest skip_install
+
+# Add openid links to GAE examples
+for i in ./examples/gae/*
+do
+  if [ -d $i ]
+    then
+      ln -sfF .tox/py27/lib/python2.7/site-packages/openid "$i/openid"
+
+      ln -sfF ./authomatic "$i/authomatic"
+  fi
+done
 
 # Prepare github pages branch
 # https://github.com/daler/sphinxdoc-test
@@ -26,6 +40,8 @@ rm ./doc/build/html/.git/index
 #  Remove everything in the directory
 git -C ./doc/build/html clean -fdx
 
+deactivate
+. ./.tox/py27/bin/activate
 # Compile documentation
 make html -C doc/
 

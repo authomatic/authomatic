@@ -11,7 +11,7 @@ that will be able to log **users** in with Facebook, Twitter and |openid|_
 and retrieve their 5 most recent tweets/statuses.
 
 You can download all the source files we are about to create
-`here <https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple>`__.
+`here <https://github.com/authomatic/authomatic/tree/master/examples/gae/simple>`__.
 
 First create the :doc:`/reference/config` dictionary where you set up all the providers you want to use.
 Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
@@ -179,6 +179,6 @@ That's it. Now just run the application.
 .. include:: twitter-localhost.rst
 
 And here is the complete app. Remember that you can download all the files we just created from
-`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/gae/simple>`__.
+`GitHub <https://github.com/authomatic/authomatic/tree/master/examples/gae/simple>`__.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py

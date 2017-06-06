@@ -29,8 +29,10 @@ Providers which implement the |oauth2|_ protocol.
     
 """
 
-from six.moves.urllib.parse import urlencode
+from authomatic.six.moves.urllib.parse import urlencode, unquote
+import base64
 import datetime
+import json
 import logging
 
 from authomatic import providers
@@ -58,6 +60,9 @@ class OAuth2(providers.AuthorizationProvider):
     
     #: :class:`bool` If ``False``, the provider doesn't support CSRF protection.
     supports_csrf_protection = True
+    
+    #: :class:`bool` If ``False``, the provider doesn't support user_state.
+    supports_user_state = True
     
     token_request_method = 'POST'  # method for requesting an access token
     
@@ -100,7 +105,8 @@ class OAuth2(providers.AuthorizationProvider):
     
     @classmethod
     def create_request_elements(cls, request_type, credentials, url, method='GET', params=None,
-                                headers=None, body='', secret=None, redirect_uri='', scope='', csrf=''):
+                                headers=None, body='', secret=None, redirect_uri='', scope='',
+                                csrf='', user_state=''):
         """
         Creates |oauth2| request elements.
         """
@@ -126,7 +132,10 @@ class OAuth2(providers.AuthorizationProvider):
                 params['client_id'] = consumer_key
                 params['redirect_uri'] = redirect_uri
                 params['scope'] = scope
-                params['state'] = csrf
+                if cls.supports_user_state:
+                    params['state'] = base64.urlsafe_b64encode(json.dumps({"csrf": csrf, "user_state": user_state}).encode('utf-8'))
+                else:
+                    params['state'] = csrf
                 params['response_type'] = 'code'
                 
                 # Add authorization header
@@ -221,9 +230,32 @@ class OAuth2(providers.AuthorizationProvider):
         credentials.token = token
         credentials.refresh_token = refresh_token
         credentials.expiration_time = expiration_time
-        credentials.token_type=cls.TOKEN_TYPES[int(token_type)]
+        credentials.token_type = cls.TOKEN_TYPES[int(token_type)]
         
         return credentials
+    
+    
+    @classmethod
+    def decode_state(cls, state, param='user_state'):
+        """Decode state and return param
+
+        :param str state:
+            state parameter passed through by provider
+        
+        :param str param:
+            key to query from decoded state variable. Options include 'csrf'
+            and 'user_state'.  
+        
+        :returns:
+            string value from decoded state
+        """
+        if state and cls.supports_user_state:
+            # urlsafe_b64 may include = which the browser quotes so must unquote
+            # Cast to str to void b64decode translation error. Base64 should be
+            # str compatible.
+            return json.loads(base64.urlsafe_b64decode(unquote(str(state))).decode('utf-8'))[param]
+        else:
+            return state if param == 'csrf' else ''
     
     
     def refresh_credentials(self, credentials):
@@ -250,7 +282,7 @@ class OAuth2(providers.AuthorizationProvider):
                                                         url=self.access_token_url,
                                                         method='POST')
         
-        self._log(logging.INFO, 'Refreshing credentials.')
+        self._log(logging.INFO, u'Refreshing credentials.')
         response = self._fetch(*request_elements)
         
         # We no longer need consumer info.
@@ -283,7 +315,9 @@ class OAuth2(providers.AuthorizationProvider):
         authorization_code = self.params.get('code')
         error = self.params.get('error')
         error_message = self.params.get('error_message')
-        state = self.params.get('state')      
+        state = self.params.get('state')
+        # optional user_state to be passed in oauth2 state
+        user_state = self.params.get('user_state', '')
         
         if authorization_code or not self.user_authorization_url:
             
@@ -292,32 +326,33 @@ class OAuth2(providers.AuthorizationProvider):
                 # Phase 2 after redirect with success
                 #===================================================================
                 
-                self._log(logging.INFO, 'Continuing OAuth 2.0 authorization procedure after redirect.')
+                self._log(logging.INFO, u'Continuing OAuth 2.0 authorization procedure after redirect.')
                 
                 # validate CSRF token
                 if self.supports_csrf_protection:
-                    self._log(logging.INFO, 'Validating request by comparing request state with stored state.')
-                    stored_state = self._session_get('state')
+                    self._log(logging.INFO, u'Validating request by comparing request state with stored state.')
+                    stored_csrf = self._session_get('csrf')
                     
-                    if not stored_state:
-                        raise FailureError('Unable to retrieve stored state!')
-                    elif not stored_state == state:
-                        raise FailureError('The returned state "{0}" doesn\'t match with the stored state!'.format(state),
+                    state_csrf = self.decode_state(state, 'csrf')
+                    if not stored_csrf:
+                        raise FailureError(u'Unable to retrieve stored state!')
+                    elif not stored_csrf == state_csrf:
+                        raise FailureError(u'The returned state csrf cookie "{0}" doesn\'t match with the stored state!'.format(state_csrf),
                                            url=self.user_authorization_url)
-                    self._log(logging.INFO, 'Request is valid.')
+                    self._log(logging.INFO, u'Request is valid.')
                 else:
-                    self._log(logging.WARN, 'Skipping CSRF validation!')
+                    self._log(logging.WARN, u'Skipping CSRF validation!')
             
             elif not self.user_authorization_url:
                 #===================================================================
                 # Phase 1 without user authorization redirect.
                 #===================================================================
                 
-                self._log(logging.INFO, 'Starting OAuth 2.0 authorization procedure without ' + \
-                                        'user authorization redirect.')
+                self._log(logging.INFO, u'Starting OAuth 2.0 authorization procedure without ' + \
+                                        u'user authorization redirect.')
             
             # exchange authorization code for access token by the provider
-            self._log(logging.INFO, 'Fetching access token from {0}.'.format(self.access_token_url))
+            self._log(logging.INFO, u'Fetching access token from {0}.'.format(self.access_token_url))
             
             self.credentials.token = authorization_code
             
@@ -330,6 +365,7 @@ class OAuth2(providers.AuthorizationProvider):
                                                              headers=self.access_token_headers)
 
             response = self._fetch(*request_elements)
+            self.access_token_response = response
             
             access_token = response.data.get('access_token', '')
             refresh_token = response.data.get('refresh_token', '')
@@ -341,10 +377,10 @@ class OAuth2(providers.AuthorizationProvider):
                                   status=response.status,
                                   url=self.access_token_url)
             
-            self._log(logging.INFO, 'Got access token.')
+            self._log(logging.INFO, u'Got access token.')
             
             if refresh_token:
-                self._log(logging.INFO, 'Got refresh access token.')
+                self._log(logging.INFO, u'Got refresh access token.')
             
             # OAuth 2.0 credentials need access_token, refresh_token, token_type and expire_in.
             self.credentials.token = access_token
@@ -374,27 +410,27 @@ class OAuth2(providers.AuthorizationProvider):
             error_description = self.params.get('error_description') \
                                 or error_message or error
 
-            if 'denied' in error_reason:
+            if error_reason and 'denied' in error_reason:
                 raise CancellationError(error_description,
                                         url=self.user_authorization_url)
             else:
                 raise FailureError(error_description, url=self.user_authorization_url)
             
-        elif not self.params:
+        elif not self.params or len(self.params) == 1 and 'user_state' in self.params:
             #===================================================================
             # Phase 1 before redirect
             #===================================================================
             
-            self._log(logging.INFO, 'Starting OAuth 2.0 authorization procedure.')
+            self._log(logging.INFO, u'Starting OAuth 2.0 authorization procedure.')
             
             csrf = ''
             if self.supports_csrf_protection:
                 # generate csfr
                 csrf = self.csrf_generator(self.settings.secret)
                 # and store it to session
-                self._session_set('state', csrf)
+                self._session_set('csrf', csrf)
             else:
-                self._log(logging.WARN, 'Provider doesn\'t support CSRF validation!')
+                self._log(logging.WARN, u'Provider doesn\'t support CSRF validation!')
                         
             request_elements = self.create_request_elements(request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
                                                             credentials=self.credentials,
@@ -402,9 +438,10 @@ class OAuth2(providers.AuthorizationProvider):
                                                             redirect_uri=self.url,
                                                             scope=self._x_scope_parser(self.scope),
                                                             csrf=csrf,
+                                                            user_state=user_state,
                                                             params=self.user_authorization_params)
             
-            self._log(logging.INFO, 'Redirecting user to {0}.'.format(request_elements.full_url))
+            self._log(logging.INFO, u'Redirecting user to {0}.'.format(request_elements.full_url))
             
             self.redirect(request_elements.full_url)
 
@@ -578,7 +615,7 @@ class Bitly(OAuth2):
         super(Bitly, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'grant_type' in self.access_token_params:
+            if 'grant_type' not in self.access_token_params:
                 self.access_token_params['grant_type'] = 'refresh_token'
     
     @staticmethod
@@ -666,7 +703,7 @@ class DeviantART(OAuth2):
         super(DeviantART, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'grant_type' in self.access_token_params:
+            if 'grant_type' not in self.access_token_params:
                 self.access_token_params['grant_type'] = 'refresh_token'
     
     
@@ -750,6 +787,7 @@ class Facebook(OAuth2):
 
     Supported :class:`.User` properties:
 
+    * birth_date
     * city
     * country
     * email
@@ -759,51 +797,55 @@ class Facebook(OAuth2):
     * last_name
     * link
     * locale
+    * location
     * name
     * picture
     * timezone
-    * username
 
     Unsupported :class:`.User` properties:
 
-    * birth_date
     * nickname
     * phone
     * postal_code
+    * username
 
     """
-    
     user_authorization_url = 'https://www.facebook.com/dialog/oauth'
     access_token_url = 'https://graph.facebook.com/oauth/access_token'
-    user_info_url = 'https://graph.facebook.com/me'
-    user_info_scope = ['user_about_me', 'email']
+    user_info_url = 'https://graph.facebook.com/v2.3/me'
+    user_info_scope = ['email', 'public_profile', 'user_birthday',
+                       'user_location']
     same_origin = False
 
     supported_user_attributes = core.SupportedUserAttributes(
-        id=True,
-        email=True,
-        username=True,
-        name=True,
-        first_name=True,
-        last_name=True,
+        birth_date=True,
         city=True,
         country=True,
+        email=True,
+        first_name=True,
         gender=True,
+        id=True,
+        last_name=True,
         link=True,
         locale=True,
+        location=True,
+        name=True,
         picture=True,
-        timezone=True
+        timezone=True,
+        username=False,
     )
     
     @classmethod
-    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+    def _x_request_elements_filter(cls, request_type, request_elements,
+                                   credentials):
         
         if request_type == cls.REFRESH_TOKEN_REQUEST_TYPE:
             # As always, Facebook has it's original name for "refresh_token"!
             url, method, params, headers, body = request_elements
             params['fb_exchange_token'] = params.pop('refresh_token')
             params['grant_type'] = 'fb_exchange_token'
-            request_elements = core.RequestElements(url, method, params, headers, body)
+            request_elements = core.RequestElements(url, method, params,
+                                                    headers, body)
         
         return request_elements
     
@@ -811,7 +853,8 @@ class Facebook(OAuth2):
     def __init__(self, *args, **kwargs):
         super(Facebook, self).__init__(*args, **kwargs)
         
-        # Handle special Facebook requirements to be able to refresh the access token.
+        # Handle special Facebook requirements to be able
+        # to refresh the access token.
         if self.offline:
             # Facebook needs an offline_access scope.
             if not 'offline_access' in self.scope:
@@ -823,11 +866,20 @@ class Facebook(OAuth2):
     
     @staticmethod
     def _x_user_parser(user, data):
-        user.picture = 'http://graph.facebook.com/{0}/picture?type=large'.format(data.get('username'))
+        _birth_date = data.get('birthday')
+        if _birth_date:
+            try:
+                user.birth_date = datetime.datetime.strptime(_birth_date,
+                                                             '%m/%d/%Y')
+            except ValueError:
+                pass
 
-        location = data.get('location', {}).get('name')
-        if location and location.split:
-            split_location = location.split(', ')
+        user.picture = ('http://graph.facebook.com/{0}/picture?type=large'
+                        .format(user.id))
+
+        user.location = data.get('location', {}).get('name')
+        if user.location:
+            split_location = user.location.split(', ')
             user.city = split_location[0].strip()
             if len(split_location) > 1:
                 user.country = split_location[1].strip()
@@ -843,7 +895,10 @@ class Facebook(OAuth2):
         
         # Facebook returns "expires" instead of "expires_in".
         credentials.expire_in = data.get('expires')
-        
+
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+
         return credentials
     
     
@@ -851,6 +906,14 @@ class Facebook(OAuth2):
     def _x_refresh_credentials_if(credentials):
         # Always refresh.
         return True
+
+
+    def access(self, url, params=None, **kwargs):
+        if params is None:
+            params = {}
+        params['fields'] = 'id,first_name,last_name,picture,email,gender,timezone,location,birthday,locale'
+
+        return super(Facebook, self).access(url, params, **kwargs)
 
 
 class Foursquare(OAuth2):
@@ -877,6 +940,7 @@ class Foursquare(OAuth2):
     * gender
     * id
     * last_name
+    * location
     * name
     * phone
     * picture
@@ -908,6 +972,7 @@ class Foursquare(OAuth2):
         gender=True,
         id=True,
         last_name=True,
+        location=True,
         name=True,
         phone=True,
         picture=True
@@ -957,8 +1022,13 @@ class Foursquare(OAuth2):
 
         if isinstance(_photo, str):
             user.picture = _photo
-        
-        user.city, user.country = _user.get('homeCity', ', ').split(', ')
+
+        user.location = _user.get('homeCity')
+        if user.location:
+            split_location = user.location.split(',')
+            user.city = split_location[0].strip()
+            if len(user.location) > 1:
+                user.country = split_location[1].strip()
         
         _contact = _user.get('contact', {})
         user.email = _contact.get('email')
@@ -971,7 +1041,7 @@ class GitHub(OAuth2):
     """
     GitHub |oauth2| provider.
     
-    * Dashboard: https://github.com/settings/applications/
+    * Dashboard: https://github.com/settings/developers
     * Docs: http://developer.github.com/v3/#authentication
     * API reference: http://developer.github.com/v3/
     
@@ -995,11 +1065,12 @@ class GitHub(OAuth2):
                 }
             }
 
-    * city
-    * country
+    Supported :class:`.User` properties:
+
     * email
     * id
     * link
+    * location
     * name
     * picture
     * username
@@ -1007,6 +1078,8 @@ class GitHub(OAuth2):
     Unsupported :class:`.User` properties:
 
     * birth_date
+    * city
+    * country
     * first_name
     * gender
     * last_name
@@ -1025,11 +1098,10 @@ class GitHub(OAuth2):
     same_origin = False
 
     supported_user_attributes = core.SupportedUserAttributes(
-        city=True,
-        country=True,
         email=True,
         id=True,
         link=True,
+        location=True,
         name=True,
         picture=True,
         username=True
@@ -1040,14 +1112,6 @@ class GitHub(OAuth2):
         user.username = data.get('login')
         user.picture = data.get('avatar_url')
         user.link = data.get('html_url')
-
-        location = data.get('location', '')
-        if location:
-            split_location = location.split(',')
-            user.city = split_location[0].strip()
-            if len(split_location) > 1:
-                user.country = split_location[1].strip()
-            
         return user
     
     @classmethod
@@ -1089,11 +1153,17 @@ class Google(OAuth2):
     * timezone
     * username
 
+    .. note::
+
+        To get the user info, you need to activate the **Google+ API**
+        in the **APIs & auth >> APIs** section of the`Google Developers Console
+        <https://console.developers.google.com/project>`__.
+
     """
     
     user_authorization_url = 'https://accounts.google.com/o/oauth2/auth'
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
-    user_info_url = 'https://www.googleapis.com/plus/v1/people/me'
+    user_info_url = 'https://www.googleapis.com/oauth2/v3/userinfo?alt=json'
 
     user_info_scope = ['profile',
                        'email']
@@ -1104,9 +1174,7 @@ class Google(OAuth2):
         name=True,
         first_name=True,
         last_name=True,
-        gender=True,
         locale=True,
-        link=True,
         picture=True
     )
     
@@ -1115,12 +1183,26 @@ class Google(OAuth2):
         
         # Handle special Google requirements to be able to refresh the access token.
         if self.offline:
-            if not 'access_type' in self.user_authorization_params:
+            if 'access_type' not in self.user_authorization_params:
                 # Google needs access_type=offline param in the user authorization request.
                 self.user_authorization_params['access_type'] = 'offline'
-            if not 'approval_prompt' in self.user_authorization_params:
+            if 'approval_prompt' not in self.user_authorization_params:
                 # And also approval_prompt=force.
                 self.user_authorization_params['approval_prompt'] = 'force'
+
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements,
+                                   credentials):
+        """
+        Google doesn't accept client ID and secret to be at the same time in
+        request parameters and in the basic authorization header in the
+        access token request.
+        """
+        if request_type is cls.ACCESS_TOKEN_REQUEST_TYPE:
+            params = request_elements[2]
+            del params['client_id']
+            del params['client_secret']
+        return request_elements
     
     @staticmethod
     def _x_user_parser(user, data):
@@ -1132,17 +1214,15 @@ class Google(OAuth2):
                     user.email = email.get('value')
                     break
 
-        user.id = data.get('sub') or data.get('id')
-        user.name = data.get('displayName')
-        user.first_name = data.get('name',{}).get('givenName')
-        user.last_name = data.get('name',{}).get('familyName')
-        user.locale = data.get('language')
-        user.link = data.get('url')
-        user.picture = data.get('image',{}).get('url')
-        try:
-            user.birth_date = datetime.datetime.strptime(data.get('birthdate'), "%Y-%m-%d")
-        except:
-            user.birth_date = data.get('birthdate')
+        user.id = data.get('sub')
+        user.name = data.get('name')
+        user.first_name = data.get('given_name', '')
+        user.last_name = data.get('family_name', '')
+        user.locale = data.get('locale', '')
+        user.picture = data.get('picture', '')
+
+        user.email_verified = data.get("email_verified")
+        user.hosted_domain = data.get("hd")
         return user
     
     def _x_scope_parser(self, scope):
@@ -1166,23 +1246,24 @@ class LinkedIn(OAuth2):
 
     Supported :class:`.User` properties:
 
-    * birth_date
     * country
     * email
     * first_name
     * id
     * last_name
     * link
+    * location
     * name
-    * phone
     * picture
 
     Unsupported :class:`.User` properties:
 
+    * birth_date
     * city
     * gender
     * locale
     * nickname
+    * phone
     * postal_code
     * timezone
     * username
@@ -1190,39 +1271,40 @@ class LinkedIn(OAuth2):
     
     user_authorization_url = 'https://www.linkedin.com/uas/oauth2/authorization'
     access_token_url = 'https://www.linkedin.com/uas/oauth2/accessToken'
-    user_info_url = 'https://api.linkedin.com/v1/people/~:' + \
-                    '(id,first-name,last-name,formatted-name,location,picture-url,public-profile-url,email-address,date-of-birth,phone-numbers)?format=json'
-    
-    user_info_scope = ['r_fullprofile', 'r_emailaddress', 'r_contactinfo']
-    
+    user_info_url = ('https://api.linkedin.com/v1/people/~:'
+                     '(id,first-name,last-name,formatted-name,location,'
+                     'picture-url,public-profile-url,email-address)'
+                     '?format=json')
+
+    user_info_scope = ['r_emailaddress']
+
     token_request_method = 'GET'  # To avoid a bug with OAuth2.0 on Linkedin
     # http://developer.linkedin.com/forum/unauthorized-invalid-or-expired-token-immediately-after-receiving-oauth2-token
 
     supported_user_attributes = core.SupportedUserAttributes(
-        birth_date=True,
         country=True,
         email=True,
         first_name=True,
         id=True,
         last_name=True,
         link=True,
+        location=True,
         name=True,
-        phone=True,
         picture=True
     )
 
     @classmethod
-    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
-        
+    def _x_request_elements_filter(cls, request_type, request_elements,
+                                   credentials):
         if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             # LinkedIn too has it's own terminology!
             url, method, params, headers, body = request_elements
             params['oauth2_access_token'] = params.pop('access_token')
-            request_elements = core.RequestElements(url, method, params, headers, body)
+            request_elements = core.RequestElements(url, method, params,
+                                                    headers, body)
         
         return request_elements
-    
-    
+
     @staticmethod
     def _x_user_parser(user, data):
         
@@ -1231,7 +1313,9 @@ class LinkedIn(OAuth2):
         user.email = data.get('emailAddress')
         user.name = data.get('formattedName')
         user.country = data.get('location', {}).get('name')
-        user.phone = data.get('phoneNumbers', {}).get('values', [{}])[0].get('phoneNumber')
+        user.location = data.get('location', {}).get('country', {}).get('code')
+        user.phone = data.get('phoneNumbers', {}).get('values', [{}])[0]\
+            .get('phoneNumber')
         user.picture = data.get('pictureUrl')
         user.link = data.get('publicProfileUrl')
 
@@ -1331,6 +1415,7 @@ class Reddit(OAuth2):
     * last_name
     * link
     * locale
+    * location
     * name
     * nickname
     * phone
@@ -1356,7 +1441,7 @@ class Reddit(OAuth2):
         super(Reddit, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'duration' in self.user_authorization_params:
+            if 'duration' not in self.user_authorization_params:
                 # http://www.reddit.com/r/changelog/comments/11jab9/reddit_change_permanent_oauth_grants_using/
                 self.user_authorization_params['duration'] = 'permanent'
 
@@ -1434,7 +1519,7 @@ class VK(OAuth2):
     """
     VK.com |oauth2| provider.
     
-    * Dashboard: Could not find any. You must do it like this: http://vk.com/editapp?id={consumer_key}
+    * Dashboard: http://vk.com/apps?act=manage
     * Docs: http://vk.com/developers.php?oid=-17680044&p=Authorizing_Sites
     * API reference: http://vk.com/developers.php?oid=-17680044&p=API_Method_Description
     
@@ -1465,6 +1550,7 @@ class VK(OAuth2):
     * gender
     * id
     * last_name
+    * location
     * name
     * picture
     * timezone
@@ -1494,6 +1580,7 @@ class VK(OAuth2):
         gender=True,
         id=True,
         last_name=True,
+        location=True,
         name=True,
         picture=True,
         timezone=True,
@@ -1503,7 +1590,7 @@ class VK(OAuth2):
         super(VK, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'offline' in self.scope:
+            if 'offline' not in self.scope:
                 self.scope.append('offline')
     
     
@@ -1553,6 +1640,7 @@ class WindowsLive(OAuth2):
     * country
     * gender
     * nickname
+    * location
     * phone
     * postal_code
     * timezone
@@ -1581,7 +1669,7 @@ class WindowsLive(OAuth2):
         super(WindowsLive, self).__init__(*args, **kwargs)
         
         if self.offline:
-            if not 'wl.offline_access' in self.scope:
+            if 'wl.offline_access' not in self.scope:
                 self.scope.append('wl.offline_access')
     
     @classmethod
@@ -1617,6 +1705,7 @@ class Yammer(OAuth2):
     * last_name
     * link
     * locale
+    * location
     * name
     * phone
     * picture
@@ -1645,6 +1734,7 @@ class Yammer(OAuth2):
         last_name=True,
         link=True,
         locale=True,
+        location=True,
         name=True,
         phone=True,
         picture=True,
@@ -1725,6 +1815,7 @@ class Yandex(OAuth2):
     * last_name
     * link
     * locale
+    * location
     * nickname
     * phone
     * picture

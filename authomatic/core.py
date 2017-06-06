@@ -1,22 +1,31 @@
 # -*- coding: utf-8 -*-
 
-from xml.etree import ElementTree
 import collections
 import copy
 import datetime
 from . import exceptions
 import hashlib
 import hmac
-import logging
 import json
-import pickle
+import logging
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+import sys
 import threading
 import time
-import six
-from six.moves.urllib import parse
-import sys
+from xml.etree import ElementTree
 
-from authomatic.exceptions import SessionError, CredentialsError, RequestElementsError
+from authomatic.exceptions import (
+    ConfigError,
+    CredentialsError,
+    ImportStringError,
+    RequestElementsError,
+    SessionError,
+)
+from authomatic import six
+from authomatic.six.moves import urllib_parse as parse
 
 
 #===============================================================================
@@ -164,8 +173,8 @@ def import_string(import_name, silent=False):
             return __import__(import_name)
     except (ImportError, AttributeError) as e:
         if not silent:
-            raise exceptions.ImportStringError('Import from string failed for path {0}'.format(import_name),
-                                               str(e))
+            raise ImportStringError('Import from string failed for path {0}'
+                                    .format(import_name), str(e))
 
 
 def resolve_provider_class(class_):
@@ -364,8 +373,15 @@ class Session(object):
     def save(self):
         """Adds the session cookie to headers."""
         if self.data:
-            # Set the cookie header.
-            self.adapter.set_header('Set-Cookie', self.create_cookie())
+            cookie = self.create_cookie()
+            cookie_len = len(cookie)
+
+            if cookie_len > 4093:
+                raise SessionError('Cookie too long! The cookie size {0} '
+                                   'is more than 4093 bytes.'
+                                   .format(cookie_len))
+
+            self.adapter.set_header('Set-Cookie', cookie)
 
             # Reset data
             self._data = {}
@@ -389,10 +405,7 @@ class Session(object):
         return self._data
 
     def _signature(self, *parts):
-        """
-        Creates signature for the session.
-        """
-
+        """Creates signature for the session."""
         signature = hmac.new(six.b(self.secret), digestmod=hashlib.sha1)
         signature.update(six.b('|'.join(parts)))
         return signature.hexdigest()
@@ -408,10 +421,11 @@ class Session(object):
             Serialized value.
         """
 
-        data = copy.deepcopy(value)
+        # data = copy.deepcopy(value)
+        data = value
 
         # 1. Serialize
-        serialized = json.dumps(data)
+        serialized = pickle.dumps(data).decode('latin-1')
 
         # 2. Encode
         # Percent encoding produces smaller result then urlsafe base64.
@@ -420,7 +434,9 @@ class Session(object):
         # 3. Concatenate
         timestamp = str(int(time.time()))
         signature = self._signature(self.name, encoded, timestamp)
-        return '|'.join([encoded, timestamp, signature])
+        concatenated = '|'.join([encoded, timestamp, signature])
+
+        return concatenated
 
 
     def _deserialize(self, value):
@@ -449,7 +465,7 @@ class Session(object):
         decoded = parse.unquote(encoded)
 
         # 1. Deserialize
-        deserialized = json.loads(decoded)
+        deserialized = pickle.loads(decoded.encode('latin-1'))
 
         return deserialized
 
@@ -519,6 +535,8 @@ class User(ReprMixin):
         self.country = kwargs.get('country')
         #: :class:`str` City.
         self.city = kwargs.get('city')
+        #: :class:`str` Geographical location.
+        self.location = kwargs.get('location')
         #: :class:`str` Postal code.
         self.postal_code = kwargs.get('postal_code')
         #: Instance of the Google App Engine Users API
@@ -577,26 +595,16 @@ class User(ReprMixin):
         return d
 
 
-class SupportedUserAttributes(collections.namedtuple('SupportedUserAttributes',
-                                         [
-                                             'id',
-                                             'username',
-                                             'name',
-                                             'first_name',
-                                             'last_name',
-                                             'nickname',
-                                             'link',
-                                             'gender',
-                                             'timezone',
-                                             'locale',
-                                             'email',
-                                             'phone',
-                                             'picture',
-                                             'birth_date',
-                                             'country',
-                                             'city',
-                                             'postal_code',
-                                         ])):
+SupportedUserAttributesNT = collections.namedtuple(
+    typename='SupportedUserAttributesNT',
+    field_names=['birth_date', 'city', 'country', 'email', 'first_name',
+                 'gender', 'id', 'last_name', 'link', 'locale', 'location',
+                 'name', 'nickname', 'phone', 'picture', 'postal_code',
+                 'timezone', 'username',]
+)
+
+
+class SupportedUserAttributes(SupportedUserAttributesNT):
     def __new__(cls, **kwargs):
         defaults = dict((i, False) for i in SupportedUserAttributes._fields)
         defaults.update(**kwargs)
@@ -799,8 +807,9 @@ class Credentials(ReprMixin):
         """
 
         if self.provider_id is None:
-            raise exceptions.ConfigError('To serialize credentials you need to specify a unique ' + \
-                                         'integer under the "id" key in the config for each provider!')
+            raise ConfigError('To serialize credentials you need to specify a '
+                              'unique integer under the "id" key in the config '
+                              'for each provider!')
 
         # Get the provider type specific items.
         rest = self.provider_type_class().to_tuple(self)
@@ -1068,6 +1077,16 @@ class Response(ReprMixin):
         return self.httplib_response.getheaders()
 
 
+    def is_binary_string(self, content):
+        """
+        Return true if string is binary data
+        """
+
+        textchars = (bytearray([7, 8, 9, 10, 12, 13, 27]) +
+                     bytearray(range(0x20, 0x100)))
+        return bool(content.translate(None, textchars))
+
+
     @property
     def content(self):
         """
@@ -1075,7 +1094,11 @@ class Response(ReprMixin):
         """
 
         if not self._content:
-            self._content = self.httplib_response.read().decode('utf-8')
+            content = self.httplib_response.read()
+            if self.is_binary_string(content):
+                self._content = content
+            else:
+                self._content = content.decode('utf-8')
         return self._content
 
 
@@ -1276,7 +1299,8 @@ class Authomatic(object):
             # retrieve required settings for current provider and raise exceptions if missing
             provider_settings = self.config.get(provider_name)
             if not provider_settings:
-                raise exceptions.ConfigError('Provider name "{0}" not specified!'.format(provider_name))
+                raise ConfigError('Provider name "{0}" not specified!'
+                                  .format(provider_name))
     
             if not (session is None or session_saver is None):
                 session = session
@@ -1293,7 +1317,8 @@ class Authomatic(object):
             # Resolve provider class.
             class_ = provider_settings.get('class_')
             if not class_:
-                raise exceptions.ConfigError('The "class_" key not specified in the config for provider {0}!'.format(provider_name))
+                raise ConfigError('The "class_" key not specified in the config'
+                                  ' for provider {0}!'.format(provider_name))
             ProviderClass = resolve_provider_class(class_)
 
             # FIXME: Find a nicer solution

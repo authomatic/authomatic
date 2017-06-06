@@ -1,6 +1,67 @@
-Version 0.0.11 (development)
-----------------------------
+Unreleased
+----------
 
+* Add :attr: email to :class: `oauth1.Twitter` provider.
+* Added support for :attr:`.User.country` and :attr:`.User.city` to 
+  :class: `oauth1.Twitter` provider. 
+* Fix Twitter user info endpoint to include image url.
+* Support passing of user state in oauth2 to support variable redirect urls.
+* The :class:`.oauth2.Google` provider now uses
+  ``https://www.googleapis.com/oauth2/v3/userinfo?alt=json`` as the ``user_info_url``
+  instead of the deprecated ``https://www.googleapis.com/plus/v1/people/me``
+* Added support for :attr:`email_verified` and :attr:`hosted_domain`
+  to :class:`.oauth2.Google` provider.
+* Removed support for :attr:`gender`, :attr:`link` and :attr:`birth_date`
+  from :class:`.oauth2.Google` provider.
+* Fix #160: Handle token_type of bearer (lower-case).
+* Fix #130: explicitly request fields from Facebook. 
+* Adjusted naming of default scope for :class:`.oauth2.Facebook` to Facebook v2 API
+* Added support for :attr:`.User.email` to the :class:`.oauth1.Bitbucket` provider.
+
+Version 0.1.0
+-------------
+
+* Introduced the :attr:`.User.access_token_response` attribute.
+* Added support for :attr:`.User.email` and :attr:`.User.link` to the
+  :class:`.oauth1.Plurk` provider.
+* The :class:`.oauth1.Flickr` provider doesn't make the redundant API call
+  during :meth:`.oauth1.Flickr.update_user` anymore.
+* Added the :attr:`.User.location` attribute.
+* Removed support for :attr:`.User.country` and :attr:`.User.city` from
+  :class:`.oauth1.Twitter` and :class:`.oauth2.GitHub` providers.
+* Removed support for :attr:`.User.link` and :attr:`.User.picture` from
+  :class:`.oauth1.Tumbler` provider.
+* Removed support for :attr:`.User.username` and added support for
+  :attr:`.User.birth_date` to :class:`.oauth2.Facebook` provider.
+* :class:`.oauth2.Facebook` provider now uses ``v2`` api for user info request.
+* Removed the ``r_fullprofile`` and ``r_fullprofile`` scopes from
+  :attr:`.oauth2.LinkedIn.user_info_scope` due to the
+  `Developer Program Transition <https://developer.linkedin.com/support/
+  developer-program-transition>`__ and as a consequence removed support for
+  :attr:`.User.birth_date` and :attr:`.User.phone`.
+
+Version 0.0.13
+--------------
+
+* Removed logging of response body in the
+  :meth:`.providers.AuthorizationProvider.access()` method.
+* Fixed an error in :class:`.oauth2.Google` when the access token request
+  resulted in an
+  ``OAuth 2 parameters can only have a single value: client_secret`` error.
+
+Version 0.0.12
+--------------
+
+* Fixed import errors of the **six** module.
+* Fixed an bug when decoding binary provider response resulted in an error.
+* Improved handling of ambiguous user location by some providers. Introduced
+  the :class:`.User.location` attribute.
+
+Version 0.0.11
+--------------
+
+* Added **Python 3.x** support thanks to
+  `Emmanuel Leblond <https://github.com/touilleMan>`__.
 * Fixed a bug when :class:`.authomatic.Response` could not be decoded.
 * The :class:`.oauth2.Foursquare` provider now supports
   :attr:`.User.birth_date`.
@@ -17,11 +78,6 @@ Version 0.0.10
 Version 0.0.9
 -------------
 
-.. note::
-
-    This version is still in development and has not been released to
-    `PyPI <https://pypi.python.org/pypi/Authomatic>`__ yet.
-
 * Updated *user info* URL scheme of the :class:`.oauth1.Yahoo` provider.
 * The :class:`.oauth2.Yandex` provider now supports :attr:`.User.name` and.
   :attr:`.User.username` properties.
@@ -36,7 +92,6 @@ Version 0.0.9
   :attr:`.User.birth_date` attribute.
 * The :class:`.oauth2.Reddit` provider now supports the
   :attr:`.User.username` attribute.
-
 
 Version 0.0.8
 -------------
@@ -68,7 +123,6 @@ Version 0.0.7
   `issue #11 <https://github.com/peterhudec/authomatic/issues/11>`__,
   when WebKit-based browsers failed to accept cookies set as part of a
   redirect response in some circumstances.
-
 
 Version 0.0.6
 -------------

@@ -12,7 +12,7 @@ to log **users** in with Facebook, Twitter and |openid|_
 and retrieve their recent tweets/statuses.
 
 You can download all the source files we are about to create
-`here <https://github.com/peterhudec/authomatic/tree/master/examples/flask/werkzeug_adapter>`__.
+`here <https://github.com/authomatic/authomatic/tree/master/examples/flask/werkzeug_adapter>`__.
 
 First create the :doc:`/reference/config` dictionary where you set up all the providers you want to use.
 Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
@@ -23,7 +23,7 @@ Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
    
    Facebook and other |oauth2| providers require a **redirect URI**
    which should be the URL of the *login request handler*
-   which we will create in this tutorial and whose walue in our case will be
+   which we will create in this tutorial and whose value in our case will be
    ``http://[hostname]/login/fb`` for Facebook.
 
 .. literalinclude:: ../../../examples/flask/werkzeug_adapter/config-template.py
@@ -205,7 +205,7 @@ That's it. Now just run the application.
 
 Here is the complete ``login.html`` template.
 Remember that you can download all the files we just created from
-`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/flask/werkzeug_adapter>`_.
+`GitHub <https://github.com/authomatic/authomatic/tree/master/examples/flask/werkzeug_adapter>`_.
 
 .. literalinclude:: ../../../examples/flask/werkzeug_adapter/templates/login.html
    :language: html+jinja

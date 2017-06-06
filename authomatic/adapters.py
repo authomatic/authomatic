@@ -17,7 +17,7 @@ Available Adapters
 ^^^^^^^^^^^^^^^^^^
 
 If you are missing an adapter for the framework of your choice,
-please open an `enhancement issue <https://github.com/peterhudec/authomatic/issues>`_
+please open an `enhancement issue <https://github.com/authomatic/authomatic/issues>`_
 or consider a contribution to this module by :ref:`implementing <implement_adapters>` one by yourself.
 Its very easy and shouldn't take you more than a few minutes.
 
@@ -145,7 +145,10 @@ class DjangoAdapter(BaseAdapter):
     
     @property
     def params(self):
-        return dict(self.request.REQUEST)
+        params = {}
+        params.update(self.request.GET.dict())
+        params.update(self.request.POST.dict())
+        return params
     
     @property
     def url(self):
@@ -162,7 +165,8 @@ class DjangoAdapter(BaseAdapter):
         self.response[key] = value
         
     def set_status(self, status):
-        self.response.status_code = status
+        status_code, reason = status.split(' ', 1)
+        self.response.status_code = int(status_code)
 
 
 class WebObAdapter(BaseAdapter):
@@ -263,7 +267,7 @@ class WerkzeugAdapter(BaseAdapter):
         self.response = response
 
     def write(self, value):
-        self.response.data += value
+        self.response.data = self.response.data.decode('utf-8') + value
 
     def set_header(self, key, value):
         self.response.headers[key] = value

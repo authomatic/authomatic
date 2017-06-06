@@ -16,11 +16,11 @@
   <h1>Login result for provider: <span id="login-result">{{ result.provider.name }}</span></h1>
   <h2>User</h2>
   <table>
-    {% for property in user_properties %}
+    {% for property in user_properties|sort %}
       <tr>
         <td><strong>{{ property }}:&nbsp;</strong></td>
         {% if property == 'birth_date' and result.user[property] %}
-          <td id="{{ property }}">{{ result.user[property].strftime('%x') }}</td>
+          <td id="{{ property }}">{{ result.user[property].strftime(birth_date_format) }}</td>
         {% else %}
           <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
         {% endif %}
@@ -35,7 +35,7 @@
   {% if original_credentials %}
     <h2>Original Credentials</h2>
     <table>
-      {% for k, v in original_credentials.items() %}
+      {% for k, v in original_credentials|dictsort %}
       <tr class="{% if k == 'config' %}hidden{% endif %}"}>
         <td><strong>{{ k }}:&nbsp;</strong></td>
         <td id="original-credentials-{{ k }}">{{ v|default('', true) }}</td>
@@ -49,7 +49,7 @@
 
     <h2>Refreshed Credentials</h2>
     <table>
-      {% for k, v in refreshed_credentials.items() %}
+      {% for k, v in refreshed_credentials|dictsort %}
       <tr class="{% if k == 'config' %}hidden{% endif %}"}>
         <td><strong>{{ k }}:&nbsp;</strong></td>
         <td id="refreshed-credentials-{{ k }}">{{ v|default('', true) }}</td>
@@ -58,13 +58,15 @@
     </table>
   {% endif %}
 
-  <h3>Human Readable Content</h3>
-  <pre id="human-readable-user-content" class="prettyprint"></pre>
+  <h3>Access Token Response Content</h3>
+  <pre id="access-token-content" class="prettyprint">{{ access_token_content }}</pre>
+
+  <h3>User Info Response Content</h3>
+  <pre id="human-readable-user-content" class="prettyprint">{{ content }}</pre>
   <h3>User content should contain these strings:</h3>
   <pre id="user-content-json-keys" class="prettyprint"></pre>
 
   <script type="text/javascript">
-
     // Display syntax-highlighted user-info response content
     var userContent = document.getElementById('human-readable-user-content');
     try {
@@ -84,7 +86,7 @@
         }
     }
     var userContentJSONKeys = document.getElementById('user-content-json-keys');
-    userContentJSONKeys.innerHTML = "[" + output.join(', ') + "]";
+    userContentJSONKeys.innerHTML = "[" + output.sort().join(', ') + "]";
 
     // Display syntax-highlighted credentials refresh response content
     var credentialsResponse = document.getElementById('credentials-response');

@@ -11,7 +11,7 @@ that will be able to log **users** in with Facebook, Twitter and |openid|_
 and retrieve their 5 most recent tweets/statuses.
 
 You can download all the source files we are about to create
-`here <https://github.com/peterhudec/authomatic/tree/master/examples/django>`__.
+`here <https://github.com/authomatic/authomatic/tree/master/examples/django>`__.
 
 First create a new |django|_ project named *example*.
 
@@ -27,7 +27,7 @@ Inside the newly created *example* project create a new application named *simpl
    $ python manage.py startapp simple
    $ cd simple
 
-Open the the ``example/simple/urls.py`` module and map the ``/`` root URL to the ``home`` view
+Open the ``example/simple/urls.py`` module and map the ``/`` root URL to the ``home`` view
 and the ``/login/[provider_name]`` URL to the ``login`` view.
 We will create the views later.
 
@@ -52,7 +52,7 @@ And create a route to the app in the ``example/example/urls.py`` module.
 
 Now in the ``example/simple`` directory create the ``config.py`` module
 with the :doc:`/reference/config` dictionary where you set up all the providers you want to use.
-Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
+You will need the ``consumer_key`` and ``consumer_secret`` which you can get
 `here <https://developers.facebook.com/apps>`__ for Facebook and
 `here <https://dev.twitter.com/apps>`__ for Twitter.
 
@@ -191,6 +191,6 @@ Run the app and navigate to ``http://[hostname]/simple`` in your browser.
 
 And here is the complete ``example/simple/views.py`` module.
 Remember that you can download all the files we just created from
-`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/django>`_.
+`GitHub <https://github.com/authomatic/authomatic/tree/master/examples/django>`_.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py

@@ -11,12 +11,12 @@
    development
    changelog
 
-Features
-========
+.. image:: https://travis-ci.org/authomatic/authomatic.svg?branch=master
+   :target: https://travis-ci.org/authomatic/authomatic
 
 .. include:: ../../README.rst
    :start-line: 35
-   :end-line: 83
+   :end-line: 88
 
 .. contents::
    :backlinks: none
@@ -31,11 +31,11 @@ First install **Authomatic** through `PyPi <https://pypi.python.org/pypi/Authoma
    
    $ pip install authomatic
 
-or clone it from `GitHub <http://github.com/peterhudec/authomatic>`_.
+or clone it from `GitHub <http://github.com/authomatic/authomatic>`_.
 
 .. code-block:: bash
    
-   $ git clone git://github.com/peterhudec/authomatic.git
+   $ git clone git://github.com/authomatic/authomatic.git
 
 .. note::
    
@@ -366,7 +366,7 @@ Popup
 The :func:`authomatic.login` function redirects the **user** to the **provider**
 to ask him for **his/her** consent. If you rather want to make the redirect in a popup,
 the :ref:`authomatic.popupInit() <js_popup_init>` function of the
-:ref:`javascript.js <js>` library with conjunction with :meth:`.LoginResult.js_callback`
+:ref:`javascript.js <js>` library with conjunction with :meth:`.LoginResult.popup_html`
 make it a breeze.
 
 Just add the ``authomatic`` class to your *login handler* links and forms
@@ -426,7 +426,7 @@ which should accept a ``result`` argument.
       </body>
    </html>
 
-In your *login handler* just write the return value of the :meth:`.LoginResult.js_callback` method
+In your *login handler* just write the return value of the :meth:`.LoginResult.popup_html` method
 to the response.
 
 .. code-block:: python
@@ -442,9 +442,9 @@ to the response.
            if result:
                if result.user:
                    result.user.update()
-               self.response.write(result.js_callback())
+               self.response.write(result.popup_html())
 
-The :meth:`.LoginResult.js_callback` generates a HTML that closes the popup when the *login procedure*
+The :meth:`.LoginResult.popup_html` generates a HTML that closes the popup when the *login procedure*
 is over and triggers the ``onLoginComplete`` event handler with a JSON *login result* object passed as argument.
 The *login result* object has similar structure as the :class:`.LoginResult`.
 
