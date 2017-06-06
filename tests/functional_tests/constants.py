@@ -1,5 +1,4 @@
-import re
-
+# -*- coding: utf-8 -*-
 GENDER_MALE = 'male'
 GENDER_FEMALE = 'female'
 CREDENTIALS_REFRESH_NOT_SUPPORTED = 'REFRESH NOT SUPPORTED'

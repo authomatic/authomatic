@@ -38,12 +38,12 @@ class BaseHandler(webapp2.RequestHandler):
     """
     Base handler which adds jinja2 templating.
     """
-    
+
     @webapp2.cached_property
     def jinja2_environment(self):
         path = os.path.join(os.path.dirname(__file__), 'templates')
         return jinja2.Environment(loader=jinja2.FileSystemLoader(path))
-    
+
     def rr(self, template, **context):
         template = self.jinja2_environment.get_template(template)
         self.response.write(template.render(context))
@@ -62,11 +62,20 @@ class Login(BaseHandler):
             if result.user:
                 result.user.update()
                 if result.user.credentials:
-                    apis = config.config.get(provider_name, {}).get('_apis', {})
-            
-            nice_provider_name = config.config.get(provider_name, {}).get('_name') or provider_name.capitalize()
-            
-            render(self, result, result.popup_js(custom=dict(apis=apis, provider_name=nice_provider_name)))
+                    apis = config.config.get(
+                        provider_name, {}).get(
+                        '_apis', {})
+
+            nice_provider_name = config.config.get(
+                provider_name, {}).get('_name') or provider_name.capitalize()
+
+            render(
+                self,
+                result,
+                result.popup_js(
+                    custom=dict(
+                        apis=apis,
+                        provider_name=nice_provider_name)))
 
 
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),

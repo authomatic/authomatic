@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # encoding: utf-8
 import logging
 
@@ -21,6 +22,7 @@ app.config.from_object(__name__)
 authomatic = authomatic.Authomatic(fixtures.ASSEMBLED_CONFIG, '123',
                                    report_errors=False,
                                    logger=app.logger)
+
 
 @app.route('/')
 def home():
@@ -51,5 +53,5 @@ if __name__ == '__main__':
     # This does nothing unles you run this module with --testliveserver flag.
     import liveandletdie
     liveandletdie.Flask.wrap(app)
-    
+
     app.run(debug=True, port=8080)

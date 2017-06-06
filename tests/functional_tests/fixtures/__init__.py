@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # encoding: utf-8
 
 from collections import namedtuple
@@ -45,7 +46,9 @@ OPENID_PROVIDERS = {}
 
 
 def render_home(framework_name):
-    """Renders the homepage"""
+    """
+    Renders the homepage.
+    """
     template = env.get_template('index.html')
     return template.render(providers=ASSEMBLED_CONFIG,
                            oauth2_providers=OAUTH2_PROVIDERS,
@@ -56,7 +59,7 @@ def render_home(framework_name):
 
 def render_login_result(framework_name, result):
     """
-    Renders the login handler
+    Renders the login handler.
 
     :param result:
 
@@ -88,7 +91,7 @@ def render_login_result(framework_name, result):
 
         access_token_content = None
         if hasattr(result.provider, 'access_token_response'):
-            access_token_content = result.provider.access_token_response.content
+            access_token_content = result.provider.access_token_response.content  # noqa
 
         template = env.get_template('login.html')
         return template.render(result=result,
@@ -108,7 +111,7 @@ def render_login_result(framework_name, result):
 
 def get_configuration(provider):
     """
-    Creates the user configuration which holds the tested values
+    Creates the user configuration which holds the tested values.
 
     It merges the ``config.COMMON`` and the ``config.PROVIDERS[provider]``
     dictionaries and returns a named tuple.
@@ -155,8 +158,12 @@ def get_configuration(provider):
     Res.no_postal_code = [conf['user_postal_code'], 'postal', 'zip']
     Res.no_timezone = ['timezone']
     Res.no_username = ['username', '"{0}"'.format(conf['user_username'])]
-    Res.no_location = [conf['user_country'], 'city',
-        'country', 'location'] + Res.no_postal_code + Res.no_city
+    Res.no_location = [
+        conf['user_country'],
+        'city',
+        'country',
+        'location'
+    ] + Res.no_postal_code + Res.no_city
 
     # Populate the namedtuple with provider settings.
     return Res(**conf)

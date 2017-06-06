@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -56,9 +57,9 @@ CONFIG = {
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date +
-                                  conf.no_email + conf.no_location +
-                                  conf.no_gender + conf.no_locale +
-                                  conf.no_first_name + conf.no_last_name,
+    conf.no_email + conf.no_location +
+    conf.no_gender + conf.no_locale +
+    conf.no_first_name + conf.no_last_name,
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': None,
