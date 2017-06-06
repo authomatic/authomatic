@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 import fixtures
@@ -7,8 +8,8 @@ from authomatic.providers import oauth1
 conf = fixtures.get_configuration('xing')
 
 LINK = 'https://www.xing.com/profile/{0}'.format(conf.user_username)
-PITURE = re.compile(r'https://x\d+.xingassets.com/assets/frontend_minified/img/'
-                    r'users/\w+.140x185.jpg')
+PITURE = re.compile(r'https://x\d+.xingassets.com/assets/frontend_minified/'
+                    r'img/users/\w+.140x185.jpg')
 
 
 CONFIG = {

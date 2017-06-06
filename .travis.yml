@@ -7,6 +7,7 @@ addons:
 install: sudo pip install tox
 script: sudo tox -- -vvx --tb=no
 after_failure:
+- tail -n 1000000 flask.log
 - tail -n 1000000 tests/functional_tests/*.log
 - tail -n 1000000 tests/*.log
 before_install:
