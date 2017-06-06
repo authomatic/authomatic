@@ -10,4 +10,5 @@ Helper functions for use with :class:`Authomatic`.
 """
 
 from . import six
-from .core import Authomatic, provider_id
+from .core import Authomatic
+from .core import provider_id

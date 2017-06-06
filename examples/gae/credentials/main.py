@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # main.py
 
 import urllib
@@ -11,29 +12,36 @@ from config import CONFIG
 # Setup Authomatic.
 authomatic = Authomatic(config=CONFIG, secret='a-long-secret-string')
 
+
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
-        
+
         # Log the user in.
         result = authomatic.login(Webapp2Adapter(self), provider_name)
-        
+
         if result:
             if result.user:
                 result.user.update()
                 self.response.write('<h1>Hi {0}</h1>'.format(result.user.name))
-                
-                # Save the user name and ID to cookies that we can use it in other handlers.
+
+                # Save the user name and ID to cookies that we can use it in
+                # other handlers.
                 self.response.set_cookie('user_id', result.user.id)
-                self.response.set_cookie('user_name', urllib.quote(result.user.name))
-                
+                self.response.set_cookie(
+                    'user_name', urllib.quote(
+                        result.user.name))
+
                 if result.user.credentials:
                     # Serialize credentials and store it as well.
-                    serialized_credentials = result.user.credentials.serialize()
-                    self.response.set_cookie('credentials', serialized_credentials)
-                    
+                    serialized_credentials = result.user.credentials.serialize()  # noqa
+                    self.response.set_cookie(
+                        'credentials', serialized_credentials)
+
             elif result.error:
-                self.response.set_cookie('error', urllib.quote(result.error.message))
-            
+                self.response.set_cookie(
+                    'error', urllib.quote(
+                        result.error.message))
+
             self.redirect('/')
 
 
@@ -42,33 +50,40 @@ class Home(webapp2.RequestHandler):
         # Create links to the Login handler.
         self.response.write('Login with <a href="login/fb">Facebook</a> or ')
         self.response.write('<a href="login/tw">Twitter</a>')
-        
+
         # Retrieve values from cookies.
         serialized_credentials = self.request.cookies.get('credentials')
         user_id = self.request.cookies.get('user_id')
         user_name = urllib.unquote(self.request.cookies.get('user_name', ''))
         error = urllib.unquote(self.request.cookies.get('error', ''))
-        
+
         if error:
             self.response.write('<p>Damn that error: {0}</p>'.format(error))
         elif user_id:
             self.response.write('<h1>Hi {0}</h1>'.format(user_name))
-            
+
             if serialized_credentials:
                 # Deserialize credentials.
                 credentials = authomatic.credentials(serialized_credentials)
-                
+
                 self.response.write("""
                 <p>
-                    You are logged in with <b>{0}</b> and we have your credentials.
+                    You are logged in with <b>{0}</b> and we have your
+                    credentials.
                 </p>
-                """.format(dict(fb='Facebook', tw='Twitter')[credentials.provider_name]))
-                
+                """.format(
+                    dict(
+                        fb='Facebook',
+                        tw='Twitter'
+                    )[credentials.provider_name])
+                )
+
                 valid = 'still' if credentials.valid else 'not anymore'
-                expire_soon = 'less' if credentials.expire_soon(60 * 60 * 24) else 'more'
+                expire_soon = 'less' if credentials.expire_soon(
+                    60 * 60 * 24) else 'more'
                 remaining = credentials.expire_in
                 expire_on = credentials.expiration_date
-                
+
                 self.response.write("""
                 <p>
                     They are <b>{0}</b> valid and
@@ -77,7 +92,7 @@ class Home(webapp2.RequestHandler):
                     It will be on <b>{0}</b>.
                 </p>
                 """.format(valid, expire_soon, remaining, expire_on))
-                
+
                 if credentials.valid:
                     self.response.write("""
                     <p>We can refresh them while they are valid.</p>
@@ -88,11 +103,12 @@ class Home(webapp2.RequestHandler):
                 else:
                     self.response.write("""
                     <p>
-                        Repeat the <b>login procedure</b>to get new credentials.
+                        Repeat the <b>login procedure</b>to get new
+                        credentials.
                     </p>
                     <a href="login/{0}">Refresh</a>
                     """.format(credentials.provider_name))
-            
+
             self.response.write('<p>We can also log you out.</p>')
             self.response.write('<a href="logout">OK, log me out!</a>')
 
@@ -100,16 +116,16 @@ class Home(webapp2.RequestHandler):
 class Refresh(webapp2.RequestHandler):
     def get(self):
         self.response.write('<a href="..">Home</a>')
-        
+
         serialized_credentials = self.request.cookies.get('credentials')
         credentials = authomatic.credentials(serialized_credentials)
         old_expiration = credentials.expiration_date
-        
+
         response = credentials.refresh(force=True)
-        
+
         if response:
             new_expiration = credentials.expiration_date
-            
+
             if response.status == 200:
                 self.response.write("""
                 <p>
@@ -126,8 +142,9 @@ class Refresh(webapp2.RequestHandler):
                 <pre>{0}</pre>
                 """.format(response.status, response.content))
         else:
-            self.response.write('<p>Your credentials don\'t support refreshment!</p>')
-        
+            self.response.write(
+                '<p>Your credentials don\'t support refreshment!</p>')
+
         self.response.write('<a href="">Try again!</a>')
 
 
@@ -137,58 +154,66 @@ class Action(webapp2.RequestHandler):
             text = 'post a status on your Facebook timeline'
         elif provider_name == 'tw':
             text = 'tweet'
-        
+
         self.response.write("""
         <a href="..">Home</a>
         <p>We can {0} on your behalf.</p>
         <form method="post">
-            <input type="text" name="message" value="Have you got a bandage?" />
+            <input type="text" name="message"
+                   value="Have you got a bandage?" />
             <input type="submit" value="Do it!">
         </form>
         """.format(text))
-    
+
     def post(self, provider_name):
         self.response.write('<a href="..">Home</a>')
-        
-        # Retrieve the message from POST parameters and the values from cookies.
-        message = self.request.POST.get('message')        
+
+        # Retrieve the message from POST parameters and the values from
+        # cookies.
+        message = self.request.POST.get('message')
         serialized_credentials = self.request.cookies.get('credentials')
         user_id = self.request.cookies.get('user_id')
-        
+
         if provider_name == 'fb':
             # Prepare the URL for Facebook Graph API.
             url = 'https://graph.facebook.com/{0}/feed'.format(user_id)
-            
+
             # Access user's protected resource.
             response = authomatic.access(serialized_credentials, url,
                                          params=dict(message=message),
                                          method='POST')
-            
+
             # Parse response.
             post_id = response.data.get('id')
             error = response.data.get('error')
-            
+
             if error:
-                self.response.write('<p>Damn that error: {0}!</p>'.format(error))
+                self.response.write(
+                    '<p>Damn that error: {0}!</p>'.format(error))
             elif post_id:
-                self.response.write('<p>You just posted a status with id ' + \
-                                    '{0} to your Facebook timeline.<p/>'.format(post_id))
+                self.response.write(
+                    '<p>You just posted a status with id ' +
+                    '{0} to your Facebook timeline.<p/>'.format(post_id))
             else:
-                self.response.write('<p>Damn that unknown error! Status code: {0}</p>'\
-                                    .format(response.status))
-        
+                self.response.write(
+                    '<p>Damn that unknown error! Status code: {0}</p>'.format(
+                        response.status
+                    ))
+
         elif provider_name == 'tw':
-            
-            response = authomatic.access(serialized_credentials,
-                                         url='https://api.twitter.com/1.1/statuses/update.json',
-                                         params=dict(status=message),
-                                         method='POST')
-            
+
+            response = authomatic.access(
+                serialized_credentials,
+                url='https://api.twitter.com/1.1/statuses/update.json',
+                params=dict(status=message),
+                method='POST')
+
             error = response.data.get('errors')
             tweet_id = response.data.get('id')
-            
+
             if error:
-                self.response.write('<p>Damn that error: {0}!</p>'.format(error))
+                self.response.write(
+                    '<p>Damn that error: {0}!</p>'.format(error))
             elif tweet_id:
                 self.response.write("""
                 <p>
@@ -201,7 +226,7 @@ class Action(webapp2.RequestHandler):
                     Damn that unknown error! Status code: {0}
                 </p>
                 """.format(response.status))
-        
+
         # Let the user repeat the action.
         self.response.write("""
         <form method="post">
@@ -217,7 +242,7 @@ class Logout(webapp2.RequestHandler):
         self.response.delete_cookie('user_id')
         self.response.delete_cookie('user_name')
         self.response.delete_cookie('credentials')
-        
+
         # Redirect home.
         self.redirect('./')
 

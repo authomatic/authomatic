@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # example/example/urls.py
 
 from django.conf.urls import patterns, include, url
@@ -6,7 +7,8 @@ from django.conf.urls import patterns, include, url
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     # Examples:
     # url(r'^$', 'example.views.home', name='home'),
     # url(r'^example/', include('example.foo.urls')),
@@ -16,6 +18,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
-    
+
     url(r'^simple/', include('simple.urls')),
 )
