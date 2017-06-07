@@ -11,7 +11,7 @@ after_failure:
 - tail -n 1000000 tests/functional_tests/*.log
 - tail -n 1000000 tests/*.log
 before_install:
-- openssl aes-256-cbc -K $encrypted_cd197f1c301c_key -iv $encrypted_cd197f1c301c_iv
+- openssl aes-256-cbc -K $encrypted_5fa87d13797d_key -iv $encrypted_5fa87d13797d_iv
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
 - brew update
