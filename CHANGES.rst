@@ -1,7 +1,8 @@
 Unreleased
 ----------
 
-* Add :attr: email to :class: `oauth1.Twitter` provider.
+* Fixed the API urls of the :class:`oauth1.Plurk` provider.
+* Add :attr: email to :class:`oauth1.Twitter` provider.
 * Added support for :attr:`.User.country` and :attr:`.User.city` to 
   :class: `oauth1.Twitter` provider. 
 * Fix Twitter user info endpoint to include image url.

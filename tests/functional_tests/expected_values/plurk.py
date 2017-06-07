@@ -7,8 +7,8 @@ from authomatic.providers import oauth1
 
 conf = fixtures.get_configuration('plurk')
 
-LINK = 'http://www.plurk.com/{0}/'.format(conf.user_username)
-PICTURE = 'http://avatars.plurk.com/{0}-big2.jpg'.format(conf.user_id)
+LINK = 'https://www.plurk.com/{0}/'.format(conf.user_username)
+PICTURE = 'https://avatars.plurk.com/{0}-big2.jpg'.format(conf.user_id)
 
 CONFIG = {
     'login_xpath': '//*[@id="input_nick_name"]',
@@ -52,21 +52,23 @@ CONFIG = {
 
         # User info JSON keys
         'about', 'accept_private_plurk_from', 'alerts_count', 'anonymous',
-        'avatar', 'avatar_big', 'avatar_medium', 'avatar_small', 'bday_privacy',
-        'content', 'content_raw', 'date_of_birth', 'dateformat', 'default_lang',
-        'display_name', 'email', 'email_confirmed', 'fans_count', 'favorers',
-        'favorite', 'favorite_count', 'friends_count', 'full_name', 'gender',
-        'has_profile_image', 'has_read_permission', 'id', 'is_unread', 'karma',
-        'lang', 'limited_to', 'location', 'name_color', 'nick_name',
+        'avatar', 'avatar_big', 'avatar_medium', 'avatar_small',
+        'background_id', 'bday_privacy', 'coins', 'content', 'content_raw',
+        'creature_url', 'date_of_birth', 'dateformat', 'default_lang',
+        'display_name', 'email', 'email_confirmed', 'excluded', 'fans_count',
+        'favorers', 'favorite', 'favorite_count', 'friends_count', 'full_name',
+        'gender', 'has_gift', 'has_profile_image', 'has_read_permission', 'id',
+        'is_unread', 'karma', 'lang', 'last_edited', 'limited_to',
+        'link_facebook', 'location', 'mentioned', 'name_color', 'nick_name',
         'no_comments', 'owner_id', 'page_title', 'plurk_id', 'plurk_type',
         'plurks', 'plurks_count', 'plurks_users', 'porn',
-        'post_anonymous_plurk', 'posted', 'privacy', 'profile_views',
+        'post_anonymous_plurk', 'posted', 'premium', 'privacy', 'profile_views',
         'qualifier', 'qualifier_translated', 'recruited', 'relationship',
         'replurkable', 'replurked', 'replurker_id', 'replurkers',
-        'replurkers_count', 'response_count', 'responses_seen',
+        'replurkers_count', 'responded', 'response_count', 'responses_seen',
         'setup_facebook_sync', 'setup_twitter_sync', 'setup_weibo_sync',
-        'timezone', 'uid', 'unread_count', 'user_id', 'user_info',
-        'verified_account'
+        'show_ads', 'show_location', 'timeline_privacy', 'timezone', 'uid',
+        'unread_count', 'user_id', 'user_info', 'verified_account'
     ],
     # Case insensitive
     'content_should_not_contain':

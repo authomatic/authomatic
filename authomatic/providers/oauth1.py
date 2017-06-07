@@ -755,10 +755,10 @@ class Plurk(OAuth1):
     )
     
     
-    request_token_url = 'http://www.plurk.com/OAuth/request_token'
-    user_authorization_url = 'http://www.plurk.com/OAuth/authorize'
-    access_token_url = 'http://www.plurk.com/OAuth/access_token'
-    user_info_url = 'http://www.plurk.com/APP/Profile/getOwnProfile'
+    request_token_url = 'https://www.plurk.com/OAuth/request_token'
+    user_authorization_url = 'https://www.plurk.com/OAuth/authorize'
+    access_token_url = 'https://www.plurk.com/OAuth/access_token'
+    user_info_url = 'https://www.plurk.com/APP/Profile/getOwnProfile'
     
     
     @staticmethod
@@ -772,11 +772,11 @@ class Plurk(OAuth1):
         user.locale = _user.get('default_lang')
         user.name = _user.get('full_name')
         user.nickname = _user.get('nick_name')
-        user.picture = 'http://avatars.plurk.com/{0}-big2.jpg'.format(user.id)
+        user.picture = 'https://avatars.plurk.com/{0}-big2.jpg'.format(user.id)
         user.timezone = _user.get('timezone')
         user.username = _user.get('display_name')
 
-        user.link = 'http://www.plurk.com/{0}/'.format(user.username)
+        user.link = 'https://www.plurk.com/{0}/'.format(user.username)
         
         user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
