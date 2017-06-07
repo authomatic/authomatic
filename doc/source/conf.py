@@ -83,7 +83,7 @@ rst_prolog = """
 .. |async| replace:: The internal implementation of the future pattern is quite naive. Use with caution!
 
 .. |provider-class| replace:: provider class
-.. _provider-class: /reference/providers
+.. _provider-class: providers
 
 
 .. |no-csrf| replace:: This provider doesn't support CSRF protection!
