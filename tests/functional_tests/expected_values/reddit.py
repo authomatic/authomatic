@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -8,7 +9,7 @@ CONFIG = {
     'login_xpath': '//*[@id="user_login"]',
     'password_xpath': '//*[@id="passwd_login"]',
     'consent_xpaths': [
-        '/html/body/div[2]/div/div[2]/form/div/input[1]',
+        '/html/body/div[3]/div/div[2]/form/div/input[1]',
     ],
     'consent_wait_seconds': 3,
     'class_': oauth2.Reddit,

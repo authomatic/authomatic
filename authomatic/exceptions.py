@@ -3,26 +3,27 @@
 Provides various exception types for the library.
 """
 
+
 class BaseError(Exception):
     """
     Base error for all errors.
     """
-    
+
     def __init__(self, message, original_message='', url='', status=None):
         super(BaseError, self).__init__(message)
-        
+
         #: Error message.
         self.message = message
-        
+
         #: Original message.
         self.original_message = original_message
-        
+
         #: URL related with the error.
         self.url = url
-        
+
         #: HTTP status code related with the error.
         self.status = status
-    
+
     def to_dict(self):
         return self.__dict__
 
@@ -81,5 +82,3 @@ class FetchError(BaseError):
 
 class RequestElementsError(BaseError):
     pass
-
-

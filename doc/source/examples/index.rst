@@ -9,3 +9,4 @@ Tutorials / Examples
    pyramid-simple
    simple
    credentials
+   providers
