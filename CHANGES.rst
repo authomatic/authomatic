@@ -28,6 +28,8 @@ Version 0.1.0
   :class:`.oauth1.Plurk` provider.
 * The :class:`.oauth1.Flickr` provider doesn't make the redundant API call
   during :meth:`.oauth1.Flickr.update_user` anymore.
+* Removed support for :attr:`.User.birth_date` and :attr:`.User.gender`
+  from the :class:`.oauth1.Yahoo` provider.
 * Added the :attr:`.User.location` attribute.
 * Removed support for :attr:`.User.country` and :attr:`.User.city` from
   :class:`.oauth1.Twitter` and :class:`.oauth2.GitHub` providers.

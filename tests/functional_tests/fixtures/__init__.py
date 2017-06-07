@@ -144,6 +144,9 @@ def get_configuration(provider):
     Res.user_birth_date_str = bday.strftime(Res.BIRTH_DATE_FORMAT)
 
     Res.no_birth_date = ['birth']
+    Res.no_birth_year = [conf['user_birth_year'], 'birth_year', 'birthYear']
+    Res.no_birth_month = [conf['user_birth_month'], 'birth_month', 'birthMonth']
+    Res.no_birth_day = [conf['user_birth_day'], 'birth_day', 'birthDay']
     Res.no_city = [conf['user_city'], 'city']
     Res.no_country = [conf['user_country'], 'country']
     Res.no_email = [conf['user_email'], 'email']
