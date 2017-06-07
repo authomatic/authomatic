@@ -7,7 +7,7 @@ from authomatic.providers import oauth1
 conf = fixtures.get_configuration('meetup')
 
 LINK = 'http://www.meetup.com/members/{0}'.format(conf.user_id)
-PICTURE = re.compile(r'http://photos\d+.meetupstatic.com/photos/member/'
+PICTURE = re.compile(r'https://.*?.meetupstatic.com/photos/member/'
                      r'\w/\d+/\w/\d+/member_\d+.jpeg')
 
 CONFIG = {
