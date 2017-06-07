@@ -809,7 +809,6 @@ class Twitter(OAuth1):
 
     Supported :class:`.User` properties:
 
-    * email
     * city
     * country
     * id
@@ -824,6 +823,7 @@ class Twitter(OAuth1):
 
     * birth_date
     * gender
+    * email
     * first_name
     * last_name
     * nickname
@@ -837,7 +837,6 @@ class Twitter(OAuth1):
         city=True,
         country=True,
         id=True,
-        email=True,
         link=True,
         locale=True,
         location=True,

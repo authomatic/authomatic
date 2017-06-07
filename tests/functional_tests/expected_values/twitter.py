@@ -32,8 +32,8 @@ CONFIG = {
     'class_': oauth1.Twitter,
     'user': {
         'birth_date': None,
-        'city': None,
-        'country': None,
+        'city': conf.user_city,
+        'country': conf.user_country,
         'email': None,
         'gender': None,
         'id': conf.user_id,
