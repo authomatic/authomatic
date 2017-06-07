@@ -144,7 +144,8 @@ def get_configuration(provider):
     Res.no_country = [conf['user_country'], 'country']
     Res.no_email = [conf['user_email'], 'email']
     Res.no_first_name = ['"{0}"'.format(conf['user_first_name']), 'first']
-    Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last']
+    Res.no_last_name = ['"{0}"'.format(conf['user_last_name']), 'last_name',
+                        'lastname']
     Res.no_gender = [conf['user_gender'], 'gender']
     Res.no_link = ['link']
     Res.no_locale = [conf['user_locale'], 'language', 'locale']
