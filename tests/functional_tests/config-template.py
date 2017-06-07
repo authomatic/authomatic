@@ -61,12 +61,14 @@ INCLUDE_PROVIDERS = [
     'tumblr',
     # 'ubuntuone',  # UbuntuOne service is no longer available
     'vimeo',
-    'xero',
+    # Xero requires creation of a new trial project every month which makes
+    # the setup of the automated test too laborious to support it.
+    # 'xero',
     'xing',
     'yahoo',
 
     # OAuth 2.0
-    'amazon',
+    # 'amazon',  # Asks for a captcha (cannot be automated)
     # 'behance',  # doesn't support third party authorization anymore.
     'bitly',
     'deviantart',
@@ -74,7 +76,7 @@ INCLUDE_PROVIDERS = [
     'foursquare',
     'google',
     'github',
-    'linkedin',
+    'linkedin',  # Asks for verification when running in Travis CI evnironment
     'paypal',
     'reddit',
     'vk',
@@ -83,7 +85,7 @@ INCLUDE_PROVIDERS = [
     'yandex',
 
     # OpenID
-    'openid_livejournal',
+    # 'openid_livejournal',  # Login and password elements are not visible.
     'openid_verisignlabs',
     'openid_wordpress',
     'openid_yahoo',
@@ -115,8 +117,10 @@ NAME = FIRST_NAME + ' ' + LAST_NAME
 USERNAME = 'andypipkin'
 USERNAME_REVERSE = 'pipkinandy'
 NICKNAME = 'Mr. Pipkin'
-BIRTH_YEAR = '1979'
-BIRTH_DATE = datetime.datetime(1979, 12, 31).strftime('%x')
+BIRTH_YEAR = 1979
+BIRTH_MONTH = 11
+BIRTH_DAY = 18
+BIRTH_DATE = datetime.datetime(BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY)
 CITY = 'London'
 COUNTRY = 'Great Britain'
 COUNTRY_ISO2 = 'gb'
@@ -131,6 +135,9 @@ LOCATION = CITY + ', ' + COUNTRY
 COMMON = {
     # Could be same if the user sets it so
     'user_birth_date': BIRTH_DATE,
+    'user_birth_day': BIRTH_DAY,
+    'user_birth_month': BIRTH_MONTH,
+    'user_birth_year': BIRTH_YEAR,
     'user_login': EMAIL,
     'user_email': EMAIL,
     'user_first_name': FIRST_NAME,
@@ -201,6 +208,9 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
+        # Twitter considers selenium login attempts suspicious and occasionally
+        # asks a security challenge question. This will be used as the answer.
+        'user_challenge_answer': '??????????',
     },
     'tumblr': {
         'consumer_key': '##########',

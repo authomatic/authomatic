@@ -12,7 +12,7 @@ CONFIG = {
         '//*[@id="js"]/body/div[7]/header/span',
         '//*[@id="js"]/body/div[4]/header/div/nav[1]/ul[2]/li[1]/a',
     ],
-    # 'login_url': 'http://www.livejournal.com/login.bml',
+    'login_url': 'http://www.livejournal.com/login.bml',
     'login_xpath': '//*[@id="user"]',
     'password_xpath': '//*[@id="lj_loginwidget_password"]',
     'consent_xpaths': [

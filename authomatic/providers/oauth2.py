@@ -1373,7 +1373,7 @@ class LinkedIn(OAuth2):
     # http://developer.linkedin.com/forum/unauthorized-invalid-or-expired-token-immediately-after-receiving-oauth2-token
 
     supported_user_attributes = core.SupportedUserAttributes(
-        city=True
+        city=True,
         country=True,
         email=True,
         first_name=True,
