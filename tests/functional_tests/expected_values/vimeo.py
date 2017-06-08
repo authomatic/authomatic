@@ -5,8 +5,8 @@ import constants
 from authomatic.providers import oauth1
 
 conf = fixtures.get_configuration('vimeo')
-LINK = 'http://vimeo.com/user{0}'.format(conf.user_id)
-PICTURE = re.compile(r'http://\w+.vimeocdn.com/portrait/\d+_300x300.jpg')
+LINK = 'https://vimeo.com/user{0}'.format(conf.user_id)
+PICTURE = re.compile(r'http.?://.*?/portrait/\d+_300x300')
 
 
 CONFIG = {
@@ -15,6 +15,7 @@ CONFIG = {
     'password_xpath': '//*[@id="login_password"]',
     'consent_xpaths': [
         '//*[@id="security"]/form/input[4]',
+        '//*[@id="main"]/article/div/div/div/form/input[4]',
     ],
     'class_': oauth1.Vimeo,
     'user': {
