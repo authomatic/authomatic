@@ -92,6 +92,13 @@ def log(indent, provider_name, message):
     ))
 
 
+def pause(indent, provider_name, request):
+    if request.config.getoption("--pause"):
+        log(indent, provider_name, 'Pausing to pdb')
+        import pdb;
+        pdb.set_trace()
+
+
 def click_on_element(element):
     """
     Tries to click on element with a fallback of hitting enter if element not
@@ -212,9 +219,7 @@ def login(request, browser, app, attempt=1):
             pass
 
         # Pause for getting login and password xpaths
-        if request.config.getoption("--pause"):
-            log(2, provider_name, 'Pausing to pdb')
-            import pdb; pdb.set_trace()
+        pause(2, provider_name, request)
 
         if login_xpath:
             if pre_login_xpaths:
@@ -245,6 +250,11 @@ def login(request, browser, app, attempt=1):
             wait(2, provider.get('before_password_input_wait'))
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
+
+            pause(2, provider_name, request)
+
+            log(2, provider_name, 'Finding password input {0}'
+                .format(login_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)
             log(3, provider_name, 'Filling out password')
             password_element.send_keys(conf.user_password)
@@ -273,13 +283,14 @@ def login(request, browser, app, attempt=1):
             for xpath in consent_xpaths:
                 try:
                     wait(2, provider.get('consent_wait_seconds'))
+                    pause(2, provider_name, request)
 
                     log(2, provider_name,
                         'Finding consent button {0}'.format(xpath))
                     button = browser.find_element_by_xpath(xpath)
+                    log(3, provider_name, 'Clicking consent button')
                     click_on_element(button)
 
-                    log(3, provider_name, 'Clicking consent button')
                 except NoSuchElementException as e:
                     log(3, provider_name,
                         'Consent button not found! '
