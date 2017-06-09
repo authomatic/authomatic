@@ -757,8 +757,8 @@ class Eventbrite(OAuth2):
     Thanks to `Paul Brown <http://www.paulsprogrammingnotes.com/>`__.
     
     * Dashboard: http://www.eventbrite.com/myaccount/apps/
-    * Docs: https://developer.eventbrite.com/docs/auth/
-    * API: http://developer.eventbrite.com/docs/
+    * Docs: https://www.eventbrite.com/developer/v3/api_overview/authentication/
+    * API: https://www.eventbrite.com/developer/v3/
 
     Supported :class:`.User` properties:
 
@@ -796,6 +796,14 @@ class Eventbrite(OAuth2):
         last_name=True,
         name=True,
     )
+
+    @staticmethod
+    def csrf_generator(secret):
+        # Eventbrite throws the "The application you're trying to use
+        # has made an invalid request to Eventbrite" error if the
+        # "state" request parameter is longer than 64 characters.
+        # Thus we need to truncate the CSRF token to a maximum of 14 characters.
+        return super(Eventbrite, Eventbrite).csrf_generator(secret)[:14]
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
