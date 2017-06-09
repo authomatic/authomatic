@@ -8,7 +8,7 @@ CONFIG = {
     'login_xpath': '//*[@id="login-username"]',
     'password_xpath': '//*[@id="login-passwd"]',
     'consent_xpaths': [
-        '//*[@id="permissions"]/form/div/input[1]',
+        '//input[contains(@value, "OK")]',
     ],
     'enter_after_login_input': True,
     'before_password_input_wait': 1,
