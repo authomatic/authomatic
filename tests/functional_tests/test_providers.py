@@ -10,7 +10,6 @@ import liveandletdie
 import pytest
 import requests
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import (
     NoSuchElementException,
     TimeoutException,
@@ -93,13 +92,26 @@ def log(indent, provider_name, message):
     ))
 
 
+def click_on_element(element):
+    """
+    Tries to click on element with a fallback of hitting enter if element not
+    clickable.
+
+    :param element:
+        A webdriver element.
+    """
+    try:
+        element.click()
+    except WebDriverException:
+        element.send_keys(Keys.ENTER)
+
+
 @pytest.fixture('module')
 def browser(request):
     """Starts and stops the server for each app in APPS"""
     _browser = config.get_browser()
     _browser.set_window_size(800, 600)
     _browser.set_window_position(1024 - 800 - 10, 40)
-    # _browser.implicitly_wait(4)
     request.addfinalizer(lambda: _browser.quit())
     return _browser
 
@@ -136,8 +148,6 @@ def login(request, browser, app, attempt=1):
 
         if seconds:
             log(indent, provider_name, u'(waiting {0} seconds)'.format(seconds))
-            # log(0, provider_name, u' waiting {0} seconds '
-            #     .format(seconds).center(60, '#'))
             time.sleep(seconds)
 
     def human_interaction_needed(xpath, seconds=0):
@@ -215,7 +225,7 @@ def login(request, browser, app, attempt=1):
 
                     log(3, provider_name,
                         'Clicking on pre-login element'.format(xpath))
-                    pre_login.click()
+                    click_on_element(pre_login)
 
             log(2, provider_name, 'Finding login input {0}'.format(login_xpath))
             login_element = browser.find_element_by_xpath(login_xpath)
@@ -267,9 +277,9 @@ def login(request, browser, app, attempt=1):
                     log(2, provider_name,
                         'Finding consent button {0}'.format(xpath))
                     button = browser.find_element_by_xpath(xpath)
+                    click_on_element(button)
 
                     log(3, provider_name, 'Clicking consent button')
-                    button.click()
                 except NoSuchElementException as e:
                     log(3, provider_name,
                         'Consent button not found! '
