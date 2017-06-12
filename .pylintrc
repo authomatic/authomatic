@@ -1,0 +1,8 @@
+[MASTER]
+
+[MESSAGES CONTROL]
+ignored-modules=authomatic.six.moves,flask,google.appengine,openid,webapp2_extras
+
+[REPORTS]
+reports=no
+
