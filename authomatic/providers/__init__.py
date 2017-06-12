@@ -224,10 +224,10 @@ class BaseProvider(object):
         """
 
         return dict(name=self.name,
-                    id=self.id if hasattr(self, 'id') else None,
+                    id=getattr(self, 'id', None),
                     type_id=self.type_id,
                     type=self.get_type(),
-                    scope=self.scope if hasattr(self, 'scope') else None,
+                    scope=getattr(self, 'scope', None),
                     user=self.user.id if self.user else None)
 
     @classmethod
