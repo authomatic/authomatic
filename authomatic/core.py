@@ -643,7 +643,7 @@ SupportedUserAttributesNT = collections.namedtuple(
 
 class SupportedUserAttributes(SupportedUserAttributesNT):
     def __new__(cls, **kwargs):
-        defaults = dict((i, False) for i in SupportedUserAttributes._fields)
+        defaults = dict((i, False) for i in SupportedUserAttributes._fields)  # pylint:disable=no-member
         defaults.update(**kwargs)
         return super(SupportedUserAttributes, cls).__new__(cls, **defaults)
 
@@ -1762,4 +1762,3 @@ class Authomatic(object):
 
         # Write result to response
         adapter.write(result)
-

@@ -380,6 +380,8 @@ class BaseProvider(object):
             from :attr:`.Response.content`.
 
         """
+        # 'magic' using _kwarg method
+        # pylint:disable=no-member
         params = params or {}
         params.update(self.access_params)
 
@@ -895,6 +897,8 @@ class AuthorizationProvider(BaseProvider):
         Validates the :attr:`.consumer`.
         """
 
+        # 'magic' using _kwarg method
+        # pylint:disable=no-member
         if not self.consumer.key:
             raise ConfigError(
                 'Consumer key not specified for provider {0}!'.format(
