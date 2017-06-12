@@ -418,9 +418,8 @@ class BaseProvider(object):
         try:
             connection.request(method, request_path, body, headers)
         except Exception as e:
-            original_message = e.message if hasattr(e, 'message') else str(e)
-            raise FetchError(message,
-                             original_message=original_message,
+            raise FetchError('Fetching URL failed',
+                             original_message=str(e),
                              url=request_path)
 
         response = connection.getresponse()
