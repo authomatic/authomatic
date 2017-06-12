@@ -224,10 +224,10 @@ class BaseProvider(object):
         """
 
         return dict(name=self.name,
-                    id=self.id if hasattr(self, 'id') else None,
+                    id=getattr(self, 'id', None),
                     type_id=self.type_id,
                     type=self.get_type(),
-                    scope=self.scope if hasattr(self, 'scope') else None,
+                    scope=getattr(self, 'scope', None),
                     user=self.user.id if self.user else None)
 
     @classmethod
@@ -380,6 +380,8 @@ class BaseProvider(object):
             from :attr:`.Response.content`.
 
         """
+        # 'magic' using _kwarg method
+        # pylint:disable=no-member
         params = params or {}
         params.update(self.access_params)
 
@@ -416,9 +418,8 @@ class BaseProvider(object):
         try:
             connection.request(method, request_path, body, headers)
         except Exception as e:
-            original_message = e.message if hasattr(e, 'message') else str(e)
-            raise FetchError(message,
-                             original_message=original_message,
+            raise FetchError('Fetching URL failed',
+                             original_message=str(e),
                              url=request_path)
 
         response = connection.getresponse()
@@ -895,6 +896,8 @@ class AuthorizationProvider(BaseProvider):
         Validates the :attr:`.consumer`.
         """
 
+        # 'magic' using _kwarg method
+        # pylint:disable=no-member
         if not self.consumer.key:
             raise ConfigError(
                 'Consumer key not specified for provider {0}!'.format(
