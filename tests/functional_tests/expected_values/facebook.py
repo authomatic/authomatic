@@ -50,15 +50,13 @@ CONFIG = {
         conf.user_gender,
         conf.user_id,
         conf.user_last_name,
-        LINK.replace('/', '\/'),
         conf.user_locale,
         conf.user_location,
-        conf.user_name,
 
         # User info JSON keys
-        'bio', 'birthday', 'email', 'first_name', 'gender', 'id', 'last_name',
-        'link', 'locale', 'location', 'name', 'timezone', 'updated_time',
-        'verified'
+        'birthday', 'data', 'email', 'first_name', 'gender', 'id',
+        'is_silhouette', 'last_name', 'locale', 'location', 'name', 'picture',
+        'timezone', 'url'
     ],
     # Case insensitive
     'content_should_not_contain':
@@ -66,9 +64,9 @@ CONFIG = {
         conf.no_phone +
         conf.no_postal_code +
         conf.no_username,
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
-        'token_type': None,
+        'token_type': 'Bearer',
         'provider_type_id': '2-5',
         '_expiration_time': True,
         'consumer_key': None,
