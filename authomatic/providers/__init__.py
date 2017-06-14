@@ -475,7 +475,7 @@ class BaseProvider(object):
                 # Extract every data item whose key matches the user property name,
                 # but only if it has a value.
                 value = data.get(key)
-                if value:
+                if value is not None:
                     setattr(self.user, key, value)
         
         # Handle different structure of data by different providers.
