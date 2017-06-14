@@ -22,7 +22,8 @@
         {% if property == 'birth_date' and result.user[property] %}
           <td id="{{ property }}">{{ result.user[property].strftime(birth_date_format) }}</td>
         {% else %}
-          <td id="{{ property }}">{{ result.user[property]|default('', true) }}</td>
+          {% set attr = result.user[property] %}
+          <td id="{{ property }}">{{ attr if attr is not none else '' }}</td>
         {% endif %}
       </tr>
     {% endfor %}
