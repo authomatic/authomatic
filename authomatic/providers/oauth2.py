@@ -929,6 +929,8 @@ class Facebook(OAuth2):
             if len(split_location) > 1:
                 user.country = split_location[1].strip()
 
+        user.link = u'https://www.facebook.com/{0}'.format(user.id)
+
         return user
     
     
