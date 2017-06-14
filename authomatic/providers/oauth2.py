@@ -934,8 +934,8 @@ class Facebook(OAuth2):
         return user
     
     
-    @staticmethod
-    def _x_credentials_parser(credentials, data):
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
         """
         We need to override this method to fix Facebooks naming deviation.
         """
