@@ -11,7 +11,7 @@ after_failure:
 - tail -n 1000000 tests/*.log
 before_install:
 - openssl aes-256-cbc -K $encrypted_7734b1bf544e_key -iv $encrypted_7734b1bf544e_iv
-  -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
+  -in ./tests/functional_tests/c  onfig.py.enc -out ./tests/functional_tests/config.py
   -d
 - brew update
 - brew install caskroom/cask/brew-cask
