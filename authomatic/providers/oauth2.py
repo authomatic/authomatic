@@ -1216,12 +1216,14 @@ class Google(OAuth2):
                        'email']
 
     supported_user_attributes = core.SupportedUserAttributes(
-        id=True,
         email=True,
-        name=True,
         first_name=True,
+        gender=True,
+        id=True,
         last_name=True,
+        link=True,
         locale=True,
+        name=True,
         picture=True
     )
     
@@ -1265,6 +1267,7 @@ class Google(OAuth2):
         user.name = data.get('name')
         user.first_name = data.get('given_name', '')
         user.last_name = data.get('family_name', '')
+        user.link = data.get('profile', '')
         user.locale = data.get('locale', '')
         user.picture = data.get('picture', '')
 

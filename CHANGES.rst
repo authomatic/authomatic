@@ -11,7 +11,7 @@ Unreleased
   instead of the deprecated ``https://www.googleapis.com/plus/v1/people/me``
 * Added support for :attr:`email_verified` and :attr:`hosted_domain`
   to :class:`.oauth2.Google` provider.
-* Removed support for :attr:`gender`, :attr:`link` and :attr:`birth_date`
+* Removed support for :attr:`gender` and :attr:`birth_date`
   from :class:`.oauth2.Google` provider.
 * Fix #160: Handle token_type of bearer (lower-case).
 * Fix #130: explicitly request fields from Facebook. 
