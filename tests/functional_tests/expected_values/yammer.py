@@ -25,8 +25,8 @@ CONFIG = {
     'scope': oauth2.Yammer.user_info_scope,
     'user': {
         'birth_date': BIRTH_DATE,
-        'city': conf.user_city,
-        'country': conf.user_country,
+        'city': None,
+        'country': None,
         'email': conf.user_email,
         'first_name': conf.user_first_name,
         'gender': None,

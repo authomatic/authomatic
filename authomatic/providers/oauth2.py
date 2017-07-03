@@ -1765,8 +1765,6 @@ class Yammer(OAuth2):
     Supported :class:`.User` properties:
 
     * birth_date
-    * city
-    * country
     * email
     * first_name
     * id
@@ -1782,6 +1780,8 @@ class Yammer(OAuth2):
 
     Unsupported :class:`.User` properties:
 
+    * city
+    * country
     * gender
     * nickname
     * postal_code
@@ -1794,8 +1794,6 @@ class Yammer(OAuth2):
 
     supported_user_attributes = core.SupportedUserAttributes(
         birth_date=True,
-        city=True,
-        country=True,
         email=True,
         first_name=True,
         id=True,
@@ -1812,7 +1810,6 @@ class Yammer(OAuth2):
     
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
-        # import pdb; pdb.set_trace()
         credentials.token_type = cls.BEARER
         _access_token = data.get('access_token', {})
         credentials.token = _access_token.get('token')
@@ -1835,10 +1832,6 @@ class Yammer(OAuth2):
         user.name = _user.get('full_name')
         user.link = _user.get('web_url')
         user.picture = _user.get('mugshot_url')
-        
-        user.city, user.country = _user.get('location', ',').split(',')
-        user.city = user.city.strip()
-        user.country = user.country.strip()
         user.locale = _user.get('web_preferences', {}).get('locale')
         
         # Contact

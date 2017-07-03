@@ -1,6 +1,8 @@
 Unreleased
 ----------
 
+* Removed support for :attr:`.User.country` and :attr:`.User.city` from
+  :class: `oauth2.Yammer` provider.
 * Added support for :attr:`.User.city` to :class:`oauth2.LinkedIn` provider.
 * Fixed the API urls of the :class:`oauth1.Plurk` provider.
 * Added support for :attr:`.User.country` and :attr:`.User.city` to 
