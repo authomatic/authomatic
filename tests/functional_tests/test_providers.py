@@ -16,6 +16,7 @@ from selenium.common.exceptions import (
     UnexpectedAlertPresentException,
     WebDriverException,
 )
+from selenium import webdriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -236,7 +237,11 @@ def login(request, browser, app, attempt=1):
             login_element = browser.find_element_by_xpath(login_xpath)
 
             log(3, provider_name, 'Filling out login')
-            login_element.send_keys(conf.user_login)
+            webdriver.ActionChains(browser)\
+                .move_to_element(login_element)\
+                .click()\
+                .send_keys(conf.user_login)\
+                .perform()
 
             enter_after_login_input = provider.get('enter_after_login_input')
             if enter_after_login_input:
