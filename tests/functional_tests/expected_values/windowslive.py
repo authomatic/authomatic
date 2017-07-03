@@ -1,5 +1,3 @@
-import datetime
-
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -10,12 +8,16 @@ conf = fixtures.get_configuration('windowslive')
 PICTURE = 'https://apis.live.net/v5.0/{0}/picture'.format(conf.user_id)
 
 CONFIG = {
-    'login_xpath': '//*[@id="i0116"]',
-    'password_xpath': '//*[@id="i0118"]',
+    'login_xpath': '//*[@id="CredentialsInputPane"]'
+                   '/div[2]/div/div/div[3]/div/div/div[2]/div',
+    'password_xpath': '//input[@type="password"]',
     'consent_xpaths': [
+        '//input[@type="submit"]',
+        '//*[@id="iNext"]',
         '//*[@id="idBtn_Accept"]',
+        '//*[@id="iLooksGood"]',
     ],
-    'consent_wait_seconds': 0,
+    'consent_wait_seconds': 1,
     'class_': oauth2.WindowsLive,
     'scope': oauth2.WindowsLive.user_info_scope,
     'offline': True,
