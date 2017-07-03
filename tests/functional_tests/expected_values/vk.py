@@ -1,4 +1,3 @@
-import datetime
 import re
 
 import fixtures
@@ -8,11 +7,11 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('vk')
 
-PICTURE = re.compile(r'http://[A-Za-z0-9]+\.vk\.me/[A-Za-z0-9-/]+\.jpg')
+PICTURE = re.compile(r'http.?://.*?(jpg|png|gif)')
 
 CONFIG = {
-    'login_xpath': '//*[@id="box"]/div/input[6]',
-    'password_xpath': '//*[@id="box"]/div/input[7]',
+    'login_xpath': '//input[@type="text"]',
+    'password_xpath': '//input[@type="password"]',
     'consent_xpaths': [
         '//*[@id="install_allow"]',
     ],
