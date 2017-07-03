@@ -1296,6 +1296,7 @@ class LinkedIn(OAuth2):
 
     Supported :class:`.User` properties:
 
+    * city
     * country
     * email
     * first_name
@@ -1309,7 +1310,6 @@ class LinkedIn(OAuth2):
     Unsupported :class:`.User` properties:
 
     * birth_date
-    * city
     * gender
     * locale
     * nickname
@@ -1332,6 +1332,7 @@ class LinkedIn(OAuth2):
     # http://developer.linkedin.com/forum/unauthorized-invalid-or-expired-token-immediately-after-receiving-oauth2-token
 
     supported_user_attributes = core.SupportedUserAttributes(
+        city=True,
         country=True,
         email=True,
         first_name=True,
@@ -1362,7 +1363,9 @@ class LinkedIn(OAuth2):
         user.last_name = data.get('lastName')
         user.email = data.get('emailAddress')
         user.name = data.get('formattedName')
-        user.country = data.get('location', {}).get('name')
+        user.city, user.country = data.get('location', {})\
+            .get('name', ',').split(',')
+
         user.location = data.get('location', {}).get('country', {}).get('code')
         user.phone = data.get('phoneNumbers', {}).get('values', [{}])[0]\
             .get('phoneNumber')

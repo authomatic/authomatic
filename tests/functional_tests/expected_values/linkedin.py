@@ -16,14 +16,13 @@ CONFIG = {
     'scope': oauth2.LinkedIn.user_info_scope,
     'user': {
         'birth_date': None,
-        'city': None,
+        'city': conf.user_city,
         'country': conf.user_country,
         'email': conf.user_email,
         'first_name': conf.user_first_name,
         'gender': None,
         'id': conf.user_id,
         'last_name': conf.user_last_name,
-        # 'link': re.compile(r'^https://www\.linkedin\.com/in/\w+$'),
         'link': re.compile(r'^https://www\.linkedin\.com/.*'),
         'locale': None,
         'location': re.compile(r'^\w{2}$'),
@@ -36,6 +35,7 @@ CONFIG = {
         'username': None,
     },
     'content_should_contain': [
+        conf.user_city,
         conf.user_country,
         conf.user_email,
         conf.user_first_name,
@@ -50,7 +50,6 @@ CONFIG = {
     # Case insensitive
     'content_should_not_contain':
         conf.no_birth_date +
-        conf.no_city +
         conf.no_gender +
         conf.no_locale +
         conf.no_nickname +
