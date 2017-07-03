@@ -1587,12 +1587,13 @@ class VK(OAuth2):
     VK.com |oauth2| provider.
     
     * Dashboard: http://vk.com/apps?act=manage
-    * Docs: http://vk.com/developers.php?oid=-17680044&p=Authorizing_Sites
-    * API reference: http://vk.com/developers.php?oid=-17680044&p=API_Method_Description
+    * Docs: https://vk.com/dev/authcode_flow_user
+    * API reference: https://vk.com/dev/methods
     
     .. note::
         
-        VK uses a `bitmask scope <http://vk.com/developers.php?oid=-17680044&p=Application_Rights>`_!
+        VK uses a `bitmask scope
+        <http://vk.com/developers.php?oid=-17680044&p=Application_Rights>`_!
         Use it like this:
         
     .. code-block:: python
@@ -1633,9 +1634,9 @@ class VK(OAuth2):
     * username
 
     """
-    
-    user_authorization_url = 'http://api.vkontakte.ru/oauth/authorize'
-    access_token_url = 'https://api.vkontakte.ru/oauth/access_token'
+
+    user_authorization_url = 'https://oauth.vk.com/authorize'
+    access_token_url = 'https://oauth.vk.com/access_token'
     user_info_url = 'https://api.vk.com/method/getProfiles?' + \
                     'fields=uid,first_name,last_name,nickname,sex,bdate,city,country,timezone,photo_big'
 
