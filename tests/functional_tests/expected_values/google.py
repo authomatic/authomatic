@@ -8,11 +8,12 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('google')
 
 LINK = 'https://plus.google.com/' + conf.user_id
+PICTURE = re.compile(r'^http.://.*(jpg|png|gif)')
 
 CONFIG = {
     'logout_url': 'https://accounts.google.com/Logout',
-    'login_xpath': '//*[@id="Email"]',
-    'password_xpath': '//*[@id="Passwd"]',
+    'login_xpath': '//*[@id="identifierId"]',
+    'password_xpath': '//input[@type="password"]',
     'enter_after_login_input': True,
     'consent_xpaths': [
         '//*[@id="submit_approve_access"]',
@@ -41,7 +42,7 @@ CONFIG = {
         'locale': re.compile(r'^\w{2}$'),
         'location': None,
         'phone': None,
-        'picture': re.compile(r'^https://\w+\.googleusercontent.com/-\w+/\w+/\w+/\w+/photo\.jpg\?sz=50$'),
+        'picture': PICTURE,
         'postal_code': None,
         'timezone': None,
     },
@@ -53,11 +54,8 @@ CONFIG = {
         LINK,
 
         # User info JSON keys
-        'kind', 'etag', 'occupation', 'gender', 'emails', 'value', 'type',
-        'urls', 'label', 'objectType', 'id', 'displayName', 'name',
-        'familyName', 'givenName', 'aboutMe', 'url', 'image', 'organizations',
-        'title', 'startDate', 'endDate', 'primary', 'placesLived', 'isPlusUser',
-        'language', 'circledByCount', 'verified'
+        'email', 'email_verified', 'family_name', 'gender', 'given_name',
+        'locale', 'name', 'picture', 'profile', 'sub',
     ],
     # Case insensitive
     'content_should_not_contain': [conf.user_postal_code]
