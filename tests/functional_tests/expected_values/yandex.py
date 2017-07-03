@@ -5,8 +5,8 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('yandex')
 
 CONFIG = {
-    'login_xpath': '//*[@id="login"]',
-    'password_xpath': '//*[@id="passwd"]',
+    'login_xpath': '//input[@type="text"]',
+    'password_xpath': '//input[@type="password"]',
     'consent_xpaths': [
         '//*[@id="nb-2"]',
     ],
@@ -64,8 +64,26 @@ CONFIG = {
         'token_secret': None,
         '_expire_in': True,
         'provider_name': 'yandex',
-        'refresh_token': None,
+        'refresh_token': True,
         'provider_type': 'authomatic.providers.oauth2.OAuth2',
-        'refresh_status': constants.CREDENTIALS_REFRESH_NOT_SUPPORTED,
+        'refresh_status': constants.CREDENTIALS_REFRESH_OK,
+    },
+    # Testing changes after credentials refresh
+    # same: True
+    # not same: False
+    # don't test: None
+    'credentials_refresh_change': {
+        'token_type': True,
+        'provider_type_id': True,
+        '_expiration_time': True,
+        'consumer_key': True,
+        'provider_id': True,
+        'consumer_secret': True,
+        'token': True,
+        'token_secret': True,
+        '_expire_in': None,  # Somtimes differ in one second.
+        'provider_name': True,
+        'refresh_token': False,
+        'provider_type': True,
     },
 }
