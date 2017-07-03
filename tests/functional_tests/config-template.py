@@ -86,7 +86,6 @@ INCLUDE_PROVIDERS = [
 
     # OpenID
     # 'openid_livejournal',  # Login and password elements are not visible.
-    'openid_verisignlabs',
     'openid_wordpress',
     'openid_yahoo',
 ]
@@ -360,10 +359,6 @@ PROVIDERS = {
     'openid_wordpress': {
         'user_login': EMAIL,
         # user_username is used in the OpenID identifier
-        'user_password': '##########',
-    },
-    'openid_verisignlabs': {
-        'user_login': USERNAME,
         'user_password': '##########',
     },
     'openid_yahoo': {
