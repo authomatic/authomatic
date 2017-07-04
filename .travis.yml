@@ -1,22 +1,11 @@
-language: objective-c
+sudo: required
 addons:
   hosts:
   - authomatic.test
   - authomatic.com
   - authomatic.org
-install: sudo pip install tox
-script: sudo tox -e py27 -- -vvx --tb=no
+install: pip install tox
+script: tox -e py27 -- -vvx --tb=no
 after_failure:
 - tail -n 1000000 tests/functional_tests/*.log
 - tail -n 1000000 tests/*.log
-before_install:
-- openssl aes-256-cbc -K $encrypted_7734b1bf544e_key -iv $encrypted_7734b1bf544e_iv
-  -in ./tests/functional_tests/c  onfig.py.enc -out ./tests/functional_tests/config.py
-  -d
-- brew update
-- brew install caskroom/cask/brew-cask
-- brew cask install google-chrome
-- wget -N http://chromedriver.storage.googleapis.com/2.10/chromedriver_mac32.zip -P
-  .
-- unzip ./chromedriver_mac32.zip -d .
-- chmod +x ./chromedriver
