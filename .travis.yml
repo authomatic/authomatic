@@ -1,11 +1,13 @@
 sudo: required
+language:
+  - 3.6
 addons:
   hosts:
   - authomatic.test
   - authomatic.com
   - authomatic.org
 install: pip install tox
-script: tox -e py27 -- -vvx --tb=no
+script: tox -e py36 -- -vvx --tb=no
 after_failure:
 - tail -n 1000000 tests/functional_tests/*.log
 - tail -n 1000000 tests/*.log
