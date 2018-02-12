@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 import fixtures
@@ -8,22 +9,24 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('github')
 
 LINK = 'https://github.com/{0}'.format(conf.user_username)
-PICTURE = re.compile('https://avatars\.githubusercontent.com/u/{0}\?v=\d'
+PICTURE = re.compile(r'https://avatars\.githubusercontent.com/u/{0}\?v=\d'
                      .format(conf.user_id))
 
 CONFIG = {
     'login_xpath': '//*[@id="login_field"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [
-        '//*[@id="login"]/form/div[3]/input[4]',
         '//*[@id="site-container"]/div/div[2]/form/p/button',
     ],
     'class_': oauth2.GitHub,
     'scope': oauth2.GitHub.user_info_scope,
+    'access_headers': {
+        'User-Agent': 'Authomatic.py Automated Functional Tests'
+    },
     'user': {
         'birth_date': None,
-        'city': conf.user_city,
-        'country': conf.user_country,
+        'city': None,
+        'country': None,
         'email': conf.user_email,
         'first_name': None,
         'gender': None,
@@ -31,6 +34,7 @@ CONFIG = {
         'last_name': None,
         'link': LINK,
         'locale': None,
+        'location': conf.user_location,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
@@ -54,10 +58,10 @@ CONFIG = {
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date +
-                                  conf.no_locale + conf.no_first_name +
-                                  conf.no_last_name + conf.no_timezone +
-                                  conf.no_gender + conf.no_postal_code +
-                                  [conf.user_nickname],
+    conf.no_locale + conf.no_first_name +
+    conf.no_last_name + conf.no_timezone +
+    conf.no_gender + conf.no_postal_code +
+    [conf.user_nickname],
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': 'Bearer',

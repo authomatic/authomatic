@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+import re
+
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -8,11 +11,17 @@ conf = fixtures.get_configuration('google')
 LINK = 'https://plus.google.com/' + conf.user_id
 
 CONFIG = {
+    'logout_url': 'https://accounts.google.com/Logout',
     'login_xpath': '//*[@id="Email"]',
     'password_xpath': '//*[@id="Passwd"]',
+    'enter_after_login_input': True,
     'consent_xpaths': [
         '//*[@id="submit_approve_access"]',
     ],
+    'human_interaction_before_password': (
+        '//*[@id="identifier-captcha-input"]',
+        1
+    ),
     'consent_wait_seconds': 5,
     'class_': oauth2.Google,
     'scope': oauth2.Google.user_info_scope,
@@ -30,9 +39,13 @@ CONFIG = {
         'country': None,
         'gender': conf.user_gender,
         'link': LINK,
-        'locale': conf.user_locale,
+        'locale': re.compile(r'^\w{2}$'),
+        'location': None,
         'phone': None,
-        'picture': conf.user_picture,
+        'picture': re.compile(
+            r'^https://\w+\.googleusercontent.com/'
+            r'-\w+/\w+/\w+/\w+/photo\.jpg\?sz=50$'
+        ),
         'postal_code': None,
         'timezone': None,
     },
@@ -42,19 +55,18 @@ CONFIG = {
         conf.user_name, conf.user_first_name, conf.user_last_name,
         conf.user_gender,
         LINK,
-        conf.user_locale,
-        conf.user_picture,
 
         # User info JSON keys
         'kind', 'etag', 'occupation', 'gender', 'emails', 'value', 'type',
         'urls', 'label', 'objectType', 'id', 'displayName', 'name',
         'familyName', 'givenName', 'aboutMe', 'url', 'image', 'organizations',
-        'title', 'startDate', 'endDate', 'primary', 'placesLived', 'isPlusUser',
-        'language', 'circledByCount', 'verified'
+        'title', 'startDate', 'endDate', 'primary', 'placesLived',
+        'isPlusUser', 'language', 'circledByCount', 'verified'
     ],
     # Case insensitive
-    'content_should_not_contain': [conf.user_postal_code]
-                                  + conf.no_phone + conf.no_birth_date,
+    'content_should_not_contain':
+        [conf.user_postal_code] + \
+        conf.no_phone + conf.no_birth_date,
 
     # True means that any thruthy value is expected
     'credentials': {
@@ -85,7 +97,7 @@ CONFIG = {
         'consumer_secret': True,
         'token': False,
         'token_secret': True,
-        '_expire_in': None, # Somtimes differ in one second.
+        '_expire_in': None,  # Somtimes differ in one second.
         'provider_name': True,
         'refresh_token': True,
         'provider_type': True,

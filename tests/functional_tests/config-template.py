@@ -1,44 +1,82 @@
 # -*- coding: utf-8 -*-
 import datetime
+import os
+
+from pyvirtualdisplay import Display
+from selenium import webdriver
 
 import constants
 
 
 # Choose and configure the browser of your choice
 def get_browser():
-    return webdriver.Chrome()
+    # # These work on Mac
+    # return webdriver.Chrome()
+    # return webdriver.Firefox()
 
+    # On Linux you need to initialize a display
+    global display
+    display = Display(visible=0, size=(1024, 768))
+    display.start()
+    return webdriver.Firefox()
+
+
+# If present and callable, it will be called at the end of the whole test suite
+def teardown():
+    global display
+    display.stop()
+
+
+# A failed login by a provider will be retried so many times as set here
+MAX_LOGIN_ATTEMPTS = 3
+# Multiplies the wait times set in expected values
+WAIT_MULTIPLIER = 1
+# Minimum wait time
+MIN_WAIT = 0
 
 # The host and port where the tested ap shoud listen.
 HOST = '127.0.0.1'
-PORT = 8080
+PORT = 80
 
 # The host alias set in the /etc/hosts file.
 # The actual tests will navigate selenium browser to this host.
 # This is necessary because some providers don't support localhost as the
 # callback url.
-HOST_ALIAS = 'authomatic.com'
+HOST_ALIAS = 'authomatic.org'
 
 # Only frameworks included here will be tested.
 INCLUDE_FRAMEWORKS = [
     # 'django',
-    'flask', # Runs with https
+    'flask',  # Runs with https
     # 'pyramid',
 ]
 
 # Only providers included here will be tested.
 INCLUDE_PROVIDERS = [
+    # OAuth 1.0a
+    'bitbucket',
+    'flickr',
+    'plurk',
     'twitter',
+    'tumblr',
+    # 'ubuntuone',  # UbuntuOne service is no longer available
+    'vimeo',
+    # Xero requires creation of a new trial project every month which makes
+    # the setup of the automated test too laborious to support it.
+    # 'xero',
+    'xing',
+    'yahoo',
 
-    'amazon',
-    # 'behance', # Behance doesn't support third party authorization anymore.
+    # OAuth 2.0
+    # 'amazon',  # Asks for a captcha (cannot be automated)
+    # 'behance',  # doesn't support third party authorization anymore.
     'bitly',
     'deviantart',
     'facebook',
     'foursquare',
     'google',
     'github',
-    'linkedin',
+    'linkedin',  # Asks for verification when running in Travis CI evnironment
     'paypal',
     'reddit',
     'vk',
@@ -46,11 +84,30 @@ INCLUDE_PROVIDERS = [
     'yammer',
     'yandex',
 
-    'openid_yahoo',
-    'openid_livejournal',
-    'openid_wordpress',
+    # OpenID
+    # 'openid_livejournal',  # Login and password elements are not visible.
     'openid_verisignlabs',
+    'openid_wordpress',
+    'openid_yahoo',
 ]
+
+# Recommended setup for Travis CI environment.
+if os.environ.get('TRAVIS'):
+    MAX_LOGIN_ATTEMPTS = 20
+    WAIT_MULTIPLIER = 2
+    MIN_WAIT = 2
+
+    # LinkedIn and WindowsLive include a captcha in the login form
+    # if a user logs in from an unusual location.
+    INCLUDE_PROVIDERS = list(set(INCLUDE_PROVIDERS) -
+                             set(['linkedin', 'windowslive']))
+
+    def get_browser():
+        # Eventbrite has problems with the login form on Firefox
+        return webdriver.Chrome()
+
+    def teardown():
+        pass
 
 # Use these constants if you have the same user info by all tested providers.
 EMAIL = 'andy.pipkin@littlebritain.co.uk'
@@ -60,20 +117,27 @@ NAME = FIRST_NAME + ' ' + LAST_NAME
 USERNAME = 'andypipkin'
 USERNAME_REVERSE = 'pipkinandy'
 NICKNAME = 'Mr. Pipkin'
-BIRTH_YEAR = '1979'
-BIRTH_DATE = datetime.datetime(1979, 12, 31).strftime('%x')
+BIRTH_YEAR = 1979
+BIRTH_MONTH = 11
+BIRTH_DAY = 18
+BIRTH_DATE = datetime.datetime(BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY)
 CITY = 'London'
 COUNTRY = 'Great Britain'
+COUNTRY_ISO2 = 'gb'
 POSTAL_CODE = 'EC1A1DH'
 PHONE = '??????????'
 PHONE_INTERNATIONAL = '0044??????????'
 GENDER = constants.GENDER_MALE
 LOCALE = 'en_UK'
+LOCATION = CITY + ', ' + COUNTRY
 
 # Common values for all providers
 COMMON = {
     # Could be same if the user sets it so
     'user_birth_date': BIRTH_DATE,
+    'user_birth_day': BIRTH_DAY,
+    'user_birth_month': BIRTH_MONTH,
+    'user_birth_year': BIRTH_YEAR,
     'user_login': EMAIL,
     'user_email': EMAIL,
     'user_first_name': FIRST_NAME,
@@ -89,6 +153,7 @@ COMMON = {
     'user_phone': PHONE,
     'user_postal_code': POSTAL_CODE,
     'user_locale': LOCALE,
+    'user_location': LOCATION,
 
     # It is not a good idea to have the same password for all providers
     # 'user_password': '##########',
@@ -111,15 +176,69 @@ COMMON = {
 # if set.
 PROVIDERS = {
     # OAuth 1.0a
+    'bitbucket': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': USERNAME,
+    },
+    'flickr': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': '??????????',
+    },
+    'meetup': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_login': EMAIL,
+        'user_id': '??????????',
+        'user_country': COUNTRY_ISO2,
+        'user_location': '{0}, {1}'.format(CITY, COUNTRY_ISO2),
+    },
+    'plurk': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': '??????????',
+    },
     'twitter': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
-        'user_id': '???',
         'user_password': '##########',
-        'user_link': '???',
-        'user_picture': '???',
-        'user_username': '???',
-        'user_locale': '???',
+        'user_id': '??????????',
+        # Twitter considers selenium login attempts suspicious and occasionally
+        # asks a security challenge question. This will be used as the answer.
+        'user_challenge_answer': '??????????',
+    },
+    'tumblr': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': USERNAME,
+    },
+    'vimeo': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': '??????????',
+    },
+    'xero': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+    },
+    'xing': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
+        'user_id': '??????????',
+    },
+    'yahoo': {
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'user_password': '##########',
     },
 
     # OAuth 2.0
@@ -164,37 +283,24 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        # The picture URL is a random CDN URL
-        'user_picture': '??????????',
     },
     'google': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        'user_locale': '??????????',
-        # The picture URL is a random CDN URL
-        'user_picture': '??????????',
     },
     'github': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        # GitHub requires the User-Agent header in every request.
-        'access_headers': {'User-Agent': ('Authomatic.py Automated Functional '
-                                          'Tests')},
     },
     'linkedin': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        # User link contains a slug derived from the username.
-        'user_link': 'http://www.linkedin.com/in/??????????',
-        # GitHub requires the User-Agent header in every request.
-        'user_picture': '??????????',
-        'user_phone': PHONE_INTERNATIONAL,
     },
     'paypal': {
         'consumer_key': '##########',
@@ -203,10 +309,7 @@ PROVIDERS = {
     'reddit': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
-        'user_login': USERNAME,
         'user_id': '??????????',
-        'access_headers': {'User-Agent': ('Authomatic.py Automated Functional '
-                                          'Tests')}
     },
     # Viadeo doesn't support access to its API
     # http://dev.viadeo.com/documentation/authentication/request-an-api-key/
@@ -219,11 +322,6 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        # City and country are numeric IDs
-        'user_city': '??????????',
-        'user_country': '??????????',
-        'user_gender': '2',
-        'user_timezone': '1',
     },
     'windowslive': {
         'consumer_key': '##########',
@@ -236,48 +334,32 @@ PROVIDERS = {
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-        'user_picture': ('https://mug0.assets-yammer.com/mugshot/images/48x48/'
-                         '??????????'),
-        'user_timezone': '??????????',
-        'user_locale': '??????????',
+        'user_timezone': '??????????',  # e.g. 'Pacific Time (US & Canada)'
     },
     'yandex': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_password': '##########',
-        'user_login': USERNAME,
         'user_id': '??????????',
     },
 
     # OpenID
-    'openid_yahoo': {
-        'openid_identifier': 'me.yahoo.com',
-        'user_id': '???',
-        'user_login': USERNAME,
-        'user_password': '##########',
-        'user_email': '{0}@yahoo.com'.format(USERNAME),
-    },
     'openid_livejournal': {
-        'openid_identifier': '{0}.livejournal.com'.format(USERNAME),
         'user_login': USERNAME,
         'user_password': '##########',
-        'user_id': 'http://{0}.livejournal.com/'.format(USERNAME)
     },
     'openid_wordpress': {
-        'openid_identifier': '{0}.wordpress.com'.format(USERNAME),
         'user_login': EMAIL,
+        # user_username is used in the OpenID identifier
         'user_password': '##########',
-        'user_id': 'https://{0}.wordpress.com/'.format(USERNAME),
-        'user_nickname': NICKNAME,
     },
     'openid_verisignlabs': {
-        'openid_identifier': '{0}.pip.verisignlabs.com'.format(USERNAME),
         'user_login': USERNAME,
         'user_password': '##########',
-        'user_id': 'http://{0}.pip.verisignlabs.com/'.format(USERNAME),
-        'user_nickname': NICKNAME,
-        'user_timezone': '???', # Europe/Bratislava, Europe/Paris ...
-        'user_locale': '???', # Slovak, English ...
-        'user_gender': '???', # M or F
+    },
+    'openid_yahoo': {
+        'user_id': 'https://me.yahoo.com/a/???',
+        'user_login': USERNAME,
+        'user_password': '##########',
     },
 }

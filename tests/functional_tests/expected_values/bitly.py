@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -9,14 +10,13 @@ LINK = 'http://bitly.com/u/{0}'.format(conf.user_id)
 PICTURE = 'http://bitly.com/u/{0}.png'.format(conf.user_id)
 
 CONFIG = {
+    'logout_url': 'https://bitly.com/a/sign_out',
     'pre_login_xpaths': [
         '//*[@id="sign-in"]/div[2]/fieldset/div/a',
-        # '//*[@id="sign-in"]/div[3]/fieldset/label/a',
     ],
     'login_xpath': '//*[@id="sign-in"]/div[3]/fieldset/label[1]/input',
     'password_xpath': '//*[@id="sign-in"]/div[3]/fieldset/label[2]/input',
     'consent_xpaths': [
-        '//*[@id="sign-in"]/div[3]/fieldset/input[2]',
         '//*[@id="oauth_access"]/form/button[1]',
     ],
     'consent_wait_seconds': 1,
@@ -25,7 +25,7 @@ CONFIG = {
     'user': {
         'id': conf.user_id,
         'email': None,
-        'username': conf.user_username_reverse,
+        'username': conf.user_name,
         'name': conf.user_name,
         'first_name': None,
         'last_name': None,
@@ -36,6 +36,7 @@ CONFIG = {
         'gender': None,
         'link': LINK,
         'locale': None,
+        'location': None,
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
@@ -43,7 +44,6 @@ CONFIG = {
     },
     'content_should_contain': [
         conf.user_id,
-        conf.user_username_reverse,
         conf.user_name,
 
         # User info JSON keys
@@ -57,9 +57,9 @@ CONFIG = {
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date +
-                                  conf.no_email + conf.no_location +
-                                  conf.no_gender + conf.no_locale +
-                                  conf.no_first_name + conf.no_last_name,
+    conf.no_email + conf.no_location +
+    conf.no_gender + conf.no_locale +
+    conf.no_first_name + conf.no_last_name,
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': None,

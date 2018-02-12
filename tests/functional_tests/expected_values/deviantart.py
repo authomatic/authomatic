@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -18,6 +19,10 @@ CONFIG = {
         '//*[@id="terms_agree"]',
         '//*[@id="authorize_form"]/fieldset/div[2]/div[2]/a[1]',
     ],
+    # 'consent_wait_seconds': 2,
+    'access_headers': {
+        'User-Agent': 'Authomatic.py Automated Functional Tests',
+    },
     'class_': oauth2.DeviantART,
     'scope': oauth2.DeviantART.user_info_scope,
     'user': {
@@ -34,6 +39,7 @@ CONFIG = {
         'gender': None,
         'link': None,
         'locale': None,
+        'location': None,
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
@@ -47,9 +53,9 @@ CONFIG = {
     ],
     # Case insensitive
     'content_should_not_contain': conf.no_phone + conf.no_birth_date +
-                                  conf.no_email + conf.no_location +
-                                  conf.no_gender + conf.no_locale +
-                                  conf.no_first_name + conf.no_last_name,
+    conf.no_email + conf.no_location +
+    conf.no_gender + conf.no_locale +
+    conf.no_first_name + conf.no_last_name,
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': 'Bearer',

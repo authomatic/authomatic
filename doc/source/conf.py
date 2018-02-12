@@ -83,7 +83,7 @@ rst_prolog = """
 .. |async| replace:: The internal implementation of the future pattern is quite naive. Use with caution!
 
 .. |provider-class| replace:: provider class
-.. _provider-class: /reference/providers
+.. _provider-class: providers
 
 
 .. |no-csrf| replace:: This provider doesn't support CSRF protection!
@@ -124,7 +124,7 @@ copyright = u'2013, Peter Hudec'
 # built documents.
 #
 # The short X.Y version.
-version = '0.0.13'
+version = '0.1.0'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -178,14 +178,15 @@ html_theme = 'foundation'
 # further.  For a list of options available for each theme, see the
 # documentation.
 
-MOTTO = u"""<span>Authomatic</span><br />
-is an <em>authorization</em> / <em>authentication</em><br />
-client library for Python web applications<br />
-inspired by Alex Vagin’s
-<a href="http://code.google.com/p/gae-simpleauth/" target="_blank">Simpleauth</a>.<br /> 
-In fact, I almost named it <em>Deadsimpleauth</em>,<br /> 
-but that name would be too long<br />
-for a succinct library."""
+MOTTO = u"""
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+"""
 
 html_theme_options = {
     'logo_screen': 'img/authomatic.svg',
@@ -194,7 +195,7 @@ html_theme_options = {
     'motto': MOTTO,
     'seo_description': ('Simple yet powerful authorization / authentication '
                         'client library for Python WEB applications.'),
-    'base_url': 'http://peterhudec.github.io/authomatic',
+    'base_url': 'http://authomatic.github.io/authomatic',
     'opengraph_image': 'img/authomatic-seo.gif',
     'google_analytics_id': 'UA-40554445-4',
     'social_buttons': True,

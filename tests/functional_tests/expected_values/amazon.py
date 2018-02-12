@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -6,10 +7,10 @@ conf = fixtures.get_configuration('amazon')
 
 
 CONFIG = {
+    'logout_url': 'http://www.amazon.com/gp/flex/sign-out.html',
     'login_xpath': '//*[@id="ap_email"]',
     'password_xpath': '//*[@id="ap_password"]',
     'consent_xpaths': [
-        '//*[@id="signInSubmit"]/span/button',
         '//*[@id="ap-oaconsent-agree-button"]/span/button',
     ],
     'class_': oauth2.Amazon,
@@ -25,6 +26,7 @@ CONFIG = {
         'last_name': None,
         'link': None,
         'locale': None,
+        'location': None,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
@@ -55,8 +57,7 @@ CONFIG = {
         conf.no_nickname +
         conf.no_phone +
         conf.no_timezone +
-        conf.no_username
-        ,
+        conf.no_username,
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': 'Bearer',

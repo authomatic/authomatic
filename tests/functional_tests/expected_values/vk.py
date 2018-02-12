@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import re
 
@@ -8,15 +9,12 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('vk')
 
-BIRTH_DATE = datetime.datetime.strptime(conf.user_birth_date[:10], '%x')
-FORMATTED_DATE = datetime.datetime.strftime(BIRTH_DATE, '%d.%m.%Y')
 PICTURE = re.compile(r'http://[A-Za-z0-9]+\.vk\.me/[A-Za-z0-9-/]+\.jpg')
 
 CONFIG = {
-    'login_xpath': '//*[@id="box"]/div/input[5]',
-    'password_xpath': '//*[@id="box"]/div/input[6]',
+    'login_xpath': '//*[@id="box"]/div/input[6]',
+    'password_xpath': '//*[@id="box"]/div/input[7]',
     'consent_xpaths': [
-        '//*[@id="install_allow"]',
         '//*[@id="install_allow"]',
     ],
     'consent_wait_seconds': 4,
@@ -24,33 +22,30 @@ CONFIG = {
     'scope': oauth2.VK.user_info_scope,
     'offline': True,
     'user': {
-        'birth_date': conf.user_birth_date,
-        'city': conf.user_city,
-        'country': conf.user_country,
+        'birth_date': conf.user_birth_date_str,
+        'city': re.compile('\d+'),
+        'country': re.compile('\d+'),
         'email': None,
         'first_name': conf.user_first_name,
-        'gender': conf.user_gender,
+        'gender': re.compile('\d'),
         'id': conf.user_id,
         'last_name': conf.user_last_name,
         'link': None,
         'locale': None,
+        'location': re.compile('\d+, \d+'),
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
-        'timezone': conf.user_timezone,
+        'timezone': re.compile('\d'),
         'username': None,
     },
     'content_should_contain': [
-        # FORMATTED_DATE,
-        conf.user_city,
-        conf.user_country,
+        conf.user_birth_date.strftime('%d.%m.%Y'),
         conf.user_first_name,
-        conf.user_gender,
         conf.user_id,
         conf.user_last_name,
-        conf.user_timezone,
 
         # User info JSON keys
         'response', 'uid', 'first_name', 'last_name', 'sex', 'nickname',

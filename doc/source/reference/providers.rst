@@ -14,14 +14,14 @@ Providers are abstractions of the **provider** party of the
 **provider**/**consumer**/**user** triangle and they are the very core of this library.
 There is no reason for you to instantiate them manually.
 You only should specify them in the :doc:`config` and access members of their instances
-available in the :class:`.LoginResult` returned by the :func:`authomatic.login` function.
+available in the :class:`.LoginResult` returned by the :class:`.Authomatic.login` function.
 
 Some provider types accept additional keyword arguments in their constructor which you can pass to them
-through the :func:`authomatic.login` function's keyword arguments or through the :doc:`config` like this:
+through the :class:`.Authomatic.login` function's keyword arguments or through the :doc:`config` like this:
 
 .. note::
 
-   Keyword arguments passed through :func:`authomatic.login` will override
+   Keyword arguments passed through :class:`.Authomatic.login` will override
    the values set in :doc:`config`.
 
 ::

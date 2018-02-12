@@ -20,15 +20,25 @@
 Authomatic
 ==========
 
-Authomatic
-is an **authorization/authentication**
-client library for Python web applications
-inspired by Alex Vagin’s `Simpleauth <http://code.google.com/p/gae-simpleauth/>`_.
-In fact, I almost named it *Deadsimpleauth*,
-but that name would be too long
-for a succinct library.
+.. image:: https://travis-ci.org/authomatic/authomatic.svg?branch=master
+    :target: https://travis-ci.org/authomatic/authomatic
 
-For more info visit the project page at http://peterhudec.github.io/authomatic.
+**Authomatic**
+is a **framework agnostic** library
+for **Python** web applications
+with a **minimalistic** but **powerful** interface
+which simplifies **authentication** of users
+by third party providers like **Facebook** or **Twitter**
+through standards like **OAuth** and **OpenID**.
+
+For more info visit the project page at http://authomatic.github.io/authomatic.
+
+Update - 2017-05-17
+====================
+**Authomatic** is currently going through the process of migrating to becoming a community-managed project.
+Please bear with us during these changes.
+We hope to begin work on updating the project and working on Issues and PRs soon.
+Many thanks to Peter Hudec for all his hard work for creating and maintaining **authomatic**!
 
 Features
 ========
@@ -36,11 +46,11 @@ Features
 * Loosely coupled.
 * Tiny but powerful interface.
 * The |pyopenid|_ library is the only **optional** dependency.
-* CSRF protection.
-* **Framework agnostic** thanks to adapters. Out of the box support for **Django**, **Flask**, **Pyramid** and **Webapp2**.
-* Ready to accommodate future authorization / authentication protocols.
-* Makes calls to provider APIs a breeze.
-* Supports asynchronous requests.
+* **Framework agnostic** thanks to adapters.
+  Out of the box support for **Django**, **Flask**, **Pyramid** and **Webapp2**.
+* Ready to accommodate future authorization/authentication protocols.
+* Makes provider API callls a breeze.
+* Asynchronous requests.
 * JavaScript library as a bonus.
 * Out of the box support for:
 
@@ -74,21 +84,13 @@ http://authomatic-example.appspot.com which makes use of most of the features.
 Contribute
 ==========
 
-.. image:: http://badge.waffle.io/peterhudec/authomatic.png
-   :target: http://waffle.io/peterhudec/authomatic
-   :alt: Stories in Ready
-
 Contributions of any kind are very welcome.
 If you want to contribute, please read the
-`Development Guide <http://peterhudec.github.io/authomatic/development.html>`__
+`Development Guide <http://authomatic.github.io/authomatic/development.html>`__
 first. The project is hosted on
-`GitHub <https://github.com/peterhudec/authomatic>`__.
-
-If you find this library useful and are using it in your projects,
-please don't be shy and leave a comment about your use case on the
-`Authomatic use cases <https://github.com/peterhudec/authomatic/issues/1>`_ issue.
+`GitHub <https://github.com/authomatic/authomatic>`__.
 
 Usage
 =====
 
-Read the exhaustive documentation at http://peterhudec.github.io/authomatic.
+Read the exhaustive documentation at http://authomatic.github.io/authomatic.
