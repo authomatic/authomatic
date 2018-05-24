@@ -131,7 +131,7 @@ getProviderClass = (credentials) ->
     else
       Oauth2Provider
   else
-    # Base provider allways works.
+    # Base provider always works.
     BaseProvider
 
 # Substitutes {dotted.path.to.object.property} tags in a template string with the value
@@ -265,7 +265,7 @@ class BaseProvider
         @options.onAccessComplete
       ]
       success: [
-        ((data) -> log 'Request successfull.', data)
+        ((data) -> log 'Request successful.', data)
         globalOptions.onAccessSuccess
         @options.onAccessSuccess
       ]
@@ -330,7 +330,7 @@ class BaseProvider
 # OAuth 1.0a
 ###########################################################
 
-# Allways makes a JSONP request.
+# Always makes a JSONP request.
 class Oauth1Provider extends BaseProvider
   access: =>
     @jsonpRequest = yes
@@ -406,7 +406,7 @@ class WindowsLive extends Oauth2Provider
       # If token type is "1" which means "Bearer", pass access token in authorisation header
       @options.headers['Authorization'] = "#{@_x_bearer} #{@accessToken}"
     
-    # Windows Live allways needs access token in querystring.
+    # Windows Live always needs access token in querystring.
     @params[@_x_accessToken] = @accessToken
 
 

@@ -156,7 +156,7 @@ And access the protected resource at that URL. The call returns a :class:`.Respo
    :language: html+jinja
    :lines: 29
 
-Check whether the response was successfull.
+Check whether the response was successful.
 
 .. literalinclude:: ../../../examples/flask/werkzeug_adapter/templates/login.html
    :language: html+jinja

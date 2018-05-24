@@ -34,7 +34,7 @@ WAIT_MULTIPLIER = 1
 # Minimum wait time
 MIN_WAIT = 0
 
-# The host and port where the tested ap shoud listen.
+# The host and port where the tested ap should listen.
 HOST = '127.0.0.1'
 PORT = 80
 
@@ -172,7 +172,7 @@ COMMON = {
     # 'consumer_secret': '',
 }
 
-# Values from COMMON will be overriden by values from PROVIDERS[provider_name]
+# Values from COMMON will be overridden by values from PROVIDERS[provider_name]
 # if set.
 PROVIDERS = {
     # OAuth 1.0a

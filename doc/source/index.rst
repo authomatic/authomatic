@@ -63,8 +63,8 @@ Now it's dead simple (hence the *Deadsimpleauth*). Just go through these two ste
       from authomatic import Authomatic
       authomatic = Authomatic(CONFIG, 'secret')
 
-   The old interface will be availabe up to version **0.1.0**,
-   but you will recieve deprecation warnings in the log.
+   The old interface will be available up to version **0.1.0**,
+   but you will receive deprecation warnings in the log.
 
 If everything goes good, you will get a :class:`.User` object with information like
 :attr:`.User.name`, :attr:`.User.id` or :attr:`.User.email`.
@@ -99,7 +99,7 @@ Log the User In
 ---------------
 
 Now you can log the **user** in by calling the :class:`.Authomatic.login` function inside a *request handler*.
-The *request handler* MUST be able to recieve both ``GET`` and ``POST`` HTTP methods.
+The *request handler* MUST be able to receive both ``GET`` and ``POST`` HTTP methods.
 You need to pass it an :doc:`adapter <reference/adapters>` for your framework
 and one of the provider names which you specified in the keys of your :doc:`reference/config`.
 We will get the provider name from the URL slug.
