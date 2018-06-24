@@ -135,7 +135,7 @@ To run *functional* tests, you first need to create the
 If you want to run tests for all of the covered providers,
 you should register an **application** and a **user account** by each of them
 and fill out **all possible** settings of the user profile.
-You can exclude providers from the tests by comenting them out of the
+You can exclude providers from the tests by commenting them out of the
 ``INCLUDE_PROVIDERS`` list.
 
 You should also add an alias for the IP address of your localhost, because

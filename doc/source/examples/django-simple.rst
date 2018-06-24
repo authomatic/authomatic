@@ -87,7 +87,7 @@ which we are going to create next.
    :language: python
    :lines: 11, 13-20
 
-Create the *login* view which should recieve the ``provider_name`` URL variable.
+Create the *login* view which should receive the ``provider_name`` URL variable.
 Inside the view instantiate the :class:`django.http.HttpResponse` class.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
