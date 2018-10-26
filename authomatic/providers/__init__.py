@@ -388,7 +388,7 @@ class BaseProvider(object):
         headers = headers or {}
         headers.update(self.access_headers)
 
-        scheme, host, path, query, fragment = parse.urlsplit(url)
+        url_parsed = parse.urlsplit(url)
         query = parse.urlencode(params)
 
         if method in ('POST', 'PUT', 'PATCH'):
@@ -398,9 +398,12 @@ class BaseProvider(object):
                 query = ''
                 headers.update(
                     {'Content-Type': 'application/x-www-form-urlencoded'})
-        request_path = parse.urlunsplit(('', '', path or '', query or '', ''))
+        request_path = parse.urlunsplit(
+            ('', '', url_parsed.path or '', query or '', ''))
 
-        self._log(logging.DEBUG, u' \u251C\u2500 host: {0}'.format(host))
+        self._log(
+            logging.DEBUG,
+            u' \u251C\u2500 host: {0}'.format(url_parsed.hostname))
         self._log(
             logging.DEBUG,
             u' \u251C\u2500 path: {0}'.format(request_path))
@@ -410,10 +413,14 @@ class BaseProvider(object):
         self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(headers))
 
         # Connect
-        if scheme.lower() == 'https':
-            connection = http_client.HTTPSConnection(host)
+        if url_parsed.scheme.lower() == 'https':
+            connection = http_client.HTTPSConnection(
+                url_parsed.hostname,
+                port=url_parsed.port)
         else:
-            connection = http_client.HTTPConnection(host)
+            connection = http_client.HTTPConnection(
+                url_parsed.hostname,
+                port=url_parsed.port)
 
         try:
             connection.request(method, request_path, body, headers)
