@@ -414,7 +414,10 @@ class BaseProvider(object):
         self._log(logging.DEBUG, u' \u251C\u2500 method: {0}'.format(method))
         self._log(logging.DEBUG, u' \u251C\u2500 body: {0}'.format(body))
         self._log(logging.DEBUG, u' \u251C\u2500 params: {0}'.format(params))
-        self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(headers))
+        self._log(logging.DEBUG, u' \u251C\u2500 headers: {0}'.format(headers))
+        self._log(
+            logging.DEBUG,
+            u' \u2514\u2500 certificate: {0}'.format(certificate_file))
 
         # Connect
         if url_parsed.scheme.lower() == 'https':
