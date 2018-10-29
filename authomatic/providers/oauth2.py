@@ -82,6 +82,9 @@ class OAuth2(providers.AuthorizationProvider):
             *offline access token*.
             Default is ``False``.
 
+        :param str certificate_file:
+            Certificate file to employ for HTTPS connection where needed.
+
         As well as those inherited from :class:`.AuthorizationProvider`
         constructor.
 
@@ -91,6 +94,7 @@ class OAuth2(providers.AuthorizationProvider):
 
         self.scope = self._kwarg(kwargs, 'scope', [])
         self.offline = self._kwarg(kwargs, 'offline', False)
+        self.cert = self._kwarg(kwargs, 'certificate_file', None)
 
     # ========================================================================
     # Internal methods
@@ -311,7 +315,7 @@ class OAuth2(providers.AuthorizationProvider):
         )
 
         self._log(logging.INFO, u'Refreshing credentials.')
-        response = self._fetch(*request_elements)
+        response = self._fetch(*request_elements, certificate_file=self.cert)
 
         # We no longer need consumer info.
         credentials.consumer_key = None
@@ -409,7 +413,8 @@ class OAuth2(providers.AuthorizationProvider):
                 headers=self.access_token_headers
             )
 
-            response = self._fetch(*request_elements)
+            response = self._fetch(*request_elements,
+                                   certificate_file=self.cert)
             self.access_token_response = response
 
             access_token = response.data.get('access_token', '')

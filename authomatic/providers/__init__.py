@@ -353,7 +353,8 @@ class BaseProvider(object):
                 ('authomatic', cls.__name__, msg)), **kwargs)
 
     def _fetch(self, url, method='GET', params=None, headers=None,
-               body='', max_redirects=5, content_parser=None):
+               body='', max_redirects=5, content_parser=None,
+               certificate_file=None):
         """
         Fetches a URL.
 
@@ -378,6 +379,9 @@ class BaseProvider(object):
         :param function content_parser:
             A callable to be used to parse the :attr:`.Response.data`
             from :attr:`.Response.content`.
+
+        :param str certificate_file:
+            Optional certificate file to be used for HTTPS connection.
 
         """
         # 'magic' using _kwarg method
@@ -416,7 +420,8 @@ class BaseProvider(object):
         if url_parsed.scheme.lower() == 'https':
             connection = http_client.HTTPSConnection(
                 url_parsed.hostname,
-                port=url_parsed.port)
+                port=url_parsed.port,
+                cert_file=certificate_file)
         else:
             connection = http_client.HTTPConnection(
                 url_parsed.hostname,
