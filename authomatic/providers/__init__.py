@@ -466,7 +466,9 @@ class BaseProvider(object):
                                        params=params,
                                        method=method,
                                        headers=headers,
-                                       max_redirects=remaining_redirects)
+                                       max_redirects=remaining_redirects,
+                                       certificate_file=certificate_file,
+                                       ssl_verify=ssl_verify)
 
             else:
                 raise FetchError('Max redirects reached!',
@@ -794,18 +796,19 @@ class AuthorizationProvider(BaseProvider):
             str(mod.PROVIDER_ID_MAP.index(cls))
 
     def access(self, url, params=None, method='GET', headers=None,
-               body='', max_redirects=5, content_parser=None):
+               body='', max_redirects=5, content_parser=None,
+               certificate_file=None, ssl_verify=True):
         """
         Fetches the **protected resource** of an authenticated **user**.
-
-        :param credentials:
-            The **user's** :class:`.Credentials` (serialized or normal).
 
         :param str url:
             The URL of the **protected resource**.
 
         :param str method:
             HTTP method of the request.
+
+        :param dict params:
+            Dictionary of request parameters.
 
         :param dict headers:
             HTTP headers of the request.
@@ -819,6 +822,12 @@ class AuthorizationProvider(BaseProvider):
         :param function content_parser:
             A function to be used to parse the :attr:`.Response.data`
             from :attr:`.Response.content`.
+
+        :param str certificate_file:
+            Optional certificate file to be used for HTTPS connection.
+
+        :param bool ssl_verify:
+            Verify SSL on HTTPS connection.
 
         :returns:
             :class:`.Response`
@@ -846,7 +855,9 @@ class AuthorizationProvider(BaseProvider):
 
         response = self._fetch(*request_elements,
                                max_redirects=max_redirects,
-                               content_parser=content_parser)
+                               content_parser=content_parser,
+                               certificate_file=certificate_file,
+                               ssl_verify=ssl_verify)
 
         self._log(
             logging.INFO,
