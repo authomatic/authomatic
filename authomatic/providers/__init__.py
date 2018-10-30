@@ -27,6 +27,7 @@ import random
 import sys
 import traceback
 import uuid
+import ssl
 
 import authomatic.core
 from authomatic.exceptions import (
@@ -35,7 +36,7 @@ from authomatic.exceptions import (
     CredentialsError,
 )
 from authomatic import six
-from authomatic.six.moves import urllib_parse as parse, http_client, ssl
+from authomatic.six.moves import urllib_parse as parse, http_client
 from authomatic.exceptions import CancellationError
 
 __all__ = [
