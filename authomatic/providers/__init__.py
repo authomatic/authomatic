@@ -1008,7 +1008,9 @@ class AuthorizationProvider(BaseProvider):
 
         """
         url = self.user_info_url.format(**self.user.__dict__)
-        return self.access(url)
+        cert = getattr(self, 'certificate_file', None)
+        verify = getattr(self, 'ssl_verify', True)
+        return self.access(url, certificate_file=cert, ssl_verify=verify)
 
 
 class AuthenticationProvider(BaseProvider):
