@@ -35,8 +35,7 @@ from authomatic.exceptions import (
     CredentialsError,
 )
 from authomatic import six
-from authomatic.six.moves import urllib_parse as parse
-from authomatic.six.moves import http_client
+from authomatic.six.moves import urllib_parse as parse, http_client, ssl
 from authomatic.exceptions import CancellationError
 
 __all__ = [
@@ -354,7 +353,7 @@ class BaseProvider(object):
 
     def _fetch(self, url, method='GET', params=None, headers=None,
                body='', max_redirects=5, content_parser=None,
-               certificate_file=None):
+               certificate_file=None, ssl_verify=True):
         """
         Fetches a URL.
 
@@ -383,6 +382,8 @@ class BaseProvider(object):
         :param str certificate_file:
             Optional certificate file to be used for HTTPS connection.
 
+        :param bool ssl_verify:
+            Verify SSL on HTTPS connection.
         """
         # 'magic' using _kwarg method
         # pylint:disable=no-member
@@ -418,13 +419,18 @@ class BaseProvider(object):
         self._log(
             logging.DEBUG,
             u' \u2514\u2500 certificate: {0}'.format(certificate_file))
+        self._log(
+            logging.DEBUG,
+            u' \u2514\u2500 SSL verify: {0}'.format(ssl_verify))
 
         # Connect
         if url_parsed.scheme.lower() == 'https':
+            context = None if ssl_verify else ssl._create_unverified_context()
             connection = http_client.HTTPSConnection(
                 url_parsed.hostname,
                 port=url_parsed.port,
-                cert_file=certificate_file)
+                cert_file=certificate_file,
+                context=context)
         else:
             connection = http_client.HTTPConnection(
                 url_parsed.hostname,

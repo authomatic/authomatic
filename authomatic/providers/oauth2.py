@@ -85,6 +85,9 @@ class OAuth2(providers.AuthorizationProvider):
         :param str certificate_file:
             Certificate file to employ for HTTPS connection where needed.
 
+        :param bool ssl_verify:
+            Certificate file to employ for HTTPS connection where needed.
+
         As well as those inherited from :class:`.AuthorizationProvider`
         constructor.
 
@@ -95,6 +98,7 @@ class OAuth2(providers.AuthorizationProvider):
         self.scope = self._kwarg(kwargs, 'scope', [])
         self.offline = self._kwarg(kwargs, 'offline', False)
         self.cert = self._kwarg(kwargs, 'certificate_file', None)
+        self.verify = self._kwarg(kwargs, 'ssl_verify', None)
 
     # ========================================================================
     # Internal methods
@@ -315,7 +319,9 @@ class OAuth2(providers.AuthorizationProvider):
         )
 
         self._log(logging.INFO, u'Refreshing credentials.')
-        response = self._fetch(*request_elements, certificate_file=self.cert)
+        response = self._fetch(*request_elements,
+                               certificate_file=self.cert,
+                               ssl_verify=self.verify)
 
         # We no longer need consumer info.
         credentials.consumer_key = None
@@ -414,7 +420,8 @@ class OAuth2(providers.AuthorizationProvider):
             )
 
             response = self._fetch(*request_elements,
-                                   certificate_file=self.cert)
+                                   certificate_file=self.cert,
+                                   ssl_verify=self.verify)
             self.access_token_response = response
 
             access_token = response.data.get('access_token', '')
