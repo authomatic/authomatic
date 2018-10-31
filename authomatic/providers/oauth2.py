@@ -98,7 +98,7 @@ class OAuth2(providers.AuthorizationProvider):
         self.scope = self._kwarg(kwargs, 'scope', [])
         self.offline = self._kwarg(kwargs, 'offline', False)
         self.cert = self._kwarg(kwargs, 'certificate_file', None)
-        self.verify = self._kwarg(kwargs, 'ssl_verify', None)
+        self.verify = self._kwarg(kwargs, 'ssl_verify', True)
 
     # ========================================================================
     # Internal methods
