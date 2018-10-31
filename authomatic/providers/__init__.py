@@ -352,6 +352,33 @@ class BaseProvider(object):
             level, ': '.join(
                 ('authomatic', cls.__name__, msg)), **kwargs)
 
+    @classmethod
+    def _log_param(cls, param, value='', last=None,
+                   level=logging.DEBUG, **kwargs):
+        """
+        Same as :meth:`_log` but in DEBUG, and with option indicator in front
+        of the message according to :param:`last`.
+
+        :param str param:
+            Parameter name.
+
+        :param Any value:
+            Parameter value.
+
+        :param bool last:
+            "|-" like character if `False`, "|_" if `True`, None if `None`.
+
+        :param int level:
+            Logging level as specified in the
+            `login module <http://docs.python.org/2/library/logging.html>`_ of
+            Python standard library.
+
+        """
+        info_style = u' \u251C\u2500 '
+        last_style = u' \u2514\u2500 '
+        style = u'' if last is None else last_style if last else info_style
+        cls._log(logging.DEBUG, u'{0}{1}: {2!s}'.format(style, param, value))
+
     def _fetch(self, url, method='GET', params=None, headers=None,
                body='', max_redirects=5, content_parser=None,
                certificate_file=None, ssl_verify=True):
@@ -407,22 +434,13 @@ class BaseProvider(object):
         request_path = parse.urlunsplit(
             ('', '', url_parsed.path or '', query or '', ''))
 
-        self._log(
-            logging.DEBUG,
-            u' \u251C\u2500 host: {0}'.format(url_parsed.hostname))
-        self._log(
-            logging.DEBUG,
-            u' \u251C\u2500 path: {0}'.format(request_path))
-        self._log(logging.DEBUG, u' \u251C\u2500 method: {0}'.format(method))
-        self._log(logging.DEBUG, u' \u251C\u2500 body: {0}'.format(body))
-        self._log(logging.DEBUG, u' \u251C\u2500 params: {0}'.format(params))
-        self._log(logging.DEBUG, u' \u251C\u2500 headers: {0}'.format(headers))
-        self._log(
-            logging.DEBUG,
-            u' \u2514\u2500 certificate: {0}'.format(certificate_file))
-        self._log(
-            logging.DEBUG,
-            u' \u2514\u2500 SSL verify: {0}'.format(ssl_verify))
+        self._log_param('host', url_parsed.hostname, last=False)
+        self._log_param('method', method, last=False)
+        self._log_param('body', body, last=False)
+        self._log_param('params', params, last=False)
+        self._log_param('headers', headers, last=False)
+        self._log_param('certificate', certificate_file, last=False)
+        self._log_param('SSL verify', ssl_verify, last=True)
 
         # Connect
         if url_parsed.scheme.lower() == 'https':
@@ -457,9 +475,8 @@ class BaseProvider(object):
             elif max_redirects > 0:
                 remaining_redirects = max_redirects - 1
 
-                self._log(logging.DEBUG, u'Redirecting to {0}'.format(url))
-                self._log(logging.DEBUG, u'Remaining redirects: {0}'
-                          .format(remaining_redirects))
+                self._log_param('Redirecting to', url)
+                self._log_param('Remaining redirects', remaining_redirects)
 
                 # Call this method again.
                 response = self._fetch(url=location,
@@ -475,16 +492,10 @@ class BaseProvider(object):
                                  url=location,
                                  status=response.status)
         else:
-            self._log(logging.DEBUG, u'Got response:')
-            self._log(logging.DEBUG, u' \u251C\u2500 url: {0}'.format(url))
-            self._log(
-                logging.DEBUG,
-                u' \u251C\u2500 status: {0}'.format(
-                    response.status))
-            self._log(
-                logging.DEBUG,
-                u' \u2514\u2500 headers: {0}'.format(
-                    response.getheaders()))
+            self._log_param('Got response')
+            self._log_param('url', url, last=False)
+            self._log_param('status', response.status, last=False)
+            self._log_param('headers', response.getheaders(), last=True)
 
         return authomatic.core.Response(response, content_parser)
 
@@ -839,9 +850,7 @@ class AuthorizationProvider(BaseProvider):
 
         headers = headers or {}
 
-        self._log(
-            logging.INFO,
-            u'Accessing protected resource {0}.'.format(url))
+        self._log_param('Accessing protected resource', url, level=logging.INFO)
 
         request_elements = self.create_request_elements(
             request_type=self.PROTECTED_RESOURCE_REQUEST_TYPE,
@@ -859,10 +868,8 @@ class AuthorizationProvider(BaseProvider):
                                certificate_file=certificate_file,
                                ssl_verify=ssl_verify)
 
-        self._log(
-            logging.INFO,
-            u'Got response. HTTP status = {0}.'.format(
-                response.status))
+        status = response.status
+        self._log_param('Got response. HTTP status', status, level=logging.INFO)
         return response
 
     def async_access(self, *args, **kwargs):
