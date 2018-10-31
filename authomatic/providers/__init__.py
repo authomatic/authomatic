@@ -280,11 +280,18 @@ class BaseProvider(object):
             Name of the desired keyword argument.
 
         """
-
-        return kwargs.get(kwname) or \
-            self.settings.config.get(self.name, {}).get(kwname) or \
-            self.settings.config.get('__defaults__', {}).get(kwname) or \
-            default
+        # check against `None` instead of multiple 'or' in case default value
+        # is `False`, which could be considered a valid 'found' value
+        getters = [
+            lambda: kwargs.get(kwname),
+            lambda: self.settings.config.get(self.name, {}).get(kwname),
+            lambda: self.settings.config.get('__defaults__', {}).get(kwname),
+        ]
+        for get in getters:
+            value = get()
+            if value is not None:
+                return value
+        return default
 
     def _session_key(self, key):
         """
