@@ -4,8 +4,11 @@ addons:
   - authomatic.test
   - authomatic.com
   - authomatic.org
-install: sudo pip install tox
-script: sudo tox -e py27 -- -vvx --tb=no
+install:
+- sudo pip install tox
+script:
+- sudo tox -e py3 -- -vvx --tb=no
+
 after_failure:
 - tail -n 1000000 flask.log
 - tail -n 1000000 tests/functional_tests/*.log
@@ -15,10 +18,4 @@ before_install:
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
 - brew update
-- brew install caskroom/cask/brew-cask
 - brew cask install google-chrome
-- brew install python3
-- wget -N http://chromedriver.storage.googleapis.com/2.10/chromedriver_mac32.zip -P
-  .
-- unzip ./chromedriver_mac32.zip -d .
-- chmod +x ./chromedriver
