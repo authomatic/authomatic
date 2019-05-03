@@ -876,19 +876,12 @@ class Facebook(OAuth2):
     Supported :class:`.User` properties:
 
     * birth_date
-    * city
-    * country
     * email
     * first_name
-    * gender
     * id
     * last_name
-    * link
-    * locale
-    * location
     * name
     * picture
-    * timezone
 
     Unsupported :class:`.User` properties:
 
@@ -907,19 +900,19 @@ class Facebook(OAuth2):
 
     supported_user_attributes = core.SupportedUserAttributes(
         birth_date=True,
-        city=True,
-        country=True,
+        city=False,
+        country=False,
         email=True,
         first_name=True,
-        gender=True,
+        gender=False,
         id=True,
         last_name=True,
-        link=True,
-        locale=True,
-        location=True,
+        link=False,
+        locale=False,
+        location=False,
         name=True,
         picture=True,
-        timezone=True,
+        timezone=False,
         username=False,
     )
 
