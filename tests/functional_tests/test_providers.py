@@ -98,7 +98,7 @@ def log(indent, provider_name, message):
 @pytest.fixture('module')
 def browser(request):
     """
-    Starts and stops the server for each app in APPS.
+    Starts and stops the browser
     """
     _browser = config.get_browser()
     _browser.set_window_size(800, 600)

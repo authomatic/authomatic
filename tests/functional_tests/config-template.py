@@ -18,13 +18,21 @@ def get_browser():
     global display
     display = Display(visible=0, size=(1024, 768))
     display.start()
-    return webdriver.Firefox()
+
+    options = webdriver.ChromeOptions()
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage");
+    options.add_experimental_option("useAutomationExtension", False);
+    return webdriver.Chrome(chrome_options=options)
 
 
 # If present and callable, it will be called at the end of the whole test suite
 def teardown():
     global display
-    display.stop()
+    try:
+        display.stop()
+    except NameError:
+        pass
 
 
 # A failed login by a provider will be retried so many times as set here
@@ -52,43 +60,45 @@ INCLUDE_FRAMEWORKS = [
 ]
 
 # Only providers included here will be tested.
+# Leave commented-out entries (with explanation) to prevent trying to re-add tests for services
+# Which aren't testable in an automated environment.
 INCLUDE_PROVIDERS = [
-    # OAuth 1.0a
-    'bitbucket',
-    'flickr',
-    'plurk',
-    'twitter',
-    'tumblr',
+    # OAuth 1.0a  - This mostly deprecated as a service 'in the wild' - we should drop support.
+    # 'bitbucket',
+    # 'flickr',
+    # 'plurk',
+    # 'twitter',
+    # 'tumblr',
     # 'ubuntuone',  # UbuntuOne service is no longer available
-    'vimeo',
+    # 'vimeo',
     # Xero requires creation of a new trial project every month which makes
     # the setup of the automated test too laborious to support it.
     # 'xero',
-    'xing',
-    'yahoo',
+    # 'xing',
+    # 'yahoo',
 
     # OAuth 2.0
     # 'amazon',  # Asks for a captcha (cannot be automated)
     # 'behance',  # doesn't support third party authorization anymore.
-    'bitly',
-    'deviantart',
+    # 'bitly',  # deprecated for test suite refactoring - consider re-enabling
+    # 'deviantart',  # deprecated for test suite refactoring - consider re-enabling
     'facebook',
-    'foursquare',
-    'google',
-    'github',
-    'linkedin',  # Asks for verification when running in Travis CI evnironment
-    'paypal',
-    'reddit',
-    'vk',
-    'windowslive',
-    'yammer',
-    'yandex',
+    # 'foursquare',  # deprecated for test suite refactoring - consider re-enabling
+    # 'google',  # deprecated for test suite refactoring - consider re-enabling
+    # 'github',  # deprecated for test suite refactoring - consider re-enabling
+    # 'linkedin',  #  # Asks for verification (captcha) in the login form in Travis CI environment.
+    # 'paypal',  # deprecated for test suite refactoring - consider re-enabling
+    # 'reddit',  # deprecated for test suite refactoring - consider re-enabling
+    # 'vk',  # deprecated for test suite refactoring - consider re-enabling
+    # 'windowslive',  # Asks for verification (captcha) in the login form in Travis CI environment.
+    # 'yammer',  # deprecated for test suite refactoring - consider re-enabling
+    # 'yandex',  # deprecated for test suite refactoring - consider re-enabling
 
     # OpenID
     # 'openid_livejournal',  # Login and password elements are not visible.
-    'openid_verisignlabs',
-    'openid_wordpress',
-    'openid_yahoo',
+    # 'openid_verisignlabs',  # deprecated for test suite refactoring - consider re-enabling
+    # 'openid_wordpress',  # deprecated for test suite refactoring - consider re-enabling
+    # 'openid_yahoo',  # deprecated for test suite refactoring - consider re-enabling
 ]
 
 # Recommended setup for Travis CI environment.
@@ -97,17 +107,6 @@ if os.environ.get('TRAVIS'):
     WAIT_MULTIPLIER = 2
     MIN_WAIT = 2
 
-    # LinkedIn and WindowsLive include a captcha in the login form
-    # if a user logs in from an unusual location.
-    INCLUDE_PROVIDERS = list(set(INCLUDE_PROVIDERS) -
-                             set(['linkedin', 'windowslive']))
-
-    def get_browser():
-        # Eventbrite has problems with the login form on Firefox
-        return webdriver.Chrome()
-
-    def teardown():
-        pass
 
 # Use these constants if you have the same user info by all tested providers.
 EMAIL = 'andy.pipkin@littlebritain.co.uk'
@@ -174,192 +173,13 @@ COMMON = {
 
 # Values from COMMON will be overridden by values from PROVIDERS[provider_name]
 # if set.
+# Update this in config.py[.enc] as appropriate
 PROVIDERS = {
-    # OAuth 1.0a
-    'bitbucket': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': USERNAME,
-    },
-    'flickr': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'meetup': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_login': EMAIL,
-        'user_id': '??????????',
-        'user_country': COUNTRY_ISO2,
-        'user_location': '{0}, {1}'.format(CITY, COUNTRY_ISO2),
-    },
-    'plurk': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'twitter': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-        # Twitter considers selenium login attempts suspicious and occasionally
-        # asks a security challenge question. This will be used as the answer.
-        'user_challenge_answer': '??????????',
-    },
-    'tumblr': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': USERNAME,
-    },
-    'vimeo': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'xero': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-    },
-    'xing': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'yahoo': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-    },
-
     # OAuth 2.0
-    'amazon': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_id': '??????????',
-        'user_password': '##########',
-    },
-    # Behance doesn't support third party authorization anymore.
-    # 'behance': {
-    #     'consumer_key': '##########',
-    #     'consumer_secret': '##########',
-    #     'user_password': '##########',
-    #     'user_id': '??????????',
-    # },
-    'bitly': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'deviantart': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-    },
-    'eventbrite': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
     'facebook': {
         'consumer_key': '##########',
         'consumer_secret': '##########',
         'user_password': '##########',
         'user_id': '??????????',
-    },
-    'foursquare': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'google': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'github': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'linkedin': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'paypal': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-    },
-    'reddit': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_id': '??????????',
-    },
-    # Viadeo doesn't support access to its API
-    # http://dev.viadeo.com/documentation/authentication/request-an-api-key/
-    # 'viadeo': {
-    #     'consumer_key': '##########',
-    #     'consumer_secret': '##########',
-    # },
-    'vk': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'windowslive': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-    'yammer': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-        'user_timezone': '??????????',  # e.g. 'Pacific Time (US & Canada)'
-    },
-    'yandex': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
-
-    # OpenID
-    'openid_livejournal': {
-        'user_login': USERNAME,
-        'user_password': '##########',
-    },
-    'openid_wordpress': {
-        'user_login': EMAIL,
-        # user_username is used in the OpenID identifier
-        'user_password': '##########',
-    },
-    'openid_verisignlabs': {
-        'user_login': USERNAME,
-        'user_password': '##########',
-    },
-    'openid_yahoo': {
-        'user_id': 'https://me.yahoo.com/a/???',
-        'user_login': USERNAME,
-        'user_password': '##########',
     },
 }
