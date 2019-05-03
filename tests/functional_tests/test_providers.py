@@ -193,6 +193,7 @@ def login(request, browser, app, attempt=1):
             log(2, provider_name, 'Going to login URL: {0}'.format(login_url))
             browser.get(login_url)
         else:
+            log(2, provider_name, 'Going to URL: {0}'.format(url))
             browser.get(url)
 
         # Handle alerts
