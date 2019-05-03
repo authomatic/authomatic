@@ -18,14 +18,14 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="platformDialogForm"]/div[2]/table/tbody/tr/td[2]/button[2]'
     ],
-    'after_consent_wait_seconds': 1,
+    'after_consent_wait_seconds': 3,
     'class_': oauth2.Facebook,
     'scope': oauth2.Facebook.user_info_scope,
     'user': {
         'birth_date': conf.user_birth_date_str,
         'city': None,
         'country': None,
-        'email': 'authomatic_wpalpsy_user@tfbnw.net',
+        'email': conf.user_login,
         'first_name': conf.user_first_name,
         'gender': None,
         'id': conf.user_id,
@@ -43,7 +43,7 @@ CONFIG = {
     },
     'content_should_contain': [
         conf.user_birth_date.strftime(u'%m\/%d\/%Y'),
-        'authomatic_wpalpsy_user@tfbnw.net'.replace('@', '\\u0040'),
+        conf.user_login.replace('@', '\\u0040'),
         conf.user_first_name,
         conf.user_id,
         conf.user_last_name,
