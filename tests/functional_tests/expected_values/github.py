@@ -9,15 +9,16 @@ from authomatic.providers import oauth2
 conf = fixtures.get_configuration('github')
 
 LINK = 'https://github.com/{0}'.format(conf.user_username)
-PICTURE = re.compile(r'https://avatars\.githubusercontent.com/u/{0}\?v=\d'
+PICTURE = re.compile(r'https://avatars3\.githubusercontent.com/u/{0}\?v=\d'
                      .format(conf.user_id))
 
 CONFIG = {
     'login_xpath': '//*[@id="login_field"]',
     'password_xpath': '//*[@id="password"]',
     'consent_xpaths': [
-        '//*[@id="site-container"]/div/div[2]/form/p/button',
+        '//*[@id="js-oauth-authorize-btn"]',
     ],
+    'after_consent_wait_seconds': 3,
     'class_': oauth2.GitHub,
     'scope': oauth2.GitHub.user_info_scope,
     'access_headers': {
@@ -45,7 +46,7 @@ CONFIG = {
     },
     'content_should_contain': [
         conf.user_id,
-        conf.user_name, conf.user_first_name, conf.user_last_name,
+        conf.user_username, conf.user_first_name, conf.user_last_name,
         conf.user_city, conf.user_country,
 
         # User info JSON keys
@@ -65,7 +66,7 @@ CONFIG = {
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': 'Bearer',
-        'provider_type_id': '2-7',
+        'provider_type_id': '2-8',
         '_expiration_time': None,
         'consumer_key': None,
         'provider_id': None,

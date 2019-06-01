@@ -177,23 +177,23 @@ expected_values_path = os.path.dirname(expected_values.__file__)
 # Loop through all modules of the expected_values package
 # except the _template.py
 for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):
-    # Import the module
-    mod = importer.find_module(name).load_module(name)
+    if name in config.INCLUDE_PROVIDERS:
+        # Import the module
+        mod = importer.find_module(name).load_module(name)
+        # Assemble result
+        result = {}
+        result.update(config.PROVIDERS[name])
+        result.update(mod.CONFIG)
 
-    # Assemble result
-    result = {}
-    result.update(config.PROVIDERS[name])
-    result.update(mod.CONFIG)
+        result['_path'] = '{0}?id={1}'.format(name, result['openid_identifier']) \
+            if result.get('openid_identifier') else name
 
-    result['_path'] = '{0}?id={1}'.format(name, result['openid_identifier']) \
-        if result.get('openid_identifier') else name
+        ASSEMBLED_CONFIG[name] = result
+        if oauth2.OAuth2 in result['class_'].__mro__:
+            OAUTH2_PROVIDERS[name] = result
 
-    ASSEMBLED_CONFIG[name] = result
-    if oauth2.OAuth2 in result['class_'].__mro__:
-        OAUTH2_PROVIDERS[name] = result
+        if oauth1.OAuth1 in result['class_'].__mro__:
+            OAUTH1_PROVIDERS[name] = result
 
-    if oauth1.OAuth1 in result['class_'].__mro__:
-        OAUTH1_PROVIDERS[name] = result
-
-    if openid.OpenID in result['class_'].__mro__:
-        OPENID_PROVIDERS[name] = result
+        if openid.OpenID in result['class_'].__mro__:
+            OPENID_PROVIDERS[name] = result

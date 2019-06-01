@@ -98,7 +98,7 @@ def log(indent, provider_name, message):
 @pytest.fixture('module')
 def browser(request):
     """
-    Starts and stops the server for each app in APPS.
+    Starts and stops the browser
     """
     _browser = config.get_browser()
     _browser.set_window_size(800, 600)
@@ -193,6 +193,7 @@ def login(request, browser, app, attempt=1):
             log(2, provider_name, 'Going to login URL: {0}'.format(login_url))
             browser.get(login_url)
         else:
+            log(2, provider_name, 'Going to URL: {0}'.format(url))
             browser.get(url)
 
         # Handle alerts
