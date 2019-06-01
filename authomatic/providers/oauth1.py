@@ -899,9 +899,11 @@ class Twitter(OAuth1):
     Unsupported :class:`.User` properties:
 
     * birth_date
+    * email
     * gender
     * first_name
     * last_name
+    * locale
     * nickname
     * phone
     * postal_code
@@ -913,9 +915,9 @@ class Twitter(OAuth1):
         city=True,
         country=True,
         id=True,
-        email=True,
+        email=False,
         link=True,
-        locale=True,
+        locale=False,
         location=True,
         name=True,
         picture=True,

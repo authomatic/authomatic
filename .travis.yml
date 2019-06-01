@@ -1,4 +1,4 @@
-language: objective-c
+os: osx
 addons:
   hosts:
   - authomatic.test
@@ -13,7 +13,7 @@ after_failure:
 - tail -n 1000000 tests/functional_tests/*.log
 - tail -n 1000000 tests/*.log
 before_install:
-- openssl aes-256-cbc -K $encrypted_dbe8ae205660_key -iv $encrypted_dbe8ae205660_iv
+- openssl aes-256-cbc -K $encrypted_a51a72b5b8ba_key -iv $encrypted_a51a72b5b8ba_iv
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
 - brew update
