@@ -1,9 +1,9 @@
-Unreleased
-----------
+Version 0.2.0
+-------------
 
 * Add :attr: email to :class: `oauth1.Twitter` provider.
-* Added support for :attr:`.User.country` and :attr:`.User.city` to 
-  :class: `oauth1.Twitter` provider. 
+* Added support for :attr:`.User.country` and :attr:`.User.city` to
+  :class: `oauth1.Twitter` provider.
 * Fix Twitter user info endpoint to include image url.
 * Support passing of user state in oauth2 to support variable redirect urls.
 * The :class:`.oauth2.Google` provider now uses
@@ -14,7 +14,7 @@ Unreleased
 * Removed support for :attr:`gender`, :attr:`link` and :attr:`birth_date`
   from :class:`.oauth2.Google` provider.
 * Fix #160: Handle token_type of bearer (lower-case).
-* Fix #130: explicitly request fields from Facebook. 
+* Fix #130: explicitly request fields from Facebook.
 * Adjusted naming of default scope for :class:`.oauth2.Facebook` to Facebook v2 API
 * Added support for :attr:`.User.email` to the :class:`.oauth1.Bitbucket` provider.
 * Added support for :attr:`.User.city`, updated :attr:`.User.country` and removed

@@ -7,7 +7,7 @@ from authomatic import six
 
 setup(
     name='Authomatic',
-    version='0.1.0.post1',  # TODO: Put version in one place.
+    version='0.2.0',  # TODO: Put version in one place.
     packages=find_packages(),
     package_data={'': ['*.txt', '*.rst']},
     author='Peter Hudec',
@@ -16,7 +16,7 @@ setup(
                  'Python web applications'),
     long_description=open('README.rst').read(),
     keywords='authorization authentication oauth openid',
-    url='http://peterhudec.github.io/authomatic',
+    url='https://authomatic.github.io/authomatic/',
     license='MIT',
     extras_require={
         'OpenID': ['python3-openid' if six.PY3 else 'python-openid'],
