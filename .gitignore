@@ -38,3 +38,4 @@ e
 .tox/
 *.log
 logs-repo
+.python-version
