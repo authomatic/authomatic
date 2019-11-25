@@ -73,9 +73,8 @@ The package is licensed under
 Requirements
 ============
 
-Requires **Python 2.6** and newer. **Python 3.x** support added in
-**Authomatic 0.0.11** thanks to
-`Emmanuel Leblond <https://github.com/touilleMan>`__.
+Requires **Python 2.7** and newer.
+**Python 3.x** support added in **Authomatic 0.0.11** thanks to Emmanuel Leblond <https://github.com/touilleMan>`__.
 
 Live Demo
 =========
