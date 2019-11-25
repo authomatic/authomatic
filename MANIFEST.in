@@ -1,9 +1,10 @@
-include *.txt *.rst *.py tox.ini
+include *.txt *.rst *.py
 include javascript/authomatic.js javascript/authomatic.map
-recursive-include examples *.py *.yaml *.html *.js *.css *.gif *.ico *.map *.png *.svg *.json *.sass
-recursive-include doc/build/html *.html *.js *.css *.ico *.jpg *.png *.gif *.svg *.inv *.xml *.txt
-recursive-include tests *.html *.template
+exclude tox.ini requirements.txt
+recursive-exclude examples *
+recursive-exclude doc *
+recursive-exclude tests *
 recursive-exclude assets *
-recursive-exclude doc/source/ *
+exclude assets doc examples tests
 global-exclude *.coffee *.sass* *.rb *.sh config.py* config_public.py* *.bowerrc Makefile *.bat Cakefile  .gitmodules .pylintrc
 
