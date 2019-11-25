@@ -16,11 +16,22 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_dbe8ae205660_key -iv $encrypted_dbe8ae205660_iv
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
+before_deploy:
+  - pip install -r requirements-docs.txt
+  - make html -C doc/
 deploy:
-  provider: pypi
-  user: "__token__"
-  # password: is defined via encrypted env var $PYPI_PASSWORD (stored on travis server)
-  skip_cleanup: true
-  distributions: "sdist bdist_wheel"
-  on:
-    tags: true
+  - provider: pypi
+    user: "__token__"
+    # password: is defined via encrypted env var $PYPI_PASSWORD (stored on travis server)
+    skip_cleanup: true
+    distributions: "sdist bdist_wheel"
+    on:
+      tags: true
+  - provider: pages
+    local_dir: docs/build/html
+    target_branch: ghpages-test
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+    keep_history: true
+    on:
+      tags: true
