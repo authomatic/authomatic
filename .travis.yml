@@ -22,6 +22,7 @@ deploy:
   provider: pypi
   user: "__token__"
   # password: is defined via encrypted env var $PYPI_PASSWORD (stored on travis server)
+  skip_cleanup: true
   on:
     tags: true
     branch: prepare-0.2.0
