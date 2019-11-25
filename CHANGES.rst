@@ -5,6 +5,15 @@ Changelog
 Version 0.2.0
 -------------
 
+
+* release-preparations/deployement:
+  - do not include tests, examples and doc in egg/wheel.
+  - fix travis, add auto-deploy
+  - internal package setup: overall cleanup
+* docs:
+  - do not include Google Appengine 1st generation modules.
+  - simplify build
+  - overall cleanup
 * Add :attr: email to :class: `oauth1.Twitter` provider.
 * Added support for :attr:`.User.country` and :attr:`.User.city` to
   :class: `oauth1.Twitter` provider.

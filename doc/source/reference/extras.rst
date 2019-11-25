@@ -10,6 +10,9 @@ Extras
 .. automodule:: authomatic.extras.interfaces
    :members:
 
+Google Appengine 1st generation
+-------------------------------
+
 The module ``authomatic.extras.gae`` is outdated and supports only first generation Google Appengine.
 It can be used for backward compatibility.
 For internals please look at the source code.

@@ -172,6 +172,9 @@ Available provider classes:
 .. automodule:: authomatic.providers
    :members:
 
+Google Appengine 1st generation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The module ``authomatic.providers.gaeopenid`` is outdated and supports only first generation Google Appengine.
 It can be used for backward compatibility.
 For internals please look at the source code.
