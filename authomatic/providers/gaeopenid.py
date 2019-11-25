@@ -25,13 +25,19 @@ Google App Engine OpenID Providers
 
 """
 
-import logging
-
-from google.appengine.api import users
-
 import authomatic.core as core
 from authomatic import providers
 from authomatic.exceptions import FailureError
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+try:
+    from google.appengine.api import users
+except ImportError:
+    logger.exception("FATAL: google.appengine 1st Gen. not installed!")
+    users = None
 
 
 __all__ = ['GAEOpenID', 'Yahoo', 'Google']

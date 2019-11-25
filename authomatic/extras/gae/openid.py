@@ -5,10 +5,15 @@
 from __future__ import absolute_import
 import logging
 import datetime
-
-from google.appengine.ext import ndb
 import openid.store.interface
 
+logger = logging.getLogger(__name__)
+
+try:
+    from google.appengine.ext import ndb
+except ImportError:
+    logger.exception("FATAL: google.appengine 1st Gen. not installed!")
+    raise
 
 class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     """

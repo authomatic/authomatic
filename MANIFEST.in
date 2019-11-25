@@ -1,6 +1,6 @@
 include *.txt *.rst *.py
 include javascript/authomatic.js javascript/authomatic.map
-exclude tox.ini requirements.txt
+exclude tox.ini requirements*.txt
 recursive-exclude examples *
 recursive-exclude doc *
 recursive-exclude tests *

@@ -6,13 +6,20 @@
 Utilities you can use when using this library on |gae|_.
 """
 
-from google.appengine.ext import ndb
-from webapp2_extras import sessions
 
 from authomatic import exceptions
 from authomatic.extras import interfaces
 from authomatic.extras.gae.openid import NDBOpenIDStore
+import logging
 
+logger = logging.getLogger(__name__)
+
+try:
+    from google.appengine.ext import ndb
+    from webapp2_extras import sessions
+except ImportError:
+    logger.exception("FATAL: google.appengine 1st Gen. not installed!")
+    raise
 
 __all__ = ['ndb_config', 'Webapp2Session']
 
