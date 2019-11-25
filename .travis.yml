@@ -18,3 +18,9 @@ before_install:
   -d
 - brew update
 - brew cask install google-chrome
+deploy:
+  provider: pypi
+  user: "__token__"
+  # password: is defined via encrypted env var $PYPI_PASSWORD (stored on travis server)
+  on:
+    tags: true
