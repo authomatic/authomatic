@@ -24,3 +24,4 @@ deploy:
   # password: is defined via encrypted env var $PYPI_PASSWORD (stored on travis server)
   on:
     tags: true
+    branch: prepare-0.2.0
