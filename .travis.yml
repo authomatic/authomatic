@@ -1,3 +1,8 @@
+language: python
+dist: bionic
+sudo: true
+cache:
+  pip: true
 addons:
   chrome: stable
   hosts:
@@ -17,7 +22,7 @@ before_install:
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
 before_deploy:
-  - pip install -r requirements-docs.txt
+  - pip3 install -r requirements-docs.txt
   - make html -C doc/
 deploy:
   - provider: pypi
