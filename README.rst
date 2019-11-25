@@ -96,3 +96,8 @@ Usage
 =====
 
 Read the exhaustive documentation at http://authomatic.github.io/authomatic.
+
+Changelog
+=========
+
+The `Changelog is part of the documentation <https://authomatic.github.io/authomatic/changelog.html>`_.
