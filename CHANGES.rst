@@ -36,6 +36,15 @@ Changelog
 
 .. towncrier release notes start
 
+1.0.0a3 (2019-11-26)
+--------------------
+
+Miscellaneous:
+~~~~~~~~~~~~~~
+
+- Travis updates for automatic releases.
+
+
 1.0.0a2 (2019-11-26)
 --------------------
 
