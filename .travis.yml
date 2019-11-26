@@ -1,6 +1,7 @@
 language: python
 sudo: false
 dist: bionic
+python: 2.7
 cache:
   pip: true
 addons:
