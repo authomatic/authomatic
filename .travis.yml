@@ -1,3 +1,6 @@
+language: python
+python:
+- "3.6"
 dist: bionic
 sudo: true
 cache:
