@@ -1,0 +1,1 @@
+Add :attr:`.email` to :class:`oauth1.Twitter` provider.

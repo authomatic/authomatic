@@ -1,0 +1,21 @@
+News Fragments
+
+The news files are one per issue, best using the issue-number or pull-request (PR) number as filename prefix.
+
+towncrier has a few standard types of news fragments, signified by the file extension. These are:
+
+    .breaking: Signifying a deprecation or removal of public API.
+    .feature: Signifying a new feature.
+    .bugfix: Signifying a bug fix.
+    .doc: Signifying a documentation improvement.
+    .misc: A ticket has been closed, but it is not of interest to users.
+
+Example:
+
+    - ``1234.bugfix``
+    - for two separate fixes in one PR `3423-1.bugfix`` and ``3423-2.bugfix``
+
+Sphinx Syntax is allowed.
+
+(Keep this folder even in GIT if empty)
+

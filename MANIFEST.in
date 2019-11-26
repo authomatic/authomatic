@@ -1,10 +1,11 @@
 include *.txt *.rst *.py
 include javascript/authomatic.js javascript/authomatic.map
-exclude tox.ini requirements*.txt
+exclude tox.ini requirements*.txt pyproject.toml news.template
 recursive-exclude examples *
 recursive-exclude doc *
 recursive-exclude tests *
 recursive-exclude assets *
-exclude assets doc examples tests
+recursive-exclude news *
+exclude assets doc examples tests news
 global-exclude *.coffee *.sass* *.rb *.sh config.py* config_public.py* *.bowerrc Makefile *.bat Cakefile  .gitmodules .pylintrc
 

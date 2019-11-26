@@ -1,0 +1,1 @@
+Removed ::attr:`User.location` in the class:`.oauth2.LinkedIn` provider.
