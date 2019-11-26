@@ -15,7 +15,7 @@ The steps for generating an automated release are:
     - keep the ``.dev0`` postfix, the release process will take care of it.
 - ``git tag trigger-x.y.z`` the release (with ``x.y.z`` the release number).
     - technical the tag name is irrelevant for the release, but we agree to mirror the version number and prefix with ``trigger-``.
-    - Push to master branch (final release) or to a prerelease/release test branch for alpha.
+    - Push to master branch; other branches will do the pre/post-release but not actually upload anything to PyPI.
     - Make sure to do ``git push --tags``
 - Travis will then release to `PyPI <https://pypi.org/project/Authomatic/#history>`_ as ``bdist_wheel`` and ``sdist`` (egg).
 - After deployment the `Authomatic documentation <https://authomatic.github.io/authomatic/>`_ will get build and updated on GitHub Pages
