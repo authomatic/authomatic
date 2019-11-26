@@ -41,6 +41,8 @@ deploy:
     distributions: "sdist bdist_wheel"
     server: https://test.pypi.org/legacy
     on:
+      # We need to set this as default branch: master overrides condition
+      all_branches: true
       condition: $TRAVIS_BRANCH =~ ^(prepare-.*)$
   - provider: pages
     local_dir: doc/build/html
@@ -49,6 +51,8 @@ deploy:
     github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
     keep_history: true
     on:
+      # We need to set this as default branch: master overrides condition
+      all_branches: true
       condition: $TRAVIS_BRANCH =~ ^(prepare-.*)$
 after_deploy:
 - postrelease --no-input --verbose
