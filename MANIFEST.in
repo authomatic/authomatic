@@ -5,5 +5,6 @@ recursive-exclude examples *
 recursive-exclude doc *
 recursive-exclude tests *
 recursive-exclude assets *
+exclude assets doc examples tests
 global-exclude *.coffee *.sass* *.rb *.sh config.py* config_public.py* *.bowerrc Makefile *.bat Cakefile  .gitmodules .pylintrc
 
