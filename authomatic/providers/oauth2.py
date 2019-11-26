@@ -471,9 +471,9 @@ class OAuth2(providers.AuthorizationProvider):
                     url=self.user_authorization_url)
 
         elif (
-                not self.params or
-                len(self.params) == 1 and
-                'user_state' in self.params
+                not self.params
+                or len(self.params) == 1
+                and 'user_state' in self.params
         ):
             # =================================================================
             # Phase 1 before redirect
