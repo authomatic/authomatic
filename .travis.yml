@@ -23,7 +23,6 @@ before_install:
   -d
 before_deploy:
 # Clean the working directory, or prerelease complains
-- git clean -f
 - pip install zestreleaser.towncrier zest.releaser[recommended]
 - git config --local user.email "authomaticproject@protonmail.com"
 - git config --local user.name "TravisCI"
@@ -42,9 +41,7 @@ deploy:
     distributions: "sdist bdist_wheel"
     server: https://test.pypi.org/legacy
     on:
-      tags: true
-      branch: prepare-0.2.0
-      condition: $TRAVIS_TAG =~ ^(trigger-.*)$
+      condition: $TRAVIS_BRANCH =~ ^(prepare-.*)$
   - provider: pages
     local_dir: doc/build/html
     target_branch: test-ghpages
@@ -52,9 +49,7 @@ deploy:
     github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
     keep_history: true
     on:
-      tags: true
-      branch: prepare-0.2.0
-      condition: $TRAVIS_TAG =~ ^(trigger-.*)$
+      condition: $TRAVIS_BRANCH =~ ^(prepare-.*)$
 after_deploy:
 - postrelease --no-input --verbose
 - git push
