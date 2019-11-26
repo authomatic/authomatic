@@ -36,6 +36,54 @@ Changelog
 
 .. towncrier release notes start
 
+1.0.0a2 (2019-11-26)
+--------------------
+
+Breaking changes:
+~~~~~~~~~~~~~~~~~
+
+- Removed support for :attr:`gender`, :attr:`link` and :attr:`birth_date` from :class:`.oauth2.Google` provider.
+- Removed ::attr:`User.location` in the class:`.oauth2.LinkedIn` provider.
+
+
+New features:
+~~~~~~~~~~~~~
+
+- Added support for :attr:`.User.city`, updated :attr:`.User.country` in the class:`.oauth2.LinkedIn` provider.
+- Added support for :attr:`.User.email` to the :class:`.oauth1.Bitbucket` provider.
+- Added support for :attr:`email_verified` and :attr:`hosted_domain` to :class:`.oauth2.Google` provider.
+- Support passing of user state in oauth2 to support variable redirect urls.
+- Added support for :attr:`.User.country` and :attr:`.User.city` to :class: `oauth1.Twitter` provider.
+- Add :attr:`.email` to :class:`oauth1.Twitter` provider.
+
+
+Bug fixes:
+~~~~~~~~~~
+
+- Adjusted naming of default scope for :class:`.oauth2.Facebook` to Facebook v2 API.
+- Fix #130: explicitly request fields from Facebook.
+- Fix #160: Handle token_type of bearer (lower-case).
+- The :class:`.oauth2.Google` provider now uses
+  ``https://www.googleapis.com/oauth2/v3/userinfo?alt=json`` as the ``user_info_url``
+  instead of the deprecated ``https://www.googleapis.com/plus/v1/people/me``.
+- Fix Twitter user info endpoint to include image url.
+
+
+Documentation:
+~~~~~~~~~~~~~~
+
+- Do not include Google Appengine 1st generation modules.
+- Simplify build and add ``build_docs.sh`` script.
+    Overall cleanup: No more submodules, update foundation theme and more.
+
+
+Miscellaneous:
+~~~~~~~~~~~~~~
+
+- Release-preparations:
+  Do not include tests, examples and doc in egg/wheel;
+  fix travis, add auto-deploy for PyPI and docs;
+  enhance internal package setup, overall cleanup and update metdadata.
 
 
 Version 0.1.0

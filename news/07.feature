@@ -1,1 +1,0 @@
-Added support for :attr:`email_verified` and :attr:`hosted_domain` to :class:`.oauth2.Google` provider.

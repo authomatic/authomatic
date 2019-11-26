@@ -1,1 +1,0 @@
-Support passing of user state in oauth2 to support variable redirect urls.

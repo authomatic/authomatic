@@ -1,4 +1,0 @@
-Release-preparations:
-Do not include tests, examples and doc in egg/wheel;
-fix travis, add auto-deploy for PyPI and docs;
-enhance internal package setup, overall cleanup and update metdadata.
