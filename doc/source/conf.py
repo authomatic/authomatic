@@ -11,7 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import datetime
+import pkg_resources
 
 # # If extensions (or modules to document with autodoc) are in another directory,
 # # add these directories to sys.path here. If the directory is relative to the
@@ -122,7 +123,10 @@ master_doc = "index"
 
 # General information about the project.
 project = u"Authomatic"
-copyright = u"2013-2019, Peter Hudec and the Authomatic Project Community"
+this_year = datetime.date.today().year
+copyright = u"2013-{0}, Peter Hudec and the Authomatic Project Community".format(
+    this_year
+)
 
 # TODO: Put version in one place.
 
@@ -131,7 +135,7 @@ copyright = u"2013-2019, Peter Hudec and the Authomatic Project Community"
 # built documents.
 #
 # The short X.Y version.
-version = "0.2.0"
+version = pkg_resources.get_distribution("Authomatic").version
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -148,7 +152,6 @@ release = version
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 exclude_patterns = [
-    "_themes/**/*",
     "examples/twitter-localhost.rst",
     "examples/**/authomatic/**/*",
 ]
