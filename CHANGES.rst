@@ -36,6 +36,15 @@ Changelog
 
 .. towncrier release notes start
 
+1.0.0a5 (2019-11-26)
+--------------------
+
+Miscellaneous:
+~~~~~~~~~~~~~~
+
+- Add misc news snippet.
+
+
 1.0.0a4 (2019-11-26)
 --------------------
 
