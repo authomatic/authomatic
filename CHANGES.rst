@@ -36,6 +36,15 @@ Changelog
 
 .. towncrier release notes start
 
+1.0.0a4 (2019-11-26)
+--------------------
+
+Miscellaneous:
+~~~~~~~~~~~~~~
+
+- Drop python multi-version support from travis
+
+
 1.0.0a3 (2019-11-26)
 --------------------
 
