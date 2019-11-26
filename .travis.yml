@@ -22,7 +22,8 @@ before_install:
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
 before_deploy:
-# Clean the working directory, or prerelease complains
+# Check out an expicit branch to avoid detached HEAD (which prelease complains about)
+- git checkout ${TRAVIS_BRANCH}
 - pip install zestreleaser.towncrier zest.releaser[recommended]
 - git config --local user.email "authomaticproject@protonmail.com"
 - git config --local user.name "TravisCI"
