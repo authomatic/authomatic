@@ -22,8 +22,16 @@ before_install:
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
 before_deploy:
-  - pip3 install -r requirements-docs.txt
-  - make html -C doc/
+- pip install zestreleaser.towncrier zest.releaser[recommended]
+- git config --local user.email "authomaticproject@protonmail.com"
+- git config --local user.name "TravisCI"
+- git remote add origin https://${GITHUB_TOKEN}@github.com/authomatic/authomatic.git > /dev/null 2>&1
+- prerelease --no-input --verbose
+- release --no-input --verbose
+- git push
+- git push --tags
+- pip install -r requirements-docs.txt
+- make html -C doc/
 deploy:
   - provider: pypi
     user: "__token__"
@@ -32,6 +40,8 @@ deploy:
     distributions: "sdist bdist_wheel"
     on:
       tags: true
+      branch: master
+      condition: $TRAVIS_TAG =~ ^(trigger-.*)$
   - provider: pages
     local_dir: doc/build/html
     target_branch: ghpages
@@ -41,3 +51,8 @@ deploy:
     on:
       tags: true
       branch: master
+      condition: $TRAVIS_TAG =~ ^(trigger-.*)$
+after_deploy:
+- postrelease --no-input --verbose
+- git push
+- git push --delete origin $TRAVIS_TAG
