@@ -38,19 +38,20 @@ deploy:
     # password: is defined via encrypted env var $PYPI_PASSWORD (stored on travis server)
     skip_cleanup: true
     distributions: "sdist bdist_wheel"
+    server: https://test.pypi.org/legacy
     on:
       tags: true
-      branch: master
+      branch: prepare-0.2.0
       condition: $TRAVIS_TAG =~ ^(trigger-.*)$
   - provider: pages
     local_dir: doc/build/html
-    target_branch: ghpages
+    target_branch: test-ghpages
     skip_cleanup: true
     github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
     keep_history: true
     on:
       tags: true
-      branch: master
+      branch: prepare-0.2.0
       condition: $TRAVIS_TAG =~ ^(trigger-.*)$
 after_deploy:
 - postrelease --no-input --verbose
