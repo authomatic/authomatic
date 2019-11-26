@@ -1,0 +1,1 @@
+Removed support for :attr:`gender`, :attr:`link` and :attr:`birth_date` from :class:`.oauth2.Google` provider.

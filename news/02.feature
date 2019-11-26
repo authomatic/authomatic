@@ -1,0 +1,1 @@
+Added support for :attr:`.User.email` to the :class:`.oauth1.Bitbucket` provider.

@@ -1,0 +1,2 @@
+  Simplify build and add ``build_docs.sh`` script.
+  Overall cleanup: No more submodules, update foundation theme and more.

@@ -1,0 +1,31 @@
+[tool.towncrier]
+filename = "CHANGES.rst"
+directory = "news/"
+title_format = "{version} ({project_date})"
+template = "news.template"
+underlines = ["-", "~"]
+
+[[tool.towncrier.type]]
+directory = "breaking"
+name = "Breaking changes:"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "feature"
+name = "New features:"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "bugfix"
+name = "Bug fixes:"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "doc"
+name = "Documentation:"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "misc"
+name = "Miscellaneous:"
+showcontent = true
