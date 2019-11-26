@@ -1,7 +1,6 @@
 language: python
-sudo: false
 dist: bionic
-python: 2.7
+sudo: true
 cache:
   pip: true
 addons:
@@ -11,9 +10,9 @@ addons:
   - authomatic.com
   - authomatic.org
 install:
-- pip install tox
+- sudo pip install tox
 script:
-- tox -e py3 -- -vvx --tb=no
+- sudo tox -e py3 -- -vvx --tb=no
 after_failure:
 - tail -n 500 tests/functional_tests/*.log
 - tail -n 500 tests/*.log
@@ -23,7 +22,7 @@ before_install:
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
 before_deploy:
-  - pip install -r requirements-docs.txt
+  - pip3 install -r requirements-docs.txt
   - make html -C doc/
 deploy:
   - provider: pypi
