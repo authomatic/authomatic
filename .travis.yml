@@ -25,7 +25,7 @@ before_deploy:
 - pip install zestreleaser.towncrier zest.releaser[recommended]
 - git config --local user.email "authomaticproject@protonmail.com"
 - git config --local user.name "TravisCI"
-- git remote add origin https://${GITHUB_TOKEN}@github.com/authomatic/authomatic.git > /dev/null 2>&1
+- git remote add origin https://${GITHUB_TOKEN}@github.com/authomatic/authomatic.git > /dev/null 2>&1 || git remote set-url origin https://${GITHUB_TOKEN}@github.com/authomatic/authomatic.git > /dev/null 2>&1
 - prerelease --no-input --verbose
 - release --no-input --verbose
 - git push
