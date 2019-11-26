@@ -1144,8 +1144,8 @@ class Response(ReprMixin):
         Return true if string is binary data.
         """
 
-        textchars = (bytearray([7, 8, 9, 10, 12, 13, 27]) +
-                     bytearray(range(0x20, 0x100)))
+        textchars = (bytearray([7, 8, 9, 10, 12, 13, 27])
+                     + bytearray(range(0x20, 0x100)))
         return bool(content.translate(None, textchars))
 
     @property

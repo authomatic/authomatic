@@ -150,7 +150,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
             u'NDBOpenIDStore: Querying datastore for OpenID nonces ordered by expiration date.')
         expired = cls.query().filter(
             cls.expiration_date <= datetime.datetime.now()).fetch(
-            keys_only=True)
+                keys_only=True)
 
         # delete all expired
         cls._log(
