@@ -6,6 +6,7 @@ recursive-exclude doc *
 recursive-exclude tests *
 recursive-exclude assets *
 recursive-exclude news *
-exclude assets doc examples tests news
+recursive-exclude travis *
+exclude assets doc examples tests news travis
 global-exclude *.coffee *.sass* *.rb *.sh config.py* config_public.py* *.bowerrc Makefile *.bat Cakefile  .gitmodules .pylintrc
 

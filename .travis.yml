@@ -22,18 +22,7 @@ before_install:
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
 before_deploy:
-# Check out an expicit branch to avoid detached HEAD (which prelease complains about)
-- git checkout ${TRAVIS_BRANCH}
-- pip install zestreleaser.towncrier zest.releaser[recommended]
-- git config --local user.email "authomaticproject@protonmail.com"
-- git config --local user.name "TravisCI"
-- git remote add origin https://${GITHUB_TOKEN}@github.com/authomatic/authomatic.git > /dev/null 2>&1 || git remote set-url origin https://${GITHUB_TOKEN}@github.com/authomatic/authomatic.git > /dev/null 2>&1
-- prerelease --no-input --verbose
-- release --no-input --verbose
-- git push
-- git push --tags
-- pip install -r requirements-docs.txt
-- make html -C doc/
+- travis/before_deploy.sh
 deploy:
   - provider: pypi
     user: "__token__"
@@ -56,6 +45,4 @@ deploy:
       all_branches: true
       condition: $TRAVIS_BRANCH =~ ^(prepare-.*)$
 after_deploy:
-- postrelease --no-input --verbose
-- git push
-- git push --delete origin $TRAVIS_TAG
+- travis/after_deploy.sh
