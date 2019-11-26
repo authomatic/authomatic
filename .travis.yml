@@ -1,4 +1,3 @@
-language: python
 dist: bionic
 sudo: true
 cache:
