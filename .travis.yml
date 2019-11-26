@@ -34,9 +34,10 @@ deploy:
       tags: true
   - provider: pages
     local_dir: doc/build/html
-    target_branch: ghpages-test
+    target_branch: ghpages
     skip_cleanup: true
     github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
     keep_history: true
     on:
       tags: true
+      branch: master
