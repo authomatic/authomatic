@@ -15,6 +15,7 @@ except ImportError:
     logger.exception("FATAL: google.appengine 1st Gen. not installed!")
     raise
 
+
 class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
     """
     |gae| `NDB <https://developers.google.com/appengine/docs/python/ndb/>`_
