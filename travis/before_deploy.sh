@@ -7,7 +7,8 @@ if ! [ -e BEFORE_DEPLOY_RUN ]; then
   git remote set-branches origin '*'
   git fetch -v
   # Check out an expicit branch to avoid detached HEAD (which prelease complains about)
-  git checkout master
+  # FIXME: This should say 'master' but for now must match PR/test branch
+  git checkout prepare-1.0.0
   pip install zestreleaser.towncrier zest.releaser[recommended]
   git config --local user.email "authomaticproject@protonmail.com"
   git config --local user.name "TravisCI"
