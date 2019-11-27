@@ -29,19 +29,18 @@ deploy:
     # password: is defined via encrypted env var $PYPI_PASSWORD (stored on travis server)
     skip_cleanup: true
     distributions: "sdist bdist_wheel"
-    server: https://test.pypi.org/legacy/
     on:
-      # We need to set this as default branch: master overrides condition
+      # Travis considers branch == tag, but we can't use patterns in 'branch:'
       all_branches: true
       condition: $TRAVIS_TAG =~ ^(trigger-.*)$
   - provider: pages
     local_dir: doc/build/html
-    target_branch: test-ghpages
+    target_branch: ghpages
     skip_cleanup: true
     github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
     keep_history: true
     on:
-      # We need to set this as default branch: master overrides condition
+      # Travis considers branch == tag, but we can't use patterns in 'branch:'
       all_branches: true
       condition: $TRAVIS_TAG =~ ^(trigger-.*)$
 after_deploy:
