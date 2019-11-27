@@ -3,6 +3,9 @@ set -e -x
 # only run once
 if ! [ -e BEFORE_DEPLOY_RUN ]; then
   touch BEFORE_DEPLOY_RUN
+  # Get the full list of branches from origin, not just this cloned branch
+  git remote set-branches origin '*'
+  git fetch -v
   # Check out an expicit branch to avoid detached HEAD (which prelease complains about)
   git checkout master
   pip install zestreleaser.towncrier zest.releaser[recommended]
