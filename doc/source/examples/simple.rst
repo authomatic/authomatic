@@ -1,10 +1,7 @@
 Simple |webapp2| |gae| Example
 ------------------------------
 
-.. seo-description::
-
-   A simple tutorial where we create a Google App Engine app which can log users
-   in with Facebook, Twitter and OpenID and read their recent statuses.
+:description: A simple tutorial where we create a Google App Engine app which can log users in with Facebook, Twitter and OpenID and read their recent statuses.
 
 In this tutorial we will create a simple |gae|_ |webapp2|_ application
 that will be able to log **users** in with Facebook, Twitter and |openid|_

@@ -1,10 +1,6 @@
 Config
 ------
-
-.. seo-description::
-
-    Config is a dictionary where you set up all the OAuth 1.0a, OAuth 2.0 and OpenID
-    providers you want to use in your application.
+:description: Config is a dictionary where you set up all the OAuth 1.0a, OAuth 2.0 and OpenID providers you want to use in your application.
 
 The config is a dictionary listing all the **providers** you want to use in your app.
 The keys are your internal **provider** names or slugs,
