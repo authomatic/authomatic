@@ -1,8 +1,8 @@
-Simple |flask| Example 
+Simple |flask| Example
 ----------------------
 
 .. seo-description::
-   
+
    A simple tutorial where we create a Flask app which can can log users
    in with Facebook, Twitter and OpenID and read their recent statuses.
 
@@ -20,11 +20,11 @@ Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
 `here <https://dev.twitter.com/apps>`__ for Twitter.
 
 .. note::
-   
+
    Facebook and other |oauth2| providers require a **redirect URI**
    which should be the URL of the *login request handler*
    which we will create in this tutorial and whose value in our case will be
-   ``http://[hostname]/login/fb`` for Facebook.
+   ``https://[hostname]/login/fb`` for Facebook.
 
 .. literalinclude:: ../../../examples/flask/werkzeug_adapter/config-template.py
 
@@ -198,7 +198,7 @@ Close the opened ``{% if result.user.credentials %}`` tag and the ``body`` block
 That's it. Now just run the application.
 
 .. code-block:: bash
-   
+
    $ python main.py
 
 .. include:: twitter-localhost.rst

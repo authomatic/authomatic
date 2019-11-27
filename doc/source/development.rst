@@ -113,13 +113,13 @@ To deploy a compiled documentation to GitHub page go to the
 Testing
 -------
 
-Tests are written in `pytest <http://pytest.org/>`__
+Tests are written in `pytest <https://pytest.org/>`__
 and `Tox <https://testrun.org/tox>`__ is used to run them against
 **Python 2.6**, **Python 2.7** and **Python 3.4**.
 
 
 There are currently only *functional* (*end-to-end*)
-`Selenium <http://seleniumhq.org>`__ tests.
+`Selenium <https://selenium.dev>`__ tests.
 They are designed to test the *login procedure* and
 *credentials refreshment* and to discover changes in provider APIs.
 
@@ -187,7 +187,7 @@ Deployment to Travis CI
 
 Register at `Travis CI <https://travis-ci.org/>`__ and configure your fork
 of Authomatic (read the `getting started section
-<http://docs.travis-ci.com/user/getting-started/>`__ if you don't know how).
+<https://docs.travis-ci.com/user/getting-started/>`__ if you don't know how).
 
 Install the `Travis CI command line client
 <https://github.com/travis-ci/travis.rb>`__.

@@ -296,6 +296,7 @@ def login(request, browser, app, attempt=1):
             log(3, provider_name, 'Result element found')
             success = True
         except NoSuchElementException:
+            log(3, provider_name, browser.current_url())
             log(3, provider_name, 'Result element not found!')
 
     except WebDriverException as e:

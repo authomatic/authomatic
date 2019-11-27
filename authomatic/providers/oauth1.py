@@ -358,7 +358,7 @@ class OAuth1(providers.AuthorizationProvider):
                     params['oauth_consumer_key'] = consumer_key
                 else:
                     raise OAuth1Error(
-                        'Credentials with valid consumer_key, ' +
+                        'Credentials with valid consumer_key, '
                         'consumer_secret, token and token_secret are required '
                         'to create Protected Resources URL!')
 
@@ -1341,8 +1341,8 @@ class Xing(OAuth1):
                 user.country = _address.get('country')
                 user.postal_code = _address.get('zip_code')
                 user.phone = (
-                    _address.get('phone', '') or
-                    _address.get('mobile_phone', '')).replace('|', '')
+                    _address.get('phone', '')
+                    or _address.get('mobile_phone', '')).replace('|', '')
 
             _languages = list(_user.get('languages', {}).keys())
             if _languages and _languages[0]:
