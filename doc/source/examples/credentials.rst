@@ -2,7 +2,7 @@ Advanced |webapp2| |gae| Example
 --------------------------------
 
 .. seo-description::
-   
+
    An advanced tutorial where we create a Google App Engine app
    where users can log in with Facebook, Twitter and OpenID and post statuses.
 
@@ -20,11 +20,11 @@ Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
 `here <https://dev.twitter.com/apps>`__ for Twitter.
 
 .. note::
-   
+
    Facebook and other |oauth2| providers require a **redirect URI**
    which should be the URL of the *login request handler*
    which we will create in this tutorial and whose walue in our case will be
-   ``http://[hostname]:[port]/login/fb`` for Facebook.
+   ``https://[hostname]:[port]/login/fb`` for Facebook.
 
 .. literalinclude:: ../../../examples/gae/credentials/config-template.py
    :language: python
@@ -155,7 +155,7 @@ Whether they expire soon.
 The remaining number of seconds till they expire.
 
 .. note::
-   
+
    If the number is negative, the :class:`.Credentials` will never expire.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
@@ -165,7 +165,7 @@ The remaining number of seconds till they expire.
 Their expiration date.
 
 .. note::
-   
+
    If :class:`.Credentials` will never expire it returns ``None``.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
@@ -195,7 +195,7 @@ It returns a :class:`.Response object`, but only if the :class:`.Credentials` su
 Otherwise the method returns ``None``.
 
 .. note::
-   
+
    Only |oauth2| :class:`.Credentials` support refreshment but it also depends on the **provider's**
    implementation, e.g. Facebook allows you to refresh :class:`.Credentials` only if you requested the
    ``offline_access`` scope in the :doc:`/reference/config`.
@@ -205,7 +205,7 @@ Otherwise the method returns ``None``.
    :lines: 108-131
 
 The most interesting things will happen in the *Action* handler.
-Let's first create a method for ``GET`` requests which will accept the ``provider_name`` URL variable. 
+Let's first create a method for ``GET`` requests which will accept the ``provider_name`` URL variable.
 Inside create a simple HTML form which submits to this handler's ``POST`` method.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py
@@ -219,10 +219,10 @@ In the ``POST`` method, retrieve the message from POST parameters and the values
    :lines: 150-152, 154-156
 
 Let's first post a status to the **user's** Facebook timeline by accessing the
-`Facebook Graph API <http://developers.facebook.com/docs/reference/api/>`_ endpoint.
+`Facebook Graph API <https://developers.facebook.com/docs/reference/api/>`_ endpoint.
 
 .. note::
-   
+
    You need to include the ``"publish_stream"`` scope in the ``"fb"`` section of the config
    to be able to post to the **user's** timeline.
 
@@ -252,7 +252,7 @@ parsed from the :attr:`.Response.content` which usually is JSON.
 Do the same with Twitter.
 
 .. note::
-   
+
    You need to set the *Application Type* of your `Twitter app <https://dev.twitter.com/apps>`_
    to *Read and Write* to be able to post tweets on the **user's** behalf.
 
@@ -293,7 +293,7 @@ Don't forget to create the ``app.yaml`` file.
 That's it. Now just run the application.
 
 .. code-block:: bash
-   
+
    $ python dev_appserver.py [path to the root folder of this app]
 
 .. include:: twitter-localhost.rst

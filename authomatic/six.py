@@ -89,7 +89,7 @@ class _LazyDescr(object):
 
     def __get__(self, obj, tp):
         result = self._resolve()
-        setattr(obj, self.name, result) # Invokes __set__.
+        setattr(obj, self.name, result)  # Invokes __set__.
         try:
             # This is a bit ugly, but it avoids running this again by
             # removing this descriptor.
@@ -219,6 +219,7 @@ class _SixMetaPathImporter(object):
         self.__get_module(fullname)  # eventually raises ImportError
         return None
     get_source = get_code  # same as get_code
+
 
 _importer = _SixMetaPathImporter(__name__)
 
@@ -463,6 +464,7 @@ class Module_six_moves_urllib(types.ModuleType):
     def __dir__(self):
         return ['parse', 'error', 'request', 'response', 'robotparser']
 
+
 _importer._add_module(Module_six_moves_urllib(__name__ + ".moves.urllib"),
                       "moves.urllib")
 
@@ -596,8 +598,10 @@ _add_doc(iterlists,
 if PY3:
     def b(s):
         return s.encode("latin-1")
+
     def u(s):
         return s
+
     unichr = chr
     if sys.version_info[1] <= 1:
         def int2byte(i):
@@ -617,15 +621,20 @@ if PY3:
 else:
     def b(s):
         return s
+
     # Workaround for standalone backslash
     def u(s):
         return unicode(s.replace(r'\\', r'\\\\'), "unicode_escape")
+
     unichr = unichr
     int2byte = chr
+
     def byte2int(bs):
         return ord(bs[0])
+
     def indexbytes(buf, i):
         return ord(buf[i])
+
     iterbytes = functools.partial(itertools.imap, ord)
     import StringIO
     StringIO = BytesIO = StringIO.StringIO
@@ -651,7 +660,6 @@ def assertRegex(self, *args, **kwargs):
 if PY3:
     exec_ = getattr(moves.builtins, "exec")
 
-
     def reraise(tp, value, tb=None):
         if value is None:
             value = tp()
@@ -671,7 +679,6 @@ else:
         elif _locs_ is None:
             _locs_ = _globs_
         exec("""exec _code_ in _globs_, _locs_""")
-
 
     exec_("""def reraise(tp, value, tb=None):
     raise tp, value, tb
@@ -700,13 +707,16 @@ if print_ is None:
         fp = kwargs.pop("file", sys.stdout)
         if fp is None:
             return
+
         def write(data):
             if not isinstance(data, basestring):
                 data = str(data)
             # If the file has an encoding, encode unicode with it.
-            if (isinstance(fp, file) and
-                    isinstance(data, unicode) and
-                    fp.encoding is not None):
+            if (
+                isinstance(fp, file)
+                and isinstance(data, unicode)
+                and fp.encoding is not None
+            ):
                 errors = getattr(fp, "errors", None)
                 if errors is None:
                     errors = "strict"
@@ -749,6 +759,7 @@ if print_ is None:
         write(end)
 if sys.version_info[:2] < (3, 3):
     _print = print_
+
     def print_(*args, **kwargs):
         fp = kwargs.get("file", sys.stdout)
         flush = kwargs.pop("flush", False)
@@ -768,6 +779,7 @@ if sys.version_info[0:2] < (3, 4):
         return wrapper
 else:
     wraps = functools.wraps
+
 
 def with_metaclass(meta, *bases):
     """Create a base class with a metaclass."""
@@ -830,8 +842,10 @@ if sys.meta_path:
         # be floating around. Therefore, we can't use isinstance() to check for
         # the six meta path importer, since the other six instance will have
         # inserted an importer with different class.
-        if (type(importer).__name__ == "_SixMetaPathImporter" and
-                importer.name == __name__):
+        if (
+            type(importer).__name__ == "_SixMetaPathImporter"
+            and importer.name == __name__
+        ):
             del sys.meta_path[i]
             break
     del i, importer

@@ -483,9 +483,9 @@ class OAuth2(providers.AuthorizationProvider):
                     url=self.user_authorization_url)
 
         elif (
-                not self.params or
-                len(self.params) == 1 and
-                'user_state' in self.params
+                not self.params
+                or len(self.params) == 1
+                and 'user_state' in self.params
         ):
             # =================================================================
             # Phase 1 before redirect
@@ -888,19 +888,12 @@ class Facebook(OAuth2):
     Supported :class:`.User` properties:
 
     * birth_date
-    * city
-    * country
     * email
     * first_name
-    * gender
     * id
     * last_name
-    * link
-    * locale
-    * location
     * name
     * picture
-    * timezone
 
     Unsupported :class:`.User` properties:
 
@@ -919,19 +912,19 @@ class Facebook(OAuth2):
 
     supported_user_attributes = core.SupportedUserAttributes(
         birth_date=True,
-        city=True,
-        country=True,
+        city=False,
+        country=False,
         email=True,
         first_name=True,
-        gender=True,
+        gender=False,
         id=True,
         last_name=True,
-        link=True,
-        locale=True,
-        location=True,
+        link=False,
+        locale=False,
+        location=False,
         name=True,
         picture=True,
-        timezone=True,
+        timezone=False,
         username=False,
     )
 
@@ -1439,8 +1432,7 @@ class PayPal(OAuth2):
     PayPal |oauth2| provider.
 
     * Dashboard: https://developer.paypal.com/webapps/developer/applications
-    * Docs:
-      https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/
+    * Docs: https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/
     * API reference: https://developer.paypal.com/webapps/developer/docs/api/
 
     .. note::
@@ -1487,8 +1479,8 @@ class Reddit(OAuth2):
 
     .. note::
 
-        According to Reddit API
-        `docs <https://github.com/reddit/reddit/wiki/API#rules>`_,
+        According to
+        `Reddit API docs <https://github.com/reddit/reddit/wiki/API#rules>`_,
         you have to include a `User-Agent` header in each API call.
 
         You can apply a default ``User-Agent`` header for all API calls in the
@@ -1908,8 +1900,7 @@ class Yandex(OAuth2):
     Yandex |oauth2| provider.
 
     * Dashboard: https://oauth.yandex.com/client/my
-    * Docs:
-      http://api.yandex.com/oauth/doc/dg/reference/obtain-access-token.xml
+    * Docs: http://api.yandex.com/oauth/doc/dg/reference/obtain-access-token.xml
     * API reference:
 
     Supported :class:`.User` properties:

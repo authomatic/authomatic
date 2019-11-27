@@ -1,0 +1,4 @@
+-e .[OpenID]
+sphinx==1.8.5
+-e git+https://github.com/authomatic/foundation-sphinx-theme.git#egg=foundation-sphinx-theme
+flask

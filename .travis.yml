@@ -1,24 +1,47 @@
-language: objective-c
+language: python
+dist: bionic
+sudo: true
+cache:
+  pip: true
 addons:
+  chrome: stable
   hosts:
   - authomatic.test
   - authomatic.com
   - authomatic.org
-install: sudo pip install tox
-script: sudo tox -e py27 -- -vvx --tb=no
+install:
+- sudo pip install tox
+script:
+- sudo tox -e py3 -- -vvx --tb=no
 after_failure:
-- tail -n 1000000 flask.log
-- tail -n 1000000 tests/functional_tests/*.log
-- tail -n 1000000 tests/*.log
+- tail -n 500 tests/functional_tests/*.log
+- tail -n 500 tests/*.log
+- tail -n 500 flask.log
 before_install:
-- openssl aes-256-cbc -K $encrypted_5fa87d13797d_key -iv $encrypted_5fa87d13797d_iv
+- openssl aes-256-cbc -K $encrypted_dbe8ae205660_key -iv $encrypted_dbe8ae205660_iv
   -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
   -d
-- brew update
-- brew install caskroom/cask/brew-cask
-- brew cask install google-chrome
-- brew install python3
-- wget -N http://chromedriver.storage.googleapis.com/2.10/chromedriver_mac32.zip -P
-  .
-- unzip ./chromedriver_mac32.zip -d .
-- chmod +x ./chromedriver
+before_deploy:
+- travis/before_deploy.sh
+deploy:
+  - provider: pypi
+    user: "__token__"
+    # password: is defined via encrypted env var $PYPI_PASSWORD (stored on travis server)
+    skip_cleanup: true
+    distributions: "sdist bdist_wheel"
+    on:
+      # Travis considers branch == tag, but we can't use patterns in 'branch:'
+      all_branches: true
+      condition: $TRAVIS_TAG =~ ^(trigger-.*)$
+  - provider: pages
+    local_dir: doc/build/html
+    target_branch: gh-pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+    keep_history: true
+    on:
+      # Travis considers branch == tag, but we can't use patterns in 'branch:'
+      all_branches: true
+      condition: $TRAVIS_TAG =~ ^(trigger-.*)$
+after_deploy:
+- travis/after_deploy.sh

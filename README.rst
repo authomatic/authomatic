@@ -33,12 +33,14 @@ through standards like **OAuth** and **OpenID**.
 
 For more info visit the project page at http://authomatic.github.io/authomatic.
 
-Update - 2017-05-17
-====================
-**Authomatic** is currently going through the process of migrating to becoming a community-managed project.
-Please bear with us during these changes.
-We hope to begin work on updating the project and working on Issues and PRs soon.
+Maintainers
+===========
+
+**Authomatic** was migrated from a private project of Peter Hudec to a community-managed project.
 Many thanks to Peter Hudec for all his hard work for creating and maintaining **authomatic**!
+We are now a small team of volunteers, not paid for the work here.
+Any help is appreciated!
+
 
 Features
 ========
@@ -71,9 +73,8 @@ The package is licensed under
 Requirements
 ============
 
-Requires **Python 2.6** and newer. **Python 3.x** support added in
-**Authomatic 0.0.11** thanks to
-`Emmanuel Leblond <https://github.com/touilleMan>`__.
+Requires **Python 2.7** and newer.
+**Python 3.x** support added in **Authomatic 0.0.11** thanks to Emmanuel Leblond <https://github.com/touilleMan>`__.
 
 Live Demo
 =========
@@ -94,3 +95,8 @@ Usage
 =====
 
 Read the exhaustive documentation at http://authomatic.github.io/authomatic.
+
+Changelog
+=========
+
+The `Changelog is part of the documentation <https://authomatic.github.io/authomatic/changelog.html>`_.

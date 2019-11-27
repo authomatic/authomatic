@@ -5,9 +5,15 @@
 from __future__ import absolute_import
 import logging
 import datetime
-
-from google.appengine.ext import ndb
 import openid.store.interface
+
+logger = logging.getLogger(__name__)
+
+try:
+    from google.appengine.ext import ndb
+except ImportError:
+    logger.exception("FATAL: google.appengine 1st Gen. not installed!")
+    raise
 
 
 class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
@@ -145,7 +151,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
             u'NDBOpenIDStore: Querying datastore for OpenID nonces ordered by expiration date.')
         expired = cls.query().filter(
             cls.expiration_date <= datetime.datetime.now()).fetch(
-            keys_only=True)
+                keys_only=True)
 
         # delete all expired
         cls._log(

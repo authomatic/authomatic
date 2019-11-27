@@ -1,8 +1,8 @@
-Simple |webapp2| |gae| Example 
+Simple |webapp2| |gae| Example
 ------------------------------
 
 .. seo-description::
-   
+
    A simple tutorial where we create a Google App Engine app which can log users
    in with Facebook, Twitter and OpenID and read their recent statuses.
 
@@ -19,11 +19,11 @@ Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
 `here <https://dev.twitter.com/apps>`__ for Twitter.
 
 .. note::
-   
+
    Facebook and other |oauth2| providers require a **redirect URI**
    which should be the URL of the *login request handler*
    which we will create in this tutorial and whose walue in our case will be
-   ``http://[hostname]:[port]/login/fb`` for Facebook.
+   ``https://[hostname]:[port]/login/fb`` for Facebook.
 
 .. literalinclude:: ../../../examples/gae/simple/config-template.py
 
@@ -47,7 +47,7 @@ receives the ``provider_name`` URL variable.
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
    :lines: 13, 17
-   
+
 Log the **user** in by calling the :meth:`.Authomatic.login` method inside the handler.
 You must pass it an :doc:`adapter for your framework </reference/adapters>`,
 in our case the :class:`.Webapp2Adapter`
@@ -64,7 +64,7 @@ to prompt **him/her** for consent and redirect **him/her** back to this handler.
 The *login procedure* is over when :meth:`.Authomatic.login` returns a :class:`.LoginResult`.
 
 .. warning::
-   
+
    Do not write anything to the response unless the *login procedure* is over!
    The :meth:`.Authomatic.login` either returns ``None``,
    which means that the *login procedure* si still pending,
@@ -81,7 +81,7 @@ To get more **user** info we need to call the :meth:`.User.update` method.
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
    :lines: 27, 29, 31, 36-37
-   
+
 Now we can welcome the **user** by name.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
@@ -105,7 +105,7 @@ Let's first get the **user's** five most recent **Facebook** statuses.
    :language: python
    :lines: 51-52
 
-Prepare the `Facebook Graph API <http://developers.facebook.com/docs/reference/api/>`__ URL.
+Prepare the `Facebook Graph API <https://developers.facebook.com/docs/reference/api/>`__ URL.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
@@ -173,7 +173,7 @@ Don't forget to set up the ``app.yaml`` file.
 That's it. Now just run the application.
 
 .. code-block:: bash
-   
+
    $ python dev_appserver.py [path to the root folder of this app]
 
 .. include:: twitter-localhost.rst

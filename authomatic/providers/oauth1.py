@@ -358,7 +358,7 @@ class OAuth1(providers.AuthorizationProvider):
                     params['oauth_consumer_key'] = consumer_key
                 else:
                     raise OAuth1Error(
-                        'Credentials with valid consumer_key, ' +
+                        'Credentials with valid consumer_key, '
                         'consumer_secret, token and token_secret are required '
                         'to create Protected Resources URL!')
 
@@ -899,9 +899,11 @@ class Twitter(OAuth1):
     Unsupported :class:`.User` properties:
 
     * birth_date
+    * email
     * gender
     * first_name
     * last_name
+    * locale
     * nickname
     * phone
     * postal_code
@@ -913,9 +915,9 @@ class Twitter(OAuth1):
         city=True,
         country=True,
         id=True,
-        email=True,
+        email=False,
         link=True,
-        locale=True,
+        locale=False,
         location=True,
         name=True,
         picture=True,
@@ -1339,8 +1341,8 @@ class Xing(OAuth1):
                 user.country = _address.get('country')
                 user.postal_code = _address.get('zip_code')
                 user.phone = (
-                    _address.get('phone', '') or
-                    _address.get('mobile_phone', '')).replace('|', '')
+                    _address.get('phone', '')
+                    or _address.get('mobile_phone', '')).replace('|', '')
 
             _languages = list(_user.get('languages', {}).keys())
             if _languages and _languages[0]:
