@@ -36,6 +36,15 @@ Changelog
 
 .. towncrier release notes start
 
+1.0.0a11 (2019-11-27)
+---------------------
+
+Miscellaneous:
+~~~~~~~~~~~~~~
+
+- Switch to tag-based releases.
+
+
 1.0.0a10 (2019-11-26)
 ---------------------
 
