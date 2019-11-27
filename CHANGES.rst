@@ -45,6 +45,15 @@ Miscellaneous:
 - Version 1.0.0 released.
 
 
+1.0.0 (2019-11-27)
+------------------
+
+Miscellaneous:
+~~~~~~~~~~~~~~
+
+- Version 1.0.0 released.
+
+
 1.0.0a11 (2019-11-27)
 ---------------------
 
