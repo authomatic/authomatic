@@ -32,8 +32,8 @@ deploy:
     server: https://test.pypi.org/legacy/
     on:
       # We need to set this as default branch: master overrides condition
-      all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^(prepare-.*)$
+      branch: prepare-1.0.0
+      condition: $TRAVIS_TAG =~ ^(trigger-.*)$
   - provider: pages
     local_dir: doc/build/html
     target_branch: test-ghpages
@@ -42,7 +42,7 @@ deploy:
     keep_history: true
     on:
       # We need to set this as default branch: master overrides condition
-      all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^(prepare-.*)$
+      branch: prepare-1.0.0
+      condition: $TRAVIS_TAG =~ ^(trigger-.*)$
 after_deploy:
 - travis/after_deploy.sh

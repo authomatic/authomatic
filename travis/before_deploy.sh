@@ -4,7 +4,7 @@ set -e -x
 if ! [ -e BEFORE_DEPLOY_RUN ]; then
   touch BEFORE_DEPLOY_RUN
   # Check out an expicit branch to avoid detached HEAD (which prelease complains about)
-  git checkout ${TRAVIS_BRANCH}
+  git checkout master
   pip install zestreleaser.towncrier zest.releaser[recommended]
   git config --local user.email "authomaticproject@protonmail.com"
   git config --local user.name "TravisCI"
@@ -18,4 +18,3 @@ if ! [ -e BEFORE_DEPLOY_RUN ]; then
 else
   echo "before_deploy already ran... skipping."
 fi
-
