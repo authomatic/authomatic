@@ -1,0 +1,1661 @@
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>authomatic.providers.oauth1 | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="../../../_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="authomatic.providers.oauth1 | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://authomatic.github.io/authomatic/_modules/authomatic/providers/oauth1.html" />
+	<meta property="og:image" content="https://authomatic.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="../../../_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="../../../_static/jquery.js"></script>
+    	<script type="text/javascript" src="../../../_static/underscore.js"></script>
+    	<script type="text/javascript" src="../../../_static/doctools.js"></script>
+    	<script type="text/javascript" src="../../../_static/language_data.js"></script>
+    	<script type="text/javascript" src="../../../_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="../../../index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		
+			<li><a href="../../../genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="../../../py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="../../../index.html">
+		
+	    	
+	    		<img id="logo" src="../../../_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="https://authomatic.github.io/authomatic/_modules/authomatic/providers/oauth1.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="https://authomatic.github.io/authomatic/_modules/authomatic/providers/oauth1.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=authomatic&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="authomatic.providers.oauth1 | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <h1>Source code for authomatic.providers.oauth1</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">|oauth1| Providers</span>
+<span class="sd">--------------------</span>
+
+<span class="sd">Providers which implement the |oauth1|_ protocol.</span>
+
+<span class="sd">.. autosummary::</span>
+
+<span class="sd">    OAuth1</span>
+<span class="sd">    Bitbucket</span>
+<span class="sd">    Flickr</span>
+<span class="sd">    Meetup</span>
+<span class="sd">    Plurk</span>
+<span class="sd">    Twitter</span>
+<span class="sd">    Tumblr</span>
+<span class="sd">    UbuntuOne</span>
+<span class="sd">    Vimeo</span>
+<span class="sd">    Xero</span>
+<span class="sd">    Xing</span>
+<span class="sd">    Yahoo</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">binascii</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">import</span> <span class="nn">authomatic.core</span> <span class="k">as</span> <span class="nn">core</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">providers</span>
+<span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CancellationError</span><span class="p">,</span>
+    <span class="n">FailureError</span><span class="p">,</span>
+    <span class="n">OAuth1Error</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">six</span>
+<span class="kn">from</span> <span class="nn">authomatic.six.moves</span> <span class="kn">import</span> <span class="n">urllib_parse</span> <span class="k">as</span> <span class="n">parse</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;OAuth1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Bitbucket&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Flickr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Meetup&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Plurk&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Twitter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Tumblr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;UbuntuOne&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Vimeo&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Xero&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Xing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Yahoo&#39;</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_normalize_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a normalized query string sorted first by key, then by value</span>
+<span class="sd">    excluding the ``realm`` and ``oauth_signature`` parameters as specified</span>
+<span class="sd">    here: http://oauth.net/core/1.0a/#rfc.section.9.1.1.</span>
+
+<span class="sd">    :param params:</span>
+<span class="sd">        :class:`dict` or :class:`list` of tuples.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+    <span class="c1"># remove &quot;realm&quot; and &quot;oauth_signature&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span>
+        <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;oauth_signature&#39;</span><span class="p">,</span> <span class="s1">&#39;realm&#39;</span><span class="p">)</span>
+    <span class="p">])</span>
+    <span class="c1"># sort</span>
+    <span class="c1"># convert to query string</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="c1"># replace &quot;+&quot; to &quot;%20&quot;</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">qs</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;%20&#39;</span><span class="p">)</span>
+    <span class="c1"># replace &quot;%7E&quot; to &quot;%20&quot;</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">qs</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%7E</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;~&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">qs</span>
+
+
+<span class="k">def</span> <span class="nf">_join_by_ampersand</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&amp;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">core</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">_create_base_string</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns base string for HMAC-SHA1 signature as specified in:</span>
+<span class="sd">    http://oauth.net/core/1.0a/#rfc.section.9.1.3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">normalized_qs</span> <span class="o">=</span> <span class="n">_normalize_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_join_by_ampersand</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">normalized_qs</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">BaseSignatureGenerator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class for all signature generators.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
+
+    <span class="c1">#: :class:`str` The name of the signature method.</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">create_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span>
+                         <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Must create signature based on the parameters as specified in</span>
+<span class="sd">        http://oauth.net/core/1.0a/#signing_process.</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            |classmethod|</span>
+
+<span class="sd">        :param str method:</span>
+<span class="sd">            HTTP method of the request to be signed.</span>
+
+<span class="sd">        :param str base:</span>
+<span class="sd">            Base URL of the request without query string an fragment.</span>
+
+<span class="sd">        :param dict params:</span>
+<span class="sd">            Dictionary or list of tuples of the request parameters.</span>
+
+<span class="sd">        :param str consumer_secret:</span>
+<span class="sd">            :attr:`.core.Consumer.secret`</span>
+
+<span class="sd">        :param str token_secret:</span>
+<span class="sd">            Access token secret as specified in</span>
+<span class="sd">            http://oauth.net/core/1.0a/#anchor3.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            The signature string.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">HMACSHA1SignatureGenerator</span><span class="p">(</span><span class="n">BaseSignatureGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HMAC-SHA1 signature generator.</span>
+
+<span class="sd">    See: http://oauth.net/core/1.0a/#anchor15</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;HMAC-SHA1&#39;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_create_key</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a key for HMAC-SHA1 signature as specified at:</span>
+<span class="sd">        http://oauth.net/core/1.0a/#rfc.section.9.2.</span>
+
+<span class="sd">        :param str consumer_secret:</span>
+<span class="sd">            :attr:`.core.Consumer.secret`</span>
+
+<span class="sd">        :param str token_secret:</span>
+<span class="sd">            Access token secret as specified in</span>
+<span class="sd">            http://oauth.net/core/1.0a/#anchor3.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            Key to sign the request with.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">_join_by_ampersand</span><span class="p">(</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_signature</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span>
+                         <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns HMAC-SHA1 signature as specified at:</span>
+<span class="sd">        http://oauth.net/core/1.0a/#rfc.section.9.2.</span>
+
+<span class="sd">        :param str method:</span>
+<span class="sd">            HTTP method of the request to be signed.</span>
+
+<span class="sd">        :param str base:</span>
+<span class="sd">            Base URL of the request without query string an fragment.</span>
+
+<span class="sd">        :param dict params:</span>
+<span class="sd">            Dictionary or list of tuples of the request parameters.</span>
+
+<span class="sd">        :param str consumer_secret:</span>
+<span class="sd">            :attr:`.core.Consumer.secret`</span>
+
+<span class="sd">        :param str token_secret:</span>
+<span class="sd">            Access token secret as specified in</span>
+<span class="sd">            http://oauth.net/core/1.0a/#anchor3.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            The signature string.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">base_string</span> <span class="o">=</span> <span class="n">_create_base_string</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_create_key</span><span class="p">(</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+            <span class="n">six</span><span class="o">.</span><span class="n">b</span><span class="p">(</span><span class="n">key</span><span class="p">),</span>
+            <span class="n">base_string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+            <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span>
+
+        <span class="n">base64_encoded</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">b2a_base64</span><span class="p">(</span><span class="n">hashed</span><span class="o">.</span><span class="n">digest</span><span class="p">())[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">base64_encoded</span>
+
+
+<span class="k">class</span> <span class="nc">PLAINTEXTSignatureGenerator</span><span class="p">(</span><span class="n">BaseSignatureGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PLAINTEXT signature generator.</span>
+
+<span class="sd">    See: http://oauth.net/core/1.0a/#anchor21</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;PLAINTEXT&#39;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_signature</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span>
+                         <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+
+        <span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">token_secret</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">token_secret</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="OAuth1"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.OAuth1">[docs]</a><span class="k">class</span> <span class="nc">OAuth1</span><span class="p">(</span><span class="n">providers</span><span class="o">.</span><span class="n">AuthorizationProvider</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for |oauth1|_ providers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_signature_generator</span> <span class="o">=</span> <span class="n">HMACSHA1SignatureGenerator</span>
+
+    <span class="n">PROVIDER_TYPE_ID</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">REQUEST_TOKEN_REQUEST_TYPE</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Accepts additional keyword arguments:</span>
+
+<span class="sd">        :param str consumer_key:</span>
+<span class="sd">            The *key* assigned to our application (**consumer**) by</span>
+<span class="sd">            the **provider**.</span>
+
+<span class="sd">        :param str consumer_secret:</span>
+<span class="sd">            The *secret* assigned to our application (**consumer**) by</span>
+<span class="sd">            the **provider**.</span>
+
+<span class="sd">        :param id:</span>
+<span class="sd">            A unique short name used to serialize :class:`.Credentials`.</span>
+
+<span class="sd">        :param dict user_authorization_params:</span>
+<span class="sd">            A dictionary of additional request parameters for</span>
+<span class="sd">            **user authorization request**.</span>
+
+<span class="sd">        :param dict access_token_params:</span>
+<span class="sd">            A dictionary of additional request parameters for</span>
+<span class="sd">            **access token request**.</span>
+
+<span class="sd">        :param dict request_token_params:</span>
+<span class="sd">            A dictionary of additional request parameters for</span>
+<span class="sd">            **request token request**.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_token_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwarg</span><span class="p">(</span>
+            <span class="n">kwargs</span><span class="p">,</span> <span class="s1">&#39;request_token_params&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Abstract properties</span>
+    <span class="c1"># ========================================================================</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractproperty</span>
+    <span class="k">def</span> <span class="nf">request_token_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :class:`str` URL where we can get the |oauth1| request token.</span>
+<span class="sd">        see http://oauth.net/core/1.0a/#auth_step1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Internal methods</span>
+    <span class="c1"># ========================================================================</span>
+
+<div class="viewcode-block" id="OAuth1.create_request_elements"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.OAuth1.create_request_elements">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_request_elements</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="p">,</span> <span class="n">request_type</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">body</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">verifier</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates |oauth1| request elements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">params</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="n">consumer_key</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_key</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">token_secret</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="c1"># separate url base and query parameters</span>
+        <span class="n">url</span><span class="p">,</span> <span class="n">base_params</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_split_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="c1"># add extracted params to future params</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">base_params</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">request_type</span> <span class="o">==</span> <span class="bp">cls</span><span class="o">.</span><span class="n">USER_AUTHORIZATION_REQUEST_TYPE</span><span class="p">:</span>
+            <span class="c1"># no need for signature</span>
+            <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
+                <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">OAuth1Error</span><span class="p">(</span>
+                    <span class="s1">&#39;Credentials with valid token are required to create &#39;</span>
+                    <span class="s1">&#39;User Authorization URL!&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># signature needed</span>
+            <span class="k">if</span> <span class="n">request_type</span> <span class="o">==</span> <span class="bp">cls</span><span class="o">.</span><span class="n">REQUEST_TOKEN_REQUEST_TYPE</span><span class="p">:</span>
+                <span class="c1"># Request Token URL</span>
+                <span class="k">if</span> <span class="n">consumer_key</span> <span class="ow">and</span> <span class="n">consumer_secret</span> <span class="ow">and</span> <span class="n">callback</span><span class="p">:</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_consumer_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">consumer_key</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_callback&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">callback</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">OAuth1Error</span><span class="p">(</span>
+                        <span class="s1">&#39;Credentials with valid consumer_key, consumer_secret &#39;</span>
+                        <span class="s1">&#39;and callback are required to create Request Token &#39;</span>
+                        <span class="s1">&#39;URL!&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">request_type</span> <span class="o">==</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ACCESS_TOKEN_REQUEST_TYPE</span><span class="p">:</span>
+                <span class="c1"># Access Token URL</span>
+                <span class="k">if</span> <span class="n">consumer_key</span> <span class="ow">and</span> <span class="n">consumer_secret</span> <span class="ow">and</span> <span class="n">token</span> <span class="ow">and</span> <span class="n">verifier</span><span class="p">:</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_consumer_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">consumer_key</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_verifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">verifier</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">OAuth1Error</span><span class="p">(</span>
+                        <span class="s1">&#39;Credentials with valid consumer_key, &#39;</span>
+                        <span class="s1">&#39;consumer_secret, token and argument verifier&#39;</span>
+                        <span class="s1">&#39; are required to create Access Token URL!&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">request_type</span> <span class="o">==</span> <span class="bp">cls</span><span class="o">.</span><span class="n">PROTECTED_RESOURCE_REQUEST_TYPE</span><span class="p">:</span>
+                <span class="c1"># Protected Resources URL</span>
+                <span class="k">if</span> <span class="n">consumer_key</span> <span class="ow">and</span> <span class="n">consumer_secret</span> <span class="ow">and</span> <span class="n">token</span> <span class="ow">and</span> <span class="n">token_secret</span><span class="p">:</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_consumer_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">consumer_key</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">OAuth1Error</span><span class="p">(</span>
+                        <span class="s1">&#39;Credentials with valid consumer_key, &#39;</span>
+                        <span class="s1">&#39;consumer_secret, token and token_secret are required &#39;</span>
+                        <span class="s1">&#39;to create Protected Resources URL!&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Sign request.</span>
+            <span class="c1"># http://oauth.net/core/1.0a/#anchor13</span>
+
+            <span class="c1"># Prepare parameters for signature base string</span>
+            <span class="c1"># http://oauth.net/core/1.0a/#rfc.section.9.1</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_signature_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_signature_generator</span><span class="o">.</span><span class="n">method</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_nonce&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">csrf_generator</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()))</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+
+            <span class="c1"># add signature to params</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oauth_signature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_signature_generator</span><span class="o">.</span><span class="n">create_signature</span><span class="p">(</span>  <span class="c1"># noqa</span>
+                <span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+
+        <span class="n">request_elements</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">RequestElements</span><span class="p">(</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_x_request_elements_filter</span><span class="p">(</span>
+            <span class="n">request_type</span><span class="p">,</span> <span class="n">request_elements</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span></div>
+
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Exposed methods</span>
+    <span class="c1"># ========================================================================</span>
+
+<div class="viewcode-block" id="OAuth1.to_tuple"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.OAuth1.to_tuple">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="n">credentials</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">credentials</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OAuth1.reconstruct"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.OAuth1.reconstruct">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">deserialized_tuple</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+
+        <span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span> <span class="o">=</span> <span class="n">deserialized_tuple</span>
+
+        <span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
+        <span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span> <span class="o">=</span> <span class="n">token_secret</span>
+        <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_key</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;consumer_key&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">credentials</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;consumer_secret&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">credentials</span></div>
+
+    <span class="nd">@providers</span><span class="o">.</span><span class="n">login_decorator</span>
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># get request parameters from which we can determine the login phase</span>
+        <span class="n">denied</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;denied&#39;</span><span class="p">)</span>
+        <span class="n">verifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;oauth_verifier&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">request_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;oauth_token&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">request_token</span> <span class="ow">and</span> <span class="n">verifier</span><span class="p">:</span>
+            <span class="c1"># Phase 2 after redirect with success</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+                <span class="sa">u</span><span class="s1">&#39;Continuing OAuth 1.0a authorization procedure after &#39;</span>
+                <span class="sa">u</span><span class="s1">&#39;redirect.&#39;</span><span class="p">)</span>
+            <span class="n">token_secret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_get</span><span class="p">(</span><span class="s1">&#39;token_secret&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">token_secret</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span>
+                    <span class="sa">u</span><span class="s1">&#39;Unable to retrieve token secret from storage!&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Get Access Token</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+                <span class="sa">u</span><span class="s1">&#39;Fetching for access token from </span><span class="si">{0}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">access_token_url</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">request_token</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span> <span class="o">=</span> <span class="n">token_secret</span>
+
+            <span class="n">request_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_request_elements</span><span class="p">(</span>
+                <span class="n">request_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ACCESS_TOKEN_REQUEST_TYPE</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_url</span><span class="p">,</span>
+                <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
+                <span class="n">verifier</span><span class="o">=</span><span class="n">verifier</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_params</span>
+            <span class="p">)</span>
+
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch</span><span class="p">(</span><span class="o">*</span><span class="n">request_elements</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token_response</span> <span class="o">=</span> <span class="n">response</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_http_status_in_category</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span>
+                    <span class="s1">&#39;Failed to obtain OAuth 1.0a  oauth_token from </span><span class="si">{0}</span><span class="s1">! &#39;</span>
+                    <span class="s1">&#39;HTTP status code: </span><span class="si">{1}</span><span class="s1">.&#39;</span>
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">),</span>
+                    <span class="n">original_message</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                    <span class="n">status</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                    <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token_url</span>
+                <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Got access token.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;oauth_token&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">token_secret</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s1">&#39;oauth_token_secret&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_credentials_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
+                                                          <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_or_create_user</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">)</span>
+
+            <span class="c1"># =================================================================</span>
+            <span class="c1"># We&#39;re done!</span>
+            <span class="c1"># =================================================================</span>
+
+        <span class="k">elif</span> <span class="n">denied</span><span class="p">:</span>
+            <span class="c1"># Phase 2 after redirect denied</span>
+            <span class="k">raise</span> <span class="n">CancellationError</span><span class="p">(</span>
+                <span class="s1">&#39;User denied the request token </span><span class="si">{0}</span><span class="s1"> during a redirect&#39;</span>
+                <span class="s1">&#39;to </span><span class="si">{1}</span><span class="s1">!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">denied</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_authorization_url</span><span class="p">),</span>
+                <span class="n">original_message</span><span class="o">=</span><span class="n">denied</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_authorization_url</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Phase 1 before redirect</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+                <span class="sa">u</span><span class="s1">&#39;Starting OAuth 1.0a authorization procedure.&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Fetch for request token</span>
+            <span class="n">request_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_request_elements</span><span class="p">(</span>
+                <span class="n">request_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">REQUEST_TOKEN_REQUEST_TYPE</span><span class="p">,</span>
+                <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">,</span>
+                <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_params</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+                <span class="sa">u</span><span class="s1">&#39;Fetching for request token and token secret.&#39;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch</span><span class="p">(</span><span class="o">*</span><span class="n">request_elements</span><span class="p">)</span>
+
+            <span class="c1"># check if response status is OK</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_http_status_in_category</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span>
+                    <span class="sa">u</span><span class="s1">&#39;Failed to obtain request token from </span><span class="si">{0}</span><span class="s1">! HTTP status &#39;</span>
+                    <span class="sa">u</span><span class="s1">&#39;code: </span><span class="si">{1}</span><span class="s1"> content: </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">,</span>
+                        <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                        <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+                    <span class="p">),</span>
+                    <span class="n">original_message</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                    <span class="n">status</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                    <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">)</span>
+
+            <span class="c1"># extract request token</span>
+            <span class="n">request_token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;oauth_token&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">request_token</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span>
+                    <span class="s1">&#39;Response from </span><span class="si">{0}</span><span class="s1"> doesn</span><span class="se">\&#39;</span><span class="s1">t contain oauth_token &#39;</span>
+                    <span class="s1">&#39;parameter!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">),</span>
+                    <span class="n">original_message</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                    <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">)</span>
+
+            <span class="c1"># we need request token for user authorization redirect</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">request_token</span>
+
+            <span class="c1"># extract token secret and save it to storage</span>
+            <span class="n">token_secret</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;oauth_token_secret&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">token_secret</span><span class="p">:</span>
+                <span class="c1"># we need token secret after user authorization redirect to get</span>
+                <span class="c1"># access token</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_session_set</span><span class="p">(</span><span class="s1">&#39;token_secret&#39;</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FailureError</span><span class="p">(</span>
+                    <span class="sa">u</span><span class="s1">&#39;Failed to obtain token secret from </span><span class="si">{0}</span><span class="s1">!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">),</span>
+                    <span class="n">original_message</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                    <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_token_url</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Got request token and token secret&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Create User Authorization URL</span>
+            <span class="n">request_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_request_elements</span><span class="p">(</span>
+                <span class="n">request_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">USER_AUTHORIZATION_REQUEST_TYPE</span><span class="p">,</span>
+                <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_authorization_url</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_authorization_params</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+                <span class="sa">u</span><span class="s1">&#39;Redirecting user to </span><span class="si">{0}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">request_elements</span><span class="o">.</span><span class="n">full_url</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">redirect</span><span class="p">(</span><span class="n">request_elements</span><span class="o">.</span><span class="n">full_url</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Bitbucket"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Bitbucket">[docs]</a><span class="k">class</span> <span class="nc">Bitbucket</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bitbucket |oauth1| provider.</span>
+
+<span class="sd">    * Dashboard: https://bitbucket.org/account/user/peterhudec/api</span>
+<span class="sd">    * Docs: https://confluence.atlassian.com/display/BITBUCKET/oauth+Endpoint</span>
+<span class="sd">    * API reference:</span>
+<span class="sd">      https://confluence.atlassian.com/display/BITBUCKET/Using+the+Bitbucket+REST+APIs</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * first_name</span>
+<span class="sd">    * id</span>
+<span class="sd">    * last_name</span>
+<span class="sd">    * link</span>
+<span class="sd">    * name</span>
+<span class="sd">    * picture</span>
+<span class="sd">    * username</span>
+<span class="sd">    * email</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * location</span>
+<span class="sd">    * nickname</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * postal_code</span>
+<span class="sd">    * timezone</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        To get the full user info, you need to select both the *Account Read*</span>
+<span class="sd">        and the *Repositories Read* permission in the Bitbucket application</span>
+<span class="sd">        edit form.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="n">first_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">last_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">picture</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://bitbucket.org/!api/1.0/oauth/request_token&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;https://bitbucket.org/!api/1.0/oauth/&#39;</span> <span class="o">+</span> \
+                             <span class="s1">&#39;authenticate&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://bitbucket.org/!api/1.0/oauth/access_token&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.bitbucket.org/1.0/user&#39;</span>
+    <span class="n">user_email_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.bitbucket.org/1.0/emails&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">_user</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display_name&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;avatar&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;https://bitbucket.org/api</span><span class="si">{0}</span><span class="s1">&#39;</span>\
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;resource_uri&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">user</span>
+
+    <span class="k">def</span> <span class="nf">_access_user_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Email is available in separate method so second request is needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Bitbucket</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_access_user_info</span><span class="p">()</span>
+
+        <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">email_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_email_url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">email_response</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">email_response</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="Flickr"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Flickr">[docs]</a><span class="k">class</span> <span class="nc">Flickr</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Flickr |oauth1| provider.</span>
+
+<span class="sd">    * Dashboard: https://www.flickr.com/services/apps/</span>
+<span class="sd">    * Docs: https://www.flickr.com/services/api/auth.oauth.html</span>
+<span class="sd">    * API reference: https://www.flickr.com/services/api/</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * id</span>
+<span class="sd">    * name</span>
+<span class="sd">    * username</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * email</span>
+<span class="sd">    * first_name</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * last_name</span>
+<span class="sd">    * link</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * location</span>
+<span class="sd">    * nickname</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * picture</span>
+<span class="sd">    * postal_code</span>
+<span class="sd">    * timezone</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        If you encounter the &quot;Oops! Flickr doesn&#39;t recognise the</span>
+<span class="sd">        permission set.&quot; message, you need to add the ``perms=read`` or</span>
+<span class="sd">        ``perms=write`` parameter to the *user authorization request*.</span>
+<span class="sd">        You can do it by adding the ``user_authorization_params``</span>
+<span class="sd">        key to the :doc:`config`:</span>
+
+<span class="sd">        .. code-block:: python</span>
+<span class="sd">            :emphasize-lines: 6</span>
+
+<span class="sd">            CONFIG = {</span>
+<span class="sd">                &#39;flickr&#39;: {</span>
+<span class="sd">                    &#39;class_&#39;: oauth1.Flickr,</span>
+<span class="sd">                    &#39;consumer_key&#39;: &#39;##########&#39;,</span>
+<span class="sd">                    &#39;consumer_secret&#39;: &#39;##########&#39;,</span>
+<span class="sd">                    &#39;user_authorization_params&#39;: dict(perms=&#39;read&#39;),</span>
+<span class="sd">                },</span>
+<span class="sd">            }</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.flickr.com/services/oauth/request_token&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.flickr.com/services/oauth/authorize&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.flickr.com/services/oauth/access_token&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">supports_jsonp</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">_user</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fullname&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_content&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_nsid&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">user</span></div>
+
+
+<div class="viewcode-block" id="Meetup"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Meetup">[docs]</a><span class="k">class</span> <span class="nc">Meetup</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Meetup |oauth1| provider.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        Meetup also supports |oauth2| but you need the **user ID** to update</span>
+<span class="sd">        the **user** info, which they don&#39;t provide in the |oauth2| access</span>
+<span class="sd">        token response.</span>
+
+<span class="sd">    * Dashboard: http://www.meetup.com/meetup_api/oauth_consumers/</span>
+<span class="sd">    * Docs: http://www.meetup.com/meetup_api/auth/#oauth</span>
+<span class="sd">    * API: http://www.meetup.com/meetup_api/docs/</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * id</span>
+<span class="sd">    * link</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * location</span>
+<span class="sd">    * name</span>
+<span class="sd">    * picture</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * email</span>
+<span class="sd">    * first_name</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * last_name</span>
+<span class="sd">    * nickname</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * postal_code</span>
+<span class="sd">    * timezone</span>
+<span class="sd">    * username</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="n">city</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">country</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">locale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">picture</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.meetup.com/oauth/request/&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.meetup.com/authorize/&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.meetup.com/oauth/access/&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.meetup.com/2/member/</span><span class="si">{id}</span><span class="s1">&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;member_id&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;photo&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;photo_link&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">user</span></div>
+
+
+<div class="viewcode-block" id="Plurk"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Plurk">[docs]</a><span class="k">class</span> <span class="nc">Plurk</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plurk |oauth1| provider.</span>
+
+<span class="sd">    * Dashboard: http://www.plurk.com/PlurkApp/</span>
+<span class="sd">    * Docs:</span>
+<span class="sd">    * API: http://www.plurk.com/API</span>
+<span class="sd">    * API explorer: http://www.plurk.com/OAuth/test/</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * email</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * id</span>
+<span class="sd">    * link</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * location</span>
+<span class="sd">    * name</span>
+<span class="sd">    * nickname</span>
+<span class="sd">    * picture</span>
+<span class="sd">    * timezone</span>
+<span class="sd">    * username</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * first_name</span>
+<span class="sd">    * last_name</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * postal_code</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="n">birth_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">city</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">country</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">gender</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">locale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">nickname</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">picture</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">timezone</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.plurk.com/OAuth/request_token&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.plurk.com/OAuth/authorize&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.plurk.com/OAuth/access_token&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.plurk.com/APP/Profile/getOwnProfile&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="n">_user</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_info&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;uid&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default_lang&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;full_name&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nick_name&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="s1">&#39;http://avatars.plurk.com/</span><span class="si">{0}</span><span class="s1">-big2.jpg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">timezone</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timezone&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display_name&#39;</span><span class="p">)</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;http://www.plurk.com/</span><span class="si">{0}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">city</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">city</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">country</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">_bd</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;date_of_birth&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_bd</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                    <span class="n">_bd</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">%a</span><span class="s2">, </span><span class="si">%d</span><span class="s2"> %b %Y %H:%M:%S %Z&quot;</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">user</span></div>
+
+
+<div class="viewcode-block" id="Twitter"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Twitter">[docs]</a><span class="k">class</span> <span class="nc">Twitter</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Twitter |oauth1| provider.</span>
+
+<span class="sd">    * Dashboard: https://dev.twitter.com/apps</span>
+<span class="sd">    * Docs: https://dev.twitter.com/docs</span>
+<span class="sd">    * API reference: https://dev.twitter.com/docs/api</span>
+
+<span class="sd">    .. note:: To prevent multiple authorization attempts, you should enable</span>
+<span class="sd">      the option:</span>
+<span class="sd">      ``Allow this application to be used to Sign in with Twitter``</span>
+<span class="sd">      in the Twitter &#39;Application Management&#39; page. (http://apps.twitter.com)</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * email</span>
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * id</span>
+<span class="sd">    * link</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * location</span>
+<span class="sd">    * name</span>
+<span class="sd">    * picture</span>
+<span class="sd">    * username</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * email</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * first_name</span>
+<span class="sd">    * last_name</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * nickname</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * postal_code</span>
+<span class="sd">    * timezone</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="n">city</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">country</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">locale</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">picture</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.twitter.com/oauth/request_token&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.twitter.com/oauth/authenticate&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.twitter.com/oauth/access_token&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;https://api.twitter.com/1.1/account/verify_credentials.json?&#39;</span>
+        <span class="s1">&#39;include_entities=true&amp;include_email=true&#39;</span>
+    <span class="p">)</span>
+    <span class="n">supports_jsonp</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;screen_name&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_image_url&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+        <span class="n">_location</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_location</span><span class="p">:</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">_location</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">_split_location</span> <span class="o">=</span> <span class="n">_location</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">_split_location</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">_city</span><span class="p">,</span> <span class="n">_country</span> <span class="o">=</span> <span class="n">_split_location</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">_country</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_city</span> <span class="o">=</span> <span class="n">_split_location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">_city</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">user</span></div>
+
+
+<div class="viewcode-block" id="Tumblr"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Tumblr">[docs]</a><span class="k">class</span> <span class="nc">Tumblr</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tumblr |oauth1| provider.</span>
+
+<span class="sd">    * Dashboard: http://www.tumblr.com/oauth/apps</span>
+<span class="sd">    * Docs: http://www.tumblr.com/docs/en/api/v2#auth</span>
+<span class="sd">    * API reference: http://www.tumblr.com/docs/en/api/v2</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * id</span>
+<span class="sd">    * name</span>
+<span class="sd">    * username</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * email</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * first_name</span>
+<span class="sd">    * last_name</span>
+<span class="sd">    * link</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * location</span>
+<span class="sd">    * nickname</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * picture</span>
+<span class="sd">    * postal_code</span>
+<span class="sd">    * timezone</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.tumblr.com/oauth/request_token&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.tumblr.com/oauth/authorize&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.tumblr.com/oauth/access_token&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="s1">&#39;http://api.tumblr.com/v2/user/info&#39;</span>
+
+    <span class="n">supports_jsonp</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">_user</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;response&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">user</span></div>
+
+
+<div class="viewcode-block" id="UbuntuOne"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.UbuntuOne">[docs]</a><span class="k">class</span> <span class="nc">UbuntuOne</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ubuntu One |oauth1| provider.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        The UbuntuOne service</span>
+<span class="sd">        `has been shut down &lt;http://blog.canonical.com/2014/04/02/</span>
+<span class="sd">        shutting-down-ubuntu-one-file-services/&gt;`__.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        Uses the `PLAINTEXT &lt;http://oauth.net/core/1.0a/#anchor21&gt;`_</span>
+<span class="sd">        Signature method!</span>
+
+<span class="sd">    * Dashboard: https://one.ubuntu.com/developer/account_admin/auth/web</span>
+<span class="sd">    * Docs: https://one.ubuntu.com/developer/account_admin/auth/web</span>
+<span class="sd">    * API reference: https://one.ubuntu.com/developer/contents</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_signature_generator</span> <span class="o">=</span> <span class="n">PLAINTEXTSignatureGenerator</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://one.ubuntu.com/oauth/request/&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;https://one.ubuntu.com/oauth/authorize/&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://one.ubuntu.com/oauth/access/&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="s1">&#39;https://one.ubuntu.com/api/account/&#39;</span></div>
+
+
+<div class="viewcode-block" id="Vimeo"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Vimeo">[docs]</a><span class="k">class</span> <span class="nc">Vimeo</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vimeo |oauth1| provider.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        Vimeo needs one more fetch to get rich user info!</span>
+
+<span class="sd">    * Dashboard: https://developer.vimeo.com/apps</span>
+<span class="sd">    * Docs: https://developer.vimeo.com/apis/advanced#oauth-endpoints</span>
+<span class="sd">    * API reference: https://developer.vimeo.com/apis</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * id</span>
+<span class="sd">    * link</span>
+<span class="sd">    * location</span>
+<span class="sd">    * name</span>
+<span class="sd">    * picture</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * email</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * first_name</span>
+<span class="sd">    * last_name</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * nickname</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * postal_code</span>
+<span class="sd">    * timezone</span>
+<span class="sd">    * username</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">picture</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://vimeo.com/oauth/request_token&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;https://vimeo.com/oauth/authorize&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://vimeo.com/oauth/access_token&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;http://vimeo.com/api/rest/v2?&#39;</span>
+                     <span class="s1">&#39;format=json&amp;method=vimeo.oauth.checkAccessToken&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_access_user_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Vimeo requires the user ID to access the user info endpoint, so we need</span>
+<span class="sd">        to make two requests: one to get user ID and second to get user info.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Vimeo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_access_user_info</span><span class="p">()</span>
+        <span class="n">uid</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;oauth&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">uid</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="s1">&#39;http://vimeo.com/api/v2/</span><span class="si">{0}</span><span class="s1">/info.json&#39;</span>
+                               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display_name&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_url&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;portrait_huge&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">user</span></div>
+
+
+<div class="viewcode-block" id="Xero"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Xero">[docs]</a><span class="k">class</span> <span class="nc">Xero</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Xero |oauth1| provider.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        API returns XML!</span>
+
+<span class="sd">    * Dashboard: https://api.xero.com/Application</span>
+<span class="sd">    * Docs: http://blog.xero.com/developer/api-overview/public-applications/</span>
+<span class="sd">    * API reference: http://blog.xero.com/developer/api/</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * email</span>
+<span class="sd">    * first_name</span>
+<span class="sd">    * id</span>
+<span class="sd">    * last_name</span>
+<span class="sd">    * name</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * link</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * location</span>
+<span class="sd">    * nickname</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * picture</span>
+<span class="sd">    * postal_code</span>
+<span class="sd">    * timezone</span>
+<span class="sd">    * username</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="n">email</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">first_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">last_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.xero.com/oauth/RequestToken&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.xero.com/oauth/Authorize&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.xero.com/oauth/AccessToken&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.xero.com/api.xro/2.0/Users&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Data is xml.etree.ElementTree.Element object.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="c1"># But only on user.update()</span>
+            <span class="n">_user</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Users/User&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;UserID&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;FirstName&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;LastName&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;EmailAddress&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="k">return</span> <span class="n">user</span></div>
+
+
+<div class="viewcode-block" id="Yahoo"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Yahoo">[docs]</a><span class="k">class</span> <span class="nc">Yahoo</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Yahoo |oauth1| provider.</span>
+
+<span class="sd">    * Dashboard: https://developer.apps.yahoo.com/dashboard/</span>
+<span class="sd">    * Docs: http://developer.yahoo.com/oauth/guide/oauth-auth-flow.html</span>
+<span class="sd">    * API: http://developer.yahoo.com/everything.html</span>
+<span class="sd">    * API explorer: http://developer.yahoo.com/yql/console/</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * id</span>
+<span class="sd">    * link</span>
+<span class="sd">    * location</span>
+<span class="sd">    * name</span>
+<span class="sd">    * nickname</span>
+<span class="sd">    * picture</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * postal_code</span>
+<span class="sd">    * timezone</span>
+<span class="sd">    * username</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="n">city</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">country</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">nickname</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">picture</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.login.yahoo.com/oauth/v2/&#39;</span> <span class="o">+</span> \
+                        <span class="s1">&#39;get_request_token&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.login.yahoo.com/oauth/v2/&#39;</span> <span class="o">+</span> \
+                             <span class="s1">&#39;request_auth&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.login.yahoo.com/oauth/v2/get_token&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;https://query.yahooapis.com/v1/yql?q=select%20*</span><span class="si">%20f</span><span class="s1">rom%20&#39;</span>
+        <span class="s1">&#39;social.profile%20where</span><span class="si">%20g</span><span class="s1">uid%3Dme%3B&amp;format=json&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">same_origin</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">supports_jsonp</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="n">_user</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;guid&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nickname&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profileUrl&#39;</span><span class="p">)</span>
+
+        <span class="n">emails</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;emails&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">emails</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">emails</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;primary&#39;</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">email</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;handle&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">emails</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">emails</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;handle&#39;</span><span class="p">)</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;imageUrl&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">city</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">city</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">country</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c1"># probably user hasn&#39;t activated Yahoo Profile</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">user</span></div>
+
+
+<div class="viewcode-block" id="Xing"><a class="viewcode-back" href="../../../reference/providers.html#authomatic.providers.oauth1.Xing">[docs]</a><span class="k">class</span> <span class="nc">Xing</span><span class="p">(</span><span class="n">OAuth1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Xing |oauth1| provider.</span>
+
+<span class="sd">    * Dashboard: https://dev.xing.com/applications</span>
+<span class="sd">    * Docs: https://dev.xing.com/docs/authentication</span>
+<span class="sd">    * API reference: https://dev.xing.com/docs/resources</span>
+
+<span class="sd">    Supported :class:`.User` properties:</span>
+
+<span class="sd">    * birth_date</span>
+<span class="sd">    * city</span>
+<span class="sd">    * country</span>
+<span class="sd">    * email</span>
+<span class="sd">    * first_name</span>
+<span class="sd">    * gender</span>
+<span class="sd">    * id</span>
+<span class="sd">    * last_name</span>
+<span class="sd">    * link</span>
+<span class="sd">    * locale</span>
+<span class="sd">    * location</span>
+<span class="sd">    * name</span>
+<span class="sd">    * phone</span>
+<span class="sd">    * picture</span>
+<span class="sd">    * postal_code</span>
+<span class="sd">    * timezone</span>
+<span class="sd">    * username</span>
+
+<span class="sd">    Unsupported :class:`.User` properties:</span>
+
+<span class="sd">    * nickname</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">request_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.xing.com/v1/request_token&#39;</span>
+    <span class="n">user_authorization_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.xing.com/v1/authorize&#39;</span>
+    <span class="n">access_token_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.xing.com/v1/access_token&#39;</span>
+    <span class="n">user_info_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.xing.com/v1/users/me&#39;</span>
+
+    <span class="n">supported_user_attributes</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SupportedUserAttributes</span><span class="p">(</span>
+        <span class="n">birth_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">city</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">country</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">first_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">gender</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">last_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">locale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">phone</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">picture</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">postal_code</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">timezone</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_x_user_parser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">_users</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="n">_users</span> <span class="ow">and</span> <span class="n">_users</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">_user</span> <span class="o">=</span> <span class="n">_users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display_name&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">timezone</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;time_zone&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;active_email&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;permalink&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page_name&#39;</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;photo_urls&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+
+            <span class="n">_address</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;business_address&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="k">if</span> <span class="n">_address</span><span class="p">:</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">_address</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;city&#39;</span><span class="p">)</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">_address</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">postal_code</span> <span class="o">=</span> <span class="n">_address</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;zip_code&#39;</span><span class="p">)</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">phone</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">_address</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;phone&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="n">_address</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mobile_phone&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="n">_languages</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;languages&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">_languages</span> <span class="ow">and</span> <span class="n">_languages</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">_languages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">_birth_date</span> <span class="o">=</span> <span class="n">_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;birth_date&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">_year</span> <span class="o">=</span> <span class="n">_birth_date</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">)</span>
+            <span class="n">_month</span> <span class="o">=</span> <span class="n">_birth_date</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;month&#39;</span><span class="p">)</span>
+            <span class="n">_day</span> <span class="o">=</span> <span class="n">_birth_date</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">_year</span> <span class="ow">and</span> <span class="n">_month</span> <span class="ow">and</span> <span class="n">_day</span><span class="p">:</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">_year</span><span class="p">,</span> <span class="n">_month</span><span class="p">,</span> <span class="n">_day</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">user</span></div>
+
+
+<span class="c1"># The provider type ID is generated from this list&#39;s indexes!</span>
+<span class="c1"># Always append new providers at the end so that ids of existing providers</span>
+<span class="c1"># don&#39;t change!</span>
+<span class="n">PROVIDER_ID_MAP</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Bitbucket</span><span class="p">,</span>
+    <span class="n">Flickr</span><span class="p">,</span>
+    <span class="n">Meetup</span><span class="p">,</span>
+    <span class="n">OAuth1</span><span class="p">,</span>
+    <span class="n">Plurk</span><span class="p">,</span>
+    <span class="n">Tumblr</span><span class="p">,</span>
+    <span class="n">Twitter</span><span class="p">,</span>
+    <span class="n">UbuntuOne</span><span class="p">,</span>
+    <span class="n">Vimeo</span><span class="p">,</span>
+    <span class="n">Xero</span><span class="p">,</span>
+    <span class="n">Xing</span><span class="p">,</span>
+    <span class="n">Yahoo</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="../../../genindex.html"  title="General Index">index</a></span>
+				<span><a href="../../../py-modindex.html"  title="Python Module Index">modules</a></span>
+				</div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="https://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '../../../_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="../../../_static/foundation/js/foundation.min.js"></script>
+	<script src="../../../_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/authomatic/authomatic">
+			<img
+				 src="../../../_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>

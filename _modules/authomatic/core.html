@@ -1,0 +1,2048 @@
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>authomatic.core | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="../../_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="authomatic.core | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://authomatic.github.io/authomatic/_modules/authomatic/core.html" />
+	<meta property="og:image" content="https://authomatic.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="../../_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="../../_static/jquery.js"></script>
+    	<script type="text/javascript" src="../../_static/underscore.js"></script>
+    	<script type="text/javascript" src="../../_static/doctools.js"></script>
+    	<script type="text/javascript" src="../../_static/language_data.js"></script>
+    	<script type="text/javascript" src="../../_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="../../index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		
+			<li><a href="../../genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="../../py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="../../index.html">
+		
+	    	
+	    		<img id="logo" src="../../_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="https://authomatic.github.io/authomatic/_modules/authomatic/core.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="https://authomatic.github.io/authomatic/_modules/authomatic/core.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=authomatic&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="authomatic.core | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <h1>Source code for authomatic.core</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">cPickle</span> <span class="k">as</span> <span class="nn">pickle</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">xml.etree</span> <span class="kn">import</span> <span class="n">ElementTree</span>
+
+<span class="kn">from</span> <span class="nn">authomatic.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ConfigError</span><span class="p">,</span>
+    <span class="n">CredentialsError</span><span class="p">,</span>
+    <span class="n">ImportStringError</span><span class="p">,</span>
+    <span class="n">RequestElementsError</span><span class="p">,</span>
+    <span class="n">SessionError</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">six</span>
+<span class="kn">from</span> <span class="nn">authomatic.six.moves</span> <span class="kn">import</span> <span class="n">urllib_parse</span> <span class="k">as</span> <span class="n">parse</span>
+
+
+<span class="c1"># =========================================================================</span>
+<span class="c1"># Global variables !!!</span>
+<span class="c1"># =========================================================================</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">))</span>
+
+<span class="n">_counter</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">normalize_dict</span><span class="p">(</span><span class="n">dict_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replaces all values that are single-item iterables with the value of its</span>
+<span class="sd">    index 0.</span>
+
+<span class="sd">    :param dict dict_:</span>
+<span class="sd">        Dictionary to normalize.</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">        Normalized dictionary.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">dict_</span><span class="o">.</span><span class="n">items</span><span class="p">())])</span>
+
+
+<span class="k">def</span> <span class="nf">items_to_dict</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts list of tuples to dictionary with duplicate keys converted to</span>
+<span class="sd">    lists.</span>
+
+<span class="sd">    :param list items:</span>
+<span class="sd">        List of tuples.</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">        :class:`dict`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">res</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">normalize_dict</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">Counter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A simple counter to be used in the config to generate unique `id` values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="n">start</span>
+
+    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span>
+
+
+<span class="n">_counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="provider_id"><a class="viewcode-back" href="../../reference/functions.html#authomatic.provider_id">[docs]</a><span class="k">def</span> <span class="nf">provider_id</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A simple counter to be used in the config to generate unique `IDs`.</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">        :class:`int`.</span>
+
+<span class="sd">    Use it in the :doc:`config` like this:</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        import authomatic</span>
+
+<span class="sd">        CONFIG = {</span>
+<span class="sd">            &#39;facebook&#39;: {</span>
+<span class="sd">                 &#39;class_&#39;: authomatic.providers.oauth2.Facebook,</span>
+<span class="sd">                 &#39;id&#39;: authomatic.provider_id(), # returns 1</span>
+<span class="sd">                 &#39;consumer_key&#39;: &#39;##########&#39;,</span>
+<span class="sd">                 &#39;consumer_secret&#39;: &#39;##########&#39;,</span>
+<span class="sd">                 &#39;scope&#39;: [&#39;user_about_me&#39;, &#39;email&#39;]</span>
+<span class="sd">            },</span>
+<span class="sd">            &#39;google&#39;: {</span>
+<span class="sd">                 &#39;class_&#39;: &#39;authomatic.providers.oauth2.Google&#39;,</span>
+<span class="sd">                 &#39;id&#39;: authomatic.provider_id(), # returns 2</span>
+<span class="sd">                 &#39;consumer_key&#39;: &#39;##########&#39;,</span>
+<span class="sd">                 &#39;consumer_secret&#39;: &#39;##########&#39;,</span>
+<span class="sd">                 &#39;scope&#39;: [&#39;https://www.googleapis.com/auth/userinfo.profile&#39;,</span>
+<span class="sd">                           &#39;https://www.googleapis.com/auth/userinfo.email&#39;]</span>
+<span class="sd">            },</span>
+<span class="sd">            &#39;windows_live&#39;: {</span>
+<span class="sd">                 &#39;class_&#39;: &#39;oauth2.WindowsLive&#39;,</span>
+<span class="sd">                 &#39;id&#39;: authomatic.provider_id(), # returns 3</span>
+<span class="sd">                 &#39;consumer_key&#39;: &#39;##########&#39;,</span>
+<span class="sd">                 &#39;consumer_secret&#39;: &#39;##########&#39;,</span>
+<span class="sd">                 &#39;scope&#39;: [&#39;wl.basic&#39;, &#39;wl.emails&#39;, &#39;wl.photos&#39;]</span>
+<span class="sd">            },</span>
+<span class="sd">        }</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">_counter</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">escape</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Escape a URL including any /.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">safe</span><span class="o">=</span><span class="s1">&#39;~&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">json_qs_parser</span><span class="p">(</span><span class="n">body</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses response body from JSON, XML or query string.</span>
+
+<span class="sd">    :param body:</span>
+<span class="sd">        string</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">        :class:`dict`, :class:`list` if input is JSON or query string,</span>
+<span class="sd">        :class:`xml.etree.ElementTree.Element` if XML.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Try JSON first.</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">OverflowError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Then XML.</span>
+        <span class="k">return</span> <span class="n">ElementTree</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">ElementTree</span><span class="o">.</span><span class="n">ParseError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Finally query string.</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">parse</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">import_string</span><span class="p">(</span><span class="n">import_name</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Imports an object by string in dotted notation.</span>
+
+<span class="sd">    taken `from webapp2.import_string() &lt;http://webapp-</span>
+<span class="sd">    improved.appspot.com/api/webapp2.html#webapp2.import_string&gt;`_</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">import_name</span><span class="p">:</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">import_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">__import__</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[</span><span class="n">obj</span><span class="p">]),</span> <span class="n">obj</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">import_name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">silent</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ImportStringError</span><span class="p">(</span><span class="s1">&#39;Import from string failed for path </span><span class="si">{0}</span><span class="s1">&#39;</span>
+                                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">import_name</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">resolve_provider_class</span><span class="p">(</span><span class="n">class_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a provider class.</span>
+
+<span class="sd">    :param class_name: :class:`string` or</span>
+<span class="sd">    :class:`authomatic.providers.BaseProvider` subclass.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># prepare path for authomatic.providers package</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">__package__</span><span class="p">,</span> <span class="s1">&#39;providers&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="p">])</span>
+
+        <span class="c1"># try to import class by string from providers module or by fully</span>
+        <span class="c1"># qualified path</span>
+        <span class="k">return</span> <span class="n">import_string</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">or</span> <span class="n">import_string</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">class_</span>
+
+
+<span class="k">def</span> <span class="nf">id_to_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">short_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the provider :doc:`config` key based on it&#39;s ``id`` value.</span>
+
+<span class="sd">    :param dict config:</span>
+<span class="sd">        :doc:`config`.</span>
+<span class="sd">    :param id:</span>
+<span class="sd">        Value of the id parameter in the :ref:`config` to search for.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">short_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">k</span>
+
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+        <span class="s1">&#39;No provider with id=</span><span class="si">{0}</span><span class="s1"> found in the config!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">short_name</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">ReprMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides __repr__() method with output *ClassName(arg1=value, arg2=value)*.</span>
+
+<span class="sd">    Ignored are attributes</span>
+
+<span class="sd">    * which values are considered false.</span>
+<span class="sd">    * with leading underscore.</span>
+<span class="sd">    * listed in _repr_ignore.</span>
+
+<span class="sd">    Values of attributes listed in _repr_sensitive will be replaced by *###*.</span>
+<span class="sd">    Values which repr() string is longer than _repr_length_limit will be</span>
+<span class="sd">    represented as *ClassName(...)*</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: Iterable of attributes to be ignored.</span>
+    <span class="n">_repr_ignore</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1">#: Iterable of attributes which value should not be visible.</span>
+    <span class="n">_repr_sensitive</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1">#: `int` Values longer than this will be truncated to *ClassName(...)*.</span>
+    <span class="n">_repr_length_limit</span> <span class="o">=</span> <span class="mi">20</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># get class name</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+
+        <span class="c1"># construct keyword arguments</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+
+            <span class="c1"># ignore attributes with leading underscores and those listed in</span>
+            <span class="c1"># _repr_ignore</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repr_ignore</span><span class="p">:</span>
+
+                <span class="c1"># replace sensitive values</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repr_sensitive</span><span class="p">:</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="s1">&#39;###&#39;</span>
+
+                <span class="c1"># if repr is too long</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repr_length_limit</span><span class="p">:</span>
+                    <span class="c1"># Truncate to ClassName(...)</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">(...)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">=</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">(</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="Future"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Future">[docs]</a><span class="k">class</span> <span class="nc">Future</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an activity run in a separate thread. Subclasses the standard</span>
+<span class="sd">    library :class:`threading.Thread` and adds :attr:`.get_result` method.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        |async|</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param callable func:</span>
+<span class="sd">            The function to be run in separate thread.</span>
+
+<span class="sd">        Calls :data:`func` in separate thread and returns immediately.</span>
+<span class="sd">        Accepts arbitrary positional and keyword arguments which will be</span>
+<span class="sd">        passed to :data:`func`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">Future</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Future.run"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Future.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Future.get_result"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Future.get_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Waits for the wrapped :data:`func` to finish and returns its result.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            This will block the **calling thread** until the :data:`func`</span>
+<span class="sd">            returns.</span>
+
+<span class="sd">        :param timeout:</span>
+<span class="sd">            :class:`float` or ``None`` A timeout for the :data:`func` to</span>
+<span class="sd">            return in seconds.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            The result of the wrapped :data:`func`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">Session</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A dictionary-like secure cookie session implementation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;authomatic&#39;</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+                 <span class="n">secure</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param str secret:</span>
+<span class="sd">            Session secret used to sign the session cookie.</span>
+<span class="sd">        :param str name:</span>
+<span class="sd">            Session cookie name.</span>
+<span class="sd">        :param int max_age:</span>
+<span class="sd">            Maximum allowed age of session cookie nonce in seconds.</span>
+<span class="sd">        :param bool secure:</span>
+<span class="sd">            If ``True`` the session cookie will be saved with ``Secure``</span>
+<span class="sd">            attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span> <span class="o">=</span> <span class="n">adapter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret</span> <span class="o">=</span> <span class="n">secret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_age</span> <span class="o">=</span> <span class="n">max_age</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secure</span> <span class="o">=</span> <span class="n">secure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">create_cookie</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates the value for ``Set-Cookie`` HTTP header.</span>
+
+<span class="sd">        :param bool delete:</span>
+<span class="sd">            If ``True`` the cookie value will be ``deleted`` and the</span>
+<span class="sd">            Expires value will be ``Thu, 01-Jan-1970 00:00:01 GMT``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;deleted&#39;</span> <span class="k">if</span> <span class="n">delete</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">split_url</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="n">split_url</span><span class="o">.</span><span class="n">netloc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Work-around for issue #11, failure of WebKit-based browsers to accept</span>
+        <span class="c1"># cookies set as part of a redirect response in some circumstances.</span>
+        <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">domain</span><span class="p">:</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">=</span><span class="si">{value}</span><span class="s1">; Path=</span><span class="si">{path}</span><span class="s1">; HttpOnly</span><span class="si">{secure}{expires}</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">=</span><span class="si">{value}</span><span class="s1">; Domain=</span><span class="si">{domain}</span><span class="s1">; Path=</span><span class="si">{path}</span><span class="s1">; &#39;</span>
+                        <span class="s1">&#39;HttpOnly</span><span class="si">{secure}{expires}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
+            <span class="n">path</span><span class="o">=</span><span class="n">split_url</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+            <span class="n">secure</span><span class="o">=</span><span class="s1">&#39;; Secure&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">secure</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">expires</span><span class="o">=</span><span class="s1">&#39;; Expires=Thu, 01-Jan-1970 00:00:01 GMT&#39;</span> <span class="k">if</span> <span class="n">delete</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds the session cookie to headers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">cookie</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_cookie</span><span class="p">()</span>
+            <span class="n">cookie_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">cookie_len</span> <span class="o">&gt;</span> <span class="mi">4093</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SessionError</span><span class="p">(</span><span class="s1">&#39;Cookie too long! The cookie size </span><span class="si">{0}</span><span class="s1"> &#39;</span>
+                                   <span class="s1">&#39;is more than 4093 bytes.&#39;</span>
+                                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cookie_len</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s1">&#39;Set-Cookie&#39;</span><span class="p">,</span> <span class="n">cookie</span><span class="p">)</span>
+
+            <span class="c1"># Reset data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s1">&#39;Set-Cookie&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_cookie</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts the session data from cookie.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cookie</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deserialize</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span> <span class="k">if</span> <span class="n">cookie</span> <span class="k">else</span> <span class="p">{}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets session data lazily.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">()</span>
+        <span class="c1"># Always return a dict, even if deserialization returned nothing</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+
+    <span class="k">def</span> <span class="nf">_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">parts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates signature for the session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">),</span> <span class="n">digestmod</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span>
+        <span class="n">signature</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">b</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">signature</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the value to a signed string with timestamp.</span>
+
+<span class="sd">        :param value:</span>
+<span class="sd">            Object to be serialized.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            Serialized value.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># data = copy.deepcopy(value)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="c1"># 1. Serialize</span>
+        <span class="n">serialized</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span>
+
+        <span class="c1"># 2. Encode</span>
+        <span class="c1"># Percent encoding produces smaller result then urlsafe base64.</span>
+        <span class="n">encoded</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">serialized</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># 3. Concatenate</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">encoded</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+        <span class="n">concatenated</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">encoded</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">signature</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">concatenated</span>
+
+    <span class="k">def</span> <span class="nf">_deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deserializes and verifies the value created by :meth:`._serialize`.</span>
+
+<span class="sd">        :param str value:</span>
+<span class="sd">            The serialized value.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            Deserialized object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># 3. Split</span>
+        <span class="n">encoded</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">signature</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Verify signature</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">signature</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">encoded</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">SessionError</span><span class="p">(</span><span class="s1">&#39;Invalid signature &quot;</span><span class="si">{0}</span><span class="s1">&quot;!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signature</span><span class="p">))</span>
+
+        <span class="c1"># Verify timestamp</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_age</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># 2. Decode</span>
+        <span class="n">decoded</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">unquote</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+
+        <span class="c1"># 1. Deserialize</span>
+        <span class="n">deserialized</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">deserialized</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="fm">__delitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../reference/classes.html#authomatic.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides unified interface to selected **user** info returned by different</span>
+<span class="sd">    **providers**.</span>
+
+<span class="sd">    .. note:: The value format may vary across providers.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">#: A :doc:`provider &lt;providers&gt;` instance.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span>
+
+        <span class="c1">#: An :class:`.Credentials` instance.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;credentials&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: A :class:`dict` containing all the **user** information returned</span>
+        <span class="c1">#: by the **provider**.</span>
+        <span class="c1">#: The structure differs across **providers**.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: The :attr:`.Response.content` of the request made to update</span>
+        <span class="c1">#: the user.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: :class:`str` ID assigned to the **user** by the **provider**.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` User name e.g. *andrewpipkin*.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Name e.g. *Andrew Pipkin*.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` First name e.g. *Andrew*.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Last name e.g. *Pipkin*.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Nickname e.g. *Andy*.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nickname&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Link URL.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;link&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Gender.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Timezone.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timezone</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timezone&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Locale.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;locale&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` E-mail.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` phone.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phone</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;phone&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Picture URL.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;picture&#39;</span><span class="p">)</span>
+        <span class="c1">#: Birth date as :class:`datetime.datetime()` or :class:`str`</span>
+        <span class="c1">#  if parsing failed or ``None``.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">birth_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;birth_date&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Country.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` City.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;city&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Geographical location.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">)</span>
+        <span class="c1">#: :class:`str` Postal code.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;postal_code&#39;</span><span class="p">)</span>
+        <span class="c1">#: Instance of the Google App Engine Users API</span>
+        <span class="c1">#: `User &lt;https://developers.google.com/appengine/docs/python/users/userclass&gt;`_ class.</span>
+        <span class="c1">#: Only present when using the :class:`authomatic.providers.gaeopenid.GAEOpenID` provider.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gae_user</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gae_user&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="User.update"><a class="viewcode-back" href="../../reference/classes.html#authomatic.User.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the user info by fetching the **provider&#39;s** user info URL.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            Updated instance of this class.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">update_user</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="User.async_update"><a class="viewcode-back" href="../../reference/classes.html#authomatic.User.async_update">[docs]</a>    <span class="k">def</span> <span class="nf">async_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as :meth:`.update` but runs asynchronously in a separate thread.</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            |async|</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.Future` instance representing the separate thread.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">Future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="User.to_dict"><a class="viewcode-back" href="../../reference/classes.html#authomatic.User.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the :class:`.User` instance to a :class:`dict`.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`dict`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># copy the dictionary</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+        <span class="c1"># Keep only the provider name to avoid circular reference</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;provider&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;credentials&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span>
+        <span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;birth_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;birth_date&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Remove content</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">ElementTree</span><span class="o">.</span><span class="n">Element</span><span class="p">):</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">d</span></div></div>
+
+
+<span class="n">SupportedUserAttributesNT</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
+    <span class="n">typename</span><span class="o">=</span><span class="s1">&#39;SupportedUserAttributesNT&#39;</span><span class="p">,</span>
+    <span class="n">field_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;birth_date&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s1">&#39;link&#39;</span><span class="p">,</span> <span class="s1">&#39;locale&#39;</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;nickname&#39;</span><span class="p">,</span> <span class="s1">&#39;phone&#39;</span><span class="p">,</span> <span class="s1">&#39;picture&#39;</span><span class="p">,</span> <span class="s1">&#39;postal_code&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;timezone&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SupportedUserAttributes</span><span class="p">(</span><span class="n">SupportedUserAttributesNT</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">SupportedUserAttributes</span><span class="o">.</span><span class="n">_fields</span><span class="p">)</span>  <span class="c1"># pylint:disable=no-member</span>
+        <span class="n">defaults</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">SupportedUserAttributes</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">defaults</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Credentials"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Credentials">[docs]</a><span class="k">class</span> <span class="nc">Credentials</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Contains all necessary information to fetch **user&#39;s protected resources**.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_repr_sensitive</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">,</span> <span class="s1">&#39;refresh_token&#39;</span><span class="p">,</span> <span class="s1">&#39;token_secret&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;consumer_key&#39;</span><span class="p">,</span> <span class="s1">&#39;consumer_secret&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="c1">#: :class:`dict` :doc:`config`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+        <span class="c1">#: :class:`str` User **access token**.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: :class:`str` Access token type.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;token_type&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: :class:`str` Refresh token.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_token</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;refresh_token&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: :class:`str` Access token secret.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_secret</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;token_secret&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: :class:`int` Expiration date as UNIX timestamp.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expiration_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;expiration_time&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="c1">#: A :doc:`Provider &lt;providers&gt;` instance**.</span>
+        <span class="n">provider</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;provider&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">expire_in</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;expire_in&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">provider</span><span class="p">:</span>
+            <span class="c1">#: :class:`str` Provider name specified in the :doc:`config`.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">name</span>
+
+            <span class="c1">#: :class:`str` Provider type e.g.</span>
+            <span class="c1">#  ``&quot;authomatic.providers.oauth2.OAuth2&quot;``.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_type</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span>
+
+            <span class="c1">#: :class:`str` Provider type e.g.</span>
+            <span class="c1">#  ``&quot;authomatic.providers.oauth2.OAuth2&quot;``.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_type_id</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">type_id</span>
+
+            <span class="c1">#: :class:`str` Provider short name specified in the :doc:`config`.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">provider</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">id</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="c1">#: :class:`class` Provider class.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_class</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="vm">__class__</span>
+
+            <span class="c1">#: :class:`str` Consumer key specified in the :doc:`config`.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_key</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">consumer_key</span>
+
+            <span class="c1">#: :class:`str` Consumer secret specified in the :doc:`config`.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">consumer_secret</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;provider_name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;provider_type&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_type_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;provider_type_id&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;provider_id&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">provider_class</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;provider_class&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;consumer_key&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_secret</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;consumer_secret&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">expire_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expire_in</span>
+
+    <span class="nd">@expire_in</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">expire_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes :attr:`.expiration_time` when the value is set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># pylint:disable=attribute-defined-outside-init</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_expiration_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_expire_in</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">expiration_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expiration_time</span>
+
+    <span class="nd">@expiration_time</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">expiration_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+        <span class="c1"># pylint:disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expiration_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expire_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expiration_time</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">expiration_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Expiration date as :class:`datetime.datetime` or ``None`` if</span>
+<span class="sd">        credentials never expire.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expire_in</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expiration_time</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        ``True`` if credentials are valid, ``False`` if expired.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expiration_time</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">expiration_time</span> <span class="o">&gt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="Credentials.expire_soon"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Credentials.expire_soon">[docs]</a>    <span class="k">def</span> <span class="nf">expire_soon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns ``True`` if credentials expire sooner than specified.</span>
+
+<span class="sd">        :param int seconds:</span>
+<span class="sd">            Number of seconds.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            ``True`` if credentials expire sooner than specified,</span>
+<span class="sd">            else ``False``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expiration_time</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">expiration_time</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Credentials.refresh"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Credentials.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">soon</span><span class="o">=</span><span class="mi">86400</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Refreshes the credentials only if the **provider** supports it and if</span>
+<span class="sd">        it will expire in less than one day. It does nothing in other cases.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            The credentials will be refreshed only if it gives sense</span>
+<span class="sd">            i.e. only |oauth2|_ has the notion of credentials</span>
+<span class="sd">            *refreshment/extension*.</span>
+<span class="sd">            And there are also differences across providers e.g. Google</span>
+<span class="sd">            supports refreshment only if there is a ``refresh_token`` in</span>
+<span class="sd">            the credentials and that in turn is present only if the</span>
+<span class="sd">            ``access_type`` parameter was set to ``offline`` in the</span>
+<span class="sd">            **user authorization request**.</span>
+
+<span class="sd">        :param bool force:</span>
+<span class="sd">            If ``True`` the credentials will be refreshed even if they</span>
+<span class="sd">            won&#39;t expire soon.</span>
+
+<span class="sd">        :param int soon:</span>
+<span class="sd">            Number of seconds specifying what means *soon*.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provider_class</span><span class="p">,</span> <span class="s1">&#39;refresh_credentials&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">force</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">expire_soon</span><span class="p">(</span><span class="n">soon</span><span class="p">):</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;PROVIDER NAME: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provider_name</span><span class="p">))</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_class</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_name</span><span class="p">)</span><span class="o">.</span><span class="n">refresh_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Credentials.async_refresh"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Credentials.async_refresh">[docs]</a>    <span class="k">def</span> <span class="nf">async_refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as :meth:`.refresh` but runs asynchronously in a separate thread.</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            |async|</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.Future` instance representing the separate thread.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">Future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Credentials.provider_type_class"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Credentials.provider_type_class">[docs]</a>    <span class="k">def</span> <span class="nf">provider_type_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the :doc:`provider &lt;providers&gt;` class specified in the</span>
+<span class="sd">        :doc:`config`.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`authomatic.providers.BaseProvider` subclass.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">resolve_provider_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provider_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Credentials.serialize"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Credentials.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the credentials to a percent encoded string to be stored for</span>
+<span class="sd">        later use.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`string`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                <span class="s1">&#39;To serialize credentials you need to specify a &#39;</span>
+                <span class="s1">&#39;unique integer under the &quot;id&quot; key in the config &#39;</span>
+                <span class="s1">&#39;for each provider!&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get the provider type specific items.</span>
+        <span class="n">rest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_type_class</span><span class="p">()</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Provider ID and provider type ID are always the first two items.</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provider_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider_type_id</span><span class="p">)</span> <span class="o">+</span> <span class="n">rest</span>
+
+        <span class="c1"># Make sure that all items are strings.</span>
+        <span class="n">stringified</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
+
+        <span class="c1"># Concatenate by newline.</span>
+        <span class="n">concatenated</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stringified</span><span class="p">)</span>
+
+        <span class="c1"># Percent encode.</span>
+        <span class="k">return</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">concatenated</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Credentials.deserialize"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Credentials.deserialize">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A *class method* which reconstructs credentials created by</span>
+<span class="sd">        :meth:`serialize`. You can also pass it a :class:`.Credentials`</span>
+<span class="sd">        instance.</span>
+
+<span class="sd">        :param dict config:</span>
+<span class="sd">            The same :doc:`config` used in the :func:`.login` to get the</span>
+<span class="sd">            credentials.</span>
+<span class="sd">        :param str credentials:</span>
+<span class="sd">            :class:`string` The serialized credentials or</span>
+<span class="sd">            :class:`.Credentials` instance.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.Credentials`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Accept both serialized and normal.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">credentials</span><span class="p">,</span> <span class="n">Credentials</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">credentials</span>
+
+        <span class="n">decoded</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">unquote</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span>
+
+        <span class="n">split</span> <span class="o">=</span> <span class="n">decoded</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># We need the provider ID to move forward.</span>
+        <span class="k">if</span> <span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CredentialsError</span><span class="p">(</span>
+                <span class="s1">&#39;To deserialize credentials you need to specify a unique &#39;</span>
+                <span class="s1">&#39;integer under the &quot;id&quot; key in the config for each provider!&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get provider config by short name.</span>
+        <span class="n">provider_name</span> <span class="o">=</span> <span class="n">id_to_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">provider_name</span><span class="p">)</span>
+
+        <span class="c1"># Get the provider class.</span>
+        <span class="n">ProviderClass</span> <span class="o">=</span> <span class="n">resolve_provider_class</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class_&#39;</span><span class="p">))</span>
+
+        <span class="n">deserialized</span> <span class="o">=</span> <span class="n">Credentials</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">deserialized</span><span class="o">.</span><span class="n">provider_id</span> <span class="o">=</span> <span class="n">provider_id</span>
+        <span class="n">deserialized</span><span class="o">.</span><span class="n">provider_type</span> <span class="o">=</span> <span class="n">ProviderClass</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span>
+        <span class="n">deserialized</span><span class="o">.</span><span class="n">provider_type_id</span> <span class="o">=</span> <span class="n">split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">deserialized</span><span class="o">.</span><span class="n">provider_class</span> <span class="o">=</span> <span class="n">ProviderClass</span>
+        <span class="n">deserialized</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">=</span> <span class="n">provider_name</span>
+        <span class="n">deserialized</span><span class="o">.</span><span class="n">provider_class</span> <span class="o">=</span> <span class="n">ProviderClass</span>
+
+        <span class="c1"># Add provider type specific properties.</span>
+        <span class="k">return</span> <span class="n">ProviderClass</span><span class="o">.</span><span class="n">reconstruct</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">deserialized</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LoginResult"><a class="viewcode-back" href="../../reference/classes.html#authomatic.LoginResult">[docs]</a><span class="k">class</span> <span class="nc">LoginResult</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Result of the :func:`authomatic.login` function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider</span><span class="p">):</span>
+        <span class="c1">#: A :doc:`provider &lt;providers&gt;` instance.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span>
+
+        <span class="c1">#: An instance of the :exc:`authomatic.exceptions.BaseError` subclass.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="LoginResult.popup_js"><a class="viewcode-back" href="../../reference/classes.html#authomatic.LoginResult.popup_js">[docs]</a>    <span class="k">def</span> <span class="nf">popup_js</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">custom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stay_open</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns JavaScript that:</span>
+
+<span class="sd">        #.  Triggers the ``options.onLoginComplete(result, closer)``</span>
+<span class="sd">            handler set with the :ref:`authomatic.setup() &lt;js_setup&gt;`</span>
+<span class="sd">            function of :ref:`javascript.js &lt;js&gt;`.</span>
+<span class="sd">        #.  Calls the JavasScript callback specified by :data:`callback_name`</span>
+<span class="sd">            on the opener of the *login handler popup* and passes it the</span>
+<span class="sd">            *login result* JSON object as first argument and the `closer`</span>
+<span class="sd">            function which you should call in your callback to close the popup.</span>
+
+<span class="sd">        :param str callback_name:</span>
+<span class="sd">            The name of the javascript callback e.g ``foo.bar.loginCallback``</span>
+<span class="sd">            will result in ``window.opener.foo.bar.loginCallback(result);``</span>
+<span class="sd">            in the HTML.</span>
+
+<span class="sd">        :param int indent:</span>
+<span class="sd">            The number of spaces to indent the JSON result object.</span>
+<span class="sd">            If ``0`` or negative, only newlines are added.</span>
+<span class="sd">            If ``None``, no newlines are added.</span>
+
+<span class="sd">        :param custom:</span>
+<span class="sd">            Any JSON serializable object that will be passed to the</span>
+<span class="sd">            ``result.custom`` attribute.</span>
+
+<span class="sd">        :param str stay_open:</span>
+<span class="sd">            If ``True``, the popup will stay open.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`str` with JavaScript.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">custom_callback</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        try {{ window.opener.</span><span class="si">{cb}</span><span class="s2">(result, closer); }} catch(e) {{}}</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cb</span><span class="o">=</span><span class="n">callback_name</span><span class="p">)</span> <span class="k">if</span> <span class="n">callback_name</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="c1"># TODO: Move the window.close() to the opener</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        (function(){{</span>
+
+<span class="s2">            closer = function(){{</span>
+<span class="s2">                window.close();</span>
+<span class="s2">            }};</span>
+
+<span class="s2">            var result = </span><span class="si">{result}</span><span class="s2">;</span>
+<span class="s2">            result.custom = </span><span class="si">{custom}</span><span class="s2">;</span>
+
+<span class="s2">            </span><span class="si">{custom_callback}</span><span class="s2"></span>
+
+<span class="s2">            try {{</span>
+<span class="s2">                window.opener.authomatic.loginComplete(result, closer);</span>
+<span class="s2">            }} catch(e) {{}}</span>
+
+<span class="s2">        }})();</span>
+
+<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">indent</span><span class="p">),</span>
+                   <span class="n">custom</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">custom</span><span class="p">),</span>
+                   <span class="n">custom_callback</span><span class="o">=</span><span class="n">custom_callback</span><span class="p">,</span>
+                   <span class="n">stay_open</span><span class="o">=</span><span class="s1">&#39;// &#39;</span> <span class="k">if</span> <span class="n">stay_open</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LoginResult.popup_html"><a class="viewcode-back" href="../../reference/classes.html#authomatic.LoginResult.popup_html">[docs]</a>    <span class="k">def</span> <span class="nf">popup_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Login | </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">custom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stay_open</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a HTML with JavaScript that:</span>
+
+<span class="sd">        #.  Triggers the ``options.onLoginComplete(result, closer)`` handler</span>
+<span class="sd">            set with the :ref:`authomatic.setup() &lt;js_setup&gt;` function of</span>
+<span class="sd">            :ref:`javascript.js &lt;js&gt;`.</span>
+<span class="sd">        #.  Calls the JavasScript callback specified by :data:`callback_name`</span>
+<span class="sd">            on the opener of the *login handler popup* and passes it the</span>
+<span class="sd">            *login result* JSON object as first argument and the `closer`</span>
+<span class="sd">            function which you should call in your callback to close the popup.</span>
+
+<span class="sd">        :param str callback_name:</span>
+<span class="sd">            The name of the javascript callback e.g ``foo.bar.loginCallback``</span>
+<span class="sd">            will result in ``window.opener.foo.bar.loginCallback(result);``</span>
+<span class="sd">            in the HTML.</span>
+
+<span class="sd">        :param int indent:</span>
+<span class="sd">            The number of spaces to indent the JSON result object.</span>
+<span class="sd">            If ``0`` or negative, only newlines are added.</span>
+<span class="sd">            If ``None``, no newlines are added.</span>
+
+<span class="sd">        :param str title:</span>
+<span class="sd">            The text of the HTML title. You can use ``{0}`` tag inside,</span>
+<span class="sd">            which will be replaced by the provider name.</span>
+
+<span class="sd">        :param custom:</span>
+<span class="sd">            Any JSON serializable object that will be passed to the</span>
+<span class="sd">            ``result.custom`` attribute.</span>
+
+<span class="sd">        :param str stay_open:</span>
+<span class="sd">            If ``True``, the popup will stay open.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`str` with HTML.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;!DOCTYPE html&gt;</span>
+<span class="s2">        &lt;html&gt;</span>
+<span class="s2">            &lt;head&gt;&lt;title&gt;</span><span class="si">{title}</span><span class="s2">&lt;/title&gt;&lt;/head&gt;</span>
+<span class="s2">            &lt;body&gt;</span>
+<span class="s2">            &lt;script type=&quot;text/javascript&quot;&gt;</span>
+<span class="s2">                </span><span class="si">{js}</span><span class="s2"></span>
+<span class="s2">            &lt;/script&gt;</span>
+<span class="s2">            &lt;/body&gt;</span>
+<span class="s2">        &lt;/html&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="n">js</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">popup_js</span><span class="p">(</span><span class="n">callback_name</span><span class="p">,</span> <span class="n">indent</span><span class="p">,</span> <span class="n">custom</span><span class="p">,</span> <span class="n">stay_open</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A :class:`.User` instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">user</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">obj</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span>
+        <span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;to_dict&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Response"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Response">[docs]</a><span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="n">ReprMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wraps :class:`httplib.HTTPResponse` and adds.</span>
+
+<span class="sd">    :attr:`.content` and :attr:`.data` attributes.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">httplib_response</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param httplib_response:</span>
+<span class="sd">            The wrapped :class:`httplib.HTTPResponse` instance.</span>
+
+<span class="sd">        :param function content_parser:</span>
+<span class="sd">            Callable which accepts :attr:`.content` as argument,</span>
+<span class="sd">            parses it and returns the parsed data as :class:`dict`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">httplib_response</span> <span class="o">=</span> <span class="n">httplib_response</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span> <span class="o">=</span> <span class="n">content_parser</span> <span class="ow">or</span> <span class="n">json_qs_parser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1">#: Same as :attr:`httplib.HTTPResponse.msg`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">httplib_response</span><span class="o">.</span><span class="n">msg</span>
+        <span class="c1">#: Same as :attr:`httplib.HTTPResponse.version`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">httplib_response</span><span class="o">.</span><span class="n">version</span>
+        <span class="c1">#: Same as :attr:`httplib.HTTPResponse.status`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">httplib_response</span><span class="o">.</span><span class="n">status</span>
+        <span class="c1">#: Same as :attr:`httplib.HTTPResponse.reason`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reason</span> <span class="o">=</span> <span class="n">httplib_response</span><span class="o">.</span><span class="n">reason</span>
+
+<div class="viewcode-block" id="Response.read"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Response.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as :meth:`httplib.HTTPResponse.read`.</span>
+
+<span class="sd">        :param amt:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">httplib_response</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">amt</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Response.getheader"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Response.getheader">[docs]</a>    <span class="k">def</span> <span class="nf">getheader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as :meth:`httplib.HTTPResponse.getheader`.</span>
+
+<span class="sd">        :param name:</span>
+<span class="sd">        :param default:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">httplib_response</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Response.fileno"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Response.fileno">[docs]</a>    <span class="k">def</span> <span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as :meth:`httplib.HTTPResponse.fileno`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">httplib_response</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Response.getheaders"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Response.getheaders">[docs]</a>    <span class="k">def</span> <span class="nf">getheaders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as :meth:`httplib.HTTPResponse.getheaders`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">httplib_response</span><span class="o">.</span><span class="n">getheaders</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Response.is_binary_string"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Response.is_binary_string">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_binary_string</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return true if string is binary data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">textchars</span> <span class="o">=</span> <span class="p">(</span><span class="nb">bytearray</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">27</span><span class="p">])</span>
+                     <span class="o">+</span> <span class="nb">bytearray</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">textchars</span><span class="p">))</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The whole response content.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">httplib_response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_binary_string</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="n">content</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A :class:`dict` of data parsed from :attr:`.content`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span></div>
+
+
+<div class="viewcode-block" id="UserInfoResponse"><a class="viewcode-back" href="../../reference/classes.html#authomatic.UserInfoResponse">[docs]</a><span class="k">class</span> <span class="nc">UserInfoResponse</span><span class="p">(</span><span class="n">Response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inherits from :class:`.Response`, adds  :attr:`~UserInfoResponse.user`</span>
+<span class="sd">    attribute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UserInfoResponse</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1">#: :class:`.User` instance.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span></div>
+
+
+<span class="k">class</span> <span class="nc">RequestElements</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A tuple of ``(url, method, params, headers, body)`` request elements.</span>
+
+<span class="sd">    With some additional properties.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Request URL.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HTTP method of the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dictionary of request parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dictionary of request headers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">body</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :class:`str` Body of ``POST``, ``PUT`` and ``PATCH`` requests.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">query_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Query string of the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">full_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        URL with query string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;?&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_string</span>
+
+    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                               <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+                               <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+                               <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span>
+                               <span class="n">body</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="Authomatic"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Authomatic">[docs]</a><span class="k">class</span> <span class="nc">Authomatic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">session_max_age</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">secure_cookie</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">session_save_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logging_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;authomatic&#39;</span><span class="p">,</span>
+            <span class="n">logger</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encapsulates all the functionality of this package.</span>
+
+<span class="sd">        :param dict config:</span>
+<span class="sd">            :doc:`config`</span>
+
+<span class="sd">        :param str secret:</span>
+<span class="sd">            A secret string that will be used as the key for signing</span>
+<span class="sd">            :class:`.Session` cookie and as a salt by *CSRF* token generation.</span>
+
+<span class="sd">        :param session_max_age:</span>
+<span class="sd">            Maximum allowed age of :class:`.Session` cookie nonce in seconds.</span>
+
+<span class="sd">        :param bool secure_cookie:</span>
+<span class="sd">            If ``True`` the :class:`.Session` cookie will be saved wit</span>
+<span class="sd">            ``Secure`` attribute.</span>
+
+<span class="sd">        :param session:</span>
+<span class="sd">            Custom dictionary-like session implementation.</span>
+
+<span class="sd">        :param callable session_save_method:</span>
+<span class="sd">            A method of the supplied session or any mechanism that saves the</span>
+<span class="sd">            session data and cookie.</span>
+
+<span class="sd">        :param bool report_errors:</span>
+<span class="sd">            If ``True`` exceptions encountered during the **login procedure**</span>
+<span class="sd">            will be caught and reported in the :attr:`.LoginResult.error`</span>
+<span class="sd">            attribute.</span>
+<span class="sd">            Default is ``True``.</span>
+
+<span class="sd">        :param bool debug:</span>
+<span class="sd">            If ``True`` traceback of exceptions will be written to response.</span>
+<span class="sd">            Default is ``False``.</span>
+
+<span class="sd">        :param int logging_level:</span>
+<span class="sd">            The logging level threshold for the default logger as specified in</span>
+<span class="sd">            the standard Python</span>
+<span class="sd">            `logging library &lt;http://docs.python.org/2/library/logging.html&gt;`_.</span>
+<span class="sd">            This setting is ignored when :data:`logger` is set.</span>
+<span class="sd">            Default is ``logging.INFO``.</span>
+
+<span class="sd">        :param str prefix:</span>
+<span class="sd">            Prefix used as the :class:`.Session` cookie name.</span>
+
+<span class="sd">        :param logger:</span>
+<span class="sd">            A :class:`logging.logger` instance.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret</span> <span class="o">=</span> <span class="n">secret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_max_age</span> <span class="o">=</span> <span class="n">session_max_age</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secure_cookie</span> <span class="o">=</span> <span class="n">secure_cookie</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_save_method</span> <span class="o">=</span> <span class="n">session_save_method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_errors</span> <span class="o">=</span> <span class="n">report_errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logging_level</span> <span class="o">=</span> <span class="n">logging_level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="ow">or</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
+
+        <span class="c1"># Set logging level.</span>
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging_level</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Authomatic.login"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Authomatic.login">[docs]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">session_saver</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If :data:`provider_name` specified, launches the login procedure for</span>
+<span class="sd">        corresponding :doc:`provider &lt;/reference/providers&gt;` and returns</span>
+<span class="sd">        :class:`.LoginResult`.</span>
+
+<span class="sd">        If :data:`provider_name` is empty, acts like</span>
+<span class="sd">        :meth:`.Authomatic.backend`.</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            The method redirects the **user** to the **provider** which in</span>
+<span class="sd">            turn redirects **him/her** back to the *request handler* where</span>
+<span class="sd">            it has been called.</span>
+
+<span class="sd">        :param str provider_name:</span>
+<span class="sd">            Name of the provider as specified in the keys of the :doc:`config`.</span>
+
+<span class="sd">        :param callable callback:</span>
+<span class="sd">            If specified the method will call the callback with</span>
+<span class="sd">            :class:`.LoginResult` passed as argument and will return nothing.</span>
+
+<span class="sd">        :param bool report_errors:</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Accepts additional keyword arguments that will be passed to</span>
+<span class="sd">            :doc:`provider &lt;providers&gt;` constructor.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.LoginResult`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">provider_name</span><span class="p">:</span>
+            <span class="c1"># retrieve required settings for current provider and raise</span>
+            <span class="c1"># exceptions if missing</span>
+            <span class="n">provider_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">provider_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">provider_settings</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Provider name &quot;</span><span class="si">{0}</span><span class="s1">&quot; not specified!&#39;</span>
+                                  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_name</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">session</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">session_saver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+                <span class="n">session_saver</span> <span class="o">=</span> <span class="n">session_saver</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">adapter</span><span class="p">,</span>
+                                  <span class="n">secret</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span>
+                                  <span class="n">max_age</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session_max_age</span><span class="p">,</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span>
+                                  <span class="n">secure</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">secure_cookie</span><span class="p">)</span>
+
+                <span class="n">session_saver</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">save</span>
+
+            <span class="c1"># Resolve provider class.</span>
+            <span class="n">class_</span> <span class="o">=</span> <span class="n">provider_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class_&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">class_</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                    <span class="s1">&#39;The &quot;class_&quot; key not specified in the config&#39;</span>
+                    <span class="s1">&#39; for provider </span><span class="si">{0}</span><span class="s1">!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">provider_name</span><span class="p">))</span>
+            <span class="n">ProviderClass</span> <span class="o">=</span> <span class="n">resolve_provider_class</span><span class="p">(</span><span class="n">class_</span><span class="p">)</span>
+
+            <span class="c1"># FIXME: Find a nicer solution</span>
+            <span class="n">ProviderClass</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
+
+            <span class="c1"># instantiate provider class</span>
+            <span class="n">provider</span> <span class="o">=</span> <span class="n">ProviderClass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                     <span class="n">adapter</span><span class="o">=</span><span class="n">adapter</span><span class="p">,</span>
+                                     <span class="n">provider_name</span><span class="o">=</span><span class="n">provider_name</span><span class="p">,</span>
+                                     <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
+                                     <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+                                     <span class="n">session_saver</span><span class="o">=</span><span class="n">session_saver</span><span class="p">,</span>
+                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="c1"># return login result</span>
+            <span class="k">return</span> <span class="n">provider</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Act like backend.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">(</span><span class="n">adapter</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Authomatic.credentials"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Authomatic.credentials">[docs]</a>    <span class="k">def</span> <span class="nf">credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deserializes credentials.</span>
+
+<span class="sd">        :param credentials:</span>
+<span class="sd">            Credentials serialized with :meth:`.Credentials.serialize` or</span>
+<span class="sd">            :class:`.Credentials` instance.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.Credentials`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">Credentials</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Authomatic.access"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Authomatic.access">[docs]</a>    <span class="k">def</span> <span class="nf">access</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+               <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">max_redirects</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">content_parser</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Accesses **protected resource** on behalf of the **user**.</span>
+
+<span class="sd">        :param credentials:</span>
+<span class="sd">            The **user&#39;s** :class:`.Credentials` (serialized or normal).</span>
+
+<span class="sd">        :param str url:</span>
+<span class="sd">            The **protected resource** URL.</span>
+
+<span class="sd">        :param str method:</span>
+<span class="sd">            HTTP method of the request.</span>
+
+<span class="sd">        :param dict headers:</span>
+<span class="sd">            HTTP headers of the request.</span>
+
+<span class="sd">        :param str body:</span>
+<span class="sd">            Body of ``POST``, ``PUT`` and ``PATCH`` requests.</span>
+
+<span class="sd">        :param int max_redirects:</span>
+<span class="sd">            Maximum number of HTTP redirects to follow.</span>
+
+<span class="sd">        :param function content_parser:</span>
+<span class="sd">            A function to be used to parse the :attr:`.Response.data`</span>
+<span class="sd">            from :attr:`.Response.content`.</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.Response`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Deserialize credentials.</span>
+        <span class="n">credentials</span> <span class="o">=</span> <span class="n">Credentials</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span>
+
+        <span class="c1"># Resolve provider class.</span>
+        <span class="n">ProviderClass</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">provider_class</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;ACCESS HEADERS: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">headers</span><span class="p">))</span>
+        <span class="c1"># Access resource and return response.</span>
+
+        <span class="n">provider</span> <span class="o">=</span> <span class="n">ProviderClass</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">provider_name</span><span class="o">=</span><span class="n">credentials</span><span class="o">.</span><span class="n">provider_name</span><span class="p">)</span>
+        <span class="n">provider</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">credentials</span>
+
+        <span class="k">return</span> <span class="n">provider</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                               <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+                               <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+                               <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+                               <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+                               <span class="n">max_redirects</span><span class="o">=</span><span class="n">max_redirects</span><span class="p">,</span>
+                               <span class="n">content_parser</span><span class="o">=</span><span class="n">content_parser</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Authomatic.async_access"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Authomatic.async_access">[docs]</a>    <span class="k">def</span> <span class="nf">async_access</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as :meth:`.Authomatic.access` but runs asynchronously in a</span>
+<span class="sd">        separate thread.</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            |async|</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.Future` instance representing the separate thread.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">Future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Authomatic.request_elements"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Authomatic.request_elements">[docs]</a>    <span class="k">def</span> <span class="nf">request_elements</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">json_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_json</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates request elements for accessing **protected resource of a</span>
+<span class="sd">        user**. Required arguments are :data:`credentials` and :data:`url`. You</span>
+<span class="sd">        can pass :data:`credentials`, :data:`url`, :data:`method`, and</span>
+<span class="sd">        :data:`params` as a JSON object.</span>
+
+<span class="sd">        :param credentials:</span>
+<span class="sd">            The **user&#39;s** credentials (can be serialized).</span>
+
+<span class="sd">        :param str url:</span>
+<span class="sd">            The url of the protected resource.</span>
+
+<span class="sd">        :param str method:</span>
+<span class="sd">            The HTTP method of the request.</span>
+
+<span class="sd">        :param dict params:</span>
+<span class="sd">            Dictionary of request parameters.</span>
+
+<span class="sd">        :param dict headers:</span>
+<span class="sd">            Dictionary of request headers.</span>
+
+<span class="sd">        :param str body:</span>
+<span class="sd">            Body of ``POST``, ``PUT`` and ``PATCH`` requests.</span>
+
+<span class="sd">        :param str json_input:</span>
+<span class="sd">            you can pass :data:`credentials`, :data:`url`, :data:`method`,</span>
+<span class="sd">            :data:`params` and :data:`headers` in a JSON object.</span>
+<span class="sd">            Values from arguments will be used for missing properties.</span>
+
+<span class="sd">            ::</span>
+
+<span class="sd">                {</span>
+<span class="sd">                    &quot;credentials&quot;: &quot;###&quot;,</span>
+<span class="sd">                    &quot;url&quot;: &quot;https://example.com/api&quot;,</span>
+<span class="sd">                    &quot;method&quot;: &quot;POST&quot;,</span>
+<span class="sd">                    &quot;params&quot;: {</span>
+<span class="sd">                        &quot;foo&quot;: &quot;bar&quot;</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &quot;headers&quot;: {</span>
+<span class="sd">                        &quot;baz&quot;: &quot;bing&quot;,</span>
+<span class="sd">                        &quot;Authorization&quot;: &quot;Bearer ###&quot;</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &quot;body&quot;: &quot;Foo bar baz bing.&quot;</span>
+<span class="sd">                }</span>
+
+<span class="sd">        :param bool return_json:</span>
+<span class="sd">            if ``True`` the function returns a json object.</span>
+
+<span class="sd">            ::</span>
+
+<span class="sd">                {</span>
+<span class="sd">                    &quot;url&quot;: &quot;https://example.com/api&quot;,</span>
+<span class="sd">                    &quot;method&quot;: &quot;POST&quot;,</span>
+<span class="sd">                    &quot;params&quot;: {</span>
+<span class="sd">                        &quot;access_token&quot;: &quot;###&quot;,</span>
+<span class="sd">                        &quot;foo&quot;: &quot;bar&quot;</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &quot;headers&quot;: {</span>
+<span class="sd">                        &quot;baz&quot;: &quot;bing&quot;,</span>
+<span class="sd">                        &quot;Authorization&quot;: &quot;Bearer ###&quot;</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &quot;body&quot;: &quot;Foo bar baz bing.&quot;</span>
+<span class="sd">                }</span>
+
+<span class="sd">        :returns:</span>
+<span class="sd">            :class:`.RequestElements` or JSON string.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Parse values from JSON</span>
+        <span class="k">if</span> <span class="n">json_input</span><span class="p">:</span>
+            <span class="n">parsed_input</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_input</span><span class="p">)</span>
+
+            <span class="n">credentials</span> <span class="o">=</span> <span class="n">parsed_input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;credentials&#39;</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">parsed_input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="n">parsed_input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">parsed_input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="n">parsed_input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;headers&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="n">parsed_input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">credentials</span> <span class="ow">and</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RequestElementsError</span><span class="p">(</span>
+                <span class="s1">&#39;To create request elements, you must provide credentials &#39;</span>
+                <span class="s1">&#39;and URL either as keyword arguments or in the JSON object!&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get the provider class</span>
+        <span class="n">credentials</span> <span class="o">=</span> <span class="n">Credentials</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span>
+        <span class="n">ProviderClass</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">provider_class</span>
+
+        <span class="c1"># Create request elements</span>
+        <span class="n">request_elements</span> <span class="o">=</span> <span class="n">ProviderClass</span><span class="o">.</span><span class="n">create_request_elements</span><span class="p">(</span>
+            <span class="n">ProviderClass</span><span class="o">.</span><span class="n">PROTECTED_RESOURCE_REQUEST_TYPE</span><span class="p">,</span>
+            <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+            <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">return_json</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">request_elements</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">request_elements</span></div>
+
+<div class="viewcode-block" id="Authomatic.backend"><a class="viewcode-back" href="../../reference/classes.html#authomatic.Authomatic.backend">[docs]</a>    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a *request handler* to a JSON backend which you can use with</span>
+<span class="sd">        :ref:`authomatic.js &lt;js&gt;`.</span>
+
+<span class="sd">        Just call it inside a *request handler* like this:</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            class JSONHandler(webapp2.RequestHandler):</span>
+<span class="sd">                def get(self):</span>
+<span class="sd">                    authomatic.backend(Webapp2Adapter(self))</span>
+
+<span class="sd">        :param adapter:</span>
+<span class="sd">            The only argument is an :doc:`adapter &lt;adapters&gt;`.</span>
+
+<span class="sd">        The *request handler* will now accept these request parameters:</span>
+
+<span class="sd">        :param str type:</span>
+<span class="sd">            Type of the request. Either ``auto``, ``fetch`` or ``elements``.</span>
+<span class="sd">            Default is ``auto``.</span>
+
+<span class="sd">        :param str credentials:</span>
+<span class="sd">            Serialized :class:`.Credentials`.</span>
+
+<span class="sd">        :param str url:</span>
+<span class="sd">            URL of the **protected resource** request.</span>
+
+<span class="sd">        :param str method:</span>
+<span class="sd">            HTTP method of the **protected resource** request.</span>
+
+<span class="sd">        :param str body:</span>
+<span class="sd">            HTTP body of the **protected resource** request.</span>
+
+<span class="sd">        :param JSON params:</span>
+<span class="sd">            HTTP params of the **protected resource** request as a JSON object.</span>
+
+<span class="sd">        :param JSON headers:</span>
+<span class="sd">            HTTP headers of the **protected resource** request as a</span>
+<span class="sd">            JSON object.</span>
+
+<span class="sd">        :param JSON json:</span>
+<span class="sd">            You can pass all of the aforementioned params except ``type``</span>
+<span class="sd">            in a JSON object.</span>
+
+<span class="sd">            .. code-block:: javascript</span>
+
+<span class="sd">                {</span>
+<span class="sd">                    &quot;credentials&quot;: &quot;######&quot;,</span>
+<span class="sd">                    &quot;url&quot;: &quot;https://example.com&quot;,</span>
+<span class="sd">                    &quot;method&quot;: &quot;POST&quot;,</span>
+<span class="sd">                    &quot;params&quot;: {&quot;foo&quot;: &quot;bar&quot;},</span>
+<span class="sd">                    &quot;headers&quot;: {&quot;baz&quot;: &quot;bing&quot;},</span>
+<span class="sd">                    &quot;body&quot;: &quot;the body of the request&quot;</span>
+<span class="sd">                }</span>
+
+<span class="sd">        Depending on the ``type`` param, the handler will either write</span>
+<span class="sd">        a JSON object with *request elements* to the response,</span>
+<span class="sd">        and add an ``Authomatic-Response-To: elements`` response header, ...</span>
+
+<span class="sd">        .. code-block:: javascript</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;url&quot;: &quot;https://example.com/api&quot;,</span>
+<span class="sd">                &quot;method&quot;: &quot;POST&quot;,</span>
+<span class="sd">                &quot;params&quot;: {</span>
+<span class="sd">                    &quot;access_token&quot;: &quot;###&quot;,</span>
+<span class="sd">                    &quot;foo&quot;: &quot;bar&quot;</span>
+<span class="sd">                },</span>
+<span class="sd">                &quot;headers&quot;: {</span>
+<span class="sd">                    &quot;baz&quot;: &quot;bing&quot;,</span>
+<span class="sd">                    &quot;Authorization&quot;: &quot;Bearer ###&quot;</span>
+<span class="sd">                }</span>
+<span class="sd">            }</span>
+
+<span class="sd">        ... or make a fetch to the **protected resource** and forward</span>
+<span class="sd">        it&#39;s response content, status and headers with an additional</span>
+<span class="sd">        ``Authomatic-Response-To: fetch`` header to the response.</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            The backend will not work if you write anything to the</span>
+<span class="sd">            response in the handler!</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">AUTHOMATIC_HEADER</span> <span class="o">=</span> <span class="s1">&#39;Authomatic-Response-To&#39;</span>
+
+        <span class="c1"># Collect request params</span>
+        <span class="n">request_type</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+        <span class="n">json_input</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        <span class="n">credentials</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;credentials&#39;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="k">if</span> <span class="n">params</span> <span class="k">else</span> <span class="p">{}</span>
+
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;headers&#39;</span><span class="p">)</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span> <span class="k">if</span> <span class="n">headers</span> <span class="k">else</span> <span class="p">{}</span>
+
+        <span class="n">ProviderClass</span> <span class="o">=</span> <span class="n">Credentials</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span><span class="o">.</span><span class="n">provider_class</span>
+
+        <span class="k">if</span> <span class="n">request_type</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+            <span class="c1"># If there is a &quot;callback&quot; param, it&#39;s a JSONP request.</span>
+            <span class="n">jsonp</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;callback&#39;</span><span class="p">)</span>
+
+            <span class="c1"># JSONP is possible only with GET method.</span>
+            <span class="k">if</span> <span class="n">ProviderClass</span><span class="o">.</span><span class="n">supports_jsonp</span> <span class="ow">and</span> <span class="n">method</span> <span class="ow">is</span> <span class="s1">&#39;GET&#39;</span><span class="p">:</span>
+                <span class="n">request_type</span> <span class="o">=</span> <span class="s1">&#39;elements&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Remove the JSONP callback</span>
+                <span class="k">if</span> <span class="n">jsonp</span><span class="p">:</span>
+                    <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;callback&#39;</span><span class="p">)</span>
+                <span class="n">request_type</span> <span class="o">=</span> <span class="s1">&#39;fetch&#39;</span>
+
+        <span class="k">if</span> <span class="n">request_type</span> <span class="o">==</span> <span class="s1">&#39;fetch&#39;</span><span class="p">:</span>
+            <span class="c1"># Access protected resource</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access</span><span class="p">(</span>
+                <span class="n">credentials</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+
+            <span class="c1"># Forward status</span>
+            <span class="n">adapter</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
+
+            <span class="c1"># Forward headers</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">getheaders</span><span class="p">():</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+                <span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">request_type</span> <span class="o">==</span> <span class="s1">&#39;elements&#39;</span><span class="p">:</span>
+            <span class="c1"># Create request elements</span>
+            <span class="k">if</span> <span class="n">json_input</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_elements</span><span class="p">(</span>
+                    <span class="n">json_input</span><span class="o">=</span><span class="n">json_input</span><span class="p">,</span> <span class="n">return_json</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_elements</span><span class="p">(</span><span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span>
+                                               <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                                               <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+                                               <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+                                               <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+                                               <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+                                               <span class="n">return_json</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s1">&#39;application/json&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;{&quot;error&quot;: &quot;Bad Request!&quot;}&#39;</span>
+
+        <span class="c1"># Add the authomatic header</span>
+        <span class="n">adapter</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="n">AUTHOMATIC_HEADER</span><span class="p">,</span> <span class="n">request_type</span><span class="p">)</span>
+
+        <span class="c1"># Write result to response</span>
+        <span class="n">adapter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div></div>
+</pre></div>
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="../../genindex.html"  title="General Index">index</a></span>
+				<span><a href="../../py-modindex.html"  title="Python Module Index">modules</a></span>
+				</div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="https://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '../../_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="../../_static/foundation/js/foundation.min.js"></script>
+	<script src="../../_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/authomatic/authomatic">
+			<img
+				 src="../../_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>

@@ -1,0 +1,566 @@
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>JavaScript | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="../_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="JavaScript | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://authomatic.github.io/authomatic/reference/javascript.html" />
+	<meta property="og:image" content="https://authomatic.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="../_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="../_static/jquery.js"></script>
+    	<script type="text/javascript" src="../_static/underscore.js"></script>
+    	<script type="text/javascript" src="../_static/doctools.js"></script>
+    	<script type="text/javascript" src="../_static/language_data.js"></script>
+    	<script type="text/javascript" src="../_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="../index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		<li><a href="extras.html"  title="Extras">&laquo; previous</a></li>
+	
+		
+			<li><a href="../genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="../py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+		
+		
+
+	
+		<li><a href="../examples/index.html"  title="Tutorials / Examples">next &raquo;</a></li>
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="../index.html">
+		
+	    	
+	    		<img id="logo" src="../_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="https://authomatic.github.io/authomatic/reference/javascript.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="https://authomatic.github.io/authomatic/reference/javascript.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=authomatic&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="JavaScript | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	
+		<ul class="breadcrumbs">
+			
+		  	<li><a href="../index.html">Authomatic</a></li>
+
+		  	
+		  		<li><a href="index.html">Reference</a></li>
+
+		  	
+			<li class="current"><a href="">JavaScript</a></li>
+		</ul>
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <div class="section" id="javascript">
+<span id="js"></span><h1>JavaScript<a class="headerlink" href="#javascript" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">authomatic.js</span></code> library is here to make your life even easier.
+It has a very tiny interface similar to it’s Python sibling.
+Yo can use it to:</p>
+<ul class="simple">
+<li>Process the <em>login procedure</em> in a popup window.</li>
+<li>Access <strong>protected resources</strong> in the most efficient way without any hassle.</li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The library is dependent on <a class="reference external" href="http://jquery.com/">jQuery</a>!</p>
+</div>
+<span class="target" id="js-setup"></span><dl class="function">
+<dt id="authomatic.setup">
+<code class="descclassname">authomatic.</code><code class="descname">setup</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#authomatic.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up all the library’s options.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>options</strong> (<em>object</em>) – <p>An object of following options:</p>
+<dl class="attribute">
+<dt id="authomatic.options.logging">
+<code class="descclassname">authomatic.options.</code><code class="descname">logging</code><a class="headerlink" href="#authomatic.options.logging" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">bool</span></code> If <code class="docutils literal notranslate"><span class="pre">true</span></code> the library will log a lot of information to the console.</p>
+</dd></dl>
+
+<p>Popup options:</p>
+<dl class="attribute">
+<dt id="options.popupWidth">
+<code class="descclassname">options.</code><code class="descname">popupWidth</code><a class="headerlink" href="#options.popupWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">int</span></code> The width of the popup in pixels. Default is <code class="docutils literal notranslate"><span class="pre">800</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.popupHeight">
+<code class="descclassname">options.</code><code class="descname">popupHeight</code><a class="headerlink" href="#options.popupHeight" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">int</span></code> The height of the popup in pixels. Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.popupLinkSelector">
+<code class="descclassname">options.</code><code class="descname">popupLinkSelector</code><a class="headerlink" href="#options.popupLinkSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">string</span></code> A jQuery selector specifying links that should be affected by
+<a class="reference internal" href="#authomatic.popupInit" title="authomatic.popupInit"><code class="xref js js-func docutils literal notranslate"><span class="pre">authomatic.popupInit()</span></code></a>. Default is <code class="docutils literal notranslate"><span class="pre">'a.authomatic'</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.popupFormSelector">
+<code class="descclassname">options.</code><code class="descname">popupFormSelector</code><a class="headerlink" href="#options.popupFormSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">string</span></code> A jQuery selector specifying forms that should be affected by
+<a class="reference internal" href="#authomatic.popupInit" title="authomatic.popupInit"><code class="xref js js-func docutils literal notranslate"><span class="pre">authomatic.popupInit()</span></code></a>. Default is <code class="docutils literal notranslate"><span class="pre">'form.authomatic'</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.popupFormValidator">
+<code class="descclassname">options.</code><code class="descname">popupFormValidator</code><a class="headerlink" href="#options.popupFormValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">function</span></code> A function which you can use to validate the form before the popup opens.
+It accepts the jQuery selected form. The popup gets opened only if it returns <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<p>Callbacks:</p>
+<dl class="attribute">
+<dt id="options.onPopupInvalid">
+<code class="descclassname">options.</code><code class="descname">onPopupInvalid</code><a class="headerlink" href="#options.onPopupInvalid" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">function</span></code> Called when the popup form doesn’t pass validation.
+Accepts the form selected with jQuery as the only argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.onPopupOpen">
+<code class="descclassname">options.</code><code class="descname">onPopupOpen</code><a class="headerlink" href="#options.onPopupOpen" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">function</span></code> Called when the popup gets open.
+Accepts the popup location URL as the only argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.onLoginComplete">
+<code class="descclassname">options.</code><code class="descname">onLoginComplete</code><a class="headerlink" href="#options.onLoginComplete" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">function</span></code> Called when the popup gets closed after the login procedure is complete.
+Accepts the <code class="xref js js-data docutils literal notranslate"><span class="pre">loginResult</span></code> object as the only argument.</p>
+</dd></dl>
+
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="js-popup-init"></span><dl class="function">
+<dt id="authomatic.popupInit">
+<code class="descclassname">authomatic.</code><code class="descname">popupInit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#authomatic.popupInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>If you call this function, all <code class="docutils literal notranslate"><span class="pre">&lt;a&gt;&lt;/a&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;form&gt;&lt;/form&gt;</span></code> elements with <code class="docutils literal notranslate"><span class="pre">class=&quot;authomatic&quot;</span></code>
+will open a popup on click/submit. By links the location of the popup will be the value of <code class="docutils literal notranslate"><span class="pre">href</span></code> attribute,
+by forms the value of <code class="docutils literal notranslate"><span class="pre">action</span></code> attribute with query string extracted from the form inputs.</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+   <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Login Popup Example<span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>
+      <span class="c">&lt;!-- authomatic.js is dependent on jQuery --&gt;</span>
+      <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://code.jquery.com/jquery-1.9.1.min.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;authomatic.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+   <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+   <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+
+      <span class="c">&lt;!-- Opens a popup with location = &quot;login/facebook&quot; --&gt;</span>
+      <span class="p">&lt;</span><span class="nt">a</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;authomatic&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;login/facebook&quot;</span><span class="p">&gt;</span>Login with Facebook<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+
+      <span class="c">&lt;!-- Opens a popup with location = &quot;login/openid?id=me.yahoo.com&quot; --&gt;</span>
+      <span class="p">&lt;</span><span class="nt">form</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;authomatic&quot;</span> <span class="na">action</span><span class="o">=</span><span class="s">&quot;login/openid&quot;</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;GET&quot;</span><span class="p">&gt;</span>
+         <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;id&quot;</span> <span class="na">value</span><span class="o">=</span><span class="s">&quot;me.yahoo.com&quot;</span> <span class="p">/&gt;</span>
+         <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span> <span class="na">value</span><span class="o">=</span><span class="s">&quot;Login with OpenID&quot;</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+
+      <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span><span class="p">&gt;</span>
+         <span class="nx">authomatic</span><span class="p">.</span><span class="nx">popupInit</span><span class="p">();</span>
+      <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+   <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<span class="target" id="js-access"></span><dl class="function">
+<dt id="authomatic.access">
+<code class="descclassname">authomatic.</code><code class="descname">access</code><span class="sig-paren">(</span><em>credentials</em>, <em>url</em><span class="optional">[</span>, <em>options</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#authomatic.access" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes an asynchronous request to <strong>protected resource</strong> of a <strong>user</strong>.</p>
+<p>Under the hood it tries to make the request as efficiently as possible
+with the aim to save your backend’s resources:</p>
+<ul class="simple">
+<li>By <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> providers:<ol class="arabic">
+<li>First a <em>cross-domain</em> XHR request is attempted.</li>
+<li>If that fails it continues either with:<ul>
+<li>A <em>JSONP</em> XHR request but only if the provider supports it and the request method is <code class="docutils literal notranslate"><span class="pre">'GET'</span></code></li>
+<li>Otherwise it will fetch the provider through backend.</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>By <a class="reference external" href="http://oauth.net/core/1.0a/">OAuth 1.0a</a> providers the request must be signed using the <strong>consumer secret</strong> which cannot
+be exposed in the client, so every request goes first to the backend.
+Depending on provider the backend either:<ul>
+<li>Fetches the provider and returns the result of the fetch.</li>
+<li>Returns signed <em>request elements</em> with which a <em>JSONP</em> XHR request is made.</li>
+</ul>
+</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>credentials</strong> (<em>string</em>) – Serialized <a class="reference internal" href="classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a> of the <strong>user</strong>.</li>
+<li><strong>url</strong> (<em>string</em>) – URL of the <strong>protected resource</strong>. Can include querystring and template tags in the form of
+<code class="docutils literal notranslate"><span class="pre">https://example.com/api/{user.id}/profile</span></code>.</li>
+<li><strong>options</strong> (<em>object</em>) – <p>An object of following options.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can also specify all of these options in the <a class="reference internal" href="#authomatic.setup" title="authomatic.setup"><code class="xref js js-func docutils literal notranslate"><span class="pre">authomatic.setup()</span></code></a>.
+Values specified here will override the values specified in <a class="reference internal" href="#authomatic.setup" title="authomatic.setup"><code class="xref js js-func docutils literal notranslate"><span class="pre">authomatic.setup()</span></code></a>
+with the exception of callbacks.</p>
+</div>
+<dl class="attribute">
+<dt id="authomatic.options.backend">
+<code class="descclassname">authomatic.options.</code><code class="descname">backend</code><a class="headerlink" href="#authomatic.options.backend" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">string</span></code> URL of your <em>login handler</em>, or the handler where you call the
+<a class="reference internal" href="classes.html#authomatic.Authomatic.backend" title="authomatic.Authomatic.backend"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Authomatic.backend()</span></code></a> function.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This parameter is required by all OAuth 1.0a providers
+and also by some OAuth 2.0 providers.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.forceBackend">
+<code class="descclassname">options.</code><code class="descname">forceBackend</code><a class="headerlink" href="#options.forceBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">bool</span></code> If <cite>true</cite> requests will be fetched through backend by all <strong>providers</strong>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.substitute">
+<code class="descclassname">options.</code><code class="descname">substitute</code><a class="headerlink" href="#options.substitute" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">object</span></code> An object which will be used to replace template tags inside the <code class="xref js js-data docutils literal notranslate"><span class="pre">URL</span></code>.
+e.g. URL <code class="docutils literal notranslate"><span class="pre">https://example.com/api/{user.id}/profile</span></code> by substitute <code class="docutils literal notranslate"><span class="pre">{user:</span> <span class="pre">{id:</span> <span class="pre">'123'}}</span></code>
+will be rendered as <code class="docutils literal notranslate"><span class="pre">https://example.com/api/123/profile</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.params">
+<code class="descclassname">options.</code><code class="descname">params</code><a class="headerlink" href="#options.params" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">object</span></code> The query parameters of the request.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.headers">
+<code class="descclassname">options.</code><code class="descname">headers</code><a class="headerlink" href="#options.headers" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">object</span></code> The HTTP headers of the request.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.body">
+<code class="descclassname">options.</code><code class="descname">body</code><a class="headerlink" href="#options.body" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">string</span></code> The body of the request.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.jsonpCallbackPrefix">
+<code class="descclassname">options.</code><code class="descname">jsonpCallbackPrefix</code><a class="headerlink" href="#options.jsonpCallbackPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">string</span></code> Some providers don’t support cross-domain requests.
+In such case the function tries a <em>JSONP</em> request and will generate a temporary callback
+in the global namespace with the name <code class="docutils literal notranslate"><span class="pre">'authomaticJsonpCallback#'</span></code> where <code class="docutils literal notranslate"><span class="pre">#</span></code> is an
+integer unique for every callback. You can change the default <code class="docutils literal notranslate"><span class="pre">'authomaticJsonpCallback'</span></code>
+to whatever you want by specifying it in this option.</p>
+</dd></dl>
+
+<p>Callbacks:</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Callbacks specified in <a class="reference internal" href="#authomatic.setup" title="authomatic.setup"><code class="xref js js-func docutils literal notranslate"><span class="pre">authomatic.setup()</span></code></a> will not be overridden by
+those specified here, but both will be called, whereas those specified in
+<a class="reference internal" href="#authomatic.setup" title="authomatic.setup"><code class="xref js js-func docutils literal notranslate"><span class="pre">authomatic.setup()</span></code></a> will be called first.</p>
+</div>
+<dl class="attribute">
+<dt id="options.onBackendStart">
+<code class="descclassname">options.</code><code class="descname">onBackendStart</code><a class="headerlink" href="#options.onBackendStart" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">function</span></code> Called when <a class="reference internal" href="#authomatic.access" title="authomatic.access"><code class="xref js js-func docutils literal notranslate"><span class="pre">authomatic.access()</span></code></a> contacts backend.
+Accepts a object of parameters which will be sent to the backend as the only argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.onBackendComplete">
+<code class="descclassname">options.</code><code class="descname">onBackendComplete</code><a class="headerlink" href="#options.onBackendComplete" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">function</span></code> Called when response returns from backend.
+Accepts <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">textStatus</span></code> and <code class="docutils literal notranslate"><span class="pre">jqXHR</span></code> as arguments in the specified order.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.onAccessSuccess">
+<code class="descclassname">options.</code><code class="descname">onAccessSuccess</code><a class="headerlink" href="#options.onAccessSuccess" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">function</span></code> Called when a successful response returns from <strong>provider</strong>.
+Accepts <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">textStatus</span></code> and <code class="docutils literal notranslate"><span class="pre">jqXHR</span></code> as arguments in the specified order.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="options.onAccessComplete">
+<code class="descclassname">options.</code><code class="descname">onAccessComplete</code><a class="headerlink" href="#options.onAccessComplete" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref js js-data docutils literal notranslate"><span class="pre">function</span></code> Called when any response returns from <strong>provider</strong>.
+Accepts <code class="docutils literal notranslate"><span class="pre">textStatus</span></code> and <code class="docutils literal notranslate"><span class="pre">jqXHR</span></code> as arguments in the specified order.</p>
+</dd></dl>
+
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="extras.html"  title="Extras">&laquo; previous</a></span>
+			<span><a href="../genindex.html"  title="General Index">index</a></span>
+				<span><a href="../py-modindex.html"  title="Python Module Index">modules</a></span>
+				<span><a href="../examples/index.html"  title="Tutorials / Examples">next &raquo;</a></span></div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="https://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '../_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="../_static/foundation/js/foundation.min.js"></script>
+	<script src="../_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/authomatic/authomatic">
+			<img
+				 src="../_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>

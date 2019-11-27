@@ -1,0 +1,1298 @@
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Classes | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="../_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="Classes | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://authomatic.github.io/authomatic/reference/classes.html" />
+	<meta property="og:image" content="https://authomatic.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="../_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="../_static/jquery.js"></script>
+    	<script type="text/javascript" src="../_static/underscore.js"></script>
+    	<script type="text/javascript" src="../_static/doctools.js"></script>
+    	<script type="text/javascript" src="../_static/language_data.js"></script>
+    	<script type="text/javascript" src="../_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="../index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		<li><a href="functions.html"  title="Functions">&laquo; previous</a></li>
+	
+		
+			<li><a href="../genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="../py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+		
+		
+
+	
+		<li><a href="providers.html"  title="Providers">next &raquo;</a></li>
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="../index.html">
+		
+	    	
+	    		<img id="logo" src="../_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="https://authomatic.github.io/authomatic/reference/classes.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="https://authomatic.github.io/authomatic/reference/classes.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=authomatic&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="Classes | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	
+		<ul class="breadcrumbs">
+			
+		  	<li><a href="../index.html">Authomatic</a></li>
+
+		  	
+		  		<li><a href="index.html">Reference</a></li>
+
+		  	
+			<li class="current"><a href="">Classes</a></li>
+		</ul>
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <div class="section" id="classes">
+<h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.Authomatic" title="authomatic.Authomatic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">authomatic.Authomatic</span></code></a></td>
+<td>Encapsulates all the functionality of this package.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.core.User" title="authomatic.core.User"><code class="xref py py-obj docutils literal notranslate"><span class="pre">authomatic.core.User</span></code></a></td>
+<td>Provides unified interface to selected <strong>user</strong> info returned by different <strong>providers</strong>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">authomatic.core.Credentials</span></code></a></td>
+<td>Contains all necessary information to fetch <strong>user’s protected resources</strong>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">authomatic.core.LoginResult</span></code></a></td>
+<td>Result of the <code class="xref py py-func docutils literal notranslate"><span class="pre">authomatic.login()</span></code> function.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.core.Response" title="authomatic.core.Response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">authomatic.core.Response</span></code></a></td>
+<td>Wraps <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">httplib.HTTPResponse</span></code></a> and adds.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#authomatic.core.UserInfoResponse" title="authomatic.core.UserInfoResponse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">authomatic.core.UserInfoResponse</span></code></a></td>
+<td>Inherits from <a class="reference internal" href="#authomatic.core.Response" title="authomatic.core.Response"><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></a>, adds  <code class="xref py py-attr docutils literal notranslate"><span class="pre">user</span></code> attribute.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#authomatic.core.Future" title="authomatic.core.Future"><code class="xref py py-obj docutils literal notranslate"><span class="pre">authomatic.core.Future</span></code></a></td>
+<td>Represents an activity run in a separate thread.</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="authomatic.Authomatic">
+<em class="property">class </em><code class="descclassname">authomatic.</code><code class="descname">Authomatic</code><span class="sig-paren">(</span><em>config</em>, <em>secret</em>, <em>session_max_age=600</em>, <em>secure_cookie=False</em>, <em>session=None</em>, <em>session_save_method=None</em>, <em>report_errors=True</em>, <em>debug=False</em>, <em>logging_level=20</em>, <em>prefix='authomatic'</em>, <em>logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Authomatic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.Authomatic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encapsulates all the functionality of this package.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – <a class="reference internal" href="config.html"><span class="doc">Config</span></a></li>
+<li><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – A secret string that will be used as the key for signing
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code> cookie and as a salt by <em>CSRF</em> token generation.</li>
+<li><strong>session_max_age</strong> – Maximum allowed age of <code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code> cookie nonce in seconds.</li>
+<li><strong>secure_cookie</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> the <code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code> cookie will be saved wit
+<code class="docutils literal notranslate"><span class="pre">Secure</span></code> attribute.</li>
+<li><strong>session</strong> – Custom dictionary-like session implementation.</li>
+<li><strong>session_save_method</strong> (<em>callable</em>) – A method of the supplied session or any mechanism that saves the
+session data and cookie.</li>
+<li><strong>report_errors</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> exceptions encountered during the <strong>login procedure</strong>
+will be caught and reported in the <a class="reference internal" href="#authomatic.core.LoginResult.error" title="authomatic.core.LoginResult.error"><code class="xref py py-attr docutils literal notranslate"><span class="pre">LoginResult.error</span></code></a>
+attribute.
+Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>debug</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> traceback of exceptions will be written to response.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</li>
+<li><strong>logging_level</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – The logging level threshold for the default logger as specified in
+the standard Python
+<a class="reference external" href="http://docs.python.org/2/library/logging.html">logging library</a>.
+This setting is ignored when <code class="xref py py-data docutils literal notranslate"><span class="pre">logger</span></code> is set.
+Default is <code class="docutils literal notranslate"><span class="pre">logging.INFO</span></code>.</li>
+<li><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Prefix used as the <code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code> cookie name.</li>
+<li><strong>logger</strong> – A <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.logger</span></code> instance.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="authomatic.Authomatic.login">
+<code class="descname">login</code><span class="sig-paren">(</span><em>adapter</em>, <em>provider_name</em>, <em>callback=None</em>, <em>session=None</em>, <em>session_saver=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Authomatic.login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.Authomatic.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>If <code class="xref py py-data docutils literal notranslate"><span class="pre">provider_name</span></code> specified, launches the login procedure for
+corresponding <a class="reference internal" href="providers.html"><span class="doc">provider</span></a> and returns
+<a class="reference internal" href="#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoginResult</span></code></a>.</p>
+<p>If <code class="xref py py-data docutils literal notranslate"><span class="pre">provider_name</span></code> is empty, acts like
+<a class="reference internal" href="#authomatic.Authomatic.backend" title="authomatic.Authomatic.backend"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Authomatic.backend()</span></code></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The method redirects the <strong>user</strong> to the <strong>provider</strong> which in
+turn redirects <strong>him/her</strong> back to the <em>request handler</em> where
+it has been called.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>provider_name</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Name of the provider as specified in the keys of the <a class="reference internal" href="config.html"><span class="doc">Config</span></a>.</li>
+<li><strong>callback</strong> (<em>callable</em>) – If specified the method will call the callback with
+<a class="reference internal" href="#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoginResult</span></code></a> passed as argument and will return nothing.</li>
+<li><strong>report_errors</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Accepts additional keyword arguments that will be passed to
+<a class="reference internal" href="providers.html"><span class="doc">provider</span></a> constructor.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoginResult</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.Authomatic.credentials">
+<code class="descname">credentials</code><span class="sig-paren">(</span><em>credentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Authomatic.credentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.Authomatic.credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserializes credentials.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>credentials</strong> – Credentials serialized with <a class="reference internal" href="#authomatic.core.Credentials.serialize" title="authomatic.core.Credentials.serialize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Credentials.serialize()</span></code></a> or
+<a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a> instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.Authomatic.access">
+<code class="descname">access</code><span class="sig-paren">(</span><em>credentials</em>, <em>url</em>, <em>params=None</em>, <em>method='GET'</em>, <em>headers=None</em>, <em>body=''</em>, <em>max_redirects=5</em>, <em>content_parser=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Authomatic.access"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.Authomatic.access" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accesses <strong>protected resource</strong> on behalf of the <strong>user</strong>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>credentials</strong> – The <strong>user’s</strong> <a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a> (serialized or normal).</li>
+<li><strong>url</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The <strong>protected resource</strong> URL.</li>
+<li><strong>method</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – HTTP method of the request.</li>
+<li><strong>headers</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – HTTP headers of the request.</li>
+<li><strong>body</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Body of <code class="docutils literal notranslate"><span class="pre">POST</span></code>, <code class="docutils literal notranslate"><span class="pre">PUT</span></code> and <code class="docutils literal notranslate"><span class="pre">PATCH</span></code> requests.</li>
+<li><strong>max_redirects</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Maximum number of HTTP redirects to follow.</li>
+<li><strong>content_parser</strong> (<em>function</em>) – A function to be used to parse the <a class="reference internal" href="#authomatic.core.Response.data" title="authomatic.core.Response.data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Response.data</span></code></a>
+from <a class="reference internal" href="#authomatic.core.Response.content" title="authomatic.core.Response.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Response.content</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#authomatic.core.Response" title="authomatic.core.Response"><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.Authomatic.async_access">
+<code class="descname">async_access</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Authomatic.async_access"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.Authomatic.async_access" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#authomatic.Authomatic.access" title="authomatic.Authomatic.access"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Authomatic.access()</span></code></a> but runs asynchronously in a
+separate thread.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The internal implementation of the future pattern is quite naive. Use with caution!</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#authomatic.core.Future" title="authomatic.core.Future"><code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code></a> instance representing the separate thread.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.Authomatic.request_elements">
+<code class="descname">request_elements</code><span class="sig-paren">(</span><em>credentials=None</em>, <em>url=None</em>, <em>method='GET'</em>, <em>params=None</em>, <em>headers=None</em>, <em>body=''</em>, <em>json_input=None</em>, <em>return_json=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Authomatic.request_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.Authomatic.request_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates request elements for accessing <strong>protected resource of a
+user</strong>. Required arguments are <a class="reference internal" href="#authomatic.Authomatic.credentials" title="authomatic.Authomatic.credentials"><code class="xref py py-data docutils literal notranslate"><span class="pre">credentials</span></code></a> and <code class="xref py py-data docutils literal notranslate"><span class="pre">url</span></code>. You
+can pass <a class="reference internal" href="#authomatic.Authomatic.credentials" title="authomatic.Authomatic.credentials"><code class="xref py py-data docutils literal notranslate"><span class="pre">credentials</span></code></a>, <code class="xref py py-data docutils literal notranslate"><span class="pre">url</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">method</span></code>, and
+<code class="xref py py-data docutils literal notranslate"><span class="pre">params</span></code> as a JSON object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>credentials</strong> – The <strong>user’s</strong> credentials (can be serialized).</li>
+<li><strong>url</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The url of the protected resource.</li>
+<li><strong>method</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The HTTP method of the request.</li>
+<li><strong>params</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – Dictionary of request parameters.</li>
+<li><strong>headers</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – Dictionary of request headers.</li>
+<li><strong>body</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Body of <code class="docutils literal notranslate"><span class="pre">POST</span></code>, <code class="docutils literal notranslate"><span class="pre">PUT</span></code> and <code class="docutils literal notranslate"><span class="pre">PATCH</span></code> requests.</li>
+<li><strong>json_input</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – <p>you can pass <a class="reference internal" href="#authomatic.Authomatic.credentials" title="authomatic.Authomatic.credentials"><code class="xref py py-data docutils literal notranslate"><span class="pre">credentials</span></code></a>, <code class="xref py py-data docutils literal notranslate"><span class="pre">url</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">method</span></code>,
+<code class="xref py py-data docutils literal notranslate"><span class="pre">params</span></code> and <code class="xref py py-data docutils literal notranslate"><span class="pre">headers</span></code> in a JSON object.
+Values from arguments will be used for missing properties.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;credentials&quot;</span><span class="p">:</span> <span class="s2">&quot;###&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/api&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;baz&quot;</span><span class="p">:</span> <span class="s2">&quot;bing&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer ###&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;Foo bar baz bing.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><strong>return_json</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – <p>if <code class="docutils literal notranslate"><span class="pre">True</span></code> the function returns a json object.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/api&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;access_token&quot;</span><span class="p">:</span> <span class="s2">&quot;###&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;baz&quot;</span><span class="p">:</span> <span class="s2">&quot;bing&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer ###&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;Foo bar baz bing.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestElements</span></code> or JSON string.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.Authomatic.backend">
+<code class="descname">backend</code><span class="sig-paren">(</span><em>adapter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Authomatic.backend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.Authomatic.backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a <em>request handler</em> to a JSON backend which you can use with
+<a class="reference internal" href="javascript.html#js"><span class="std std-ref">authomatic.js</span></a>.</p>
+<p>Just call it inside a <em>request handler</em> like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">JSONHandler</span><span class="p">(</span><span class="n">webapp2</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">authomatic</span><span class="o">.</span><span class="n">backend</span><span class="p">(</span><span class="n">Webapp2Adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>adapter</strong> – The only argument is an <a class="reference internal" href="adapters.html"><span class="doc">adapter</span></a>.</td>
+</tr>
+</tbody>
+</table>
+<p>The <em>request handler</em> will now accept these request parameters:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Type of the request. Either <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">fetch</span></code> or <code class="docutils literal notranslate"><span class="pre">elements</span></code>.
+Default is <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</li>
+<li><strong>credentials</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Serialized <a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a>.</li>
+<li><strong>url</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – URL of the <strong>protected resource</strong> request.</li>
+<li><strong>method</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – HTTP method of the <strong>protected resource</strong> request.</li>
+<li><strong>body</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – HTTP body of the <strong>protected resource</strong> request.</li>
+<li><strong>params</strong> (<em>JSON</em>) – HTTP params of the <strong>protected resource</strong> request as a JSON object.</li>
+<li><strong>headers</strong> (<em>JSON</em>) – HTTP headers of the <strong>protected resource</strong> request as a
+JSON object.</li>
+<li><strong>json</strong> (<em>JSON</em>) – <p>You can pass all of the aforementioned params except <code class="docutils literal notranslate"><span class="pre">type</span></code>
+in a JSON object.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;credentials&quot;</span><span class="o">:</span> <span class="s2">&quot;######&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;https://example.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;method&quot;</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;params&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;headers&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;baz&quot;</span><span class="o">:</span> <span class="s2">&quot;bing&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;body&quot;</span><span class="o">:</span> <span class="s2">&quot;the body of the request&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Depending on the <code class="docutils literal notranslate"><span class="pre">type</span></code> param, the handler will either write
+a JSON object with <em>request elements</em> to the response,
+and add an <code class="docutils literal notranslate"><span class="pre">Authomatic-Response-To:</span> <span class="pre">elements</span></code> response header, …</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;https://example.com/api&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;method&quot;</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;params&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;access_token&quot;</span><span class="o">:</span> <span class="s2">&quot;###&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;headers&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;baz&quot;</span><span class="o">:</span> <span class="s2">&quot;bing&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Authorization&quot;</span><span class="o">:</span> <span class="s2">&quot;Bearer ###&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>… or make a fetch to the <strong>protected resource</strong> and forward
+it’s response content, status and headers with an additional
+<code class="docutils literal notranslate"><span class="pre">Authomatic-Response-To:</span> <span class="pre">fetch</span></code> header to the response.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The backend will not work if you write anything to the
+response in the handler!</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-authomatic.core"></span><dl class="class">
+<dt id="authomatic.core.Future">
+<em class="property">class </em><code class="descclassname">authomatic.core.</code><code class="descname">Future</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Future"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Future" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an activity run in a separate thread. Subclasses the standard
+library <a class="reference external" href="https://docs.python.org/2.7/library/threading.html#threading.Thread" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></a> and adds <code class="xref py py-attr docutils literal notranslate"><span class="pre">get_result</span></code> method.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The internal implementation of the future pattern is quite naive. Use with caution!</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> (<em>callable</em>) – The function to be run in separate thread.</td>
+</tr>
+</tbody>
+</table>
+<p>Calls <code class="xref py py-data docutils literal notranslate"><span class="pre">func</span></code> in separate thread and returns immediately.
+Accepts arbitrary positional and keyword arguments which will be
+passed to <code class="xref py py-data docutils literal notranslate"><span class="pre">func</span></code>.</p>
+<dl class="method">
+<dt id="authomatic.core.Future.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Future.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Future.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method representing the thread’s activity.</p>
+<p>You may override this method in a subclass. The standard run() method
+invokes the callable object passed to the object’s constructor as the
+target argument, if any, with sequential and keyword arguments taken
+from the args and kwargs arguments, respectively.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Future.get_result">
+<code class="descname">get_result</code><span class="sig-paren">(</span><em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Future.get_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Future.get_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits for the wrapped <code class="xref py py-data docutils literal notranslate"><span class="pre">func</span></code> to finish and returns its result.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This will block the <strong>calling thread</strong> until the <code class="xref py py-data docutils literal notranslate"><span class="pre">func</span></code>
+returns.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> – <a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> or <code class="docutils literal notranslate"><span class="pre">None</span></code> A timeout for the <code class="xref py py-data docutils literal notranslate"><span class="pre">func</span></code> to
+return in seconds.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The result of the wrapped <code class="xref py py-data docutils literal notranslate"><span class="pre">func</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.core.User">
+<em class="property">class </em><code class="descclassname">authomatic.core.</code><code class="descname">User</code><span class="sig-paren">(</span><em>provider</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides unified interface to selected <strong>user</strong> info returned by different
+<strong>providers</strong>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The value format may vary across providers.</p>
+</div>
+<dl class="attribute">
+<dt id="authomatic.core.User.provider">
+<code class="descname">provider</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.provider" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="providers.html"><span class="doc">provider</span></a> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.credentials">
+<code class="descname">credentials</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>An <a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.data">
+<code class="descname">data</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> containing all the <strong>user</strong> information returned
+by the <strong>provider</strong>.
+The structure differs across <strong>providers</strong>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.content">
+<code class="descname">content</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.content" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#authomatic.core.Response.content" title="authomatic.core.Response.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Response.content</span></code></a> of the request made to update
+the user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.id">
+<code class="descname">id</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> ID assigned to the <strong>user</strong> by the <strong>provider</strong>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.username">
+<code class="descname">username</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.username" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> User name e.g. <em>andrewpipkin</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.name">
+<code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Name e.g. <em>Andrew Pipkin</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.first_name">
+<code class="descname">first_name</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.first_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> First name e.g. <em>Andrew</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.last_name">
+<code class="descname">last_name</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.last_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Last name e.g. <em>Pipkin</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.nickname">
+<code class="descname">nickname</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.nickname" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Nickname e.g. <em>Andy</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.link">
+<code class="descname">link</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.link" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Link URL.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.gender">
+<code class="descname">gender</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.gender" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Gender.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.timezone">
+<code class="descname">timezone</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.timezone" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Timezone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.locale">
+<code class="descname">locale</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.locale" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Locale.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.email">
+<code class="descname">email</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.email" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> E-mail.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.phone">
+<code class="descname">phone</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.phone" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> phone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.picture">
+<code class="descname">picture</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.picture" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Picture URL.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.country">
+<code class="descname">country</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.country" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Country.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.city">
+<code class="descname">city</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.city" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> City.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.location">
+<code class="descname">location</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.location" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Geographical location.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.postal_code">
+<code class="descname">postal_code</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.postal_code" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Postal code.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.User.gae_user">
+<code class="descname">gae_user</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.User.gae_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instance of the Google App Engine Users API
+<a class="reference external" href="https://developers.google.com/appengine/docs/python/users/userclass">User</a> class.
+Only present when using the <code class="xref py py-class docutils literal notranslate"><span class="pre">authomatic.providers.gaeopenid.GAEOpenID</span></code> provider.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.User.update">
+<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#User.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.User.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the user info by fetching the <strong>provider’s</strong> user info URL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Updated instance of this class.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.User.async_update">
+<code class="descname">async_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#User.async_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.User.async_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#authomatic.core.User.update" title="authomatic.core.User.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> but runs asynchronously in a separate thread.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The internal implementation of the future pattern is quite naive. Use with caution!</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#authomatic.core.Future" title="authomatic.core.Future"><code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code></a> instance representing the separate thread.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.User.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#User.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.User.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the <a class="reference internal" href="#authomatic.core.User" title="authomatic.core.User"><code class="xref py py-class docutils literal notranslate"><span class="pre">User</span></code></a> instance to a <a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.core.Credentials">
+<em class="property">class </em><code class="descclassname">authomatic.core.</code><code class="descname">Credentials</code><span class="sig-paren">(</span><em>config</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Credentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains all necessary information to fetch <strong>user’s protected resources</strong>.</p>
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.config">
+<code class="descname">config</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.config" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> <a class="reference internal" href="config.html"><span class="doc">Config</span></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.token">
+<code class="descname">token</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.token" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> User <strong>access token</strong>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.token_type">
+<code class="descname">token_type</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.token_type" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Access token type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.refresh_token">
+<code class="descname">refresh_token</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.refresh_token" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Refresh token.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.token_secret">
+<code class="descname">token_secret</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.token_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Access token secret.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.provider_name">
+<code class="descname">provider_name</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.provider_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Provider name specified in the <a class="reference internal" href="config.html"><span class="doc">Config</span></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.provider_id">
+<code class="descname">provider_id</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.provider_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Provider short name specified in the <a class="reference internal" href="config.html"><span class="doc">Config</span></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.provider_class">
+<code class="descname">provider_class</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.provider_class" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">class</span></code> Provider class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.consumer_key">
+<code class="descname">consumer_key</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.consumer_key" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Consumer key specified in the <a class="reference internal" href="config.html"><span class="doc">Config</span></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.consumer_secret">
+<code class="descname">consumer_secret</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Credentials.consumer_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> Consumer secret specified in the <a class="reference internal" href="config.html"><span class="doc">Config</span></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.expire_in">
+<code class="descname">expire_in</code><a class="headerlink" href="#authomatic.core.Credentials.expire_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.expiration_time">
+<code class="descname">expiration_time</code><a class="headerlink" href="#authomatic.core.Credentials.expiration_time" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> Expiration date as UNIX timestamp.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.expiration_date">
+<code class="descname">expiration_date</code><a class="headerlink" href="#authomatic.core.Credentials.expiration_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expiration date as <a class="reference external" href="https://docs.python.org/2.7/library/datetime.html#datetime.datetime" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> or <code class="docutils literal notranslate"><span class="pre">None</span></code> if
+credentials never expire.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Credentials.valid">
+<code class="descname">valid</code><a class="headerlink" href="#authomatic.core.Credentials.valid" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if credentials are valid, <code class="docutils literal notranslate"><span class="pre">False</span></code> if expired.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Credentials.expire_soon">
+<code class="descname">expire_soon</code><span class="sig-paren">(</span><em>seconds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Credentials.expire_soon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Credentials.expire_soon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if credentials expire sooner than specified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>seconds</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Number of seconds.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if credentials expire sooner than specified,
+else <code class="docutils literal notranslate"><span class="pre">False</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Credentials.refresh">
+<code class="descname">refresh</code><span class="sig-paren">(</span><em>force=False</em>, <em>soon=86400</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Credentials.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Credentials.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refreshes the credentials only if the <strong>provider</strong> supports it and if
+it will expire in less than one day. It does nothing in other cases.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The credentials will be refreshed only if it gives sense
+i.e. only <a class="reference external" href="http://oauth.net/2/">OAuth 2.0</a> has the notion of credentials
+<em>refreshment/extension</em>.
+And there are also differences across providers e.g. Google
+supports refreshment only if there is a <code class="docutils literal notranslate"><span class="pre">refresh_token</span></code> in
+the credentials and that in turn is present only if the
+<code class="docutils literal notranslate"><span class="pre">access_type</span></code> parameter was set to <code class="docutils literal notranslate"><span class="pre">offline</span></code> in the
+<strong>user authorization request</strong>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>force</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> the credentials will be refreshed even if they
+won’t expire soon.</li>
+<li><strong>soon</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Number of seconds specifying what means <em>soon</em>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Credentials.async_refresh">
+<code class="descname">async_refresh</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Credentials.async_refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Credentials.async_refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#authomatic.core.Credentials.refresh" title="authomatic.core.Credentials.refresh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">refresh()</span></code></a> but runs asynchronously in a separate thread.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The internal implementation of the future pattern is quite naive. Use with caution!</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#authomatic.core.Future" title="authomatic.core.Future"><code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code></a> instance representing the separate thread.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Credentials.provider_type_class">
+<code class="descname">provider_type_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Credentials.provider_type_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Credentials.provider_type_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <a class="reference internal" href="providers.html"><span class="doc">provider</span></a> class specified in the
+<a class="reference internal" href="config.html"><span class="doc">Config</span></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="providers.html#authomatic.providers.BaseProvider" title="authomatic.providers.BaseProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">authomatic.providers.BaseProvider</span></code></a> subclass.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Credentials.serialize">
+<code class="descname">serialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Credentials.serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Credentials.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the credentials to a percent encoded string to be stored for
+later use.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">string</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="authomatic.core.Credentials.deserialize">
+<em class="property">classmethod </em><code class="descname">deserialize</code><span class="sig-paren">(</span><em>config</em>, <em>credentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Credentials.deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Credentials.deserialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <em>class method</em> which reconstructs credentials created by
+<a class="reference internal" href="#authomatic.core.Credentials.serialize" title="authomatic.core.Credentials.serialize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">serialize()</span></code></a>. You can also pass it a <a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a>
+instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – The same <a class="reference internal" href="config.html"><span class="doc">Config</span></a> used in the <code class="xref py py-func docutils literal notranslate"><span class="pre">login()</span></code> to get the
+credentials.</li>
+<li><strong>credentials</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – <code class="xref py py-class docutils literal notranslate"><span class="pre">string</span></code> The serialized credentials or
+<a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a> instance.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.core.LoginResult">
+<em class="property">class </em><code class="descclassname">authomatic.core.</code><code class="descname">LoginResult</code><span class="sig-paren">(</span><em>provider</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#LoginResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.LoginResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Result of the <code class="xref py py-func docutils literal notranslate"><span class="pre">authomatic.login()</span></code> function.</p>
+<dl class="attribute">
+<dt id="authomatic.core.LoginResult.provider">
+<code class="descname">provider</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.LoginResult.provider" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="providers.html"><span class="doc">provider</span></a> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.LoginResult.error">
+<code class="descname">error</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.LoginResult.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of the <code class="xref py py-exc docutils literal notranslate"><span class="pre">authomatic.exceptions.BaseError</span></code> subclass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.LoginResult.popup_js">
+<code class="descname">popup_js</code><span class="sig-paren">(</span><em>callback_name=None</em>, <em>indent=None</em>, <em>custom=None</em>, <em>stay_open=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#LoginResult.popup_js"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.LoginResult.popup_js" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns JavaScript that:</p>
+<ol class="arabic simple">
+<li>Triggers the <code class="docutils literal notranslate"><span class="pre">options.onLoginComplete(result,</span> <span class="pre">closer)</span></code>
+handler set with the <a class="reference internal" href="javascript.html#js-setup"><span class="std std-ref">authomatic.setup()</span></a>
+function of <a class="reference internal" href="javascript.html#js"><span class="std std-ref">javascript.js</span></a>.</li>
+<li>Calls the JavasScript callback specified by <code class="xref py py-data docutils literal notranslate"><span class="pre">callback_name</span></code>
+on the opener of the <em>login handler popup</em> and passes it the
+<em>login result</em> JSON object as first argument and the <cite>closer</cite>
+function which you should call in your callback to close the popup.</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callback_name</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The name of the javascript callback e.g <code class="docutils literal notranslate"><span class="pre">foo.bar.loginCallback</span></code>
+will result in <code class="docutils literal notranslate"><span class="pre">window.opener.foo.bar.loginCallback(result);</span></code>
+in the HTML.</li>
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – The number of spaces to indent the JSON result object.
+If <code class="docutils literal notranslate"><span class="pre">0</span></code> or negative, only newlines are added.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, no newlines are added.</li>
+<li><strong>custom</strong> – Any JSON serializable object that will be passed to the
+<code class="docutils literal notranslate"><span class="pre">result.custom</span></code> attribute.</li>
+<li><strong>stay_open</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the popup will stay open.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> with JavaScript.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.LoginResult.popup_html">
+<code class="descname">popup_html</code><span class="sig-paren">(</span><em>callback_name=None</em>, <em>indent=None</em>, <em>title='Login | {0}'</em>, <em>custom=None</em>, <em>stay_open=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#LoginResult.popup_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.LoginResult.popup_html" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a HTML with JavaScript that:</p>
+<ol class="arabic simple">
+<li>Triggers the <code class="docutils literal notranslate"><span class="pre">options.onLoginComplete(result,</span> <span class="pre">closer)</span></code> handler
+set with the <a class="reference internal" href="javascript.html#js-setup"><span class="std std-ref">authomatic.setup()</span></a> function of
+<a class="reference internal" href="javascript.html#js"><span class="std std-ref">javascript.js</span></a>.</li>
+<li>Calls the JavasScript callback specified by <code class="xref py py-data docutils literal notranslate"><span class="pre">callback_name</span></code>
+on the opener of the <em>login handler popup</em> and passes it the
+<em>login result</em> JSON object as first argument and the <cite>closer</cite>
+function which you should call in your callback to close the popup.</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callback_name</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The name of the javascript callback e.g <code class="docutils literal notranslate"><span class="pre">foo.bar.loginCallback</span></code>
+will result in <code class="docutils literal notranslate"><span class="pre">window.opener.foo.bar.loginCallback(result);</span></code>
+in the HTML.</li>
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – The number of spaces to indent the JSON result object.
+If <code class="docutils literal notranslate"><span class="pre">0</span></code> or negative, only newlines are added.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, no newlines are added.</li>
+<li><strong>title</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The text of the HTML title. You can use <code class="docutils literal notranslate"><span class="pre">{0}</span></code> tag inside,
+which will be replaced by the provider name.</li>
+<li><strong>custom</strong> – Any JSON serializable object that will be passed to the
+<code class="docutils literal notranslate"><span class="pre">result.custom</span></code> attribute.</li>
+<li><strong>stay_open</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the popup will stay open.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> with HTML.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.LoginResult.user">
+<code class="descname">user</code><a class="headerlink" href="#authomatic.core.LoginResult.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#authomatic.core.User" title="authomatic.core.User"><code class="xref py py-class docutils literal notranslate"><span class="pre">User</span></code></a> instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.core.Response">
+<em class="property">class </em><code class="descclassname">authomatic.core.</code><code class="descname">Response</code><span class="sig-paren">(</span><em>httplib_response</em>, <em>content_parser=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">httplib.HTTPResponse</span></code></a> and adds.</p>
+<p><a class="reference internal" href="#authomatic.core.Response.content" title="authomatic.core.Response.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a> and <a class="reference internal" href="#authomatic.core.Response.data" title="authomatic.core.Response.data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code></a> attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>httplib_response</strong> – The wrapped <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">httplib.HTTPResponse</span></code></a> instance.</li>
+<li><strong>content_parser</strong> (<em>function</em>) – Callable which accepts <a class="reference internal" href="#authomatic.core.Response.content" title="authomatic.core.Response.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a> as argument,
+parses it and returns the parsed data as <a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="authomatic.core.Response.msg">
+<code class="descname">msg</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Response.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse.msg" title="(in Python v2.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">httplib.HTTPResponse.msg</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Response.version">
+<code class="descname">version</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Response.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse.version" title="(in Python v2.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">httplib.HTTPResponse.version</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Response.status">
+<code class="descname">status</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Response.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse.status" title="(in Python v2.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">httplib.HTTPResponse.status</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Response.reason">
+<code class="descname">reason</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.Response.reason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse.reason" title="(in Python v2.7)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">httplib.HTTPResponse.reason</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Response.read">
+<code class="descname">read</code><span class="sig-paren">(</span><em>amt=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Response.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Response.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse.read" title="(in Python v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">httplib.HTTPResponse.read()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>amt</strong> – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Response.getheader">
+<code class="descname">getheader</code><span class="sig-paren">(</span><em>name</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Response.getheader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Response.getheader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse.getheader" title="(in Python v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">httplib.HTTPResponse.getheader()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> – </li>
+<li><strong>default</strong> – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Response.fileno">
+<code class="descname">fileno</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Response.fileno"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Response.fileno" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse.fileno" title="(in Python v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">httplib.HTTPResponse.fileno()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="authomatic.core.Response.getheaders">
+<code class="descname">getheaders</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Response.getheaders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Response.getheaders" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference external" href="https://docs.python.org/2.7/library/httplib.html#httplib.HTTPResponse.getheaders" title="(in Python v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">httplib.HTTPResponse.getheaders()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="authomatic.core.Response.is_binary_string">
+<em class="property">static </em><code class="descname">is_binary_string</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#Response.is_binary_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.Response.is_binary_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if string is binary data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Response.content">
+<code class="descname">content</code><a class="headerlink" href="#authomatic.core.Response.content" title="Permalink to this definition">¶</a></dt>
+<dd><p>The whole response content.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="authomatic.core.Response.data">
+<code class="descname">data</code><a class="headerlink" href="#authomatic.core.Response.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> of data parsed from <a class="reference internal" href="#authomatic.core.Response.content" title="authomatic.core.Response.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="authomatic.core.UserInfoResponse">
+<em class="property">class </em><code class="descclassname">authomatic.core.</code><code class="descname">UserInfoResponse</code><span class="sig-paren">(</span><em>user</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/authomatic/core.html#UserInfoResponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#authomatic.core.UserInfoResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inherits from <a class="reference internal" href="#authomatic.core.Response" title="authomatic.core.Response"><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></a>, adds  <a class="reference internal" href="#authomatic.core.UserInfoResponse.user" title="authomatic.core.UserInfoResponse.user"><code class="xref py py-attr docutils literal notranslate"><span class="pre">user</span></code></a>
+attribute.</p>
+<dl class="attribute">
+<dt id="authomatic.core.UserInfoResponse.user">
+<code class="descname">user</code><em class="property"> = None</em><a class="headerlink" href="#authomatic.core.UserInfoResponse.user" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#authomatic.core.User" title="authomatic.core.User"><code class="xref py py-class docutils literal notranslate"><span class="pre">User</span></code></a> instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="functions.html"  title="Functions">&laquo; previous</a></span>
+			<span><a href="../genindex.html"  title="General Index">index</a></span>
+				<span><a href="../py-modindex.html"  title="Python Module Index">modules</a></span>
+				<span><a href="providers.html"  title="Providers">next &raquo;</a></span></div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="https://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '../_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="../_static/foundation/js/foundation.min.js"></script>
+	<script src="../_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/authomatic/authomatic">
+			<img
+				 src="../_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>

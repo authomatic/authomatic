@@ -1,0 +1,717 @@
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Simple Flask Example | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="../_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="Simple Flask Example | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://authomatic.github.io/authomatic/examples/flask-simple.html" />
+	<meta property="og:image" content="https://authomatic.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="../_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="../_static/jquery.js"></script>
+    	<script type="text/javascript" src="../_static/underscore.js"></script>
+    	<script type="text/javascript" src="../_static/doctools.js"></script>
+    	<script type="text/javascript" src="../_static/language_data.js"></script>
+    	<script type="text/javascript" src="../_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="../index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		<li><a href="django-simple.html"  title="Simple Django Example">&laquo; previous</a></li>
+	
+		
+			<li><a href="../genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="../py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+		
+		
+
+	
+		<li><a href="pyramid-simple.html"  title="Simple Pyramid Example">next &raquo;</a></li>
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="../index.html">
+		
+	    	
+	    		<img id="logo" src="../_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="https://authomatic.github.io/authomatic/examples/flask-simple.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="https://authomatic.github.io/authomatic/examples/flask-simple.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=authomatic&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="Simple Flask Example | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	
+		<ul class="breadcrumbs">
+			
+		  	<li><a href="../index.html">Authomatic</a></li>
+
+		  	
+		  		<li><a href="index.html">Tutorials / Examples</a></li>
+
+		  	
+			<li class="current"><a href="">Simple Flask Example</a></li>
+		</ul>
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <div class="section" id="simple-flask-example">
+<h1>Simple Flask Example<a class="headerlink" href="#simple-flask-example" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial we will create a simple <a class="reference external" href="http://flask.pocoo.org/">Flask</a> application
+which will use <strong>Authomatic</strong> with <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">WerkzeugAdapter</span></code></a>
+to log <strong>users</strong> in with Facebook, Twitter and <a class="reference external" href="http://openid.net/">OpenID</a>
+and retrieve their recent tweets/statuses.</p>
+<p>You can download all the source files we are about to create
+<a class="reference external" href="https://github.com/authomatic/authomatic/tree/master/examples/flask/werkzeug_adapter">here</a>.</p>
+<p>First create the <a class="reference internal" href="../reference/config.html"><span class="doc">Config</span></a> dictionary where you set up all the providers you want to use.
+Yo will need the <code class="docutils literal notranslate"><span class="pre">consumer_key</span></code> and <code class="docutils literal notranslate"><span class="pre">consumer_secret</span></code> which you can get
+<a class="reference external" href="https://developers.facebook.com/apps">here</a> for Facebook and
+<a class="reference external" href="https://dev.twitter.com/apps">here</a> for Twitter.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Facebook and other OAuth 2.0 providers require a <strong>redirect URI</strong>
+which should be the URL of the <em>login request handler</em>
+which we will create in this tutorial and whose value in our case will be
+<code class="docutils literal notranslate"><span class="pre">https://[hostname]/login/fb</span></code> for Facebook.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># config.py</span>
+
+<span class="kn">from</span> <span class="nn">authomatic.providers</span> <span class="kn">import</span> <span class="n">oauth2</span><span class="p">,</span> <span class="n">oauth1</span><span class="p">,</span> <span class="n">openid</span>
+
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="s1">&#39;tw&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># Your internal provider name</span>
+
+        <span class="c1"># Provider class</span>
+        <span class="s1">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth1</span><span class="o">.</span><span class="n">Twitter</span><span class="p">,</span>
+
+        <span class="c1"># Twitter is an AuthorizationProvider so we need to set several other</span>
+        <span class="c1"># properties too:</span>
+        <span class="s1">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s1">&#39;########################&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s1">&#39;########################&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;fb&#39;</span><span class="p">:</span> <span class="p">{</span>
+
+        <span class="s1">&#39;class_&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Facebook</span><span class="p">,</span>
+
+        <span class="c1"># Facebook is an AuthorizationProvider too.</span>
+        <span class="s1">&#39;consumer_key&#39;</span><span class="p">:</span> <span class="s1">&#39;########################&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;consumer_secret&#39;</span><span class="p">:</span> <span class="s1">&#39;########################&#39;</span><span class="p">,</span>
+
+        <span class="c1"># But it is also an OAuth 2.0 provider and it needs scope.</span>
+        <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;user_about_me&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;publish_stream&#39;</span><span class="p">],</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;oi&#39;</span><span class="p">:</span> <span class="p">{</span>
+
+        <span class="c1"># OpenID provider dependent on the python-openid package.</span>
+        <span class="s1">&#39;class_&#39;</span><span class="p">:</span> <span class="n">openid</span><span class="o">.</span><span class="n">OpenID</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Create <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file and import what’s needed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">make_response</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">WerkzeugAdapter</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">Authomatic</span>
+
+</pre></div>
+</div>
+<p>Create the <em>home</em> request handler.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<p>Create the <em>login</em> request handler which should receive the <code class="docutils literal notranslate"><span class="pre">provider_name</span></code> URL variable and
+should also accept the <code class="docutils literal notranslate"><span class="pre">POST</span></code> HTTP method to work properly with the <a class="reference internal" href="../reference/providers.html#authomatic.providers.openid.OpenID" title="authomatic.providers.openid.OpenID"><code class="xref py py-class docutils literal notranslate"><span class="pre">openid.OpenID</span></code></a>
+provider which we have configured in the <a class="reference internal" href="../reference/config.html"><span class="doc">Config</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login/&lt;provider_name&gt;/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Now just Log the <strong>user</strong> in by calling the <a class="reference internal" href="../reference/classes.html#authomatic.Authomatic.login" title="authomatic.Authomatic.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Authomatic.login()</span></code></a> method inside the <em>login</em> handler.
+You must pass it the <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">WerkzeugAdapter</span></code></a>
+and the <code class="docutils literal notranslate"><span class="pre">provider_name</span></code> URL variable.
+The <a class="reference internal" href="../reference/adapters.html#authomatic.adapters.WerkzeugAdapter" title="authomatic.adapters.WerkzeugAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">WerkzeugAdapter</span></code></a> needs instances of <a class="reference external" href="https://werkzeug.palletsprojects.com/en/0.16.x/wrappers/#werkzeug.wrappers.Request" title="(in Werkzeug v0.16.x)"><code class="xref py py-class docutils literal notranslate"><span class="pre">werkzeug.wrappers.Request</span></code></a>
+and <a class="reference external" href="https://werkzeug.palletsprojects.com/en/0.16.x/wrappers/#werkzeug.wrappers.Response" title="(in Werkzeug v0.16.x)"><code class="xref py py-class docutils literal notranslate"><span class="pre">werkzeug.wrappers.Response</span></code></a> classes.
+The handler must return the <code class="docutils literal notranslate"><span class="pre">response</span></code> so we assign it to a variable.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># We need response object for the WerkzeugAdapter.</span>
+    <span class="c1"># Log the user in, pass it the adapter and the provider name.</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If you want to use the <a class="reference external" href="https://flask.palletsprojects.com/en/1.1.x/api/#flask.session" title="(in Flask v1.1.x)"><code class="xref py py-class docutils literal notranslate"><span class="pre">flask.session</span></code></a>, you can do it like this:</p>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># You need to set a secret string otherwise the session will not work.</span>
+<span class="n">app</span><span class="o">.</span><span class="n">secret_key</span> <span class="o">=</span> <span class="s1">&#39;random secret string&#39;</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+   <span class="n">WerkzeugAdapter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">),</span>
+   <span class="n">provider_name</span><span class="p">,</span>
+<span class="hll">   <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+</span><span class="hll">   <span class="n">session_saver</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">save_session</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Now check whether there is a <a class="reference internal" href="../reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoginResult</span></code></a>.
+If so, we need to update the <a class="reference internal" href="../reference/classes.html#authomatic.core.User" title="authomatic.core.User"><code class="xref py py-class docutils literal notranslate"><span class="pre">User</span></code></a> to get <strong>his/her</strong> info.
+Then just pass the whole <a class="reference internal" href="../reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoginResult</span></code></a> to the template.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>            <span class="n">request</span><span class="p">,</span>
+            <span class="n">response</span><span class="p">),</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>If there is no <a class="reference internal" href="../reference/classes.html#authomatic.core.LoginResult" title="authomatic.core.LoginResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoginResult</span></code></a> the <em>login procedure</em> is still pending and
+we need to return the <code class="docutils literal notranslate"><span class="pre">response</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>Finally run the WSGI application.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Don&#39;t forget to return the response.</span>
+    <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+</div>
+<p>The rest happens in the templates.</p>
+<p>First create a base template.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span><span class="c">{# base.html #}</span>
+<span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Authomatic Flask Example<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+        <span class="cp">{%</span> <span class="k">block</span> <span class="nv">body</span> <span class="cp">%}{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">index.html</span></code> template contains just links to the <em>login</em> handler and
+an OpenID form. The <a class="reference internal" href="../reference/classes.html#authomatic.Authomatic.login" title="authomatic.Authomatic.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Authomatic.login()</span></code></a> method expects the <strong>claimed ID</strong> to be in the
+<code class="docutils literal notranslate"><span class="pre">id</span></code> request parameter. This off course can be changed.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span><span class="c">{# index.html #}</span>
+<span class="cp">{%</span> <span class="k">extends</span> <span class="s2">&quot;base.html&quot;</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">body</span> <span class="cp">%}</span>
+
+    <span class="c">&lt;!--Links to the login handler--&gt;</span>
+    Login with <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;login/fb&quot;</span><span class="p">&gt;</span>Facebook<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>.<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+    Login with <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;login/tw&quot;</span><span class="p">&gt;</span>Twitter<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>.<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+    
+    <span class="c">&lt;!--OpenID form--&gt;</span>
+    <span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&quot;login/oi&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;id&quot;</span> <span class="na">value</span><span class="o">=</span><span class="s">&quot;me.yahoo.com&quot;</span> <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span> <span class="na">value</span><span class="o">=</span><span class="s">&quot;Authenticate With OpenID&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>The most interesting things happen in the <code class="docutils literal notranslate"><span class="pre">login.html</span></code> template.
+First create a link to the <em>home</em> handler.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span><span class="c">{# login.html #}</span>
+<span class="cp">{%</span> <span class="k">extends</span> <span class="s2">&quot;base.html&quot;</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">body</span> <span class="cp">%}</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/&quot;</span><span class="p">&gt;</span>Home<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<p>Then check for possible errors.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>    <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.error</span> <span class="cp">%}</span>
+        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Damn that error: <span class="cp">{{</span> <span class="nv">result.error.message</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+    <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>And welcome the <strong>user</strong>.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>    <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.user</span> <span class="cp">%}</span>
+        <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hi <span class="cp">{{</span> <span class="nv">result.user.name</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Your id is: <span class="cp">{{</span> <span class="nv">result.user.id</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Your email is: <span class="cp">{{</span> <span class="nv">result.user.email</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+    <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>Seems like we’re done, but we can do more.</p>
+<p>If the <strong>user</strong> has <a class="reference internal" href="../reference/classes.html#authomatic.core.Credentials" title="authomatic.core.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a>, we can access <strong>his/her protected resources</strong>.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>    <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.user.credentials</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>Let’s get the <strong>user’s</strong> five most recent Facebook statuses first.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>        <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.provider.name</span> <span class="o">==</span> <span class="s1">&#39;fb&#39;</span> <span class="cp">%}</span>
+            Your are logged in with Facebook.<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+</pre></div>
+</div>
+<p>Prepare the Facebook API URL.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>            <span class="cp">{%</span> <span class="k">set</span> <span class="nv">url</span> <span class="o">=</span> <span class="s1">&#39;https://graph.facebook.com/{0}?fields=feed.limit(5)&#39;</span><span class="nv">.format</span><span class="o">(</span><span class="nv">result.user.id</span><span class="o">)</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>And access the protected resource at that URL. The call returns a <a class="reference internal" href="../reference/classes.html#authomatic.core.Response" title="authomatic.core.Response"><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></a> instance.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>            <span class="cp">{%</span> <span class="k">set</span> <span class="nv">response</span> <span class="o">=</span> <span class="nv">result.provider.access</span><span class="o">(</span><span class="nv">url</span><span class="o">)</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>Check whether the response was successful.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>            <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.status</span> <span class="o">==</span> <span class="m">200</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>Parse the <a class="reference internal" href="../reference/classes.html#authomatic.core.Response.data" title="authomatic.core.Response.data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Response.data</span></code></a> attribute which is a data structure (<a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> or <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>)
+parsed from the <a class="reference internal" href="../reference/classes.html#authomatic.core.Response.content" title="authomatic.core.Response.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Response.content</span></code></a> which usually is <strong>JSON</strong>.</p>
+<p>Handle possible errors.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data.error</span> <span class="cp">%}</span>
+                    Damn that error: <span class="cp">{{</span> <span class="nv">response.data.error</span> <span class="cp">}}</span>!
+                <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>If there are no errors, there should be a <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of statuses in the <code class="docutils literal notranslate"><span class="pre">response.data.feed.data</span></code> node.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data.feed.data</span> <span class="cp">%}</span>
+                    Your 5 most recent statuses:<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+                    <span class="cp">{%</span> <span class="k">for</span> <span class="nv">status</span> <span class="k">in</span> <span class="nv">response.data.feed.data</span> <span class="cp">%}</span>
+                        <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span><span class="cp">{{</span> <span class="nv">status.message</span> <span class="k">or</span> <span class="nv">status.name</span> <span class="k">or</span> <span class="nv">status.story</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+                        Posted on: <span class="cp">{{</span> <span class="nv">status.created_time</span> <span class="cp">}}</span>
+                    <span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+                <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>Close the opened <code class="docutils literal notranslate"><span class="pre">{%</span> <span class="pre">if</span> <span class="pre">%}</span></code> tags.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>            <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="c">{# response.status == 200 #}</span>
+        <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="c">{# result.provider.name == &#39;fb&#39; #}</span>
+</pre></div>
+</div>
+<p>Do the same for Twitter.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>        <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.provider.name</span> <span class="o">==</span> <span class="s1">&#39;tw&#39;</span> <span class="cp">%}</span>
+            Your are logged in with Twitter.<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+            <span class="cp">{%</span> <span class="k">set</span> <span class="nv">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.twitter.com/1.1/statuses/user_timeline.json?count=5&#39;</span> <span class="cp">%}</span>
+            <span class="cp">{%</span> <span class="k">set</span> <span class="nv">response</span> <span class="o">=</span> <span class="nv">result.provider.access</span><span class="o">(</span><span class="nv">url</span><span class="o">)</span> <span class="cp">%}</span>
+            <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.status</span> <span class="o">==</span> <span class="m">200</span> <span class="cp">%}</span>
+                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data.errors</span> <span class="cp">%}</span>
+                    Damn that error: <span class="cp">{{</span> <span class="nv">response.data.errors</span> <span class="cp">}}</span>!
+                <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data</span> <span class="cp">%}</span>
+                    Your 5 most recent tweets:<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data</span> <span class="cp">%}</span>
+                    Your 5 most recent tweets:<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+                    
+                    <span class="cp">{%</span> <span class="k">for</span> <span class="nv">tweet</span> <span class="k">in</span> <span class="nv">response.data</span> <span class="cp">%}</span>
+                        <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span><span class="cp">{{</span> <span class="nv">tweet.text</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+                        Posted on: <span class="cp">{{</span> <span class="nv">tweet.created_at</span> <span class="cp">}}</span>
+                    <span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+                <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+            <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+        <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="c">{# result.provider.name == &#39;tw&#39; #}</span>
+</pre></div>
+</div>
+<p>Close the opened <code class="docutils literal notranslate"><span class="pre">{%</span> <span class="pre">if</span> <span class="pre">result.user.credentials</span> <span class="pre">%}</span></code> tag and the <code class="docutils literal notranslate"><span class="pre">body</span></code> block.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span>    <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="c">{# result.user.credentials #}</span>
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="nv">body</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>That’s it. Now just run the application.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python main.py
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>Some of the providers don’t support authorization from apps running on <strong>localhost</strong>.
+Probably the best solution is to use an arbitrary domain as an alias of the <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code> IP address.</p>
+<p>You can do this on UNIX systems by adding an alias to the <code class="docutils literal notranslate"><span class="pre">/etc/hosts</span></code> file.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    # /etc/hosts
+    127.0.0.1    localhost
+<span class="hll">    127.0.0.1    yourlocalhostalias.com
+</span></pre></div>
+</div>
+<p>You can do this on Windows systems by adding an alias in the <code class="docutils literal notranslate"><span class="pre">C:\Windows\system32\drivers\etc\hosts</span></code> file.</p>
+<div class="last highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">    127.0.0.1     yourlocalhostalias.com
+</span></pre></div>
+</div>
+</div>
+<p>Here is the complete <code class="docutils literal notranslate"><span class="pre">login.html</span></code> template.
+Remember that you can download all the files we just created from
+<a class="reference external" href="https://github.com/authomatic/authomatic/tree/master/examples/flask/werkzeug_adapter">GitHub</a>.</p>
+<div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span><span class="c">{# login.html #}</span>
+<span class="cp">{%</span> <span class="k">extends</span> <span class="s2">&quot;base.html&quot;</span> <span class="cp">%}</span>
+
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">body</span> <span class="cp">%}</span>
+
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/&quot;</span><span class="p">&gt;</span>Home<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+    
+    <span class="c">{# Check for errors. #}</span>
+    <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.error</span> <span class="cp">%}</span>
+        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Damn that error: <span class="cp">{{</span> <span class="nv">result.error.message</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+    <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+    
+    <span class="c">{# Welcome the user. #}</span>
+    <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.user</span> <span class="cp">%}</span>
+        <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hi <span class="cp">{{</span> <span class="nv">result.user.name</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Your id is: <span class="cp">{{</span> <span class="nv">result.user.id</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Your email is: <span class="cp">{{</span> <span class="nv">result.user.email</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+    <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+    
+    <span class="c">{# If the user has credentials, we can access his/her protected resources. #}</span>
+    <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.user.credentials</span> <span class="cp">%}</span>
+        
+        <span class="c">{# Let&#39;s get the user&#39;s 5 most recent statuses. #}</span>
+        <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.provider.name</span> <span class="o">==</span> <span class="s1">&#39;fb&#39;</span> <span class="cp">%}</span>
+            Your are logged in with Facebook.<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+            
+            <span class="c">{# Insert the user&#39;s ID to the URL and access the resource. #}</span>
+            <span class="cp">{%</span> <span class="k">set</span> <span class="nv">url</span> <span class="o">=</span> <span class="s1">&#39;https://graph.facebook.com/{0}?fields=feed.limit(5)&#39;</span><span class="nv">.format</span><span class="o">(</span><span class="nv">result.user.id</span><span class="o">)</span> <span class="cp">%}</span>
+            <span class="cp">{%</span> <span class="k">set</span> <span class="nv">response</span> <span class="o">=</span> <span class="nv">result.provider.access</span><span class="o">(</span><span class="nv">url</span><span class="o">)</span> <span class="cp">%}</span>
+            
+            <span class="c">{# Parse the response. #}</span>
+            <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.status</span> <span class="o">==</span> <span class="m">200</span> <span class="cp">%}</span>
+                
+                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data.error</span> <span class="cp">%}</span>
+                    Damn that error: <span class="cp">{{</span> <span class="nv">response.data.error</span> <span class="cp">}}</span>!
+                <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+                
+                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data.feed.data</span> <span class="cp">%}</span>
+                    Your 5 most recent statuses:<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+                    
+                    <span class="cp">{%</span> <span class="k">for</span> <span class="nv">status</span> <span class="k">in</span> <span class="nv">response.data.feed.data</span> <span class="cp">%}</span>
+                        <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span><span class="cp">{{</span> <span class="nv">status.message</span> <span class="k">or</span> <span class="nv">status.name</span> <span class="k">or</span> <span class="nv">status.story</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+                        Posted on: <span class="cp">{{</span> <span class="nv">status.created_time</span> <span class="cp">}}</span>
+                    <span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+                <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+                
+            <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="c">{# response.status == 200 #}</span>
+            
+        <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="c">{# result.provider.name == &#39;fb&#39; #}</span>
+        
+        <span class="c">{# Do the same for Twitter. #}</span>
+        <span class="cp">{%</span> <span class="k">if</span> <span class="nv">result.provider.name</span> <span class="o">==</span> <span class="s1">&#39;tw&#39;</span> <span class="cp">%}</span>
+            Your are logged in with Twitter.<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+            
+            <span class="cp">{%</span> <span class="k">set</span> <span class="nv">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.twitter.com/1.1/statuses/user_timeline.json?count=5&#39;</span> <span class="cp">%}</span>
+            <span class="cp">{%</span> <span class="k">set</span> <span class="nv">response</span> <span class="o">=</span> <span class="nv">result.provider.access</span><span class="o">(</span><span class="nv">url</span><span class="o">)</span> <span class="cp">%}</span>
+            
+            <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.status</span> <span class="o">==</span> <span class="m">200</span> <span class="cp">%}</span>
+                
+                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data.errors</span> <span class="cp">%}</span>
+                    Damn that error: <span class="cp">{{</span> <span class="nv">response.data.errors</span> <span class="cp">}}</span>!
+                <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+                
+                <span class="cp">{%</span> <span class="k">if</span> <span class="nv">response.data</span> <span class="cp">%}</span>
+                    Your 5 most recent tweets:<span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+                    
+                    <span class="cp">{%</span> <span class="k">for</span> <span class="nv">tweet</span> <span class="k">in</span> <span class="nv">response.data</span> <span class="cp">%}</span>
+                        <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span><span class="cp">{{</span> <span class="nv">tweet.text</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+                        Posted on: <span class="cp">{{</span> <span class="nv">tweet.created_at</span> <span class="cp">}}</span>
+                    <span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+                <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+                
+            <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+            
+        <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="c">{# result.provider.name == &#39;tw&#39; #}</span>
+    <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="c">{# result.user.credentials #}</span>
+
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="nv">body</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>And here is the whole <code class="docutils literal notranslate"><span class="pre">main.py</span></code> module.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This is a simple Flask app that uses Authomatic to log users in with Facebook</span>
+<span class="sd">Twitter and OpenID.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">make_response</span>
+<span class="kn">from</span> <span class="nn">authomatic.adapters</span> <span class="kn">import</span> <span class="n">WerkzeugAdapter</span>
+<span class="kn">from</span> <span class="nn">authomatic</span> <span class="kn">import</span> <span class="n">Authomatic</span>
+
+<span class="kn">from</span> <span class="nn">config_template</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Instantiate Authomatic.</span>
+<span class="n">authomatic</span> <span class="o">=</span> <span class="n">Authomatic</span><span class="p">(</span><span class="n">CONFIG</span><span class="p">,</span> <span class="s1">&#39;your secret string&#39;</span><span class="p">,</span> <span class="n">report_errors</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Home handler.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">)</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login/&lt;provider_name&gt;/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">provider_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Login handler, must accept both GET and POST to be able to use OpenID.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># We need response object for the WerkzeugAdapter.</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">()</span>
+
+    <span class="c1"># Log the user in, pass it the adapter and the provider name.</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">authomatic</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+        <span class="n">WerkzeugAdapter</span><span class="p">(</span>
+            <span class="n">request</span><span class="p">,</span>
+            <span class="n">response</span><span class="p">),</span>
+        <span class="n">provider_name</span><span class="p">)</span>
+
+    <span class="c1"># If there is no LoginResult object, the login procedure is still pending.</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+            <span class="c1"># We need to update the user to get more info.</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="c1"># The rest happens inside the template.</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;login.html&#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="c1"># Don&#39;t forget to return the response.</span>
+    <span class="k">return</span> <span class="n">response</span>
+
+
+<span class="c1"># Run the app.</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="django-simple.html"  title="Simple Django Example">&laquo; previous</a></span>
+			<span><a href="../genindex.html"  title="General Index">index</a></span>
+				<span><a href="../py-modindex.html"  title="Python Module Index">modules</a></span>
+				<span><a href="pyramid-simple.html"  title="Simple Pyramid Example">next &raquo;</a></span></div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="https://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '../_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="../_static/foundation/js/foundation.min.js"></script>
+	<script src="../_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/authomatic/authomatic">
+			<img
+				 src="../_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>

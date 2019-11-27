@@ -1,0 +1,519 @@
+
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" prefix="og: http://ogp.me/ns#"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Changelog | Authomatic</title>
+    	<link rel="icon" type="image/x-icon" href="_static/img/favicon.ico" />
+	
+	
+	
+	<meta property="og:title" content="Changelog | Authomatic" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://authomatic.github.io/authomatic/changelog.html" />
+	<meta property="og:image" content="https://authomatic.github.io/authomatic/_static/img/authomatic-seo.gif" />
+	
+	
+	<meta property="og:description" content="Simple yet powerful authorization / authentication client library for Python WEB applications." />
+	<meta property="og:site_name" content="Authomatic" />
+	
+	
+    
+    
+	<meta name="description" content="Simple yet powerful authorization / authentication client library for Python WEB applications.">
+    
+	
+	
+	
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/css/authomatic.css" type="text/css" />
+    	
+	<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    	<script type="text/javascript" src="_static/jquery.js"></script>
+    	<script type="text/javascript" src="_static/underscore.js"></script>
+    	<script type="text/javascript" src="_static/doctools.js"></script>
+    	<script type="text/javascript" src="_static/language_data.js"></script>
+    	<script type="text/javascript" src="_static/foundation/js/vendor/custom.modernizr.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+
+
+<body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=249464911861131";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script><div id="root"><div class="contain-to-grid">
+			<nav class="top-bar">
+				<ul class="title-area">
+					<li class="name">
+					  <h1><a href="index.html">Authomatic</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				 
+				<section class="top-bar-section">
+					<ul class="left"><li class="divider"></li></ul>
+					
+						
+					
+					<ul class="left">
+						
+	<li class="divider"></li>
+
+	
+		<li><a href="development.html"  title="Development">&laquo; previous</a></li>
+	
+		
+			<li><a href="genindex.html"  title="General Index">index</a></li>
+		
+		
+			<li><a href="py-modindex.html"  title="Python Module Index">modules</a></li>
+		
+		
+
+	
+					</ul>
+				</section>
+			</nav>
+		</div><div id="header">
+			<div class="row">
+				
+		        <div id="logo-container" class="large-6 columns">
+		        	
+	<div>
+		<a href="index.html">
+		
+	    	
+	    		<img id="logo" src="_static/img/authomatic.svg" />
+	    	
+		
+		</a>
+	</div>
+
+		        </div>
+		        <div class="large-6 columns">
+		            <p id="motto">
+						
+<span>Authomatic</span><br />
+is a <em>framework agnostic</em> library<br />
+for <em>Python</em> web applications<br />
+with a <em>minimalistic</em> but <em>powerful</em> interface<br />
+which simplifies <em>authentication</em> of users<br />
+by third party providers like <em>Facebook</em> or <em>Twitter</em><br />
+through standards like <em>OAuth</em> and <em>OpenID</em>.
+
+					</p>
+		        </div>
+		        
+		    </div>
+	    </div>
+	    
+	    <div class="social-buttons">
+	    	<ul>
+	    		<li>
+	    			<div class="fb-like" data-href="https://authomatic.github.io/authomatic/changelog.html" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+	    		</li>
+	    		<li>
+	    			<div class="g-plusone" data-size="medium" data-href="https://authomatic.github.io/authomatic/changelog.html"></div>
+	    		</li>
+	    		<li>
+	    			<a href="https://twitter.com/share" class="twitter-share-button" data-via="AuthomaticPy">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	    		</li>
+	    		
+	    		<li>
+	    			<iframe src="http://ghbtns.com/github-btn.html?user=authomatic&repo=authomatic&type=watch&count=true"
+  							allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+	    		</li>
+	    		
+	    		<li>
+	    			<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+					<script type="IN/Share" data-counter="right"></script>
+	    		</li>
+	    		
+	    		<li>
+	    			<a	class="FlattrButton"
+	    				href="http://peterhudec.github.io/foundation-sphinx-theme/cards/html"
+	    				data-flattr-uid="peterhudec"
+	    				data-flattr-category="software"
+	    				data-flattr-button="compact"
+	    				data-flattr-tags=""
+	    				data-flattr-description="Simple yet powerful authorization / authentication client library for Python WEB applications."
+	    				title="Changelog | Authomatic"></a>
+	    		</li>
+	    		
+	    		<li class="reddit">
+	    			<script type="text/javascript" src="http://www.reddit.com/static/button/button1.js">
+	    				reddit_newwindow='1';
+	    			</script>
+	    		</li>
+	    	</ul>
+	    	
+	    </div>
+		
+		
+		
+		<div class="row">
+	</div>
+		
+		
+		<div class="row">
+			
+			<div id="content" class="large-9 push-3 columns">
+				
+  <div class="section" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>DO NOT EDIT HERE!</p>
+<p>This FILE IS GENERATED by towncrier <a class="reference external" href="https://towncrier.readthedocs.io/en/">https://towncrier.readthedocs.io/en/</a></p>
+<p>DO NOT EDIT HERE!</p>
+<p>Create a news fragment in the “news” folder instead.</p>
+<p>The news files are one per issue, best using the issue-number or pull-request (PR) number as filename prefix.</p>
+<p>towncrier has a few standard types of news fragments, signified by the file extension. These are:</p>
+<blockquote>
+<div>.breaking: Signifying a deprecation or removal of public API.
+.feature: Signifying a new feature.
+.bugfix: Signifying a bug fix.
+.doc: Signifying a documentation improvement.
+.misc: A ticket has been closed, but it is not of interest to users.</div></blockquote>
+<p>Example:</p>
+<ul class="simple">
+<li>“1234.bugfix”</li>
+<li>for two separate fixes in one PR  “3423-1.bugfix” and “3423-2.bugfix”</li>
+</ul>
+<p>Sphinx Syntax is allowed.</p>
+</div></blockquote>
+</div>
+<div class="section" id="id1">
+<h1>Changelog<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>DO NOT EDIT HERE!</p>
+<p>Below towncrier inserts the output before release!</p>
+</div></blockquote>
+<div class="section" id="id2">
+<h2>1.0.0 (2019-11-27)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="miscellaneous">
+<h3>Miscellaneous:<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Version 1.0.0 released.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>1.0.0 (2019-11-27)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h3>Miscellaneous:<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Version 1.0.0 released.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="a11-2019-11-27">
+<h2>1.0.0a11 (2019-11-27)<a class="headerlink" href="#a11-2019-11-27" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>Miscellaneous:<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Switch to tag-based releases.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="a10-2019-11-26">
+<h2>1.0.0a10 (2019-11-26)<a class="headerlink" href="#a10-2019-11-26" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="breaking-changes">
+<h3>Breaking changes:<a class="headerlink" href="#breaking-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Removed support for <code class="xref py py-attr docutils literal notranslate"><span class="pre">gender</span></code>, <code class="xref py py-attr docutils literal notranslate"><span class="pre">link</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">birth_date</span></code> from <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Google" title="authomatic.providers.oauth2.Google"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Google</span></code></a> provider.</li>
+<li>Removed :<code class="xref py py-attr docutils literal notranslate"><span class="pre">User.location</span></code> in the class:<cite>.oauth2.LinkedIn</cite> provider.</li>
+</ul>
+</div>
+<div class="section" id="new-features">
+<h3>New features:<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added support for <a class="reference internal" href="reference/classes.html#authomatic.core.User.city" title="authomatic.core.User.city"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.city</span></code></a>, updated <a class="reference internal" href="reference/classes.html#authomatic.core.User.country" title="authomatic.core.User.country"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.country</span></code></a> in the class:<cite>.oauth2.LinkedIn</cite> provider.</li>
+<li>Added support for <a class="reference internal" href="reference/classes.html#authomatic.core.User.email" title="authomatic.core.User.email"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.email</span></code></a> to the <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth1.Bitbucket" title="authomatic.providers.oauth1.Bitbucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Bitbucket</span></code></a> provider.</li>
+<li>Added support for <code class="xref py py-attr docutils literal notranslate"><span class="pre">email_verified</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">hosted_domain</span></code> to <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Google" title="authomatic.providers.oauth2.Google"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Google</span></code></a> provider.</li>
+<li>Support passing of user state in oauth2 to support variable redirect urls.</li>
+<li>Added support for <a class="reference internal" href="reference/classes.html#authomatic.core.User.country" title="authomatic.core.User.country"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.country</span></code></a> and <a class="reference internal" href="reference/classes.html#authomatic.core.User.city" title="authomatic.core.User.city"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.city</span></code></a> to :class: <cite>oauth1.Twitter</cite> provider.</li>
+<li>Add <a class="reference internal" href="reference/classes.html#authomatic.core.User.email" title="authomatic.core.User.email"><code class="xref py py-attr docutils literal notranslate"><span class="pre">email</span></code></a> to <code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Twitter</span></code> provider.</li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h3>Bug fixes:<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Adjusted naming of default scope for <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Facebook" title="authomatic.providers.oauth2.Facebook"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Facebook</span></code></a> to Facebook v2 API.</li>
+<li>Fix #130: explicitly request fields from Facebook.</li>
+<li>Fix #160: Handle token_type of bearer (lower-case).</li>
+<li>The <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Google" title="authomatic.providers.oauth2.Google"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Google</span></code></a> provider now uses
+<code class="docutils literal notranslate"><span class="pre">https://www.googleapis.com/oauth2/v3/userinfo?alt=json</span></code> as the <code class="docutils literal notranslate"><span class="pre">user_info_url</span></code>
+instead of the deprecated <code class="docutils literal notranslate"><span class="pre">https://www.googleapis.com/plus/v1/people/me</span></code>.</li>
+<li>Fix Twitter user info endpoint to include image url.</li>
+</ul>
+</div>
+<div class="section" id="documentation">
+<h3>Documentation:<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Do not include Google Appengine 1st generation modules.</li>
+<li><dl class="first docutils">
+<dt>Simplify build and add <code class="docutils literal notranslate"><span class="pre">build_docs.sh</span></code> script.</dt>
+<dd>Overall cleanup: No more submodules, update foundation theme and more.</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h3>Miscellaneous:<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Release-preparations:
+Do not include tests, examples and doc in egg/wheel;
+fix travis, add auto-deploy for PyPI and docs;
+enhance internal package setup, overall cleanup and update metdadata.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="version-0-1-0">
+<h2>Version 0.1.0<a class="headerlink" href="#version-0-1-0" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Introduced the <code class="xref py py-attr docutils literal notranslate"><span class="pre">User.access_token_response</span></code> attribute.</li>
+<li>Added support for <a class="reference internal" href="reference/classes.html#authomatic.core.User.email" title="authomatic.core.User.email"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.email</span></code></a> and <a class="reference internal" href="reference/classes.html#authomatic.core.User.link" title="authomatic.core.User.link"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.link</span></code></a> to the
+<a class="reference internal" href="reference/providers.html#authomatic.providers.oauth1.Plurk" title="authomatic.providers.oauth1.Plurk"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Plurk</span></code></a> provider.</li>
+<li>The <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth1.Flickr" title="authomatic.providers.oauth1.Flickr"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Flickr</span></code></a> provider doesn’t make the redundant API call
+during <code class="xref py py-meth docutils literal notranslate"><span class="pre">oauth1.Flickr.update_user()</span></code> anymore.</li>
+<li>Removed support for <code class="xref py py-attr docutils literal notranslate"><span class="pre">User.birth_date</span></code> and <a class="reference internal" href="reference/classes.html#authomatic.core.User.gender" title="authomatic.core.User.gender"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.gender</span></code></a>
+from the <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth1.Yahoo" title="authomatic.providers.oauth1.Yahoo"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Yahoo</span></code></a> provider.</li>
+<li>Added the <a class="reference internal" href="reference/classes.html#authomatic.core.User.location" title="authomatic.core.User.location"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.location</span></code></a> attribute.</li>
+<li>Removed support for <a class="reference internal" href="reference/classes.html#authomatic.core.User.country" title="authomatic.core.User.country"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.country</span></code></a> and <a class="reference internal" href="reference/classes.html#authomatic.core.User.city" title="authomatic.core.User.city"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.city</span></code></a> from
+<a class="reference internal" href="reference/providers.html#authomatic.providers.oauth1.Twitter" title="authomatic.providers.oauth1.Twitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Twitter</span></code></a> and <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.GitHub" title="authomatic.providers.oauth2.GitHub"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.GitHub</span></code></a> providers.</li>
+<li>Removed support for <a class="reference internal" href="reference/classes.html#authomatic.core.User.link" title="authomatic.core.User.link"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.link</span></code></a> and <a class="reference internal" href="reference/classes.html#authomatic.core.User.picture" title="authomatic.core.User.picture"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.picture</span></code></a> from
+<code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Tumbler</span></code> provider.</li>
+<li>Removed support for <a class="reference internal" href="reference/classes.html#authomatic.core.User.username" title="authomatic.core.User.username"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.username</span></code></a> and added support for
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">User.birth_date</span></code> to <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Facebook" title="authomatic.providers.oauth2.Facebook"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Facebook</span></code></a> provider.</li>
+<li><a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Facebook" title="authomatic.providers.oauth2.Facebook"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Facebook</span></code></a> provider now uses <code class="docutils literal notranslate"><span class="pre">v2</span></code> api for user info request.</li>
+<li>Removed the <code class="docutils literal notranslate"><span class="pre">r_fullprofile</span></code> and <code class="docutils literal notranslate"><span class="pre">r_fullprofile</span></code> scopes from
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">oauth2.LinkedIn.user_info_scope</span></code> due to the
+<a class="reference external" href="https://developer.linkedin.com/support/developer-program-transition">Developer Program Transition</a> and as a consequence removed support for
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">User.birth_date</span></code> and <a class="reference internal" href="reference/classes.html#authomatic.core.User.phone" title="authomatic.core.User.phone"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.phone</span></code></a>.</li>
+</ul>
+</div>
+<div class="section" id="version-0-0-13">
+<h2>Version 0.0.13<a class="headerlink" href="#version-0-0-13" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Removed logging of response body in the
+<a class="reference internal" href="reference/providers.html#authomatic.providers.AuthorizationProvider.access" title="authomatic.providers.AuthorizationProvider.access"><code class="xref py py-meth docutils literal notranslate"><span class="pre">providers.AuthorizationProvider.access()</span></code></a> method.</li>
+<li>Fixed an error in <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Google" title="authomatic.providers.oauth2.Google"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Google</span></code></a> when the access token request
+resulted in an
+<code class="docutils literal notranslate"><span class="pre">OAuth</span> <span class="pre">2</span> <span class="pre">parameters</span> <span class="pre">can</span> <span class="pre">only</span> <span class="pre">have</span> <span class="pre">a</span> <span class="pre">single</span> <span class="pre">value:</span> <span class="pre">client_secret</span></code> error.</li>
+</ul>
+</div>
+<div class="section" id="version-0-0-12">
+<h2>Version 0.0.12<a class="headerlink" href="#version-0-0-12" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed import errors of the <strong>six</strong> module.</li>
+<li>Fixed an bug when decoding binary provider response resulted in an error.</li>
+<li>Improved handling of ambiguous user location by some providers. Introduced
+the <code class="xref py py-class docutils literal notranslate"><span class="pre">User.location</span></code> attribute.</li>
+</ul>
+</div>
+<div class="section" id="version-0-0-11">
+<h2>Version 0.0.11<a class="headerlink" href="#version-0-0-11" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Added <strong>Python 3.x</strong> support thanks to
+<a class="reference external" href="https://github.com/touilleMan">Emmanuel Leblond</a>.</li>
+<li>Fixed a bug when <code class="xref py py-class docutils literal notranslate"><span class="pre">authomatic.Response</span></code> could not be decoded.</li>
+<li>The <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Foursquare" title="authomatic.providers.oauth2.Foursquare"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Foursquare</span></code></a> provider now supports
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">User.birth_date</span></code>.</li>
+</ul>
+</div>
+<div class="section" id="version-0-0-10">
+<h2>Version 0.0.10<a class="headerlink" href="#version-0-0-10" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed a bug when saving non-JSON-serializable values to third party sessions
+by the <code class="docutils literal notranslate"><span class="pre">python-openid</span></code> package caused a <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>.</li>
+<li>Added the <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Eventbrite" title="authomatic.providers.oauth2.Eventbrite"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Eventbrite</span></code></a> provider.</li>
+<li>Added the <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Amazon" title="authomatic.providers.oauth2.Amazon"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Amazon</span></code></a> provider.</li>
+<li>Improved OAuth 2.0 Error Handling.</li>
+</ul>
+</div>
+<div class="section" id="version-0-0-9">
+<h2>Version 0.0.9<a class="headerlink" href="#version-0-0-9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Updated <em>user info</em> URL scheme of the <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth1.Yahoo" title="authomatic.providers.oauth1.Yahoo"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Yahoo</span></code></a> provider.</li>
+<li>The <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Yandex" title="authomatic.providers.oauth2.Yandex"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Yandex</span></code></a> provider now supports <a class="reference internal" href="reference/classes.html#authomatic.core.User.name" title="authomatic.core.User.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.name</span></code></a> and.
+<a class="reference internal" href="reference/classes.html#authomatic.core.User.username" title="authomatic.core.User.username"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.username</span></code></a> properties.</li>
+<li>Updated <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.WindowsLive" title="authomatic.providers.oauth2.WindowsLive"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.WindowsLive</span></code></a> OAuth 2.0 endpoints.</li>
+<li>Fixed a bug with the <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Yammer" title="authomatic.providers.oauth2.Yammer"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Yammer</span></code></a> provider when <em>user info</em> request
+failed because the <code class="docutils literal notranslate"><span class="pre">token_type</span></code> was not <code class="docutils literal notranslate"><span class="pre">&quot;Bearer&quot;</span></code>.</li>
+<li>The <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Yammer" title="authomatic.providers.oauth2.Yammer"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Yammer</span></code></a> provider now supports CSRF protection.</li>
+<li>Added the <code class="docutils literal notranslate"><span class="pre">logger</span></code> keyword argument to <a class="reference internal" href="reference/classes.html#authomatic.Authomatic" title="authomatic.Authomatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Authomatic</span></code></a> constructor.</li>
+<li>Added the <code class="docutils literal notranslate"><span class="pre">v=20140501</span></code> parameter to each request of the
+<a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Foursquare" title="authomatic.providers.oauth2.Foursquare"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Foursquare</span></code></a> provider.</li>
+<li>The <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.LinkedIn" title="authomatic.providers.oauth2.LinkedIn"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.LinkedIn</span></code></a> provider now supports the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">User.birth_date</span></code> attribute.</li>
+<li>The <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Reddit" title="authomatic.providers.oauth2.Reddit"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Reddit</span></code></a> provider now supports the
+<a class="reference internal" href="reference/classes.html#authomatic.core.User.username" title="authomatic.core.User.username"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.username</span></code></a> attribute.</li>
+</ul>
+</div>
+<div class="section" id="version-0-0-8">
+<h2>Version 0.0.8<a class="headerlink" href="#version-0-0-8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Added the <code class="docutils literal notranslate"><span class="pre">supported_user_attributes</span></code> to tested provider classes.</li>
+<li>The <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Facebook" title="authomatic.providers.oauth2.Facebook"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Facebook</span></code></a> provider now populates the <a class="reference internal" href="reference/classes.html#authomatic.core.User.city" title="authomatic.core.User.city"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.city</span></code></a>
+and <a class="reference internal" href="reference/classes.html#authomatic.core.User.country" title="authomatic.core.User.country"><code class="xref py py-attr docutils literal notranslate"><span class="pre">User.country</span></code></a> properties.</li>
+<li>The <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Google" title="authomatic.providers.oauth2.Google"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Google</span></code></a> prowider now uses
+<code class="docutils literal notranslate"><span class="pre">https://www.googleapis.com/plus/v1/people/me</span></code> as the <code class="docutils literal notranslate"><span class="pre">user_info_url</span></code> instead of
+the deprecated <code class="docutils literal notranslate"><span class="pre">https://www.googleapis.com/oauth2/v3/userinfo</span></code>. Also the
+<code class="docutils literal notranslate"><span class="pre">user_info_scope</span></code> reflects these changes.</li>
+<li>Added missing <code class="docutils literal notranslate"><span class="pre">user_info_scope</span></code> to <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.DeviantART" title="authomatic.providers.oauth2.DeviantART"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.DeviantART</span></code></a> provider.</li>
+<li>Changed the <code class="docutils literal notranslate"><span class="pre">user_authorization_url</span></code> of <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth1.Twitter" title="authomatic.providers.oauth1.Twitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Twitter</span></code></a> provider from
+<code class="docutils literal notranslate"><span class="pre">https://api.twitter.com/oauth/authorize</span></code> to
+<code class="docutils literal notranslate"><span class="pre">https://api.twitter.com/oauth/authenticate</span></code>.</li>
+<li>Added the <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth1.Xing" title="authomatic.providers.oauth1.Xing"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Xing</span></code></a> provider.</li>
+<li>Made compatible with <strong>Python 2.6</strong>.</li>
+</ul>
+</div>
+<div class="section" id="version-0-0-7">
+<h2>Version 0.0.7<a class="headerlink" href="#version-0-0-7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Added user email extraction to <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth1.Yahoo" title="authomatic.providers.oauth1.Yahoo"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth1.Yahoo</span></code></a> provider.</li>
+<li>Added the <code class="docutils literal notranslate"><span class="pre">access_headers</span></code> and <code class="docutils literal notranslate"><span class="pre">access_params</span></code>
+keyword arguments to the <a class="reference internal" href="reference/providers.html#authomatic.providers.AuthorizationProvider" title="authomatic.providers.AuthorizationProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuthorizationProvider</span></code></a> constructor.</li>
+<li>Fixed a bug in <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.GitHub" title="authomatic.providers.oauth2.GitHub"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.GitHub</span></code></a> provider when <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> got risen
+when a user had only the city specified.</li>
+<li>Added a workaround for
+<a class="reference external" href="https://github.com/peterhudec/authomatic/issues/11">issue #11</a>,
+when WebKit-based browsers failed to accept cookies set as part of a
+redirect response in some circumstances.</li>
+</ul>
+</div>
+<div class="section" id="version-0-0-6">
+<h2>Version 0.0.6<a class="headerlink" href="#version-0-0-6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Added the <a class="reference internal" href="reference/adapters.html#authomatic.adapters.DjangoAdapter" title="authomatic.adapters.DjangoAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">DjangoAdapter</span></code></a>.</li>
+<li>Switched the <code class="docutils literal notranslate"><span class="pre">user_info_url</span></code> attribute of the <a class="reference internal" href="reference/providers.html#authomatic.providers.oauth2.Google" title="authomatic.providers.oauth2.Google"><code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2.Google</span></code></a>
+provider to Google API <code class="docutils literal notranslate"><span class="pre">v3</span></code>.</li>
+</ul>
+</div>
+</div>
+
+
+			</div>
+			
+			
+			
+			<div id="navigation" class="large-3 pull-9 columns">
+				
+			</div>
+			
+		</div>
+		
+		<div id="root_footer"></div>
+	</div><div id="footer"><div id="bottom-nav"><span><a href="development.html"  title="Development">&laquo; previous</a></span>
+			<span><a href="genindex.html"  title="General Index">index</a></span>
+				<span><a href="py-modindex.html"  title="Python Module Index">modules</a></span>
+				</div><div id="footer-notice">
+			    	&copy; Copyright 2014,
+			    	
+			    		<a href="https://peterhudec.com">Peter Hudec</a>
+			    		<a class="google-plus-badge" href="//plus.google.com/117034840853387702598?rel=author" rel="author" style="text-decoration:none;">
+						<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+"/></a>.
+		        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+	    </div></div><script>
+		document.write('<script src=' +
+		('__proto__' in {} ? '_static/foundation/js/vendor/zepto' : 'js/vendor/jquery') +
+		'.js><\/script>')
+	</script>
+	<script src="_static/foundation/js/foundation.min.js"></script>
+	<script src="_static/foundation/js/foundation/foundation.topbar.js"></script>
+	<script>
+		$(document).foundation();
+		
+		/**
+		 * Fallback svg to png.
+		 * Taken from Todd Motto's article:
+		 * http://toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script/
+		 */
+		if(!Modernizr.svg) {
+		    $('img[src*="svg"]').attr('src', function() {
+		        return $(this).attr('src').replace('.svg', '.png');
+		    });
+		}
+		
+		// Reset width of all table columns.
+		$('col').attr('width', null);
+		
+		// Add "returns" class to all returns elements
+		$(".field-name:contains('Returns:')").parent().addClass('returns');
+		
+		
+		(function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-40554445-4']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+	</script>
+	
+		<a	id="github-ribbon"
+			style="right: 0; border: 0;"
+			href="https://github.com/authomatic/authomatic">
+			<img
+				 src="_static/img/github-ribbon-right.png"
+				 alt="Fork me on GitHub">
+		</a>
+	
+</body>
+
+</html>
