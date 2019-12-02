@@ -10,5 +10,12 @@ setup(
             "python-openid ; python_version<'3'",
             "python3-openid ; python_version>='3'",
         ],
+        'test': [
+            "jinja2",
+            "liveandletdie",
+            "pytest",
+            "pyvirtualdisplay",
+            "selenium",
+        ]
     },
 )
