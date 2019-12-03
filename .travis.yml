@@ -12,7 +12,7 @@ addons:
 install:
 - sudo pip install tox
 script:
-- sudo tox -e py3 -- -vvx --tb=no
+- sudo tox -e py3
 after_failure:
 - tail -n 500 tests/functional_tests/*.log
 - tail -n 500 flask.log
