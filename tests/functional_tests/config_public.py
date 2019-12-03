@@ -23,7 +23,7 @@ def get_browser():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage");
     options.add_experimental_option("useAutomationExtension", False);
-    return webdriver.Chrome(chrome_options=options)
+    return webdriver.Chrome(options=options)
 
 
 # If present and callable, it will be called at the end of the whole test suite
