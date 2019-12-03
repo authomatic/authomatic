@@ -19,7 +19,7 @@ after_failure:
 - tail -n 500 flask.log
 before_install:
 - openssl aes-256-cbc -K $encrypted_dbe8ae205660_key -iv $encrypted_dbe8ae205660_iv
-  -in ./tests/functional_tests/config.py.enc -out ./tests/functional_tests/config.py
+  -in ./tests/functional_tests/config_secret.py.enc -out ./tests/functional_tests/config_secret.py
   -d
 before_deploy:
 - travis/before_deploy.sh

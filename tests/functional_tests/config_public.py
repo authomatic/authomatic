@@ -67,7 +67,7 @@ INCLUDE_PROVIDERS = [
     # 'bitbucket',
     # 'flickr',
     # 'plurk',
-    'twitter',
+     'twitter',
     # 'tumblr',
     # 'ubuntuone',  # UbuntuOne service is no longer available
     # 'vimeo',
@@ -85,7 +85,7 @@ INCLUDE_PROVIDERS = [
     'facebook',
     # 'foursquare',  # deprecated for test suite refactoring - consider re-enabling
     # 'google',  # deprecated for test suite refactoring - consider re-enabling
-    # 'github',  # Asks for 2FA/one-time-pass verification in Travis CI environment.
+    # 'github', # Asks for 2FA/one-time-pass verification in Travis CI environment.
     # 'linkedin',  #  # Asks for verification (captcha) in the login form in Travis CI environment.
     # 'paypal',  # deprecated for test suite refactoring - consider re-enabling
     # 'reddit',  # deprecated for test suite refactoring - consider re-enabling
@@ -173,13 +173,14 @@ COMMON = {
 
 # Values from COMMON will be overridden by values from PROVIDERS[provider_name]
 # if set.
-# Update this in config.py[.enc] as appropriate
+# Since this file is public, only put providers in here if they aren't secret.
+# Otherwise, secret providers should be added to config_secret.py[.enc]
 PROVIDERS = {
-    # OAuth 2.0
-    'facebook': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
+#     # OAuth 2.0
+#     'facebook': {
+#         'consumer_key': '##########',
+#         'consumer_secret': '##########',
+#         'user_password': '##########',
+#         'user_id': '??????????',
+#     },
 }
