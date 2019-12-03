@@ -95,7 +95,7 @@ def log(indent, provider_name, message):
     ))
 
 
-@pytest.fixture('module')
+@pytest.fixture(scope='module')
 def browser(request):
     """
     Starts and stops the browser
@@ -108,7 +108,7 @@ def browser(request):
     return _browser
 
 
-@pytest.fixture('module', APPS)
+@pytest.fixture(scope='module', params=APPS)
 def app(request):
     """
     Starts and stops the server for each app in APPS.
