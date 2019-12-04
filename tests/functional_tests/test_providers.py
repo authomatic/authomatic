@@ -22,7 +22,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from authomatic.six.moves.urllib import parse
 from tests.functional_tests import fixtures
 import constants
-from tests.functional_tests import config
+from tests.functional_tests import config_public as config
 
 
 requests.packages.urllib3.disable_warnings()
@@ -39,7 +39,10 @@ EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
 PROVIDERS = sorted([(k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items()
                     if k in config.INCLUDE_PROVIDERS])
 PROVIDERS_IDS = [k for k, v in PROVIDERS]
-PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
+try:
+    PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
+except ValueError:
+    PROVIDER_NAME_WIDTH = 0
 
 
 ALL_APPS = {
@@ -95,7 +98,7 @@ def log(indent, provider_name, message):
     ))
 
 
-@pytest.fixture('module')
+@pytest.fixture(scope='module')
 def browser(request):
     """
     Starts and stops the browser
@@ -108,7 +111,7 @@ def browser(request):
     return _browser
 
 
-@pytest.fixture('module', APPS)
+@pytest.fixture(scope='module', params=APPS)
 def app(request):
     """
     Starts and stops the server for each app in APPS.
@@ -178,6 +181,10 @@ def login(request, browser, app, attempt=1):
     try:
         provider['name'] = provider_name
         conf = fixtures.get_configuration(provider_name)
+        if not conf:
+            log(0, "No configuration found for provider {}".format(provider_name))
+            # return to 'skip' test
+            return 1
 
         # Andy types the login handler url to the address bar.
         url = parse.urljoin(app.check_url, 'login/' + provider['_path'])
