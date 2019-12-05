@@ -23,7 +23,7 @@ def get_browser():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage");
     options.add_experimental_option("useAutomationExtension", False);
-    return webdriver.Chrome(chrome_options=options)
+    return webdriver.Chrome(options=options)
 
 
 # If present and callable, it will be called at the end of the whole test suite
@@ -44,7 +44,7 @@ MIN_WAIT = 0
 
 # The host and port where the tested ap should listen.
 HOST = '127.0.0.1'
-PORT = 80
+PORT = 443
 
 # The host alias set in the /etc/hosts file.
 # The actual tests will navigate selenium browser to this host.
@@ -67,7 +67,7 @@ INCLUDE_PROVIDERS = [
     # 'bitbucket',
     # 'flickr',
     # 'plurk',
-    # 'twitter',
+     'twitter',
     # 'tumblr',
     # 'ubuntuone',  # UbuntuOne service is no longer available
     # 'vimeo',
@@ -85,7 +85,7 @@ INCLUDE_PROVIDERS = [
     'facebook',
     # 'foursquare',  # deprecated for test suite refactoring - consider re-enabling
     # 'google',  # deprecated for test suite refactoring - consider re-enabling
-    # 'github',  # deprecated for test suite refactoring - consider re-enabling
+    # 'github', # Asks for 2FA/one-time-pass verification in Travis CI environment.
     # 'linkedin',  #  # Asks for verification (captcha) in the login form in Travis CI environment.
     # 'paypal',  # deprecated for test suite refactoring - consider re-enabling
     # 'reddit',  # deprecated for test suite refactoring - consider re-enabling
@@ -109,16 +109,16 @@ if os.environ.get('TRAVIS'):
 
 
 # Use these constants if you have the same user info by all tested providers.
-EMAIL = 'andy.pipkin@littlebritain.co.uk'
-FIRST_NAME = 'Andy'
-LAST_NAME = 'Pipkin'
+EMAIL = 'authomaticproject@protonmail.com'
+FIRST_NAME = 'Authomatic'
+LAST_NAME = 'Testuser'
 NAME = FIRST_NAME + ' ' + LAST_NAME
-USERNAME = 'andypipkin'
-USERNAME_REVERSE = 'pipkinandy'
-NICKNAME = 'Mr. Pipkin'
-BIRTH_YEAR = 1979
-BIRTH_MONTH = 11
-BIRTH_DAY = 18
+USERNAME = 'authomaticproject'
+USERNAME_REVERSE = 'projectauthomatic'
+NICKNAME = 'Mr. AP'
+BIRTH_YEAR = 2000
+BIRTH_MONTH = 5
+BIRTH_DAY = 5
 BIRTH_DATE = datetime.datetime(BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY)
 CITY = 'London'
 COUNTRY = 'Great Britain'
@@ -173,13 +173,14 @@ COMMON = {
 
 # Values from COMMON will be overridden by values from PROVIDERS[provider_name]
 # if set.
-# Update this in config.py[.enc] as appropriate
+# Since this file is public, only put providers in here if they aren't secret.
+# Otherwise, secret providers should be added to config_secret.py[.enc]
 PROVIDERS = {
-    # OAuth 2.0
-    'facebook': {
-        'consumer_key': '##########',
-        'consumer_secret': '##########',
-        'user_password': '##########',
-        'user_id': '??????????',
-    },
+#     # OAuth 2.0
+#     'facebook': {
+#         'consumer_key': '##########',
+#         'consumer_secret': '##########',
+#         'user_password': '##########',
+#         'user_id': '??????????',
+#     },
 }

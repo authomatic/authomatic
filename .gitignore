@@ -15,8 +15,8 @@ Authomatic.egg-info/
 bootstrap/bootstrap.py
 bower_components/
 build/
-config.py
-config_public.py
+config.py*
+config_secret.py
 dist/
 doc/build
 e

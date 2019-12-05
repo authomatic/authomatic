@@ -1,10 +1,7 @@
 Simple |pyramid| Example
 ------------------------
 
-.. seo-description::
-
-   A simple tutorial where we create a Pyramid application which can log users
-   in with Facebook, Twitter and OpenID and read their recent statuses.
+:description: A simple tutorial where we create a Pyramid application which can log users in with Facebook, Twitter and OpenID and read their recent statuses.
 
 In this tutorial we will create a simple |pyramid|_ application
 that will be able to log **users** in with Facebook, Twitter and |openid|_

@@ -151,10 +151,7 @@ release = version
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = [
-    "examples/twitter-localhost.rst",
-    "examples/**/authomatic/**/*",
-]
+exclude_patterns = ["examples/twitter-localhost.rst", "examples/**/authomatic/**/*"]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 # default_role = None
@@ -240,7 +237,7 @@ intersphinx_mapping = {
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "Authomatic"
+html_title = "Authomatic {0}".format(version)
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -354,7 +351,15 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [("index", "authomatic", u"Authomatic Documentation", [u"Peter Hudec"], 1)]
+man_pages = [
+    (
+        "index",
+        "authomatic",
+        u"Authomatic Documentation",
+        [u"Peter Hudec", u"Authomatic Project Community"],
+        1,
+    )
+]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False

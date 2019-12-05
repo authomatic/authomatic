@@ -6,6 +6,7 @@ import os
 import pkgutil
 import sys
 import time
+import warnings
 
 from jinja2 import (
     Environment,
@@ -30,8 +31,14 @@ sys.path.append(FUNCTIONAL_TESTS_PATH)
 
 from tests.functional_tests import expected_values
 
-from tests.functional_tests import config
+from tests.functional_tests import config_public as config
 
+# Merge in provider secrets (if present)
+try:
+    from tests.functional_tests import config_secret
+    config.PROVIDERS.update(config_secret.PROVIDERS)
+except (ImportError, AttributeError):
+    warnings.warn("config_secret update failed. Some provider tests may be skipped.")
 
 # Create template environment to load templates.
 TEMPLATES_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -131,8 +138,8 @@ def get_configuration(provider):
     try:
         conf.update(config.PROVIDERS[provider])
     except KeyError:
-        raise Exception('No record for the provider "{0}" was not found in the '
-                        'config!'.format(provider))
+        warnings.warn('No record for the provider "{0}" found in the config!'.format(provider))
+        return
 
     class_name = '{0}Configuration'.format(provider.capitalize())
     Res = namedtuple(class_name, sorted(conf.keys()))
@@ -177,7 +184,7 @@ expected_values_path = os.path.dirname(expected_values.__file__)
 # Loop through all modules of the expected_values package
 # except the _template.py
 for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):
-    if name in config.INCLUDE_PROVIDERS:
+    if name in config.INCLUDE_PROVIDERS and name in config.PROVIDERS:
         # Import the module
         mod = importer.find_module(name).load_module(name)
         # Assemble result

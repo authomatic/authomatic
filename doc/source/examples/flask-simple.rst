@@ -1,10 +1,7 @@
 Simple |flask| Example
 ----------------------
 
-.. seo-description::
-
-   A simple tutorial where we create a Flask app which can can log users
-   in with Facebook, Twitter and OpenID and read their recent statuses.
+:description: A simple tutorial where we create a Flask app which can can log users in with Facebook, Twitter and OpenID and read their recent statuses.
 
 In this tutorial we will create a simple |flask|_ application
 which will use **Authomatic** with :class:`.WerkzeugAdapter`

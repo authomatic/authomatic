@@ -4,9 +4,7 @@
 JavaScript
 ----------
 
-.. seo-description::
-
-   Use authomatic.js to run the login procedure in a centered popup and to delegate most of the work from your server to browser.
+:description: Use authomatic.js to run the login procedure in a centered popup and to delegate most of the work from your server to browser.
 
 The ``authomatic.js`` library is here to make your life even easier.
 It has a very tiny interface similar to it's Python sibling.
