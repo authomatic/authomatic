@@ -369,7 +369,7 @@ class TornadoAdapter(BaseAdapter):
 
         """
         try:
-            status_code = re.findall('\d+', status)[0]
-        except:
+            status_code = re.findall(r'\d+', status)[0]
+        except Exception:
             status_code = 500
         self.request_handler.set_status(int(status_code), status)
