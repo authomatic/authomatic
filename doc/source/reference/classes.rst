@@ -1,13 +1,11 @@
 Classes
 -------
 
-.. seo-description::
-
-	Reference of available classes.
+:description: Reference of available classes.
 
 .. autosummary::
 	:nosignatures:
-	
+
 	authomatic.Authomatic
 	authomatic.core.User
 	authomatic.core.Credentials

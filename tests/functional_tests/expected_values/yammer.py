@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 import re
 
@@ -82,7 +83,7 @@ CONFIG = {
         'show_ask_for_photo', 'show_communities_directory', 'significant_other',
         'state', 'stats', 'sticky_my_feed', 'summary', 'threaded_mode',
         'timezone', 'type', 'updates', 'url', 'username', 'verified_admin',
-        'web_preferences', 'web_url', 'xdr_proxy', 'yammer_now_app_id'
+        'web_preferences', 'web_url', 'xdr_proxy'
     ],
     # Case insensitive
     'content_should_not_contain':

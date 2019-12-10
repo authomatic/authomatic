@@ -1,17 +1,14 @@
-Simple |pyramid| Example 
+Simple |pyramid| Example
 ------------------------
 
-.. seo-description::
-   
-   A simple tutorial where we create a Pyramid application which can log users
-   in with Facebook, Twitter and OpenID and read their recent statuses.
+:description: A simple tutorial where we create a Pyramid application which can log users in with Facebook, Twitter and OpenID and read their recent statuses.
 
 In this tutorial we will create a simple |pyramid|_ application
 that will be able to log **users** in with Facebook, Twitter and |openid|_
 and retrieve their 5 most recent tweets/statuses.
 
 You can download all the source files we are about to create
-`here <https://github.com/peterhudec/authomatic/tree/master/examples/pyramid/simple>`__.
+`here <https://github.com/authomatic/authomatic/tree/master/examples/pyramid/simple>`__.
 
 First create the :doc:`/reference/config`
 dictionary where you set up all the providers you want to use.
@@ -20,11 +17,11 @@ Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
 `here <https://dev.twitter.com/apps>`__ for Twitter.
 
 .. note::
-   
+
    Facebook and other |oauth2| providers require a **redirect URI**
    which should be the URL of the *login request view*
    which we will create in this tutorial and whose walue in our case will be
-   ``http://[hostname]:[port]/login/fb`` for Facebook.
+   ``https://[hostname]:[port]/login/fb`` for Facebook.
 
 .. literalinclude:: ../../../examples/pyramid/simple/config-template.py
 
@@ -47,7 +44,7 @@ Create a simple *login* view.
 .. literalinclude:: ../../../examples/pyramid/simple/main.py
    :language: python
    :lines: 15
-   
+
 Inside the *login* view create a :class:`pyramid.response.Response` instance which we need to pass to the :class:`.WebObAdapter`.
 
 .. literalinclude:: ../../../examples/pyramid/simple/main.py
@@ -75,7 +72,7 @@ to prompt **him/her** for consent and redirect **him/her** back to this view.
 The *login procedure* is over when :meth:`.Authomatic.login` returns a :class:`.LoginResult`.
 
 .. warning::
-   
+
    Do not write anything to the response unless the *login procedure* is over!
    The :meth:`.Authomatic.login` either returns ``None``,
    which means that the *login procedure* si still pending,
@@ -92,7 +89,7 @@ To get more **user** info we need to call the :meth:`.User.update` method.
 .. literalinclude:: ../../../examples/pyramid/simple/main.py
    :language: python
    :lines: 31, 33, 35, 40-41
-   
+
 Now we can welcome the **user** by name.
 
 .. literalinclude:: ../../../examples/pyramid/simple/main.py
@@ -116,7 +113,7 @@ Let's first get the **user's** five most recent Facebook statuses.
    :language: python
    :lines: 55-56
 
-Prepare the `Facebook Graph API <http://developers.facebook.com/docs/reference/api/>`_ URL.
+Prepare the `Facebook Graph API <https://developers.facebook.com/docs/reference/api/>`_ URL.
 
 .. literalinclude:: ../../../examples/pyramid/simple/main.py
    :language: python
@@ -164,16 +161,15 @@ Last bit is to configure the application.
    :lines: 128-139
 
 
-That's it. Now just run the application and navigate your browser to ``http://127.0.0.1:8080``
-or ``http://localhost:8080``.
+That's it. Now just run the application and navigate your browser to ``http://127.0.0.1:8080`` or ``http://localhost:8080``.
 
 .. code-block:: bash
-   
+
    $ python main.py
 
 .. include:: twitter-localhost.rst
 
 And here is the complete app. Remember that you can download all the files we just created from
-`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/pyramid/simple>`_.
+`GitHub <https://github.com/authomatic/authomatic/tree/master/examples/pyramid/simple>`_.
 
 .. literalinclude:: ../../../examples/pyramid/simple/main.py

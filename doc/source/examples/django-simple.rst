@@ -1,28 +1,25 @@
-Simple |django| Example 
+Simple |django| Example
 -----------------------
 
-.. seo-description::
-   
-   A simple tutorial where we create a Django app which can log users
-   in with Facebook, Twitter and OpenID and read their recent statuses.
+:description: A simple tutorial where we create a Django app which can log users in with Facebook, Twitter and OpenID and read their recent statuses.
 
 In this tutorial we will create a simple |django|_ application
 that will be able to log **users** in with Facebook, Twitter and |openid|_
 and retrieve their 5 most recent tweets/statuses.
 
 You can download all the source files we are about to create
-`here <https://github.com/peterhudec/authomatic/tree/master/examples/django>`__.
+`here <https://github.com/authomatic/authomatic/tree/master/examples/django>`__.
 
 First create a new |django|_ project named *example*.
 
 .. code-block:: bash
-   
+
    $ django-admin.py startproject example
 
 Inside the newly created *example* project create a new application named *simple*.
 
 .. code-block:: bash
-   
+
    $ cd example
    $ python manage.py startapp simple
    $ cd simple
@@ -57,11 +54,11 @@ You will need the ``consumer_key`` and ``consumer_secret`` which you can get
 `here <https://dev.twitter.com/apps>`__ for Twitter.
 
 .. note::
-   
+
    Facebook and other |oauth2| providers require a **redirect URI**
    which should be the URL of the *login view*
    which we will create in this tutorial and whose walue in our case will be
-   ``http://[hostname]/simple/login/fb`` for Facebook.
+   ``https://[hostname]/simple/login/fb`` for Facebook.
 
 
 .. literalinclude:: ../../../examples/django/example/simple/config-template.py
@@ -87,13 +84,13 @@ which we are going to create next.
    :language: python
    :lines: 11, 13-20
 
-Create the *login* view which should recieve the ``provider_name`` URL variable.
+Create the *login* view which should receive the ``provider_name`` URL variable.
 Inside the view instantiate the :class:`django.http.HttpResponse` class.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
    :language: python
    :lines: 22, 24
-   
+
 Now just Log the **user** in by calling the :meth:`.Authomatic.login` method inside the *login* view.
 You must pass it the :class:`.DjangoAdapter`
 and the ``provider_name`` URL variable.
@@ -109,7 +106,7 @@ to prompt **him/her** for consent and redirect **him/her** back to this view.
 The *login procedure* is over when :meth:`.Authomatic.login` returns a :class:`.LoginResult`.
 
 .. warning::
-   
+
    Do not write anything to the response unless the *login procedure* is over!
    The :meth:`.Authomatic.login` either returns ``None``,
    which means that the *login procedure* si still pending,
@@ -126,7 +123,7 @@ To get more **user** info we need to call the :meth:`.User.update` method.
 .. literalinclude:: ../../../examples/django/example/simple/views.py
    :language: python
    :lines: 35, 37, 39, 44-45
-   
+
 Now we can welcome the **user** by name.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
@@ -150,7 +147,7 @@ Let's first get the **user's** five most recent **Facebook** statuses.
    :language: python
    :lines: 59-60
 
-Prepare the `Facebook Graph API <http://developers.facebook.com/docs/reference/api/>`_ URL.
+Prepare the `Facebook Graph API <https://developers.facebook.com/docs/reference/api/>`_ URL.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
    :language: python
@@ -181,16 +178,16 @@ Finally return the ``response`` instance.
    :language: python
    :lines: 117
 
-Run the app and navigate to ``http://[hostname]/simple`` in your browser.
+Run the app and navigate to ``https://[hostname]/simple`` in your browser.
 
 .. code-block:: bash
-   
+
    $ python manage.py runserver
 
 .. include:: twitter-localhost.rst
 
 And here is the complete ``example/simple/views.py`` module.
 Remember that you can download all the files we just created from
-`GitHub <https://github.com/peterhudec/authomatic/tree/master/examples/django>`_.
+`GitHub <https://github.com/authomatic/authomatic/tree/master/examples/django>`_.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py

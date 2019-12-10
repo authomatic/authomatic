@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -54,8 +55,7 @@ CONFIG = {
         conf.no_location +
         conf.no_nickname +
         conf.no_phone +
-        conf.no_timezone
-        ,
+        conf.no_timezone,
     # True means that any thruthy value is expected
     'credentials': {
         'token_type': 'Bearer',

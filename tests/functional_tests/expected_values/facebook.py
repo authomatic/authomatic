@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 import re
 
@@ -17,47 +18,38 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="platformDialogForm"]/div[2]/table/tbody/tr/td[2]/button[2]'
     ],
-    'after_consent_wait_seconds': 1,
+    'after_consent_wait_seconds': 3,
     'class_': oauth2.Facebook,
     'scope': oauth2.Facebook.user_info_scope,
     'user': {
         'birth_date': conf.user_birth_date_str,
-        'city': conf.user_city,
-        'country': conf.user_country,
-        'email': conf.user_email,
+        'city': None,
+        'country': None,
+        'email': conf.user_login,
         'first_name': conf.user_first_name,
-        'gender': conf.user_gender,
+        'gender': None,
         'id': conf.user_id,
         'last_name': conf.user_last_name,
-        'link': LINK,
-        'locale': conf.user_locale,
-        'location': conf.user_location,
+        'link': None,
+        'locale': None,
+        'location': None,
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
         'picture': PICTURE,
         'postal_code': None,
-        'timezone': re.compile(r'\d+'),
+        'timezone': None,
         'username': None,
     },
     'content_should_contain': [
         conf.user_birth_date.strftime(u'%m\/%d\/%Y'),
-        conf.user_city,
-        conf.user_country,
-        conf.user_email.replace('@', '\\u0040'),
+        conf.user_login.replace('@', '\\u0040'),
         conf.user_first_name,
-        conf.user_gender,
         conf.user_id,
         conf.user_last_name,
-        LINK.replace('/', '\/'),
-        conf.user_locale,
-        conf.user_location,
-        conf.user_name,
 
         # User info JSON keys
-        'bio', 'birthday', 'email', 'first_name', 'gender', 'id', 'last_name',
-        'link', 'locale', 'location', 'name', 'timezone', 'updated_time',
-        'verified'
+        'email', 'first_name', 'id', 'last_name', 'picture',
     ],
     # Case insensitive
     'content_should_not_contain':
@@ -67,8 +59,8 @@ CONFIG = {
         conf.no_username,
     # True means that any thruthy value is expected
     'credentials': {
-        'token_type': None,
-        'provider_type_id': '2-5',
+        'token_type': 'Bearer',
+        'provider_type_id': '2-6',
         '_expiration_time': True,
         'consumer_key': None,
         'provider_id': None,

@@ -1,0 +1,111 @@
+import fixtures
+import constants
+# from authomatic.providers import oauth1
+# from authomatic.providers import oauth2
+
+
+conf = fixtures.get_configuration('provider_slug')
+
+CONFIG = {
+    'login_xpath': '',
+    'password_xpath': '',
+    'consent_xpaths': [
+        ''
+    ],
+    'class_': ProviderClass,
+    'scope': ProviderClass.user_info_scope,
+    'user': {
+        'birth_date': conf.user_birth_date,
+        'city': conf.user_city,
+        'country': conf.user_country,
+        'email': conf.user_email,
+        'first_name': conf.user_first_name,
+        'gender': conf.user_gender,
+        'id': conf.user_id,
+        'last_name': conf.user_last_name,
+        'link': conf.user_link,
+        'locale': conf.user_locale,
+        'name': conf.user_name,
+        'nickname': conf.user_nickname,
+        'phone': conf.user_phone,
+        'picture': conf.user_picture,
+        'postal_code': conf.user_postal_code,
+        'timezone': conf.user_timezone,
+        'username': conf.user_username_reverse,
+    },
+    'content_should_contain': [
+        conf.user_birth_date,
+        conf.user_city,
+        conf.user_country,
+        conf.user_email,
+        conf.user_first_name,
+        conf.user_gender,
+        conf.user_id,
+        conf.user_last_name,
+        conf.user_link,
+        conf.user_locale,
+        conf.user_name,
+        conf.user_nickname,
+        conf.user_phone,
+        conf.user_picture,
+        conf.user_postal_code,
+        conf.user_timezone,
+        conf.user_username_reverse,
+
+        # User info response JSON keys
+        'foo', 'bar', 'baz',
+    ],
+    # Case insensitive
+    'content_should_not_contain':
+        [] +
+        # conf.email_escaped +
+        # conf.no_birth_date +
+        # conf.no_city +
+        # conf.no_email +
+        # conf.no_first_name +
+        # conf.no_gender +
+        # conf.no_last_name +
+        # conf.no_locale +
+        # conf.no_nickname +
+        # conf.no_phone +
+        # conf.no_postal_code +
+        # conf.no_timezone +
+        # conf.no_username +
+        # conf.no_location +
+        ['any', 'other', 'values'],
+
+    # True means that any thruthy value is expected
+    'credentials': {
+        'token_type': True,
+        'provider_type_id': '#-#',
+        '_expiration_time': True,
+        'consumer_key': True,
+        'provider_id': True,
+        'consumer_secret': True,
+        'token': True,
+        'token_secret': True,
+        '_expire_in': True,
+        'provider_name': 'provider_name',
+        'refresh_token': True,
+        'provider_type': 'provider_type',
+        'refresh_status': constants.CREDENTIALS_REFRESH_OK,
+    },
+    # Testing changes after credentials refresh
+    # same: True
+    # not same: False
+    # don't test: None
+    'credentials_refresh_change': {
+        'token_type': True,
+        'provider_type_id': True,
+        '_expiration_time': True,
+        'consumer_key': True,
+        'provider_id': True,
+        'consumer_secret': True,
+        'token': True,
+        'token_secret': True,
+        '_expire_in': True,
+        'provider_name': True,
+        'refresh_token': True,
+        'provider_type': True,
+    },
+}

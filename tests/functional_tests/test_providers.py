@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # encoding: utf-8
 
 import logging
@@ -10,11 +11,9 @@ import liveandletdie
 import pytest
 import requests
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import (
     NoSuchElementException,
     TimeoutException,
-    UnexpectedAlertPresentException,
     WebDriverException,
 )
 from selenium.webdriver.support import expected_conditions
@@ -23,10 +22,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from authomatic.six.moves.urllib import parse
 from tests.functional_tests import fixtures
 import constants
-from tests.functional_tests import config
+from tests.functional_tests import config_public as config
 
 
 requests.packages.urllib3.disable_warnings()
+
+if os.getuid() and config.PORT == 80:
+    pytest.exit('You need to run this tests as sudo if config.PORT == 80')
 
 ME = os.path.dirname(__file__)
 VIRTUALENV_NAME = os.path.basename(os.environ.get('VIRTUAL_ENV', ''))
@@ -37,9 +39,11 @@ EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
 PROVIDERS = sorted([(k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items()
                     if k in config.INCLUDE_PROVIDERS])
 PROVIDERS_IDS = [k for k, v in PROVIDERS]
-PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
+try:
+    PROVIDER_NAME_WIDTH = len(max(PROVIDERS_IDS, key=lambda x: len(x)))
+except ValueError:
+    PROVIDER_NAME_WIDTH = 0
 
-# CHECK_URL = 'https://authomatic.com'
 
 ALL_APPS = {
     'Django': liveandletdie.Django(
@@ -68,7 +72,10 @@ APPS = dict((k, v) for k, v in ALL_APPS.items() if
 
 
 file_handler = logging.FileHandler(LOG_PATH, mode='w')
-file_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s', '%x %X'))
+file_handler.setFormatter(
+    logging.Formatter(
+        '%(asctime)s %(message)s',
+        '%x %X'))
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -91,9 +98,11 @@ def log(indent, provider_name, message):
     ))
 
 
-@pytest.fixture('module')
+@pytest.fixture(scope='module')
 def browser(request):
-    """Starts and stops the server for each app in APPS"""
+    """
+    Starts and stops the browser
+    """
     _browser = config.get_browser()
     _browser.set_window_size(800, 600)
     _browser.set_window_position(1024 - 800 - 10, 40)
@@ -102,9 +111,11 @@ def browser(request):
     return _browser
 
 
-@pytest.fixture('module', APPS)
+@pytest.fixture(scope='module', params=APPS)
 def app(request):
-    """Starts and stops the server for each app in APPS"""
+    """
+    Starts and stops the server for each app in APPS.
+    """
 
     _app = APPS[request.param]
     _app.name = request.param
@@ -121,7 +132,9 @@ def app(request):
 
 
 def login(request, browser, app, attempt=1):
-    """Runs for each provider."""
+    """
+    Runs for each provider.
+    """
     success = False
     provider_name, provider = request.param
     log(1, provider_name, 'Attempt {0}'.format(attempt))
@@ -133,7 +146,8 @@ def login(request, browser, app, attempt=1):
             seconds = config.MIN_WAIT
 
         if seconds:
-            log(indent, provider_name, u'(waiting {0} seconds)'.format(seconds))
+            log(indent, provider_name,
+                u'(waiting {0} seconds)'.format(seconds))
             # log(0, provider_name, u' waiting {0} seconds '
             #     .format(seconds).center(60, '#'))
             time.sleep(seconds)
@@ -155,7 +169,8 @@ def login(request, browser, app, attempt=1):
                     return
 
                 log(3, provider_name, 'Entering PDB for human interaction')
-                import pdb; pdb.set_trace()
+                import pdb
+                pdb.set_trace()
                 log(3, provider_name, 'Returned from PDB')
                 return
         except NoSuchElementException:
@@ -166,6 +181,10 @@ def login(request, browser, app, attempt=1):
     try:
         provider['name'] = provider_name
         conf = fixtures.get_configuration(provider_name)
+        if not conf:
+            log(0, "No configuration found for provider {}".format(provider_name))
+            # return to 'skip' test
+            return 1
 
         # Andy types the login handler url to the address bar.
         url = parse.urljoin(app.check_url, 'login/' + provider['_path'])
@@ -181,6 +200,7 @@ def login(request, browser, app, attempt=1):
             log(2, provider_name, 'Going to login URL: {0}'.format(login_url))
             browser.get(login_url)
         else:
+            log(2, provider_name, 'Going to URL: {0}'.format(url))
             browser.get(url)
 
         # Handle alerts
@@ -202,7 +222,8 @@ def login(request, browser, app, attempt=1):
         # Pause for getting login and password xpaths
         if request.config.getoption("--pause"):
             log(2, provider_name, 'Pausing to pdb')
-            import pdb; pdb.set_trace()
+            import pdb
+            pdb.set_trace()
 
         if login_xpath:
             if pre_login_xpaths:
@@ -215,7 +236,8 @@ def login(request, browser, app, attempt=1):
                         'Clicking on pre-login element'.format(xpath))
                     pre_login.click()
 
-            log(2, provider_name, 'Finding login input {0}'.format(login_xpath))
+            log(2, provider_name,
+                'Finding login input {0}'.format(login_xpath))
             login_element = browser.find_element_by_xpath(login_xpath)
 
             log(3, provider_name, 'Filling out login')
@@ -230,6 +252,7 @@ def login(request, browser, app, attempt=1):
             if hi:
                 human_interaction_needed(*hi)
 
+            wait(2, provider.get('before_password_input_wait'))
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
             password_element = browser.find_element_by_xpath(password_xpath)
@@ -240,6 +263,11 @@ def login(request, browser, app, attempt=1):
             log(2, provider_name, 'Hitting ENTER')
             password_element.send_keys(Keys.ENTER)
             wait(2, provider.get('after_login_wait_seconds'))
+
+        after_login_hook = provider.get('after_login_hook')
+        if after_login_hook:
+            log(3, provider_name, 'Calling no-result hook')
+            after_login_hook(browser, log)
 
         if login_url:
             # Return back from login URL
@@ -275,12 +303,14 @@ def login(request, browser, app, attempt=1):
             log(3, provider_name, 'Result element found')
             success = True
         except NoSuchElementException:
+            log(3, provider_name, browser.current_url())
             log(3, provider_name, 'Result element not found!')
 
     except WebDriverException as e:
         if request.config.getoption('--login-error-pdb'):
             log(2, provider_name, 'Entering PDB session')
-            import pdb; pdb.set_trace()
+            import pdb
+            pdb.set_trace()
         try:
             log(2, provider_name,
                 'Finding result element after error {0}'.format(e.msg))
@@ -301,7 +331,8 @@ def login(request, browser, app, attempt=1):
 
             # import pdb; pdb.set_trace()
 
-            pytest.fail('Login by provider "{0}" failed!'.format(provider_name))
+            pytest.fail(
+                'Login by provider "{0}" failed!'.format(provider_name))
 
     return provider
 
@@ -348,7 +379,8 @@ class TestCredentials(Base):
                 try:
                     unicode
                 except NameError:
-                    class unicode(object): pass
+                    class unicode(object):
+                        pass
                 if coerce is not None and isinstance(expected, (str, unicode)):
                     expected = coerce(expected)
                     value = coerce(value)
@@ -405,10 +437,10 @@ class TestCredentialsChange(Base):
         self.skip_if_openid(provider)
 
         refresh_status = browser.find_element_by_id('original-credentials-'
-                                                      'refresh_status').text
+                                                    'refresh_status').text
 
         supports_refresh = refresh_status != \
-                           constants.CREDENTIALS_REFRESH_NOT_SUPPORTED
+            constants.CREDENTIALS_REFRESH_NOT_SUPPORTED
 
         def f(property_name, coerce=None):
             if not supports_refresh:
@@ -554,7 +586,7 @@ class TestUser(Base):
         content = browser.find_element_by_id('content').text.lower()
         for item in provider['content_should_not_contain']:
             if item:
-                assert item.lower() not in content
+                assert str(item).lower() not in content
 
     def test_provider_support(self, app, provider):
         self.skip_if_openid(provider)

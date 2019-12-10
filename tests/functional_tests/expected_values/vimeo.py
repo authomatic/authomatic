@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 import fixtures
@@ -11,8 +12,8 @@ PICTURE = re.compile(r'http://\w+.vimeocdn.com/portrait/\d+_300x300.jpg')
 
 CONFIG = {
     'logout_url': 'https://vimeo.com/log_out',
-    'login_xpath': '//*[@id="email"]',
-    'password_xpath': '//*[@id="password"]',
+    'login_xpath': '//*[@id="signup_email"]',
+    'password_xpath': '//*[@id="login_password"]',
     'consent_xpaths': [
         '//*[@id="security"]/form/input[4]',
     ],

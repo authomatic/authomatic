@@ -8,7 +8,7 @@ Development Environment Setup
 -----------------------------
 
 Fork the
-`Authomatic repository on Github <https://github.com/peterhudec/authomatic>`__
+`Authomatic repository on Github <https://github.com/authomatic/authomatic>`__
 and clone it:
 
 .. code-block:: bash
@@ -34,7 +34,7 @@ The easiest way to set up the development environment is to run the
 The script does following:
 
 #. Initializes and updates GIT submodules. The
-   `Foundation Sphinx Theme <https://github.com/peterhudec/foundation-sphinx-theme>`__
+   `Foundation Sphinx Theme <https://github.com/authomatic/foundation-sphinx-theme>`__
    located in ``./doc/source_/themes/foundation-sphinx-theme``
    is currently the only GIT submodule used.
 #. Creates a `virtual environment <https://virtualenv.pypa.io/en/latest/>`__
@@ -113,13 +113,13 @@ To deploy a compiled documentation to GitHub page go to the
 Testing
 -------
 
-Tests are written in `pytest <http://pytest.org/>`__
+Tests are written in `pytest <https://pytest.org/>`__
 and `Tox <https://testrun.org/tox>`__ is used to run them against
 **Python 2.6**, **Python 2.7** and **Python 3.4**.
 
 
 There are currently only *functional* (*end-to-end*)
-`Selenium <http://seleniumhq.org>`__ tests.
+`Selenium <https://selenium.dev>`__ tests.
 They are designed to test the *login procedure* and
 *credentials refreshment* and to discover changes in provider APIs.
 
@@ -135,7 +135,7 @@ To run *functional* tests, you first need to create the
 If you want to run tests for all of the covered providers,
 you should register an **application** and a **user account** by each of them
 and fill out **all possible** settings of the user profile.
-You can exclude providers from the tests by comenting them out of the
+You can exclude providers from the tests by commenting them out of the
 ``INCLUDE_PROVIDERS`` list.
 
 You should also add an alias for the IP address of your localhost, because
@@ -187,7 +187,7 @@ Deployment to Travis CI
 
 Register at `Travis CI <https://travis-ci.org/>`__ and configure your fork
 of Authomatic (read the `getting started section
-<http://docs.travis-ci.com/user/getting-started/>`__ if you don't know how).
+<https://docs.travis-ci.com/user/getting-started/>`__ if you don't know how).
 
 Install the `Travis CI command line client
 <https://github.com/travis-ci/travis.rb>`__.

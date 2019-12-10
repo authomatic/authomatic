@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # encoding: utf-8
 
 from collections import namedtuple
@@ -5,6 +6,7 @@ import os
 import pkgutil
 import sys
 import time
+import warnings
 
 from jinja2 import (
     Environment,
@@ -29,8 +31,14 @@ sys.path.append(FUNCTIONAL_TESTS_PATH)
 
 from tests.functional_tests import expected_values
 
-from tests.functional_tests import config
+from tests.functional_tests import config_public as config
 
+# Merge in provider secrets (if present)
+try:
+    from tests.functional_tests import config_secret
+    config.PROVIDERS.update(config_secret.PROVIDERS)
+except (ImportError, AttributeError):
+    warnings.warn("config_secret update failed. Some provider tests may be skipped.")
 
 # Create template environment to load templates.
 TEMPLATES_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -45,7 +53,9 @@ OPENID_PROVIDERS = {}
 
 
 def render_home(framework_name):
-    """Renders the homepage"""
+    """
+    Renders the homepage.
+    """
     template = env.get_template('index.html')
     return template.render(providers=ASSEMBLED_CONFIG,
                            oauth2_providers=OAUTH2_PROVIDERS,
@@ -56,7 +66,7 @@ def render_home(framework_name):
 
 def render_login_result(framework_name, result):
     """
-    Renders the login handler
+    Renders the login handler.
 
     :param result:
 
@@ -88,7 +98,7 @@ def render_login_result(framework_name, result):
 
         access_token_content = None
         if hasattr(result.provider, 'access_token_response'):
-            access_token_content = result.provider.access_token_response.content
+            access_token_content = result.provider.access_token_response.content  # noqa
 
         template = env.get_template('login.html')
         return template.render(result=result,
@@ -108,7 +118,7 @@ def render_login_result(framework_name, result):
 
 def get_configuration(provider):
     """
-    Creates the user configuration which holds the tested values
+    Creates the user configuration which holds the tested values.
 
     It merges the ``config.COMMON`` and the ``config.PROVIDERS[provider]``
     dictionaries and returns a named tuple.
@@ -125,7 +135,11 @@ def get_configuration(provider):
     # Merge and override common settings with provider settings.
     conf = {}
     conf.update(config.COMMON)
-    conf.update(config.PROVIDERS[provider])
+    try:
+        conf.update(config.PROVIDERS[provider])
+    except KeyError:
+        warnings.warn('No record for the provider "{0}" found in the config!'.format(provider))
+        return
 
     class_name = '{0}Configuration'.format(provider.capitalize())
     Res = namedtuple(class_name, sorted(conf.keys()))
@@ -137,6 +151,9 @@ def get_configuration(provider):
     Res.user_birth_date_str = bday.strftime(Res.BIRTH_DATE_FORMAT)
 
     Res.no_birth_date = ['birth']
+    Res.no_birth_year = [conf['user_birth_year'], 'birth_year', 'birthYear']
+    Res.no_birth_month = [conf['user_birth_month'], 'birth_month', 'birthMonth']
+    Res.no_birth_day = [conf['user_birth_day'], 'birth_day', 'birthDay']
     Res.no_city = [conf['user_city'], 'city']
     Res.no_country = [conf['user_country'], 'country']
     Res.no_email = [conf['user_email'], 'email']
@@ -151,8 +168,12 @@ def get_configuration(provider):
     Res.no_postal_code = [conf['user_postal_code'], 'postal', 'zip']
     Res.no_timezone = ['timezone']
     Res.no_username = ['username', '"{0}"'.format(conf['user_username'])]
-    Res.no_location = [conf['user_country'], 'city',
-        'country', 'location'] + Res.no_postal_code + Res.no_city
+    Res.no_location = [
+        conf['user_country'],
+        'city',
+        'country',
+        'location'
+    ] + Res.no_postal_code + Res.no_city
 
     # Populate the namedtuple with provider settings.
     return Res(**conf)
@@ -160,25 +181,26 @@ def get_configuration(provider):
 
 expected_values_path = os.path.dirname(expected_values.__file__)
 
-# Loop through all modules of the expected_values package.
+# Loop through all modules of the expected_values package
+# except the _template.py
 for importer, name, ispkg in pkgutil.iter_modules([expected_values_path]):
-    # Import the module
-    mod = importer.find_module(name).load_module(name)
+    if name in config.INCLUDE_PROVIDERS and name in config.PROVIDERS:
+        # Import the module
+        mod = importer.find_module(name).load_module(name)
+        # Assemble result
+        result = {}
+        result.update(config.PROVIDERS[name])
+        result.update(mod.CONFIG)
 
-    # Assemble result
-    result = {}
-    result.update(config.PROVIDERS[name])
-    result.update(mod.CONFIG)
+        result['_path'] = '{0}?id={1}'.format(name, result['openid_identifier']) \
+            if result.get('openid_identifier') else name
 
-    result['_path'] = '{0}?id={1}'.format(name, result['openid_identifier']) \
-        if result.get('openid_identifier') else name
+        ASSEMBLED_CONFIG[name] = result
+        if oauth2.OAuth2 in result['class_'].__mro__:
+            OAUTH2_PROVIDERS[name] = result
 
-    ASSEMBLED_CONFIG[name] = result
-    if oauth2.OAuth2 in result['class_'].__mro__:
-        OAUTH2_PROVIDERS[name] = result
+        if oauth1.OAuth1 in result['class_'].__mro__:
+            OAUTH1_PROVIDERS[name] = result
 
-    if oauth1.OAuth1 in result['class_'].__mro__:
-        OAUTH1_PROVIDERS[name] = result
-
-    if openid.OpenID in result['class_'].__mro__:
-        OPENID_PROVIDERS[name] = result
+        if openid.OpenID in result['class_'].__mro__:
+            OPENID_PROVIDERS[name] = result

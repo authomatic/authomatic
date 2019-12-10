@@ -7,18 +7,21 @@ Adapters
    :backlinks: none
 
 The :func:`authomatic.login` function needs access to functionality like
-getting the **URL** of the handler where it is being called, getting the **request params** and **cookies** and
-**writing the body**, **headers** and **status** to the response.
+getting the **URL** of the handler where it is being called, getting the
+**request params** and **cookies** and **writing the body**, **headers**
+and **status** to the response.
 
 Since implementation of these features varies across Python web frameworks,
-the Authomatic library uses **adapters** to unify these differences into a single interface.
+the Authomatic library uses **adapters** to unify these differences into a
+single interface.
 
 Available Adapters
 ^^^^^^^^^^^^^^^^^^
 
-If you are missing an adapter for the framework of your choice,
-please open an `enhancement issue <https://github.com/peterhudec/authomatic/issues>`_
-or consider a contribution to this module by :ref:`implementing <implement_adapters>` one by yourself.
+If you are missing an adapter for the framework of your choice, please
+open an `enhancement issue <https://github.com/authomatic/authomatic/issues>`_
+or consider a contribution to this module by
+:ref:`implementing <implement_adapters>` one by yourself.
 Its very easy and shouldn't take you more than a few minutes.
 
 .. autoclass:: DjangoAdapter
@@ -44,7 +47,8 @@ Do it by subclassing the :class:`.BaseAdapter` abstract class.
 There are only **six** members that you need to implement.
 
 Moreover if your framework is based on the |webob|_ or |werkzeug|_ package
-you can subclass the :class:`.WebObAdapter` or :class:`.WerkzeugAdapter` respectively.
+you can subclass the :class:`.WebObAdapter` or :class:`.WerkzeugAdapter`
+respectively.
 
 .. autoclass:: BaseAdapter
     :members:
@@ -52,16 +56,15 @@ you can subclass the :class:`.WebObAdapter` or :class:`.WerkzeugAdapter` respect
 """
 
 import abc
-import re
-
 from authomatic.core import Response
 
 
 class BaseAdapter(object):
     """
-    Base class for platform adapters
+    Base class for platform adapters.
 
     Defines common interface for WSGI framework specific functionality.
+
     """
 
     __metaclass__ = abc.ABCMeta
@@ -69,22 +72,24 @@ class BaseAdapter(object):
     @abc.abstractproperty
     def params(self):
         """
-        Must return a :class:`dict` of all request parameters of any HTTP method.
+        Must return a :class:`dict` of all request parameters of any HTTP
+        method.
 
         :returns:
             :class:`dict`
-        """
 
+        """
 
     @abc.abstractproperty
     def url(self):
         """
-        Must return the url of the actual request including path but without query and fragment
+        Must return the url of the actual request including path but without
+        query and fragment.
 
         :returns:
             :class:`str`
-        """
 
+        """
 
     @abc.abstractproperty
     def cookies(self):
@@ -93,8 +98,8 @@ class BaseAdapter(object):
 
         :returns:
             :class:`dict`
-        """
 
+        """
 
     @abc.abstractmethod
     def write(self, value):
@@ -103,8 +108,8 @@ class BaseAdapter(object):
 
         :param str value:
             String to be written to response.
-        """
 
+        """
 
     @abc.abstractmethod
     def set_header(self, key, value):
@@ -116,8 +121,8 @@ class BaseAdapter(object):
 
         :param str value:
             Header value.
-        """
 
+        """
 
     @abc.abstractmethod
     def set_status(self, status):
@@ -126,6 +131,7 @@ class BaseAdapter(object):
 
         :param str status:
             The HTTP response status.
+
         """
 
 
@@ -147,7 +153,10 @@ class DjangoAdapter(BaseAdapter):
 
     @property
     def params(self):
-        return dict(self.request.REQUEST)
+        params = {}
+        params.update(self.request.GET.dict())
+        params.update(self.request.POST.dict())
+        return params
 
     @property
     def url(self):
@@ -169,7 +178,9 @@ class DjangoAdapter(BaseAdapter):
 
 
 class WebObAdapter(BaseAdapter):
-    """Adapter for the |webob|_ package."""
+    """
+    Adapter for the |webob|_ package.
+    """
 
     def __init__(self, request, response):
         """
@@ -182,37 +193,31 @@ class WebObAdapter(BaseAdapter):
         self.request = request
         self.response = response
 
-
-    #===========================================================================
+    # =========================================================================
     # Request
-    #===========================================================================
+    # =========================================================================
 
     @property
     def url(self):
         return self.request.path_url
 
-
     @property
     def params(self):
         return dict(self.request.params)
-
 
     @property
     def cookies(self):
         return dict(self.request.cookies)
 
-
-    #===========================================================================
+    # =========================================================================
     # Response
-    #===========================================================================
+    # =========================================================================
 
     def write(self, value):
         self.response.write(value)
 
-
     def set_header(self, key, value):
         self.response.headers[key] = str(value)
-
 
     def set_status(self, status):
         self.response.status = status
@@ -223,6 +228,7 @@ class Webapp2Adapter(WebObAdapter):
     Adapter for the |webapp2|_ framework.
 
     Inherits from the :class:`.WebObAdapter`.
+
     """
 
     def __init__(self, handler):
@@ -239,6 +245,7 @@ class WerkzeugAdapter(BaseAdapter):
     Adapter for |flask|_ and other |werkzeug|_ based frameworks.
 
     Thanks to `Mark Steve Samson <http://marksteve.com>`_.
+
     """
 
     @property
@@ -273,80 +280,3 @@ class WerkzeugAdapter(BaseAdapter):
 
     def set_status(self, status):
         self.response.status = status
-
-
-class TornadoAdapter(BaseAdapter):
-    """
-    Base class for platform adapters
-    Defines common interface for WSGI framework specific functionality.
-    """
-
-    def __init__(self, request_handler, return_url=None):
-        self.return_url = return_url
-        self.request_handler = request_handler
-        self.request = self.request_handler.request
-
-    @property
-    def params(self):
-        """
-        Must return a :class:`dict` of all request
-        parameters of any HTTP method.
-        :returns:
-            :class:`dict`
-        """
-        _arguments = dict()
-        for k, v in self.request.arguments.iteritems():
-            _arguments[k] = v[0]
-        return _arguments
-
-    @property
-    def url(self):
-        """
-        Must return the url of the actual request including path
-        but without query and fragment
-        :returns:
-            :class:`str`
-        """
-        return self.return_url or self.request.full_url()
-
-    @property
-    def cookies(self):
-        """
-        Must return cookies as a :class:`dict`.
-        :returns:
-            :class:`dict`
-        """
-        _cookies = dict()
-        for k, v in self.request.cookies.iteritems():
-            _cookies[k] = v.OutputString().replace("authomatic=", "")
-        return _cookies
-
-    def write(self, value):
-        """
-        Must write specified value to response.
-        :param str value:
-            String to be written to response.
-        """
-        self.request_handler.write(value)
-
-    def set_header(self, key, value):
-        """
-        Must set response headers to ``Key: value``.
-        :param str key:
-            Header name.
-        :param str value:
-            Header value.
-        """
-        self.request_handler.set_header(key, value)
-
-    def set_status(self, status):
-        """
-        Must set the response status e.g. ``'302 Found'``.
-        :param str status:
-            The HTTP response status.
-        """
-        try:
-            status_code = re.findall('\d+', status)[0]
-        except:
-            status_code = 500
-        self.request_handler.set_status(int(status_code), status)

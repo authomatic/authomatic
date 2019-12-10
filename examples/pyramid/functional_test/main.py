@@ -24,7 +24,9 @@ def login(request):
     result = authomatic.login(WebObAdapter(request, response), provider_name)
 
     if result:
-        response.write(fixtures.render_login_result('pyramid', result).encode())
+        response.write(
+            fixtures.render_login_result(
+                'pyramid', result).encode())
 
     return response
 
@@ -37,7 +39,7 @@ if __name__ == '__main__':
 
     config.add_route('login', '/login/{provider_name}')
     config.add_view(login, route_name='login')
-    
+
     app = config.make_wsgi_app()
     liveandletdie.WsgirefSimpleServer.wrap(app)
 

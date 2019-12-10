@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth1
@@ -10,7 +11,9 @@ CONFIG = {
     'consent_xpaths': [
         '//*[@id="permissions"]/form/div/input[1]',
     ],
-    'consent_wait_seconds': 6,
+    'enter_after_login_input': True,
+    'before_password_input_wait': 1,
+    'consent_wait_seconds': 1,
     'logout_url': 'https://login.yahoo.com/config/login?logout=1',
     'class_': oauth1.Flickr,
     'user_authorization_params': dict(perms='read'),

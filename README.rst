@@ -20,8 +20,8 @@
 Authomatic
 ==========
 
-.. image:: https://travis-ci.org/peterhudec/authomatic.svg?branch=master
-    :target: https://travis-ci.org/peterhudec/authomatic
+.. image:: https://travis-ci.org/authomatic/authomatic.svg?branch=master
+    :target: https://travis-ci.org/authomatic/authomatic
 
 **Authomatic**
 is a **framework agnostic** library
@@ -31,7 +31,16 @@ which simplifies **authentication** of users
 by third party providers like **Facebook** or **Twitter**
 through standards like **OAuth** and **OpenID**.
 
-For more info visit the project page at http://peterhudec.github.io/authomatic.
+For more info visit the project page at http://authomatic.github.io/authomatic.
+
+Maintainers
+===========
+
+**Authomatic** was migrated from a private project of Peter Hudec to a community-managed project.
+Many thanks to Peter Hudec for all his hard work for creating and maintaining **authomatic**!
+We are now a small team of volunteers, not paid for the work here.
+Any help is appreciated!
+
 
 Features
 ========
@@ -64,9 +73,8 @@ The package is licensed under
 Requirements
 ============
 
-Requires **Python 2.6** and newer. **Python 3.x** support added in
-**Authomatic 0.0.11** thanks to
-`Emmanuel Leblond <https://github.com/touilleMan>`__.
+Requires **Python 2.7** and newer.
+**Python 3.x** support added in **Authomatic 0.0.11** thanks to Emmanuel Leblond <https://github.com/touilleMan>`__.
 
 Live Demo
 =========
@@ -77,17 +85,18 @@ http://authomatic-example.appspot.com which makes use of most of the features.
 Contribute
 ==========
 
-.. image:: http://badge.waffle.io/peterhudec/authomatic.png
-   :target: http://waffle.io/peterhudec/authomatic
-   :alt: Stories in Ready
-
 Contributions of any kind are very welcome.
 If you want to contribute, please read the
-`Development Guide <http://peterhudec.github.io/authomatic/development.html>`__
+`Development Guide <http://authomatic.github.io/authomatic/development.html>`__
 first. The project is hosted on
-`GitHub <https://github.com/peterhudec/authomatic>`__.
+`GitHub <https://github.com/authomatic/authomatic>`__.
 
 Usage
 =====
 
-Read the exhaustive documentation at http://peterhudec.github.io/authomatic.
+Read the exhaustive documentation at http://authomatic.github.io/authomatic.
+
+Changelog
+=========
+
+The `Changelog is part of the documentation <https://authomatic.github.io/authomatic/changelog.html>`_.

@@ -1,11 +1,6 @@
 Providers
 ---------
 
-.. seo-description::
-  
-  There are 10 OAuth 1.0a providers and 16 OAuth 2.0 providers available out of the box.
-  You can also use the OpenID and GAEOpenID providers.
-
 
 .. contents::
    :backlinks: none
@@ -14,14 +9,14 @@ Providers are abstractions of the **provider** party of the
 **provider**/**consumer**/**user** triangle and they are the very core of this library.
 There is no reason for you to instantiate them manually.
 You only should specify them in the :doc:`config` and access members of their instances
-available in the :class:`.LoginResult` returned by the :func:`authomatic.login` function.
+available in the :class:`.LoginResult` returned by the :class:`.Authomatic.login` function.
 
 Some provider types accept additional keyword arguments in their constructor which you can pass to them
-through the :func:`authomatic.login` function's keyword arguments or through the :doc:`config` like this:
+through the :class:`.Authomatic.login` function's keyword arguments or through the :doc:`config` like this:
 
 .. note::
 
-   Keyword arguments passed through :func:`authomatic.login` will override
+   Keyword arguments passed through :class:`.Authomatic.login` will override
    the values set in :doc:`config`.
 
 ::
@@ -54,7 +49,7 @@ through the :func:`authomatic.login` function's keyword arguments or through the
              'ax': ['http://axschema.org/contact/email', 'http://axschema.org/namePerson'],
              'ax_required': ['http://axschema.org/contact/email'],
              'pape': ['http://schemas.openid.net/pape/policies/2007/06/multi-factor']
-        },  
+        },
     }
 
 
@@ -115,7 +110,7 @@ Additional keyword arguments by provider type:
 +                                  +---------------------------+-----------+-+
 |                                  | popup                     |           | |
 +----------------------------------+---------------------------+-----------+-+
-| :class:`.GAEOpenID`              | identifier_param          |           | |
+| :class:`.GAEOpenID` (1st Gen.)   | identifier_param          |           | |
 +                                  +---------------------------+-----------+-+
 |                                  | popup                     |           | |
 +----------------------------------+---------------------------+-----------+-+
@@ -133,11 +128,11 @@ Available provider classes:
 +------------------------------+----------------------------+-------------------------------+-+
 | :class:`.oauth2.Bitly`       | :class:`.oauth1.Meetup`    | :class:`.openid.Google`       | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.Cosm`        | :class:`.oauth1.Plurk`     | :class:`.gaeopenid.GAEOpenID` | |
+| :class:`.oauth2.Cosm`        | :class:`.oauth1.Plurk`     | ``.gaeopenid.GAEOpenID``      | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.DeviantART`  | :class:`.oauth1.Twitter`   | :class:`.gaeopenid.Yahoo`     | |
+| :class:`.oauth2.DeviantART`  | :class:`.oauth1.Twitter`   | ``.gaeopenid.Yahoo``          | |
 +------------------------------+----------------------------+-------------------------------+-+
-| :class:`.oauth2.Eventbrite`  | :class:`.oauth1.Tumblr`    | :class:`.gaeopenid.Google`    | |
+| :class:`.oauth2.Eventbrite`  | :class:`.oauth1.Tumblr`    | ``.gaeopenid.Google``         | |
 +------------------------------+----------------------------+-------------------------------+-+
 | :class:`.oauth2.Facebook`    | :class:`.oauth1.UbuntuOne` |                               | |
 +------------------------------+----------------------------+-------------------------------+-+
@@ -174,8 +169,13 @@ Available provider classes:
 .. automodule:: authomatic.providers.openid
    :members:
 
-.. automodule:: authomatic.providers.gaeopenid
-   :members:
-
 .. automodule:: authomatic.providers
    :members:
+
+Google Appengine 1st generation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The module ``authomatic.providers.gaeopenid`` is outdated and supports only first generation Google Appengine.
+It can be used for backward compatibility.
+For internals please look at the source code.
+Auto documentation is not supported.

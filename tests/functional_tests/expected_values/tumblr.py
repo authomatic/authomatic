@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 import fixtures
@@ -9,11 +10,14 @@ conf = fixtures.get_configuration('tumblr')
 
 CONFIG = {
     'logout_url': 'https://www.tumblr.com/logout',
-    'login_xpath': '//*[@id="signup_email"]',
+    'login_xpath': '//*[@id="signup_determine_email"]',
     'password_xpath': '//*[@id="signup_password"]',
+    'enter_after_login_input': True,
+    'before_password_input_wait': 1,
     'consent_xpaths': [
-        '//*[@id="api_v1_oauth_authorize"]'
-        '/div[2]/div/div[1]/div/div/div[2]/form/button[2]',
+        '//*[@id="signup_forms_submit"]',
+        ('//*[@id="api_v1_oauth_authorize"]'
+         '/div[2]/div/div[1]/div/div/div[2]/form/button[2]'),
     ],
     'consent_wait_seconds': 3,
     'class_': oauth1.Tumblr,

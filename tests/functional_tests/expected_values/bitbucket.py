@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 import fixtures
@@ -11,11 +12,9 @@ LINK = 'https://bitbucket.org/api/1.0/users/{0}'.format(conf.user_username)
 
 CONFIG = {
     'logout_url': 'https://bitbucket.org/account/signout/',
-    'login_xpath': '//*[@id="id_username"]',
-    'password_xpath': '//*[@id="id_password"]',
-    'consent_xpaths': [
-        '//*[@id="oauth-authorize"]/section/form/div/div/button',
-    ],
+    'login_xpath': '//*[@id="js-email-field"]',
+    'password_xpath': '//*[@id="js-password-field"]',
+    'consent_xpaths': [],
     'class_': oauth1.Bitbucket,
     'user': {
         'birth_date': None,
@@ -32,7 +31,9 @@ CONFIG = {
         'name': conf.user_name,
         'nickname': None,
         'phone': None,
-        'picture': re.compile(r'https://bitbucket\.org/account/\w+/avatar/32/.*'),
+        'picture': re.compile(
+            r'https://bitbucket\.org/account/\w+/avatar/32/.*'
+        ),
         'postal_code': None,
         'timezone': None,
         'username': conf.user_username,

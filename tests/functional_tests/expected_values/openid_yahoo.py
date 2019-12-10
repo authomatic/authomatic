@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 from authomatic.providers import openid
 
@@ -7,11 +8,13 @@ CONFIG = {
     'openid_identifier': 'me.yahoo.com',
     'login_xpath': '//*[@id="login-username"]',
     'password_xpath': '//*[@id="login-passwd"]',
+    'enter_after_login_input': True,
+    'before_password_input_wait': 1,
     'consent_xpaths': [
         '//*[@id="login-signin"]',
         '//*[@id="agree"]',
     ],
-    'after_consent_wait_seconds': 3,
+    'after_consent_wait_seconds': 1,
     'logout_url': 'https://login.yahoo.com/config/login?logout=1',
     'class_': openid.OpenID,
     'user': {

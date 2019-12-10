@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import fixtures
 from authomatic.providers import openid
 
@@ -11,12 +12,13 @@ CONFIG = {
         '//*[@id="js"]/body/div[7]/header/span',
         '//*[@id="js"]/body/div[4]/header/div/nav[1]/ul[2]/li[1]/a',
     ],
-    # 'login_url': 'http://www.livejournal.com/login.bml',
+    'login_url': 'http://www.livejournal.com/login.bml',
     'login_xpath': '//*[@id="user"]',
     'password_xpath': '//*[@id="lj_loginwidget_password"]',
     'consent_xpaths': [
         # '//*[@id="js"]/body/div[4]/div[2]/div/form/div[3]/div[2]/button',
-        '//*[@id="js"]/body/div[4]/div[2]/div/div/form/table/tbody/tr/td/input[1]',
+        '//*[@id="js"]/body/div[4]/div[2]/div/div/form/'
+        'table/tbody/tr/td/input[1]',
     ],
     'class_': openid.OpenID,
     'user': {
