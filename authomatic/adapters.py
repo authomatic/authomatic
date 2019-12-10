@@ -56,6 +56,8 @@ respectively.
 """
 
 import abc
+import re
+
 from authomatic.core import Response
 
 
@@ -280,3 +282,94 @@ class WerkzeugAdapter(BaseAdapter):
 
     def set_status(self, status):
         self.response.status = status
+
+
+class TornadoAdapter(BaseAdapter):
+    """
+    Adapter for |tornado|_ framework.
+
+    Inherits from the :class:`.BaseAdapter`.
+
+    """
+
+    def __init__(self, request_handler, return_url=None):
+        self.return_url = return_url
+        self.request_handler = request_handler
+        self.request = self.request_handler.request
+
+    @property
+    def params(self):
+        """
+        Must return a :class:`dict` of all request
+        parameters of any HTTP method.
+
+        :returns:
+            :class:`dict`
+
+        """
+        _arguments = dict()
+        for k, v in self.request.arguments.iteritems():
+            _arguments[k] = v[0]
+        return _arguments
+
+    @property
+    def url(self):
+        """
+        Must return the url of the actual request including path
+        but without query and fragment
+
+        :returns:
+            :class:`str`
+
+        """
+        return self.return_url or self.request.full_url()
+
+    @property
+    def cookies(self):
+        """
+        Must return cookies as a :class:`dict`.
+
+        :returns:
+            :class:`dict`
+
+        """
+        _cookies = dict()
+        for k, v in self.request.cookies.iteritems():
+            _cookies[k] = v.OutputString().replace("authomatic=", "")
+        return _cookies
+
+    def write(self, value):
+        """
+        Must write specified value to response.
+
+        :param str value:
+            String to be written to response.
+
+        """
+        self.request_handler.write(value)
+
+    def set_header(self, key, value):
+        """
+        Must set response headers to ``Key: value``.
+
+        :param str key:
+            Header name.
+
+        :param str value:
+            Header value.
+        """
+        self.request_handler.set_header(key, value)
+
+    def set_status(self, status):
+        """
+        Must set the response status e.g. ``'302 Found'``.
+
+        :param str status:
+            The HTTP response status.
+
+        """
+        try:
+            status_code = re.findall('\d+', status)[0]
+        except:
+            status_code = 500
+        self.request_handler.set_status(int(status_code), status)
