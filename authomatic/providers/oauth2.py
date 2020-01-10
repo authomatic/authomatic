@@ -1662,7 +1662,7 @@ class VK(OAuth2):
     access_token_url = 'https://api.vkontakte.ru/oauth/access_token'
     user_info_url = 'https://api.vk.com/method/getProfiles?' + \
                     'fields=uid,first_name,last_name,nickname,sex,bdate,' + \
-                    'city,country,timezone,photo_big'
+                    'city,country,timezone,photo_big' + '&v=5.103'
 
     supported_user_attributes = core.SupportedUserAttributes(
         birth_date=True,
