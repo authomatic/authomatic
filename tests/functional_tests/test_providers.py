@@ -63,7 +63,8 @@ ALL_APPS = {
         os.path.join(EXAMPLES_DIR, 'pyramid/functional_test/main.py'),
         host=config.HOST,
         port=config.PORT,
-        check_url=config.HOST_ALIAS
+        check_url=config.HOST_ALIAS,
+        ssl=True,
     ),
 }
 

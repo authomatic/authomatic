@@ -10,9 +10,10 @@ addons:
   - authomatic.com
   - authomatic.org
 install:
-- sudo pip install tox
+- pip install tox
 script:
-- sudo tox -e py3
+# Call tox from venv, not system
+- sudo $VIRTUAL_ENV/bin/tox -e py3
 after_failure:
 - tail -n 500 tests/functional_tests/*.log
 - tail -n 500 flask.log
