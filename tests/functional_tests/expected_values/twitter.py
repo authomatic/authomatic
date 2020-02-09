@@ -31,6 +31,7 @@ CONFIG = {
     'consent_xpaths': ['//*[@id="allow"]'],
     'after_login_hook': after_login_hook,
     'class_': oauth1.Twitter,
+    'logout_url': 'https://twitter.com/logout',
     'user': {
         'birth_date': None,
         'city': conf.user_city,
