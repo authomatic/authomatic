@@ -24,10 +24,10 @@ import base64
 import hashlib
 import logging
 import random
+import ssl
 import sys
 import traceback
 import uuid
-import ssl
 
 import authomatic.core
 from authomatic.exceptions import (
