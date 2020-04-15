@@ -320,7 +320,7 @@
 
     hidden_fix : {
       /**
-       * Sets all hidden parent elements and self to visibile.
+       * Sets all hidden parent elements and self to visible.
        *
        * @method adjust
        * @param {jQuery Object} $child
