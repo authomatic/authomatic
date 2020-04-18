@@ -1125,13 +1125,11 @@ class GitHub(OAuth2):
     .. note::
 
         GitHub API
-        `documentation <http://developer.github.com/v3/#user-agent-required>`_
-        says:
+                
+        Users may not have a public email address. In order to obtain the private email address, the `documentation <https://developer.github.com/v3/users/emails/#list-email-addresses-for-a-user>`_
+        specifies to request ``user:email`` scope. This allows the ``default`` function to scrape ``users/email`` API endpoint.
 
-            all API requests MUST include a valid ``User-Agent`` header.
-
-        You can apply a default ``User-Agent`` header for all API calls in
-        the config like this:
+            You can set the ``user:email`` scope like this:
 
         .. code-block:: python
             :emphasize-lines: 6
@@ -1141,7 +1139,7 @@ class GitHub(OAuth2):
                     'class_': oauth2.GitHub,
                     'consumer_key': '#####',
                     'consumer_secret': '#####',
-                    'access_headers': {'User-Agent': 'Awesome-Octocat-App'},
+                    'scope': ['user:email']
                 }
             }
 
@@ -1202,6 +1200,7 @@ class GitHub(OAuth2):
     
     def access(self, url, **kwargs):
         # https://developer.github.com/v3/#user-agent-required
+        # Github requries that all API requests MUST include a valid ``User-Agent`` header.
         headers = kwargs["headers"] = kwargs.get("headers", {})
         if not headers.get("User-Agent"):
             headers["User-Agent"] = self.settings.config[self.name]["consumer_key"]
