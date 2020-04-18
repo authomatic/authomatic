@@ -1125,13 +1125,13 @@ class GitHub(OAuth2):
     .. note::
 
         GitHub API
-        `documentation <http://developer.github.com/v3/#user-agent-required>`_
-        says:
 
-            all API requests MUST include a valid ``User-Agent`` header.
+        Users may not have a public email address. In order to obtain the private email address, the
+        `documentation <https://developer.github.com/v3/users/emails/#list-email-addresses-for-a-user>`_
+        specifies to request ``user:email`` scope.
+         This allows the ``default`` function to scrape ``users/email`` API endpoint.
 
-        You can apply a default ``User-Agent`` header for all API calls in
-        the config like this:
+            You can set the ``user:email`` scope like this:
 
         .. code-block:: python
             :emphasize-lines: 6
@@ -1141,7 +1141,7 @@ class GitHub(OAuth2):
                     'class_': oauth2.GitHub,
                     'consumer_key': '#####',
                     'consumer_secret': '#####',
-                    'access_headers': {'User-Agent': 'Awesome-Octocat-App'},
+                    'scope': ['user:email']
                 }
             }
 
@@ -1199,35 +1199,36 @@ class GitHub(OAuth2):
         if data.get('token_type') == 'bearer':
             credentials.token_type = cls.BEARER
         return credentials
-    
+
     def access(self, url, **kwargs):
         # https://developer.github.com/v3/#user-agent-required
+        # Github requries that all API requests MUST include a valid ``User-Agent`` header.
         headers = kwargs["headers"] = kwargs.get("headers", {})
         if not headers.get("User-Agent"):
             headers["User-Agent"] = self.settings.config[self.name]["consumer_key"]
-        
+
         def parent_access(url):
             return super(GitHub, self).access(url, **kwargs)
-        
+
         response = parent_access(url)
-        
+
         # additional action to get email is required:
         # https://developer.github.com/v3/users/emails/
         if response.status == 200:
             email_response = parent_access(url + "/emails")
             if email_response.status == 200:
                 response.data["emails"] = email_response.data
-                
+
                 # find first or primary email
                 primary_email = None
                 for item in email_response.data:
                     is_primary = item["primary"]
                     if not primary_email or is_primary:
                         primary_email = item["email"]
-                        
+
                     if is_primary:
                         break
-                    
+
                 response.data["email"] = primary_email
         return response
 
