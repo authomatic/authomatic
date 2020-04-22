@@ -1202,7 +1202,7 @@ class GitHub(OAuth2):
 
     def access(self, url, **kwargs):
         # https://developer.github.com/v3/#user-agent-required
-        # Github requries that all API requests MUST include a valid ``User-Agent`` header.
+        # GitHub requires that all API requests MUST include a valid ``User-Agent`` header.
         headers = kwargs["headers"] = kwargs.get("headers", {})
         if not headers.get("User-Agent"):
             headers["User-Agent"] = self.settings.config[self.name]["consumer_key"]
