@@ -917,7 +917,7 @@ class Credentials(ReprMixin):
 
         deserialized = Credentials(config)
 
-        deserialized.provider_id = provider_id
+        deserialized.provider_id = int(split[0])
         deserialized.provider_type = ProviderClass.get_type()
         deserialized.provider_type_id = split[1]
         deserialized.provider_class = ProviderClass
