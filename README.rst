@@ -73,7 +73,7 @@ The package is licensed under
 Requirements
 ============
 
-Requires **Python 2.7** and newer.
+Requires **Python 3.4** or newer.
 **Python 3.x** support added in **Authomatic 0.0.11** thanks to Emmanuel Leblond <https://github.com/touilleMan>`__.
 
 Live Demo
