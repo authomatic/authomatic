@@ -45,6 +45,21 @@ except ValueError:
     PROVIDER_NAME_WIDTH = 0
 
 
+class FastAPIServer(liveandletdie.Base):
+    def __init__(self, *args, **kwargs):
+        kwargs['executable'] = 'uvicorn'
+        super().__init__(*args, **kwargs)
+
+    def create_command(self):
+        return [
+            self.executable,
+            '{}:app'.format(self.path),
+            '--host {}'.format(self.host),
+            '--port {}'.format(self.port),
+            '--reload',
+        ]
+
+
 ALL_APPS = {
     'Django': liveandletdie.Django(
         os.path.join(EXAMPLES_DIR, 'django/functional_test'),
@@ -66,6 +81,13 @@ ALL_APPS = {
         check_url=config.HOST_ALIAS,
         ssl=True,
     ),
+    'FastAPI': FastAPIServer(
+        os.path.join(EXAMPLES_DIR, 'fastapi/functional_test/app.py'),
+        host=config.HOST,
+        port=config.PORT,
+        check_url=config.HOST_ALIAS,
+        ssl=True,
+    )
 }
 
 APPS = dict((k, v) for k, v in ALL_APPS.items() if

@@ -44,4 +44,4 @@ class FlaskAuthomatic(Authomatic):
         return decorator
 
     def session_saver(self):
-        session.modified = True
+        session.modified = True  # pylint: disable=assigning-non-slot
