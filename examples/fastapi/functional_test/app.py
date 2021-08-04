@@ -24,3 +24,4 @@ def login(request, provider_name):
         return fixtures.render_login_result('fastapi', result)
 
     return response
+  
