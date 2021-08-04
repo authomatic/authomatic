@@ -8,6 +8,11 @@ authomatic = Authomatic(config=CONFIG, secret='YOUR SUPER CONFIDENTIAL SECRET')
 app = FastAPI()
 
 
+@app.get('/')
+async def home():
+    return 'Welcome home, why are you late?'
+
+
 @app.api_route('/login/{provider}', methods=['GET', 'POST'])
 async def login(request: Request, provider: str):
     """
