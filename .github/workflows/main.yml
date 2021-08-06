@@ -43,7 +43,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Setup Tox
-        run: pip install tox
+        run: sudo pip install tox
       - name: Run Tox
         # Run tox using the version of Python in `PATH`
         run: sudo tox -e py3
