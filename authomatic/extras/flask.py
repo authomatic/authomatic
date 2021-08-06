@@ -44,4 +44,5 @@ class FlaskAuthomatic(Authomatic):
         return decorator
 
     def session_saver(self):
+        # FIXME: pylint false positive - see https://github.com/pallets/flask/issues/4020
         session.modified = True  # pylint: disable=assigning-non-slot
