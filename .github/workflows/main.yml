@@ -23,6 +23,13 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - name: Sign release
+        # To encrypt, replace -d with -e and reverse -in and -out
+        run: |
+          openssl aes-256-cbc -pass env:PRIVATE_KEY -d -md sha512 -pbkdf2 -iter 100000 -salt -in tests/functional_tests/config_secret.py.enc -out tests/functional_tests/config_secret.py
+          env:
+            PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
