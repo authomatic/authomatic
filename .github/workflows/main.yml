@@ -26,6 +26,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - name: Update /etc/hosts
+        run: |
+          echo "127.0.0.1 authomatic.org" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 authomatic.com" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 authomatic.test" | sudo tee -a /etc/hosts
       - name: Decrypt Secret Config
         # To encrypt, replace -d with -e and reverse -in and -out
         run: |
