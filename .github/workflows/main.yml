@@ -16,6 +16,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Environment contains secrets for this build
+    environment:
+      name: Authomatic Tox
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
@@ -23,7 +26,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: Sign release
+      - name: Decrypt Secret Config
         # To encrypt, replace -d with -e and reverse -in and -out
         run: |
           openssl aes-256-cbc -pass env:PRIVATE_KEY -d -md sha512 -pbkdf2 -iter 100000 -salt -in tests/functional_tests/config_secret.py.enc -out tests/functional_tests/config_secret.py
