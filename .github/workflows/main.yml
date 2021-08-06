@@ -46,4 +46,4 @@ jobs:
         run: pip install tox
       - name: Run Tox
         # Run tox using the version of Python in `PATH`
-        run: tox -e py3
+        run: sudo tox -e py3
