@@ -42,8 +42,34 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
+
       - name: Setup Tox
         run: sudo pip install tox
+
       - name: Run Tox
         # Run tox using the version of Python in `PATH`
         run: sudo tox -e py3
+
+      - name: Install pypi/build
+        run: >-
+          python -m
+          pip install
+          build
+          --user
+
+      - name: Build a binary wheel and a source tarball
+        run: >-
+          python -m
+          build
+          --sdist
+          --wheel
+          --outdir dist/
+          .
+
+      - name: Publish to PyPI
+        # Only publish on tagged pushes when building py3.6
+        if: matrix.version == '3.6' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
