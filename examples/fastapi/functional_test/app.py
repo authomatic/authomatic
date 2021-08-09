@@ -1,7 +1,7 @@
 import authomatic
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
-from authomatic.adapters import DjangoAdapter
+from authomatic.adapters import FastAPIAdapter
 from tests.functional_tests import fixtures
 
 authomatic = authomatic.Authomatic(fixtures.ASSEMBLED_CONFIG, secret='123',
@@ -18,10 +18,9 @@ def home(request):
 @app.route('/login/{provider_name}', methods=['GET', 'POST'])
 def login(request, provider_name):
     response = PlainTextResponse()
-    result = authomatic.login(DjangoAdapter(request, response), provider_name)
+    result = authomatic.login(FastAPIAdapter(request, response), provider_name)
 
     if result:
         return fixtures.render_login_result('fastapi', result)
 
     return response
-  

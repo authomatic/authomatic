@@ -27,6 +27,9 @@ Its very easy and shouldn't take you more than a few minutes.
 .. autoclass:: DjangoAdapter
     :members:
 
+.. autoclass:: FastAPIAdapter
+    :members:
+
 .. autoclass:: Webapp2Adapter
     :members:
 
@@ -285,6 +288,8 @@ class WerkzeugAdapter(BaseAdapter):
 class FastAPIAdapter(BaseAdapter):
     def __init__(self, request, response):
         """
+        Adapter for FastAPI framework.
+
         :param request:
             An instance of the :class:`starlette.requests.HTTPConnection` class.
         :param response:
