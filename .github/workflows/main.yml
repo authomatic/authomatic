@@ -16,9 +16,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Environment contains secrets for this build
-    environment:
-      name: Authomatic Tox
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
@@ -31,12 +28,15 @@ jobs:
           echo "127.0.0.1 authomatic.org" | sudo tee -a /etc/hosts
           echo "127.0.0.1 authomatic.com" | sudo tee -a /etc/hosts
           echo "127.0.0.1 authomatic.test" | sudo tee -a /etc/hosts
+
       - name: Decrypt Secret Config
+        # secrets isn't available to forks or PRs
+        if: env.SECRETS_KEY != ''
         # To encrypt, replace -d with -e and reverse -in and -out
         run: |
-          openssl aes-256-cbc -pass env:PRIVATE_KEY -d -md sha512 -pbkdf2 -iter 100000 -salt -in tests/functional_tests/config_secret.py.enc -out tests/functional_tests/config_secret.py
+          openssl aes-256-cbc -pass env:SECRETS_KEY -d -md sha512 -pbkdf2 -iter 100000 -salt -in tests/functional_tests/config_secret.py.enc -out tests/functional_tests/config_secret.py
         env:
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          SECRETS_KEY: ${{ secrets.SECRETS_KEY }}
 
       - name: Setup Python
         uses: actions/setup-python@v2
