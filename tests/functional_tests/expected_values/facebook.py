@@ -22,7 +22,7 @@ CONFIG = {
     'class_': oauth2.Facebook,
     'scope': oauth2.Facebook.user_info_scope,
     'user': {
-        'birth_date': conf.user_birth_date_str,
+        'birth_date': '08-11-2002',
         'city': None,
         'country': None,
         'email': conf.user_login,
@@ -42,14 +42,12 @@ CONFIG = {
         'username': None,
     },
     'content_should_contain': [
-        conf.user_birth_date.strftime(u'%m\/%d\/%Y'),
-        conf.user_login.replace('@', '\\u0040'),
         conf.user_first_name,
         conf.user_id,
         conf.user_last_name,
 
         # User info JSON keys
-        'email', 'first_name', 'id', 'last_name', 'picture',
+        'email', 'first_name', 'id', 'last_name', 'picture', 'birthday',
     ],
     # Case insensitive
     'content_should_not_contain':
