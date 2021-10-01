@@ -89,7 +89,7 @@ Seems like we're done, but we can do more:
 
 If there are :class:`credentials <.core.Credentials>` the **user** has logged in with an
 :class:`AuthorizationProvider <.providers.AuthorizationProvider>`
-i.e. |oauth1|_ or |oauth2|_ and we can access **his/her** **protected resources**.
+i.e. |oauth1|_ or |oauth2|_ and we can access **their** **protected resources**.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
@@ -142,7 +142,7 @@ Create links to our *Login* handler.
    :language: python
    :lines: 115-116
 
-Create **OpenID** forms where the **user** can specify **his/her** **claimed ID**.
+Create **OpenID** forms where the **user** can specify **their** **claimed ID**.
 The library by default extracts the identifier from the query string ``id`` parameter,
 but you can change its name to whatever you want.
 
