@@ -173,7 +173,7 @@ We can refresh the :class:`.Credentials` without the **user** while they are val
 If they are expired we only can get new :class:`.Credentials` by repeating the *login procedure*
 with :meth:`.Authomatic.login`.
 
-Inform the **user** about **his/her** :class:`.Credentials` and create links to
+Inform the **user** about **their** :class:`.Credentials` and create links to
 *Refresh*, *Action* and *Logout* handlers, which we are going to create next.
 
 .. literalinclude:: ../../../examples/gae/credentials/main.py

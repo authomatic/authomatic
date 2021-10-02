@@ -277,7 +277,7 @@ def login(request, browser, app, attempt=1):
 
             browser.get(url)
 
-        # Andy authorizes this app to access his protected resources.
+        # Andy authorizes this app to access their protected resources.
         consent_xpaths = provider.get('consent_xpaths')
 
         if consent_xpaths:

@@ -74,7 +74,7 @@ The handler must return the ``response`` so we assign it to a variable.
       )
 
 Now check whether there is a :class:`.LoginResult`.
-If so, we need to update the :class:`.User` to get **his/her** info.
+If so, we need to update the :class:`.User` to get **their** info.
 Then just pass the whole :class:`.LoginResult` to the template.
 
 .. literalinclude:: ../../../examples/flask/werkzeug_adapter/main.py
@@ -129,7 +129,7 @@ And welcome the **user**.
 
 Seems like we’re done, but we can do more.
 
-If the **user** has :class:`.Credentials`, we can access **his/her protected resources**.
+If the **user** has :class:`.Credentials`, we can access **their protected resources**.
 
 .. literalinclude:: ../../../examples/flask/werkzeug_adapter/templates/login.html
    :language: html+jinja
