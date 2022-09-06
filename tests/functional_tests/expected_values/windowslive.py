@@ -56,7 +56,7 @@ CONFIG = {
     # Case insensitive
     'content_should_not_contain':
         conf.no_birth_date +
-        # conf.no_gender + # Gender JSON key is there but is alwas null
+        # conf.no_gender + # Gender JSON key is there but is always null
         [constants.GENDER_MALE] +
         conf.no_location +
         conf.no_nickname +
