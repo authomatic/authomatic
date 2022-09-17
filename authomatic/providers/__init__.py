@@ -20,6 +20,8 @@ Abstract base classes for implementation of protocol specific providers.
 """
 
 import abc
+import os
+import authomatic.core
 import base64
 import hashlib
 import logging
@@ -399,24 +401,36 @@ class BaseProvider(object):
                 headers.update(
                     {'Content-Type': 'application/x-www-form-urlencoded'})
         request_path = parse.urlunsplit(('', '', path or '', query or '', ''))
-
-        self._log(logging.DEBUG, u' \u251C\u2500 host: {0}'.format(host))
-        self._log(
-            logging.DEBUG,
-            u' \u251C\u2500 path: {0}'.format(request_path))
-        self._log(logging.DEBUG, u' \u251C\u2500 method: {0}'.format(method))
-        self._log(logging.DEBUG, u' \u251C\u2500 body: {0}'.format(body))
-        self._log(logging.DEBUG, u' \u251C\u2500 params: {0}'.format(params))
-        self._log(logging.DEBUG, u' \u2514\u2500 headers: {0}'.format(headers))
-
+       
+        self._log(logging.DEBUG, ' \u251C\u2500 host: {0}'.format(host))
+        self._log(logging.DEBUG, ' \u251C\u2500 path: {0}'.format(request_path))
+        self._log(logging.DEBUG, ' \u251C\u2500 method: {0}'.format(method))
+        self._log(logging.DEBUG, ' \u251C\u2500 body: {0}'.format(body))
+        self._log(logging.DEBUG, ' \u251C\u2500 params: {0}'.format(params))
+        self._log(logging.DEBUG, ' \u2514\u2500 headers: {0}'.format(headers))
+        
+        http_proxy = os.environ.get('http_proxy')
+        https_proxy = os.environ.get('https_proxy')
+        type_,https_host = https_proxy.split('//')
+        type_,http_host = http_proxy.split('//')
         # Connect
         if scheme.lower() == 'https':
-            connection = http_client.HTTPSConnection(host)
-        else:
-            connection = http_client.HTTPConnection(host)
+            if https_proxy is not None:
+                connection = http_client.HTTPSConnection(https_host)
+                connection.set_tunnel(host)
+            else:
+                connection = http_client.HTTPSConnection(host)
+                
+        elif scheme.lower() == 'http':
+            if http_proxy is not None:
+                connection = http_client.HTTPConnection(http_host)
+                connection.set_tunnel(host)
+            else:
+                connection = http_client.HTTPConnection(host)
+
 
         try:
-            connection.request(method, request_path, body, headers)
+            connection.request(method, url, body, headers)
         except Exception as e:
             raise FetchError('Fetching URL failed',
                              original_message=str(e),
