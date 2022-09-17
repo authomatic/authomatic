@@ -26,6 +26,7 @@ Providers which implement the |oauth2|_ protocol.
     WindowsLive
     Yammer
     Yandex
+    Xero
 
 """
 
@@ -43,7 +44,7 @@ import authomatic.core as core
 __all__ = ['OAuth2', 'Amazon', 'Behance', 'Bitly', 'Cosm', 'DeviantART',
            'Eventbrite', 'Facebook', 'Foursquare', 'GitHub', 'Google',
            'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive',
-           'Yammer', 'Yandex']
+           'Yammer', 'Yandex', 'Xero']
 
 
 class OAuth2(providers.AuthorizationProvider):
@@ -1984,6 +1985,85 @@ class Yandex(OAuth2):
         return user
 
 
+class Xero(OAuth2):
+    """
+    Xero |oauth2| provider.
+
+    * Dashboard: https://developer.xero.com/myapps/
+    * Docs: https://developer.xero.com/documentation/oauth2/overview
+    * API reference: https://developer.xero.com/documentation/
+
+    Supported :class:`.User` properties:
+    * id
+    * name
+    * username
+    * first_name
+    * last_name
+    * email
+
+    Unsupported :class:`.User` properties:
+    * birth_date
+    * city
+    * country
+    * gender
+    * link
+    * location
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+    * locale
+
+    """
+
+    user_authorization_url = 'https://login.xero.com/identity/connect/authorize'
+    access_token_url = 'https://identity.xero.com/connect/token'
+    user_info_url = ''
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        name=True,
+        username=True,
+        first_name=True,
+        last_name=True,
+        email=True
+    )
+
+    def _x_scope_parser(self, scope):
+        """
+        Xero has space-separated scopes.
+        """
+        return ' '.join(scope)
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        # includes jwt
+        from jwt import JWT
+
+        # instantiates JWT
+        jwt = JWT()
+
+        # decode JWT token that contains user info, algos=RS256, verification of signature is turned off
+        # learn more about this on https://developer.xero.com/documentation/oauth2/sign-in
+        xero_user_info = jwt.decode(data.get('id_token'), do_verify=False)
+
+        user.id = xero_user_info['xero_userid']
+        user.name = xero_user_info['given_name'] + ' ' + xero_user_info['family_name']
+        user.username = xero_user_info['preferred_username']
+        user.first_name = xero_user_info['given_name']
+        user.last_name = xero_user_info['family_name']
+        user.email = xero_user_info['email']
+
+        return user
+
+
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers
 # don't change!
@@ -2007,4 +2087,5 @@ PROVIDER_ID_MAP = [
     WindowsLive,
     Yammer,
     Yandex,
+    Xero,
 ]
