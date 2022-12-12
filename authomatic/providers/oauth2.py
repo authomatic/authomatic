@@ -19,6 +19,7 @@ Providers which implement the |oauth2|_ protocol.
     GitHub
     Google
     LinkedIn
+    MicrosoftOnline
     PayPal
     Reddit
     Viadeo
@@ -42,8 +43,8 @@ import authomatic.core as core
 
 __all__ = ['OAuth2', 'Amazon', 'Behance', 'Bitly', 'Cosm', 'DeviantART',
            'Eventbrite', 'Facebook', 'Foursquare', 'GitHub', 'Google',
-           'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive',
-           'Yammer', 'Yandex']
+           'LinkedIn', 'MicrosoftOnline', 'PayPal', 'Reddit', 'Viadeo',
+           'VK', 'WindowsLive', 'Yammer', 'Yandex']
 
 
 class OAuth2(providers.AuthorizationProvider):
@@ -1447,6 +1448,77 @@ class LinkedIn(OAuth2):
         return user
 
 
+class MicrosoftOnline(OAuth2):
+    """
+    Microsoft Online |oauth2| provider.
+
+    Supported :class:`.User` properties:
+
+    * email
+    * first_name
+    * id
+    * last_name
+    * name
+    * picture
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * gender
+    * link
+    * locale
+    * location
+    * nickname
+    * phone
+    * postal_code
+    * timezone
+    * username
+
+    """
+
+    user_authorization_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
+    access_token_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+    user_info_url = 'https://graph.microsoft.com/oidc/userinfo'
+
+    user_info_scope = ['openid profile']
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        email=True,
+        first_name=True,
+        last_name=True,
+        name=True,
+        picture=True,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(MicrosoftOnline, self).__init__(*args, **kwargs)
+        auth = args[0]
+        provider_name = kwargs.get('provider_name')
+        domain = auth.config.get(provider_name, {}).get('domain')
+        if domain is not None:
+            self.user_authorization_url = MicrosoftOnline.user_authorization_url.replace('/common/', '/%s/' % domain)
+            self.access_token_url = MicrosoftOnline.access_token_url.replace('/common/', '/%s/' % domain)
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.id = data.get('sub')
+        user.name = data.get('name')
+        user.first_name = data.get('given_name', '')
+        user.last_name = data.get('family_name', '')
+        user.email = data.get('email', '')
+        user.picture = data.get('picture', '')
+        return user
+
+
 class PayPal(OAuth2):
     """
     PayPal |oauth2| provider.
@@ -1999,6 +2071,7 @@ PROVIDER_ID_MAP = [
     GitHub,
     Google,
     LinkedIn,
+    MicrosoftOnline,
     OAuth2,
     PayPal,
     Reddit,
