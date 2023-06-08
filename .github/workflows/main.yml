@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.9]
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -67,7 +67,7 @@ jobs:
 
       - name: Publish to PyPI
         # Only publish on tagged pushes when building py3.6
-        if: matrix.python-version == '3.6' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        if: matrix.python-version == '3.9' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@master
         with:
           user: __token__

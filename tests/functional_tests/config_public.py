@@ -68,7 +68,7 @@ INCLUDE_PROVIDERS = [
     # 'bitbucket',
     # 'flickr',
     # 'plurk',
-     'twitter',
+    # 'twitter',
     # 'tumblr',
     # 'ubuntuone',  # UbuntuOne service is no longer available
     # 'vimeo',
