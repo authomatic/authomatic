@@ -16,7 +16,8 @@ CONFIG = {
     'login_xpath': u'//*[@id="email"]',
     'password_xpath': u'//*[@id="pass"]',
     'consent_xpaths': [
-        '//*[@id="platformDialogForm"]/div[2]/table/tbody/tr/td[2]/button[2]'
+        '//*[@aria-label="Allow all cookies"]',
+        '//*[@aria-label="Continue"]',
     ],
     'after_consent_wait_seconds': 3,
     'class_': oauth2.Facebook,
