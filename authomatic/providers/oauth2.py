@@ -1458,8 +1458,11 @@ class MicrosoftOnline(OAuth2):
     * first_name
     * id
     * last_name
+    * location
     * name
+    * phone
     * picture
+    * username
 
     Unsupported :class:`.User` properties:
 
@@ -1469,18 +1472,15 @@ class MicrosoftOnline(OAuth2):
     * gender
     * link
     * locale
-    * location
     * nickname
-    * phone
     * postal_code
     * timezone
-    * username
 
     """
 
     user_authorization_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
     access_token_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
-    user_info_url = 'https://graph.microsoft.com/oidc/userinfo'
+    user_info_url = "https://graph.microsoft.com/v1.0/me"
 
     user_info_scope = ['openid profile']
 
@@ -1489,8 +1489,11 @@ class MicrosoftOnline(OAuth2):
         email=True,
         first_name=True,
         last_name=True,
+        location=True,
         name=True,
+        phone=True,
         picture=True,
+        username=True,
     )
 
     def __init__(self, *args, **kwargs):
@@ -1510,12 +1513,15 @@ class MicrosoftOnline(OAuth2):
 
     @staticmethod
     def _x_user_parser(user, data):
-        user.id = data.get('sub')
-        user.name = data.get('name')
-        user.first_name = data.get('given_name', '')
-        user.last_name = data.get('family_name', '')
-        user.email = data.get('email', '')
+        user.id = data.get('id')
+        user.name = data.get('displayName', '')
+        user.first_name = data.get('givenName', '')
+        user.last_name = data.get('surname', '')
+        user.email = data.get('mail', '')
+        user.location = data.get('officeLocation', '')
+        user.phone = data.get('mobilePhone', '')
         user.picture = data.get('picture', '')
+        user.username = data.get('userPrincipalName', '')
         return user
 
 
