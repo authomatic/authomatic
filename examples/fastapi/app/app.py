@@ -51,7 +51,7 @@ async def login(request: Request, provider: str):
                 if provider.name == 'github':
                     response.body += 'You\'re now logged in with GitHub.<br />'.encode('utf-8')
 
-                    provider_response = provider.access(user.credentials, 'https://api.github.com/user', {
+                    provider_response = provider.access('https://api.github.com/user', headers={
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                                       ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36'
                     })
