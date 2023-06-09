@@ -45,7 +45,8 @@ async def login(request: Request, provider: str):
                     )
 
                     if provider_response.status == 200:
-                        response.body += 'Hello {}'.format(provider_response.data.name).encode('utf-8')
+                        response.body += 'Hello {}'.format(provider_response['data'].name).encode('utf-8')
+
 
                 if provider.name == 'github':
                     response.body += 'You\'re now logged in with GitHub.<br />'.encode('utf-8')
