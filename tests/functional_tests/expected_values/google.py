@@ -68,7 +68,7 @@ CONFIG = {
         [conf.user_postal_code] + \
         conf.no_phone + conf.no_birth_date,
 
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         'token_type': 'Bearer',
         'provider_type_id': '2-8',

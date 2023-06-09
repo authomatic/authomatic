@@ -51,7 +51,7 @@ Features
 * **Framework agnostic** thanks to adapters.
   Out of the box support for **Django**, **Flask**, **Pyramid** and **Webapp2**.
 * Ready to accommodate future authorization/authentication protocols.
-* Makes provider API callls a breeze.
+* Makes provider API calls a breeze.
 * Asynchronous requests.
 * JavaScript library as a bonus.
 * Out of the box support for:

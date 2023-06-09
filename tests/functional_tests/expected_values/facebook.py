@@ -16,7 +16,8 @@ CONFIG = {
     'login_xpath': u'//*[@id="email"]',
     'password_xpath': u'//*[@id="pass"]',
     'consent_xpaths': [
-        '//*[@id="platformDialogForm"]/div[2]/table/tbody/tr/td[2]/button[2]'
+        '//*[@aria-label="Allow all cookies"]',
+        '//*[@aria-label="Continue"]',
     ],
     'after_consent_wait_seconds': 3,
     'class_': oauth2.Facebook,
@@ -55,7 +56,7 @@ CONFIG = {
         conf.no_phone +
         conf.no_postal_code +
         conf.no_username,
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         'token_type': 'Bearer',
         'provider_type_id': '2-6',
