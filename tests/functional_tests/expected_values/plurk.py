@@ -74,7 +74,7 @@ CONFIG = {
         conf.no_first_name +
         conf.no_last_name +
         conf.no_postal_code,
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         '_expiration_time': None,
         '_expire_in': True,

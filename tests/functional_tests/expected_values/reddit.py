@@ -58,7 +58,7 @@ CONFIG = {
         conf.no_timezone +
         conf.no_location +
         [conf.user_email],
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         'token_type': 'Bearer',
         'provider_type_id': '2-11',
