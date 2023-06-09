@@ -73,7 +73,7 @@ CONFIG = {
         conf.user_postal_code,
         conf.user_username_reverse
     ],
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         'token_type': None,
         'provider_type_id': '2-6',
