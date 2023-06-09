@@ -56,7 +56,7 @@ CONFIG = {
         conf.no_nickname +
         conf.no_phone +
         conf.no_timezone,
-    # True means that any truthy value is expected
+    # True means that any thruthy value is expected
     'credentials': {
         'token_type': 'Bearer',
         'provider_type_id': '2-17',

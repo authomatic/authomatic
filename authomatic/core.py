@@ -1328,7 +1328,10 @@ class Authomatic(object):
         self.logging_level = logging_level
         self.prefix = prefix
         self._logger = logger or logging.getLogger(str(id(self)))
-        self._logger.setLevel(logging_level)
+
+        # Set logging level.
+        if logger is None:
+            self._logger.setLevel(logging_level)
 
     def login(self, adapter, provider_name, callback=None,
               session=None, session_saver=None, **kwargs):
