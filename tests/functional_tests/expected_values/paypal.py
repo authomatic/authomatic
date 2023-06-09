@@ -33,7 +33,7 @@ CONFIG = {
     'content_should_contain': [],
     # Case insensitive
     'content_should_not_contain': [],
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         'token_type': 'Bearer',
         'provider_type_id': '2-10',

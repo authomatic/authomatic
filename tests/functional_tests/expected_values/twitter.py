@@ -83,7 +83,7 @@ CONFIG = {
         # conf.no_phone +  # Contains unrelated phone string
         conf.no_postal_code +
         conf.no_timezone,
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         '_expiration_time': None,
         '_expire_in': True,
