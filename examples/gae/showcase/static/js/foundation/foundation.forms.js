@@ -235,7 +235,7 @@
         $customSelect.addClass( 'open' );
         //
         // Quickly, display all parent elements.
-        // This should help us calcualate the width of the list item's within the drop down.
+        // This should help us calculate the width of the list item's within the drop down.
         //
         var self = Foundation.libs.forms;
         self.hidden_fix.adjust( $customList );
@@ -320,7 +320,7 @@
 
     hidden_fix : {
       /**
-       * Sets all hidden parent elements and self to visibile.
+       * Sets all hidden parent elements and self to visible.
        *
        * @method adjust
        * @param {jQuery Object} $child

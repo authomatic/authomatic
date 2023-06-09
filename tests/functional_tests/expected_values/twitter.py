@@ -2,6 +2,7 @@
 import re
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 import fixtures
@@ -14,7 +15,7 @@ conf = fixtures.get_configuration('twitter')
 def after_login_hook(browser, log):
     try:
         log(4, 'twitter', 'Finding challenge element')
-        challenge = browser.find_element_by_xpath('//*[@id="challenge_response"]')
+        challenge = browser.find_element(By.XPATH, '//*[@id="challenge_response"]')
 
         log(4, 'twitter', 'Answering challenge')
         challenge.send_keys(conf.user_challenge_answer)
@@ -31,6 +32,7 @@ CONFIG = {
     'consent_xpaths': ['//*[@id="allow"]'],
     'after_login_hook': after_login_hook,
     'class_': oauth1.Twitter,
+    'logout_url': 'https://twitter.com/logout',
     'user': {
         'birth_date': None,
         'city': conf.user_city,
@@ -81,7 +83,7 @@ CONFIG = {
         # conf.no_phone +  # Contains unrelated phone string
         conf.no_postal_code +
         conf.no_timezone,
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         '_expiration_time': None,
         '_expire_in': True,

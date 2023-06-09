@@ -147,7 +147,7 @@ class Home(webapp2.RequestHandler):
             'Login with <a href="login/fb">Facebook</a>.<br />')
         self.response.write('Login with <a href="login/tw">Twitter</a>.<br />')
 
-        # Create OpenID form where the user can specify his claimed identifier.
+        # Create OpenID form where the user can specify their claimed identifier.
         # The library by default extracts the identifier from the "id"
         # parameter.
         self.response.write('''

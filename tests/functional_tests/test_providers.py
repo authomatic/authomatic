@@ -10,6 +10,7 @@ import time
 import liveandletdie
 import pytest
 import requests
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import (
     NoSuchElementException,
@@ -63,8 +64,16 @@ ALL_APPS = {
         os.path.join(EXAMPLES_DIR, 'pyramid/functional_test/main.py'),
         host=config.HOST,
         port=config.PORT,
-        check_url=config.HOST_ALIAS
+        check_url=config.HOST_ALIAS,
+        ssl=True,
     ),
+    'FastAPI': liveandletdie.FastAPIServer(
+        os.path.join(EXAMPLES_DIR, 'fastapi/functional_test/app.py'),
+        host=config.HOST,
+        port=config.PORT,
+        check_url=config.HOST_ALIAS,
+        ssl=True,
+    )
 }
 
 APPS = dict((k, v) for k, v in ALL_APPS.items() if
@@ -156,7 +165,7 @@ def login(request, browser, app, attempt=1):
         log(2, provider_name, 'Checking if human interaction is needed')
         try:
             wait(2, seconds)
-            el = browser.find_element_by_xpath(xpath)
+            el = browser.find_element(By.XPATH, xpath)
             if el.is_displayed():
                 print('Human interaction is needed (captcha or similar)!')
                 print('Go to the browser, do the interaction and hit "c".')
@@ -230,7 +239,7 @@ def login(request, browser, app, attempt=1):
                 for xpath in pre_login_xpaths:
                     log(2, provider_name,
                         'Finding pre-login element {0}'.format(xpath))
-                    pre_login = browser.find_element_by_xpath(xpath)
+                    pre_login = browser.find_element(By.XPATH, xpath)
 
                     log(3, provider_name,
                         'Clicking on pre-login element'.format(xpath))
@@ -238,7 +247,7 @@ def login(request, browser, app, attempt=1):
 
             log(2, provider_name,
                 'Finding login input {0}'.format(login_xpath))
-            login_element = browser.find_element_by_xpath(login_xpath)
+            login_element = browser.find_element(By.XPATH, login_xpath)
 
             log(3, provider_name, 'Filling out login')
             login_element.send_keys(conf.user_login)
@@ -255,7 +264,7 @@ def login(request, browser, app, attempt=1):
             wait(2, provider.get('before_password_input_wait'))
             log(2, provider_name,
                 'Finding password input {0}'.format(password_xpath))
-            password_element = browser.find_element_by_xpath(password_xpath)
+            password_element = browser.find_element(By.XPATH, password_xpath)
             log(3, provider_name, 'Filling out password')
             password_element.send_keys(conf.user_password)
 
@@ -276,7 +285,7 @@ def login(request, browser, app, attempt=1):
 
             browser.get(url)
 
-        # Andy authorizes this app to access his protected resources.
+        # Andy authorizes this app to access their protected resources.
         consent_xpaths = provider.get('consent_xpaths')
 
         if consent_xpaths:
@@ -286,7 +295,7 @@ def login(request, browser, app, attempt=1):
 
                     log(2, provider_name,
                         'Finding consent button {0}'.format(xpath))
-                    button = browser.find_element_by_xpath(xpath)
+                    button = browser.find_element(By.XPATH, xpath)
 
                     log(3, provider_name, 'Clicking consent button')
                     button.click()
@@ -299,11 +308,10 @@ def login(request, browser, app, attempt=1):
 
         try:
             log(2, provider_name, 'Finding result element')
-            browser.find_element_by_id('login-result')
+            browser.find_element(By.ID, 'login-result')
             log(3, provider_name, 'Result element found')
             success = True
         except NoSuchElementException:
-            log(3, provider_name, browser.current_url())
             log(3, provider_name, 'Result element not found!')
 
     except WebDriverException as e:
@@ -314,7 +322,7 @@ def login(request, browser, app, attempt=1):
         try:
             log(2, provider_name,
                 'Finding result element after error {0}'.format(e.msg))
-            browser.find_element_by_id('login-result')
+            browser.find_element(By.ID, 'login-result')
             log(3, provider_name, 'Result element found')
             success = True
         except NoSuchElementException:
@@ -369,7 +377,7 @@ class TestCredentials(Base):
 
         def f(property_name, coerce=None):
             id_ = 'original-credentials-{0}'.format(property_name)
-            value = browser.find_element_by_id(id_).text or None
+            value = browser.find_element(By.ID, id_).text or None
 
             expected = provider['credentials'][property_name]
 
@@ -436,7 +444,7 @@ class TestCredentialsChange(Base):
     def fixture(self, app, provider, browser):
         self.skip_if_openid(provider)
 
-        refresh_status = browser.find_element_by_id('original-credentials-'
+        refresh_status = browser.find_element(By.ID, 'original-credentials-'
                                                     'refresh_status').text
 
         supports_refresh = refresh_status != \
@@ -453,9 +461,9 @@ class TestCredentialsChange(Base):
                 original_id = 'original-credentials-{0}'.format(property_name)
                 changed_id = 'refreshed-credentials-{0}'.format(property_name)
 
-                original_val = browser.find_element_by_id(original_id).text\
+                original_val = browser.find_element(By.ID, original_id).text\
                     or None
-                changed_val = browser.find_element_by_id(changed_id).text\
+                changed_val = browser.find_element(By.ID, changed_id).text\
                     or None
 
                 if coerce is not None:
@@ -511,7 +519,8 @@ class TestUser(Base):
     def fixture(self, app, provider, browser):
 
         def f(property_name):
-            value = browser.find_element_by_id(property_name).text or None
+            value = browser.find_element(By.ID, property_name).text or None
+
             expected = provider['user'][property_name]
 
             if isinstance(expected, type(re.compile(''))):
@@ -576,14 +585,14 @@ class TestUser(Base):
 
     def test_content_should_contain(self, app, provider, browser):
         self.skip_if_openid(provider)
-        content = browser.find_element_by_id('content').text
+        content = browser.find_element(By.ID, 'content').text
         for item in provider['content_should_contain']:
 
             assert item in content
 
     def test_content_should_not_contain(self, app, provider, browser):
         self.skip_if_openid(provider)
-        content = browser.find_element_by_id('content').text.lower()
+        content = browser.find_element(By.ID, 'content').text.lower()
         for item in provider['content_should_not_contain']:
             if item:
                 assert str(item).lower() not in content

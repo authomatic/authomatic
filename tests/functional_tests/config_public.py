@@ -21,7 +21,8 @@ def get_browser():
 
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage");
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--ignore-certificate-errors")
     options.add_experimental_option("useAutomationExtension", False);
     return webdriver.Chrome(options=options)
 
@@ -55,8 +56,9 @@ HOST_ALIAS = 'authomatic.org'
 # Only frameworks included here will be tested.
 INCLUDE_FRAMEWORKS = [
     # 'django',
+    'fastapi', # Runs with https
     'flask',  # Runs with https
-    # 'pyramid',
+    'pyramid',  # Runs with https
 ]
 
 # Only providers included here will be tested.
@@ -67,7 +69,7 @@ INCLUDE_PROVIDERS = [
     # 'bitbucket',
     # 'flickr',
     # 'plurk',
-     'twitter',
+    # 'twitter',
     # 'tumblr',
     # 'ubuntuone',  # UbuntuOne service is no longer available
     # 'vimeo',
