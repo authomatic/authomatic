@@ -59,7 +59,7 @@ CONFIG = {
         conf.no_postal_code +
         conf.no_username +
         ['link', conf.user_nickname],
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         'token_type': None,
         'provider_type_id': '2-13',

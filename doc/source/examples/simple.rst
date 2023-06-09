@@ -19,7 +19,7 @@ Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
 
    Facebook and other |oauth2| providers require a **redirect URI**
    which should be the URL of the *login request handler*
-   which we will create in this tutorial and whose walue in our case will be
+   which we will create in this tutorial and whose value in our case will be
    ``https://[hostname]:[port]/login/fb`` for Facebook.
 
 .. literalinclude:: ../../../examples/gae/simple/config-template.py
