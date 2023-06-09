@@ -40,7 +40,7 @@ CONFIG = {
     'content_should_contain': [],
     # Case insensitive
     'content_should_not_contain': [],
-    # True means that any truthy value is expected
+    # True means that any thruthy value is expected
     'credentials': {
         '_expiration_time': None,
         '_expire_in': True,

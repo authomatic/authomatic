@@ -74,7 +74,7 @@ CONFIG = {
         # conf.no_location +
         ['any', 'other', 'values'],
 
-    # True means that any truthy value is expected
+    # True means that any thruthy value is expected
     'credentials': {
         'token_type': True,
         'provider_type_id': '#-#',
