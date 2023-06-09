@@ -100,7 +100,7 @@ Seems like we're done, but we can do more:
 
 If there are :class:`.Credentials` the **user** has logged in with an
 :class:`.AuthorizationProvider` i.e. |oauth1|_ or |oauth2|_
-and we can access **his/her** **protected resources**.
+and we can access **their** **protected resources**.
 
 .. literalinclude:: ../../../examples/pyramid/simple/main.py
    :language: python
