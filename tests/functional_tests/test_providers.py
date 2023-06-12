@@ -68,7 +68,7 @@ ALL_APPS = {
         ssl=True,
     ),
     'FastAPI': liveandletdie.FastAPIServer(
-        os.path.join(EXAMPLES_DIR, 'fastapi/functional_test/app.py'),
+        os.path.join(EXAMPLES_DIR, 'fastapi/functional_test/main.py'),
         host=config.HOST,
         port=config.PORT,
         check_url=config.HOST_ALIAS,

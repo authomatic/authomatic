@@ -1,6 +1,6 @@
 import authomatic
-from fastapi import FastAPI
-from fastapi.responses import PlainTextResponse
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, PlainTextResponse
 from authomatic.adapters import FastAPIAdapter
 from tests.functional_tests import fixtures
 
@@ -11,12 +11,12 @@ app = FastAPI()
 
 
 @app.get('/')
-def home(request):
-    return fixtures.render_home('fastapi')
+def home(request: Request):
+    return HTMLResponse(fixtures.render_home('fastapi'))
 
 
-@app.route('/login/{provider_name}', methods=['GET', 'POST'])
-def login(request, provider_name):
+@app.api_route('/login/{provider_name}', methods=['GET', 'POST'])
+def login(request: Request, provider_name):
     response = PlainTextResponse()
     result = authomatic.login(FastAPIAdapter(request, response), provider_name)
 
