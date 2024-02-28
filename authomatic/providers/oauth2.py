@@ -662,7 +662,7 @@ class Apple(OAuth2):
         jwks_uri = "https://appleid.apple.com/auth/keys"
         keys = []
         with urlopen(url=jwks_uri) as f:
-            result = f.read().decode
+            result = f.read().decode()
             keys = json.loads(result).get("keys")
 
         if not isinstance(keys, list) or not keys:
