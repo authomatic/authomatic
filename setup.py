@@ -14,4 +14,5 @@ setup(
         'OpenID: python_version < "3"': ['python-openid'],
         'OpenID: python_version >= "3"': ['python3-openid'],
     },
+    install_requires="PyJWT"
 )
