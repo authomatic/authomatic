@@ -34,8 +34,15 @@ import base64
 import datetime
 import json
 import logging
+import time
+
+import jwt
+
+from jwt.algorithms import RSAAlgorithm
+from jwt.exceptions import PyJWTError
 
 from authomatic.six.moves.urllib.parse import unquote
+from authomatic.six.moves.urllib.request import urlopen
 from authomatic import providers
 from authomatic.exceptions import CancellationError, FailureError, OAuth2Error
 import authomatic.core as core
@@ -162,6 +169,10 @@ class OAuth2(providers.AuthorizationProvider):
                     params['state'] = csrf
                 params['response_type'] = 'code'
 
+                # Add any other param that may be needed
+                # by a given provider
+                params.update(cls.get_extra_params(cls))
+
                 # Add authorization header
                 headers.update(cls._authorization_header(credentials))
             else:
@@ -175,7 +186,7 @@ class OAuth2(providers.AuthorizationProvider):
             if consumer_key and consumer_secret:
                 params['code'] = token
                 params['client_id'] = consumer_key
-                params['client_secret'] = consumer_secret
+                params['client_secret'] = cls.get_consumer_secret(cls, credentials)
                 params['redirect_uri'] = redirect_uri
                 params['grant_type'] = 'authorization_code'
 
@@ -349,7 +360,6 @@ class OAuth2(providers.AuthorizationProvider):
 
     @providers.login_decorator
     def login(self):
-
         # get request parameters from which we can determine the login phase
         authorization_code = self.params.get('code')
         error = self.params.get('error')
@@ -527,6 +537,17 @@ class OAuth2(providers.AuthorizationProvider):
             self.redirect(request_elements.full_url)
 
 
+    def get_consumer_secret(self, credentials):
+        """ return the client secret"""
+
+        return credentials.consumer_secret or ''
+
+    def get_extra_params(self):
+        """ return extra params that may be needed
+            in a given provider
+        """
+        return {}
+
 class Amazon(OAuth2):
     """
     Amazon |oauth2| provider.
@@ -595,6 +616,103 @@ class Amazon(OAuth2):
             credentials.token_type = cls.BEARER
         return credentials
 
+
+class Apple(OAuth2):
+    """
+    Apple |oauth2| provider
+
+    .. note::
+
+        Apple supports a OIDC-like interface, which is OAuth2 compatible
+        with some pecularities like having to create a specific secret
+        for each request based on the secret provided by Apple.
+
+    """
+
+    user_authorization_url = "https://appleid.apple.com/auth/authorize"
+    access_token_url = "https://appleid.apple.com/auth/token"
+
+    user_info_scope = ["openid", "email", "name"]
+
+    TOKEN_TTL_SEC = 6 * 30 * 24 * 60 * 60
+    TOKEN_AUDIENCE = "https://appleid.apple.com"
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        email=True,
+        name=True,
+        first_name=True,
+        last_name=True,
+        locale=False,
+        picture=False
+    )
+
+    def _x_scope_parser(self, scope):
+        """
+        Apple has %20-separated scopes.
+        """
+        return '%20'.join(scope)
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        id_token = data.get('id_token')
+        kid = jwt.get_unverified_header(id_token).get("kid")
+
+        # get apple JWK keys
+        jwks_uri = "https://appleid.apple.com/auth/keys"
+        keys = []
+        with urlopen(url=jwks_uri) as f:
+            result = f.read().decode
+            keys = json.loads(result).get("keys")
+
+        if not isinstance(keys, list) or not keys:
+            raise
+
+        keys = json.dumps([key for key in keys if key["kid"] == kid][0])
+        public_key = RSAAlgorithm.from_jwk(keys)
+        audience = user.provider.settings.config[user.provider.name]['consumer_audience']
+        try:
+            # Decode the received token to get user information
+            decoded = jwt.decode(
+                id_token,
+                key=public_key,
+                audience=audience,
+                algorithms=["RS256"],
+            )
+        except PyJWTError as error:
+            raise
+
+        user.email = decoded.get('email')
+        user.id = decoded.get('sub')
+        user.username = decoded.get('email')
+        return user
+
+    def get_consumer_secret(self, credentials):
+        """ Get specific consumer secret
+            it's a JWT encoded by our own private key
+        """
+        now = int(time.time())
+
+        client_id = credentials.consumer_key
+        team_id = credentials.config[credentials.provider_name]['consumer_team']
+        key_id = credentials.config[credentials.provider_name]['consumer_id_key']
+        private_key = credentials.consumer_secret
+
+        headers = {"kid": key_id}
+        payload = {
+            "iss": team_id,
+            "iat": now,
+            "exp": now + self.TOKEN_TTL_SEC,
+            "aud": self.TOKEN_AUDIENCE,
+            "sub": client_id,
+        }
+
+        private_key = private_key.replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n').replace('-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----')
+
+        return jwt.encode(payload, key=private_key.encode(), algorithm="ES256", headers=headers)
+
+    def get_extra_params(self):
+        return {'response_mode': 'form_post'}
 
 class Behance(OAuth2):
     """
@@ -1958,7 +2076,6 @@ class Yammer(OAuth2):
 
     @classmethod
     def _x_credentials_parser(cls, credentials, data):
-        # import pdb; pdb.set_trace()
         credentials.token_type = cls.BEARER
         _access_token = data.get('access_token', {})
         credentials.token = _access_token.get('token')
@@ -2079,6 +2196,7 @@ class Yandex(OAuth2):
 # don't change!
 PROVIDER_ID_MAP = [
     Amazon,
+    Apple,
     Behance,
     Bitly,
     Cosm,
