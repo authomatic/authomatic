@@ -83,7 +83,7 @@ INCLUDE_PROVIDERS = [
     # 'behance',  # doesn't support third party authorization anymore.
     # 'bitly',  # deprecated for test suite refactoring - consider re-enabling
     # 'deviantart',  # deprecated for test suite refactoring - consider re-enabling
-    'facebook',
+    # 'facebook',
     # 'foursquare',  # deprecated for test suite refactoring - consider re-enabling
     # 'google',  # deprecated for test suite refactoring - consider re-enabling
     # 'github', # Asks for 2FA/one-time-pass verification in Travis CI environment.
