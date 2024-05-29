@@ -1706,7 +1706,7 @@ class Authomatic():
             jsonp = params.get('callback')
 
             # JSONP is possible only with GET method.
-            if ProviderClass.supports_jsonp and method is 'GET':
+            if ProviderClass.supports_jsonp and method == 'GET':
                 request_type = 'elements'
             else:
                 # Remove the JSONP callback
