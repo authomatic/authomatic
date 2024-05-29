@@ -59,7 +59,7 @@ import abc
 from authomatic.core import Response
 
 
-class BaseAdapter(object):
+class BaseAdapter():
     """
     Base class for platform adapters.
 

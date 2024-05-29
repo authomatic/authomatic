@@ -75,7 +75,7 @@ def items_to_dict(items):
     return normalize_dict(dict(res))
 
 
-class Counter(object):
+class Counter():
     """
     A simple counter to be used in the config to generate unique `id` values.
     """
@@ -226,7 +226,7 @@ def id_to_name(config, short_name):
         'No provider with id={0} found in the config!'.format(short_name))
 
 
-class ReprMixin(object):
+class ReprMixin():
     """
     Provides __repr__() method with output *ClassName(arg1=value, arg2=value)*.
 
@@ -333,7 +333,7 @@ class Future(threading.Thread):
         return self._result
 
 
-class Session(object):
+class Session():
     """
     A dictionary-like secure cookie session implementation.
     """
@@ -1256,7 +1256,7 @@ class RequestElements(tuple):
                                body=self.body))
 
 
-class Authomatic(object):
+class Authomatic():
     def __init__(
             self, config, secret, session_max_age=600, secure_cookie=False,
             session=None, session_save_method=None, report_errors=True,

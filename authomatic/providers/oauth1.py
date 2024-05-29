@@ -102,7 +102,7 @@ def _create_base_string(method, base, params):
     return _join_by_ampersand(method, base, normalized_qs)
 
 
-class BaseSignatureGenerator(object):
+class BaseSignatureGenerator():
     """
     Abstract base class for all signature generators.
     """
