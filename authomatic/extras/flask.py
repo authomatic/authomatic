@@ -35,7 +35,7 @@ class FlaskAuthomatic(Authomatic):
                 adapter = WerkzeugAdapter(request, self.response)
                 login_kwargs.setdefault('session', session)
                 login_kwargs.setdefault('session_saver', self.session_saver)
-                self.result = super(FlaskAuthomatic, self).login(
+                self.result = super().login(
                     adapter,
                     *login_args,
                     **login_kwargs)

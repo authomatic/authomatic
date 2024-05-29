@@ -275,7 +275,7 @@ class OAuth1(providers.AuthorizationProvider):
 
         """
 
-        super(OAuth1, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.request_token_params = self._kwarg(
             kwargs, 'request_token_params', {})
@@ -622,7 +622,7 @@ class Bitbucket(OAuth1):
         """
         Email is available in separate method so second request is needed.
         """
-        response = super(Bitbucket, self)._access_user_info()
+        response = super()._access_user_info()
 
         response.data.setdefault("email", None)
 
@@ -1093,7 +1093,7 @@ class Vimeo(OAuth1):
         Vimeo requires the user ID to access the user info endpoint, so we need
         to make two requests: one to get user ID and second to get user info.
         """
-        response = super(Vimeo, self)._access_user_info()
+        response = super()._access_user_info()
         uid = response.data.get('oauth', {}).get('user', {}).get('id')
         if uid:
             return self.access('http://vimeo.com/api/v2/{0}/info.json'

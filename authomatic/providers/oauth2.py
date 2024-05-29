@@ -94,7 +94,7 @@ class OAuth2(providers.AuthorizationProvider):
 
         """
 
-        super(OAuth2, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.scope = self._kwarg(kwargs, 'scope', [])
         self.offline = self._kwarg(kwargs, 'offline', False)
@@ -692,7 +692,7 @@ class Bitly(OAuth2):
     user_info_url = 'https://api-ssl.bitly.com/v3/user/info'
 
     def __init__(self, *args, **kwargs):
-        super(Bitly, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'grant_type' not in self.access_token_params:
@@ -800,7 +800,7 @@ class DeviantART(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(DeviantART, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'grant_type' not in self.access_token_params:
@@ -942,7 +942,7 @@ class Facebook(OAuth2):
         return request_elements
 
     def __init__(self, *args, **kwargs):
-        super(Facebook, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Handle special Facebook requirements to be able
         # to refresh the access token.
@@ -1002,7 +1002,7 @@ class Facebook(OAuth2):
         params['fields'] = 'id,first_name,last_name,picture,email,gender,' + \
                            'timezone,location,birthday,locale'
 
-        return super(Facebook, self).access(url, params, **kwargs)
+        return super().access(url, params, **kwargs)
 
 
 class Foursquare(OAuth2):
@@ -1219,7 +1219,7 @@ class GitHub(OAuth2):
             headers["User-Agent"] = self.settings.config[self.name]["consumer_key"]
 
         def parent_access(url):
-            return super(GitHub, self).access(url, **kwargs)
+            return super().access(url, **kwargs)
 
         response = parent_access(url)
 
@@ -1302,7 +1302,7 @@ class Google(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(Google, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Handle special Google requirements to be able to refresh the access
         # token.
@@ -1507,7 +1507,7 @@ class MicrosoftOnline(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(MicrosoftOnline, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         auth = args[0]
         provider_name = kwargs.get('provider_name')
         domain = auth.config.get(provider_name, {}).get('domain')
@@ -1645,7 +1645,7 @@ class Reddit(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(Reddit, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'duration' not in self.user_authorization_params:
@@ -1799,7 +1799,7 @@ class VK(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(VK, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'offline' not in self.scope:
@@ -1878,7 +1878,7 @@ class WindowsLive(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(WindowsLive, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'wl.offline_access' not in self.scope:

@@ -239,7 +239,7 @@ class OpenID(providers.AuthenticationProvider):
 
         """
 
-        super(OpenID, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Allow for other openid store implementations.
         self.store = self._kwarg(
