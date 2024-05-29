@@ -10,7 +10,7 @@ class BaseError(Exception):
     """
 
     def __init__(self, message, original_message='', url='', status=None):
-        super(BaseError, self).__init__(message)
+        super().__init__(message)
 
         #: Error message.
         self.message = message

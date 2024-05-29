@@ -50,8 +50,8 @@ def normalize_dict(dict_):
 
     """
 
-    return dict([(k, v[0] if not isinstance(v, str) and len(v) == 1 else v)
-                 for k, v in list(dict_.items())])
+    return {[(k, v[0] if not isinstance(v, str) and len(v) == 1 else v)
+             for k, v in list(dict_.items())]}
 
 
 def items_to_dict(items):
@@ -75,7 +75,7 @@ def items_to_dict(items):
     return normalize_dict(dict(res))
 
 
-class Counter(object):
+class Counter():
     """
     A simple counter to be used in the config to generate unique `id` values.
     """
@@ -181,8 +181,7 @@ def import_string(import_name, silent=False):
         if '.' in import_name:
             module, obj = import_name.rsplit('.', 1)
             return getattr(__import__(module, None, None, [obj]), obj)
-        else:
-            return __import__(import_name)
+        return __import__(import_name)
     except (ImportError, AttributeError) as e:
         if not silent:
             raise ImportStringError('Import from string failed for path {0}'
@@ -205,8 +204,7 @@ def resolve_provider_class(class_):
         # try to import class by string from providers module or by fully
         # qualified path
         return import_string(class_, True) or import_string(path)
-    else:
-        return class_
+    return class_
 
 
 def id_to_name(config, short_name):
@@ -228,7 +226,7 @@ def id_to_name(config, short_name):
         'No provider with id={0} found in the config!'.format(short_name))
 
 
-class ReprMixin(object):
+class ReprMixin():
     """
     Provides __repr__() method with output *ClassName(arg1=value, arg2=value)*.
 
@@ -302,7 +300,7 @@ class Future(threading.Thread):
         passed to :data:`func`.
         """
 
-        super(Future, self).__init__()
+        super().__init__()
         self._func = func
         self._args = args
         self._kwargs = kwargs
@@ -335,7 +333,7 @@ class Future(threading.Thread):
         return self._result
 
 
-class Session(object):
+class Session():
     """
     A dictionary-like secure cookie session implementation.
     """
@@ -754,8 +752,7 @@ class Credentials(ReprMixin):
 
         if self.expire_in < 0:
             return None
-        else:
-            return datetime.datetime.fromtimestamp(self.expiration_time)
+        return datetime.datetime.fromtimestamp(self.expiration_time)
 
     @property
     def valid(self):
@@ -765,8 +762,7 @@ class Credentials(ReprMixin):
 
         if self.expiration_time:
             return self.expiration_time > int(time.time())
-        else:
-            return True
+        return True
 
     def expire_soon(self, seconds):
         """
@@ -783,8 +779,7 @@ class Credentials(ReprMixin):
 
         if self.expiration_time:
             return self.expiration_time < int(time.time()) + int(seconds)
-        else:
-            return False
+        return False
 
     def refresh(self, force=False, soon=86400):
         """
@@ -1066,7 +1061,7 @@ class LoginResult(ReprMixin):
         return self.provider.user if self.provider else None
 
     def to_dict(self):
-        return dict(provider=self.provider, user=self.user, error=self.error)
+        return {'provider': self.provider, 'user': self.user, 'error': self.error}
 
     def to_json(self, indent=4):
         return json.dumps(self, default=lambda obj: obj.to_dict(
@@ -1180,7 +1175,7 @@ class UserInfoResponse(Response):
     """
 
     def __init__(self, user, *args, **kwargs):
-        super(UserInfoResponse, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         #: :class:`.User` instance.
         self.user = user
@@ -1254,14 +1249,16 @@ class RequestElements(tuple):
         return self.url + '?' + self.query_string
 
     def to_json(self):
-        return json.dumps(dict(url=self.url,
-                               method=self.method,
-                               params=self.params,
-                               headers=self.headers,
-                               body=self.body))
+        return json.dumps({
+            'url': self.url,
+            'method': self.method,
+            'params': self.params,
+            'headers': self.headers,
+            'body': self.body
+        })
 
 
-class Authomatic(object):
+class Authomatic():
     def __init__(
             self, config, secret, session_max_age=600, secure_cookie=False,
             session=None, session_save_method=None, report_errors=True,
@@ -1373,10 +1370,7 @@ class Authomatic(object):
                 raise ConfigError('Provider name "{0}" not specified!'
                                   .format(provider_name))
 
-            if not (session is None or session_saver is None):
-                session = session
-                session_saver = session_saver
-            else:
+            if session is None or session_saver is None:
                 session = Session(adapter=adapter,
                                   secret=self.secret,
                                   max_age=self.session_max_age,
@@ -1408,9 +1402,8 @@ class Authomatic(object):
             # return login result
             return provider.login()
 
-        else:
-            # Act like backend.
-            self.backend(adapter)
+        # Act like backend.
+        self.backend(adapter)
 
     def credentials(self, credentials):
         """
@@ -1600,9 +1593,7 @@ class Authomatic(object):
 
         if return_json:
             return request_elements.to_json()
-
-        else:
-            return request_elements
+        return request_elements
 
     def backend(self, adapter):
         """
@@ -1714,7 +1705,7 @@ class Authomatic(object):
             jsonp = params.get('callback')
 
             # JSONP is possible only with GET method.
-            if ProviderClass.supports_jsonp and method is 'GET':
+            if ProviderClass.supports_jsonp and method == 'GET':
                 request_type = 'elements'
             else:
                 # Remove the JSONP callback
