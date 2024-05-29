@@ -56,7 +56,6 @@ respectively.
 """
 
 import abc
-from authomatic.core import Response
 
 
 class BaseAdapter():
