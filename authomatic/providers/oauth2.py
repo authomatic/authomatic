@@ -115,8 +115,6 @@ class OAuth2(providers.AuthorizationProvider):
 
         """
 
-        # pylint:disable=no-self-use
-
         # Most providers accept csv scope.
         return ','.join(scope) if scope else ''
 
