@@ -132,16 +132,15 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
                 logging.WARNING,
                 u'NDBOpenIDStore: Nonce was already used!')
             return False
-        else:
-            # if not, store the key to datastore and return True
-            nonce = cls(key=key)
-            nonce.expiration_date = datetime.datetime.fromtimestamp(
-                timestamp) + datetime.timedelta(0, openid.store.nonce.SKEW)
-            cls._log(
-                logging.DEBUG,
-                u'NDBOpenIDStore: Putting new nonce to datastore.')
-            nonce.put()
-            return True
+        # if not, store the key to datastore and return True
+        nonce = cls(key=key)
+        nonce.expiration_date = datetime.datetime.fromtimestamp(
+            timestamp) + datetime.timedelta(0, openid.store.nonce.SKEW)
+        cls._log(
+            logging.DEBUG,
+            u'NDBOpenIDStore: Putting new nonce to datastore.')
+        nonce.put()
+        return True
 
     @classmethod
     def cleanupNonces(cls):

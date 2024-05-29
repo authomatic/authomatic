@@ -289,8 +289,7 @@ class OAuth2(providers.AuthorizationProvider):
             # should be str compatible.
             return json.loads(base64.urlsafe_b64decode(
                 unquote(str(state))).decode('utf-8'))[param]
-        else:
-            return state if param == 'csrf' else ''
+        return state if param == 'csrf' else ''
 
     def refresh_credentials(self, credentials):
         """
@@ -381,7 +380,7 @@ class OAuth2(providers.AuthorizationProvider):
                     state_csrf = self.decode_state(state, 'csrf')
                     if not stored_csrf:
                         raise FailureError(u'Unable to retrieve stored state!')
-                    elif stored_csrf != state_csrf:
+                    if stored_csrf != state_csrf:
                         raise FailureError(
                             u'The returned state csrf cookie "{0}" doesn\'t '
                             u'match with the stored state!'.format(
@@ -478,10 +477,9 @@ class OAuth2(providers.AuthorizationProvider):
             if error_reason and 'denied' in error_reason:
                 raise CancellationError(error_description,
                                         url=self.user_authorization_url)
-            else:
-                raise FailureError(
-                    error_description,
-                    url=self.user_authorization_url)
+            raise FailureError(
+                error_description,
+                url=self.user_authorization_url)
 
         elif (
                 not self.params

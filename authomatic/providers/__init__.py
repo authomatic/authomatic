@@ -123,9 +123,8 @@ def login_decorator(func):
             if provider.callback:
                 provider.callback(result)
             return result
-        else:
-            # Save session
-            provider.save_session()
+        # Save session
+        provider.save_session()
 
     return wrap
 
@@ -479,7 +478,7 @@ class BaseProvider(object):
                                  url=location,
                                  status=response.status)
 
-            elif max_redirects > 0:
+            if max_redirects > 0:
                 remaining_redirects = max_redirects - 1
 
                 self._log_param('Redirecting to', url)
@@ -938,8 +937,7 @@ class AuthorizationProvider(BaseProvider):
                  credentials.consumer_secret))
             res = base64.b64encode(six.b(res)).decode()
             return {'Authorization': 'Basic {0}'.format(res)}
-        else:
-            return {}
+        return {}
 
     def _check_consumer(self):
         """

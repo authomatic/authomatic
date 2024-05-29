@@ -77,12 +77,11 @@ class Webapp2Session(interfaces.BaseSession):
         if session is None:
             if not secret:
                 raise GAEError('Either session or secret must be specified!')
-            else:
-                # Create new session.
-                cfg = config or dict(
-                    secret_key=secret, cookie_name=cookie_name)
-                session_store = sessions.SessionStore(handler.request, cfg)
-                self.session_dict = session_store.get_session(backend=backend)
+            # Create new session.
+            cfg = config or dict(
+                secret_key=secret, cookie_name=cookie_name)
+            session_store = sessions.SessionStore(handler.request, cfg)
+            self.session_dict = session_store.get_session(backend=backend)
         else:
             # Use supplied session.
             self.session_dict = session
@@ -160,8 +159,7 @@ class NDBConfig(ndb.Model):
                     result_dict[i] = None
 
             return result_dict
-        else:
-            return default
+        return default
 
     @classmethod
     def values(cls):

@@ -181,8 +181,7 @@ def import_string(import_name, silent=False):
         if '.' in import_name:
             module, obj = import_name.rsplit('.', 1)
             return getattr(__import__(module, None, None, [obj]), obj)
-        else:
-            return __import__(import_name)
+        return __import__(import_name)
     except (ImportError, AttributeError) as e:
         if not silent:
             raise ImportStringError('Import from string failed for path {0}'
@@ -205,8 +204,7 @@ def resolve_provider_class(class_):
         # try to import class by string from providers module or by fully
         # qualified path
         return import_string(class_, True) or import_string(path)
-    else:
-        return class_
+    return class_
 
 
 def id_to_name(config, short_name):
@@ -754,8 +752,7 @@ class Credentials(ReprMixin):
 
         if self.expire_in < 0:
             return None
-        else:
-            return datetime.datetime.fromtimestamp(self.expiration_time)
+        return datetime.datetime.fromtimestamp(self.expiration_time)
 
     @property
     def valid(self):
@@ -765,8 +762,7 @@ class Credentials(ReprMixin):
 
         if self.expiration_time:
             return self.expiration_time > int(time.time())
-        else:
-            return True
+        return True
 
     def expire_soon(self, seconds):
         """
@@ -783,8 +779,7 @@ class Credentials(ReprMixin):
 
         if self.expiration_time:
             return self.expiration_time < int(time.time()) + int(seconds)
-        else:
-            return False
+        return False
 
     def refresh(self, force=False, soon=86400):
         """
@@ -1408,9 +1403,8 @@ class Authomatic(object):
             # return login result
             return provider.login()
 
-        else:
-            # Act like backend.
-            self.backend(adapter)
+        # Act like backend.
+        self.backend(adapter)
 
     def credentials(self, credentials):
         """
@@ -1600,9 +1594,7 @@ class Authomatic(object):
 
         if return_json:
             return request_elements.to_json()
-
-        else:
-            return request_elements
+        return request_elements
 
     def backend(self, adapter):
         """

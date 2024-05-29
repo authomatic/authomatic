@@ -121,9 +121,8 @@ class SessionOpenIDStore(object):
             # If found deserialize and return it.
             self._log(logging.DEBUG, u'SessionOpenIDStore: Association found.')
             return Association.deserialize(assoc[2].encode('latin-1'))
-        else:
-            self._log(logging.DEBUG,
-                      u'SessionOpenIDStore: Association not found.')
+        self._log(logging.DEBUG,
+                  u'SessionOpenIDStore: Association not found.')
 
     def removeAssociation(self, server_url, handle):
         # Just inform the caller that it's gone.
@@ -134,9 +133,8 @@ class SessionOpenIDStore(object):
         age = int(time.time()) - int(timestamp)
         if age < self.nonce_timeout:
             return True
-        else:
-            self._log(logging.ERROR, u'SessionOpenIDStore: Expired nonce!')
-            return False
+        self._log(logging.ERROR, u'SessionOpenIDStore: Expired nonce!')
+        return False
 
 
 class OpenID(providers.AuthenticationProvider):
