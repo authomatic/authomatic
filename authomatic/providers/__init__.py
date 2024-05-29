@@ -584,7 +584,7 @@ class BaseProvider():
 
         assert category < 10, 'HTTP status category must be a one-digit int!'
         cat = category * 100
-        return status >= cat and status < cat + 100
+        return cat <= status < cat + 100
 
 
 class AuthorizationProvider(BaseProvider):
