@@ -50,8 +50,8 @@ def normalize_dict(dict_):
 
     """
 
-    return dict([(k, v[0] if not isinstance(v, str) and len(v) == 1 else v)
-                 for k, v in list(dict_.items())])
+    return {[(k, v[0] if not isinstance(v, str) and len(v) == 1 else v)
+             for k, v in list(dict_.items())]}
 
 
 def items_to_dict(items):
@@ -1061,7 +1061,7 @@ class LoginResult(ReprMixin):
         return self.provider.user if self.provider else None
 
     def to_dict(self):
-        return dict(provider=self.provider, user=self.user, error=self.error)
+        return {'provider': self.provider, 'user': self.user, 'error': self.error}
 
     def to_json(self, indent=4):
         return json.dumps(self, default=lambda obj: obj.to_dict(
@@ -1249,11 +1249,13 @@ class RequestElements(tuple):
         return self.url + '?' + self.query_string
 
     def to_json(self):
-        return json.dumps(dict(url=self.url,
-                               method=self.method,
-                               params=self.params,
-                               headers=self.headers,
-                               body=self.body))
+        return json.dumps({
+            'url': self.url,
+            'method': self.method,
+            'params': self.params,
+            'headers': self.headers,
+            'body': self.body
+        })
 
 
 class Authomatic():

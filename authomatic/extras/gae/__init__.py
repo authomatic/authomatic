@@ -78,8 +78,7 @@ class Webapp2Session(interfaces.BaseSession):
             if not secret:
                 raise GAEError('Either session or secret must be specified!')
             # Create new session.
-            cfg = config or dict(
-                secret_key=secret, cookie_name=cookie_name)
+            cfg = config or {'secret_key': secret, 'cookie_name': cookie_name}
             session_store = sessions.SessionStore(handler.request, cfg)
             self.session_dict = session_store.get_session(backend=backend)
         else:

@@ -222,12 +222,14 @@ class BaseProvider():
 
         """
 
-        return dict(name=self.name,
-                    id=getattr(self, 'id', None),
-                    type_id=self.type_id,
-                    type=self.get_type(),
-                    scope=getattr(self, 'scope', None),
-                    user=self.user.id if self.user else None)
+        return {
+            'name': self.name,
+            'id': getattr(self, 'id', None),
+            'type_id': self.type_id,
+            'type': self.get_type(),
+            'scope': getattr(self, 'scope', None),
+            'user': self.user.id if self.user else None
+        }
 
     @classmethod
     def get_type(cls):
