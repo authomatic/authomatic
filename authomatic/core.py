@@ -1370,10 +1370,7 @@ class Authomatic():
                 raise ConfigError('Provider name "{0}" not specified!'
                                   .format(provider_name))
 
-            if not (session is None or session_saver is None):
-                session = session
-                session_saver = session_saver
-            else:
+            if session is None or session_saver is None:
                 session = Session(adapter=adapter,
                                   secret=self.secret,
                                   max_age=self.session_max_age,
