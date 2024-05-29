@@ -119,10 +119,10 @@ class SessionOpenIDStore(object):
         assoc = self.session.get(self.ASSOCIATION_KEY)
         if assoc and assoc[0] == server_url:
             # If found deserialize and return it.
-            self._log(logging.DEBUG, u'SessionOpenIDStore: Association found.')
+            self._log(logging.DEBUG, 'SessionOpenIDStore: Association found.')
             return Association.deserialize(assoc[2].encode('latin-1'))
         self._log(logging.DEBUG,
-                  u'SessionOpenIDStore: Association not found.')
+                  'SessionOpenIDStore: Association not found.')
 
     def removeAssociation(self, server_url, handle):
         # Just inform the caller that it's gone.
@@ -133,7 +133,7 @@ class SessionOpenIDStore(object):
         age = int(time.time()) - int(timestamp)
         if age < self.nonce_timeout:
             return True
-        self._log(logging.ERROR, u'SessionOpenIDStore: Expired nonce!')
+        self._log(logging.ERROR, 'SessionOpenIDStore: Expired nonce!')
         return False
 
 
@@ -331,7 +331,7 @@ class OpenID(providers.AuthenticationProvider):
 
             self._log(
                 logging.INFO,
-                u'Writing OpenID realm HTML to the response.')
+                'Writing OpenID realm HTML to the response.')
             xrds_location = '{u}?{x}={x}'.format(u=self.url, x=self.xrds_param)
             self.write(
                 REALM_HTML.format(
@@ -345,7 +345,7 @@ class OpenID(providers.AuthenticationProvider):
 
             self._log(
                 logging.INFO,
-                u'Writing XRDS XML document to the response.')
+                'Writing XRDS XML document to the response.')
             self.set_header('Content-Type', 'application/xrds+xml')
             self.write(XRDS_XML.format(return_to=self.url))
 
@@ -356,7 +356,7 @@ class OpenID(providers.AuthenticationProvider):
 
             self._log(
                 logging.INFO,
-                u'Continuing OpenID authentication procedure after redirect.')
+                'Continuing OpenID authentication procedure after redirect.')
 
             # complete the authentication process
             response = oi_consumer.complete(self.params, self.url)
@@ -369,12 +369,12 @@ class OpenID(providers.AuthenticationProvider):
                 # get user ID
                 data['guid'] = response.getDisplayIdentifier()
 
-                self._log(logging.INFO, u'Authentication successful.')
+                self._log(logging.INFO, 'Authentication successful.')
 
                 # get user data from AX response
                 ax_response = ax.FetchResponse.fromSuccessResponse(response)
                 if ax_response and ax_response.data:
-                    self._log(logging.INFO, u'Got AX data.')
+                    self._log(logging.INFO, 'Got AX data.')
                     ax_data = {}
                     # convert iterable values to their first item
                     for k, v in ax_response.data.items():
@@ -385,13 +385,13 @@ class OpenID(providers.AuthenticationProvider):
                 # get user data from SREG response
                 sreg_response = sreg.SRegResponse.fromSuccessResponse(response)
                 if sreg_response and sreg_response.data:
-                    self._log(logging.INFO, u'Got SREG data.')
+                    self._log(logging.INFO, 'Got SREG data.')
                     data['sreg'] = sreg_response.data
 
                 # get data from PAPE response
                 pape_response = pape.Response.fromSuccessResponse(response)
                 if pape_response and pape_response.auth_policies:
-                    self._log(logging.INFO, u'Got PAPE data.')
+                    self._log(logging.INFO, 'Got PAPE data.')
                     data['pape'] = pape_response.auth_policies
 
                 # create user
@@ -403,7 +403,7 @@ class OpenID(providers.AuthenticationProvider):
 
             elif response.status == consumer.CANCEL:
                 raise CancellationError(
-                    u'User cancelled the verification of ID "{0}"!'.format(
+                    'User cancelled the verification of ID "{0}"!'.format(
                         response.getDisplayIdentifier()))
 
             elif response.status == consumer.FAILURE:
@@ -416,14 +416,14 @@ class OpenID(providers.AuthenticationProvider):
 
             self._log(
                 logging.INFO,
-                u'Starting OpenID authentication procedure.')
+                'Starting OpenID authentication procedure.')
 
             # get AuthRequest object
             try:
                 auth_request = oi_consumer.begin(self.identifier)
             except consumer.DiscoveryFailure as e:
                 raise FailureError(
-                    u'Discovery failed for identifier {0}!'.format(
+                    'Discovery failed for identifier {0}!'.format(
                         self.identifier
                     ),
                     url=self.identifier,
@@ -431,7 +431,7 @@ class OpenID(providers.AuthenticationProvider):
 
             self._log(
                 logging.INFO,
-                u'Service discovery for identifier {0} successful.'.format(
+                'Service discovery for identifier {0} successful.'.format(
                     self.identifier))
 
             # add SREG extension
@@ -469,14 +469,14 @@ class OpenID(providers.AuthenticationProvider):
                 url = auth_request.redirectURL(realm, return_to)
                 self._log(
                     logging.INFO,
-                    u'Redirecting user to {0}.'.format(url))
+                    'Redirecting user to {0}.'.format(url))
                 self.redirect(url)
             else:
                 # must be sent as POST
                 # this writes a html post form with auto-submit
                 self._log(
                     logging.INFO,
-                    u'Writing an auto-submit HTML form to the response.')
+                    'Writing an auto-submit HTML form to the response.')
                 form = auth_request.htmlMarkup(
                     realm, return_to, False, dict(
                         id='openid_form'))

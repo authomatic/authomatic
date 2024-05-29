@@ -96,7 +96,7 @@ def login_decorator(func):
                 if not isinstance(error, CancellationError):
                     provider._log(
                         logging.ERROR,
-                        u'Reported suppressed exception: {0}!'.format(
+                        'Reported suppressed exception: {0}!'.format(
                             repr(error)),
                         exc_info=1)
             else:
@@ -118,7 +118,7 @@ def login_decorator(func):
             if isinstance(provider.session, authomatic.core.Session):
                 provider.session.delete()
 
-            provider._log(logging.INFO, u'Procedure finished.')
+            provider._log(logging.INFO, 'Procedure finished.')
 
             if provider.callback:
                 provider.callback(result)
@@ -380,10 +380,10 @@ class BaseProvider(object):
             Python standard library.
 
         """
-        info_style = u' \u251C\u2500 '
-        last_style = u' \u2514\u2500 '
-        style = u'' if last is None else last_style if last else info_style
-        cls._log(logging.DEBUG, u'{0}{1}: {2!s}'.format(style, param, value))
+        info_style = ' \u251C\u2500 '
+        last_style = ' \u2514\u2500 '
+        style = '' if last is None else last_style if last else info_style
+        cls._log(logging.DEBUG, '{0}{1}: {2!s}'.format(style, param, value))
 
     def _fetch(self, url, method='GET', params=None, headers=None,
                body='', max_redirects=5, content_parser=None,
@@ -854,7 +854,7 @@ class AuthorizationProvider(BaseProvider):
         """
 
         if not self.user and not self.credentials:
-            raise CredentialsError(u'There is no authenticated user!')
+            raise CredentialsError('There is no authenticated user!')
 
         headers = headers or {}
 

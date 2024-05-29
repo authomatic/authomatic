@@ -413,17 +413,17 @@ class OAuth1(providers.AuthorizationProvider):
             # Phase 2 after redirect with success
             self._log(
                 logging.INFO,
-                u'Continuing OAuth 1.0a authorization procedure after '
-                u'redirect.')
+                'Continuing OAuth 1.0a authorization procedure after '
+                'redirect.')
             token_secret = self._session_get('token_secret')
             if not token_secret:
                 raise FailureError(
-                    u'Unable to retrieve token secret from storage!')
+                    'Unable to retrieve token secret from storage!')
 
             # Get Access Token
             self._log(
                 logging.INFO,
-                u'Fetching for access token from {0}.'.format(
+                'Fetching for access token from {0}.'.format(
                     self.access_token_url))
 
             self.credentials.token = request_token
@@ -450,7 +450,7 @@ class OAuth1(providers.AuthorizationProvider):
                     url=self.access_token_url
                 )
 
-            self._log(logging.INFO, u'Got access token.')
+            self._log(logging.INFO, 'Got access token.')
             self.credentials.token = response.data.get('oauth_token', '')
             self.credentials.token_secret = response.data.get(
                 'oauth_token_secret', ''
@@ -475,7 +475,7 @@ class OAuth1(providers.AuthorizationProvider):
             # Phase 1 before redirect
             self._log(
                 logging.INFO,
-                u'Starting OAuth 1.0a authorization procedure.')
+                'Starting OAuth 1.0a authorization procedure.')
 
             # Fetch for request token
             request_elements = self.create_request_elements(
@@ -488,14 +488,14 @@ class OAuth1(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                u'Fetching for request token and token secret.')
+                'Fetching for request token and token secret.')
             response = self._fetch(*request_elements)
 
             # check if response status is OK
             if not self._http_status_in_category(response.status, 2):
                 raise FailureError(
-                    u'Failed to obtain request token from {0}! HTTP status '
-                    u'code: {1} content: {2}'.format(
+                    'Failed to obtain request token from {0}! HTTP status '
+                    'code: {1} content: {2}'.format(
                         self.request_token_url,
                         response.status,
                         response.content
@@ -524,12 +524,12 @@ class OAuth1(providers.AuthorizationProvider):
                 self._session_set('token_secret', token_secret)
             else:
                 raise FailureError(
-                    u'Failed to obtain token secret from {0}!'.format(
+                    'Failed to obtain token secret from {0}!'.format(
                         self.request_token_url),
                     original_message=response.content,
                     url=self.request_token_url)
 
-            self._log(logging.INFO, u'Got request token and token secret')
+            self._log(logging.INFO, 'Got request token and token secret')
 
             # Create User Authorization URL
             request_elements = self.create_request_elements(
@@ -541,7 +541,7 @@ class OAuth1(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                u'Redirecting user to {0}.'.format(
+                'Redirecting user to {0}.'.format(
                     request_elements.full_url))
 
             self.redirect(request_elements.full_url)
