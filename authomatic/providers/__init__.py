@@ -682,7 +682,8 @@ class AuthorizationProvider(BaseProvider):
     # Abstract properties
     # ========================================================================
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def user_authorization_url(self):
         """
         :class:`str` URL to which we redirect the **user** to grant our app
@@ -692,7 +693,8 @@ class AuthorizationProvider(BaseProvider):
         http://oauth.net/core/1.0a/#auth_step2.
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def access_token_url(self):
         """
         :class:`str` URL where we can get the *access token* to access
@@ -701,7 +703,8 @@ class AuthorizationProvider(BaseProvider):
         http://oauth.net/core/1.0a/#auth_step3.
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def user_info_url(self):
         """
         :class:`str` URL where we can get the **user** info.

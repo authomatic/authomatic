@@ -284,7 +284,8 @@ class OAuth1(providers.AuthorizationProvider):
     # Abstract properties
     # ========================================================================
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def request_token_url(self):
         """
         :class:`str` URL where we can get the |oauth1| request token.

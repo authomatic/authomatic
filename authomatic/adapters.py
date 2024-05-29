@@ -69,7 +69,8 @@ class BaseAdapter():
 
     __metaclass__ = abc.ABCMeta
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def params(self):
         """
         Must return a :class:`dict` of all request parameters of any HTTP
@@ -80,7 +81,8 @@ class BaseAdapter():
 
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def url(self):
         """
         Must return the url of the actual request including path but without
@@ -91,7 +93,8 @@ class BaseAdapter():
 
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def cookies(self):
         """
         Must return cookies as a :class:`dict`.
