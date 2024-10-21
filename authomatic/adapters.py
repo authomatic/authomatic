@@ -58,7 +58,7 @@ respectively.
 import abc
 
 
-class BaseAdapter():
+class BaseAdapter:
     """
     Base class for platform adapters.
 

@@ -52,6 +52,7 @@ def normalize_dict(dict_):
 
     return {k: v[0] if not isinstance(v, str) and len(v) == 1 else v for k, v in dict_.items()}
 
+
 def items_to_dict(items):
     """
     Converts list of tuples to dictionary with duplicate keys converted to
@@ -73,7 +74,7 @@ def items_to_dict(items):
     return normalize_dict(dict(res))
 
 
-class Counter():
+class Counter:
     """
     A simple counter to be used in the config to generate unique `id` values.
     """
@@ -224,7 +225,7 @@ def id_to_name(config, short_name):
         'No provider with id={0} found in the config!'.format(short_name))
 
 
-class ReprMixin():
+class ReprMixin:
     """
     Provides __repr__() method with output *ClassName(arg1=value, arg2=value)*.
 
@@ -331,7 +332,7 @@ class Future(threading.Thread):
         return self._result
 
 
-class Session():
+class Session:
     """
     A dictionary-like secure cookie session implementation.
     """
@@ -1252,7 +1253,7 @@ class RequestElements(tuple):
         })
 
 
-class Authomatic():
+class Authomatic:
     def __init__(
             self, config, secret, session_max_age=600, secure_cookie=False,
             session=None, session_save_method=None, report_errors=True,

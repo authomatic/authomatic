@@ -129,7 +129,7 @@ def login_decorator(func):
     return wrap
 
 
-class BaseProvider():
+class BaseProvider:
     """
     Abstract base class for all providers.
     """

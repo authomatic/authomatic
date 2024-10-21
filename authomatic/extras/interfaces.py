@@ -11,7 +11,7 @@ classes as bases:
 import abc
 
 
-class BaseSession():
+class BaseSession:
     """
     Abstract class for custom session implementations.
     """
@@ -53,7 +53,7 @@ class BaseSession():
         """
 
 
-class BaseConfig():
+class BaseConfig:
     """
     Abstract class for :doc:`config` implementations.
     """

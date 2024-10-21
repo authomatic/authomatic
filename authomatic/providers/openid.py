@@ -70,7 +70,7 @@ XRDS_XML = \
 """
 
 
-class SessionOpenIDStore():
+class SessionOpenIDStore:
     """
     A very primitive session-based implementation of the.
 
