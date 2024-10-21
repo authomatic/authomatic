@@ -50,9 +50,7 @@ def normalize_dict(dict_):
 
     """
 
-    return {[(k, v[0] if not isinstance(v, str) and len(v) == 1 else v)
-             for k, v in list(dict_.items())]}
-
+    return {k: v[0] if not isinstance(v, str) and len(v) == 1 else v for k, v in dict_.items()}
 
 def items_to_dict(items):
     """
@@ -760,9 +758,7 @@ class Credentials(ReprMixin):
         ``True`` if credentials are valid, ``False`` if expired.
         """
 
-        if self.expiration_time:
-            return self.expiration_time > int(time.time())
-        return True
+        return self.expiration_time and self.expiration_time > int(time.time())
 
     def expire_soon(self, seconds):
         """
@@ -777,9 +773,7 @@ class Credentials(ReprMixin):
 
         """
 
-        if self.expiration_time:
-            return self.expiration_time < int(time.time()) + int(seconds)
-        return False
+        return self.expiration_time and self.expiration_time < int(time.time()) + int(seconds)
 
     def refresh(self, force=False, soon=86400):
         """
