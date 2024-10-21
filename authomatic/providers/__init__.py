@@ -96,7 +96,7 @@ def login_decorator(func):
                 if not isinstance(error, CancellationError):
                     provider._log(
                         logging.ERROR,
-                        u'Reported suppressed exception: {0}!'.format(
+                        'Reported suppressed exception: {0}!'.format(
                             repr(error)),
                         exc_info=1)
             else:
@@ -118,19 +118,18 @@ def login_decorator(func):
             if isinstance(provider.session, authomatic.core.Session):
                 provider.session.delete()
 
-            provider._log(logging.INFO, u'Procedure finished.')
+            provider._log(logging.INFO, 'Procedure finished.')
 
             if provider.callback:
                 provider.callback(result)
             return result
-        else:
-            # Save session
-            provider.save_session()
+        # Save session
+        provider.save_session()
 
     return wrap
 
 
-class BaseProvider(object):
+class BaseProvider:
     """
     Abstract base class for all providers.
     """
@@ -223,12 +222,14 @@ class BaseProvider(object):
 
         """
 
-        return dict(name=self.name,
-                    id=getattr(self, 'id', None),
-                    type_id=self.type_id,
-                    type=self.get_type(),
-                    scope=getattr(self, 'scope', None),
-                    user=self.user.id if self.user else None)
+        return {
+            'name': self.name,
+            'id': getattr(self, 'id', None),
+            'type_id': self.type_id,
+            'type': self.get_type(),
+            'scope': getattr(self, 'scope', None),
+            'user': self.user.id if self.user else None
+        }
 
     @classmethod
     def get_type(cls):
@@ -381,10 +382,10 @@ class BaseProvider(object):
             Python standard library.
 
         """
-        info_style = u' \u251C\u2500 '
-        last_style = u' \u2514\u2500 '
-        style = u'' if last is None else last_style if last else info_style
-        cls._log(logging.DEBUG, u'{0}{1}: {2!s}'.format(style, param, value))
+        info_style = ' \u251C\u2500 '
+        last_style = ' \u2514\u2500 '
+        style = '' if last is None else last_style if last else info_style
+        cls._log(logging.DEBUG, '{0}{1}: {2!s}'.format(style, param, value))
 
     def _fetch(self, url, method='GET', params=None, headers=None,
                body='', max_redirects=5, content_parser=None,
@@ -479,7 +480,7 @@ class BaseProvider(object):
                                  url=location,
                                  status=response.status)
 
-            elif max_redirects > 0:
+            if max_redirects > 0:
                 remaining_redirects = max_redirects - 1
 
                 self._log_param('Redirecting to', url)
@@ -583,7 +584,7 @@ class BaseProvider(object):
 
         assert category < 10, 'HTTP status category must be a one-digit int!'
         cat = category * 100
-        return status >= cat and status < cat + 100
+        return cat <= status < cat + 100
 
 
 class AuthorizationProvider(BaseProvider):
@@ -652,7 +653,7 @@ class AuthorizationProvider(BaseProvider):
 
         """
 
-        super(AuthorizationProvider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.consumer_key = self._kwarg(kwargs, 'consumer_key')
         self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
@@ -681,7 +682,8 @@ class AuthorizationProvider(BaseProvider):
     # Abstract properties
     # ========================================================================
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def user_authorization_url(self):
         """
         :class:`str` URL to which we redirect the **user** to grant our app
@@ -691,7 +693,8 @@ class AuthorizationProvider(BaseProvider):
         http://oauth.net/core/1.0a/#auth_step2.
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def access_token_url(self):
         """
         :class:`str` URL where we can get the *access token* to access
@@ -700,7 +703,8 @@ class AuthorizationProvider(BaseProvider):
         http://oauth.net/core/1.0a/#auth_step3.
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def user_info_url(self):
         """
         :class:`str` URL where we can get the **user** info.
@@ -855,7 +859,7 @@ class AuthorizationProvider(BaseProvider):
         """
 
         if not self.user and not self.credentials:
-            raise CredentialsError(u'There is no authenticated user!')
+            raise CredentialsError('There is no authenticated user!')
 
         headers = headers or {}
 
@@ -938,8 +942,7 @@ class AuthorizationProvider(BaseProvider):
                  credentials.consumer_secret))
             res = base64.b64encode(six.b(res)).decode()
             return {'Authorization': 'Basic {0}'.format(res)}
-        else:
-            return {}
+        return {}
 
     def _check_consumer(self):
         """
@@ -1044,7 +1047,7 @@ class AuthenticationProvider(BaseProvider):
     has_protected_resources = False
 
     def __init__(self, *args, **kwargs):
-        super(AuthenticationProvider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Lookup default identifier, if available in provider
         default_identifier = getattr(self, 'identifier', None)

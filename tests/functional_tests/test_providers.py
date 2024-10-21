@@ -594,6 +594,5 @@ class TestUser(Base):
         self.skip_if_openid(provider)
         sua = provider['class_'].supported_user_attributes
         tested = dict((k, getattr(sua, k)) for k in sua._fields)
-        expected = dict((k, bool(v)) for k, v in provider['user'].items() if
-                        k is not 'content')
+        expected = dict((k, bool(v)) for k, v in provider['user'].items() if k != 'content')
         assert tested == expected
