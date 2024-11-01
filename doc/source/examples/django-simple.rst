@@ -97,7 +97,7 @@ and the ``provider_name`` URL variable.
 The :class:`.DjangoAdapter` needs instances of :class:`django.http.HttpRequest`
 and :class:`django.http.HttpResponse`.
 The method will redirect the **user** to the specified **provider**
-to prompt **him/her** for consent and redirect **him/her** back to this view.
+to prompt **them** for consent and redirect **them** back to this view.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
    :language: python
