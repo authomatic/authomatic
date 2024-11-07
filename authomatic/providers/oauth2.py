@@ -101,7 +101,7 @@ class OAuth2(providers.AuthorizationProvider):
 
         """
 
-        super(OAuth2, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.scope = self._kwarg(kwargs, 'scope', [])
         self.offline = self._kwarg(kwargs, 'offline', False)
@@ -121,8 +121,6 @@ class OAuth2(providers.AuthorizationProvider):
             List of scopes.
 
         """
-
-        # pylint:disable=no-self-use
 
         # Most providers accept csv scope.
         return ','.join(scope) if scope else ''
@@ -300,8 +298,7 @@ class OAuth2(providers.AuthorizationProvider):
             # should be str compatible.
             return json.loads(base64.urlsafe_b64decode(
                 unquote(str(state))).decode('utf-8'))[param]
-        else:
-            return state if param == 'csrf' else ''
+        return state if param == 'csrf' else ''
 
     def refresh_credentials(self, credentials):
         """
@@ -330,7 +327,7 @@ class OAuth2(providers.AuthorizationProvider):
             method='POST'
         )
 
-        self._log(logging.INFO, u'Refreshing credentials.')
+        self._log(logging.INFO, 'Refreshing credentials.')
         response = self._fetch(*request_elements,
                                certificate_file=self.cert,
                                ssl_verify=self.verify)
@@ -377,30 +374,30 @@ class OAuth2(providers.AuthorizationProvider):
 
                 self._log(
                     logging.INFO,
-                    u'Continuing OAuth 2.0 authorization procedure after '
-                    u'redirect.')
+                    'Continuing OAuth 2.0 authorization procedure after '
+                    'redirect.')
 
                 # validate CSRF token
                 if self.supports_csrf_protection:
                     self._log(
                         logging.INFO,
-                        u'Validating request by comparing request state with '
-                        u'stored state.')
+                        'Validating request by comparing request state with '
+                        'stored state.')
                     stored_csrf = self._session_get('csrf')
 
                     state_csrf = self.decode_state(state, 'csrf')
                     if not stored_csrf:
-                        raise FailureError(u'Unable to retrieve stored state!')
-                    elif stored_csrf != state_csrf:
+                        raise FailureError('Unable to retrieve stored state!')
+                    if stored_csrf != state_csrf:
                         raise FailureError(
-                            u'The returned state csrf cookie "{0}" doesn\'t '
-                            u'match with the stored state!'.format(
+                            'The returned state csrf cookie "{0}" doesn\'t '
+                            'match with the stored state!'.format(
                                 state_csrf
                             ),
                             url=self.user_authorization_url)
-                    self._log(logging.INFO, u'Request is valid.')
+                    self._log(logging.INFO, 'Request is valid.')
                 else:
-                    self._log(logging.WARN, u'Skipping CSRF validation!')
+                    self._log(logging.WARN, 'Skipping CSRF validation!')
 
             elif not self.user_authorization_url:
                 # =============================================================
@@ -409,13 +406,13 @@ class OAuth2(providers.AuthorizationProvider):
 
                 self._log(
                     logging.INFO,
-                    u'Starting OAuth 2.0 authorization procedure without '
-                    u'user authorization redirect.')
+                    'Starting OAuth 2.0 authorization procedure without '
+                    'user authorization redirect.')
 
             # exchange authorization code for access token by the provider
             self._log(
                 logging.INFO,
-                u'Fetching access token from {0}.'.format(
+                'Fetching access token from {0}.'.format(
                     self.access_token_url))
 
             self.credentials.token = authorization_code
@@ -450,10 +447,10 @@ class OAuth2(providers.AuthorizationProvider):
                     status=response.status,
                     url=self.access_token_url)
 
-            self._log(logging.INFO, u'Got access token.')
+            self._log(logging.INFO, 'Got access token.')
 
             if refresh_token:
-                self._log(logging.INFO, u'Got refresh access token.')
+                self._log(logging.INFO, 'Got refresh access token.')
 
             # OAuth 2.0 credentials need access_token, refresh_token,
             # token_type and expire_in.
@@ -488,10 +485,9 @@ class OAuth2(providers.AuthorizationProvider):
             if error_reason and 'denied' in error_reason:
                 raise CancellationError(error_description,
                                         url=self.user_authorization_url)
-            else:
-                raise FailureError(
-                    error_description,
-                    url=self.user_authorization_url)
+            raise FailureError(
+                error_description,
+                url=self.user_authorization_url)
 
         elif (
                 not self.params
@@ -504,7 +500,7 @@ class OAuth2(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                u'Starting OAuth 2.0 authorization procedure.')
+                'Starting OAuth 2.0 authorization procedure.')
 
             csrf = ''
             if self.supports_csrf_protection:
@@ -515,7 +511,7 @@ class OAuth2(providers.AuthorizationProvider):
             else:
                 self._log(
                     logging.WARN,
-                    u'Provider doesn\'t support CSRF validation!')
+                    'Provider doesn\'t support CSRF validation!')
 
             request_elements = self.create_request_elements(
                 request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
@@ -531,7 +527,7 @@ class OAuth2(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                u'Redirecting user to {0}.'.format(
+                'Redirecting user to {0}.'.format(
                     request_elements.full_url))
 
             self.redirect(request_elements.full_url)
@@ -812,7 +808,7 @@ class Bitly(OAuth2):
     user_info_url = 'https://api-ssl.bitly.com/v3/user/info'
 
     def __init__(self, *args, **kwargs):
-        super(Bitly, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'grant_type' not in self.access_token_params:
@@ -920,7 +916,7 @@ class DeviantART(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(DeviantART, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'grant_type' not in self.access_token_params:
@@ -1062,7 +1058,7 @@ class Facebook(OAuth2):
         return request_elements
 
     def __init__(self, *args, **kwargs):
-        super(Facebook, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Handle special Facebook requirements to be able
         # to refresh the access token.
@@ -1122,7 +1118,7 @@ class Facebook(OAuth2):
         params['fields'] = 'id,first_name,last_name,picture,email,gender,' + \
                            'timezone,location,birthday,locale'
 
-        return super(Facebook, self).access(url, params, **kwargs)
+        return super().access(url, params, **kwargs)
 
 
 class Foursquare(OAuth2):
@@ -1339,7 +1335,7 @@ class GitHub(OAuth2):
             headers["User-Agent"] = self.settings.config[self.name]["consumer_key"]
 
         def parent_access(url):
-            return super(GitHub, self).access(url, **kwargs)
+            return super().access(url, **kwargs)
 
         response = parent_access(url)
 
@@ -1422,7 +1418,7 @@ class Google(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(Google, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Handle special Google requirements to be able to refresh the access
         # token.
@@ -1627,7 +1623,7 @@ class MicrosoftOnline(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(MicrosoftOnline, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         auth = args[0]
         provider_name = kwargs.get('provider_name')
         domain = auth.config.get(provider_name, {}).get('domain')
@@ -1765,7 +1761,7 @@ class Reddit(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(Reddit, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'duration' not in self.user_authorization_params:
@@ -1919,7 +1915,7 @@ class VK(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(VK, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'offline' not in self.scope:
@@ -1998,7 +1994,7 @@ class WindowsLive(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(WindowsLive, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'wl.offline_access' not in self.scope:

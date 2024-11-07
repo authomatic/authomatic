@@ -50,7 +50,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
 
         cls._log(
             logging.DEBUG,
-            u'NDBOpenIDStore: Putting OpenID association to datastore.')
+            'NDBOpenIDStore: Putting OpenID association to datastore.')
 
         entity.put()
 
@@ -59,7 +59,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
         # query for all expired
         cls._log(
             logging.DEBUG,
-            u'NDBOpenIDStore: Querying datastore for OpenID associations.')
+            'NDBOpenIDStore: Querying datastore for OpenID associations.')
         query = cls.query(cls.expiration_date <= datetime.datetime.now())
 
         # fetch keys only
@@ -68,7 +68,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
         # delete all expired
         cls._log(
             logging.DEBUG,
-            u'NDBOpenIDStore: Deleting expired OpenID associations from datastore.')
+            'NDBOpenIDStore: Deleting expired OpenID associations from datastore.')
         ndb.delete_multi(expired)
 
         return len(expired)
@@ -81,13 +81,13 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
             key = ndb.Key('ServerUrl', server_url, cls, handle)
             cls._log(
                 logging.DEBUG,
-                u'NDBOpenIDStore: Getting OpenID association from datastore by key.')
+                'NDBOpenIDStore: Getting OpenID association from datastore by key.')
             entity = key.get()
         else:
             # return most recently issued association
             cls._log(
                 logging.DEBUG,
-                u'NDBOpenIDStore: Querying datastore for OpenID associations by ancestor.')
+                'NDBOpenIDStore: Querying datastore for OpenID associations by ancestor.')
             entity = cls.query(ancestor=ndb.Key(
                 'ServerUrl', server_url)).order(-cls.issued).get()
 
@@ -100,11 +100,11 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
         key = ndb.Key('ServerUrl', server_url, cls, handle)
         cls._log(
             logging.DEBUG,
-            u'NDBOpenIDStore: Getting OpenID association from datastore by key.')
+            'NDBOpenIDStore: Getting OpenID association from datastore by key.')
         if key.get():
             cls._log(
                 logging.DEBUG,
-                u'NDBOpenIDStore: Deleting OpenID association from datastore.')
+                'NDBOpenIDStore: Deleting OpenID association from datastore.')
             key.delete()
             return True
 
@@ -123,32 +123,31 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
 
         cls._log(
             logging.DEBUG,
-            u'NDBOpenIDStore: Getting OpenID nonce from datastore by key.')
+            'NDBOpenIDStore: Getting OpenID nonce from datastore by key.')
         result = key.get()
 
         if result:
             # if so, the nonce is not valid so return False
             cls._log(
                 logging.WARNING,
-                u'NDBOpenIDStore: Nonce was already used!')
+                'NDBOpenIDStore: Nonce was already used!')
             return False
-        else:
-            # if not, store the key to datastore and return True
-            nonce = cls(key=key)
-            nonce.expiration_date = datetime.datetime.fromtimestamp(
-                timestamp) + datetime.timedelta(0, openid.store.nonce.SKEW)
-            cls._log(
-                logging.DEBUG,
-                u'NDBOpenIDStore: Putting new nonce to datastore.')
-            nonce.put()
-            return True
+        # if not, store the key to datastore and return True
+        nonce = cls(key=key)
+        nonce.expiration_date = datetime.datetime.fromtimestamp(
+            timestamp) + datetime.timedelta(0, openid.store.nonce.SKEW)
+        cls._log(
+            logging.DEBUG,
+            'NDBOpenIDStore: Putting new nonce to datastore.')
+        nonce.put()
+        return True
 
     @classmethod
     def cleanupNonces(cls):
         # get all expired nonces
         cls._log(
             logging.DEBUG,
-            u'NDBOpenIDStore: Querying datastore for OpenID nonces ordered by expiration date.')
+            'NDBOpenIDStore: Querying datastore for OpenID nonces ordered by expiration date.')
         expired = cls.query().filter(
             cls.expiration_date <= datetime.datetime.now()).fetch(
                 keys_only=True)
@@ -156,7 +155,7 @@ class NDBOpenIDStore(ndb.Expando, openid.store.interface.OpenIDStore):
         # delete all expired
         cls._log(
             logging.DEBUG,
-            u'NDBOpenIDStore: Deleting expired OpenID nonces from datastore.')
+            'NDBOpenIDStore: Deleting expired OpenID nonces from datastore.')
         ndb.delete_multi(expired)
 
         return len(expired)
