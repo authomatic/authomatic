@@ -52,7 +52,7 @@ and one of the *provider names* that you defined in the :doc:`/reference/config`
 which we get from the URL path of the request.
 
 The method will redirect the **user** to the specified **provider**
-to prompt **him/her** for consent and redirect **him/her** back to this handler.
+to prompt **them** for consent and redirect **them** back to this handler.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python

@@ -109,7 +109,7 @@ We will get the provider name from the URL slug.
    :emphasize-lines: 3
 
 The :class:`.Authomatic.login` function will redirect the **user** to the **provider**,
-which will prompt **him/her** to authorize your app (**the consumer**) to access **their**
+which will prompt **them** to authorize your app (**the consumer**) to access **their**
 protected resources (|oauth1|_ and |oauth2|_), or to verify **their** claimed ID (|openid|_).
 The **provider** then redirects the **user** back to *this request handler*.
 
@@ -133,7 +133,7 @@ Check whether *login procedure* is over.
 Check for errors, but hope that there is a :attr:`.LoginResult.user`.
 If so, we have an authenticated **user** logged in.
 Before we print a welcoming message we need to update the :class:`.User`
-to get more info about **him/her**.
+to get more info about **them**.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
    :lines: 27, 29, 31, 36-37, 40-42
@@ -364,7 +364,7 @@ Popup
 """""
 
 The :class:`.Authomatic.login` function redirects the **user** to the **provider**
-to ask him for **their** consent. If you rather want to make the redirect in a popup,
+to ask them for **their** consent. If you rather want to make the redirect in a popup,
 the :ref:`authomatic.popupInit() <js_popup_init>` function of the
 :ref:`javascript.js <js>` library with conjunction with :meth:`.LoginResult.popup_html`
 make it a breeze.

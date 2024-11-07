@@ -1335,7 +1335,7 @@ class Authomatic:
         .. warning::
 
             The method redirects the **user** to the **provider** which in
-            turn redirects **him/her** back to the *request handler* where
+            turn redirects **them** back to the *request handler* where
             it has been called.
 
         :param str provider_name:
