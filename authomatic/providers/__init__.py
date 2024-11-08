@@ -452,12 +452,14 @@ class BaseProvider:
 
         # Connect
         if url_parsed.scheme.lower() == 'https':
-            context = None if ssl_verify else ssl._create_unverified_context()
-            cert_file = certificate_file if ssl_verify else None
+            if ssl_verify:
+                context = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=certificate_file)
+            else:
+                context = ssl._create_unverified_context()
+
             connection = http_client.HTTPSConnection(
                 url_parsed.hostname,
                 port=url_parsed.port,
-                cert_file=cert_file,
                 context=context)
         else:
             connection = http_client.HTTPConnection(
