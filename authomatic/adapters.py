@@ -27,6 +27,9 @@ Its very easy and shouldn't take you more than a few minutes.
 .. autoclass:: DjangoAdapter
     :members:
 
+.. autoclass:: FastAPIAdapter
+    :members:
+
 .. autoclass:: Webapp2Adapter
     :members:
 
@@ -282,3 +285,38 @@ class WerkzeugAdapter(BaseAdapter):
 
     def set_status(self, status):
         self.response.status = status
+
+
+class FastAPIAdapter(BaseAdapter):
+    def __init__(self, request, response):
+        """
+        Adapter for FastAPI framework.
+
+        :param request:
+            An instance of the :class:`starlette.requests.HTTPConnection` class.
+        :param response:
+            An instance of the :class:`starlette.responses.Response` class.
+        """
+        self.request = request
+        self.response = response
+
+    @property
+    def params(self):
+        return self.request.query_params
+
+    @property
+    def url(self):
+        return str(self.request.url)
+
+    @property
+    def cookies(self):
+        return self.request.cookies
+
+    def write(self, value):
+        self.response += value
+
+    def set_header(self, key, value):
+        self.response.headers[key] = value
+
+    def set_status(self, status):
+        self.response.status_code = int(status.split(' ')[0])
