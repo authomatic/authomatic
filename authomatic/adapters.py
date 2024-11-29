@@ -56,9 +56,10 @@ respectively.
 """
 
 import abc
+from authomatic.core import Response
 
 
-class BaseAdapter:
+class BaseAdapter(object):
     """
     Base class for platform adapters.
 
@@ -68,8 +69,7 @@ class BaseAdapter:
 
     __metaclass__ = abc.ABCMeta
 
-    @property
-    @abc.abstractmethod
+    @abc.abstractproperty
     def params(self):
         """
         Must return a :class:`dict` of all request parameters of any HTTP
@@ -80,8 +80,7 @@ class BaseAdapter:
 
         """
 
-    @property
-    @abc.abstractmethod
+    @abc.abstractproperty
     def url(self):
         """
         Must return the url of the actual request including path but without
@@ -92,8 +91,7 @@ class BaseAdapter:
 
         """
 
-    @property
-    @abc.abstractmethod
+    @abc.abstractproperty
     def cookies(self):
         """
         Must return cookies as a :class:`dict`.
@@ -175,7 +173,7 @@ class DjangoAdapter(BaseAdapter):
         self.response[key] = value
 
     def set_status(self, status):
-        status_code = status.split(' ', 1)[0]
+        status_code, reason = status.split(' ', 1)
         self.response.status_code = int(status_code)
 
 
