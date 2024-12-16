@@ -56,6 +56,7 @@ HOST_ALIAS = 'authomatic.org'
 # Only frameworks included here will be tested.
 INCLUDE_FRAMEWORKS = [
     # 'django',
+    'fastapi', # Runs with https
     'flask',  # Runs with https
     'pyramid',  # Runs with https
 ]
