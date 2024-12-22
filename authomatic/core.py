@@ -182,8 +182,7 @@ def import_string(import_name, silent=False):
         if '.' in import_name:
             module, obj = import_name.rsplit('.', 1)
             return getattr(__import__(module, None, None, [obj]), obj)
-        else:
-            return __import__(import_name)
+        return __import__(import_name)
     except (ImportError, AttributeError) as e:
         if not silent:
             raise ImportStringError('Import from string failed for path {0}'
