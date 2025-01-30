@@ -805,6 +805,12 @@ class DeviantART(OAuth2):
             if 'grant_type' not in self.access_token_params:
                 self.access_token_params['grant_type'] = 'refresh_token'
 
+    def _x_scope_parser(self, scope):
+        """
+        DeviantArt has space-separated scopes.
+        """
+        return ' '.join(scope)
+
     @staticmethod
     def _x_user_parser(user, data):
         user.id = data.get('userid')
