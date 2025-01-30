@@ -762,6 +762,7 @@ class DeviantART(OAuth2):
 
     Supported :class:`.User` properties:
 
+    * id
     * name
     * picture
     * username
@@ -774,7 +775,6 @@ class DeviantART(OAuth2):
     * email
     * first_name
     * gender
-    * id
     * last_name
     * link
     * locale
@@ -792,6 +792,7 @@ class DeviantART(OAuth2):
     user_info_scope = ['basic']
 
     supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
         name=True,
         picture=True,
         username=True
@@ -806,7 +807,8 @@ class DeviantART(OAuth2):
 
     @staticmethod
     def _x_user_parser(user, data):
-        user.picture = data.get('usericonurl')
+        user.id = data.get('userid')
+        user.picture = data.get('usericon')
         return user
 
 
