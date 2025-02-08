@@ -19,9 +19,15 @@ from flask import make_response, request, session
 class FlaskAuthomatic(Authomatic):
     """
     Flask Plugin for authomatic support.
+
+    :param adapter_cls: Adapter class to use (default: `WerkzeugAdapter`)
     """
 
     result = None
+
+    def __init__(self, *args, **kwargs):
+        self._adapter_cls = kwargs.pop('adapter_cls', WerkzeugAdapter)
+        super(FlaskAuthomatic, self).__init__(*args, **kwargs)
 
     def login(self, *login_args, **login_kwargs):
         """
@@ -32,7 +38,7 @@ class FlaskAuthomatic(Authomatic):
             @wraps(f)
             def decorated(*args, **kwargs):
                 self.response = make_response()
-                adapter = WerkzeugAdapter(request, self.response)
+                adapter = self._adapter_cls(request, self.response)
                 login_kwargs.setdefault('session', session)
                 login_kwargs.setdefault('session_saver', self.session_saver)
                 self.result = super().login(
