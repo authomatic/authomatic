@@ -27,6 +27,7 @@ Providers which implement the |oauth2|_ protocol.
     WindowsLive
     Yammer
     Yandex
+    Twitter
 
 """
 
@@ -44,7 +45,7 @@ import authomatic.core as core
 __all__ = ['OAuth2', 'Amazon', 'Behance', 'Bitly', 'Cosm', 'DeviantART',
            'Eventbrite', 'Facebook', 'Foursquare', 'GitHub', 'Google',
            'LinkedIn', 'MicrosoftOnline', 'PayPal', 'Reddit', 'Viadeo',
-           'VK', 'WindowsLive', 'Yammer', 'Yandex']
+           'VK', 'WindowsLive', 'Yammer', 'Yandex', 'Twitter']
 
 
 class OAuth2(providers.AuthorizationProvider):
@@ -591,6 +592,119 @@ class Amazon(OAuth2):
             credentials.token_type = cls.BEARER
         return credentials
 
+
+class Twitter(OAuth2):
+    """
+    Twitter |oauth2| provider.
+    * Dashboard: https://developer.twitter.com/en/docs/authentication/oauth-2-0 
+    * Docs:  https://developer.twitter.com/en/docs/authentication/oauth-2-0
+    * API: https://developer.twitter.com/en/docs/authentication/oauth-2-0
+    Supported :class:`.User` properties:
+    * tweet.read
+    * tweet.write
+    * users.read
+    * follows.read
+    * follows.write
+    Unsupported :class:`.User` properties:
+    * birth_date
+    * city
+    * country
+    * gender
+    * link
+    * locale
+    * nickname
+    * phone
+    * picture
+    * postal_code
+    * timezone
+    * username
+    """
+
+    user_authorization_url = 'https://twitter.com/i/oauth2/authorize'
+    access_token_url = 'https://api.twitter.com/2/oauth2/token'
+    user_info_url = 'https://api.twitter.com/2/users/me'
+    user_info_scope = ['users.read', 'tweets.read']
+
+    _x_use_authorization_header = True
+
+    supports_jsonp = False
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        username=True
+    )
+
+    def access(self, url, **kwargs):
+    
+        def parent_access(url):
+            return super().access(url, **kwargs) 
+
+        response = parent_access(url)
+        user_data = response.data
+
+        def make_user(user, data):
+            return super()._x_user_parser(user, data)  
+
+        user = make_user(user_data, user_data)
+        if response.status == 200:
+            self._update_or_create_user(response.data, self.credentials)
+        return response
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        _access_token = data['access_token']
+        credentials.token = _access_token
+        if data['token_type'] == 'bearer':
+            credentials.token_type = cls.BEARER
+        _expire_in = data['expires_in']
+        if _expire_in:
+            credentials.expire_in = _expire_in
+        return credentials
+
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        # Twitter needs to rearrange the param in the redirect url for authorization.
+        authorization_code = 'rsC9arN7WM'
+        headers = {}
+        if request_type == cls.USER_AUTHORIZATION_REQUEST_TYPE:
+            url, method, params, headers, body = request_elements
+            consumer_key = credentials.consumer_key
+            req_var = request_elements[2]
+            redirect_uri = req_var['redirect_uri']
+            user_state = req_var['state']
+            user_scope = 'tweet.read users.read'
+            params['response_type'] = 'code'
+            params['client_id'] = consumer_key
+            params['redirect_uri'] = redirect_uri
+            params['scope'] = user_scope
+            params['state'] = user_state
+            params['code_challenge'] = authorization_code
+            params['code_challenge_method'] = 'plain' 
+            request_elements = core.RequestElements(url, method, params, headers, body)
+
+        if request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
+            url, method, params, headers, body = request_elements
+            params['grant_type'] = 'authorization_code'
+            params['code_verifier'] = authorization_code
+            request_elements = core.RequestElements(
+                url, method, params, headers, body)
+
+        if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
+            url, method, params, headers, body = request_elements
+            # Protected resource request.
+            if credentials.token_type == cls.BEARER:
+                headers.update({'Authorization': 'Bearer {0}'.format(credentials.token)})
+
+        return request_elements
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        _data = data.get('data')
+        if _data:
+            user.id = data['data']['id']
+            user.username = data['data']['username']
+            user.name = data['data']['name']
+        return user
 
 class Behance(OAuth2):
     """
@@ -2094,4 +2208,5 @@ PROVIDER_ID_MAP = [
     WindowsLive,
     Yammer,
     Yandex,
+    Twitter,
 ]
