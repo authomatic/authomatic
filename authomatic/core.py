@@ -25,7 +25,7 @@ from authomatic.exceptions import (
 )
 from authomatic import six
 from authomatic.six.moves import urllib_parse as parse
-
+import urllib
 
 # =========================================================================
 # Global variables !!!
@@ -489,7 +489,7 @@ class Session:
             return None
 
         # 2. Decode
-        decoded = parse.unquote(encoded)
+        decoded = parse.unquote_plus(encoded)
 
         # 1. Deserialize
         deserialized = pickle.loads(decoded.encode('latin-1'))
@@ -888,8 +888,8 @@ class Credentials(ReprMixin):
         if isinstance(credentials, Credentials):
             return credentials
 
-        decoded = parse.unquote(credentials)
-
+        decoded = parse.unquote_plus(credentials)
+        # because this will decode plus sign as spaces in addition to percent encoded characters
         split = decoded.split('\n')
 
         # We need the provider ID to move forward.
@@ -1233,7 +1233,7 @@ class RequestElements(tuple):
         Query string of the request.
         """
 
-        return parse.urlencode(self.params)
+        return parse.urlencode(self.params, quote_via=urllib.parse.quote)
 
     @property
     def full_url(self):
