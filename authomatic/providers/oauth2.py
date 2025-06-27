@@ -1280,6 +1280,16 @@ class Google(OAuth2):
         in the **APIs & auth >> APIs** section of the`Google Developers Console
         <https://console.developers.google.com/project>`__.
 
+    .. note::
+        By default, user is forced to give consent everytime oauth2 flow is started.
+        It is helpful when you are not using database to store user credentials.
+        For auto behavior, you can set the `prompt` parameter to `" "` by passing 
+        `user_authorization_params`: {'prompt': " "}`
+        either in configuration or in the request.
+        You also have other options for `prompt` like 'none','select_account' 
+        or even some combination.
+        Read Google Oauth2 documentation for more info" __.
+
     """
 
     user_authorization_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -1309,9 +1319,12 @@ class Google(OAuth2):
                 # Google needs access_type=offline param in the user
                 # authorization request.
                 self.user_authorization_params['access_type'] = 'offline'
+            # Check if user provided deprecated 'approval_prompt', to avoid conflict
             if 'approval_prompt' not in self.user_authorization_params:
-                # And also approval_prompt=force.
-                self.user_authorization_params['approval_prompt'] = 'force'
+                # Check if user provided 'prompt' themselves
+                if 'prompt' not in self.user_authorization_params:
+                    # Otherwise set default to 'consent', to forcefully get refresh_token
+                    self.user_authorization_params['prompt'] = 'consent'
 
     @classmethod
     def _x_request_elements_filter(cls, request_type, request_elements,
