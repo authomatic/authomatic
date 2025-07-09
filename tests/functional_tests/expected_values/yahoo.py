@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 
 import fixtures
@@ -7,7 +6,7 @@ from authomatic.providers import oauth1
 
 conf = fixtures.get_configuration('yahoo')
 
-LINK = 'http://profile.yahoo.com/{0}'.format(conf.user_id)
+LINK = f'http://profile.yahoo.com/{conf.user_id}'
 PITURE = re.compile(r'https://\w+.yimg.com/dg/users/\w+==.large.png')
 
 

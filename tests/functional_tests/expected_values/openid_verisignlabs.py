@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 
 import fixtures
@@ -6,7 +5,7 @@ from authomatic.providers import openid
 
 conf = fixtures.get_configuration('openid_verisignlabs')
 
-OPENID_IDENTIFIER = 'http://{0}.pip.verisignlabs.com/'.format(conf.user_login)
+OPENID_IDENTIFIER = f'http://{conf.user_login}.pip.verisignlabs.com/'
 
 CONFIG = {
     'openid_identifier': OPENID_IDENTIFIER,

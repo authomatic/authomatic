@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -6,8 +5,8 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('bitly')
 
-LINK = 'http://bitly.com/u/{0}'.format(conf.user_id)
-PICTURE = 'http://bitly.com/u/{0}.png'.format(conf.user_id)
+LINK = f'http://bitly.com/u/{conf.user_id}'
+PICTURE = f'http://bitly.com/u/{conf.user_id}.png'
 
 CONFIG = {
     'logout_url': 'https://bitly.com/a/sign_out',

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created by Mark Steve Samson http://marksteve.com.
 """

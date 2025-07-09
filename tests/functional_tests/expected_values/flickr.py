@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth1

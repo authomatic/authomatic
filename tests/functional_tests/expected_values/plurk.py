@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 
 
@@ -8,8 +7,8 @@ from authomatic.providers import oauth1
 
 conf = fixtures.get_configuration('plurk')
 
-LINK = 'http://www.plurk.com/{0}/'.format(conf.user_username)
-PICTURE = 'http://avatars.plurk.com/{0}-big2.jpg'.format(conf.user_id)
+LINK = f'http://www.plurk.com/{conf.user_username}/'
+PICTURE = f'http://avatars.plurk.com/{conf.user_id}-big2.jpg'
 
 CONFIG = {
     'login_xpath': '//*[@id="input_nick_name"]',

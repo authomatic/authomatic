@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # example/example/urls.py
 
 from django.conf.urls import include, url

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 |oauth2| Providers
 -------------------
@@ -206,7 +205,7 @@ class OAuth2(providers.AuthorizationProvider):
             if credentials.token_type == cls.BEARER:
                 # http://tools.ietf.org/html/rfc6750#section-2.1
                 headers.update(
-                    {'Authorization': 'Bearer {0}'.format(credentials.token)})
+                    {'Authorization': f'Bearer {credentials.token}'})
 
             elif token:
                 params['access_token'] = token
@@ -380,10 +379,8 @@ class OAuth2(providers.AuthorizationProvider):
                         raise FailureError('Unable to retrieve stored state!')
                     if stored_csrf != state_csrf:
                         raise FailureError(
-                            'The returned state csrf cookie "{0}" doesn\'t '
-                            'match with the stored state!'.format(
-                                state_csrf
-                            ),
+                            f'The returned state csrf cookie "{state_csrf}" doesn\'t '
+                            'match with the stored state!',
                             url=self.user_authorization_url)
                     self._log(logging.INFO, 'Request is valid.')
                 else:
@@ -402,8 +399,7 @@ class OAuth2(providers.AuthorizationProvider):
             # exchange authorization code for access token by the provider
             self._log(
                 logging.INFO,
-                'Fetching access token from {0}.'.format(
-                    self.access_token_url))
+                f'Fetching access token from {self.access_token_url}.')
 
             self.credentials.token = authorization_code
 
@@ -427,12 +423,8 @@ class OAuth2(providers.AuthorizationProvider):
 
             if response.status != 200 or not access_token:
                 raise FailureError(
-                    'Failed to obtain OAuth 2.0 access token from {0}! '
-                    'HTTP status: {1}, message: {2}.'.format(
-                        self.access_token_url,
-                        response.status,
-                        response.content
-                    ),
+                    f'Failed to obtain OAuth 2.0 access token from {self.access_token_url}! '
+                    f'HTTP status: {response.status}, message: {response.content}.',
                     original_message=response.content,
                     status=response.status,
                     url=self.access_token_url)
@@ -517,8 +509,7 @@ class OAuth2(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                'Redirecting user to {0}.'.format(
-                    request_elements.full_url))
+                f'Redirecting user to {request_elements.full_url}.')
 
             self.redirect(request_elements.full_url)
 
@@ -962,8 +953,8 @@ class Facebook(OAuth2):
             except ValueError:
                 pass
 
-        user.picture = ('http://graph.facebook.com/{0}/picture?type=large'
-                        .format(user.id))
+        user.picture = (f'http://graph.facebook.com/{user.id}/picture?type=large'
+                        )
 
         user.location = data.get('location', {}).get('name')
         if user.location:

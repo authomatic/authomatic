@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import fixtures
 import constants
 from authomatic.providers import oauth2
@@ -6,8 +5,8 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('deviantart')
 
-PICTURE = 'http://a.deviantart.net/avatars/p/e/{0}.jpg?1'\
-    .format(conf.user_username)
+PICTURE = f'http://a.deviantart.net/avatars/p/e/{conf.user_username}.jpg?1'\
+    
 
 CONFIG = {
     'pre_login_xpaths': [

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # main.py
 
 import webapp2
@@ -38,7 +37,7 @@ class Login(webapp2.RequestHandler):
             if result.error:
                 # Login procedure finished with an error.
                 self.response.write(
-                    '<h2>Damn that error: {}</h2>'.format(result.error.message))
+                    f'<h2>Damn that error: {result.error.message}</h2>')
 
             elif result.user:
                 # Hooray, we have the user!
@@ -48,11 +47,11 @@ class Login(webapp2.RequestHandler):
                 result.user.update()
 
                 # Welcome the user.
-                self.response.write('<h1>Hi {}</h1>'.format(result.user.name))
+                self.response.write(f'<h1>Hi {result.user.name}</h1>')
                 self.response.write(
-                    '<h2>Your id is: {}</h2>'.format(result.user.id))
+                    f'<h2>Your id is: {result.user.id}</h2>')
                 self.response.write(
-                    '<h2>Your email is: {}</h2>'.format(result.user.email))
+                    f'<h2>Your email is: {result.user.email}</h2>')
 
                 # Seems like we're done, but there's more we can do...
 
@@ -80,7 +79,7 @@ class Login(webapp2.RequestHandler):
 
                             if error:
                                 self.response.write(
-                                    'Damn that error: {}!'.format(error))
+                                    f'Damn that error: {error}!')
                             elif statuses:
                                 self.response.write(
                                     'and these are your 5 most recent statuses:<br /><br />')
@@ -90,14 +89,14 @@ class Login(webapp2.RequestHandler):
                                     date = message.get('created_time')
 
                                     self.response.write(
-                                        '<h3>{}</h3>'.format(text))
+                                        f'<h3>{text}</h3>')
                                     self.response.write(
-                                        'Posted on: {}<br /><br />'.format(date))
+                                        f'Posted on: {date}<br /><br />')
                         else:
                             self.response.write(
                                 'Damn that unknown error!<br />')
                             self.response.write(
-                                'Status: {}'.format(response.status))
+                                f'Status: {response.status}')
 
                     if result.provider.name == 'tw':
 
@@ -121,9 +120,9 @@ class Login(webapp2.RequestHandler):
                                     date = tweet.get('created_at')
 
                                     self.response.write(
-                                        '<h3>{}</h3>'.format(text))
+                                        f'<h3>{text}</h3>')
                                     self.response.write(
-                                        'Tweeted on: {}'.format(date))
+                                        f'Tweeted on: {date}')
 
                             elif response.data.get('errors'):
                                 self.response.write(
@@ -133,7 +132,7 @@ class Login(webapp2.RequestHandler):
                             self.response.write(
                                 'Damn that unknown error!<br />')
                             self.response.write(
-                                'Status: {}'.format(response.status))
+                                f'Status: {response.status}')
 
 
 # Create a home request handler just that you don't have to enter the urls

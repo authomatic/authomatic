@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 
 import fixtures
@@ -8,7 +7,7 @@ from authomatic.providers import oauth1
 conf = fixtures.get_configuration('bitbucket')
 
 
-LINK = 'https://bitbucket.org/api/1.0/users/{0}'.format(conf.user_username)
+LINK = f'https://bitbucket.org/api/1.0/users/{conf.user_username}'
 
 CONFIG = {
     'logout_url': 'https://bitbucket.org/account/signout/',

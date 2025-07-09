@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 
 # We need absolute import to import from openid library which has the same
 # name as this module
-from __future__ import absolute_import
 import logging
 import datetime
 import openid.store.interface

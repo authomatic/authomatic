@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Keys with leading underscore are our custom provider-specific data.
 """

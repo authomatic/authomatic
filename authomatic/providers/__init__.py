@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Abstract Classes for Providers
 ------------------------------
@@ -96,8 +95,7 @@ def login_decorator(func):
                 if not isinstance(error, CancellationError):
                     provider._log(
                         logging.ERROR,
-                        'Reported suppressed exception: {0}!'.format(
-                            repr(error)),
+                        f'Reported suppressed exception: {repr(error)}!',
                         exc_info=1)
             else:
                 if provider.settings.debug:
@@ -303,7 +301,7 @@ class BaseProvider:
 
         """
 
-        return '{0}:{1}:{2}'.format(self.settings.prefix, self.name, key)
+        return f'{self.settings.prefix}:{self.name}:{key}'
 
     def _session_set(self, key, value):
         """
@@ -385,7 +383,7 @@ class BaseProvider:
         info_style = ' \u251C\u2500 '
         last_style = ' \u2514\u2500 '
         style = '' if last is None else last_style if last else info_style
-        cls._log(logging.DEBUG, '{0}{1}: {2!s}'.format(style, param, value))
+        cls._log(logging.DEBUG, f'{style}{param}: {value!s}')
 
     def _fetch(self, url, method='GET', params=None, headers=None,
                body='', max_redirects=5, content_parser=None,
@@ -556,8 +554,7 @@ class BaseProvider:
 
         if not self.user.location:
             if self.user.city and self.user.country:
-                self.user.location = '{0}, {1}'.format(self.user.city,
-                                                       self.user.country)
+                self.user.location = f'{self.user.city}, {self.user.country}'
             else:
                 self.user.location = self.user.city or self.user.country
 
@@ -943,7 +940,7 @@ class AuthorizationProvider(BaseProvider):
                 (credentials.consumer_key,
                  credentials.consumer_secret))
             res = base64.b64encode(six.b(res)).decode()
-            return {'Authorization': 'Basic {0}'.format(res)}
+            return {'Authorization': f'Basic {res}'}
         return {}
 
     def _check_consumer(self):
@@ -955,13 +952,11 @@ class AuthorizationProvider(BaseProvider):
         # pylint:disable=no-member
         if not self.consumer.key:
             raise ConfigError(
-                'Consumer key not specified for provider {0}!'.format(
-                    self.name))
+                f'Consumer key not specified for provider {self.name}!')
 
         if not self.consumer.secret:
             raise ConfigError(
-                'Consumer secret not specified for provider {0}!'.format(
-                    self.name))
+                f'Consumer secret not specified for provider {self.name}!')
 
     @staticmethod
     def _split_url(url):

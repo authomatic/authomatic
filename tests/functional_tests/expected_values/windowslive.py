@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import datetime
 
 import fixtures
@@ -8,7 +7,7 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('windowslive')
 
-PICTURE = 'https://apis.live.net/v5.0/{0}/picture'.format(conf.user_id)
+PICTURE = f'https://apis.live.net/v5.0/{conf.user_id}/picture'
 
 CONFIG = {
     'login_xpath': '//*[@id="i0116"]',

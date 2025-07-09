@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # config.py
 
 from authomatic.providers import oauth2, oauth1, openid, gaeopenid

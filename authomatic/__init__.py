@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Helper functions for use with :class:`Authomatic`.
 

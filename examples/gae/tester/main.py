@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 import cgi
 import logging
@@ -18,7 +17,7 @@ authomatic = Authomatic(config=CONFIG,  # Here goes the config.
 
 def links(handler):
     for p in CONFIG.keys():
-        handler.response.write('<a href="login/{p}">{p}</a><br />'.format(p=p))
+        handler.response.write(f'<a href="login/{p}">{p}</a><br />')
     handler.response.write('<br /><br />')
 
 
@@ -28,7 +27,7 @@ def loop(handler, obj):
         if not k in ('data', 'gae_user', 'credentials', 'content', 'config'):
             style = 'color: red' if not v else ''
             handler.response.write(
-                '<tr style="{}"><td>{}:</td><td>{}</td></tr>'.format(style, k, v))
+                f'<tr style="{style}"><td>{k}:</td><td>{v}</td></tr>')
     handler.response.write('</table>')
 
 
@@ -47,23 +46,23 @@ class Login(webapp2.RequestHandler):
             self.response.write('<body>')
             self.response.write('<a href="..">Home</a> | ')
             self.response.write(
-                '<a href="../login/{}">Retry</a>'.format(provider_name))
+                f'<a href="../login/{provider_name}">Retry</a>')
 
             if result.error:
                 self.response.write(
-                    '<h4>ERROR: {}</h4>'.format(result.error.message))
+                    f'<h4>ERROR: {result.error.message}</h4>')
 
                 self.response.write('<h3>error to dict</h3>')
                 self.response.write(
-                    '<pre class="prettyprint">{}</pre>'.format(result.error.to_dict()))
+                    f'<pre class="prettyprint">{result.error.to_dict()}</pre>')
 
             elif result.user:
                 response = result.user.update()
                 if response:
                     self.response.write(
-                        '<h3>User refresh status: {}</h3>'.format(response.status))
+                        f'<h3>User refresh status: {response.status}</h3>')
                     self.response.write(
-                        '<pre class="prettyprint">{}</pre>'.format(response.content))
+                        f'<pre class="prettyprint">{response.content}</pre>')
 
                     self.response.write('<h3>Access-Control-Allow-Origin</h3>')
                     self.response.write(
@@ -72,12 +71,12 @@ class Login(webapp2.RequestHandler):
 
                     self.response.write('<h3>User headers</h3>')
                     self.response.write(
-                        '<pre class="prettyprint">{}</pre>'.format(response.getheaders()))
+                        f'<pre class="prettyprint">{response.getheaders()}</pre>')
 
                 self.response.write('<h3>User</h3>')
                 if result.user.picture:
                     self.response.write(
-                        '<img src="{}" width="100" height="100" />'.format(result.user.picture))
+                        f'<img src="{result.user.picture}" width="100" height="100" />')
 
                 loop(self, result.user)
 
@@ -85,9 +84,9 @@ class Login(webapp2.RequestHandler):
                     # loop through credentials attrs
                     self.response.write('<h3>Credentials</h3>')
                     self.response.write(
-                        '<h5>expiration time: {}</h5>'.format(result.user.credentials.expiration_time))
+                        f'<h5>expiration time: {result.user.credentials.expiration_time}</h5>')
                     self.response.write(
-                        '<h5>expiration date: {}</h5>'.format(result.user.credentials.expiration_date))
+                        f'<h5>expiration date: {result.user.credentials.expiration_date}</h5>')
                     loop(self, result.user.credentials)
 
                     self.response.write('<h3>Serialized credentials</h3>')
@@ -95,30 +94,30 @@ class Login(webapp2.RequestHandler):
                     endpoint_url = '/login/?type=elements&url=http://example.com&credentials=' + \
                         serialized_credentials
                     self.response.write(
-                        '<a href="{}" target="_blank">{}</a>'.format(endpoint_url, serialized_credentials))
+                        f'<a href="{endpoint_url}" target="_blank">{serialized_credentials}</a>')
 
-                    json_input = """
-                    {{"credentials": "{}",
+                    json_input = f"""
+                    {{"credentials": "{result.user.credentials.serialize()}",
                     "url": "http://example.com",
                     "method": "GET",
                     "params": {{"a": 1, "b": 2}},
                     "headers": {{"c": 3, "d": 4}}}}
-                    """.format(result.user.credentials.serialize())
+                    """
 
                     self.response.write('<h3>JSON Request elements</h3>')
                     re = authomatic.request_elements(
                         json_input=json_input, return_json=True)
                     self.response.write(
-                        '<pre class="prettyprint">{}</pre>'.format(re))
+                        f'<pre class="prettyprint">{re}</pre>')
 
                     # refresh credentials
                     response = result.user.credentials.refresh(force=True)
 
                     if response:
                         self.response.write(
-                            '<h3>Refresh status: {}</h3>'.format(response.status))
+                            f'<h3>Refresh status: {response.status}</h3>')
                         self.response.write(
-                            '<pre class="prettyprint">{}</pre>'.format(response.content))
+                            f'<pre class="prettyprint">{response.content}</pre>')
 
                 self.response.write(
                     '<pre id="ui" class="prettyprint">{}</pre>'.format(cgi.escape(result.user.content or '')))
@@ -146,7 +145,7 @@ class Login(webapp2.RequestHandler):
 class Home(webapp2.RequestHandler):
     def get(self):
         self.response.write(
-            '<h2>Number of providers: {}</h2>'.format(len(CONFIG)))
+            f'<h2>Number of providers: {len(CONFIG)}</h2>')
         links(self)
 
 

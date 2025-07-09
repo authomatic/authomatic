@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Provides various exception types for the library.
 """

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# encoding: utf-8
 
 import logging
 import os
@@ -33,8 +31,7 @@ if os.getuid() and config.PORT == 80:
 
 ME = os.path.dirname(__file__)
 VIRTUALENV_NAME = os.path.basename(os.environ.get('VIRTUAL_ENV', ''))
-LOG_PATH = os.path.join(ME, 'login-py{0}{1}.log'.format(sys.version_info[0],
-                                                        sys.version_info[1]))
+LOG_PATH = os.path.join(ME, f'login-py{sys.version_info[0]}{sys.version_info[1]}.log')
 PROJECT_DIR = os.path.abspath(os.path.join(ME, '../..'))
 EXAMPLES_DIR = os.path.join(PROJECT_DIR, 'examples')
 PROVIDERS = sorted([(k, v) for k, v in fixtures.ASSEMBLED_CONFIG.items()
@@ -91,11 +88,11 @@ def teardown_module():
 
 def log(indent, provider_name, message):
     tab_width = 4
-    logger.info(u'({venv}) {provider: <{padding}}{indent}{message}'.format(
+    logger.info('({venv}) {provider: <{padding}}{indent}{message}'.format(
         venv=VIRTUALENV_NAME,
         provider=provider_name,
         padding=PROVIDER_NAME_WIDTH + 3,
-        indent=u' ' * tab_width * indent,
+        indent=' ' * tab_width * indent,
         message=message
     ))
 
@@ -139,7 +136,7 @@ def login(request, browser, app, attempt=1):
     """
     success = False
     provider_name, provider = request.param
-    log(1, provider_name, 'Attempt {0}'.format(attempt))
+    log(1, provider_name, f'Attempt {attempt}')
 
     def wait(indent, seconds):
         seconds = seconds or 0
@@ -149,7 +146,7 @@ def login(request, browser, app, attempt=1):
 
         if seconds:
             log(indent, provider_name,
-                u'(waiting {0} seconds)'.format(seconds))
+                f'(waiting {seconds} seconds)')
             # log(0, provider_name, u' waiting {0} seconds '
             #     .format(seconds).center(60, '#'))
             time.sleep(seconds)
@@ -184,7 +181,7 @@ def login(request, browser, app, attempt=1):
         provider['name'] = provider_name
         conf = fixtures.get_configuration(provider_name)
         if not conf:
-            log(0, "No configuration found for provider {}".format(provider_name))
+            log(0, f"No configuration found for provider {provider_name}")
             # return to 'skip' test
             return 1
 
@@ -199,10 +196,10 @@ def login(request, browser, app, attempt=1):
 
         # Go to login URL to log in
         if login_url:
-            log(2, provider_name, 'Going to login URL: {0}'.format(login_url))
+            log(2, provider_name, f'Going to login URL: {login_url}')
             browser.get(login_url)
         else:
-            log(2, provider_name, 'Going to URL: {0}'.format(url))
+            log(2, provider_name, f'Going to URL: {url}')
             browser.get(url)
 
         # Handle alerts
@@ -212,11 +209,11 @@ def login(request, browser, app, attempt=1):
                 .until(expected_conditions.alert_is_present())
 
             if alert_wait:
-                log(2, provider_name, 'Waiting {0} seconds for alert'
-                    .format(alert_wait))
+                log(2, provider_name, f'Waiting {alert_wait} seconds for alert'
+                    )
 
             alert = browser.switch_to_alert()
-            log(2, provider_name, 'Accepting alert: {0}'.format(alert.text))
+            log(2, provider_name, f'Accepting alert: {alert.text}')
             alert.accept()
         except TimeoutException:
             pass
@@ -231,15 +228,15 @@ def login(request, browser, app, attempt=1):
             if pre_login_xpaths:
                 for xpath in pre_login_xpaths:
                     log(2, provider_name,
-                        'Finding pre-login element {0}'.format(xpath))
+                        f'Finding pre-login element {xpath}')
                     pre_login = browser.find_element(By.XPATH, xpath)
 
                     log(3, provider_name,
-                        'Clicking on pre-login element'.format(xpath))
+                        'Clicking on pre-login element')
                     pre_login.click()
 
             log(2, provider_name,
-                'Finding login input {0}'.format(login_xpath))
+                f'Finding login input {login_xpath}')
             login_element = browser.find_element(By.XPATH, login_xpath)
 
             log(3, provider_name, 'Filling out login')
@@ -256,7 +253,7 @@ def login(request, browser, app, attempt=1):
 
             wait(2, provider.get('before_password_input_wait'))
             log(2, provider_name,
-                'Finding password input {0}'.format(password_xpath))
+                f'Finding password input {password_xpath}')
             password_element = browser.find_element(By.XPATH, password_xpath)
             log(3, provider_name, 'Filling out password')
             password_element.send_keys(conf.user_password)
@@ -273,8 +270,8 @@ def login(request, browser, app, attempt=1):
 
         if login_url:
             # Return back from login URL
-            log(2, provider_name, 'Going back from login URL to: {0}'
-                .format(url))
+            log(2, provider_name, f'Going back from login URL to: {url}'
+                )
 
             browser.get(url)
 
@@ -287,7 +284,7 @@ def login(request, browser, app, attempt=1):
                     wait(2, provider.get('consent_wait_seconds'))
 
                     log(2, provider_name,
-                        'Finding consent button {0}'.format(xpath))
+                        f'Finding consent button {xpath}')
                     button = browser.find_element(By.XPATH, xpath)
 
                     log(3, provider_name, 'Clicking consent button')
@@ -314,7 +311,7 @@ def login(request, browser, app, attempt=1):
             pdb.set_trace()
         try:
             log(2, provider_name,
-                'Finding result element after error {0}'.format(e.msg))
+                f'Finding result element after error {e.msg}')
             browser.find_element(By.ID, 'login-result')
             log(3, provider_name, 'Result element found')
             success = True
@@ -328,12 +325,12 @@ def login(request, browser, app, attempt=1):
             login(request, browser, app, attempt + 1)
         else:
             log(1, provider_name,
-                'Giving up after {0} attempts!'.format(attempt))
+                f'Giving up after {attempt} attempts!')
 
             # import pdb; pdb.set_trace()
 
             pytest.fail(
-                'Login by provider "{0}" failed!'.format(provider_name))
+                f'Login by provider "{provider_name}" failed!')
 
     return provider
 
@@ -344,19 +341,19 @@ def provider(request, browser, app):
 
     logout_url = provider.get('logout_url')
     if logout_url:
-        log(0, provider_name, 'Logging out at {0}'.format(logout_url))
+        log(0, provider_name, f'Logging out at {logout_url}')
         browser.get(logout_url)
 
     cookies = browser.get_cookies()
     if cookies:
-        log(0, provider_name, 'Deleting {0} cookies'.format(len(cookies)))
+        log(0, provider_name, f'Deleting {len(cookies)} cookies')
         browser.delete_all_cookies()
 
     log(0, request.param[0], 'Logging in')
     return login(request, browser, app)
 
 
-class Base(object):
+class Base:
     def skip_if_openid(self, provider):
         if provider.get('openid_identifier'):
             pytest.skip("OpenID provider has no credentials.")
@@ -369,7 +366,7 @@ class TestCredentials(Base):
         self.skip_if_openid(provider)
 
         def f(property_name, coerce=None):
-            id_ = 'original-credentials-{0}'.format(property_name)
+            id_ = f'original-credentials-{property_name}'
             value = browser.find_element(By.ID, id_).text or None
 
             expected = provider['credentials'][property_name]
@@ -380,7 +377,7 @@ class TestCredentials(Base):
                 try:
                     unicode
                 except NameError:
-                    class unicode(object):
+                    class unicode:
                         pass
                 if coerce is not None and isinstance(expected, (str, unicode)):
                     expected = coerce(expected)
@@ -451,8 +448,8 @@ class TestCredentialsChange(Base):
             if not changed_values:
                 pytest.skip("Credentials refresh values not specified.")
             else:
-                original_id = 'original-credentials-{0}'.format(property_name)
-                changed_id = 'refreshed-credentials-{0}'.format(property_name)
+                original_id = f'original-credentials-{property_name}'
+                changed_id = f'refreshed-credentials-{property_name}'
 
                 original_val = browser.find_element(By.ID, original_id).text\
                     or None

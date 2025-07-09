@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
 import re
 
@@ -8,13 +7,13 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('facebook')
 
-LINK = u'http://www.facebook.com/' + conf.user_id
-PICTURE = (u'http://graph.facebook.com/{0}/picture?type=large'
-           .format(conf.user_id))
+LINK = 'http://www.facebook.com/' + conf.user_id
+PICTURE = (f'http://graph.facebook.com/{conf.user_id}/picture?type=large'
+           )
 
 CONFIG = {
-    'login_xpath': u'//*[@id="email"]',
-    'password_xpath': u'//*[@id="pass"]',
+    'login_xpath': '//*[@id="email"]',
+    'password_xpath': '//*[@id="pass"]',
     'consent_xpaths': [
         '//*[@aria-label="Allow all cookies"]',
         '//*[@aria-label="Continue"]',

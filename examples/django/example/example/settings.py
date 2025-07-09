@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # example/example/settings.py
 # Django settings for example project.
 import os

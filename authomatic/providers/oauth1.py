@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 |oauth1| Providers
 --------------------
@@ -424,8 +423,7 @@ class OAuth1(providers.AuthorizationProvider):
             # Get Access Token
             self._log(
                 logging.INFO,
-                'Fetching for access token from {0}.'.format(
-                    self.access_token_url))
+                f'Fetching for access token from {self.access_token_url}.')
 
             self.credentials.token = request_token
             self.credentials.token_secret = token_secret
@@ -443,9 +441,9 @@ class OAuth1(providers.AuthorizationProvider):
 
             if not self._http_status_in_category(response.status, 2):
                 raise FailureError(
-                    'Failed to obtain OAuth 1.0a  oauth_token from {0}! '
-                    'HTTP status code: {1}.'
-                    .format(self.access_token_url, response.status),
+                    f'Failed to obtain OAuth 1.0a  oauth_token from {self.access_token_url}! '
+                    f'HTTP status code: {response.status}.'
+                    ,
                     original_message=response.content,
                     status=response.status,
                     url=self.access_token_url
@@ -468,8 +466,8 @@ class OAuth1(providers.AuthorizationProvider):
         elif denied:
             # Phase 2 after redirect denied
             raise CancellationError(
-                'User denied the request token {0} during a redirect'
-                'to {1}!'.format(denied, self.user_authorization_url),
+                f'User denied the request token {denied} during a redirect'
+                f'to {self.user_authorization_url}!',
                 original_message=denied,
                 url=self.user_authorization_url)
         else:
@@ -495,12 +493,8 @@ class OAuth1(providers.AuthorizationProvider):
             # check if response status is OK
             if not self._http_status_in_category(response.status, 2):
                 raise FailureError(
-                    'Failed to obtain request token from {0}! HTTP status '
-                    'code: {1} content: {2}'.format(
-                        self.request_token_url,
-                        response.status,
-                        response.content
-                    ),
+                    f'Failed to obtain request token from {self.request_token_url}! HTTP status '
+                    f'code: {response.status} content: {response.content}',
                     original_message=response.content,
                     status=response.status,
                     url=self.request_token_url)
@@ -509,8 +503,8 @@ class OAuth1(providers.AuthorizationProvider):
             request_token = response.data.get('oauth_token')
             if not request_token:
                 raise FailureError(
-                    'Response from {0} doesn\'t contain oauth_token '
-                    'parameter!'.format(self.request_token_url),
+                    f'Response from {self.request_token_url} doesn\'t contain oauth_token '
+                    'parameter!',
                     original_message=response.content,
                     url=self.request_token_url)
 
@@ -525,8 +519,7 @@ class OAuth1(providers.AuthorizationProvider):
                 self._session_set('token_secret', token_secret)
             else:
                 raise FailureError(
-                    'Failed to obtain token secret from {0}!'.format(
-                        self.request_token_url),
+                    f'Failed to obtain token secret from {self.request_token_url}!',
                     original_message=response.content,
                     url=self.request_token_url)
 
@@ -542,8 +535,7 @@ class OAuth1(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                'Redirecting user to {0}.'.format(
-                    request_elements.full_url))
+                f'Redirecting user to {request_elements.full_url}.')
 
             self.redirect(request_elements.full_url)
 
@@ -848,11 +840,11 @@ class Plurk(OAuth1):
         user.locale = _user.get('default_lang')
         user.name = _user.get('full_name')
         user.nickname = _user.get('nick_name')
-        user.picture = 'http://avatars.plurk.com/{0}-big2.jpg'.format(user.id)
+        user.picture = f'http://avatars.plurk.com/{user.id}-big2.jpg'
         user.timezone = _user.get('timezone')
         user.username = _user.get('display_name')
 
-        user.link = 'http://www.plurk.com/{0}/'.format(user.username)
+        user.link = f'http://www.plurk.com/{user.username}/'
 
         user.city, user.country = _user.get('location', ',').split(',')
         user.city = user.city.strip()
@@ -1097,8 +1089,8 @@ class Vimeo(OAuth1):
         response = super()._access_user_info()
         uid = response.data.get('oauth', {}).get('user', {}).get('id')
         if uid:
-            return self.access('http://vimeo.com/api/v2/{0}/info.json'
-                               .format(uid))
+            return self.access(f'http://vimeo.com/api/v2/{uid}/info.json'
+                               )
         return response
 
     @staticmethod

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This is a simple Flask app that uses Authomatic to log users in with Facebook
 Twitter and OpenID.

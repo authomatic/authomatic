@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 
 import fixtures
@@ -7,7 +6,7 @@ from authomatic.providers import oauth1
 
 conf = fixtures.get_configuration('xing')
 
-LINK = 'https://www.xing.com/profile/{0}'.format(conf.user_username)
+LINK = f'https://www.xing.com/profile/{conf.user_username}'
 PICTURE = re.compile(r'https://www.xing.com/assets/frontend_minified/'
                      r'img/users/\w+\.\d+x\d+.jpg')
 
@@ -42,9 +41,9 @@ CONFIG = {
         'username': conf.user_username,
     },
     'content_should_contain': [
-        '"year":{0:%Y},'.format(conf.user_birth_date),
-        '"month":{0:%m},'.format(conf.user_birth_date),
-        '"day":{0:%d}'.format(conf.user_birth_date),
+        f'"year":{conf.user_birth_date:%Y},',
+        f'"month":{conf.user_birth_date:%m},',
+        f'"day":{conf.user_birth_date:%d}',
         conf.user_email,
         conf.user_first_name,
         conf.user_id,

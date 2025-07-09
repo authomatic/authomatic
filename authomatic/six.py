@@ -20,7 +20,6 @@
 
 """Utilities for writing code that runs on Python 2 and 3"""
 
-from __future__ import absolute_import
 
 import functools
 import itertools
@@ -57,7 +56,7 @@ else:
         MAXSIZE = int((1 << 31) - 1)
     else:
         # It's possible to have sizeof(long) != sizeof(Py_ssize_t).
-        class X(object):
+        class X:
 
             def __len__(self):
                 return 1 << 31
@@ -88,7 +87,7 @@ def _import_module(name):
     return sys.modules[name]
 
 
-class _LazyDescr(object):
+class _LazyDescr:
 
     def __init__(self, name):
         self.name = name
@@ -166,7 +165,7 @@ class MovedAttribute(_LazyDescr):
         return getattr(module, self.attr)
 
 
-class _SixMetaPathImporter(object):
+class _SixMetaPathImporter:
 
     """
     A meta path importer to import six.moves and its submodules.
@@ -576,7 +575,7 @@ else:
     def create_unbound_method(func, cls):
         return types.MethodType(func, None, cls)
 
-    class Iterator(object):
+    class Iterator:
 
         def next(self):
             return type(self).__next__(self)

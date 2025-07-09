@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
 import re
 
@@ -8,8 +7,8 @@ from authomatic.providers import oauth2
 
 conf = fixtures.get_configuration('yammer')
 
-LINK = 'https://www.yammer.com/peterhudec.com/users/{0}'\
-    .format(conf.user_username)
+LINK = f'https://www.yammer.com/peterhudec.com/users/{conf.user_username}'\
+    
 
 # Yammer allows users to only set month and day of their birth day.
 # The year is always 1900.

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# encoding: utf-8
 
 from collections import namedtuple
 import os
@@ -138,10 +136,10 @@ def get_configuration(provider):
     try:
         conf.update(config.PROVIDERS[provider])
     except KeyError:
-        warnings.warn('No record for the provider "{0}" found in the config!'.format(provider))
+        warnings.warn(f'No record for the provider "{provider}" found in the config!')
         return
 
-    class_name = '{0}Configuration'.format(provider.capitalize())
+    class_name = f'{provider.capitalize()}Configuration'
     Res = namedtuple(class_name, sorted(conf.keys()))
 
     # Add additional class attributes which are not allowed to be passed

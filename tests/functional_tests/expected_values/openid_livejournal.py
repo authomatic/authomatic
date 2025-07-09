@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 import fixtures
 from authomatic.providers import openid
 
 conf = fixtures.get_configuration('openid_livejournal')
 
-OPENID_IDENTIFIER = 'http://{0}.livejournal.com/'.format(conf.user_login)
+OPENID_IDENTIFIER = f'http://{conf.user_login}.livejournal.com/'
 
 CONFIG = {
     'openid_identifier': OPENID_IDENTIFIER,

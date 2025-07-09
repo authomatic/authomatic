@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 |openid| Providers
 ----------------------------------
@@ -20,7 +19,6 @@ Providers which implement the |openid|_ protocol based on the
 
 # We need absolute import to import from openid library which has the same
 # name as this module
-from __future__ import absolute_import
 import datetime
 import logging
 import time
@@ -332,7 +330,7 @@ class OpenID(providers.AuthenticationProvider):
             self._log(
                 logging.INFO,
                 'Writing OpenID realm HTML to the response.')
-            xrds_location = '{u}?{x}={x}'.format(u=self.url, x=self.xrds_param)
+            xrds_location = f'{self.url}?{self.xrds_param}={self.xrds_param}'
             self.write(
                 REALM_HTML.format(
                     xrds_location=xrds_location,
@@ -403,8 +401,7 @@ class OpenID(providers.AuthenticationProvider):
 
             elif response.status == consumer.CANCEL:
                 raise CancellationError(
-                    'User cancelled the verification of ID "{0}"!'.format(
-                        response.getDisplayIdentifier()))
+                    f'User cancelled the verification of ID "{response.getDisplayIdentifier()}"!')
 
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
@@ -423,16 +420,13 @@ class OpenID(providers.AuthenticationProvider):
                 auth_request = oi_consumer.begin(self.identifier)
             except consumer.DiscoveryFailure as e:
                 raise FailureError(
-                    'Discovery failed for identifier {0}!'.format(
-                        self.identifier
-                    ),
+                    f'Discovery failed for identifier {self.identifier}!',
                     url=self.identifier,
                     original_message=e.message)
 
             self._log(
                 logging.INFO,
-                'Service discovery for identifier {0} successful.'.format(
-                    self.identifier))
+                f'Service discovery for identifier {self.identifier} successful.')
 
             # add SREG extension
             # we need to remove required fields from optional fields because
@@ -457,8 +451,7 @@ class OpenID(providers.AuthenticationProvider):
 
             # prepare realm and return_to URLs
             if self.use_realm:
-                realm = return_to = '{u}?{r}={r}'.format(
-                    u=self.url, r=self.realm_param)
+                realm = return_to = f'{self.url}?{self.realm_param}={self.realm_param}'
             else:
                 realm = return_to = self.url
 
@@ -469,7 +462,7 @@ class OpenID(providers.AuthenticationProvider):
                 url = auth_request.redirectURL(realm, return_to)
                 self._log(
                     logging.INFO,
-                    'Redirecting user to {0}.'.format(url))
+                    f'Redirecting user to {url}.')
                 self.redirect(url)
             else:
                 # must be sent as POST

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 import collections
 import copy
@@ -183,8 +182,8 @@ def import_string(import_name, silent=False):
         return __import__(import_name)
     except (ImportError, AttributeError) as e:
         if not silent:
-            raise ImportStringError('Import from string failed for path {0}'
-                                    .format(import_name), str(e))
+            raise ImportStringError(f'Import from string failed for path {import_name}'
+                                    , str(e))
 
 
 def resolve_provider_class(class_):
@@ -222,7 +221,7 @@ def id_to_name(config, short_name):
             return k
 
     raise Exception(
-        'No provider with id={0} found in the config!'.format(short_name))
+        f'No provider with id={short_name} found in the config!')
 
 
 class ReprMixin:
@@ -269,11 +268,11 @@ class ReprMixin:
                 # if repr is too long
                 if len(repr(v)) > self._repr_length_limit:
                     # Truncate to ClassName(...)
-                    v = '{0}(...)'.format(v.__class__.__name__)
+                    v = f'{v.__class__.__name__}(...)'
                 else:
                     v = repr(v)
 
-                args.append('{0}={1}'.format(k, v))
+                args.append(f'{k}={v}')
 
         return '{0}({1})'.format(name, ', '.join(args))
 
@@ -397,9 +396,9 @@ class Session:
             cookie_len = len(cookie)
 
             if cookie_len > 4093:
-                raise SessionError('Cookie too long! The cookie size {0} '
+                raise SessionError(f'Cookie too long! The cookie size {cookie_len} '
                                    'is more than 4093 bytes.'
-                                   .format(cookie_len))
+                                   )
 
             self.adapter.set_header('Set-Cookie', cookie)
 
@@ -482,7 +481,7 @@ class Session:
 
         # Verify signature
         if not signature == self._signature(self.name, encoded, timestamp):
-            raise SessionError('Invalid signature "{0}"!'.format(signature))
+            raise SessionError(f'Invalid signature "{signature}"!')
 
         # Verify timestamp
         if int(timestamp) < int(time.time()) - self.max_age:
@@ -803,7 +802,7 @@ class Credentials(ReprMixin):
 
         if hasattr(self.provider_class, 'refresh_credentials'):
             if force or self.expire_soon(soon):
-                logging.info('PROVIDER NAME: {0}'.format(self.provider_name))
+                logging.info(f'PROVIDER NAME: {self.provider_name}')
                 return self.provider_class(
                     self, None, self.provider_name).refresh_credentials(self)
 
@@ -965,9 +964,9 @@ class LoginResult(ReprMixin):
 
         """
 
-        custom_callback = """
-        try {{ window.opener.{cb}(result, closer); }} catch(e) {{}}
-        """.format(cb=callback_name) if callback_name else ''
+        custom_callback = f"""
+        try {{ window.opener.{callback_name}(result, closer); }} catch(e) {{}}
+        """ if callback_name else ''
 
         # TODO: Move the window.close() to the opener
         return """
@@ -1362,8 +1361,8 @@ class Authomatic:
             # exceptions if missing
             provider_settings = self.config.get(provider_name)
             if not provider_settings:
-                raise ConfigError('Provider name "{0}" not specified!'
-                                  .format(provider_name))
+                raise ConfigError(f'Provider name "{provider_name}" not specified!'
+                                  )
 
             if session is None or session_saver is None:
                 session = Session(adapter=adapter,
@@ -1379,7 +1378,7 @@ class Authomatic:
             if not class_:
                 raise ConfigError(
                     'The "class_" key not specified in the config'
-                    ' for provider {0}!'.format(provider_name))
+                    f' for provider {provider_name}!')
             ProviderClass = resolve_provider_class(class_)
 
             # FIXME: Find a nicer solution
@@ -1452,7 +1451,7 @@ class Authomatic:
 
         # Resolve provider class.
         ProviderClass = credentials.provider_class
-        logging.info('ACCESS HEADERS: {0}'.format(headers))
+        logging.info(f'ACCESS HEADERS: {headers}')
         # Access resource and return response.
 
         provider = ProviderClass(
@@ -1719,7 +1718,7 @@ class Authomatic:
 
             # Forward headers
             for k, v in response.getheaders():
-                logging.info('    {0}: {1}'.format(k, v))
+                logging.info(f'    {k}: {v}')
                 adapter.set_header(k, v)
 
         elif request_type == 'elements':
