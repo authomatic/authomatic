@@ -346,7 +346,7 @@ class BaseProvider:
         # Each time return random portion of the hash.
         span = 5
         shift = random.randint(0, span)
-        return hashed[shift : shift - span - 1]
+        return hashed[shift: shift - span - 1]
 
     @classmethod
     def _log(cls, level, msg, **kwargs):
