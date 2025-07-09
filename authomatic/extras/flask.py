@@ -31,14 +31,13 @@ class FlaskAuthomatic(Authomatic):
             def decorated(*args, **kwargs):
                 self.response = make_response()
                 adapter = WerkzeugAdapter(request, self.response)
-                login_kwargs.setdefault('session', session)
-                login_kwargs.setdefault('session_saver', self.session_saver)
-                self.result = super().login(
-                    adapter,
-                    *login_args,
-                    **login_kwargs)
+                login_kwargs.setdefault("session", session)
+                login_kwargs.setdefault("session_saver", self.session_saver)
+                self.result = super().login(adapter, *login_args, **login_kwargs)
                 return f(*args, **kwargs)
+
             return decorated
+
         return decorator
 
     def session_saver(self):

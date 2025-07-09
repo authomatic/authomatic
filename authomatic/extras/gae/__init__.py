@@ -5,7 +5,6 @@
 Utilities you can use when using this library on |gae|_.
 """
 
-
 from authomatic import exceptions
 from authomatic.extras import interfaces
 from authomatic.extras.gae.openid import NDBOpenIDStore
@@ -20,7 +19,7 @@ except ImportError:
     logger.exception("FATAL: google.appengine 1st Gen. not installed!")
     raise
 
-__all__ = ['ndb_config', 'Webapp2Session']
+__all__ = ["ndb_config", "Webapp2Session"]
 
 
 class GAEError(exceptions.BaseError):
@@ -40,9 +39,15 @@ class Webapp2Session(interfaces.BaseSession):
 
     """
 
-    def __init__(self, handler, session=None, secret=None,
-                 cookie_name='webapp2authomatic', backend='memcache',
-                 config=None):
+    def __init__(
+        self,
+        handler,
+        session=None,
+        secret=None,
+        cookie_name="webapp2authomatic",
+        backend="memcache",
+        config=None,
+    ):
         """
         .. warning::
 
@@ -75,9 +80,9 @@ class Webapp2Session(interfaces.BaseSession):
 
         if session is None:
             if not secret:
-                raise GAEError('Either session or secret must be specified!')
+                raise GAEError("Either session or secret must be specified!")
             # Create new session.
-            cfg = config or {'secret_key': secret, 'cookie_name': cookie_name}
+            cfg = config or {"secret_key": secret, "cookie_name": cookie_name}
             session_store = sessions.SessionStore(handler.request, cfg)
             self.session_dict = session_store.get_session(backend=backend)
         else:
@@ -145,14 +150,14 @@ class NDBConfig(ndb.Model):
             result_dict = result.to_dict()
 
             # Use NDBOpenIDStore by default
-            result_dict['store'] = NDBOpenIDStore
+            result_dict["store"] = NDBOpenIDStore
 
             # Convert coma-separated values to list. Currently only scope is
             # csv.
-            for i in ('scope', ):
+            for i in ("scope",):
                 prop = result_dict.get(i)
                 if prop:
-                    result_dict[i] = [s.strip() for s in prop.split(',')]
+                    result_dict[i] = [s.strip() for s in prop.split(",")]
                 else:
                     result_dict[i] = None
 
@@ -189,31 +194,34 @@ class NDBConfig(ndb.Model):
 
         if not len(cls.query().fetch()):
 
-            example = cls.get_or_insert('Example')
+            example = cls.get_or_insert("Example")
 
-            example.class_ = 'Provider class e.g. ' + \
-                             '"authomatic.providers.oauth2.Facebook".'
+            example.class_ = (
+                "Provider class e.g. " + '"authomatic.providers.oauth2.Facebook".'
+            )
             example.provider_name = 'Your custom provider name e.g. "fb".'
 
             # AuthorizationProvider
-            example.consumer_key = 'Consumer key.'
-            example.consumer_secret = 'Consumer secret'
+            example.consumer_key = "Consumer key."
+            example.consumer_secret = "Consumer secret"
             example.provider_id = 1
 
             # OAuth2
-            example.scope = 'coma, separated, list, of, scopes'
+            example.scope = "coma, separated, list, of, scopes"
 
             # AuthenticationProvider
-            example.identifier_param = 'Querystring parameter for claimed ' + \
-                                       'id. default is "id"'
+            example.identifier_param = (
+                "Querystring parameter for claimed " + 'id. default is "id"'
+            )
 
             # Save the example
             example.put()
 
             # Raise an information error.
             raise GAEError(
-                'A NDBConfig data model was created! Go to Datastore Viewer '
-                'in your dashboard and populate it with data!')
+                "A NDBConfig data model was created! Go to Datastore Viewer "
+                "in your dashboard and populate it with data!"
+            )
 
 
 def ndb_config():

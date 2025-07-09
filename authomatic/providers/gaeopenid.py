@@ -39,7 +39,7 @@ except ImportError:
     users = None
 
 
-__all__ = ['GAEOpenID', 'Yahoo', 'Google']
+__all__ = ["GAEOpenID", "Yahoo", "Google"]
 
 
 class GAEOpenID(providers.AuthenticationProvider):
@@ -61,14 +61,13 @@ class GAEOpenID(providers.AuthenticationProvider):
             # =================================================================
             # Phase 1 before redirect.
             # =================================================================
-            self._log(
-                logging.INFO,
-                'Starting OpenID authentication procedure.')
+            self._log(logging.INFO, "Starting OpenID authentication procedure.")
 
             url = users.create_login_url(
-                dest_url=self.url, federated_identity=self.identifier)
+                dest_url=self.url, federated_identity=self.identifier
+            )
 
-            self._log(logging.INFO, f'Redirecting user to {url}.')
+            self._log(logging.INFO, f"Redirecting user to {url}.")
 
             self.redirect(url)
         else:
@@ -78,24 +77,28 @@ class GAEOpenID(providers.AuthenticationProvider):
 
             self._log(
                 logging.INFO,
-                'Continuing OpenID authentication procedure after redirect.')
+                "Continuing OpenID authentication procedure after redirect.",
+            )
 
             user = users.get_current_user()
 
             if user:
-                self._log(logging.INFO, 'Authentication successful.')
-                self._log(logging.INFO, 'Creating user.')
-                self.user = core.User(self,
-                                      id=user.federated_identity(),
-                                      email=user.email(),
-                                      gae_user=user)
+                self._log(logging.INFO, "Authentication successful.")
+                self._log(logging.INFO, "Creating user.")
+                self.user = core.User(
+                    self,
+                    id=user.federated_identity(),
+                    email=user.email(),
+                    gae_user=user,
+                )
 
                 # =============================================================
                 # We're done
                 # =============================================================
             else:
                 raise FailureError(
-                    f'Unable to authenticate identifier "{self.identifier}"!')
+                    f'Unable to authenticate identifier "{self.identifier}"!'
+                )
 
 
 class Yahoo(GAEOpenID):
@@ -104,7 +107,7 @@ class Yahoo(GAEOpenID):
     ``"me.yahoo.com"``.
     """
 
-    identifier = 'me.yahoo.com'
+    identifier = "me.yahoo.com"
 
 
 class Google(GAEOpenID):
@@ -113,4 +116,4 @@ class Google(GAEOpenID):
     ``"https://www.google.com/accounts/o8/id"``.
     """
 
-    identifier = 'https://www.google.com/accounts/o8/id'
+    identifier = "https://www.google.com/accounts/o8/id"

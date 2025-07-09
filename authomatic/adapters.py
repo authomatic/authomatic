@@ -174,7 +174,7 @@ class DjangoAdapter(BaseAdapter):
         self.response[key] = value
 
     def set_status(self, status):
-        status_code = status.split(' ', 1)[0]
+        status_code = status.split(" ", 1)[0]
         self.response.status_code = int(status_code)
 
 
@@ -274,7 +274,7 @@ class WerkzeugAdapter(BaseAdapter):
         self.response = response
 
     def write(self, value):
-        self.response.data = self.response.data.decode('utf-8') + value
+        self.response.data = self.response.data.decode("utf-8") + value
 
     def set_header(self, key, value):
         self.response.headers[key] = value

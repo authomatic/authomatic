@@ -39,10 +39,11 @@ from authomatic.six.moves import urllib_parse as parse, http_client
 from authomatic.exceptions import CancellationError
 
 __all__ = [
-    'BaseProvider',
-    'AuthorizationProvider',
-    'AuthenticationProvider',
-    'login_decorator']
+    "BaseProvider",
+    "AuthorizationProvider",
+    "AuthenticationProvider",
+    "login_decorator",
+]
 
 
 def _error_traceback_html(exc_info, traceback_):
@@ -95,15 +96,15 @@ def login_decorator(func):
                 if not isinstance(error, CancellationError):
                     provider._log(
                         logging.ERROR,
-                        f'Reported suppressed exception: {repr(error)}!',
-                        exc_info=1)
+                        f"Reported suppressed exception: {repr(error)}!",
+                        exc_info=1,
+                    )
             else:
                 if provider.settings.debug:
                     # TODO: Check whether it actually works without middleware
                     provider.write(
-                        _error_traceback_html(
-                            sys.exc_info(),
-                            traceback.format_exc()))
+                        _error_traceback_html(sys.exc_info(), traceback.format_exc())
+                    )
                 raise
 
         # If there is user or error the login procedure has finished
@@ -116,7 +117,7 @@ def login_decorator(func):
             if isinstance(provider.session, authomatic.core.Session):
                 provider.session.delete()
 
-            provider._log(logging.INFO, 'Procedure finished.')
+            provider._log(logging.INFO, "Procedure finished.")
 
             if provider.callback:
                 provider.callback(result)
@@ -134,15 +135,24 @@ class BaseProvider:
 
     PROVIDER_TYPE_ID = 0
 
-    _repr_ignore = ('user',)
+    _repr_ignore = ("user",)
 
     __metaclass__ = abc.ABCMeta
 
     supported_user_attributes = authomatic.core.SupportedUserAttributes()
 
-    def __init__(self, settings, adapter, provider_name, session=None,
-                 session_saver=None, callback=None, js_callback=None,
-                 prefix='authomatic', **kwargs):
+    def __init__(
+        self,
+        settings,
+        adapter,
+        provider_name,
+        session=None,
+        session_saver=None,
+        callback=None,
+        js_callback=None,
+        prefix="authomatic",
+        **kwargs,
+    ):
 
         self.settings = settings
         self.adapter = adapter
@@ -167,7 +177,7 @@ class BaseProvider:
         #: :class:`bool` If ``True``, the
         #: :attr:`.BaseProvider.user_authorization_url` will be displayed
         #: in a *popup mode*, if the **provider** supports it.
-        self.popup = self._kwarg(kwargs, 'popup')
+        self.popup = self._kwarg(kwargs, "popup")
 
     @property
     def url(self):
@@ -187,8 +197,8 @@ class BaseProvider:
         self.adapter.set_status(status)
 
     def redirect(self, url):
-        self.set_status('302 Found')
-        self.set_header('Location', url)
+        self.set_status("302 Found")
+        self.set_header("Location", url)
 
     # ========================================================================
     # Abstract methods
@@ -221,12 +231,12 @@ class BaseProvider:
         """
 
         return {
-            'name': self.name,
-            'id': getattr(self, 'id', None),
-            'type_id': self.type_id,
-            'type': self.get_type(),
-            'scope': getattr(self, 'scope', None),
-            'user': self.user.id if self.user else None
+            "name": self.name,
+            "id": getattr(self, "id", None),
+            "type_id": self.type_id,
+            "type": self.get_type(),
+            "scope": getattr(self, "scope", None),
+            "user": self.user.id if self.user else None,
         }
 
     @classmethod
@@ -240,7 +250,7 @@ class BaseProvider:
 
         """
 
-        return cls.__module__ + '.' + cls.__bases__[0].__name__
+        return cls.__module__ + "." + cls.__bases__[0].__name__
 
     def update_user(self):
         """
@@ -284,7 +294,7 @@ class BaseProvider:
         getters = [
             lambda: kwargs.get(kwname),
             lambda: self.settings.config.get(self.name, {}).get(kwname),
-            lambda: self.settings.config.get('__defaults__', {}).get(kwname),
+            lambda: self.settings.config.get("__defaults__", {}).get(kwname),
         ]
         for get in getters:
             value = get()
@@ -301,7 +311,7 @@ class BaseProvider:
 
         """
 
-        return f'{self.settings.prefix}:{self.name}:{key}'
+        return f"{self.settings.prefix}:{self.name}:{key}"
 
     def _session_set(self, key, value):
         """
@@ -336,7 +346,7 @@ class BaseProvider:
         # Each time return random portion of the hash.
         span = 5
         shift = random.randint(0, span)
-        return hashed[shift:shift - span - 1]
+        return hashed[shift : shift - span - 1]
 
     @classmethod
     def _log(cls, level, msg, **kwargs):
@@ -353,14 +363,11 @@ class BaseProvider:
 
         """
 
-        logger = getattr(cls, '_logger', None) or authomatic.core._logger
-        logger.log(
-            level, ': '.join(
-                ('authomatic', cls.__name__, msg)), **kwargs)
+        logger = getattr(cls, "_logger", None) or authomatic.core._logger
+        logger.log(level, ": ".join(("authomatic", cls.__name__, msg)), **kwargs)
 
     @classmethod
-    def _log_param(cls, param, value='', last=None,
-                   level=logging.DEBUG, **kwargs):
+    def _log_param(cls, param, value="", last=None, level=logging.DEBUG, **kwargs):
         """
         Same as :meth:`_log` but in DEBUG, and with option indicator in front
         of the message according to :param:`last`.
@@ -380,14 +387,23 @@ class BaseProvider:
             Python standard library.
 
         """
-        info_style = ' \u251C\u2500 '
-        last_style = ' \u2514\u2500 '
-        style = '' if last is None else last_style if last else info_style
-        cls._log(logging.DEBUG, f'{style}{param}: {value!s}')
+        info_style = " \u251c\u2500 "
+        last_style = " \u2514\u2500 "
+        style = "" if last is None else last_style if last else info_style
+        cls._log(logging.DEBUG, f"{style}{param}: {value!s}")
 
-    def _fetch(self, url, method='GET', params=None, headers=None,
-               body='', max_redirects=5, content_parser=None,
-               certificate_file=None, ssl_verify=True):
+    def _fetch(
+        self,
+        url,
+        method="GET",
+        params=None,
+        headers=None,
+        body="",
+        max_redirects=5,
+        content_parser=None,
+        certificate_file=None,
+        ssl_verify=True,
+    ):
         """
         Fetches a URL.
 
@@ -430,80 +446,83 @@ class BaseProvider:
         url_parsed = parse.urlsplit(url)
         query = parse.urlencode(params)
 
-        if method in ('POST', 'PUT', 'PATCH'):
+        if method in ("POST", "PUT", "PATCH"):
             if not body:
                 # Put querystring to body
                 body = query
-                query = ''
-                headers.update(
-                    {'Content-Type': 'application/x-www-form-urlencoded'})
+                query = ""
+                headers.update({"Content-Type": "application/x-www-form-urlencoded"})
         request_path = parse.urlunsplit(
-            ('', '', url_parsed.path or '', query or '', ''))
+            ("", "", url_parsed.path or "", query or "", "")
+        )
 
-        self._log_param('host', url_parsed.hostname, last=False)
-        self._log_param('method', method, last=False)
-        self._log_param('body', body, last=False)
-        self._log_param('params', params, last=False)
-        self._log_param('headers', headers, last=False)
-        self._log_param('certificate', certificate_file, last=False)
-        self._log_param('SSL verify', ssl_verify, last=True)
+        self._log_param("host", url_parsed.hostname, last=False)
+        self._log_param("method", method, last=False)
+        self._log_param("body", body, last=False)
+        self._log_param("params", params, last=False)
+        self._log_param("headers", headers, last=False)
+        self._log_param("certificate", certificate_file, last=False)
+        self._log_param("SSL verify", ssl_verify, last=True)
 
         # Connect
-        if url_parsed.scheme.lower() == 'https':
+        if url_parsed.scheme.lower() == "https":
             if ssl_verify:
-                context = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=certificate_file)
+                context = ssl.create_default_context(
+                    purpose=ssl.Purpose.SERVER_AUTH, cafile=certificate_file
+                )
             else:
                 context = ssl._create_unverified_context()
 
             connection = http_client.HTTPSConnection(
-                url_parsed.hostname,
-                port=url_parsed.port,
-                context=context)
+                url_parsed.hostname, port=url_parsed.port, context=context
+            )
         else:
             connection = http_client.HTTPConnection(
-                url_parsed.hostname,
-                port=url_parsed.port)
+                url_parsed.hostname, port=url_parsed.port
+            )
 
         try:
             connection.request(method, request_path, body, headers)
         except Exception as e:
-            raise FetchError('Fetching URL failed',
-                             original_message=str(e),
-                             url=request_path)
+            raise FetchError(
+                "Fetching URL failed", original_message=str(e), url=request_path
+            )
 
         response = connection.getresponse()
-        location = response.getheader('Location')
+        location = response.getheader("Location")
 
         if response.status in (300, 301, 302, 303, 307) and location:
             if location == url:
-                raise FetchError('Url redirects to itself!',
-                                 url=location,
-                                 status=response.status)
+                raise FetchError(
+                    "Url redirects to itself!", url=location, status=response.status
+                )
 
             if max_redirects > 0:
                 remaining_redirects = max_redirects - 1
 
-                self._log_param('Redirecting to', url)
-                self._log_param('Remaining redirects', remaining_redirects)
+                self._log_param("Redirecting to", url)
+                self._log_param("Remaining redirects", remaining_redirects)
 
                 # Call this method again.
-                response = self._fetch(url=location,
-                                       params=params,
-                                       method=method,
-                                       headers=headers,
-                                       max_redirects=remaining_redirects,
-                                       certificate_file=certificate_file,
-                                       ssl_verify=ssl_verify)
+                response = self._fetch(
+                    url=location,
+                    params=params,
+                    method=method,
+                    headers=headers,
+                    max_redirects=remaining_redirects,
+                    certificate_file=certificate_file,
+                    ssl_verify=ssl_verify,
+                )
 
             else:
-                raise FetchError('Max redirects reached!',
-                                 url=location,
-                                 status=response.status)
+                raise FetchError(
+                    "Max redirects reached!", url=location, status=response.status
+                )
         else:
-            self._log_param('Got response')
-            self._log_param('url', url, last=False)
-            self._log_param('status', response.status, last=False)
-            self._log_param('headers', response.getheaders(), last=True)
+            self._log_param("Got response")
+            self._log_param("url", url, last=False)
+            self._log_param("status", response.status, last=False)
+            self._log_param("headers", response.getheaders(), last=True)
 
         return authomatic.core.Response(response, content_parser)
 
@@ -525,7 +544,7 @@ class BaseProvider:
         # Update.
         for key in self.user.__dict__:
             # Exclude data.
-            if key not in ('data', 'content'):
+            if key not in ("data", "content"):
                 # Extract every data item whose key matches the user
                 # property name, but only if it has a value.
                 value = data.get(key)
@@ -543,18 +562,19 @@ class BaseProvider:
         if not self.user.name:
             if self.user.first_name and self.user.last_name:
                 # Create it from first name and last name if available.
-                self.user.name = ' '.join((self.user.first_name,
-                                           self.user.last_name))
+                self.user.name = " ".join((self.user.first_name, self.user.last_name))
             else:
                 # Or use one of these.
-                self.user.name = (self.user.username
-                                  or self.user.nickname
-                                  or self.user.first_name
-                                  or self.user.last_name)
+                self.user.name = (
+                    self.user.username
+                    or self.user.nickname
+                    or self.user.first_name
+                    or self.user.last_name
+                )
 
         if not self.user.location:
             if self.user.city and self.user.country:
-                self.user.location = f'{self.user.city}, {self.user.country}'
+                self.user.location = f"{self.user.city}, {self.user.country}"
             else:
                 self.user.location = self.user.city or self.user.country
 
@@ -581,7 +601,7 @@ class BaseProvider:
         hundreds digit.
         """
 
-        assert category < 10, 'HTTP status category must be a one-digit int!'
+        assert category < 10, "HTTP status category must be a one-digit int!"
         cat = category * 100
         return cat <= status < cat + 100
 
@@ -602,7 +622,7 @@ class AuthorizationProvider(BaseProvider):
     PROTECTED_RESOURCE_REQUEST_TYPE = 4
     REFRESH_TOKEN_REQUEST_TYPE = 5
 
-    BEARER = 'Bearer'
+    BEARER = "Bearer"
 
     _x_term_dict = {}
 
@@ -654,25 +674,27 @@ class AuthorizationProvider(BaseProvider):
 
         super().__init__(*args, **kwargs)
 
-        self.consumer_key = self._kwarg(kwargs, 'consumer_key')
-        self.consumer_secret = self._kwarg(kwargs, 'consumer_secret')
+        self.consumer_key = self._kwarg(kwargs, "consumer_key")
+        self.consumer_secret = self._kwarg(kwargs, "consumer_secret")
 
         self.user_authorization_params = self._kwarg(
-            kwargs, 'user_authorization_params', {})
+            kwargs, "user_authorization_params", {}
+        )
 
         self.access_token_headers = self._kwarg(
-            kwargs, 'user_authorization_headers', {})
-        self.access_token_params = self._kwarg(
-            kwargs, 'access_token_params', {})
+            kwargs, "user_authorization_headers", {}
+        )
+        self.access_token_params = self._kwarg(kwargs, "access_token_params", {})
 
-        self.id = self._kwarg(kwargs, 'id')
+        self.id = self._kwarg(kwargs, "id")
 
-        self.access_headers = self._kwarg(kwargs, 'access_headers', {})
-        self.access_params = self._kwarg(kwargs, 'access_params', {})
+        self.access_headers = self._kwarg(kwargs, "access_headers", {})
+        self.access_params = self._kwarg(kwargs, "access_params", {})
 
         #: :class:`.Credentials` to access **user's protected resources**.
         self.credentials = authomatic.core.Credentials(
-            self.settings.config, provider=self)
+            self.settings.config, provider=self
+        )
 
         #: Response of the *access token request*.
         self.access_token_response = None
@@ -757,9 +779,16 @@ class AuthorizationProvider(BaseProvider):
         """
 
     @abc.abstractmethod
-    def create_request_elements(self, request_type, credentials,
-                                url, method='GET', params=None, headers=None,
-                                body=''):
+    def create_request_elements(
+        self,
+        request_type,
+        credentials,
+        url,
+        method="GET",
+        params=None,
+        headers=None,
+        body="",
+    ):
         """
         Must return :class:`.RequestElements`.
 
@@ -815,12 +844,20 @@ class AuthorizationProvider(BaseProvider):
         cls = self.__class__
         mod = sys.modules.get(cls.__module__)
 
-        return str(self.PROVIDER_TYPE_ID) + '-' + \
-            str(mod.PROVIDER_ID_MAP.index(cls))
+        return str(self.PROVIDER_TYPE_ID) + "-" + str(mod.PROVIDER_ID_MAP.index(cls))
 
-    def access(self, url, params=None, method='GET', headers=None,
-               body='', max_redirects=5, content_parser=None,
-               certificate_file=None, ssl_verify=True):
+    def access(
+        self,
+        url,
+        params=None,
+        method="GET",
+        headers=None,
+        body="",
+        max_redirects=5,
+        content_parser=None,
+        certificate_file=None,
+        ssl_verify=True,
+    ):
         """
         Fetches the **protected resource** of an authenticated **user**.
 
@@ -858,11 +895,11 @@ class AuthorizationProvider(BaseProvider):
         """
 
         if not self.user and not self.credentials:
-            raise CredentialsError('There is no authenticated user!')
+            raise CredentialsError("There is no authenticated user!")
 
         headers = headers or {}
 
-        self._log_param('Accessing protected resource', url, level=logging.INFO)
+        self._log_param("Accessing protected resource", url, level=logging.INFO)
 
         request_elements = self.create_request_elements(
             request_type=self.PROTECTED_RESOURCE_REQUEST_TYPE,
@@ -871,17 +908,19 @@ class AuthorizationProvider(BaseProvider):
             body=body,
             params=params,
             headers=headers,
-            method=method
+            method=method,
         )
 
-        response = self._fetch(*request_elements,
-                               max_redirects=max_redirects,
-                               content_parser=content_parser,
-                               certificate_file=certificate_file,
-                               ssl_verify=ssl_verify)
+        response = self._fetch(
+            *request_elements,
+            max_redirects=max_redirects,
+            content_parser=content_parser,
+            certificate_file=certificate_file,
+            ssl_verify=ssl_verify,
+        )
 
         status = response.status
-        self._log_param('Got response. HTTP status', status, level=logging.INFO)
+        self._log_param("Got response. HTTP status", status, level=logging.INFO)
         return response
 
     def async_access(self, *args, **kwargs):
@@ -912,10 +951,12 @@ class AuthorizationProvider(BaseProvider):
         """
         if self.user_info_url:
             response = self._access_user_info()
-            self.user = self._update_or_create_user(response.data,
-                                                    content=response.content)
-            return authomatic.core.UserInfoResponse(self.user,
-                                                    response.httplib_response)
+            self.user = self._update_or_create_user(
+                response.data, content=response.content
+            )
+            return authomatic.core.UserInfoResponse(
+                self.user, response.httplib_response
+            )
 
     # ========================================================================
     # Internal methods
@@ -936,11 +977,9 @@ class AuthorizationProvider(BaseProvider):
         """
 
         if cls._x_use_authorization_header:
-            res = ':'.join(
-                (credentials.consumer_key,
-                 credentials.consumer_secret))
+            res = ":".join((credentials.consumer_key, credentials.consumer_secret))
             res = base64.b64encode(six.b(res)).decode()
-            return {'Authorization': f'Basic {res}'}
+            return {"Authorization": f"Basic {res}"}
         return {}
 
     def _check_consumer(self):
@@ -951,12 +990,12 @@ class AuthorizationProvider(BaseProvider):
         # 'magic' using _kwarg method
         # pylint:disable=no-member
         if not self.consumer.key:
-            raise ConfigError(
-                f'Consumer key not specified for provider {self.name}!')
+            raise ConfigError(f"Consumer key not specified for provider {self.name}!")
 
         if not self.consumer.secret:
             raise ConfigError(
-                f'Consumer secret not specified for provider {self.name}!')
+                f"Consumer secret not specified for provider {self.name}!"
+            )
 
     @staticmethod
     def _split_url(url):
@@ -971,8 +1010,7 @@ class AuthorizationProvider(BaseProvider):
         return base, params
 
     @classmethod
-    def _x_request_elements_filter(
-            cls, request_type, request_elements, credentials):
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
         """
         Override this to handle special request requirements of zealous
         providers.
@@ -1024,8 +1062,8 @@ class AuthorizationProvider(BaseProvider):
 
         """
         url = self.user_info_url.format(**self.user.__dict__)
-        cert = self._kwarg({}, 'certificate_file', None)
-        verify = self._kwarg({}, 'ssl_verify', True)
+        cert = self._kwarg({}, "certificate_file", None)
+        verify = self._kwarg({}, "ssl_verify", True)
         return self.access(url, certificate_file=cert, ssl_verify=verify)
 
 
@@ -1047,14 +1085,13 @@ class AuthenticationProvider(BaseProvider):
         super().__init__(*args, **kwargs)
 
         # Lookup default identifier, if available in provider
-        default_identifier = getattr(self, 'identifier', None)
+        default_identifier = getattr(self, "identifier", None)
 
         # Allow for custom name for the "id" querystring parameter.
-        self.identifier_param = kwargs.get('identifier_param', 'id')
+        self.identifier_param = kwargs.get("identifier_param", "id")
 
         # Get the identifier from request params, or use default as fallback.
-        self.identifier = self.params.get(
-            self.identifier_param, default_identifier)
+        self.identifier = self.params.get(self.identifier_param, default_identifier)
 
 
 PROVIDER_ID_MAP = [
