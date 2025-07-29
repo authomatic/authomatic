@@ -335,6 +335,16 @@ OAUTH2 = {
         'id': authomatic.provider_id(),
         'scope': oauth2.Yandex.user_info_scope,
     },
+    'twitter-oauth2': {
+        'class_': oauth2.Twitter,
+        'consumer_key': '##########',
+        'consumer_secret': '##########',
+        'id': authomatic.provider_id(),
+        'scope': oauth2.Twitter.user_info_scope,
+        '_name': 'Twitter OAuth2',
+        '_apis': {
+            'Get your profile': ('GET', 'https://api.twitter.com/2/users/me'),
+        },
 }
 
 # Concatenate the configs.

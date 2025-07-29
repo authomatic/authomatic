@@ -61,7 +61,7 @@ Features
   * |oauth2|_ providers: **Amazon**, **Behance**, **Bitly**, **Cosm**,
     **DeviantART**, **Eventbrite**, **Facebook**, **Foursquare**,
     **GitHub**, **Google**, **LinkedIn**, **PayPal**, **Reddit**,
-    **Viadeo**, **VK**, **WindowsLive**, **Yammer** and **Yandex**.
+    **Viadeo**, **VK**, **WindowsLive**, **Twitter** , **Yammer** and **Yandex**.
   * |pyopenid|_ and |gae|_ based |openid|_.
 
 License
