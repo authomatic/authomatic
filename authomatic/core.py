@@ -24,7 +24,8 @@ from authomatic.exceptions import (
     SessionError,
 )
 from authomatic import six
-from authomatic.six.moves import urllib_parse as parse
+from  authomatic.six.moves import urllib_parse as parse
+import urllib
 
 
 # =========================================================================
@@ -50,7 +51,8 @@ def normalize_dict(dict_):
 
     """
 
-    return {k: v[0] if not isinstance(v, str) and len(v) == 1 else v for k, v in dict_.items()}
+    return dict([(k, v[0] if not isinstance(v, str) and len(v) == 1 else v)
+                 for k, v in list(dict_.items())])
 
 
 def items_to_dict(items):
@@ -74,7 +76,7 @@ def items_to_dict(items):
     return normalize_dict(dict(res))
 
 
-class Counter:
+class Counter(object):
     """
     A simple counter to be used in the config to generate unique `id` values.
     """
@@ -203,7 +205,8 @@ def resolve_provider_class(class_):
         # try to import class by string from providers module or by fully
         # qualified path
         return import_string(class_, True) or import_string(path)
-    return class_
+    else:
+        return class_
 
 
 def id_to_name(config, short_name):
@@ -225,7 +228,7 @@ def id_to_name(config, short_name):
         'No provider with id={0} found in the config!'.format(short_name))
 
 
-class ReprMixin:
+class ReprMixin(object):
     """
     Provides __repr__() method with output *ClassName(arg1=value, arg2=value)*.
 
@@ -299,7 +302,7 @@ class Future(threading.Thread):
         passed to :data:`func`.
         """
 
-        super().__init__()
+        super(Future, self).__init__()
         self._func = func
         self._args = args
         self._kwargs = kwargs
@@ -332,7 +335,7 @@ class Future(threading.Thread):
         return self._result
 
 
-class Session:
+class Session(object):
     """
     A dictionary-like secure cookie session implementation.
     """
@@ -489,7 +492,7 @@ class Session:
             return None
 
         # 2. Decode
-        decoded = parse.unquote(encoded)
+        decoded = parse.unquote_plus(encoded)
 
         # 1. Deserialize
         deserialized = pickle.loads(decoded.encode('latin-1'))
@@ -751,7 +754,8 @@ class Credentials(ReprMixin):
 
         if self.expire_in < 0:
             return None
-        return datetime.datetime.fromtimestamp(self.expiration_time)
+        else:
+            return datetime.datetime.fromtimestamp(self.expiration_time)
 
     @property
     def valid(self):
@@ -759,7 +763,10 @@ class Credentials(ReprMixin):
         ``True`` if credentials are valid, ``False`` if expired.
         """
 
-        return self.expiration_time and self.expiration_time > int(time.time())
+        if self.expiration_time:
+            return self.expiration_time > int(time.time())
+        else:
+            return True
 
     def expire_soon(self, seconds):
         """
@@ -774,7 +781,10 @@ class Credentials(ReprMixin):
 
         """
 
-        return self.expiration_time and self.expiration_time < int(time.time()) + int(seconds)
+        if self.expiration_time:
+            return self.expiration_time < int(time.time()) + int(seconds)
+        else:
+            return False
 
     def refresh(self, force=False, soon=86400):
         """
@@ -888,7 +898,7 @@ class Credentials(ReprMixin):
         if isinstance(credentials, Credentials):
             return credentials
 
-        decoded = parse.unquote(credentials)
+        decoded = parse.unquote_plus(credentials)
 
         split = decoded.split('\n')
 
@@ -1056,7 +1066,7 @@ class LoginResult(ReprMixin):
         return self.provider.user if self.provider else None
 
     def to_dict(self):
-        return {'provider': self.provider, 'user': self.user, 'error': self.error}
+        return dict(provider=self.provider, user=self.user, error=self.error)
 
     def to_json(self, indent=4):
         return json.dumps(self, default=lambda obj: obj.to_dict(
@@ -1170,7 +1180,7 @@ class UserInfoResponse(Response):
     """
 
     def __init__(self, user, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(UserInfoResponse, self).__init__(*args, **kwargs)
 
         #: :class:`.User` instance.
         self.user = user
@@ -1232,8 +1242,9 @@ class RequestElements(tuple):
         """
         Query string of the request.
         """
-
-        return parse.urlencode(self.params)
+        return parse.urlencode(self.params, quote_via=urllib.parse.quote)
+        #urllib.request.pathname2url
+        #return urllib.parse.quote_plus(str(self.params))
 
     @property
     def full_url(self):
@@ -1244,16 +1255,14 @@ class RequestElements(tuple):
         return self.url + '?' + self.query_string
 
     def to_json(self):
-        return json.dumps({
-            'url': self.url,
-            'method': self.method,
-            'params': self.params,
-            'headers': self.headers,
-            'body': self.body
-        })
+        return json.dumps(dict(url=self.url,
+                               method=self.method,
+                               params=self.params,
+                               headers=self.headers,
+                               body=self.body))
 
 
-class Authomatic:
+class Authomatic(object):
     def __init__(
             self, config, secret, session_max_age=600, secure_cookie=False,
             session=None, session_save_method=None, report_errors=True,
@@ -1320,7 +1329,10 @@ class Authomatic:
         self.logging_level = logging_level
         self.prefix = prefix
         self._logger = logger or logging.getLogger(str(id(self)))
-        self._logger.setLevel(logging_level)
+
+        # Set logging level.
+        if logger is None:
+            self._logger.setLevel(logging_level)
 
     def login(self, adapter, provider_name, callback=None,
               session=None, session_saver=None, **kwargs):
@@ -1335,7 +1347,7 @@ class Authomatic:
         .. warning::
 
             The method redirects the **user** to the **provider** which in
-            turn redirects **them** back to the *request handler* where
+            turn redirects **him/her** back to the *request handler* where
             it has been called.
 
         :param str provider_name:
@@ -1365,7 +1377,10 @@ class Authomatic:
                 raise ConfigError('Provider name "{0}" not specified!'
                                   .format(provider_name))
 
-            if session is None or session_saver is None:
+            if not (session is None or session_saver is None):
+                session = session
+                session_saver = session_saver
+            else:
                 session = Session(adapter=adapter,
                                   secret=self.secret,
                                   max_age=self.session_max_age,
@@ -1397,8 +1412,9 @@ class Authomatic:
             # return login result
             return provider.login()
 
-        # Act like backend.
-        self.backend(adapter)
+        else:
+            # Act like backend.
+            self.backend(adapter)
 
     def credentials(self, credentials):
         """
@@ -1588,7 +1604,9 @@ class Authomatic:
 
         if return_json:
             return request_elements.to_json()
-        return request_elements
+
+        else:
+            return request_elements
 
     def backend(self, adapter):
         """

@@ -102,7 +102,7 @@ def _create_base_string(method, base, params):
     return _join_by_ampersand(method, base, normalized_qs)
 
 
-class BaseSignatureGenerator:
+class BaseSignatureGenerator(object):
     """
     Abstract base class for all signature generators.
     """
@@ -275,7 +275,7 @@ class OAuth1(providers.AuthorizationProvider):
 
         """
 
-        super().__init__(*args, **kwargs)
+        super(OAuth1, self).__init__(*args, **kwargs)
 
         self.request_token_params = self._kwarg(
             kwargs, 'request_token_params', {})
@@ -284,8 +284,7 @@ class OAuth1(providers.AuthorizationProvider):
     # Abstract properties
     # ========================================================================
 
-    @property
-    @abc.abstractmethod
+    @abc.abstractproperty
     def request_token_url(self):
         """
         :class:`str` URL where we can get the |oauth1| request token.
@@ -414,17 +413,17 @@ class OAuth1(providers.AuthorizationProvider):
             # Phase 2 after redirect with success
             self._log(
                 logging.INFO,
-                'Continuing OAuth 1.0a authorization procedure after '
-                'redirect.')
+                u'Continuing OAuth 1.0a authorization procedure after '
+                u'redirect.')
             token_secret = self._session_get('token_secret')
             if not token_secret:
                 raise FailureError(
-                    'Unable to retrieve token secret from storage!')
+                    u'Unable to retrieve token secret from storage!')
 
             # Get Access Token
             self._log(
                 logging.INFO,
-                'Fetching for access token from {0}.'.format(
+                u'Fetching for access token from {0}.'.format(
                     self.access_token_url))
 
             self.credentials.token = request_token
@@ -451,7 +450,7 @@ class OAuth1(providers.AuthorizationProvider):
                     url=self.access_token_url
                 )
 
-            self._log(logging.INFO, 'Got access token.')
+            self._log(logging.INFO, u'Got access token.')
             self.credentials.token = response.data.get('oauth_token', '')
             self.credentials.token_secret = response.data.get(
                 'oauth_token_secret', ''
@@ -476,7 +475,7 @@ class OAuth1(providers.AuthorizationProvider):
             # Phase 1 before redirect
             self._log(
                 logging.INFO,
-                'Starting OAuth 1.0a authorization procedure.')
+                u'Starting OAuth 1.0a authorization procedure.')
 
             # Fetch for request token
             request_elements = self.create_request_elements(
@@ -489,14 +488,14 @@ class OAuth1(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                'Fetching for request token and token secret.')
+                u'Fetching for request token and token secret.')
             response = self._fetch(*request_elements)
 
             # check if response status is OK
             if not self._http_status_in_category(response.status, 2):
                 raise FailureError(
-                    'Failed to obtain request token from {0}! HTTP status '
-                    'code: {1} content: {2}'.format(
+                    u'Failed to obtain request token from {0}! HTTP status '
+                    u'code: {1} content: {2}'.format(
                         self.request_token_url,
                         response.status,
                         response.content
@@ -525,12 +524,12 @@ class OAuth1(providers.AuthorizationProvider):
                 self._session_set('token_secret', token_secret)
             else:
                 raise FailureError(
-                    'Failed to obtain token secret from {0}!'.format(
+                    u'Failed to obtain token secret from {0}!'.format(
                         self.request_token_url),
                     original_message=response.content,
                     url=self.request_token_url)
 
-            self._log(logging.INFO, 'Got request token and token secret')
+            self._log(logging.INFO, u'Got request token and token secret')
 
             # Create User Authorization URL
             request_elements = self.create_request_elements(
@@ -542,7 +541,7 @@ class OAuth1(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                'Redirecting user to {0}.'.format(
+                u'Redirecting user to {0}.'.format(
                     request_elements.full_url))
 
             self.redirect(request_elements.full_url)
@@ -623,7 +622,7 @@ class Bitbucket(OAuth1):
         """
         Email is available in separate method so second request is needed.
         """
-        response = super()._access_user_info()
+        response = super(Bitbucket, self)._access_user_info()
 
         response.data.setdefault("email", None)
 
@@ -1094,7 +1093,7 @@ class Vimeo(OAuth1):
         Vimeo requires the user ID to access the user info endpoint, so we need
         to make two requests: one to get user ID and second to get user info.
         """
-        response = super()._access_user_info()
+        response = super(Vimeo, self)._access_user_info()
         uid = response.data.get('oauth', {}).get('user', {}).get('id')
         if uid:
             return self.access('http://vimeo.com/api/v2/{0}/info.json'
