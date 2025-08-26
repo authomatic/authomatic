@@ -17,8 +17,8 @@ def get_user_info_from_google(auth_code: str):
     token_url = "https://oauth2.googleapis.com/token"
     token_payload = {
         "code": auth_code,
-        "client_id": "1083110725843-3ddc9f5jr5sc3dr9sqcdf59h2a5nm2ts.apps.googleusercontent.com",
-        "client_secret": "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",
+        "client_id": "CLIENT_ID",
+        "client_secret": "CLIENT_SECRET",
         "redirect_uri": "https://localhost",
         "grant_type": "authorization_code",
     }

@@ -17,8 +17,8 @@ def get_user_info_from_github(auth_code: str):
     token_url = "https://github.com/login/oauth/access_token"
     token_payload = {
         "code": auth_code,
-        "client_id": "Ov23liWHsnFgT3XWVFrp",
-        "client_secret": "8def4ea2d890875e87cd130a7cea6ad1951f1ff6",
+        "client_id": "CLIENT_ID",
+        "client_secret": "CLIENT_SECRET",
         "redirect_uri": "http://localhost",
     }
 

@@ -18,8 +18,8 @@ def get_user_info_from_provider(auth_code: str):
     token_payload = {
         "grant_type": "authorization_code",
         "code": auth_code,
-        "client_id": "amzn1.application-oa2-client.60de1a02255d4792910699f7ba5a3d76",
-        "client_secret": "495857d85ebb163d1ca8e57e8b64674dd9ffddb4814f3a7121ec4e75eeff0a5e",
+        "client_id": "CLIENT_ID",
+        "client_secret": "CLIENT_SECRET",
         "redirect_uri": "https://localhost",
     }
 

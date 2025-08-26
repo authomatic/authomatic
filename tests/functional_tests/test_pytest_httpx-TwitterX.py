@@ -19,7 +19,7 @@ def get_user_info_from_twitter(auth_code: str, code_verifier: str):
         "grant_type": "authorization_code",
         "code": auth_code,
         "redirect_uri": "https://localhost",
-        "client_id": "eG5BY3FNSWFBQUlsN0hOREYwZDg6MTpjaQ",
+        "client_id": "CLIENT_ID",
         "code_verifier": code_verifier,
     }
 
