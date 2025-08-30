@@ -2180,7 +2180,7 @@ class TwitterX(OAuth2):
             params['scope'] = user_scope
             params['state'] = user_state
 #            params['code_challenge'] = authorization_code
-#            params['code_challenge_method'] = 'plain' 
+#            params['code_challenge_method'] = 'plain'
             request_elements = core.RequestElements(url, method, params, headers, body)
 
         if request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
