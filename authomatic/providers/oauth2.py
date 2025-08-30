@@ -28,6 +28,8 @@ Providers which implement the |oauth2|_ protocol.
     Yandex
     TwitterX
     BitBucket
+    Tumblr
+    Vimeo
 
 """
 
@@ -2300,6 +2302,172 @@ class Bitbucket(OAuth2):
         
         return request_elements
 
+class Tumblr(OAuth2):
+    """
+    Tumblr OAuth 2.0 provider.
+
+    This class handles the entire OAuth 2.0 authentication flow for Tumblr,
+    including authorization, token exchange, and user information retrieval.
+    """
+
+    # These are the official API endpoints for Tumblr's OAuth 2.0 flow.
+    # The authomatic library uses these attributes to handle the API requests.
+    AUTHORIZATION_URL = 'https://www.tumblr.com/oauth2/authorize'
+    TOKEN_URL = 'https://api.tumblr.com/v2/oauth2/token'
+    # The user info endpoint is a custom endpoint to get account information.
+    USERINFO_URL = 'https://api.tumblr.com/v2/user/info'
+
+    # The default scope requested for a basic user profile. The 'basic' scope is
+    # used to get a user's information.
+    default_scope = ['basic']
+
+    def user_parser(self, user, data):
+        """
+        Parses user data from the Tumblr API response.
+
+        Args:
+            user (User): The authomatic User object to populate.
+            data (dict): The JSON data returned by the USERINFO_URL.
+        """
+        if data and 'response' in data and 'user' in data['response']:
+            # The Tumblr API wraps the user data in a 'response' key.
+            user_data = data['response']['user']
+            user.id = user_data.get('name')
+            user.username = user_data.get('name')
+            user.name = user_data.get('name')
+            # Tumblr does not provide a standard "full name," so the username is used.
+            user.picture = user_data.get('avatar_url')
+            user.email = user_data.get('email')
+
+        return user
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        """
+        Parses the JSON response from the token endpoint to handle
+        potential non-standard or additional data in the credentials.
+
+        Args:
+            credentials (Credentials): The authomatic Credentials object to populate.
+            data (dict): The JSON data returned by the TOKEN_URL.
+        """
+        # This hook is used to parse any additional data from the token response.
+        # Tumblr's response is standard, so this is mostly a placeholder.
+        return credentials
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        """
+        A static method hook to pre-process the user data before it is
+        passed to the main `user_parser`.
+        
+        This is useful for normalizing data from the provider's API before
+        it is used to populate the authomatic User object.
+        """
+        # Tumblr's user data is nested within a 'response' key, which is
+        # handled by the main parser, but this hook can be used for custom logic.
+        return data
+
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        """
+        A filter for modifying elements of the requests to the provider.
+
+        This method is called for both the token request and the user info request.
+
+        Args:
+            request_type (str): Either 'token' or 'user_info'.
+            request_elements (dict): The elements of the request, e.g., headers or params.
+            credentials (Credentials): The authomatic Credentials object.
+        """
+        # This hook is useful for modifying request headers or data,
+        # for example, adding a custom header required by the provider.
+        return request_elements
+
+class Vimeo(OAuth2):
+    """
+    Vimeo OAuth 2.0 provider.
+
+    This class handles the entire OAuth 2.0 authentication flow for Vimeo,
+    including authorization, token exchange, and user information retrieval.
+    """
+
+    # These are the official API endpoints for Vimeo's OAuth 2.0 flow.
+    # The authomatic library uses these attributes to handle the API requests.
+    AUTHORIZATION_URL = 'https://api.vimeo.com/oauth/authorize'
+    TOKEN_URL = 'https://api.vimeo.com/oauth/access_token'
+    # The user info endpoint is used to get information about the authenticated user.
+    USERINFO_URL = 'https://api.vimeo.com/me'
+
+    # The default scope requested for a basic user profile. The 'public' scope is
+    # used to get a user's public information.
+    default_scope = ['public']
+
+    def user_parser(self, user, data):
+        """
+        Parses user data from the Vimeo API response.
+
+        Args:
+            user (User): The authomatic User object to populate.
+            data (dict): The JSON data returned by the USERINFO_URL.
+        """
+        if data:
+            user.id = data.get('uri')
+            user.username = data.get('name')
+            user.name = data.get('name')
+            # The API returns a 'pictures' object with various sizes.
+            # We'll get the largest available picture.
+            if 'pictures' in data and 'sizes' in data['pictures']:
+                sizes = data['pictures']['sizes']
+                # Sort sizes by width to find the largest one.
+                sizes.sort(key=lambda s: s['width'], reverse=True)
+                if sizes:
+                    user.picture = sizes[0]['link']
+            user.email = None  # Vimeo's user info endpoint doesn't return the email.
+
+        return user
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        """
+        Parses the JSON response from the token endpoint to handle
+        potential non-standard or additional data in the credentials.
+
+        Args:
+            credentials (Credentials): The authomatic Credentials object to populate.
+            data (dict): The JSON data returned by the TOKEN_URL.
+        """
+        # This hook is used to parse any additional data from the token response.
+        return credentials
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        """
+        A static method hook to pre-process the user data before it is
+        passed to the main `user_parser`.
+        
+        This is useful for normalizing data from the provider's API before
+        it is used to populate the authomatic User object.
+        """
+        # This hook can be used for custom logic if needed.
+        return data
+
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        """
+        A filter for modifying elements of the requests to the provider.
+
+        This method is called for both the token request and the user info request.
+
+        Args:
+            request_type (str): Either 'token' or 'user_info'.
+            request_elements (dict): The elements of the request, e.g., headers or params.
+            credentials (Credentials): The authomatic Credentials object.
+        """
+        # This hook is useful for modifying request headers or data,
+        # for example, adding a custom header required by the provider.
+        return request_elements
+
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers
 # don't change!
@@ -2326,4 +2494,6 @@ PROVIDER_ID_MAP = [
     Yandex,
     TwitterX,
     BitBucket,
+    Tumblr,
+    Vimeo,
 ]
