@@ -2390,6 +2390,7 @@ class Tumblr(OAuth2):
         # for example, adding a custom header required by the provider.
         return request_elements
 
+
 class Vimeo(OAuth2):
     """
     Vimeo OAuth 2.0 provider.
