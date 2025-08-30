@@ -2307,6 +2307,7 @@ class Bitbucket(OAuth2):
 
         return request_elements
 
+
 class Tumblr(OAuth2):
     """
     Tumblr OAuth 2.0 provider.
