@@ -2304,7 +2304,7 @@ class Bitbucket(OAuth2):
             if 'params' in request_elements:
                 request_elements['params']['client_id'] = credentials.consumer_key
                 request_elements['params']['client_secret'] = credentials.consumer_secret
-        
+
         return request_elements
 
 class Tumblr(OAuth2):
