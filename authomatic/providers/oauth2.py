@@ -2189,7 +2189,7 @@ class TwitterX(OAuth2):
 #            params['code_verifier']= authorization_code
             request_elements = core.RequestElements(
                 url, method, params, headers, body)
-        
+
         if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             url, method, params, headers, body = request_elements
             # Protected resource request.
