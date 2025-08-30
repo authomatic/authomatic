@@ -2146,7 +2146,7 @@ class TwitterX(OAuth2):
         def make_user(user, data):
             return super(TwitterX, self)._x_user_parser(user, data)
 
-        user = make_user(user_data, user_data)    
+        user = make_user(user_data, user_data)
         if response.status == 200:
             self._update_or_create_user(response.data, self.credentials)
         return response
