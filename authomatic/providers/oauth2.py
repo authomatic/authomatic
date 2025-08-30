@@ -2475,6 +2475,7 @@ class Vimeo(OAuth2):
         # for example, adding a custom header required by the provider.
         return request_elements
 
+
 class Yahoo(OAuth2):
     """
     Yahoo OAuth 2.0 provider.
