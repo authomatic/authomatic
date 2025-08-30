@@ -2200,7 +2200,7 @@ class TwitterX(OAuth2):
                 headers.update({'Authorization': f'Bearer {credentials.token}'})
 
         return request_elements
-            
+
     
     @staticmethod
     def _x_user_parser(user, data):
