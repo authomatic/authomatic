@@ -2253,7 +2253,7 @@ class Bitbucket(OAuth2):
                 avatar = links.get('avatar')
                 if avatar:
                     user.picture = avatar.get('href')
-        
+
         return user
 
     @classmethod
