@@ -26,6 +26,8 @@ Providers which implement the |oauth2|_ protocol.
     WindowsLive
     Yammer
     Yandex
+    TwitterX
+    BitBucket
 
 """
 
@@ -2203,6 +2205,101 @@ class Twitter(OAuth2):
 
         return user
 
+class Bitbucket(OAuth2):
+    """
+    Bitbucket OAuth 2.0 provider.
+
+    This class handles the entire OAuth 2.0 authentication flow for Bitbucket,
+    including authorization, token exchange, and user information retrieval.
+    """
+
+    # These are the official API endpoints for Bitbucket's OAuth 2.0 flow.
+    # The authomatic library uses these attributes to handle the API requests.
+    AUTHORIZATION_URL = 'https://bitbucket.org/site/oauth2/authorize'
+    TOKEN_URL = 'https://bitbucket.org/site/oauth2/access_token'
+    USERINFO_URL = 'https://api.bitbucket.org/2.0/user'
+
+    # The default scope requested for a basic user profile.
+    # The 'account' scope is required to access the user info endpoint.
+    default_scope = ['account']
+    
+    # Bitbucket does not require PKCE, so this can be set to False.
+    # Note: If you need a refresh token, you may need to add the 'offline.access' scope.
+    pkce_required = False
+
+    def user_parser(self, user, data):
+        """
+        Parses user data from the Bitbucket API response.
+
+        Args:
+            user (User): The authomatic User object to populate.
+            data (dict): The JSON data returned by the USERINFO_URL.
+        """
+        # The Bitbucket API v2 user endpoint returns the user data directly.
+        if data:
+            user.id = data.get('uuid')
+            user.username = data.get('username')
+            user.name = data.get('display_name')
+            # The API also provides an avatar link, which can be useful.
+            links = data.get('links')
+            if links:
+                avatar = links.get('avatar')
+                if avatar:
+                    user.picture = avatar.get('href')
+        
+        return user
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        """
+        Parses the JSON response from the token endpoint to handle
+        potential non-standard or additional data in the credentials.
+
+        Args:
+            credentials (Credentials): The authomatic Credentials object to populate.
+            data (dict): The JSON data returned by the TOKEN_URL.
+        """
+        # This is a hook to parse additional data from the token response.
+        # It's useful if the provider returns extra fields not covered by the
+        # standard OAuth2 flow.
+        return credentials
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        """
+        A static method hook to pre-process the user data before it is
+        passed to the main `user_parser`.
+        
+        This is useful for normalizing data from the provider's API before
+        it is used to populate the authomatic User object.
+        """
+        # Bitbucket's user data is already in a clean format, so we can
+        # simply return the data as is.
+        return data
+
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        """
+        A filter for modifying elements of the requests to the provider.
+
+        This method is called for both the token request and the user info request.
+
+        Args:
+            request_type (str): Either 'token' or 'user_info'.
+            request_elements (dict): The elements of the request, e.g., headers or params.
+            credentials (Credentials): The authomatic Credentials object.
+        """
+        # This hook is useful for modifying request headers or data,
+        # for example, adding a custom header required by the provider.
+        if request_type == 'token':
+            # Bitbucket requires client_id and client_secret to be in the request body
+            # instead of the standard Basic Auth header. This ensures the correct format.
+            if 'params' in request_elements:
+                request_elements['params']['client_id'] = credentials.consumer_key
+                request_elements['params']['client_secret'] = credentials.consumer_secret
+        
+        return request_elements
+
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers
 # don't change!
@@ -2228,4 +2325,5 @@ PROVIDER_ID_MAP = [
     Yammer,
     Yandex,
     TwitterX,
+    BitBucket,
 ]
