@@ -30,6 +30,7 @@ Providers which implement the |oauth2|_ protocol.
     BitBucket
     Tumblr
     Vimeo
+    Yahoo
 
 """
 
@@ -2468,6 +2469,101 @@ class Vimeo(OAuth2):
         # for example, adding a custom header required by the provider.
         return request_elements
 
+class Yahoo(OAuth2):
+    """
+    Yahoo OAuth 2.0 provider.
+
+    This class handles the entire OAuth 2.0 authentication flow for Yahoo,
+    including authorization, token exchange, and user information retrieval.
+    """
+
+    # These are the official API endpoints for Yahoo's OAuth 2.0 flow.
+    # The authomatic library uses these attributes to handle the API requests.
+    AUTHORIZATION_URL = 'https://api.login.yahoo.com/oauth2/request_auth'
+    TOKEN_URL = 'https://api.login.yahoo.com/oauth2/get_token'
+    # The user info endpoint is used to get information about the authenticated user.
+    # The 'profile' scope is required for this endpoint.
+    USERINFO_URL = 'https://social.yahooapis.com/v1/user/me/profile?format=json'
+
+    # The default scopes requested for a basic user profile. 'openid' and 'profile'
+    # are standard for getting user information. 'email' is for retrieving the email address.
+    default_scope = ['openid', 'profile', 'email']
+
+    def user_parser(self, user, data):
+        """
+        Parses user data from the Yahoo API response.
+
+        Args:
+            user (User): The authomatic User object to populate.
+            data (dict): The JSON data returned by the USERINFO_URL.
+        """
+        if data and 'profile' in data:
+            profile_data = data['profile']
+            
+            # The user's unique identifier is the 'guid' field.
+            user.id = profile_data.get('guid')
+            
+            # The display name is used for both username and name.
+            user.username = profile_data.get('username')
+            user.name = profile_data.get('displayName')
+            
+            # The 'image' field contains an object with different image sizes.
+            # We'll select the largest available image link.
+            if 'image' in profile_data:
+                user.picture = profile_data['image'].get('imageUrl')
+
+            # Yahoo returns a list of emails, we'll take the first one.
+            if 'emails' in profile_data and profile_data['emails']:
+                for email_info in profile_data['emails']:
+                    if email_info.get('primary'):
+                        user.email = email_info.get('handle')
+                        break
+                if not user.email:
+                    user.email = profile_data['emails'][0].get('handle')
+        
+        return user
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        """
+        Parses the JSON response from the token endpoint to handle
+        potential non-standard or additional data in the credentials.
+
+        Args:
+            credentials (Credentials): The authomatic Credentials object to populate.
+            data (dict): The JSON data returned by the TOKEN_URL.
+        """
+        # This hook is used to parse any additional data from the token response.
+        return credentials
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        """
+        A static method hook to pre-process the user data before it is
+        passed to the main `user_parser`.
+        
+        This is useful for normalizing data from the provider's API before
+        it is used to populate the authomatic User object.
+        """
+        # This hook can be used for custom logic if needed.
+        return data
+
+    @classmethod
+    def _x_request_elements_filter(cls, request_type, request_elements, credentials):
+        """
+        A filter for modifying elements of the requests to the provider.
+
+        This method is called for both the token request and the user info request.
+
+        Args:
+            request_type (str): Either 'token' or 'user_info'.
+            request_elements (dict): The elements of the request, e.g., headers or params.
+            credentials (Credentials): The authomatic Credentials object.
+        """
+        # This hook is useful for modifying request headers or data,
+        # for example, adding a custom header required by the provider.
+        return request_elements
+
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers
 # don't change!
@@ -2496,4 +2592,5 @@ PROVIDER_ID_MAP = [
     BitBucket,
     Tumblr,
     Vimeo,
+    Yahoo,
 ]
