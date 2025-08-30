@@ -2164,8 +2164,8 @@ class TwitterX(OAuth2):
 
     @classmethod
     def _x_request_elements_filter(cls, request_type, request_elements, credentials):
-        #Twitter needs to rearrange the param in the redirect url for authorization.
-#        authorization_code = 'rsC9arN7WM'
+        # Twitter needs to rearrange the param in the redirect url for authorization.
+        # authorization_code = 'rsC9arN7WM'
         headers = {}
         if request_type == cls.USER_AUTHORIZATION_REQUEST_TYPE:
             url, method, params, headers, body = request_elements
