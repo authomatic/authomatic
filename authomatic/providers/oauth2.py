@@ -2140,8 +2140,6 @@ class TwitterX(OAuth2):
 
         def parent_access(url):
             return super(TwitterX, self).access(url, **kwargs)
-
-
         response = parent_access(url)
         user_data = response.data
         def make_user(user, data):
