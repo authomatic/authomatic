@@ -2201,7 +2201,7 @@ class TwitterX(OAuth2):
 
         return request_elements
 
-    
+
     @staticmethod
     def _x_user_parser(user, data):
         _data = data.get('data')
