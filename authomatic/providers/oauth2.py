@@ -66,6 +66,11 @@ __all__ = [
     "WindowsLive",
     "Yammer",
     "Yandex",
+    "TwitterX",
+    "Bitbucket",
+    "Tumblr",
+    "Vimeo",
+    "Yahoo",
 ]
 
 
@@ -2084,11 +2089,11 @@ class Yandex(OAuth2):
         return user
 
 
-class Twitter(OAuth2):
+class TwitterX(OAuth2):
     """
     Twitter |oauth2| provider.
 
-    * Dashboard: https://developer.twitter.com/en/docs/authentication/oauth-2-0 
+    * Dashboard: https://developer.twitter.com/en/docs/authentication/oauth-2-0
     * Docs:  https://developer.twitter.com/en/docs/authentication/oauth-2-0
     * API: https://developer.twitter.com/en/docs/authentication/oauth-2-0
 
@@ -2134,13 +2139,13 @@ class Twitter(OAuth2):
     def access(self, url, **kwargs):
 
         def parent_access(url):
-            return super(Twitter, self).access(url, **kwargs)
+            return super(TwitterX, self).access(url, **kwargs)
 
         
         response = parent_access(url)
         user_data = response.data
         def make_user(user, data):
-            return super(Twitter, self)._x_user_parser(user, data)
+            return super(TwitterX, self)._x_user_parser(user, data)
 
         user = make_user(user_data, user_data)    
         if response.status == 200:
@@ -2193,7 +2198,7 @@ class Twitter(OAuth2):
             # http://tools.ietf.org/html/rfc6749#section-7.1
             if credentials.token_type == cls.BEARER:
                 # http://tools.ietf.org/html/rfc6750#section-2.1
-                headers.update({'Authorization': 'Bearer {0}'.format(credentials.token)})
+                headers.update({'Authorization': f'Bearer {credentials.token}'})
 
         return request_elements
             
@@ -2589,7 +2594,7 @@ PROVIDER_ID_MAP = [
     Yammer,
     Yandex,
     TwitterX,
-    BitBucket,
+    Bitbucket,
     Tumblr,
     Vimeo,
     Yahoo,
