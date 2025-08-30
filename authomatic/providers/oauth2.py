@@ -2229,7 +2229,7 @@ class Bitbucket(OAuth2):
     # The default scope requested for a basic user profile.
     # The 'account' scope is required to access the user info endpoint.
     default_scope = ['account']
-    
+
     # Bitbucket does not require PKCE, so this can be set to False.
     # Note: If you need a refresh token, you may need to add the 'offline.access' scope.
     pkce_required = False
