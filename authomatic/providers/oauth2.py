@@ -2142,6 +2142,7 @@ class TwitterX(OAuth2):
             return super(TwitterX, self).access(url, **kwargs)
         response = parent_access(url)
         user_data = response.data
+
         def make_user(user, data):
             return super(TwitterX, self)._x_user_parser(user, data)
 
