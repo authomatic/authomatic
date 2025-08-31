@@ -2513,7 +2513,7 @@ class Yahoo(OAuth2):
             # The display name is used for both username and name.
             user.username = profile_data.get('username')
             user.name = profile_data.get('displayName')
-            
+
             # The 'image' field contains an object with different image sizes.
             # We'll select the largest available image link.
             if 'image' in profile_data:
