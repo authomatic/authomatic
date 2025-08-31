@@ -2506,7 +2506,7 @@ class Yahoo(OAuth2):
         """
         if data and 'profile' in data:
             profile_data = data['profile']
-            
+
             # The user's unique identifier is the 'guid' field.
             user.id = profile_data.get('guid')
             
