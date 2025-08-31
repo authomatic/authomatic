@@ -2571,6 +2571,7 @@ class Yahoo(OAuth2):
         # for example, adding a custom header required by the provider.
         return request_elements
 
+
 # The provider type ID is generated from this list's indexes!
 # Always append new providers at the end so that ids of existing providers
 # don't change!
