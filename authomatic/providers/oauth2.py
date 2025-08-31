@@ -2548,7 +2548,7 @@ class Yahoo(OAuth2):
         """
         A static method hook to pre-process the user data before it is
         passed to the main `user_parser`.
-        
+
         This is useful for normalizing data from the provider's API before
         it is used to populate the authomatic User object.
         """
