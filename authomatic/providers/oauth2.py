@@ -2527,7 +2527,7 @@ class Yahoo(OAuth2):
                         break
                 if not user.email:
                     user.email = profile_data['emails'][0].get('handle')
-        
+
         return user
 
     @classmethod
