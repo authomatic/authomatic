@@ -2509,7 +2509,7 @@ class Yahoo(OAuth2):
 
             # The user's unique identifier is the 'guid' field.
             user.id = profile_data.get('guid')
-            
+
             # The display name is used for both username and name.
             user.username = profile_data.get('username')
             user.name = profile_data.get('displayName')
