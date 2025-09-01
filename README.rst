@@ -20,7 +20,6 @@
 Authomatic
 ==========
 
-.. image:: https://travis-ci.org/authomatic/authomatic.svg?branch=master
     :target: https://travis-ci.org/authomatic/authomatic
 
 **Authomatic**
@@ -100,3 +99,41 @@ Changelog
 =========
 
 The `Changelog is part of the documentation <https://authomatic.github.io/authomatic/changelog.html>`_.
+
+Google Summer of Code 2025:
+  Contributor: Andrew Himelstieb
+  Mentor: Jens Klein
+    This package was included in the GSOC '25 program with the Plone Foundation. This 2.0 release was a major aspect to the project.
+
+This 2.0 Release contains major breaking changes that will be incorperated into the official changelog soon.
+These changes include the following: 
+  - Removed Travic CI 
+  - Removed Python Support for version < Python 3.10
+    - Pyupgrade
+    - Ruff
+  - Removed Support for Deprecated OAuth1 authentication Flow 
+   - Includes all OAuth1 Provders:
+    - Bitbucket
+    - Flickr
+    - Meetup
+    - Plurk
+    - Twitter
+    - Tumblr
+    - UbuntuOne
+    - Vimeo
+    - Xero
+    - Xing
+    - Yahoo
+   - Removed OpenID support
+   - The following Providers were updated to OAuth2 Authenication FLow and classes added to OAuth2.py:
+    - Bitbucket
+    - Twitter/x
+    - Tumblr
+    - Vimeo
+    - Yahoo
+  - New Functional Tests were created using pytest-httpx to mock the authentication flow in a ping-pong fashion for:
+   - Google
+   - Github
+   - Facebook
+   - Twitter/x
+   - Amazon
