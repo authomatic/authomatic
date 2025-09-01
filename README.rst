@@ -107,10 +107,8 @@ Google Summer of Code 2025:
 
 This 2.0 Release contains major breaking changes that will be incorperated into the official changelog soon.
 These changes include the following: 
-  - Removed Travic CI 
+  - Removed Travis CI 
   - Removed Python Support for version < Python 3.10
-    - Pyupgrade
-    - Ruff
   - Removed Support for Deprecated OAuth1 authentication Flow 
    - Includes all OAuth1 Provders:
     - Bitbucket
