@@ -25,6 +25,7 @@ from authomatic.exceptions import (
 from authomatic import six
 from authomatic.six.moves import urllib_parse as parse
 
+import urllib
 
 # =========================================================================
 # Global variables !!!
@@ -493,7 +494,7 @@ class Session:
             return None
 
         # 2. Decode
-        decoded = parse.unquote(encoded)
+        decoded = parse.unquote_plus(encoded)
 
         # 1. Deserialize
         deserialized = pickle.loads(decoded.encode("latin-1"))
@@ -916,7 +917,7 @@ class Credentials(ReprMixin):
         if isinstance(credentials, Credentials):
             return credentials
 
-        decoded = parse.unquote(credentials)
+        decoded = parse.unquote_plus(credentials)
 
         split = decoded.split("\n")
 

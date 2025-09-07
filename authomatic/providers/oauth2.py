@@ -2165,7 +2165,6 @@ class TwitterX(OAuth2):
     @classmethod
     def _x_request_elements_filter(cls, request_type, request_elements, credentials):
         # Twitter needs to rearrange the param in the redirect url for authorization.
-        # authorization_code = 'rsC9arN7WM'
         headers = {}
         if request_type == cls.USER_AUTHORIZATION_REQUEST_TYPE:
             url, method, params, headers, body = request_elements
@@ -2179,16 +2178,16 @@ class TwitterX(OAuth2):
             params['redirect_uri'] = redirect_uri
             params['scope'] = user_scope
             params['state'] = user_state
-#            params['code_challenge'] = authorization_code
-#            params['code_challenge_method'] = 'plain'
+            params['code_challenge'] = 'challenge'
+            params['code_challenge_method'] = 'plain'
             request_elements = core.RequestElements(url, method, params, headers, body)
 
         if request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
             url, method, params, headers, body = request_elements
-            params['grant_type'] = 'access_token'
-#            params['code_verifier']= authorization_code
+            params['grant_type'] = "authorization_code"
+            params['code_verifier']= 'challenge'
             request_elements = core.RequestElements(
-                url, method, params, headers, body)
+                url, method, params, headers, body) 
 
         if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             url, method, params, headers, body = request_elements

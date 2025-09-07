@@ -23,7 +23,7 @@ Authomatic
  Google Summer of Code 2025:
   - Contributor: Andrew Himelstieb
   - Mentor: Jens Klein
- - This package was included in the GSOC '25 program with the Plone Foundation. This 2.0 release was a major aspect to the project.
+  - This package was included in the GSOC '25 program with the Plone Foundation. This 2.0 release was a major aspect to the project.
 
 This 2.0 Release contains major breaking changes that will be incorperated into the official changelog soon.
 These changes include the following: 
