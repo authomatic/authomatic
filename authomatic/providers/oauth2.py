@@ -2187,7 +2187,7 @@ class TwitterX(OAuth2):
             params['grant_type'] = 'authorization_code'
             params['code_verifier'] = 'challenge'
             request_elements = core.RequestElements(
-                url, method, params, headers, body) 
+                url, method, params, headers, body)
 
         if request_type == cls.PROTECTED_RESOURCE_REQUEST_TYPE:
             url, method, params, headers, body = request_elements
