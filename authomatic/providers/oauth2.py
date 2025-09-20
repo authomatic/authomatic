@@ -2184,8 +2184,8 @@ class TwitterX(OAuth2):
 
         if request_type == cls.ACCESS_TOKEN_REQUEST_TYPE:
             url, method, params, headers, body = request_elements
-            params['grant_type'] = "authorization_code"
-            params['code_verifier']= 'challenge'
+            params['grant_type'] = 'authorization_code'
+            params['code_verifier'] = 'challenge'
             request_elements = core.RequestElements(
                 url, method, params, headers, body) 
 
