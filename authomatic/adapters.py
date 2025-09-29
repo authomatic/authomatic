@@ -56,7 +56,7 @@ respectively.
 """
 
 import abc
-
+import re
 
 
 class BaseAdapter:
@@ -176,7 +176,7 @@ class DjangoAdapter(BaseAdapter):
         self.response[key] = value
 
     def set_status(self, status):
-        status_code = status.split(' ', 1)[0]
+        status_code = status.split(" ", 1)[0]
         self.response.status_code = int(status_code)
 
 
@@ -276,7 +276,7 @@ class WerkzeugAdapter(BaseAdapter):
         self.response = response
 
     def write(self, value):
-        self.response.data = self.response.data.decode('utf-8') + value
+        self.response.data = self.response.data.decode("utf-8") + value
 
     def set_header(self, key, value):
         self.response.headers[key] = value
@@ -309,8 +309,9 @@ class TornadoAdapter(BaseAdapter):
 
         """
         _arguments = dict()
-        for k, v in self.request.arguments.iteritems():
-            _arguments[k] = v[0]
+        for k, v in self.request.arguments.items():
+            if v:  # Only process non-empty lists
+                _arguments[k] = v[0]
         return _arguments
 
     @property
@@ -335,7 +336,7 @@ class TornadoAdapter(BaseAdapter):
 
         """
         _cookies = dict()
-        for k, v in self.request.cookies.iteritems():
+        for k, v in self.request.cookies.items():
             _cookies[k] = v.OutputString().replace("authomatic=", "")
         return _cookies
 
@@ -370,7 +371,7 @@ class TornadoAdapter(BaseAdapter):
 
         """
         try:
-            status_code = re.findall(r'\d+', status)[0]
+            status_code = re.findall(r"\d+", status)[0]
         except Exception:
             status_code = 500
         self.request_handler.set_status(int(status_code), status)

@@ -67,6 +67,13 @@ ALL_APPS = {
         check_url=config.HOST_ALIAS,
         ssl=True,
     ),
+    'Tornado': liveandletdie.WsgirefSimpleServer(
+        os.path.join(EXAMPLES_DIR, 'tornado/functional_test/main.py'),
+        host=config.HOST,
+        port=config.PORT,
+        check_url=config.HOST_ALIAS,
+        ssl=True,
+    ),
 }
 
 APPS = dict((k, v) for k, v in ALL_APPS.items() if
