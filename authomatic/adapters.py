@@ -56,6 +56,7 @@ respectively.
 """
 
 import abc
+import re
 
 
 class BaseAdapter:
@@ -175,7 +176,7 @@ class DjangoAdapter(BaseAdapter):
         self.response[key] = value
 
     def set_status(self, status):
-        status_code = status.split(' ', 1)[0]
+        status_code = status.split(" ", 1)[0]
         self.response.status_code = int(status_code)
 
 
@@ -275,10 +276,102 @@ class WerkzeugAdapter(BaseAdapter):
         self.response = response
 
     def write(self, value):
-        self.response.data = self.response.data.decode('utf-8') + value
+        self.response.data = self.response.data.decode("utf-8") + value
 
     def set_header(self, key, value):
         self.response.headers[key] = value
 
     def set_status(self, status):
         self.response.status = status
+
+
+class TornadoAdapter(BaseAdapter):
+    """
+    Adapter for |tornado|_ framework.
+
+    Inherits from the :class:`.BaseAdapter`.
+
+    """
+
+    def __init__(self, request_handler, return_url=None):
+        self.return_url = return_url
+        self.request_handler = request_handler
+        self.request = self.request_handler.request
+
+    @property
+    def params(self):
+        """
+        Must return a :class:`dict` of all request
+        parameters of any HTTP method.
+
+        :returns:
+            :class:`dict`
+
+        """
+        _arguments = dict()
+        for k, v in self.request.arguments.items():
+            if v:  # Only process non-empty lists
+                _arguments[k] = v[0]
+        return _arguments
+
+    @property
+    def url(self):
+        """
+        Must return the url of the actual request including path
+        but without query and fragment
+
+        :returns:
+            :class:`str`
+
+        """
+        return self.return_url or self.request.full_url()
+
+    @property
+    def cookies(self):
+        """
+        Must return cookies as a :class:`dict`.
+
+        :returns:
+            :class:`dict`
+
+        """
+        _cookies = dict()
+        for k, v in self.request.cookies.items():
+            _cookies[k] = v.OutputString().replace("authomatic=", "")
+        return _cookies
+
+    def write(self, value):
+        """
+        Must write specified value to response.
+
+        :param str value:
+            String to be written to response.
+
+        """
+        self.request_handler.write(value)
+
+    def set_header(self, key, value):
+        """
+        Must set response headers to ``Key: value``.
+
+        :param str key:
+            Header name.
+
+        :param str value:
+            Header value.
+        """
+        self.request_handler.set_header(key, value)
+
+    def set_status(self, status):
+        """
+        Must set the response status e.g. ``'302 Found'``.
+
+        :param str status:
+            The HTTP response status.
+
+        """
+        try:
+            status_code = re.findall(r"\d+", status)[0]
+        except Exception:
+            status_code = 500
+        self.request_handler.set_status(int(status_code), status)
