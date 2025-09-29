@@ -19,7 +19,7 @@ Yo will need the ``consumer_key`` and ``consumer_secret`` which you can get
 
    Facebook and other |oauth2| providers require a **redirect URI**
    which should be the URL of the *login request handler*
-   which we will create in this tutorial and whose walue in our case will be
+   which we will create in this tutorial and whose value in our case will be
    ``https://[hostname]:[port]/login/fb`` for Facebook.
 
 .. literalinclude:: ../../../examples/gae/simple/config-template.py
@@ -52,7 +52,7 @@ and one of the *provider names* that you defined in the :doc:`/reference/config`
 which we get from the URL path of the request.
 
 The method will redirect the **user** to the specified **provider**
-to prompt **him/her** for consent and redirect **him/her** back to this handler.
+to prompt **them** for consent and redirect **them** back to this handler.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
@@ -89,7 +89,7 @@ Seems like we're done, but we can do more:
 
 If there are :class:`credentials <.core.Credentials>` the **user** has logged in with an
 :class:`AuthorizationProvider <.providers.AuthorizationProvider>`
-i.e. |oauth1|_ or |oauth2|_ and we can access **his/her** **protected resources**.
+i.e. |oauth1|_ or |oauth2|_ and we can access **their** **protected resources**.
 
 .. literalinclude:: ../../../examples/gae/simple/main.py
    :language: python
@@ -142,7 +142,7 @@ Create links to our *Login* handler.
    :language: python
    :lines: 115-116
 
-Create **OpenID** forms where the **user** can specify **his/her** **claimed ID**.
+Create **OpenID** forms where the **user** can specify **their** **claimed ID**.
 The library by default extracts the identifier from the query string ``id`` parameter,
 but you can change its name to whatever you want.
 

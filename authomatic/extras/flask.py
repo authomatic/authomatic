@@ -35,7 +35,7 @@ class FlaskAuthomatic(Authomatic):
                 adapter = WerkzeugAdapter(request, self.response)
                 login_kwargs.setdefault('session', session)
                 login_kwargs.setdefault('session_saver', self.session_saver)
-                self.result = super(FlaskAuthomatic, self).login(
+                self.result = super().login(
                     adapter,
                     *login_args,
                     **login_kwargs)
@@ -44,4 +44,5 @@ class FlaskAuthomatic(Authomatic):
         return decorator
 
     def session_saver(self):
-        session.modified = True
+        # FIXME: pylint false positive - see https://github.com/pallets/flask/issues/4020
+        session.modified = True  # pylint: disable=assigning-non-slot

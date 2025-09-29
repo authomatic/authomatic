@@ -97,7 +97,7 @@ and the ``provider_name`` URL variable.
 The :class:`.DjangoAdapter` needs instances of :class:`django.http.HttpRequest`
 and :class:`django.http.HttpResponse`.
 The method will redirect the **user** to the specified **provider**
-to prompt **him/her** for consent and redirect **him/her** back to this view.
+to prompt **them** for consent and redirect **them** back to this view.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
    :language: python
@@ -134,7 +134,7 @@ Seems like we're done, but we can do more:
 
 If there are :class:`credentials <.core.Credentials>` the **user** has logged in with an
 :class:`AuthorizationProvider <.providers.AuthorizationProvider>`
-i.e. |oauth1|_ or |oauth2|_ and we can access **his/her** **protected resources**.
+i.e. |oauth1|_ or |oauth2|_ and we can access **their** **protected resources**.
 
 .. literalinclude:: ../../../examples/django/example/simple/views.py
    :language: python

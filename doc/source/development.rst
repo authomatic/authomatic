@@ -94,7 +94,7 @@ Compile the documentation with this commands:
    (py27)$ make html
 
 The documentation will be compiled to ``./doc/build/html``.
-For easy deploiment to `Github Pages <https://pages.github.com/>`__,
+For easy deployment to `Github Pages <https://pages.github.com/>`__,
 the ``./doc/build/html`` directory is actually a clone of the **origin** of the
 actual project repository that you cloned from (your fork) with the
 **gh-pages** branch checked out.

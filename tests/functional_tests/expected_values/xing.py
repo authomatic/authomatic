@@ -75,7 +75,7 @@ CONFIG = {
     # Case insensitive
     'content_should_not_contain':
         conf.no_nickname,
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         '_expiration_time': None,
         '_expire_in': True,

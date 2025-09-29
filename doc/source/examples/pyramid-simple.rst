@@ -63,7 +63,7 @@ and one of the *provider names* that you defined in the :doc:`/reference/config`
 which we get from the URL path of the request.
 |pyramid| is based on |webob|_ so the :class:`.WebObAdapter` will do the job.
 The method will redirect the **user** to the specified **provider**
-to prompt **him/her** for consent and redirect **him/her** back to this view.
+to prompt **them** for consent and redirect **them** back to this view.
 
 .. literalinclude:: ../../../examples/pyramid/simple/main.py
    :language: python
@@ -100,7 +100,7 @@ Seems like we're done, but we can do more:
 
 If there are :class:`.Credentials` the **user** has logged in with an
 :class:`.AuthorizationProvider` i.e. |oauth1|_ or |oauth2|_
-and we can access **his/her** **protected resources**.
+and we can access **their** **protected resources**.
 
 .. literalinclude:: ../../../examples/pyramid/simple/main.py
    :language: python

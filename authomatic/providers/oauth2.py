@@ -19,6 +19,7 @@ Providers which implement the |oauth2|_ protocol.
     GitHub
     Google
     LinkedIn
+    MicrosoftOnline
     PayPal
     Reddit
     Viadeo
@@ -42,8 +43,8 @@ import authomatic.core as core
 
 __all__ = ['OAuth2', 'Amazon', 'Behance', 'Bitly', 'Cosm', 'DeviantART',
            'Eventbrite', 'Facebook', 'Foursquare', 'GitHub', 'Google',
-           'LinkedIn', 'PayPal', 'Reddit', 'Viadeo', 'VK', 'WindowsLive',
-           'Yammer', 'Yandex']
+           'LinkedIn', 'MicrosoftOnline', 'PayPal', 'Reddit', 'Viadeo',
+           'VK', 'WindowsLive', 'Yammer', 'Yandex']
 
 
 class OAuth2(providers.AuthorizationProvider):
@@ -82,15 +83,23 @@ class OAuth2(providers.AuthorizationProvider):
             *offline access token*.
             Default is ``False``.
 
+        :param str certificate_file:
+            Certificate file to employ for HTTPS connection where needed.
+
+        :param bool ssl_verify:
+            Certificate file to employ for HTTPS connection where needed.
+
         As well as those inherited from :class:`.AuthorizationProvider`
         constructor.
 
         """
 
-        super(OAuth2, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.scope = self._kwarg(kwargs, 'scope', [])
         self.offline = self._kwarg(kwargs, 'offline', False)
+        self.cert = self._kwarg(kwargs, 'certificate_file', None)
+        self.verify = self._kwarg(kwargs, 'ssl_verify', True)
 
     # ========================================================================
     # Internal methods
@@ -105,8 +114,6 @@ class OAuth2(providers.AuthorizationProvider):
             List of scopes.
 
         """
-
-        # pylint:disable=no-self-use
 
         # Most providers accept csv scope.
         return ','.join(scope) if scope else ''
@@ -280,8 +287,7 @@ class OAuth2(providers.AuthorizationProvider):
             # should be str compatible.
             return json.loads(base64.urlsafe_b64decode(
                 unquote(str(state))).decode('utf-8'))[param]
-        else:
-            return state if param == 'csrf' else ''
+        return state if param == 'csrf' else ''
 
     def refresh_credentials(self, credentials):
         """
@@ -310,8 +316,10 @@ class OAuth2(providers.AuthorizationProvider):
             method='POST'
         )
 
-        self._log(logging.INFO, u'Refreshing credentials.')
-        response = self._fetch(*request_elements)
+        self._log(logging.INFO, 'Refreshing credentials.')
+        response = self._fetch(*request_elements,
+                               certificate_file=self.cert,
+                               ssl_verify=self.verify)
 
         # We no longer need consumer info.
         credentials.consumer_key = None
@@ -356,30 +364,30 @@ class OAuth2(providers.AuthorizationProvider):
 
                 self._log(
                     logging.INFO,
-                    u'Continuing OAuth 2.0 authorization procedure after '
-                    u'redirect.')
+                    'Continuing OAuth 2.0 authorization procedure after '
+                    'redirect.')
 
                 # validate CSRF token
                 if self.supports_csrf_protection:
                     self._log(
                         logging.INFO,
-                        u'Validating request by comparing request state with '
-                        u'stored state.')
+                        'Validating request by comparing request state with '
+                        'stored state.')
                     stored_csrf = self._session_get('csrf')
 
                     state_csrf = self.decode_state(state, 'csrf')
                     if not stored_csrf:
-                        raise FailureError(u'Unable to retrieve stored state!')
-                    elif stored_csrf != state_csrf:
+                        raise FailureError('Unable to retrieve stored state!')
+                    if stored_csrf != state_csrf:
                         raise FailureError(
-                            u'The returned state csrf cookie "{0}" doesn\'t '
-                            u'match with the stored state!'.format(
+                            'The returned state csrf cookie "{0}" doesn\'t '
+                            'match with the stored state!'.format(
                                 state_csrf
                             ),
                             url=self.user_authorization_url)
-                    self._log(logging.INFO, u'Request is valid.')
+                    self._log(logging.INFO, 'Request is valid.')
                 else:
-                    self._log(logging.WARN, u'Skipping CSRF validation!')
+                    self._log(logging.WARN, 'Skipping CSRF validation!')
 
             elif not self.user_authorization_url:
                 # =============================================================
@@ -388,13 +396,13 @@ class OAuth2(providers.AuthorizationProvider):
 
                 self._log(
                     logging.INFO,
-                    u'Starting OAuth 2.0 authorization procedure without '
-                    u'user authorization redirect.')
+                    'Starting OAuth 2.0 authorization procedure without '
+                    'user authorization redirect.')
 
             # exchange authorization code for access token by the provider
             self._log(
                 logging.INFO,
-                u'Fetching access token from {0}.'.format(
+                'Fetching access token from {0}.'.format(
                     self.access_token_url))
 
             self.credentials.token = authorization_code
@@ -409,7 +417,9 @@ class OAuth2(providers.AuthorizationProvider):
                 headers=self.access_token_headers
             )
 
-            response = self._fetch(*request_elements)
+            response = self._fetch(*request_elements,
+                                   certificate_file=self.cert,
+                                   ssl_verify=self.verify)
             self.access_token_response = response
 
             access_token = response.data.get('access_token', '')
@@ -427,10 +437,10 @@ class OAuth2(providers.AuthorizationProvider):
                     status=response.status,
                     url=self.access_token_url)
 
-            self._log(logging.INFO, u'Got access token.')
+            self._log(logging.INFO, 'Got access token.')
 
             if refresh_token:
-                self._log(logging.INFO, u'Got refresh access token.')
+                self._log(logging.INFO, 'Got refresh access token.')
 
             # OAuth 2.0 credentials need access_token, refresh_token,
             # token_type and expire_in.
@@ -465,10 +475,9 @@ class OAuth2(providers.AuthorizationProvider):
             if error_reason and 'denied' in error_reason:
                 raise CancellationError(error_description,
                                         url=self.user_authorization_url)
-            else:
-                raise FailureError(
-                    error_description,
-                    url=self.user_authorization_url)
+            raise FailureError(
+                error_description,
+                url=self.user_authorization_url)
 
         elif (
                 not self.params
@@ -481,7 +490,7 @@ class OAuth2(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                u'Starting OAuth 2.0 authorization procedure.')
+                'Starting OAuth 2.0 authorization procedure.')
 
             csrf = ''
             if self.supports_csrf_protection:
@@ -492,7 +501,7 @@ class OAuth2(providers.AuthorizationProvider):
             else:
                 self._log(
                     logging.WARN,
-                    u'Provider doesn\'t support CSRF validation!')
+                    'Provider doesn\'t support CSRF validation!')
 
             request_elements = self.create_request_elements(
                 request_type=self.USER_AUTHORIZATION_REQUEST_TYPE,
@@ -508,7 +517,7 @@ class OAuth2(providers.AuthorizationProvider):
 
             self._log(
                 logging.INFO,
-                u'Redirecting user to {0}.'.format(
+                'Redirecting user to {0}.'.format(
                     request_elements.full_url))
 
             self.redirect(request_elements.full_url)
@@ -681,7 +690,7 @@ class Bitly(OAuth2):
     user_info_url = 'https://api-ssl.bitly.com/v3/user/info'
 
     def __init__(self, *args, **kwargs):
-        super(Bitly, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'grant_type' not in self.access_token_params:
@@ -789,7 +798,7 @@ class DeviantART(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(DeviantART, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'grant_type' not in self.access_token_params:
@@ -931,7 +940,7 @@ class Facebook(OAuth2):
         return request_elements
 
     def __init__(self, *args, **kwargs):
-        super(Facebook, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Handle special Facebook requirements to be able
         # to refresh the access token.
@@ -991,7 +1000,7 @@ class Facebook(OAuth2):
         params['fields'] = 'id,first_name,last_name,picture,email,gender,' + \
                            'timezone,location,birthday,locale'
 
-        return super(Facebook, self).access(url, params, **kwargs)
+        return super().access(url, params, **kwargs)
 
 
 class Foursquare(OAuth2):
@@ -1125,13 +1134,13 @@ class GitHub(OAuth2):
     .. note::
 
         GitHub API
-        `documentation <http://developer.github.com/v3/#user-agent-required>`_
-        says:
 
-            all API requests MUST include a valid ``User-Agent`` header.
+        Users may not have a public email address. In order to obtain the private email address, the
+        `documentation <https://developer.github.com/v3/users/emails/#list-email-addresses-for-a-user>`_
+        specifies to request ``user:email`` scope.
+         This allows the ``access`` function to scrape ``users/email`` API endpoint.
 
-        You can apply a default ``User-Agent`` header for all API calls in
-        the config like this:
+            You can set the ``user:email`` scope like this:
 
         .. code-block:: python
             :emphasize-lines: 6
@@ -1141,7 +1150,7 @@ class GitHub(OAuth2):
                     'class_': oauth2.GitHub,
                     'consumer_key': '#####',
                     'consumer_secret': '#####',
-                    'access_headers': {'User-Agent': 'Awesome-Octocat-App'},
+                    'scope': ['user:email']
                 }
             }
 
@@ -1199,6 +1208,38 @@ class GitHub(OAuth2):
         if data.get('token_type') == 'bearer':
             credentials.token_type = cls.BEARER
         return credentials
+
+    def access(self, url, **kwargs):
+        # https://developer.github.com/v3/#user-agent-required
+        # GitHub requires that all API requests MUST include a valid ``User-Agent`` header.
+        headers = kwargs["headers"] = kwargs.get("headers", {})
+        if not headers.get("User-Agent"):
+            headers["User-Agent"] = self.settings.config[self.name]["consumer_key"]
+
+        def parent_access(url):
+            return super().access(url, **kwargs)
+
+        response = parent_access(url)
+
+        # additional action to get email is required:
+        # https://developer.github.com/v3/users/emails/
+        if response.status == 200:
+            email_response = parent_access(url + "/emails")
+            if email_response.status == 200:
+                response.data["emails"] = email_response.data
+
+                # find first or primary email
+                primary_email = None
+                for item in email_response.data:
+                    is_primary = item["primary"]
+                    if not primary_email or is_primary:
+                        primary_email = item["email"]
+
+                    if is_primary:
+                        break
+
+                response.data["email"] = primary_email
+        return response
 
 
 class Google(OAuth2):
@@ -1259,7 +1300,7 @@ class Google(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(Google, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Handle special Google requirements to be able to refresh the access
         # token.
@@ -1415,6 +1456,83 @@ class LinkedIn(OAuth2):
         return user
 
 
+class MicrosoftOnline(OAuth2):
+    """
+    Microsoft Online |oauth2| provider.
+
+    Supported :class:`.User` properties:
+
+    * email
+    * first_name
+    * id
+    * last_name
+    * location
+    * name
+    * phone
+    * picture
+    * username
+
+    Unsupported :class:`.User` properties:
+
+    * birth_date
+    * city
+    * country
+    * gender
+    * link
+    * locale
+    * nickname
+    * postal_code
+    * timezone
+
+    """
+
+    user_authorization_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
+    access_token_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+    user_info_url = "https://graph.microsoft.com/v1.0/me"
+
+    user_info_scope = ['openid profile']
+
+    supported_user_attributes = core.SupportedUserAttributes(
+        id=True,
+        email=True,
+        first_name=True,
+        last_name=True,
+        location=True,
+        name=True,
+        phone=True,
+        picture=True,
+        username=True,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        auth = args[0]
+        provider_name = kwargs.get('provider_name')
+        domain = auth.config.get(provider_name, {}).get('domain')
+        if domain is not None:
+            self.user_authorization_url = MicrosoftOnline.user_authorization_url.replace('/common/', '/%s/' % domain)
+            self.access_token_url = MicrosoftOnline.access_token_url.replace('/common/', '/%s/' % domain)
+
+    @classmethod
+    def _x_credentials_parser(cls, credentials, data):
+        if data.get('token_type') == 'bearer':
+            credentials.token_type = cls.BEARER
+        return credentials
+
+    @staticmethod
+    def _x_user_parser(user, data):
+        user.id = data.get('id')
+        user.name = data.get('displayName', '')
+        user.first_name = data.get('givenName', '')
+        user.last_name = data.get('surname', '')
+        user.email = data.get('mail', '')
+        user.location = data.get('officeLocation', '')
+        user.phone = data.get('mobilePhone', '')
+        user.picture = data.get('picture', '')
+        user.username = data.get('userPrincipalName', '')
+        return user
+
+
 class PayPal(OAuth2):
     """
     PayPal |oauth2| provider.
@@ -1525,7 +1643,7 @@ class Reddit(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(Reddit, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'duration' not in self.user_authorization_params:
@@ -1679,7 +1797,7 @@ class VK(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(VK, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'offline' not in self.scope:
@@ -1758,7 +1876,7 @@ class WindowsLive(OAuth2):
     )
 
     def __init__(self, *args, **kwargs):
-        super(WindowsLive, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.offline:
             if 'wl.offline_access' not in self.scope:
@@ -1967,6 +2085,7 @@ PROVIDER_ID_MAP = [
     GitHub,
     Google,
     LinkedIn,
+    MicrosoftOnline,
     OAuth2,
     PayPal,
     Reddit,

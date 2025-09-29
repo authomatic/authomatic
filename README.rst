@@ -51,7 +51,7 @@ Features
 * **Framework agnostic** thanks to adapters.
   Out of the box support for **Django**, **Flask**, **Pyramid** and **Webapp2**.
 * Ready to accommodate future authorization/authentication protocols.
-* Makes provider API callls a breeze.
+* Makes provider API calls a breeze.
 * Asynchronous requests.
 * JavaScript library as a bonus.
 * Out of the box support for:
@@ -73,7 +73,7 @@ The package is licensed under
 Requirements
 ============
 
-Requires **Python 2.7** and newer.
+Requires **Python 3.4** or newer.
 **Python 3.x** support added in **Authomatic 0.0.11** thanks to Emmanuel Leblond <https://github.com/touilleMan>`__.
 
 Live Demo

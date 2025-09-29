@@ -56,14 +56,14 @@ CONFIG = {
     # Case insensitive
     'content_should_not_contain':
         conf.no_birth_date +
-        # conf.no_gender + # Gender JSON key is there but is alwas null
+        # conf.no_gender + # Gender JSON key is there but is always null
         [constants.GENDER_MALE] +
         conf.no_location +
         conf.no_nickname +
         conf.no_phone +
         conf.no_timezone +
         conf.no_username,
-    # True means that any thruthy value is expected
+    # True means that any truthy value is expected
     'credentials': {
         'token_type': 'Bearer',
         'provider_type_id': '2-14',

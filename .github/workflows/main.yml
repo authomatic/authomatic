@@ -1,0 +1,76 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Authomatic Tox
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Update /etc/hosts
+        run: |
+          echo "127.0.0.1 authomatic.org" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 authomatic.com" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 authomatic.test" | sudo tee -a /etc/hosts
+
+      - name: Decrypt Secret Config
+        # secrets isn't available to forks or PRs
+        if: env.SECRETS_KEY != ''
+        # To encrypt, replace -d with -e and reverse -in and -out
+        run: |
+          openssl aes-256-cbc -pass env:SECRETS_KEY -d -md sha512 -pbkdf2 -iter 100000 -salt -in tests/functional_tests/config_secret.py.enc -out tests/functional_tests/config_secret.py
+        env:
+          SECRETS_KEY: ${{ secrets.SECRETS_KEY }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Setup Tox
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install tox tox-gh-actions
+
+      - name: Run Tox
+        # Run tox using the version of Python in `PATH`
+        run: python -m tox -e py310
+
+      - name: Install pypi/build
+        run: >-
+          python -m
+          pip install
+          build
+          --user
+
+      - name: Build a binary wheel and a source tarball
+        run: >-
+          python -m
+          build
+          --sdist
+          --wheel
+          --outdir dist/
+          .
+
+      - name: Publish to PyPI
+        # Only publish on tagged pushes when building py3.9
+        if: matrix.python-version == '3.9' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}

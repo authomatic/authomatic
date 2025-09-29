@@ -69,7 +69,7 @@ Now it's dead simple (hence the *Deadsimpleauth*). Just go through these two ste
 If everything goes good, you will get a :class:`.User` object with information like
 :attr:`.User.name`, :attr:`.User.id` or :attr:`.User.email`.
 Moreover, if the **user** has logged in with an |oauth2|_ or |oauth1|_ provider,
-you will be able to access **his/her protected resources**.
+you will be able to access **their protected resources**.
 
 Instantiate Authomatic
 ----------------------
@@ -109,8 +109,8 @@ We will get the provider name from the URL slug.
    :emphasize-lines: 3
 
 The :class:`.Authomatic.login` function will redirect the **user** to the **provider**,
-which will prompt **him/her** to authorize your app (**the consumer**) to access **his/her**
-protected resources (|oauth1|_ and |oauth2|_), or to verify **his/her** claimed ID (|openid|_).
+which will prompt **them** to authorize your app (**the consumer**) to access **their**
+protected resources (|oauth1|_ and |oauth2|_), or to verify **their** claimed ID (|openid|_).
 The **provider** then redirects the **user** back to *this request handler*.
 
 If the *login procedure* is over, :class:`.Authomatic.login` returns a :class:`.LoginResult`.
@@ -133,7 +133,7 @@ Check whether *login procedure* is over.
 Check for errors, but hope that there is a :attr:`.LoginResult.user`.
 If so, we have an authenticated **user** logged in.
 Before we print a welcoming message we need to update the :class:`.User`
-to get more info about **him/her**.
+to get more info about **them**.
 
 .. literalinclude:: ../../examples/gae/simple/main.py
    :lines: 27, 29, 31, 36-37, 40-42
@@ -143,7 +143,7 @@ Advanced
 
 Logging a **user** in is nice, but you can do more.
 
-You can use the **user's** credentials_ to **access his/her protected resources**,
+You can use the **user's** credentials_ to **access their protected resources**,
 make `asynchronous requests`_, use your own session_ implementation and
 Save your backend's resources by utilizing the :doc:`authomatic.js <reference/javascript>`
 javascript_ library.
@@ -364,7 +364,7 @@ Popup
 """""
 
 The :class:`.Authomatic.login` function redirects the **user** to the **provider**
-to ask him for **his/her** consent. If you rather want to make the redirect in a popup,
+to ask them for **their** consent. If you rather want to make the redirect in a popup,
 the :ref:`authomatic.popupInit() <js_popup_init>` function of the
 :ref:`javascript.js <js>` library with conjunction with :meth:`.LoginResult.popup_html`
 make it a breeze.

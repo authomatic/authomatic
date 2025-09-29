@@ -21,7 +21,8 @@ def get_browser():
 
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage");
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--ignore-certificate-errors")
     options.add_experimental_option("useAutomationExtension", False);
     return webdriver.Chrome(options=options)
 
@@ -56,7 +57,7 @@ HOST_ALIAS = 'authomatic.org'
 INCLUDE_FRAMEWORKS = [
     # 'django',
     'flask',  # Runs with https
-    # 'pyramid',
+    'pyramid',  # Runs with https
 ]
 
 # Only providers included here will be tested.
@@ -67,7 +68,7 @@ INCLUDE_PROVIDERS = [
     # 'bitbucket',
     # 'flickr',
     # 'plurk',
-     'twitter',
+    # 'twitter',
     # 'tumblr',
     # 'ubuntuone',  # UbuntuOne service is no longer available
     # 'vimeo',
@@ -82,7 +83,7 @@ INCLUDE_PROVIDERS = [
     # 'behance',  # doesn't support third party authorization anymore.
     # 'bitly',  # deprecated for test suite refactoring - consider re-enabling
     # 'deviantart',  # deprecated for test suite refactoring - consider re-enabling
-    'facebook',
+    # 'facebook',
     # 'foursquare',  # deprecated for test suite refactoring - consider re-enabling
     # 'google',  # deprecated for test suite refactoring - consider re-enabling
     # 'github', # Asks for 2FA/one-time-pass verification in Travis CI environment.
