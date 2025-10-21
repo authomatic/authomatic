@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This is a simple Flask app that uses Authomatic to log users in with Facebook
 Twitter and OpenID.
@@ -13,19 +12,19 @@ from config_template import CONFIG
 app = Flask(__name__)
 
 # Instantiate Authomatic.
-authomatic = Authomatic(CONFIG, 'your secret string', report_errors=False)
+authomatic = Authomatic(CONFIG, "your secret string", report_errors=False)
 
 
-@app.route('/')
+@app.route("/")
 def index():
     """
     Home handler.
     """
 
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/login/<provider_name>/', methods=['GET', 'POST'])
+@app.route("/login/<provider_name>/", methods=["GET", "POST"])
 def login(provider_name):
     """
     Login handler, must accept both GET and POST to be able to use OpenID.
@@ -35,11 +34,7 @@ def login(provider_name):
     response = make_response()
 
     # Log the user in, pass it the adapter and the provider name.
-    result = authomatic.login(
-        WerkzeugAdapter(
-            request,
-            response),
-        provider_name)
+    result = authomatic.login(WerkzeugAdapter(request, response), provider_name)
 
     # If there is no LoginResult object, the login procedure is still pending.
     if result:
@@ -48,12 +43,12 @@ def login(provider_name):
             result.user.update()
 
         # The rest happens inside the template.
-        return render_template('login.html', result=result)
+        return render_template("login.html", result=result)
 
     # Don't forget to return the response.
     return response
 
 
 # Run the app.
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True, port=8080)

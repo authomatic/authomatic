@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Authomatic documentation build configuration file, created by
 # sphinx-quickstart on Thu Feb  7 16:09:00 2013.
@@ -122,11 +121,9 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"Authomatic"
+project = "Authomatic"
 this_year = datetime.date.today().year
-copyright = u"2013-{0}, Peter Hudec and the Authomatic Project Community".format(
-    this_year
-)
+copyright = f"2013-{this_year}, Peter Hudec and the Authomatic Project Community"
 
 # TODO: Put version in one place.
 
@@ -185,7 +182,7 @@ html_theme = "foundation"
 # further.  For a list of options available for each theme, see the
 # documentation.
 
-MOTTO = u"""
+MOTTO = """
 <span>Authomatic</span><br />
 is a <em>framework agnostic</em> library<br />
 for <em>Python</em> web applications<br />
@@ -237,7 +234,7 @@ intersphinx_mapping = {
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "Authomatic {0}".format(version)
+html_title = f"Authomatic {version}"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -320,7 +317,7 @@ latex_documents = [
     (
         "index",
         "Authomatic.tex",
-        u"Authomatic Documentation",
+        "Authomatic Documentation",
         "Peter Hudec et al",
         "manual",
     )
@@ -355,8 +352,8 @@ man_pages = [
     (
         "index",
         "authomatic",
-        u"Authomatic Documentation",
-        [u"Peter Hudec", u"Authomatic Project Community"],
+        "Authomatic Documentation",
+        ["Peter Hudec", "Authomatic Project Community"],
         1,
     )
 ]
@@ -374,8 +371,8 @@ texinfo_documents = [
     (
         "index",
         "Authomatic",
-        u"Authomatic Documentation",
-        u"Peter Hudec",
+        "Authomatic Documentation",
+        "Peter Hudec",
         "Authomatic",
         "One line description of project.",
         "Miscellaneous",
