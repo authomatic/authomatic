@@ -10,6 +10,7 @@ import jinja2
 import webapp2
 from authomatic import Authomatic
 from authomatic.adapters import Webapp2Adapter
+from authomatic.extras import get_diagnosis_info
 
 if "development" in os.environ["SERVER_SOFTWARE"].lower():
     import config
@@ -59,7 +60,6 @@ class Home(BaseHandler):
     def get(self):
         render(self)
 
-
 class Login(BaseHandler):
     def any(self, provider_name):
         result = authomatic.login(Webapp2Adapter(self), provider_name)
@@ -67,6 +67,11 @@ class Login(BaseHandler):
             apis = []
             if result.user:
                 result.user.update()
+
+                diagnosis = get_diagnosis_info(result)
+                if diagnosis:
+                    logging.info('More info: %s' % diagnosis)
+                    
                 if result.user.credentials:
                     apis = config.config.get(provider_name, {}).get("_apis", {})
 
