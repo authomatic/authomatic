@@ -35,6 +35,9 @@ For more info visit the project page at http://authomatic.github.io/authomatic.
 
 Maintainers
 ===========
+**Authomatic** was a large part of the Google Summer Of Code 2025 program with The Plone Foundation:
+Selectee/Contributor: Andrew Himelstieb https://github.com/gnuamua
+Mentor: Jens Klein https://github.com/jensens
 
 **Authomatic** was migrated from a private project of Peter Hudec to a community-managed project.
 Many thanks to Peter Hudec for all his hard work for creating and maintaining **authomatic**!
