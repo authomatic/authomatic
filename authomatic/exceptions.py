@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Provides various exception types for the library.
 """
@@ -9,7 +8,7 @@ class BaseError(Exception):
     Base error for all errors.
     """
 
-    def __init__(self, message, original_message='', url='', status=None):
+    def __init__(self, message, original_message="", url="", status=None):
         super().__init__(message)
 
         #: Error message.

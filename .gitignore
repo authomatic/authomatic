@@ -12,6 +12,7 @@
 .settings/
 .tox/
 Authomatic.egg-info/
+bin/
 bootstrap/bootstrap.py
 bower_components/
 build/

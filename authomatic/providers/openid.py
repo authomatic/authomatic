@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 |openid| Providers
 ----------------------------------
@@ -20,7 +19,6 @@ Providers which implement the |openid|_ protocol based on the
 
 # We need absolute import to import from openid library which has the same
 # name as this module
-from __future__ import absolute_import
 import datetime
 import logging
 import time
@@ -34,15 +32,14 @@ from authomatic import providers
 from authomatic.exceptions import FailureError, CancellationError, OpenIDError
 
 
-__all__ = ['OpenID', 'Yahoo', 'Google']
+__all__ = ["OpenID", "Yahoo", "Google"]
 
 
 # Suppress openid logging.
 oidutil.log = lambda message, level=0: None
 
 
-REALM_HTML = \
-    """
+REALM_HTML = """
 <!DOCTYPE html>
 <html>
     <head>
@@ -53,8 +50,7 @@ REALM_HTML = \
 """
 
 
-XRDS_XML = \
-    """
+XRDS_XML = """
 <?xml version="1.0" encoding="UTF-8"?>
 <xrds:XRDS
     xmlns:xrds="xri://$xrds"
@@ -87,8 +83,7 @@ class SessionOpenIDStore:
     def _log(level, message):
         return None
 
-    ASSOCIATION_KEY = ('authomatic.providers.openid.SessionOpenIDStore:'
-                       'association')
+    ASSOCIATION_KEY = "authomatic.providers.openid.SessionOpenIDStore:" "association"
 
     def __init__(self, session, nonce_timeout=None):
         """
@@ -101,28 +96,25 @@ class SessionOpenIDStore:
         self.nonce_timeout = nonce_timeout or 600
 
     def storeAssociation(self, server_url, association):
-        self._log(logging.DEBUG,
-                  'SessionOpenIDStore: Storing association to session.')
+        self._log(logging.DEBUG, "SessionOpenIDStore: Storing association to session.")
 
         serialized = association.serialize()
-        decoded = serialized.decode('latin-1')
+        decoded = serialized.decode("latin-1")
 
         assoc = decoded
         # assoc = serialized
 
         # Always store only one association as a tuple.
-        self.session[self.ASSOCIATION_KEY] = (server_url, association.handle,
-                                              assoc)
+        self.session[self.ASSOCIATION_KEY] = (server_url, association.handle, assoc)
 
     def getAssociation(self, server_url, handle=None):
         # Try to get association.
         assoc = self.session.get(self.ASSOCIATION_KEY)
         if assoc and assoc[0] == server_url:
             # If found deserialize and return it.
-            self._log(logging.DEBUG, 'SessionOpenIDStore: Association found.')
-            return Association.deserialize(assoc[2].encode('latin-1'))
-        self._log(logging.DEBUG,
-                  'SessionOpenIDStore: Association not found.')
+            self._log(logging.DEBUG, "SessionOpenIDStore: Association found.")
+            return Association.deserialize(assoc[2].encode("latin-1"))
+        self._log(logging.DEBUG, "SessionOpenIDStore: Association not found.")
 
     def removeAssociation(self, server_url, handle):
         # Just inform the caller that it's gone.
@@ -133,7 +125,7 @@ class SessionOpenIDStore:
         age = int(time.time()) - int(timestamp)
         if age < self.nonce_timeout:
             return True
-        self._log(logging.ERROR, 'SessionOpenIDStore: Expired nonce!')
+        self._log(logging.ERROR, "SessionOpenIDStore: Expired nonce!")
         return False
 
 
@@ -142,34 +134,37 @@ class OpenID(providers.AuthenticationProvider):
     |openid|_ provider based on the `python-openid`_ library.
     """
 
-    AX = ['http://axschema.org/contact/email',
-          'http://schema.openid.net/contact/email',
-          'http://axschema.org/namePerson',
-          'http://openid.net/schema/namePerson/first',
-          'http://openid.net/schema/namePerson/last',
-          'http://openid.net/schema/gender',
-          'http://openid.net/schema/language/pref',
-          'http://openid.net/schema/contact/web/default',
-          'http://openid.net/schema/media/image',
-          'http://openid.net/schema/timezone']
+    AX = [
+        "http://axschema.org/contact/email",
+        "http://schema.openid.net/contact/email",
+        "http://axschema.org/namePerson",
+        "http://openid.net/schema/namePerson/first",
+        "http://openid.net/schema/namePerson/last",
+        "http://openid.net/schema/gender",
+        "http://openid.net/schema/language/pref",
+        "http://openid.net/schema/contact/web/default",
+        "http://openid.net/schema/media/image",
+        "http://openid.net/schema/timezone",
+    ]
 
-    AX_REQUIRED = ['http://schema.openid.net/contact/email']
+    AX_REQUIRED = ["http://schema.openid.net/contact/email"]
 
-    SREG = ['nickname',
-            'email',
-            'fullname',
-            'dob',
-            'gender',
-            'postcode',
-            'country',
-            'language',
-            'timezone']
+    SREG = [
+        "nickname",
+        "email",
+        "fullname",
+        "dob",
+        "gender",
+        "postcode",
+        "country",
+        "language",
+        "timezone",
+    ]
 
     PAPE = [
-        'http://schemas.openid.net/pape/policies/2007/06/'
-        'multi-factor-physical',
-        'http://schemas.openid.net/pape/policies/2007/06/multi-factor',
-        'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant'
+        "http://schemas.openid.net/pape/policies/2007/06/" "multi-factor-physical",
+        "http://schemas.openid.net/pape/policies/2007/06/multi-factor",
+        "http://schemas.openid.net/pape/policies/2007/06/phishing-resistant",
     ]
 
     def __init__(self, *args, **kwargs):
@@ -242,67 +237,72 @@ class OpenID(providers.AuthenticationProvider):
         super().__init__(*args, **kwargs)
 
         # Allow for other openid store implementations.
-        self.store = self._kwarg(
-            kwargs, 'store', SessionOpenIDStore(
-                self.session))
+        self.store = self._kwarg(kwargs, "store", SessionOpenIDStore(self.session))
 
         # Realm
-        self.use_realm = self._kwarg(kwargs, 'use_realm', True)
-        self.realm_body = self._kwarg(kwargs, 'realm_body', '')
-        self.realm_param = self._kwarg(kwargs, 'realm_param', 'realm')
-        self.xrds_param = self._kwarg(kwargs, 'xrds_param', 'xrds')
+        self.use_realm = self._kwarg(kwargs, "use_realm", True)
+        self.realm_body = self._kwarg(kwargs, "realm_body", "")
+        self.realm_param = self._kwarg(kwargs, "realm_param", "realm")
+        self.xrds_param = self._kwarg(kwargs, "xrds_param", "xrds")
 
         # SREG
-        self.sreg = self._kwarg(kwargs, 'sreg', self.SREG)
-        self.sreg_required = self._kwarg(kwargs, 'sreg_required', [])
+        self.sreg = self._kwarg(kwargs, "sreg", self.SREG)
+        self.sreg_required = self._kwarg(kwargs, "sreg_required", [])
 
         # AX
-        self.ax = self._kwarg(kwargs, 'ax', self.AX)
-        self.ax_required = self._kwarg(kwargs, 'ax_required', self.AX_REQUIRED)
+        self.ax = self._kwarg(kwargs, "ax", self.AX)
+        self.ax_required = self._kwarg(kwargs, "ax_required", self.AX_REQUIRED)
         # add required schemas to schemas if not already there
         for i in self.ax_required:
             if i not in self.ax:
                 self.ax.append(i)
 
         # PAPE
-        self.pape = self._kwarg(kwargs, 'pape', self.PAPE)
+        self.pape = self._kwarg(kwargs, "pape", self.PAPE)
 
     @staticmethod
     def _x_user_parser(user, data):
 
-        user.first_name = data.get('ax', {}).get(
-            'http://openid.net/schema/namePerson/first')
-        user.last_name = data.get('ax', {}).get(
-            'http://openid.net/schema/namePerson/last')
-        user.id = data.get('guid')
-        user.link = data.get('ax', {}).get(
-            'http://openid.net/schema/contact/web/default')
-        user.picture = data.get('ax', {}).get(
-            'http://openid.net/schema/media/image')
-        user.nickname = data.get('sreg', {}).get('nickname')
-        user.country = data.get('sreg', {}).get('country')
-        user.postal_code = data.get('sreg', {}).get('postcode')
+        user.first_name = data.get("ax", {}).get(
+            "http://openid.net/schema/namePerson/first"
+        )
+        user.last_name = data.get("ax", {}).get(
+            "http://openid.net/schema/namePerson/last"
+        )
+        user.id = data.get("guid")
+        user.link = data.get("ax", {}).get(
+            "http://openid.net/schema/contact/web/default"
+        )
+        user.picture = data.get("ax", {}).get("http://openid.net/schema/media/image")
+        user.nickname = data.get("sreg", {}).get("nickname")
+        user.country = data.get("sreg", {}).get("country")
+        user.postal_code = data.get("sreg", {}).get("postcode")
 
-        user.name = data.get('sreg', {}).get('fullname') or \
-            data.get('ax', {}).get('http://axschema.org/namePerson')
+        user.name = data.get("sreg", {}).get("fullname") or data.get("ax", {}).get(
+            "http://axschema.org/namePerson"
+        )
 
-        user.gender = data.get('sreg', {}).get('gender') or \
-            data.get('ax', {}).get('http://openid.net/schema/gender')
+        user.gender = data.get("sreg", {}).get("gender") or data.get("ax", {}).get(
+            "http://openid.net/schema/gender"
+        )
 
-        user.locale = data.get('sreg', {}).get('language') or \
-            data.get('ax', {}).get('http://openid.net/schema/language/pref')
+        user.locale = data.get("sreg", {}).get("language") or data.get("ax", {}).get(
+            "http://openid.net/schema/language/pref"
+        )
 
-        user.timezone = data.get('sreg', {}).get('timezone') or \
-            data.get('ax', {}).get('http://openid.net/schema/timezone')
+        user.timezone = data.get("sreg", {}).get("timezone") or data.get("ax", {}).get(
+            "http://openid.net/schema/timezone"
+        )
 
-        user.email = data.get('sreg', {}).get('email') or \
-            data.get('ax', {}).get('http://axschema.org/contact/email') or \
-            data.get('ax', {}).get('http://schema.openid.net/contact/email')
+        user.email = (
+            data.get("sreg", {}).get("email")
+            or data.get("ax", {}).get("http://axschema.org/contact/email")
+            or data.get("ax", {}).get("http://schema.openid.net/contact/email")
+        )
 
-        if data.get('sreg', {}).get('dob'):
+        if data.get("sreg", {}).get("dob"):
             user.birth_date = datetime.datetime.strptime(
-                data.get('sreg', {}).get('dob'),
-                '%Y-%m-%d'
+                data.get("sreg", {}).get("dob"), "%Y-%m-%d"
             )
         else:
             user.birth_date = None
@@ -329,34 +329,30 @@ class OpenID(providers.AuthenticationProvider):
             # Realm HTML
             # =================================================================
 
-            self._log(
-                logging.INFO,
-                'Writing OpenID realm HTML to the response.')
-            xrds_location = '{u}?{x}={x}'.format(u=self.url, x=self.xrds_param)
+            self._log(logging.INFO, "Writing OpenID realm HTML to the response.")
+            xrds_location = f"{self.url}?{self.xrds_param}={self.xrds_param}"
             self.write(
-                REALM_HTML.format(
-                    xrds_location=xrds_location,
-                    body=self.realm_body))
+                REALM_HTML.format(xrds_location=xrds_location, body=self.realm_body)
+            )
 
         elif xrds_request:
             # =================================================================
             # XRDS XML
             # =================================================================
 
-            self._log(
-                logging.INFO,
-                'Writing XRDS XML document to the response.')
-            self.set_header('Content-Type', 'application/xrds+xml')
+            self._log(logging.INFO, "Writing XRDS XML document to the response.")
+            self.set_header("Content-Type", "application/xrds+xml")
             self.write(XRDS_XML.format(return_to=self.url))
 
-        elif self.params.get('openid.mode'):
+        elif self.params.get("openid.mode"):
             # =================================================================
             # Phase 2 after redirect
             # =================================================================
 
             self._log(
                 logging.INFO,
-                'Continuing OpenID authentication procedure after redirect.')
+                "Continuing OpenID authentication procedure after redirect.",
+            )
 
             # complete the authentication process
             response = oi_consumer.complete(self.params, self.url)
@@ -367,32 +363,32 @@ class OpenID(providers.AuthenticationProvider):
                 data = {}
 
                 # get user ID
-                data['guid'] = response.getDisplayIdentifier()
+                data["guid"] = response.getDisplayIdentifier()
 
-                self._log(logging.INFO, 'Authentication successful.')
+                self._log(logging.INFO, "Authentication successful.")
 
                 # get user data from AX response
                 ax_response = ax.FetchResponse.fromSuccessResponse(response)
                 if ax_response and ax_response.data:
-                    self._log(logging.INFO, 'Got AX data.')
+                    self._log(logging.INFO, "Got AX data.")
                     ax_data = {}
                     # convert iterable values to their first item
                     for k, v in ax_response.data.items():
                         if v and isinstance(v, (list, tuple)):
                             ax_data[k] = v[0]
-                    data['ax'] = ax_data
+                    data["ax"] = ax_data
 
                 # get user data from SREG response
                 sreg_response = sreg.SRegResponse.fromSuccessResponse(response)
                 if sreg_response and sreg_response.data:
-                    self._log(logging.INFO, 'Got SREG data.')
-                    data['sreg'] = sreg_response.data
+                    self._log(logging.INFO, "Got SREG data.")
+                    data["sreg"] = sreg_response.data
 
                 # get data from PAPE response
                 pape_response = pape.Response.fromSuccessResponse(response)
                 if pape_response and pape_response.auth_policies:
-                    self._log(logging.INFO, 'Got PAPE data.')
-                    data['pape'] = pape_response.auth_policies
+                    self._log(logging.INFO, "Got PAPE data.")
+                    data["pape"] = pape_response.auth_policies
 
                 # create user
                 self._update_or_create_user(data)
@@ -403,8 +399,8 @@ class OpenID(providers.AuthenticationProvider):
 
             elif response.status == consumer.CANCEL:
                 raise CancellationError(
-                    'User cancelled the verification of ID "{0}"!'.format(
-                        response.getDisplayIdentifier()))
+                    f'User cancelled the verification of ID "{response.getDisplayIdentifier()}"!'
+                )
 
             elif response.status == consumer.FAILURE:
                 raise FailureError(response.message)
@@ -414,34 +410,29 @@ class OpenID(providers.AuthenticationProvider):
             # Phase 1 before redirect
             # =================================================================
 
-            self._log(
-                logging.INFO,
-                'Starting OpenID authentication procedure.')
+            self._log(logging.INFO, "Starting OpenID authentication procedure.")
 
             # get AuthRequest object
             try:
                 auth_request = oi_consumer.begin(self.identifier)
             except consumer.DiscoveryFailure as e:
                 raise FailureError(
-                    'Discovery failed for identifier {0}!'.format(
-                        self.identifier
-                    ),
+                    f"Discovery failed for identifier {self.identifier}!",
                     url=self.identifier,
-                    original_message=e.message)
+                    original_message=e.message,
+                )
 
             self._log(
                 logging.INFO,
-                'Service discovery for identifier {0} successful.'.format(
-                    self.identifier))
+                f"Service discovery for identifier {self.identifier} successful.",
+            )
 
             # add SREG extension
             # we need to remove required fields from optional fields because
             # addExtension then raises an error
             self.sreg = [i for i in self.sreg if i not in self.sreg_required]
             auth_request.addExtension(
-                sreg.SRegRequest(
-                    optional=self.sreg,
-                    required=self.sreg_required)
+                sreg.SRegRequest(optional=self.sreg, required=self.sreg_required)
             )
 
             # add AX extension
@@ -457,8 +448,7 @@ class OpenID(providers.AuthenticationProvider):
 
             # prepare realm and return_to URLs
             if self.use_realm:
-                realm = return_to = '{u}?{r}={r}'.format(
-                    u=self.url, r=self.realm_param)
+                realm = return_to = f"{self.url}?{self.realm_param}={self.realm_param}"
             else:
                 realm = return_to = self.url
 
@@ -467,21 +457,20 @@ class OpenID(providers.AuthenticationProvider):
             if auth_request.shouldSendRedirect():
                 # can be redirected
                 url = auth_request.redirectURL(realm, return_to)
-                self._log(
-                    logging.INFO,
-                    'Redirecting user to {0}.'.format(url))
+                self._log(logging.INFO, f"Redirecting user to {url}.")
                 self.redirect(url)
             else:
                 # must be sent as POST
                 # this writes a html post form with auto-submit
                 self._log(
-                    logging.INFO,
-                    'Writing an auto-submit HTML form to the response.')
+                    logging.INFO, "Writing an auto-submit HTML form to the response."
+                )
                 form = auth_request.htmlMarkup(
-                    realm, return_to, False, {'id': 'openid_form'})
+                    realm, return_to, False, {"id": "openid_form"}
+                )
                 self.write(form)
         else:
-            raise OpenIDError('No identifier specified!')
+            raise OpenIDError("No identifier specified!")
 
 
 class Yahoo(OpenID):
@@ -490,7 +479,7 @@ class Yahoo(OpenID):
     ``"me.yahoo.com"``.
     """
 
-    identifier = 'me.yahoo.com'
+    identifier = "me.yahoo.com"
 
 
 class Google(OpenID):
@@ -499,4 +488,4 @@ class Google(OpenID):
     ``"https://www.google.com/accounts/o8/id"``.
     """
 
-    identifier = 'https://www.google.com/accounts/o8/id'
+    identifier = "https://www.google.com/accounts/o8/id"

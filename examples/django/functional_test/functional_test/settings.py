@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Django settings for functional_test project.
 
@@ -12,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'eurg@o^!yp#xm3lm)pa*ldv(gcmqbqsogc8hku920)6h)ct%eb'
+SECRET_KEY = "eurg@o^!yp#xm3lm)pa*ldv(gcmqbqsogc8hku920)6h)ct%eb"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,9 +35,9 @@ INSTALLED_APPS = ()
 
 MIDDLEWARE_CLASSES = ()
 
-ROOT_URLCONF = 'functional_test.urls'
+ROOT_URLCONF = "functional_test.urls"
 
-WSGI_APPLICATION = 'functional_test.wsgi.application'
+WSGI_APPLICATION = "functional_test.wsgi.application"
 
 
 # Database
@@ -48,9 +48,9 @@ DATABASES = {}
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -62,4 +62,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"

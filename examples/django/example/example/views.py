@@ -5,6 +5,6 @@ from django.core.urlresolvers import reverse
 
 def home(request):
     # Create links and OpenID form to the Login handler.
-    simple_example_url = reverse('simple:home')
+    simple_example_url = reverse("simple:home")
 
-    return render_to_response('home.html', {})
+    return render_to_response("home.html", {})

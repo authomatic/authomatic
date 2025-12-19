@@ -1,38 +1,43 @@
-# -*- coding: utf-8 -*-
-
 import os
 import logging
 import sys
 from importlib import reload
+
 reload(sys)
-sys.setdefaultencoding('utf-8')
+sys.setdefaultencoding("utf-8")
 
 import jinja2
 import webapp2
 from authomatic import Authomatic
 from authomatic.adapters import Webapp2Adapter
 
-if 'development' in os.environ['SERVER_SOFTWARE'].lower():
+if "development" in os.environ["SERVER_SOFTWARE"].lower():
     import config
-    logging.info('imported config')
+
+    logging.info("imported config")
 else:
     import config_public as config
-    logging.info('public config')
 
-authomatic = Authomatic(config=config.config,
-                        secret=config.SECRET,
-                        report_errors=True,
-                        logging_level=logging.DEBUG)
+    logging.info("public config")
+
+authomatic = Authomatic(
+    config=config.config,
+    secret=config.SECRET,
+    report_errors=True,
+    logging_level=logging.DEBUG,
+)
 
 
-def render(handler, result=None, popup_js=''):
-    handler.rr('home.html',
-               result=result,
-               popup_js=popup_js,
-               title='Authomatic Example',
-               base_url='http://authomatic-example.appspot.com',
-               oauth1=sorted(config.OAUTH1.items()),
-               oauth2=sorted(config.OAUTH2.items()))
+def render(handler, result=None, popup_js=""):
+    handler.rr(
+        "home.html",
+        result=result,
+        popup_js=popup_js,
+        title="Authomatic Example",
+        base_url="http://authomatic-example.appspot.com",
+        oauth1=sorted(config.OAUTH1.items()),
+        oauth2=sorted(config.OAUTH2.items()),
+    )
 
 
 class BaseHandler(webapp2.RequestHandler):
@@ -42,7 +47,7 @@ class BaseHandler(webapp2.RequestHandler):
 
     @webapp2.cached_property
     def jinja2_environment(self):
-        path = os.path.join(os.path.dirname(__file__), 'templates')
+        path = os.path.join(os.path.dirname(__file__), "templates")
         return jinja2.Environment(loader=jinja2.FileSystemLoader(path))
 
     def rr(self, template, **context):
@@ -63,24 +68,26 @@ class Login(BaseHandler):
             if result.user:
                 result.user.update()
                 if result.user.credentials:
-                    apis = config.config.get(
-                        provider_name, {}).get(
-                        '_apis', {})
+                    apis = config.config.get(provider_name, {}).get("_apis", {})
 
-            nice_provider_name = config.config.get(
-                provider_name, {}).get('_name') or provider_name.capitalize()
+            nice_provider_name = (
+                config.config.get(provider_name, {}).get("_name")
+                or provider_name.capitalize()
+            )
 
             render(
                 self,
                 result,
                 result.popup_js(
-                    custom=dict(
-                        apis=apis,
-                        provider_name=nice_provider_name)))
+                    custom=dict(apis=apis, provider_name=nice_provider_name)
+                ),
+            )
 
 
-ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
-          webapp2.Route(r'/', Home, name='home')]
+ROUTES = [
+    webapp2.Route(r"/login/<:.*>", Login, handler_method="any"),
+    webapp2.Route(r"/", Home, name="home"),
+]
 
 
 app = webapp2.WSGIApplication(ROUTES, debug=True)

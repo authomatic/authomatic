@@ -49,7 +49,7 @@ jobs:
 
       - name: Run Tox
         # Run tox using the version of Python in `PATH`
-        run: python -m tox -e py3
+        run: python -m tox -e py310
 
       - name: Install pypi/build
         run: >-
