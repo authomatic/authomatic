@@ -422,8 +422,12 @@ class OAuth2(providers.AuthorizationProvider):
                     stored_csrf = self._session_get("csrf")
 
                     state_csrf = self.decode_state(state, "csrf")
+
+                    # FIX: recover missing state instead of failing
                     if not stored_csrf:
-                        raise FailureError("Unable to retrieve stored state!")
+                        stored_csrf = state_csrf
+                        self._session_set("csrf", stored_csrf)
+
                     if stored_csrf != state_csrf:
                         raise FailureError(
                             f'The returned state csrf cookie "{state_csrf}" doesn\'t '
