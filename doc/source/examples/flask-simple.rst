@@ -73,6 +73,22 @@ The handler must return the ``response`` so we assign it to a variable.
          session_saver=lambda: app.save_session(session, response)
       )
 
+OAuth state collisions when using subdomains
+--------------------------------------------
+
+When running multiple Flask applications on the same parent domain 
+(for example, ``example.com`` and ``sub.example.com``), OAuth login may fail with state or CSRF mismatch errors.
+ Authomatic stores OAuth state data in the Flask session.
+  If Flask session cookies are shared across subdomains (for example via ``SESSION_COOKIE_DOMAIN=.example.com``),
+   one application may overwrite the stored OAuth state of another.
+
+To prevent this, ensure that each Flask application isolates its session cookies:
+
+.. code-block:: python
+
+   app.config['SESSION_COOKIE_NAME'] = 'unique_name_per_app'
+   app.config['SESSION_COOKIE_DOMAIN'] = 'sub.example.com'  # no leading dot
+
 Now check whether there is a :class:`.LoginResult`.
 If so, we need to update the :class:`.User` to get **their** info.
 Then just pass the whole :class:`.LoginResult` to the template.
